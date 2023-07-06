@@ -13,7 +13,7 @@ coordMode "pixel", "window"
 
 appName := "Areia/Jaeger Mix Selector"
 reaperFX_winCriteria := "ahk_exe reaper.exe ahk_class #32770"
-reaperFX_controlClasses := Array("NIVSTChildWindow00007.*", "Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1")
+reaperFX_controlClasses := array("NIVSTChildWindow00007.*", "Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1")
 
 A_IconTip := appName
 A_TrayMenu.rename("E&xit", "&Close")

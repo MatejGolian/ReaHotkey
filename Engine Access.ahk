@@ -14,7 +14,7 @@ coordMode "pixel", "window"
 appName := "Engine Access"
 standalone_winCriteria := "Best Service Engine ahk_class Engine"
 reaperFX_winCriteria := "ahk_exe reaper.exe ahk_class #32770"
-reaperFX_controlClasses := Array("Plugin00007.*")
+reaperFX_controlClasses := array("Plugin00007.*")
 
 A_IconTip := appName
 A_TrayMenu.rename("E&xit", "&Close")
