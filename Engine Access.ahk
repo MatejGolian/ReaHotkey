@@ -17,6 +17,7 @@ reaperFX_winCriteria := "ahk_exe reaper.exe ahk_class #32770"
 reaperFX_controlClasses := array("Plugin00007.*")
 
 A_IconTip := appName
+A_TrayMenu.delete("&Pause Script")
 A_TrayMenu.rename("E&xit", "&Close")
 
 accessibilityOverlay.speak(appName . " ready")

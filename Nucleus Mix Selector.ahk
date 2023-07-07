@@ -16,6 +16,7 @@ reaperFX_winCriteria := "ahk_exe reaper.exe ahk_class #32770"
 reaperFX_controlClasses := array("NIVSTChildWindow00007.*", "Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1")
 
 A_IconTip := appName
+A_TrayMenu.delete("&Pause Script")
 A_TrayMenu.rename("E&xit", "&Close")
 
 accessibilityOverlay.speak(appName . " ready")
