@@ -120,7 +120,7 @@ else
 send "{Enter}"
 }
 
-CTRL:: {
+Ctrl:: {
 if controlGetFocus(reaperFX_winCriteria) != 0
 if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria)))
 accessibilityOverlay.stopSpeech()

@@ -66,7 +66,7 @@ Left:: {
     send "{Enter}"
     }
     
-    CTRL:: {
+    Ctrl:: {
     accessibilityOverlay.stopSpeech()
     }
     
