@@ -35,7 +35,7 @@ F6:: {
 Tab:: {
     global pluginOverlay
     if controlGetFocus(reaperFX_winCriteria) != 0
-    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and !WinExist("ahk_class #32768")
+    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and !winExist("ahk_class #32768")
     pluginOverlay.focusNextControl()
     else
     send "{Tab}"
@@ -46,7 +46,7 @@ Tab:: {
 +Tab:: {
     global pluginOverlay
     if controlGetFocus(reaperFX_winCriteria) != 0
-    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and !WinExist("ahk_class #32768")
+    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and !winExist("ahk_class #32768")
     pluginOverlay.focusPreviousControl()
     else
     send "+{Tab}"
@@ -57,7 +57,7 @@ Tab:: {
 Right:: {
     global pluginOverlay
     if controlGetFocus(reaperFX_winCriteria) != 0
-    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and pluginOverlay.getCurrentControl() is tabControl and !WinExist("ahk_class #32768")
+    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and pluginOverlay.getCurrentControl() is tabControl and !winExist("ahk_class #32768")
     pluginOverlay.focusNextTab()
     else
     send "{Right}"
@@ -68,7 +68,7 @@ Right:: {
 ^Tab:: {
     global pluginOverlay
     if controlGetFocus(reaperFX_winCriteria) != 0
-    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and pluginOverlay.getCurrentControl() is tabControl and !WinExist("ahk_class #32768")
+    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and pluginOverlay.getCurrentControl() is tabControl and !winExist("ahk_class #32768")
     pluginOverlay.focusNextTab()
     else
     send "^{Tab}"
@@ -79,7 +79,7 @@ Right:: {
 Left:: {
     global pluginOverlay
     if controlGetFocus(reaperFX_winCriteria) != 0
-    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and pluginOverlay.getCurrentControl() is tabControl and !WinExist("ahk_class #32768")
+    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and pluginOverlay.getCurrentControl() is tabControl and !winExist("ahk_class #32768")
     pluginOverlay.focusPreviousTab()
     else
     send "{Left}"
@@ -90,7 +90,7 @@ Left:: {
 ^+Tab:: {
     global pluginOverlay
     if controlGetFocus(reaperFX_winCriteria) != 0
-    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and pluginOverlay.getCurrentControl() is tabControl and !WinExist("ahk_class #32768")
+    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and pluginOverlay.getCurrentControl() is tabControl and !winExist("ahk_class #32768")
     pluginOverlay.focusPreviousTab()
     else
     send "^+{Tab}"
@@ -101,7 +101,7 @@ Left:: {
 Space:: {
     global pluginOverlay
     if controlGetFocus(reaperFX_winCriteria) != 0
-    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and !WinExist("ahk_class #32768")
+    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and !winExist("ahk_class #32768")
     pluginOverlay.activateCurrentControl()
     else
     send "{Space}"
@@ -112,7 +112,7 @@ Space:: {
 Enter:: {
     global pluginOverlay
     if controlGetFocus(reaperFX_winCriteria) != 0
-    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and !WinExist("ahk_class #32768")
+    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and !winExist("ahk_class #32768")
     pluginOverlay.activateCurrentControl()
     else
     send "{Enter}"
@@ -133,7 +133,7 @@ Ctrl:: {
 ^R:: {
     global appName, pluginOverlay
     if controlGetFocus(reaperFX_winCriteria) != 0
-    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and !WinExist("ahk_class #32768") {
+    if reaperFX_isAllowedClass(controlGetClassNN(controlGetFocus(reaperFX_winCriteria))) and !winExist("ahk_class #32768") {
         pluginOverlay.reset()
         accessibilityOverlay.speak(appName . " reloaded")
     }
