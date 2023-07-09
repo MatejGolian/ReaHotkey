@@ -36,11 +36,10 @@ Tab::focusNextHotspot()
 #^+K::toggleKeyboardNavigation()
 
 setTimer checkKeyboardNavigaction, 100
-
 msgBox "Use this tool to determine hotspot mouse coordinates and export them to clipboard.", appName
 msgBox "Keyboard shortcuts:`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+F - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+A - Add hotspot`nWin+Ctrl+Shift+D - Delete hotspot`nWin+Ctrl+Shift+R - Rename hotspot`nWin+Ctrl+Shift+M - Perform a mouse click on the current hotspot`nWin+Ctrl+Shift+C - Copy hotspots to clipboard`nWin+Ctrl+Shift+K - Toggle Keyboard navigaction`nTab - Focus next hotspot`nShift+Tab - Focus previous hotspot", appName
 msgBox "Enable Keyboard navigaction whenever you want to click, delete or rename hotspots.", appName
-
+dialogOpen := 0
 speak(appName . " ready")
 
 addHotspot() {
