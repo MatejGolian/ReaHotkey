@@ -69,20 +69,48 @@ addHotspot() {
 }
 
 checkKeyboardNavigaction() {
-    global keyboardNavigaction
-    if keyboardNavigaction == 1 {
-        hotkey "#^+M", "on"
-        hotkey "#^+D", "on"
-        hotkey "Tab", "on"
-        hotkey "+Tab", "on"
-        hotkey "#^+R", "on"
-    }
-    else {
+    global dialogOpen, keyboardNavigaction
+    if dialogOpen == 1 or winExist("ahk_class #32768") {
+        hotkey "#^+A", "off"
         hotkey "#^+M", "off"
+        hotkey "#^+F", "off"
+        hotkey "#^+C", "off"
+        hotkey "#^+P", "off"
+        hotkey "#^+W", "off"
         hotkey "#^+D", "off"
         hotkey "Tab", "off"
         hotkey "+Tab", "off"
         hotkey "#^+R", "off"
+        hotkey "#Ctrl", "off"
+        hotkey "#^+K", "off"
+    }
+    else if keyboardNavigaction == 1 {
+        hotkey "#^+A", "on"
+        hotkey "#^+M", "on"
+        hotkey "#^+F", "on"
+        hotkey "#^+C", "on"
+        hotkey "#^+P", "on"
+        hotkey "#^+W", "on"
+        hotkey "#^+D", "on"
+        hotkey "Tab", "on"
+        hotkey "+Tab", "on"
+        hotkey "#^+R", "on"
+        hotkey "#Ctrl", "on"
+        hotkey "#^+K", "on"
+    }
+    else {
+        hotkey "#^+A", "on"
+        hotkey "#^+M", "off"
+        hotkey "#^+F", "on"
+        hotkey "#^+C", "on"
+        hotkey "#^+P", "on"
+        hotkey "#^+W", "on"
+        hotkey "#^+D", "off"
+        hotkey "Tab", "off"
+        hotkey "+Tab", "off"
+        hotkey "#^+R", "off"
+        hotkey "#Ctrl", "on"
+        hotkey "#^+K", "on"
     }
 }
 
@@ -247,8 +275,7 @@ stopSpeech() {
 }
 
 toggleKeyboardNavigation() {
-    global dialogOpen, keyboardNavigaction
-    if dialogOpen == 0 and !winExist("ahk_class #32768")
+    global keyboardNavigaction
     if  keyboardNavigaction == 0 {
         keyboardNavigaction := 1
         speak("Keyboard navigation on")
