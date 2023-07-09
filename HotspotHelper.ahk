@@ -10,7 +10,7 @@ coordMode "mouse", "window"
 
 appName := "HotspotHelper"
 currentHotspot := 0
-dialogOpen := 0
+dialogOpen := 1
 hotspots := array()
 keyboardNavigaction := 0
 mouseXPosition := ""
