@@ -12,33 +12,34 @@ appName := "HotspotHelper"
 currentHotspot := 0
 dialogOpen := 0
 hotspots := array()
+keyboardNavigaction := 0
 mouseXPosition := ""
 mouseYPosition := ""
 SAPI := comObject("SAPI.spVoice")
 unlabelledHotspotLabel := "unlabelled hotspot"
-windowID := ""
 
 A_IconTip := appName
 A_TrayMenu.delete("&Pause Script")
 A_TrayMenu.rename("E&xit", "&Close")
 
-^+A::addHotspot()
-^+M::clickHotspot()
-^+F::copyControlClassToClipboard()
-^+C::copyHotspotsToClipboard()
-^+G::copyWindowClassToClipboard()
-^+D::deleteHotspot()
+#^+A::addHotspot()
+#^+M::clickHotspot()
+#^+F::copyControlClassToClipboard()
+#^+C::copyHotspotsToClipboard()
+#^+P::copyProcessNameToClipboard()
+#^+W::copyWindowClassToClipboard()
+#^+D::deleteHotspot()
 Tab::focusNextHotspot()
 +Tab::focusPreviousHotspot()
-^+R::renameHotspot()
-Ctrl::stopSpeech()
-^+W::toggleWindowSelection()
+#^+R::renameHotspot()
+#Ctrl::stopSpeech()
+#^+K::toggleKeyboardNavigation()
 
-setTimer checkWindowID, 100
+setTimer checkKeyboardNavigaction, 100
 
 msgBox "Use this tool to determine hotspot mouse coordinates and export them to clipboard.", appName
-msgBox "Keyboard shortcuts:`nCtrl+Shift+W - Toggle window selection`nCtrl+Shift+G - Copy the class of the active window to clipboard`nCtrl+Shift+F - Copy the class of the currently focused control to clipboard`nCtrl+Shift+A - Add hotspot`nCtrl+Shift+D - Delete hotspot`nCtrl+Shift+R - Rename hotspot`nCtrl+Shift+M - Perform a mouse click on the current hotspot`nCtrl+Shift+C - Copy hotspots to clipboard`nTab - Focus next hotspot`nShift+Tab - Focus previous hotspot", appName
-msgBox "Press Ctrl+Shift+W in the window that you want to create hotspots for.", appName
+msgBox "Keyboard shortcuts:`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+F - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+A - Add hotspot`nWin+Ctrl+Shift+D - Delete hotspot`nWin+Ctrl+Shift+R - Rename hotspot`nWin+Ctrl+Shift+M - Perform a mouse click on the current hotspot`nWin+Ctrl+Shift+C - Copy hotspots to clipboard`nWin+Ctrl+Shift+K - Toggle Keyboard navigaction`nTab - Focus next hotspot`nShift+Tab - Focus previous hotspot", appName
+msgBox "Enable Keyboard navigaction whenever you want to click, delete or rename hotspots.", appName
 
 speak(appName . " ready")
 
@@ -61,29 +62,27 @@ addHotspot() {
             hotspots[currentHotspot]["label"] := label
             hotspots[currentHotspot]["xCoordinate"] := mouseXPosition
             hotspots[currentHotspot]["yCoordinate"] := mouseYPosition
-            speak("hotspot added " . hotspots[currentHotspot]["label"])
+            speak(hotspots[currentHotspot]["label"])
         }
         dialogOpen := 0
     }
 }
 
-checkWindowID() {
-    global windowID
-    if windowID != "" and winActive(windowID) and !winExist("ahk_class #32768") {
-        hotkey "^+A", "on"
-        hotkey "^+M", "on"
-        hotkey "^+D", "on"
+checkKeyboardNavigaction() {
+    global keyboardNavigaction
+    if keyboardNavigaction == 1 {
+        hotkey "#^+M", "on"
+        hotkey "#^+D", "on"
         hotkey "Tab", "on"
         hotkey "+Tab", "on"
-        hotkey "^+R", "on"
+        hotkey "#^+R", "on"
     }
     else {
-        hotkey "^+A", "off"
-        hotkey "^+M", "off"
-        hotkey "^+D", "off"
+        hotkey "#^+M", "off"
+        hotkey "#^+D", "off"
         hotkey "Tab", "off"
         hotkey "+Tab", "off"
-        hotkey "^+R", "off"
+        hotkey "#^+R", "off"
     }
 }
 
@@ -134,6 +133,20 @@ copyHotspotsToClipboard() {
             clipboardData := rTrim(clipboardData, "`r`n")
             A_Clipboard := clipboardData
             speak("Hotspots copied to clipboard")
+        }
+        dialogOpen := 0
+    }
+}
+
+copyProcessNameToClipboard() {
+    global appName, dialogOpen
+    if dialogOpen == 0 {
+        dialogOpen := 1
+        clipboardDialog := msgBox("Copy the process name for the active window to clipboard?", appName, 4)
+        if clipboardDialog == "Yes" {
+            winWaitActive("ahk_id " . winGetID("A"))
+            A_Clipboard := winGetProcessName("A")
+            speak("process name copied to clipboard")
         }
         dialogOpen := 0
     }
@@ -206,7 +219,7 @@ renameHotspot() {
         renameDialog := inputBox("Enter a new name for this hotspot.", appName, "", hotspots[currentHotspot]["label"])
         if renameDialog.result == "OK" and renameDialog.value != "" {
             hotspots[currentHotspot]["label"] := renameDialog.value
-            speak("hotspot renamed " . hotspots[currentHotspot]["label"])
+            speak(hotspots[currentHotspot]["label"])
         }
         dialogOpen := 0
     }
@@ -233,14 +246,15 @@ stopSpeech() {
     SAPI.speak("", 0x1|0x2)
 }
 
-toggleWindowSelection() {
-    global windowID
-    if windowID == winGetID("A") {
-        windowID := ""
-        speak("Window deselected")
+toggleKeyboardNavigation() {
+    global dialogOpen, keyboardNavigaction
+    if dialogOpen == 0 and !winExist("ahk_class #32768")
+    if  keyboardNavigaction == 0 {
+        keyboardNavigaction := 1
+        speak("Keyboard navigation on")
     }
     else {
-        windowID := winGetID("A")
-        speak("Window selected")
+        keyboardNavigaction := 0
+        speak("Keyboard navigaction off")
     }
 }

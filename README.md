@@ -10,4 +10,4 @@ This is a collection of AutoHotkey scripths I wrote in order to make certain vir
 * Engine Access - Makes it possible to load instruments and add libraries in Best Service Engine 2.
   - Works both inside REAPER and in the standalone version of Engine 2.
 * HotspotHelper - A special utility to make developing these kind of scripts a little easier.
-  - Retrieves window and control classes and creates labelled hotspots that can be exported to clipboard for subsequent use.
+  - Retrieves window and control info and creates labelled hotspots that can be exported to clipboard for subsequent use.
