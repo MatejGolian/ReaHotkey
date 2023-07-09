@@ -166,7 +166,7 @@ deleteHotspot() {
 
 manageHotkeys() {
     global dialogOpen, keyboardNavigation
-    if dialogOpen == 1 or winExist("ahk_class #32768") or winActive("ahk_class Shell_TrayWnd") {
+    if dialogOpen == 1 or winActive("ahk_exe explorer.exe ahk_class Progman") or winActive("ahk_class Shell_TrayWnd" or winExist("ahk_class #32768") ) {
         hotkey "#^+Enter", "off"
         hotkey "Enter", "off"
         hotkey "#^+C", "off"
@@ -174,7 +174,7 @@ manageHotkeys() {
         hotkey "#^+P", "off"
         hotkey "#^+W", "off"
         hotkey "#^+Del", "off"
-        hotkey "#^+Q", "off"
+        hotkey "#^+Q", "on"
         hotkey "#^+F2", "off"
         hotkey "Tab", "off"
         hotkey "+Tab", "off"
@@ -209,87 +209,88 @@ manageHotkeys() {
         hotkey "Tab", "off"
         hotkey "+Tab", "off"
         hotkey "Ctrl", "on"
-        hotkey "#^+K", "on"
+    hotkey "#^+K", "on"
     }
-}
-
-quitTheApp() {
+    }
+    
+    quitTheApp() {
     exitApp
-}
-
-renameHotspot() {
-global currentHotspot, dialogOpen, hotspots
-if dialogOpen == 0
-if hotspots.length > 0 and currentHotspot > 0 and currentHotspot <= hotspots.length {
-dialogOpen := 1
-renameDialog := inputBox("Enter a new name for this hotspot.", appName, "", hotspots[currentHotspot]["label"])
-if renameDialog.result == "OK" and renameDialog.value != "" {
-hotspots[currentHotspot]["label"] := renameDialog.value
-speak(hotspots[currentHotspot]["label"])
-}
-dialogOpen := 0
-}
-else {
-speak("No hotspot selected")
-}
-}
-
-selectNextHotspot() {
-global currentHotspot, dialogOpen, hotspots
-if dialogOpen == 0
-if hotspots.length > 0 {
-currentHotspot++
-if currentHotspot > hotspots.length
-currentHotspot := 1
-mouseMove hotspots[currentHotspot]["xCoordinate"], hotspots[currentHotspot]["yCoordinate"]
-speak(hotspots[currentHotspot]["label"])
-}
-else {
-speak("No hotspots defined")
-}
-}
-
-selectPreviousHotspot() {
-global currentHotspot, dialogOpen, hotspots
-if dialogOpen == 0
-if hotspots.length > 0 {
-currentHotspot--
-if currentHotspot < 1
-currentHotspot := hotspots.length
-mouseMove hotspots[currentHotspot]["xCoordinate"], hotspots[currentHotspot]["yCoordinate"]
-speak(hotspots[currentHotspot]["label"])
-}
-else {
-speak("No hotspots defined")
-}
-}
-
-speak(message) {
-global SAPI
-if fileExist("nvdaControllerClient" . A_PtrSize * 8 . ".dll") and !DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
-dllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_cancelSpeech")
-dllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_speakText", "wstr", message)
-}
-else {
-SAPI.speak("", 0x1|0x2)
-SAPI.speak(message, 0x1)
-}
-}
-
-stopSpeech() {
-global SAPI
-if !FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".dll") or dllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")
-SAPI.speak("", 0x1|0x2)
-}
-
-toggleKeyboardNavigation() {
-global keyboardNavigation
-if  keyboardNavigation == 0 {
-keyboardNavigation := 1
-speak("Keyboard navigation on")
-}
-else {
-keyboardNavigation := 0
-speak("Keyboard navigation off")
-}
-}
+    }
+    
+    renameHotspot() {
+    global currentHotspot, dialogOpen, hotspots
+    if dialogOpen == 0
+    if hotspots.length > 0 and currentHotspot > 0 and currentHotspot <= hotspots.length {
+    dialogOpen := 1
+    renameDialog := inputBox("Enter a new name for this hotspot.", appName, "", hotspots[currentHotspot]["label"])
+    if renameDialog.result == "OK" and renameDialog.value != "" {
+    hotspots[currentHotspot]["label"] := renameDialog.value
+    speak(hotspots[currentHotspot]["label"])
+    }
+    dialogOpen := 0
+    }
+    else {
+    speak("No hotspot selected")
+    }
+    }
+    
+    selectNextHotspot() {
+    global currentHotspot, dialogOpen, hotspots
+    if dialogOpen == 0
+    if hotspots.length > 0 {
+    currentHotspot++
+    if currentHotspot > hotspots.length
+    currentHotspot := 1
+    mouseMove hotspots[currentHotspot]["xCoordinate"], hotspots[currentHotspot]["yCoordinate"]
+    speak(hotspots[currentHotspot]["label"])
+    }
+    else {
+    speak("No hotspots defined")
+    }
+    }
+    
+    selectPreviousHotspot() {
+    global currentHotspot, dialogOpen, hotspots
+    if dialogOpen == 0
+    if hotspots.length > 0 {
+    currentHotspot--
+    if currentHotspot < 1
+    currentHotspot := hotspots.length
+    mouseMove hotspots[currentHotspot]["xCoordinate"], hotspots[currentHotspot]["yCoordinate"]
+    speak(hotspots[currentHotspot]["label"])
+    }
+    else {
+    speak("No hotspots defined")
+    }
+    }
+    
+    speak(message) {
+    global SAPI
+    if fileExist("nvdaControllerClient" . A_PtrSize * 8 . ".dll") and !DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
+    dllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_cancelSpeech")
+    dllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_speakText", "wstr", message)
+    }
+    else {
+    SAPI.speak("", 0x1|0x2)
+    SAPI.speak(message, 0x1)
+    }
+    }
+    
+    stopSpeech() {
+    global SAPI
+    if !FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".dll") or dllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")
+    SAPI.speak("", 0x1|0x2)
+    }
+    
+    toggleKeyboardNavigation() {
+    global keyboardNavigation
+    if  keyboardNavigation == 0 {
+    keyboardNavigation := 1
+    speak("Keyboard navigation on")
+    }
+    else {
+    keyboardNavigation := 0
+    speak("Keyboard navigation off")
+    }
+    }
+        
