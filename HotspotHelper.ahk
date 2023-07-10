@@ -40,7 +40,7 @@ Ctrl::stopSpeech()
 #^+K::toggleKeyboardMode()
 
 setTimer manageHotkeys, 100
-
+about()
 speak(appName . " ready")
 
 about(itemName := "", itemPos := "", myMenu := "") {
