@@ -9,7 +9,7 @@ SetWorkingDir A_InitialWorkingDir
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
 
-#Include Includes/accessibilityOverlay.Ahk
+#Include Includes/AccessibilityOverlay.ahk
 
 AppName := "Engine Access"
 Standalone_WinCriteria := "Best Service Engine Ahk_Class Engine"
@@ -56,5 +56,5 @@ PluginMiscTab := HotspotTab("Misc.", 872, 168)
 PluginPreferencesTab.AddTabControl("", PluginEngineTab, PluginLibrariesTab, PluginUserFolderTab, PluginOutputSurrTab, PluginMiscTab)
 PluginAddLibraryButton := PluginLibrariesTab.AddHotspotButton("Add Library", 652, 204)
 
-#Include Includes/standalone.Ahk
-#Include Includes/reaperFX.Ahk
+#Include Includes/Standalone.ahk
+#Include Includes/ReaperFX.ahk

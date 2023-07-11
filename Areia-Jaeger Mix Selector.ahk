@@ -9,7 +9,7 @@ SetWorkingDir A_InitialWorkingDir
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
 
-#Include Includes/accessibilityOverlay.Ahk
+#Include Includes/AccessibilityOverlay.ahk
 
 AppName := "Areia/Jaeger Mix Selector"
 ReaperFX_WinCriteria := "ahk_Exe Reaper.Exe Ahk_Class #32770"
@@ -25,4 +25,4 @@ PluginOverlay := AccessibilityOverlay()
 PluginOverlay.AddHotspotButton("Classic Mix", 678, 448)
 PluginOverlay.AddHotspotButton("Modern Mix", 775, 448)
 
-#Include Includes/reaperFX.Ahk
+#Include Includes/ReaperFX.ahk

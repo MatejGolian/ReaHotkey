@@ -9,7 +9,7 @@ SetWorkingDir A_InitialWorkingDir
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
 
-#Include Includes/accessibilityOverlay.Ahk
+#Include Includes/AccessibilityOverlay.ahk
 
 AppName := "Nucleus Mix Selector"
 ReaperFX_WinCriteria := "ahk_Exe Reaper.Exe Ahk_Class #32770"
@@ -25,4 +25,4 @@ PluginOverlay := AccessibilityOverlay()
 PluginOverlay.AddHotspotButton("Classic Mix", 690, 402)
 PluginOverlay.AddHotspotButton("Modern Mix", 690, 432)
 
-#Include Includes/reaperFX.Ahk
+#Include Includes/ReaperFX.ahk

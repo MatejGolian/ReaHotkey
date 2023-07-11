@@ -9,7 +9,7 @@ SetWorkingDir A_InitialWorkingDir
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
 
-#Include Includes/accessibilityOverlay.Ahk
+#Include Includes/AccessibilityOverlay.ahk
 
 AppName := "Shreddage Guitar Selector"
 ReaperFX_WinCriteria := "ahk_Exe Reaper.Exe Ahk_Class #32770"
@@ -27,4 +27,4 @@ PluginOverlay.AddHotspotButton("Guitar Number 2", 1076, 524,)
 PluginOverlay.AddHotspotButton("Guitar Number 3", 1100, 524)
 PluginOverlay.AddHotspotButton("Guitar Number 4", 1124, 524)
 
-#Include Includes/reaperFX.Ahk
+#Include Includes/ReaperFX.ahk

@@ -424,9 +424,9 @@ Class AccessibilityOverlay {
     }
     
     Static Speak(Message) {
-        If FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".Dll") And !DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".Dll\nvdaController_TestIfRunning") {
-            DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".Dll\nvdaController_CancelSpeech")
-            DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".Dll\nvdaController_SpeakText", "wstr", Message)
+        If FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
+            DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_cancelSpeech")
+            DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_speakText", "wstr", Message)
         }
         Else {
             AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
@@ -435,7 +435,7 @@ Class AccessibilityOverlay {
     }
     
     Static StopSpeech() {
-        If !FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".Dll") Or DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".Dll\nvdaController_TestIfRunning")
+        If !FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")
         AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
     }
     
