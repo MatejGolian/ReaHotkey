@@ -1,4 +1,4 @@
-#Requires AutoHotkey V2.0
+#Requires AutoHotkey v2.0
 
 #MaxThreadsPerHotkey 1
 #SingleInstance Force
@@ -19,7 +19,7 @@ A_IconTip := AppName
 A_TrayMenu.Delete("&Pause Script")
 A_TrayMenu.Rename("E&xit", "&Close")
 
-AccessibilityOverlay.Speak(AppName . " Ready")
+AccessibilityOverlay.Speak(AppName . " ready")
 
 PluginOverlay := AccessibilityOverlay()
 PluginOverlay.AddHotspotButton("Classic Mix", 678, 448)

@@ -1,4 +1,4 @@
-#Requires AutoHotkey V2.0
+#Requires AutoHotkey v2.0
 
 #MaxThreadsPerHotkey 1
 #SingleInstance Force
