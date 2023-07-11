@@ -1,83 +1,83 @@
-#requires AutoHotkey v2.0
+#Requires AutoHotkey V2.0
 
-#hotIf winActive(standalone_winCriteria)
+#HotIf WinActive(Standalone_WinCriteria)
 
 Tab:: {
-    global standaloneOverlay
-    if !winExist("ahk_class #32768")
-    standaloneOverlay.focusNextControl()
-    else
-    send "{Tab}"
+    Global StandaloneOverlay
+    If !WinExist("ahk_Class #32768")
+    StandaloneOverlay.FocusNextControl()
+    Else
+    Send "{Tab}"
 }
 
 +Tab:: {
-    global standaloneOverlay
-    if !winExist("ahk_class #32768")
-    standaloneOverlay.focusPreviousControl()
-    else
-    send "+{Tab}"
+    Global StandaloneOverlay
+    If !WinExist("ahk_Class #32768")
+    StandaloneOverlay.FocusPreviousControl()
+    Else
+    Send "+{Tab}"
 }
 
 Right:: {
-    global standaloneOverlay
-    if standaloneOverlay.getCurrentControl() is tabControl and !winExist("ahk_class #32768")
-    standaloneOverlay.focusNextTab()
-    else
-    send "{Right}"
+    Global StandaloneOverlay
+    If StandaloneOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_Class #32768")
+    StandaloneOverlay.FocusNextTab()
+    Else
+    Send "{Right}"
 }
 
 ^Tab:: {
-    global standaloneOverlay
-    if standaloneOverlay.getCurrentControl() is tabControl and !winExist("ahk_class #32768")
-    standaloneOverlay.focusNextTab()
-    else
-    send "^{Tab}"
+    Global StandaloneOverlay
+    If StandaloneOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_Class #32768")
+    StandaloneOverlay.FocusNextTab()
+    Else
+    Send "^{Tab}"
 }
 
 Left:: {
-    global standaloneOverlay
-    if standaloneOverlay.getCurrentControl() is tabControl and !winExist("ahk_class #32768")
-    standaloneOverlay.focusPreviousTab()
-    else
-    send "{Left}"
+    Global StandaloneOverlay
+    If StandaloneOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_Class #32768")
+    StandaloneOverlay.FocusPreviousTab()
+    Else
+    Send "{Left}"
+}
+
+^+Tab:: {
+    Global StandaloneOverlay
+    If StandaloneOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_Class #32768")
+    StandaloneOverlay.FocusPreviousTab()
+    Else
+    Send "^+{Tab}"
+}
+
+Space:: {
+    Global StandaloneOverlay
+    If !WinExist("ahk_Class #32768")
+    StandaloneOverlay.ActivateCurrentControl()
+    Else
+    Send "{Space}"
+}
+
+Enter:: {
+    Global StandaloneOverlay
+    If !WinExist("ahk_Class #32768")
+    StandaloneOverlay.ActivateCurrentControl()
+    Else
+    Send "{Enter}"
+}
+
+Ctrl:: {
+    AccessibilityOverlay.StopSpeech()
+}
+
+^R:: {
+    Global AppName, StandaloneOverlay
+    If !WinExist("ahk_Class #32768") {
+        StandaloneOverlay.Reset()
+        AccessibilityOverlay.Speak(AppName . " reloaded")
     }
-    
-    ^+Tab:: {
-    global standaloneOverlay
-    if standaloneOverlay.getCurrentControl() is tabControl and !winExist("ahk_class #32768")
-    standaloneOverlay.focusPreviousTab()
-    else
-    send "^+{Tab}"
-    }
-    
-    Space:: {
-    global standaloneOverlay
-    if !winExist("ahk_class #32768")
-    standaloneOverlay.activateCurrentControl()
-    else
-    send "{Space}"
-    }
-    
-    Enter:: {
-    global standaloneOverlay
-    if !winExist("ahk_class #32768")
-    standaloneOverlay.activateCurrentControl()
-    else
-    send "{Enter}"
-    }
-    
-    Ctrl:: {
-    accessibilityOverlay.stopSpeech()
-    }
-    
-    ^R:: {
-    global appName, standaloneOverlay
-    if !winExist("ahk_class #32768") {
-    standaloneOverlay.reset()
-    accessibilityOverlay.speak(appName . " reloaded")
-    }
-    else {
-    send "^{R}"
+    Else {
+    Send "^{R}"
     }
     }
         

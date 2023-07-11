@@ -1,60 +1,60 @@
-#requires autoHotkey v2.0
+#Requires AutoHotkey V2.0
 
-#maxThreadsPerHotkey 1
-#singleInstance Force
-#warn
-sendMode "input"
-setTitleMatchMode "regEx"
-setWorkingDir A_InitialWorkingDir
-coordMode "mouse", "window"
-coordMode "pixel", "window"
+#MaxThreadsPerHotkey 1
+#SingleInstance Force
+#Warn
+SendMode "Input"
+SetTitleMatchMode "RegEx"
+SetWorkingDir A_InitialWorkingDir
+CoordMode "Mouse", "Window"
+CoordMode "Pixel", "Window"
 
-#include Includes/accessibilityOverlay.ahk
+#Include Includes/accessibilityOverlay.Ahk
 
-appName := "Engine Access"
-standalone_winCriteria := "Best Service Engine ahk_class Engine"
-reaperFX_winCriteria := "ahk_exe reaper.exe ahk_class #32770"
-reaperFX_controlClasses := array("Plugin00007.*")
+AppName := "Engine Access"
+Standalone_WinCriteria := "Best Service Engine Ahk_Class Engine"
+ReaperFX_WinCriteria := "ahk_Exe Reaper.Exe Ahk_Class #32770"
+ReaperFX_ControlClasses := Array("Plugin00007.*")
 
-A_IconTip := appName
-A_TrayMenu.delete("&Pause Script")
-A_TrayMenu.rename("E&xit", "&Close")
+A_IconTip := AppName
+A_TrayMenu.Delete("&Pause Script")
+A_TrayMenu.Rename("E&xit", "&Close")
 
-accessibilityOverlay.speak(appName . " ready")
+AccessibilityOverlay.Speak(AppName . " ready")
 
-standaloneOverlay := accessibilityOverlay()
-standaloneOverlay.addHotspotButton("Load instrument", 112, 180)
-standAloneQuickEditTab := hotspotTab("Quick edit", 352, 72)
-standAloneProEditTab := hotspotTab("Pro edit", 424, 72)
-standAloneBrowserTab := hotspotTab("Browser", 488, 72)
-standAloneMixerTab := hotspotTab("Mixer", 528, 72)
-standAlonePreferencesTab := hotspotTab("Preferences", 580, 72)
-standAloneHelpTab := hotspotTab("Help", 600, 72)
-standaloneOverlay.addTabControl("", standAloneQuickEditTab, standAloneProEditTab, standAloneBrowserTab, standAloneMixerTab, standAlonePreferencesTab, standAloneHelpTab)
-standAloneEngineTab := hotspotTab("Engine", 396, 112)
-standAloneLibrariesTab := hotspotTab("Libraries", 424, 112)
-standAloneUserFolderTab := hotspotTab("User folder", 488, 112)
-standAloneOutputSurrTab := hotspotTab("Output/Surr", 572, 112)
-standAloneMiscTab := hotspotTab("Misc.", 656, 112)
-standAlonePreferencesTab.AddTabControl("", standAloneEngineTab, standAloneLibrariesTab, standAloneUserFolderTab, standAloneOutputSurrTab, standAloneMiscTab)
-standAloneAddLibraryButton := standAloneLibrariesTab.AddHotspotButton("Add library", 436, 146)
+StandaloneOverlay := AccessibilityOverlay()
+StandaloneOverlay.AddHotspotButton("Load Instrument", 112, 180)
+StandAloneQuickEditTab := HotspotTab("Quick Edit", 352, 72)
+StandAloneProEditTab := HotspotTab("Pro Edit", 424, 72)
+StandAloneBrowserTab := HotspotTab("Browser", 488, 72)
+StandAloneMixerTab := HotspotTab("Mixer", 528, 72)
+StandAlonePreferencesTab := HotspotTab("Preferences", 580, 72)
+StandAloneHelpTab := HotspotTab("Help", 600, 72)
+StandaloneOverlay.AddTabControl("", StandAloneQuickEditTab, StandAloneProEditTab, StandAloneBrowserTab, StandAloneMixerTab, StandAlonePreferencesTab, StandAloneHelpTab)
+StandAloneEngineTab := HotspotTab("Engine", 396, 112)
+StandAloneLibrariesTab := HotspotTab("Libraries", 424, 112)
+StandAloneUserFolderTab := HotspotTab("User Folder", 488, 112)
+StandAloneOutputSurrTab := HotspotTab("Output/Surr", 572, 112)
+StandAloneMiscTab := HotspotTab("Misc.", 656, 112)
+StandAlonePreferencesTab.AddTabControl("", StandAloneEngineTab, StandAloneLibrariesTab, StandAloneUserFolderTab, StandAloneOutputSurrTab, StandAloneMiscTab)
+StandAloneAddLibraryButton := StandAloneLibrariesTab.AddHotspotButton("Add Library", 436, 146)
 
-pluginOverlay := accessibilityOverlay()
-pluginOverlay.addHotspotButton("Load instrument", 320, 232)
-pluginQuickEditTab := hotspotTab("Quick edit", 574, 124)
-pluginProEditTab := hotspotTab("Pro edit", 628, 124)
-pluginBrowserTab := hotspotTab("Browser", 686, 124)
-pluginMixerTab := hotspotTab("Mixer", 744, 124)
-pluginPreferencesTab := hotspotTab("Preferences", 800, 124)
-pluginHelpTab := hotspotTab("Help", 850, 124)
-pluginOverlay.addTabControl("", pluginQuickEditTab, pluginProEditTab, pluginBrowserTab, pluginMixerTab, pluginPreferencesTab, pluginHelpTab)
-pluginEngineTab := hotspotTab("Engine", 576, 168)
-pluginLibrariesTab := hotspotTab("Libraries", 650, 168)
-pluginUserFolderTab := hotspotTab("User folder", 716, 168)
-pluginOutputSurrTab := hotspotTab("Output/Surr", 788, 168)
-pluginMiscTab := hotspotTab("Misc.", 872, 168)
-pluginPreferencesTab.AddTabControl("", pluginEngineTab, pluginLibrariesTab, pluginUserFolderTab, pluginOutputSurrTab, pluginMiscTab)
-pluginAddLibraryButton := pluginLibrariesTab.AddHotspotButton("Add library", 652, 204)
+PluginOverlay := AccessibilityOverlay()
+PluginOverlay.AddHotspotButton("Load Instrument", 320, 232)
+PluginQuickEditTab := HotspotTab("Quick Edit", 574, 124)
+PluginProEditTab := HotspotTab("Pro Edit", 628, 124)
+PluginBrowserTab := HotspotTab("Browser", 686, 124)
+PluginMixerTab := HotspotTab("Mixer", 744, 124)
+PluginPreferencesTab := HotspotTab("Preferences", 800, 124)
+PluginHelpTab := HotspotTab("Help", 850, 124)
+PluginOverlay.AddTabControl("", PluginQuickEditTab, PluginProEditTab, PluginBrowserTab, PluginMixerTab, PluginPreferencesTab, PluginHelpTab)
+PluginEngineTab := HotspotTab("Engine", 576, 168)
+PluginLibrariesTab := HotspotTab("Libraries", 650, 168)
+PluginUserFolderTab := HotspotTab("User Folder", 716, 168)
+PluginOutputSurrTab := HotspotTab("Output/Surr", 788, 168)
+PluginMiscTab := HotspotTab("Misc.", 872, 168)
+PluginPreferencesTab.AddTabControl("", PluginEngineTab, PluginLibrariesTab, PluginUserFolderTab, PluginOutputSurrTab, PluginMiscTab)
+PluginAddLibraryButton := PluginLibrariesTab.AddHotspotButton("Add Library", 652, 204)
 
-#include Includes/standalone.ahk
-#include Includes/reaperFX.ahk
+#Include Includes/standalone.Ahk
+#Include Includes/reaperFX.Ahk
