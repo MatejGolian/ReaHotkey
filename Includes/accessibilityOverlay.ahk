@@ -359,25 +359,25 @@ Class AccessibilityOverlay {
         "UnlabelledString", ""),
         "CustomButton", Map(
         "ControlTypeLabel", "tlačidlo",
-        "UnlabelledString", "bez názvu"
+        "UnlabelledString", "bez názvu"),
         "CustomTab", Map(
         "ControlTypeLabel", "záložka",
-        "UnlabelledString", "bez názvu"
+        "UnlabelledString", "bez názvu"),
         "GraphicButton", Map(
         "ControlTypeLabel", "tlačidlo",
         "NotFoundString", "nenájdené",
         "OffString", "vypnuté",
         "OnString", "zapnuté",
-        "UnlabelledString", "bez názvu"
+        "UnlabelledString", "bez názvu"),
         "GraphicTab", Map(
         "ControlTypeLabel", "záložka",
-        "UnlabelledString", "bez názvu"
+        "UnlabelledString", "bez názvu"),
         "HotspotButton", Map(
         "ControlTypeLabel", "tlačidlo",
-        "UnlabelledString", "bez názvu"
+        "UnlabelledString", "bez názvu"),
         "HotspotTab", Map(
         "ControlTypeLabel", "záložka",
-        "UnlabelledString", "bez názvu"
+        "UnlabelledString", "bez názvu"),
         "TabControl", Map(
         "ControlTypeLabel", "zoznam záložiek",
         "SelectedString", "vybraté",
