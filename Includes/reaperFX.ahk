@@ -3,7 +3,7 @@
 #HotIf WinActive(ReaperFX_WinCriteria)
 
 F6:: {
-    Global AppName, PluginPreferencesTab, PluginLibrariesTab, PluginAddLibraryButton
+    Global AppName, PluginOverlay, PluginPreferencesTab, PluginLibrariesTab, PluginAddLibraryButton
     If ControlGetFocus(ReaperFX_WinCriteria) != 0
     If ReaperFX_IsAllowedClass(ControlGetClassNN(ControlGetFocus(ReaperFX_WinCriteria))) {
         Send "{F6}"
@@ -52,9 +52,9 @@ Tab:: {
     Send "+{Tab}"
     Else
     Send "+{Tab}"
-    }
-    
-    Right:: {
+}
+
+Right:: {
     Global PluginOverlay
     If ControlGetFocus(ReaperFX_WinCriteria) != 0
     If ReaperFX_IsAllowedClass(ControlGetClassNN(ControlGetFocus(ReaperFX_WinCriteria))) And PluginOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_Class #32768")
@@ -63,9 +63,9 @@ Tab:: {
     Send "{Right}"
     Else
     Send "{Right}"
-    }
-    
-    ^Tab:: {
+}
+
+^Tab:: {
     Global PluginOverlay
     If ControlGetFocus(ReaperFX_WinCriteria) != 0
     If ReaperFX_IsAllowedClass(ControlGetClassNN(ControlGetFocus(ReaperFX_WinCriteria))) And PluginOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_Class #32768")
@@ -74,9 +74,9 @@ Tab:: {
     Send "^{Tab}"
     Else
     Send "^{Tab}"
-    }
-    
-    Left:: {
+}
+
+Left:: {
     Global PluginOverlay
     If ControlGetFocus(ReaperFX_WinCriteria) != 0
     If ReaperFX_IsAllowedClass(ControlGetClassNN(ControlGetFocus(ReaperFX_WinCriteria))) And PluginOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_Class #32768")
@@ -85,9 +85,9 @@ Tab:: {
     Send "{Left}"
     Else
     Send "{Left}"
-    }
-    
-    ^+Tab:: {
+}
+
+^+Tab:: {
     Global PluginOverlay
     If ControlGetFocus(ReaperFX_WinCriteria) != 0
     If ReaperFX_IsAllowedClass(ControlGetClassNN(ControlGetFocus(ReaperFX_WinCriteria))) And PluginOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_Class #32768")
@@ -96,9 +96,9 @@ Tab:: {
     Send "^+{Tab}"
     Else
     Send "^+{Tab}"
-    }
-    
-    Space:: {
+}
+
+Space:: {
     Global PluginOverlay
     If ControlGetFocus(ReaperFX_WinCriteria) != 0
     If ReaperFX_IsAllowedClass(ControlGetClassNN(ControlGetFocus(ReaperFX_WinCriteria))) And !WinExist("ahk_Class #32768")
@@ -107,9 +107,9 @@ Tab:: {
     Send "{Space}"
     Else
     Send "{Space}"
-    }
-    
-    Enter:: {
+}
+
+Enter:: {
     Global PluginOverlay
     If ControlGetFocus(ReaperFX_WinCriteria) != 0
     If ReaperFX_IsAllowedClass(ControlGetClassNN(ControlGetFocus(ReaperFX_WinCriteria))) And !WinExist("ahk_Class #32768")
@@ -118,9 +118,9 @@ Tab:: {
     Send "{Enter}"
     Else
     Send "{Enter}"
-    }
-    
-    Ctrl:: {
+}
+
+Ctrl:: {
     If ControlGetFocus(ReaperFX_WinCriteria) != 0
     If ReaperFX_IsAllowedClass(ControlGetClassNN(ControlGetFocus(ReaperFX_WinCriteria)))
     AccessibilityOverlay.StopSpeech()
@@ -128,23 +128,23 @@ Tab:: {
     Send "^"
     Else
     Send "^"
-    }
-    
-    ^R:: {
+}
+
+^R:: {
     Global AppName, PluginOverlay
     If ControlGetFocus(ReaperFX_WinCriteria) != 0
     If ReaperFX_IsAllowedClass(ControlGetClassNN(ControlGetFocus(ReaperFX_WinCriteria))) And !WinExist("ahk_Class #32768") {
-    PluginOverlay.Reset()
-    AccessibilityOverlay.Speak(AppName . " reloaded")
+        PluginOverlay.Reset()
+        AccessibilityOverlay.Speak(AppName . " reloaded")
     }
     Else {
-    Send "^{R}"
+        Send "^{R}"
     }
     Else
     Send "^{R}"
-    }
-    
-    ReaperFX_IsAllowedClass(ClassName) {
+}
+
+ReaperFX_IsAllowedClass(ClassName) {
     Global ReaperFX_ControlClasses
     If !IsObject(ReaperFX_ControlClasses)
     Return False
@@ -154,9 +154,9 @@ Tab:: {
     If RegExMatch(ClassName, ControlClass)
     Return True
     Return False
-    }
-    
-    ReaperFX_IsAllowedControl() {
+}
+
+ReaperFX_IsAllowedControl() {
     Global ReaperFX_ControlClasses, ReaperFX_WinCriteria
     Controls := WinGetControls(ReaperFX_WinCriteria)
     If !IsObject(ReaperFX_ControlClasses)
@@ -168,5 +168,4 @@ Tab:: {
     If RegExMatch(Control, ControlClass)
     Return Control
     Return False
-    }
-        
+}

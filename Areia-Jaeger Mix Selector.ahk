@@ -12,7 +12,7 @@ CoordMode "Pixel", "Window"
 #Include Includes/AccessibilityOverlay.ahk
 
 AppName := "Areia/Jaeger Mix Selector"
-ReaperFX_WinCriteria := "ahk_Exe Reaper.Exe Ahk_Class #32770"
+ReaperFX_WinCriteria := "ahk_exe reaper.exe ahk_class #32770"
 ReaperFX_ControlClasses := Array("NIVSTChildWindow00007.*", "Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1")
 
 A_IconTip := AppName

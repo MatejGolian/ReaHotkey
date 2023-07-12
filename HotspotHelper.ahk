@@ -94,14 +94,14 @@ CopyControlClassToClipboard() {
     Global AppName, DialogOpen
     If DialogOpen == 0 {
         DialogOpen := 1
-        If ControlGetFocus("ahk_Id " . WinGetID("A")) == 0 {
+        If ControlGetFocus("ahk_id " . WinGetID("A")) == 0 {
             Speak("Focused control not found")
         }
         Else {
             ConfirmationDialog := MsgBox("Copy the class of the currently focused control to clipboard?", AppName, 4)
             If ConfirmationDialog == "Yes" {
-                WinWaitActive("ahk_Id " . WinGetID("A"))
-                A_Clipboard := ControlGetClassNN(ControlGetFocus("ahk_Id " . WinGetID("A")))
+                WinWaitActive("ahk_id " . WinGetID("A"))
+                A_Clipboard := ControlGetClassNN(ControlGetFocus("ahk_id " . WinGetID("A")))
                 Speak("Control class copied to clipboard")
             }
         }
@@ -136,7 +136,7 @@ CopyProcessNameToClipboard() {
         DialogOpen := 1
         ConfirmationDialog := MsgBox("Copy the process name for the active window to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
-            WinWaitActive("ahk_Id " . WinGetID("A"))
+            WinWaitActive("ahk_id " . WinGetID("A"))
             A_Clipboard := WinGetProcessName("A")
             Speak("process name copied to clipboard")
         }
@@ -150,7 +150,7 @@ CopyWindowClassToClipboard() {
         DialogOpen := 1
         ConfirmationDialog := MsgBox("Copy the class of the active window to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
-            WinWaitActive("ahk_Id " . WinGetID("A"))
+            WinWaitActive("ahk_id " . WinGetID("A"))
             A_Clipboard := WinGetClass("A")
             Speak("Window class copied to clipboard")
         }
@@ -164,7 +164,7 @@ CopyWindowTitleToClipboard() {
         DialogOpen := 1
         ConfirmationDialog := MsgBox("Copy the title of the active window to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
-            WinWaitActive("ahk_Id " . WinGetID("A"))
+            WinWaitActive("ahk_id " . WinGetID("A"))
             A_Clipboard := WinGetTitle("A")
             Speak("Window title copied to clipboard")
         }
@@ -189,7 +189,7 @@ DeleteHotspot() {
 
 ManageHotkeys() {
     Global DialogOpen, KeyboardMode
-    If DialogOpen == 1 Or WinActive("ahk_Exe Explorer.Exe Ahk_Class Progman") Or WinActive("ahk_Class Shell_TrayWnd" Or WinExist("ahk_Class #32768") ) {
+    If DialogOpen == 1 Or WinActive("ahk_exe Explorer.Exe ahk_class Progman") Or WinActive("ahk_class Shell_TrayWnd" Or WinExist("ahk_class #32768") ) {
         Hotkey "#^+A", "on"
         Hotkey "#^+Enter", "off"
         Hotkey "Enter", "off"
@@ -303,9 +303,9 @@ SelectPreviousHotspot() {
 
 Speak(Message) {
     Global SAPI
-    If FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".Dll") And !DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".Dll\nvdaController_TestIfRunning") {
-        DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".Dll\nvdaController_CancelSpeech")
-        DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".Dll\nvdaController_SpeakText", "wstr", Message)
+    If FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
+        DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_cancelSpeech")
+        DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_speakText", "wstr", Message)
     }
     Else {
         SAPI.Speak("", 0x1|0x2)
@@ -315,7 +315,7 @@ Speak(Message) {
 
 StopSpeech() {
 Global SAPI
-If !FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".Dll") Or DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".Dll\nvdaController_TestIfRunning")
+If !FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")
 SAPI.Speak("", 0x1|0x2)
 }
 

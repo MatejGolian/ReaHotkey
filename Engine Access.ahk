@@ -12,8 +12,8 @@ CoordMode "Pixel", "Window"
 #Include Includes/AccessibilityOverlay.ahk
 
 AppName := "Engine Access"
-Standalone_WinCriteria := "Best Service Engine Ahk_Class Engine"
-ReaperFX_WinCriteria := "ahk_Exe Reaper.Exe Ahk_Class #32770"
+Standalone_WinCriteria := "Best Service Engine ahk_class Engine"
+ReaperFX_WinCriteria := "ahk_exe reaper.exe ahk_class #32770"
 ReaperFX_ControlClasses := Array("Plugin00007.*")
 
 A_IconTip := AppName
