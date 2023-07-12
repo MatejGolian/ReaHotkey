@@ -4,7 +4,7 @@ Class AccessibilityOverlay {
     
     ControlID := 0
     ControlType := "Overlay"
-    ControlTypeLabel := "Overlay"
+    ControlTypeLabel := "overlay"
     Label := ""
     AllFocusableControls := Array()
     ChildControls := Array()
@@ -324,95 +324,95 @@ Class AccessibilityOverlay {
     Static SetupTranslations() {
         English := Map(
         "AccessibilityOverlay", Map(
-        "ControlTypeLabel", "Overlay",
+        "ControlTypeLabel", "overlay",
         "UnlabelledString", ""),
         "CustomButton", Map(
-        "ControlTypeLabel", "Button",
-        "UnlabelledString", "Unlabelled"),
+        "ControlTypeLabel", "button",
+        "UnlabelledString", "unlabelled"),
         "CustomTab", Map(
-        "ControlTypeLabel", "Tab",
-        "UnlabelledString", "Unlabelled"),
+        "ControlTypeLabel", "tab",
+        "UnlabelledString", "unlabelled"),
         "GraphicButton", Map(
-        "ControlTypeLabel", "Button",
-        "NotFoundString", "Not Found",
-        "OffString", "Off",
-        "OnString", "On",
-        "UnlabelledString", "Unlabelled"),
+        "ControlTypeLabel", "button",
+        "NotFoundString", "not found",
+        "OffString", "off",
+        "OnString", "on",
+        "UnlabelledString", "unlabelled"),
         "GraphicTab", Map(
-        "ControlTypeLabel", "Tab",
-        "UnlabelledString", "Unlabelled"),
+        "ControlTypeLabel", "tab",
+        "UnlabelledString", "unlabelled"),
         "HotspotButton", Map(
-        "ControlTypeLabel", "Button",
-        "UnlabelledString", "Unlabelled"),
+        "ControlTypeLabel", "button",
+        "UnlabelledString", "unlabelled"),
         "HotspotTab", Map(
-        "ControlTypeLabel", "Tab",
-        "UnlabelledString", "Unlabelled"),
+        "ControlTypeLabel", "tab",
+        "UnlabelledString", "unlabelled"),
         "TabControl", Map(
-        "ControlTypeLabel", "Tab Control",
-        "SelectedString", "Selected",
-        "NotFoundString", "Not Found",
+        "ControlTypeLabel", "tab control",
+        "SelectedString", "selected",
+        "NotFoundString", "not found",
         "UnlabelledString", ""))
         English.Default := ""
         Slovak := Map(
         "AccessibilityOverlay", Map(
-        "ControlTypeLabel", "Pokrývka",
+        "ControlTypeLabel", "pokrývka",
         "UnlabelledString", ""),
         "CustomButton", Map(
-        "ControlTypeLabel", "Tlačidlo",
-        "UnlabelledString", "Bez Názvu"),
+        "ControlTypeLabel", "tlačidlo",
+        "UnlabelledString", "bez názvu"
         "CustomTab", Map(
-        "ControlTypeLabel", "Záložka",
-        "UnlabelledString", "Bez Názvu"),
+        "ControlTypeLabel", "záložka",
+        "UnlabelledString", "bez názvu"
         "GraphicButton", Map(
-        "ControlTypeLabel", "Tlačidlo",
-        "NotFoundString", "Nenájdené",
-        "OffString", "Vypnuté",
-        "OnString", "Zapnuté",
-        "UnlabelledString", "Bez Názvu"),
+        "ControlTypeLabel", "tlačidlo",
+        "NotFoundString", "nenájdené",
+        "OffString", "vypnuté",
+        "OnString", "zapnuté",
+        "UnlabelledString", "bez názvu"
         "GraphicTab", Map(
-        "ControlTypeLabel", "Záložka",
-        "UnlabelledString", "Bez Názvu"),
+        "ControlTypeLabel", "záložka",
+        "UnlabelledString", "bez názvu"
         "HotspotButton", Map(
-        "ControlTypeLabel", "Tlačidlo",
-        "UnlabelledString", "Bez Názvu"),
+        "ControlTypeLabel", "tlačidlo",
+        "UnlabelledString", "bez názvu"
         "HotspotTab", Map(
-        "ControlTypeLabel", "Záložka",
-        "UnlabelledString", "Bez Názvu"),
+        "ControlTypeLabel", "záložka",
+        "UnlabelledString", "bez názvu"
         "TabControl", Map(
-        "ControlTypeLabel", "Zoznam Záložiek",
-        "SelectedString", "Vybraté",
-        "NotFoundString", "Nenájdené",
+        "ControlTypeLabel", "zoznam záložiek",
+        "SelectedString", "vybraté",
+        "NotFoundString", "nenájdené",
         "UnlabelledString", ""))
         Slovak.Default := ""
         Swedish := Map(
         "AccessibilityOverlay", Map(
-        "ControlTypeLabel", "Täcke",
+        "ControlTypeLabel", "täcke",
         "UnlabelledString", ""),
         "CustomButton", Map(
-        "ControlTypeLabel", "Knapp",
-        "UnlabelledString", "Namnlös"),
+        "ControlTypeLabel", "knapp",
+        "UnlabelledString", "namnlös"),
         "CustomTab", Map(
-        "ControlTypeLabel", "Flik",
-        "UnlabelledString", "Namnlös"),
+        "ControlTypeLabel", "flik",
+        "UnlabelledString", "namnlös"),
         "GraphicButton", Map(
-        "ControlTypeLabel", "Knapp",
-        "NotFoundString", "Hittades Ej",
-        "OffString", "Av",
-        "OnString", "På",
-        "UnlabelledString", "Namnlös"),
+        "ControlTypeLabel", "knapp",
+        "NotFoundString", "hittades ej",
+        "OffString", "av",
+        "OnString", "på",
+        "UnlabelledString", "namnlös"),
         "GraphicTab", Map(
-        "ControlTypeLabel", "Flik",
-        "UnlabelledString", "Namnlös"),
+        "ControlTypeLabel", "flik",
+        "UnlabelledString", "namnlös"),
         "HotspotButton", Map(
-        "ControlTypeLabel", "Knapp",
-        "UnlabelledString", "Namnlös"),
+        "ControlTypeLabel", "knapp",
+        "UnlabelledString", "namnlös"),
         "HotspotTab", Map(
-        "ControlTypeLabel", "Flik",
-        "UnlabelledString", "Namnlös"),
+        "ControlTypeLabel", "flik",
+        "UnlabelledString", "namnlös"),
         "TabControl", Map(
-        "ControlTypeLabel", "Flikar",
-        "SelectedString", "Markerad",
-        "NotFoundString", "Hittades Ej",
+        "ControlTypeLabel", "flikar",
+        "SelectedString", "markerad",
+        "NotFoundString", "hittades ej",
         "UnlabelledString", ""))
         Swedish.Default := ""
         Translations := Map()
@@ -484,12 +484,12 @@ Class AccessibilityOverlay {
     
     ControlID := 0
     ControlType := "Button"
-    ControlTypeLabel := "Button"
+    ControlTypeLabel := "button"
     OnFocusFunction := ""
     OnActivateFunction := ""
     Label := ""
     SuperordinateControlID := 0
-    UnlabelledString := "Unlabelled"
+    UnlabelledString := "unlabelled"
     
     __New(Label, OnFocusFunction := "", OnActivateFunction := "") {
     AccessibilityOverlay.TotalNumberOfControls++
@@ -530,7 +530,7 @@ Class AccessibilityOverlay {
     
     ControlID := 0
     ControlType := "Custom"
-    ControlTypeLabel := "Custom"
+    ControlTypeLabel := "custom"
     OnFocusFunction := ""
     OnActivateFunction := ""
     SuperordinateControlID := 0
@@ -560,9 +560,9 @@ Class AccessibilityOverlay {
     Class CustomTab Extends AccessibilityOverlay {
     
     ControlType := "Tab"
-    ControlTypeLabel := "Tab"
+    ControlTypeLabel := "tab"
     OnFocusFunction := ""
-    UnlabelledString := "Unlabelled"
+    UnlabelledString := "unlabelled"
     
     __New(Label, OnFocusFunction := "") {
     AccessibilityOverlay.TotalNumberOfControls++
@@ -590,7 +590,7 @@ Class AccessibilityOverlay {
     
     ControlID := 0
     ControlType := "Button"
-    ControlTypeLabel := "Button"
+    ControlTypeLabel := "button"
     Label := ""
     SuperordinateControlID := 0
     OnImage := ""
@@ -607,10 +607,10 @@ Class AccessibilityOverlay {
     FoundYCoordinate := 0
     IsToggle := 0
     ToggleState := 0
-    NotFoundString := "Not Found"
-    OffString := "Off"
-    OnString := "On"
-    UnlabelledString := "Unlabelled"
+    NotFoundString := "not found"
+    OffString := "off"
+    OnString := "on"
+    UnlabelledString := "unlabelled"
     
     __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage := "", OnHoverImage := "", OffHoverImage := "", OnFocusFunction := "", OnActivateFunction := "") {
     AccessibilityOverlay.TotalNumberOfControls++
@@ -834,7 +834,7 @@ Class AccessibilityOverlay {
     Class GraphicTab Extends AccessibilityOverlay {
     
     ControlType := "Tab"
-    ControlTypeLabel := "Tab"
+    ControlTypeLabel := "tab"
     OnImage := ""
     OffImage := ""
     OnHoverImage := ""
@@ -848,7 +848,7 @@ Class AccessibilityOverlay {
     FoundYCoordinate := 0
     IsToggle := 0
     ToggleState := 0
-    UnlabelledString := "Unlabelled"
+    UnlabelledString := "unlabelled"
     
     __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage := "", OnHoverImage := "", OffHoverImage := "", OnFocusFunction := "") {
     AccessibilityOverlay.TotalNumberOfControls++
@@ -992,14 +992,14 @@ Class AccessibilityOverlay {
     
     ControlID := 0
     ControlType := "Button"
-    ControlTypeLabel := "Button"
+    ControlTypeLabel := "button"
     OnFocusFunction := ""
     OnActivateFunction := ""
     Label := ""
     SuperordinateControlID := 0
     XCoordinate := 0
     YCoordinate := 0
-    UnlabelledString := "Unlabelled"
+    UnlabelledString := "unlabelled"
     
     __New(Label, XCoordinate, YCoordinate, OnFocusFunction := "", OnActivateFunction := "") {
     AccessibilityOverlay.TotalNumberOfControls++
@@ -1043,11 +1043,11 @@ Class AccessibilityOverlay {
     Class HotspotTab Extends AccessibilityOverlay {
     
     ControlType := "Tab"
-    ControlTypeLabel := "Tab"
+    ControlTypeLabel := "tab"
     OnFocusFunction := ""
     XCoordinate := 0
     YCoordinate := 0
-    UnlabelledString := "Unlabelled"
+    UnlabelledString := "unlabelled"
     
     __New(Label, XCoordinate, YCoordinate, OnFocusFunction := "") {
     AccessibilityOverlay.TotalNumberOfControls++
@@ -1078,13 +1078,13 @@ Class AccessibilityOverlay {
     
     ControlID := 0
     ControlType := "TabControl"
-    ControlTypeLabel := "Tab Control"
+    ControlTypeLabel := "tab control"
     Label := ""
     SuperordinateControlID := 0
     CurrentTab := 1
     Tabs := Array()
-    SelectedString := "Selected"
-    NotFoundString := "Not Found"
+    SelectedString := "selected"
+    NotFoundString := "not found"
     UnlabelledString := ""
     
     __New(Label := "", Tabs*) {
