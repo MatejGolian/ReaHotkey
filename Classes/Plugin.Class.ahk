@@ -15,7 +15,7 @@ Class Plugin {
     
     __New(Name, ControlClass, FocusFunction := "", SingleInstance := False) {
         If Name == ""
-        This.Name := UnnamedPluginName
+        This.Name := Plugin.UnnamedPluginName
         Else
         This.Name := Name
         This.ControlClass := ControlClass
