@@ -4,7 +4,7 @@
 
 Tab:: {
     Global StandaloneOverlay
-    If !WinExist("ahk_Class #32768")
+    If !WinExist("ahk_class #32768")
     StandaloneOverlay.FocusNextControl()
     Else
     Send "{Tab}"
@@ -12,7 +12,7 @@ Tab:: {
 
 +Tab:: {
     Global StandaloneOverlay
-    If !WinExist("ahk_Class #32768")
+    If !WinExist("ahk_class #32768")
     StandaloneOverlay.FocusPreviousControl()
     Else
     Send "+{Tab}"
@@ -20,7 +20,7 @@ Tab:: {
 
 Right:: {
     Global StandaloneOverlay
-    If StandaloneOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_Class #32768")
+    If StandaloneOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_class #32768")
     StandaloneOverlay.FocusNextTab()
     Else
     Send "{Right}"
@@ -28,7 +28,7 @@ Right:: {
 
 ^Tab:: {
     Global StandaloneOverlay
-    If StandaloneOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_Class #32768")
+    If StandaloneOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_class #32768")
     StandaloneOverlay.FocusNextTab()
     Else
     Send "^{Tab}"
@@ -36,7 +36,7 @@ Right:: {
 
 Left:: {
     Global StandaloneOverlay
-    If StandaloneOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_Class #32768")
+    If StandaloneOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_class #32768")
     StandaloneOverlay.FocusPreviousTab()
     Else
     Send "{Left}"
@@ -44,7 +44,7 @@ Left:: {
 
 ^+Tab:: {
     Global StandaloneOverlay
-    If StandaloneOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_Class #32768")
+    If StandaloneOverlay.GetCurrentControl() Is TabControl And !WinExist("ahk_class #32768")
     StandaloneOverlay.FocusPreviousTab()
     Else
     Send "^+{Tab}"
@@ -52,7 +52,7 @@ Left:: {
 
 Space:: {
     Global StandaloneOverlay
-    If !WinExist("ahk_Class #32768")
+    If !WinExist("ahk_class #32768")
     StandaloneOverlay.ActivateCurrentControl()
     Else
     Send "{Space}"
@@ -60,7 +60,7 @@ Space:: {
 
 Enter:: {
     Global StandaloneOverlay
-    If !WinExist("ahk_Class #32768")
+    If !WinExist("ahk_class #32768")
     StandaloneOverlay.ActivateCurrentControl()
     Else
     Send "{Enter}"
@@ -72,7 +72,7 @@ Ctrl:: {
 
 ^R:: {
     Global AppName, StandaloneOverlay
-    If !WinExist("ahk_Class #32768") {
+    If !WinExist("ahk_class #32768") {
         StandaloneOverlay.Reset()
         AccessibilityOverlay.Speak(AppName . " reloaded")
     }

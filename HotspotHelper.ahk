@@ -43,7 +43,7 @@ SetTimer ManageHotkeys, 100
 About()
 Speak(AppName . " ready")
 
-About(ItemName := "", ItemPos := "", MyMenu := "") {
+About(*) {
     Global DialogOpen
     If DialogOpen == 0 {
         DialogOpen := 1
@@ -190,59 +190,59 @@ DeleteHotspot() {
 ManageHotkeys() {
     Global DialogOpen, KeyboardMode
     If DialogOpen == 1 Or WinActive("ahk_exe Explorer.Exe ahk_class Progman") Or WinActive("ahk_class Shell_TrayWnd" Or WinExist("ahk_class #32768") ) {
-        Hotkey "#^+A", "on"
-        Hotkey "#^+Enter", "off"
-        Hotkey "Enter", "off"
-        Hotkey "#^+C", "off"
-        Hotkey "#^+H", "off"
-        Hotkey "#^+P", "off"
-        Hotkey "#^+W", "off"
-        Hotkey "#^+T", "off"
-        Hotkey "#^+Del", "off"
-        Hotkey "#^+Q", "on"
-        Hotkey "#^+F2", "off"
-        Hotkey "Tab", "off"
-        Hotkey "+Tab", "off"
-        Hotkey "Ctrl", "off"
-        Hotkey "#^+K", "off"
+        Hotkey "#^+A", "On"
+        Hotkey "#^+Enter", "Off"
+        Hotkey "Enter", "Off"
+        Hotkey "#^+C", "Off"
+        Hotkey "#^+H", "Off"
+        Hotkey "#^+P", "Off"
+        Hotkey "#^+W", "Off"
+        Hotkey "#^+T", "Off"
+        Hotkey "#^+Del", "Off"
+        Hotkey "#^+Q", "On"
+        Hotkey "#^+F2", "Off"
+        Hotkey "Tab", "Off"
+        Hotkey "+Tab", "Off"
+        Hotkey "Ctrl", "Off"
+        Hotkey "#^+K", "Off"
     }
     Else If KeyboardMode == 1 {
-        Hotkey "#^+A", "on"
-        Hotkey "#^+Enter", "on"
-        Hotkey "Enter", "on"
-        Hotkey "#^+C", "on"
-        Hotkey "#^+H", "on"
-        Hotkey "#^+P", "on"
-        Hotkey "#^+W", "on"
-        Hotkey "#^+T", "on"
-        Hotkey "#^+Del", "on"
-        Hotkey "#^+Q", "on"
-        Hotkey "#^+F2", "on"
-        Hotkey "Tab", "on"
-        Hotkey "+Tab", "on"
-        Hotkey "Ctrl", "on"
-        Hotkey "#^+K", "on"
+        Hotkey "#^+A", "On"
+        Hotkey "#^+Enter", "On"
+        Hotkey "Enter", "On"
+        Hotkey "#^+C", "On"
+        Hotkey "#^+H", "On"
+        Hotkey "#^+P", "On"
+        Hotkey "#^+W", "On"
+        Hotkey "#^+T", "On"
+        Hotkey "#^+Del", "On"
+        Hotkey "#^+Q", "On"
+        Hotkey "#^+F2", "On"
+        Hotkey "Tab", "On"
+        Hotkey "+Tab", "On"
+        Hotkey "Ctrl", "On"
+        Hotkey "#^+K", "On"
     }
     Else {
-        Hotkey "#^+A", "on"
-        Hotkey "#^+Enter", "on"
-        Hotkey "Enter", "off"
-        Hotkey "#^+C", "on"
-        Hotkey "#^+H", "on"
-        Hotkey "#^+P", "on"
-        Hotkey "#^+W", "on"
-        Hotkey "#^+T", "on"
-        Hotkey "#^+Del", "off"
-        Hotkey "#^+Q", "on"
-        Hotkey "#^+F2", "off"
-        Hotkey "Tab", "off"
-        Hotkey "+Tab", "off"
-        Hotkey "Ctrl", "on"
-        Hotkey "#^+K", "on"
+        Hotkey "#^+A", "On"
+        Hotkey "#^+Enter", "On"
+        Hotkey "Enter", "Off"
+        Hotkey "#^+C", "On"
+        Hotkey "#^+H", "On"
+        Hotkey "#^+P", "On"
+        Hotkey "#^+W", "On"
+        Hotkey "#^+T", "On"
+        Hotkey "#^+Del", "Off"
+        Hotkey "#^+Q", "On"
+        Hotkey "#^+F2", "Off"
+        Hotkey "Tab", "Off"
+        Hotkey "+Tab", "Off"
+        Hotkey "Ctrl", "On"
+        Hotkey "#^+K", "On"
     }
 }
 
-Quit(ItemName := "", ItemPos := "", MyMenu := "") {
+Quit(*) {
     Global AppName, DialogOpen
     If DialogOpen == 0 {
         DialogOpen := 1
@@ -314,19 +314,19 @@ Speak(Message) {
 }
 
 StopSpeech() {
-Global SAPI
-If !FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")
-SAPI.Speak("", 0x1|0x2)
+    Global SAPI
+    If !FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")
+    SAPI.Speak("", 0x1|0x2)
 }
 
 ToggleKeyboardMode() {
-Global KeyboardMode
-If  KeyboardMode == 0 {
-KeyboardMode := 1
-Speak("Keyboard mode on")
-}
-Else {
-KeyboardMode := 0
-Speak("Keyboard mode off")
-}
+    Global KeyboardMode
+    If  KeyboardMode == 0 {
+        KeyboardMode := 1
+        Speak("Keyboard mode on")
+    }
+    Else {
+        KeyboardMode := 0
+        Speak("Keyboard mode off")
+    }
 }
