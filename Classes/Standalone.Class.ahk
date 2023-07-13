@@ -3,7 +3,7 @@
 Class Standalone {
     
     FocusFunction := ""
-    Name := "Unnamed Program"
+    Name := ""
     Overlay := AccessibilityOverlay()
     WindowID := ""
     Static ChooserOverlay := AccessibilityOverlay()
@@ -13,7 +13,9 @@ Class Standalone {
     Static UnnamedProgramName := "Unnamed Program"
     
     __New(Name, WindowID, FocusFunction := "") {
-        If Name != ""
+        If Name == ""
+        This.Name := Standalone.UnnamedProgramName
+        Else
         This.Name := Name
         This.WindowID := WindowID
         This.FocusFunction := FocusFunction
