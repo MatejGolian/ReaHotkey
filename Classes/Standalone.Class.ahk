@@ -10,6 +10,7 @@ Class Standalone {
     Static DefaultOverlay := AccessibilityOverlay()
     Static Instances := Array()
     Static List := Array()
+    Static UnnamedProgramName := "Unnamed Program"
     
     __New(Name, WindowID, FocusFunction := "") {
         If Name != ""
@@ -69,7 +70,7 @@ Class Standalone {
     Standalone.Instances.Push(ProgramInstance)
     Return ProgramInstance
     }
-    Return False
+    Return Standalone("", WinID)
     }
     
     Static GetList() {
@@ -86,7 +87,7 @@ Class Standalone {
     Static Register(ProgramName, WinCriteria, FocusFunction := "") {
     If Standalone.FindName(ProgramName) == False {
     If ProgramName == ""
-    ProgramName := "Unnamed Program"
+    ProgramName := Standalone.UnnamedProgramName
     ProgramEntry := Map()
     ProgramEntry["Name"] := ProgramName
     ProgramEntry["WinCriteria"] := WinCriteria
