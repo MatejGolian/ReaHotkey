@@ -38,7 +38,7 @@ Class Plugin {
     
     Focus() {
         If This.FocusFunction != ""
-    %this.FocusFunction%()
+    %this.FocusFunction%(This)
     }
     
     GetOverlay() {
@@ -118,7 +118,7 @@ Class Plugin {
     Static RegisterOverlay(PluginName, PluginOverlay) {
     PluginNumber := Plugin.FindName(PluginName)
     If PluginNumber > 0
-    Plugin.List[PluginNumber]["Overlays"].Push(PluginOverlay)
+    Plugin.List[PluginNumber]["Overlays"].Push(PluginOverlay.Clone())
     }
     
     }

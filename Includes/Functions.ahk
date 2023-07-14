@@ -60,12 +60,24 @@ FocusDefaultOverlay(Overlay) {
     AccessibilityOverlay.Speak("No overlay defined")
 }
 
-FocusEnginePlugin() {
-    Global EnginePluginOverlay, EnginePluginAddLibraryButton, EnginePluginLibrariesTab, EnginePluginPreferencesTab
-    If EnginePluginOverlay.GetCurrentControl() == EnginePluginAddLibraryButton {
-        EnginePluginPreferencesTab.Focus(EnginePluginPreferencesTab.ControlID)
-        EnginePluginLibrariesTab.Focus(EnginePluginLibrariesTab.ControlID)
-        EnginePluginAddLibraryButton.Focus(EnginePluginAddLibraryButton.ControlID)
+FocusEnginePlugin(EngineInstance) {
+    EngineOverlay := EngineInstance.GetOverlay()
+    CurrentEngineControl := EngineOverlay.GetCurrentControl()
+    If CurrentEngineControl Is HotspotButton And CurrentEngineControl.Label == "Add library"
+    For EngineControl In EngineOverlay.GetAllFocusableControls() {
+        EngineControl := AccessibilityOverlay.GetControl(EngineControl)
+        If EngineControl Is TabControl And EngineControl.CurrentTab == 5 And EngineControl.GetCurrentTab() Is HotspotTab {
+            EnginePreferencesTab := EngineControl.GetCurrentTab()
+            For EnginePreferenceControl In EnginePreferencesTab.GetAllFocusableControls() {
+                EnginePreferenceControl := AccessibilityOverlay.GetControl(EnginePreferenceControl)
+                If EnginePreferenceControl Is TabControl And EnginePreferenceControl.CurrentTab == 2 And EnginePreferenceControl.GetCurrentTab() Is HotspotTab {
+                    EngineLibrariesTab := EnginePreferenceControl.GetCurrentTab()
+                    EnginePreferencesTab.Focus(EnginePreferencesTab.ControlID)
+                    EngineLibrariesTab.Focus(EngineLibrariesTab.ControlID)
+                    CurrentEngineControl.Focus(CurrentEngineControl.ControlID)
+                }
+            }
+        }
     }
 }
 

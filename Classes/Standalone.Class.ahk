@@ -94,7 +94,7 @@ Class Standalone {
     Static RegisterOverlay(ProgramName, ProgramOverlay) {
         ProgramNumber := Standalone.FindName(ProgramName)
         If ProgramNumber > 0
-        Standalone.List[ProgramNumber]["Overlays"].Push(ProgramOverlay)
+        Standalone.List[ProgramNumber]["Overlays"].Push(ProgramOverlay.Clone())
     }
     
 }

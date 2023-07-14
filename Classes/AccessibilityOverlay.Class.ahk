@@ -63,6 +63,46 @@ Class AccessibilityOverlay {
         Return This.ChildControls[This.ChildControls.Length]
     }
     
+    Clone() {
+        Switch(This.__Class) {
+            Case "AccessibilityOverlay":
+            Clone := AccessibilityOverlay(This.Label)
+            Case "CustomTab":
+            Clone := CustomTab(This.Label, This.OnFocusFunction)
+            Case "GraphicTab":
+            Clone := GraphicTab(This.Label, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage, This.OffImage, This.OnHoverImage, This.OffHoverImage, This.OnFocusFunction)
+            Case "HotspotTab":
+            Clone := HotspotTab(This.Label, This.XCoordinate, This.YCoordinate, This.OnFocusFunction)
+        }
+        If This.ChildControls.Length > 0
+        For CurrentControl In This.ChildControls
+        Switch(CurrentControl.__Class) {
+            Case "AccessibilityOverlay":
+            If CurrentControl.ChildControls.Length == 0
+            Clone.AddAccessibilityOverlay(CurrentControl.Label)
+            Else
+            Clone.AddControl(CurrentControl.Clone())
+            Case "CustomButton":
+            Clone.AddCustomButton(CurrentControl.Label, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
+            Case "CustomControl":
+            Clone.AddCustomControl(CurrentControl.Label, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
+            Case "GraphicButton":
+            Clone.AddGraphicButton(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OnImage, CurrentControl.OffImage, CurrentControl.OnHoverImage, CurrentControl.OffHoverImage, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
+            Case "HotspotButton":
+            Clone.AddHotspotButton(CurrentControl.Label, CurrentControl.XCoordinate, CurrentControl.YCoordinate, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
+            Case "TabControl":
+            If CurrentControl.Tabs.Length == 0 {
+                Clone.AddTabControl(CurrentControl.Label)
+            }
+            Else {
+                ClonedTabControl := Clone.AddTabControl(CurrentControl.Label)
+                For CurrentTab In CurrentControl.Tabs
+                ClonedTabControl.AddTabs(CurrentTab.Clone())
+            }
+        }
+        Return Clone
+    }
+    
     FindFocusableControl(ControlID) {
         AllFocusableControls := This.GetAllFocusableControls()
         If AllFocusableControls.Length > 0
@@ -1154,6 +1194,14 @@ Class TabControl {
             AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
         }
         Return 1
+    }
+    
+    GetCurrentTab() {
+        Return This.Tabs.Get(This.CurrentTab, 0)
+    }
+    
+    GetTab(TabNumber) {
+        Return This.Tabs.Get(TabNumber, 0)
     }
     
 }
