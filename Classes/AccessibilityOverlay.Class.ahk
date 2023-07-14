@@ -85,7 +85,7 @@ Class AccessibilityOverlay {
             Case "CustomButton":
             Clone.AddCustomButton(CurrentControl.Label, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
             Case "CustomControl":
-            Clone.AddCustomControl(CurrentControl.Label, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
+            Clone.AddCustomControl(CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
             Case "GraphicButton":
             Clone.AddGraphicButton(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OnImage, CurrentControl.OffImage, CurrentControl.OnHoverImage, CurrentControl.OffHoverImage, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
             Case "HotspotButton":
