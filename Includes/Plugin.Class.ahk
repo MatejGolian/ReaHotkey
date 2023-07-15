@@ -38,58 +38,59 @@ Class Plugin {
     
     Focus() {
         If This.FocusFunction != ""
-    %this.FocusFunction%(This)
+        %this.FocusFunction%(This)
     }
     
     GetOverlay() {
-    Return This.Overlay
+        Return This.Overlay
     }
     
     GetOverlays() {
-    Return Plugin.GetOverlays(This.Name)
+        Return Plugin.GetOverlays(This.Name)
     }
     
     Static FindClass(ClassName) {
-    For PluginNumber, PluginEntry In Plugin.List {
-    If IsObject(PluginEntry["ControlClasses"]) And PluginEntry["ControlClasses"].Length > 0
-    For ControlClass In PluginEntry["ControlClasses"]
-    If RegExMatch(ClassName, ControlClass)
-    Return PluginNumber
-    }
-    Return 0
+        For PluginNumber, PluginEntry In Plugin.List {
+            If IsObject(PluginEntry["ControlClasses"]) And PluginEntry["ControlClasses"].Length > 0
+            For ControlClass In PluginEntry["ControlClasses"]
+            If RegExMatch(ClassName, ControlClass)
+            Return PluginNumber
+        }
+        Return 0
     }
     
     Static FindName(PluginName) {
-    For PluginNumber, PluginEntry In Plugin.List
-    If PluginEntry["Name"] == PluginName
-    Return PluginNumber
-    Return 0
+        For PluginNumber, PluginEntry In Plugin.List
+        If PluginEntry["Name"] == PluginName
+        Return PluginNumber
+        Return 0
     }
     
     Static GetByClass(ControlClass) {
-    PluginNumber := Plugin.FindClass(ControlClass)
-    If PluginNumber > 0 {
-    PluginName := Plugin.List[PluginNumber]["Name"]
-    SingleInstance := Plugin.List[PluginNumber]["SingleInstance"]
-    If SingleInstance == True {
-    For PluginInstance In Plugin.Instances
-    If PluginInstance.Name == PluginName
-    Return PluginInstance
-    }
-    Else {
-    For PluginInstance In Plugin.Instances
-    If PluginInstance.ControlClass == ControlClass
-    Return PluginInstance
-    }
-    PluginInstance := Plugin(Plugin.List[PluginNumber]["Name"], ControlClass, Plugin.List[PluginNumber]["FocusFunction"])
-    Plugin.Instances.Push(PluginInstance)
-    Return PluginInstance
-    }
-    Return Plugin("", ControlClass)
+        PluginNumber := Plugin.FindClass(ControlClass)
+        If PluginNumber > 0 {
+            PluginName := Plugin.List[PluginNumber]["Name"]
+            SingleInstance := Plugin.List[PluginNumber]["SingleInstance"]
+            If SingleInstance == True {
+                For PluginInstance In Plugin.Instances
+                If PluginInstance.Name == PluginName
+                Return PluginInstance
+            }
+            Else {
+                SingleInstance := False
+                For PluginInstance In Plugin.Instances
+                If PluginInstance.ControlClass == ControlClass
+                Return PluginInstance
+                }
+            PluginInstance := Plugin(Plugin.List[PluginNumber]["Name"], ControlClass, Plugin.List[PluginNumber]["FocusFunction"], SingleInstance)
+            Plugin.Instances.Push(PluginInstance)
+            Return PluginInstance
+        }
+        Return Plugin("", ControlClass)
     }
     
     Static GetList() {
-    Return Plugin.List
+        Return Plugin.List
     }
     
     Static GetOverlays(PluginName) {
