@@ -98,39 +98,37 @@ GetPluginControl() {
 
 ManageHotkeys() {
     Global PluginWinCriteria, StandaloneWinCriteria
-    If WinActive(PluginWinCriteria) {
-        If WinExist("ahk_class #32768") {
-            TurnHotkeysOff()
-            Return False
-        }
-        Else If ControlGetFocus(PluginWinCriteria) == 0 {
-            TurnHotkeysOff()
-            Return False
-        }
-        Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
-            TurnHotkeysOff()
-            Return False
-        }
-        Else {
+    If WinActive(PluginWinCriteria)
+    If WinExist("ahk_class #32768") {
+        TurnHotkeysOff()
+        Return False
+    }
+    Else If ControlGetFocus(PluginWinCriteria) == 0 {
+        TurnHotkeysOff()
+        Return False
+    }
+    Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
+        TurnHotkeysOff()
+        Return False
+    }
+    Else {
+        TurnHotkeysOn()
+        Return True
+    }
+    Else
+    If WinExist("ahk_class #32768") {
+        TurnHotkeysOff()
+        Return False
+    }
+    Else {
+        For Program In Standalone.List
+        If WinActive(Program["WinCriteria"]) {
+            StandaloneWinCriteria := Program["WinCriteria"]
             TurnHotkeysOn()
             Return True
         }
-    }
-    Else {
-        If WinExist("ahk_class #32768") {
-            TurnHotkeysOff()
-            Return False
-        }
-        Else {
-            For Program In Standalone.List
-            If WinActive(Program["WinCriteria"]) {
-                StandaloneWinCriteria := Program["WinCriteria"]
-                TurnHotkeysOn()
-                Return True
-            }
-            TurnHotkeysOff()
-            Return False
-        }
+        TurnHotkeysOff()
+        Return False
     }
 }
 
