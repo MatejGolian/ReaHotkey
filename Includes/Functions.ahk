@@ -97,7 +97,6 @@ GetPluginControl() {
 }
 
 ImportOverlays() {
-    Static
     #Include Overlays.ahk
 }
 

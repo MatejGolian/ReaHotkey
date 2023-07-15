@@ -2,7 +2,7 @@
 
 #MaxThreadsPerHotkey 1
 #SingleInstance Force
-#Warn
+;#Warn
 SendMode "Input"
 SetTitleMatchMode "RegEx"
 SetWorkingDir A_InitialWorkingDir
