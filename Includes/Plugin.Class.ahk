@@ -56,14 +56,14 @@ Class Plugin {
     If RegExMatch(ClassName, ControlClass)
     Return PluginNumber
     }
-    Return False
+    Return 0
     }
     
     Static FindName(PluginName) {
     For PluginNumber, PluginEntry In Plugin.List
     If PluginEntry["Name"] == PluginName
     Return PluginNumber
-    Return False
+    Return 0
     }
     
     Static GetByClass(ControlClass) {

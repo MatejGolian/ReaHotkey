@@ -10,9 +10,9 @@ SetWorkingDir A_InitialWorkingDir
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
 
-#Include Classes/AccessibilityOverlay.Class.ahk
-#Include Classes/Plugin.Class.ahk
-#Include Classes/Standalone.Class.ahk
+#Include Includes/AccessibilityOverlay.Class.ahk
+#Include Includes/Plugin.Class.ahk
+#Include Includes/Standalone.Class.ahk
 #Include Includes/Functions.ahk
 
 AppName := "ReaHotkey"
@@ -31,7 +31,7 @@ A_TrayMenu.Rename("E&xit", "&Close")
 AccessibilityOverlay.Speak(AppName . " ready")
 
 #Include Includes/Overlays.ahk
-#Include Includes/Plugin.ahk
-#Include Includes/Standalone.ahk
+#Include Includes/Plugin.Context.ahk
+#Include Includes/Standalone.Context.ahk
 
 SetTimer ManageHotkeys, 100

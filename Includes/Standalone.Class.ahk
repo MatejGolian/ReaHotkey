@@ -45,14 +45,14 @@ Class Standalone {
             If RegExMatch(WinCriteria, ProgramEntry["WinCriteria"])
             Return ProgramNumber
         }
-        Return False
+        Return 0
     }
     
     Static FindName(ProgramName) {
         For ProgramNumber, ProgramEntry In Standalone.List
         If ProgramEntry["Name"] == ProgramName
         Return ProgramNumber
-        Return False
+        Return 0
     }
     
     Static Get(WinCriteria, WinID) {

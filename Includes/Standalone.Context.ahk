@@ -16,6 +16,7 @@ Tab:: {
     StandaloneOverlay.FocusPreviousControl()
 }
 
+^Tab::
 Right:: {
     Global FoundStandalone
     FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
@@ -23,13 +24,7 @@ Right:: {
     StandaloneOverlay.FocusNextTab()
 }
 
-^Tab:: {
-    Global FoundStandalone
-    FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
-    StandaloneOverlay := FoundStandalone.GetOverlay()
-    StandaloneOverlay.FocusNextTab()
-}
-
+^+Tab::
 Left:: {
     Global FoundStandalone
     FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
@@ -37,21 +32,8 @@ Left:: {
     StandaloneOverlay.FocusPreviousTab()
 }
 
-^+Tab:: {
-    Global FoundStandalone
-    FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
-    StandaloneOverlay := FoundStandalone.GetOverlay()
-    StandaloneOverlay.FocusPreviousTab()
-}
-
+Enter::
 Space:: {
-    Global FoundStandalone
-    FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
-    StandaloneOverlay := FoundStandalone.GetOverlay()
-    StandaloneOverlay.ActivateCurrentControl()
-}
-
-Enter:: {
     Global FoundStandalone
     FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
