@@ -96,6 +96,11 @@ GetPluginControl() {
     Return False
 }
 
+ImportOverlays() {
+    Static
+    #Include Overlays.ahk
+}
+
 ManageHotkeys() {
     Global PluginWinCriteria, StandaloneWinCriteria
     If WinActive(PluginWinCriteria)

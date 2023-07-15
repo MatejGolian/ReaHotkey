@@ -1,6 +1,5 @@
 #Requires AutoHotkey v2.0
 
-#Requires AutoHotkey v2.0
 #MaxThreadsPerHotkey 1
 #SingleInstance Force
 #Warn
@@ -29,8 +28,8 @@ A_TrayMenu.Delete("&Pause Script")
 A_TrayMenu.Rename("E&xit", "&Close")
 
 AccessibilityOverlay.Speak(AppName . " ready")
+ImportOverlays()
 
-#Include Includes/Overlays.ahk
 #Include Includes/Plugin.Context.ahk
 #Include Includes/Standalone.Context.ahk
 
