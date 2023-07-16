@@ -89,7 +89,7 @@ ChoosePluginOverlay(*) {
     Global PluginWinCriteria
     Controls := WinGetControls(PluginWinCriteria)
     For PluginEntry In Plugin.List {
-    If IsObject(PluginEntry["ControlClasses"]) And PluginEntry["ControlClasses"].Length > 0
+    If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
     For ControlClass In PluginEntry["ControlClasses"]
     For Control In Controls
     If RegExMatch(Control, ControlClass)

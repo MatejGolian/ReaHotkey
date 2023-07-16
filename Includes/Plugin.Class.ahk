@@ -51,7 +51,7 @@ Class Plugin {
     
     Static FindClass(ClassName) {
         For PluginNumber, PluginEntry In Plugin.List {
-            If IsObject(PluginEntry["ControlClasses"]) And PluginEntry["ControlClasses"].Length > 0
+            If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
             For ControlClass In PluginEntry["ControlClasses"]
             If RegExMatch(ClassName, ControlClass)
             Return PluginNumber
@@ -81,7 +81,7 @@ Class Plugin {
                 For PluginInstance In Plugin.Instances
                 If PluginInstance.ControlClass == ControlClass
                 Return PluginInstance
-                }
+            }
             PluginInstance := Plugin(Plugin.List[PluginNumber]["Name"], ControlClass, Plugin.List[PluginNumber]["FocusFunction"], SingleInstance)
             Plugin.Instances.Push(PluginInstance)
             Return PluginInstance
@@ -94,33 +94,35 @@ Class Plugin {
     }
     
     Static GetOverlays(PluginName) {
-    PluginNumber := Plugin.FindName(PluginName)
-    If PluginNumber > 0
-    Return Plugin.List[PluginNumber]["Overlays"]
-    Return Array()
+        PluginNumber := Plugin.FindName(PluginName)
+        If PluginNumber > 0
+        Return Plugin.List[PluginNumber]["Overlays"]
+        Return Array()
     }
     
     Static Register(PluginName, ControlClasses, FocusFunction := "", SingleInstance := False) {
-    If Plugin.FindName(PluginName) == False {
-    If PluginName == ""
-    PluginName := Plugin.UnnamedPluginName
-    If SingleInstance != True And SingleInstance != False
-    SingleInstance := False
-    PluginEntry := Map()
-    PluginEntry["Name"] := PluginName
-    PluginEntry["ControlClasses"] := ControlClasses
-    PluginEntry["FocusFunction"] := FocusFunction
-    PluginEntry["SingleInstance"] := SingleInstance
-    PluginEntry["Overlays"] := Array()
-    Plugin.List.Push(PluginEntry)
-    }
+        If Plugin.FindName(PluginName) == False {
+            If PluginName == ""
+            PluginName := Plugin.UnnamedPluginName
+            If SingleInstance != True And SingleInstance != False
+            SingleInstance := False
+            PluginEntry := Map()
+            PluginEntry["Name"] := PluginName
+            If ControlClasses Is Array
+            PluginEntry["ControlClasses"] := ControlClasses
+            Else
+            PluginEntry["ControlClasses"] := Array(ControlClasses)
+            PluginEntry["FocusFunction"] := FocusFunction
+            PluginEntry["SingleInstance"] := SingleInstance
+            PluginEntry["Overlays"] := Array()
+            Plugin.List.Push(PluginEntry)
+        }
     }
     
     Static RegisterOverlay(PluginName, PluginOverlay) {
-    PluginNumber := Plugin.FindName(PluginName)
-    If PluginNumber > 0
-    Plugin.List[PluginNumber]["Overlays"].Push(PluginOverlay.Clone())
+        PluginNumber := Plugin.FindName(PluginName)
+        If PluginNumber > 0
+        Plugin.List[PluginNumber]["Overlays"].Push(PluginOverlay.Clone())
     }
     
-    }
-        
+}
