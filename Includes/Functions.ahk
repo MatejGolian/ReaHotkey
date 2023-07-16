@@ -68,11 +68,11 @@ ChoosePluginOverlay(*) {
     EngineOverlay := EngineInstance.GetOverlay()
     CurrentEngineControl := EngineOverlay.GetCurrentControl()
     If CurrentEngineControl Is HotspotButton And CurrentEngineControl.Label == "Add library"
-    For EngineControl In EngineOverlay.GetAllFocusableControls() {
+    For EngineControl In EngineOverlay.GetFocusableControls() {
     EngineControl := AccessibilityOverlay.GetControl(EngineControl)
     If EngineControl Is TabControl And EngineControl.CurrentTab == 5 And EngineControl.GetCurrentTab() Is HotspotTab {
     EnginePreferencesTab := EngineControl.GetCurrentTab()
-    For EnginePreferenceControl In EnginePreferencesTab.GetAllFocusableControls() {
+    For EnginePreferenceControl In EnginePreferencesTab.GetFocusableControls() {
     EnginePreferenceControl := AccessibilityOverlay.GetControl(EnginePreferenceControl)
     If EnginePreferenceControl Is TabControl And EnginePreferenceControl.CurrentTab == 2 And EnginePreferenceControl.GetCurrentTab() Is HotspotTab {
     EngineLibrariesTab := EnginePreferenceControl.GetCurrentTab()
