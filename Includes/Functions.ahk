@@ -7,6 +7,7 @@ ChangePluginOverlay(ItemName, ItemNumber, *) {
         FoundPlugin.Overlay := AccessibilityOverlay(ItemName)
         FoundPlugin.Overlay.AddControl(OverlayList[ItemNumber].Clone())
         FoundPlugin.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
+        FoundPlugin.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
     }
 }
 
@@ -17,6 +18,7 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, *) {
         FoundStandalone.Overlay := AccessibilityOverlay(ItemName)
         FoundStandalone.Overlay.AddControl(OverlayList[ItemNumber].Clone())
         FoundStandalone.Overlay.AddControl(Standalone.ChooserOverlay.Clone())
+        FoundStandalone.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
     }
 }
 
@@ -35,108 +37,108 @@ ChoosePluginOverlay(*) {
         TurnHotkeysOff()
         OverlayMenu.Show()
         TurnHotkeysOn()
-        SetTimer ManageHotkeys, 100
+    SetTimer ManageHotkeys, 100
     }
-}
-
-ChooseStandaloneOverlay(*) {
+    }
+    
+    ChooseStandaloneOverlay(*) {
     Global FoundStandalone
     OverlayList := FoundStandalone.GetOverlays()
     If OverlayList.Length > 0 {
-        OverlayMenu := Menu()
-        For OverlayEntry In OverlayList {
-            OverlayMenu.Add(OverlayEntry.Label, ChangeStandaloneOverlay)
-            If FoundStandalone.Overlay.Label == OverlayEntry.Label
-            OverlayMenu.Check(OverlayEntry.Label)
-        }
-        OverlayMenu.Add("")
-        SetTimer ManageHotkeys, 0
-        TurnHotkeysOff()
-        OverlayMenu.Show()
-        TurnHotkeysOn()
-        SetTimer ManageHotkeys, 100
+    OverlayMenu := Menu()
+    For OverlayEntry In OverlayList {
+    OverlayMenu.Add(OverlayEntry.Label, ChangeStandaloneOverlay)
+    If FoundStandalone.Overlay.Label == OverlayEntry.Label
+    OverlayMenu.Check(OverlayEntry.Label)
     }
-}
-
-FocusDefaultOverlay(Overlay) {
+    OverlayMenu.Add("")
+    SetTimer ManageHotkeys, 0
+    TurnHotkeysOff()
+    OverlayMenu.Show()
+    TurnHotkeysOn()
+    SetTimer ManageHotkeys, 100
+    }
+    }
+    
+    FocusDefaultOverlay(Overlay) {
     AccessibilityOverlay.Speak("No overlay defined")
-}
-
-FocusEnginePlugin(EngineInstance) {
+    }
+    
+    FocusEnginePlugin(EngineInstance) {
     EngineOverlay := EngineInstance.GetOverlay()
     CurrentEngineControl := EngineOverlay.GetCurrentControl()
     If CurrentEngineControl Is HotspotButton And CurrentEngineControl.Label == "Add library"
     For EngineControl In EngineOverlay.GetAllFocusableControls() {
-        EngineControl := AccessibilityOverlay.GetControl(EngineControl)
-        If EngineControl Is TabControl And EngineControl.CurrentTab == 5 And EngineControl.GetCurrentTab() Is HotspotTab {
-            EnginePreferencesTab := EngineControl.GetCurrentTab()
-            For EnginePreferenceControl In EnginePreferencesTab.GetAllFocusableControls() {
-                EnginePreferenceControl := AccessibilityOverlay.GetControl(EnginePreferenceControl)
-                If EnginePreferenceControl Is TabControl And EnginePreferenceControl.CurrentTab == 2 And EnginePreferenceControl.GetCurrentTab() Is HotspotTab {
-                    EngineLibrariesTab := EnginePreferenceControl.GetCurrentTab()
-                    EnginePreferencesTab.Focus(EnginePreferencesTab.ControlID)
-                    EngineLibrariesTab.Focus(EngineLibrariesTab.ControlID)
-                    CurrentEngineControl.Focus(CurrentEngineControl.ControlID)
-                }
-            }
-        }
+    EngineControl := AccessibilityOverlay.GetControl(EngineControl)
+    If EngineControl Is TabControl And EngineControl.CurrentTab == 5 And EngineControl.GetCurrentTab() Is HotspotTab {
+    EnginePreferencesTab := EngineControl.GetCurrentTab()
+    For EnginePreferenceControl In EnginePreferencesTab.GetAllFocusableControls() {
+    EnginePreferenceControl := AccessibilityOverlay.GetControl(EnginePreferenceControl)
+    If EnginePreferenceControl Is TabControl And EnginePreferenceControl.CurrentTab == 2 And EnginePreferenceControl.GetCurrentTab() Is HotspotTab {
+    EngineLibrariesTab := EnginePreferenceControl.GetCurrentTab()
+    EnginePreferencesTab.Focus(EnginePreferencesTab.ControlID)
+    EngineLibrariesTab.Focus(EngineLibrariesTab.ControlID)
+    CurrentEngineControl.Focus(CurrentEngineControl.ControlID)
     }
-}
-
-GetPluginControl() {
+    }
+    }
+    }
+    }
+    
+    GetPluginControl() {
     Global PluginWinCriteria
     Controls := WinGetControls(PluginWinCriteria)
     For PluginEntry In Plugin.List {
-        If IsObject(PluginEntry["ControlClasses"]) And PluginEntry["ControlClasses"].Length > 0
-        For ControlClass In PluginEntry["ControlClasses"]
-        For Control In Controls
-        If RegExMatch(Control, ControlClass)
-        Return Control
+    If IsObject(PluginEntry["ControlClasses"]) And PluginEntry["ControlClasses"].Length > 0
+    For ControlClass In PluginEntry["ControlClasses"]
+    For Control In Controls
+    If RegExMatch(Control, ControlClass)
+    Return Control
     }
     Return False
-}
-
-ImportOverlays() {
+    }
+    
+    ImportOverlays() {
     #Include Overlays.ahk
-}
-
-ManageHotkeys() {
+    }
+    
+    ManageHotkeys() {
     Global PluginWinCriteria, StandaloneWinCriteria
     If WinActive(PluginWinCriteria)
     If WinExist("ahk_class #32768") {
-        TurnHotkeysOff()
-        Return False
+    TurnHotkeysOff()
+    Return False
     }
     Else If ControlGetFocus(PluginWinCriteria) == 0 {
-        TurnHotkeysOff()
-        Return False
+    TurnHotkeysOff()
+    Return False
     }
     Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
-        TurnHotkeysOff()
-        Return False
+    TurnHotkeysOff()
+    Return False
     }
     Else {
-        TurnHotkeysOn()
-        Return True
+    TurnHotkeysOn()
+    Return True
     }
     Else
     If WinExist("ahk_class #32768") {
-        TurnHotkeysOff()
-        Return False
+    TurnHotkeysOff()
+    Return False
     }
     Else {
-        For Program In Standalone.List
-        If WinActive(Program["WinCriteria"]) {
-            StandaloneWinCriteria := Program["WinCriteria"]
-            TurnHotkeysOn()
-            Return True
-        }
-        TurnHotkeysOff()
-        Return False
+    For Program In Standalone.List
+    If WinActive(Program["WinCriteria"]) {
+    StandaloneWinCriteria := Program["WinCriteria"]
+    TurnHotkeysOn()
+    Return True
     }
-}
-
-TurnHotkeysOff() {
+    TurnHotkeysOff()
+    Return False
+    }
+    }
+    
+    TurnHotkeysOff() {
     Global PluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
@@ -154,9 +156,9 @@ TurnHotkeysOff() {
     Hotkey "^R", "Off"
     If WinActive(PluginWinCriteria) And WinExist("ahk_class #32768")
     Hotkey "F6", "Off"
-}
-
-TurnHotkeysOn() {
+    }
+    
+    TurnHotkeysOn() {
     Global PluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
@@ -174,4 +176,5 @@ TurnHotkeysOn() {
     Hotkey "^R", "On"
     If WinActive(PluginWinCriteria) And !WinExist("ahk_class #32768")
     Hotkey "F6", "On"
-}
+    }
+        
