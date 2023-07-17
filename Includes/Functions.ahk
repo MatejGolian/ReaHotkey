@@ -8,6 +8,7 @@ ChangePluginOverlay(ItemName, ItemNumber, *) {
         FoundPlugin.Overlay.AddControl(OverlayList[ItemNumber].Clone())
         FoundPlugin.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
         FoundPlugin.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
+        FoundPlugin.Overlay.FocusControl(FoundPlugin.Overlay.ChildControls[2].ChildControls[1].ControlID)
     }
 }
 
@@ -19,6 +20,7 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, *) {
         FoundStandalone.Overlay.AddControl(OverlayList[ItemNumber].Clone())
         FoundStandalone.Overlay.AddControl(Standalone.ChooserOverlay.Clone())
         FoundStandalone.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
+        FoundStandalone.Overlay.FocusControl(FoundStandalone.Overlay.ChildControls[2].ChildControls[1].ControlID)
     }
 }
 
@@ -37,77 +39,78 @@ ChoosePluginOverlay(*) {
         TurnHotkeysOff()
         OverlayMenu.Show()
         TurnHotkeysOn()
-    SetTimer ManageHotkeys, 100
+        SetTimer ManageHotkeys, 100
     }
-    }
-    
-    ChooseStandaloneOverlay(*) {
+}
+
+ChooseStandaloneOverlay(*) {
     Global FoundStandalone
     OverlayList := FoundStandalone.GetOverlays()
     If OverlayList.Length > 0 {
-    OverlayMenu := Menu()
-    For OverlayEntry In OverlayList {
-    OverlayMenu.Add(OverlayEntry.Label, ChangeStandaloneOverlay)
-    If FoundStandalone.Overlay.Label == OverlayEntry.Label
-    OverlayMenu.Check(OverlayEntry.Label)
+        OverlayMenu := Menu()
+        For OverlayEntry In OverlayList {
+            OverlayMenu.Add(OverlayEntry.Label, ChangeStandaloneOverlay)
+            If FoundStandalone.Overlay.Label == OverlayEntry.Label
+            OverlayMenu.Check(OverlayEntry.Label)
+        }
+        OverlayMenu.Add("")
+        SetTimer ManageHotkeys, 0
+        TurnHotkeysOff()
+        OverlayMenu.Show()
+        TurnHotkeysOn()
+        SetTimer ManageHotkeys, 100
     }
-    OverlayMenu.Add("")
-    SetTimer ManageHotkeys, 0
-    TurnHotkeysOff()
-    OverlayMenu.Show()
-    TurnHotkeysOn()
-    SetTimer ManageHotkeys, 100
-    }
-    }
-    
-    FocusDefaultOverlay(Overlay) {
+}
+
+FocusDefaultOverlay(Overlay) {
     AccessibilityOverlay.Speak("No overlay defined")
-    }
-    
-    FocusEnginePlugin(EngineInstance) {
+}
+
+FocusEnginePlugin(EngineInstance) {
     EngineOverlay := EngineInstance.GetOverlay()
     CurrentEngineControl := EngineOverlay.GetCurrentControl()
-    If CurrentEngineControl Is HotspotButton And CurrentEngineControl.Label == "Add library"
-    For EngineControl In EngineOverlay.GetFocusableControls() {
-    EngineControl := AccessibilityOverlay.GetControl(EngineControl)
-    If EngineControl Is TabControl And EngineControl.CurrentTab == 5 And EngineControl.GetCurrentTab() Is HotspotTab {
-    EnginePreferencesTab := EngineControl.GetCurrentTab()
-    For EnginePreferenceControl In EnginePreferencesTab.GetFocusableControls() {
-    EnginePreferenceControl := AccessibilityOverlay.GetControl(EnginePreferenceControl)
-    If EnginePreferenceControl Is TabControl And EnginePreferenceControl.CurrentTab == 2 And EnginePreferenceControl.GetCurrentTab() Is HotspotTab {
-    EngineLibrariesTab := EnginePreferenceControl.GetCurrentTab()
-    EnginePreferencesTab.Focus(EnginePreferencesTab.ControlID)
-    EngineLibrariesTab.Focus(EngineLibrariesTab.ControlID)
-    CurrentEngineControl.Focus(CurrentEngineControl.ControlID)
+    EngineAddLibraryButton := FocusedEnginePluginAddLibraryButton()
+    If EngineAddLibraryButton Is Object And CurrentEngineControl == EngineAddLibraryButton {
+        EngineLibrariesTab := AccessibilityOverlay.GetControl(EngineAddLibraryButton.SuperordinateControlID)
+        EnginePreferencesTab := AccessibilityOverlay.GetControl(EngineLibrariesTab.SuperordinateControlID)
+        EnginePreferencesTab.Focus(EnginePreferencesTab.ControlID)
+        EngineLibrariesTab.Focus(EngineLibrariesTab.ControlID)
+        EngineAddLibraryButton.Focus(EngineAddLibraryButton.ControlID)
     }
-    }
-    }
-    }
-    }
-    
-    GetPluginControl() {
+}
+
+FocusedEnginePluginAddLibraryButton(OverlayObject := False) {
+    Static
+    If !IsSet(AddLibraryButton)
+    AddLibraryButton := False
+    If OverlayObject Is Object
+    AddLibraryButton := OverlayObject
+    Return AddLibraryButton
+}
+
+GetPluginControl() {
     Global PluginWinCriteria
     Controls := WinGetControls(PluginWinCriteria)
     For PluginEntry In Plugin.List {
-    If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
-    For ControlClass In PluginEntry["ControlClasses"]
-    For Control In Controls
-    If RegExMatch(Control, ControlClass)
-    Return Control
+        If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
+        For ControlClass In PluginEntry["ControlClasses"]
+        For Control In Controls
+        If RegExMatch(Control, ControlClass)
+        Return Control
     }
     Return False
-    }
-    
-    ImportOverlays() {
+}
+
+ImportOverlays() {
     #Include Overlays.ahk
-    }
-    
-    ManageHotkeys() {
+}
+
+ManageHotkeys() {
     Global PluginWinCriteria, StandaloneWinCriteria
     If WinActive(PluginWinCriteria)
     If WinExist("ahk_class #32768") {
-    TurnHotkeysOff()
-    Return False
+        TurnHotkeysOff()
+        Return False
     }
     Else If ControlGetFocus(PluginWinCriteria) == 0 {
     TurnHotkeysOff()
