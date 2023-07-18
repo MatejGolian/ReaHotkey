@@ -12,7 +12,9 @@ F6:: {
         ControlFocus(GetPluginControl(), PluginWinCriteria)
         FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
         PluginOverlay := FoundPlugin.GetOverlay()
-        If PluginOverlay.Label == ""
+        If HasProp(PluginOverlay, "Metadata") And PluginOverlay.Metadata.Has("Product") And PluginOverlay.Metadata["Product"] != ""
+        AccessibilityOverlay.Speak(PluginOverlay.Metadata["Product"] . " overlay active")
+        Else If PluginOverlay.Label == ""
         AccessibilityOverlay.Speak(FoundPlugin.Name . " overlay active")
         Else
         AccessibilityOverlay.Speak(PluginOverlay.Label . " overlay active")

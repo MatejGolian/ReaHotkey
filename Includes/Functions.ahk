@@ -1,23 +1,29 @@
 #Requires AutoHotkey v2.0
 
-ChangePluginOverlay(ItemName, ItemNumber, *) {
+ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
     Global FoundPlugin
     OverlayList := FoundPlugin.GetOverlays()
-    If FoundPlugin.Overlay.Label != ItemName {
+    OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
+    If FoundPlugin.Overlay.Label != OverlayList[OverlayNumber].Label {
         FoundPlugin.Overlay := AccessibilityOverlay(ItemName)
-        FoundPlugin.Overlay.AddControl(OverlayList[ItemNumber].Clone())
+        If HasProp(OverlayList[OverlayNumber], "Metadata")
+        FoundPlugin.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
+        FoundPlugin.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
         FoundPlugin.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
         FoundPlugin.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
         FoundPlugin.Overlay.FocusControl(FoundPlugin.Overlay.ChildControls[2].ChildControls[1].ControlID)
     }
 }
 
-ChangeStandaloneOverlay(ItemName, ItemNumber, *) {
+ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
     Global FoundStandalone
     OverlayList := FoundStandalone.GetOverlays()
-    If FoundStandalone.Overlay.Label != ItemName {
+    OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
+    If FoundStandalone.Overlay.Label != OverlayList[OverlayNumber].Label {
         FoundStandalone.Overlay := AccessibilityOverlay(ItemName)
-        FoundStandalone.Overlay.AddControl(OverlayList[ItemNumber].Clone())
+        If HasProp(OverlayList[OverlayNumber], "Metadata")
+        FoundStandalone.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
+        FoundStandalone.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
         FoundStandalone.Overlay.AddControl(Standalone.ChooserOverlay.Clone())
         FoundStandalone.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
         FoundStandalone.Overlay.FocusControl(FoundStandalone.Overlay.ChildControls[2].ChildControls[1].ControlID)
@@ -26,40 +32,76 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, *) {
 
 ChoosePluginOverlay(*) {
     Global FoundPlugin
-    OverlayList := FoundPlugin.GetOverlays()
-    If OverlayList.Length > 0 {
-        OverlayMenu := Menu()
-        For OverlayEntry In OverlayList {
-            OverlayMenu.Add(OverlayEntry.Label, ChangePluginOverlay)
-            If FoundPlugin.Overlay.Label == OverlayEntry.Label
-            OverlayMenu.Check(OverlayEntry.Label)
-        }
-        OverlayMenu.Add("")
-        SetTimer ManageHotkeys, 0
-        TurnHotkeysOff()
-        OverlayMenu.Show()
-        TurnHotkeysOn()
-        SetTimer ManageHotkeys, 100
-    }
+    SetTimer ManageHotkeys, 0
+    TurnHotkeysOff()
+    CreateOverlayMenu(FoundPlugin, "Plugin").Show()
+    TurnHotkeysOn()
+    SetTimer ManageHotkeys, 100
 }
 
 ChooseStandaloneOverlay(*) {
     Global FoundStandalone
-    OverlayList := FoundStandalone.GetOverlays()
+    SetTimer ManageHotkeys, 0
+    TurnHotkeysOff()
+    CreateOverlayMenu(FoundStandalone, "Standalone").Show()
+    TurnHotkeysOn()
+    SetTimer ManageHotkeys, 100
+}
+
+CreateOverlayMenu(Found, Type) {
+    OverlayList := Found.GetOverlays()
+    OverlayMenu := Menu()
+    OverlayMenu.OverlayNumbers := Array()
     If OverlayList.Length > 0 {
-        OverlayMenu := Menu()
-        For OverlayEntry In OverlayList {
-            OverlayMenu.Add(OverlayEntry.Label, ChangeStandaloneOverlay)
-            If FoundStandalone.Overlay.Label == OverlayEntry.Label
-            OverlayMenu.Check(OverlayEntry.Label)
+        VendorList := Array()
+        VendorMenuList := Array()
+        For OverlayNumber, OverlayEntry In OverlayList {
+            If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Vendor") {
+                If !InArray(OverlayEntry.Metadata["Vendor"], VendorList) {
+                    VendorList.Push(OverlayEntry.Metadata["Vendor"])
+                    VendorMenuList.Push(Menu())
+                    VendorMenuNumber := InArray(OverlayEntry.Metadata["Vendor"], VendorList)
+                    VendorMenuList[VendorMenuNumber].OverlayNumbers := Array()
+                    OverlayMenu.Add(OverlayEntry.Metadata["Vendor"], VendorMenuList[VendorMenuNumber])
+                }
+                VendorMenuNumber := InArray(OverlayEntry.Metadata["Vendor"], VendorList)
+                If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") {
+                    VendorMenuList[VendorMenuNumber].Add(OverlayEntry.Metadata["Product"], Change%Type%Overlay)
+                    VendorMenuList[VendorMenuNumber].OverlayNumbers.Push(OverlayNumber)
+                    If HasProp(Found.Overlay, "Metadata") And Found.Overlay.Metadata["Product"] == OverlayEntry.Metadata["Product"] {
+                        OverlayMenu.Check(VendorList[VendorMenuNumber])
+                        VendorMenuList[VendorMenuNumber].Check(OverlayEntry.Metadata["Product"])
+                    }
+                }
+                Else {
+                    VendorMenuList[VendorMenuNumber].Add(OverlayEntry.Label, Change%Type%Overlay)
+                    VendorMenuList[VendorMenuNumber].OverlayNumbers.Push(OverlayNumber)
+                    If Found.Overlay.Label == OverlayEntry.Label {
+                        OverlayMenu.Check(VendorList[VendorMenuNumber])
+                        VendorMenuList[VendorMenuNumber].Check(OverlayEntry.Label)
+                    }
+                }
+            }
+            Else {
+                If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") {
+                    OverlayMenu.Add(OverlayEntry.Metadata["Product"], Change%Type%Overlay)
+                    OverlayMenu.OverlayNumbers.Push(OverlayNumber)
+                    If HasProp(Found.Overlay, "Metadata") And Found.Overlay.Metadata["Product"] == OverlayEntry.Metadata["Product"]
+                    OverlayMenu.Check(OverlayEntry.Metadata["Product"])
+                }
+                Else {
+                    OverlayMenu.Add(OverlayEntry.Label, Change%Type%Overlay)
+                    OverlayMenu.OverlayNumbers.Push(OverlayNumber)
+                    If Found.Overlay.Label == OverlayEntry.Label
+                    OverlayMenu.Check(OverlayEntry.Label)
+                }
+            }
         }
+        For VendorMenu In VendorMenuList
+        VendorMenu.Add("")
         OverlayMenu.Add("")
-        SetTimer ManageHotkeys, 0
-        TurnHotkeysOff()
-        OverlayMenu.Show()
-        TurnHotkeysOn()
-        SetTimer ManageHotkeys, 100
     }
+    Return OverlayMenu
 }
 
 FocusDefaultOverlay(Overlay) {
@@ -101,6 +143,13 @@ GetPluginControl() {
     Return False
 }
 
+InArray(Needle, Haystack) {
+    For FoundIndex, FoundValue In Haystack
+    If FoundValue == Needle
+    Return FoundIndex
+    Return False
+}
+
 ImportOverlays() {
     #Include Overlays.ahk
 }
@@ -113,35 +162,35 @@ ManageHotkeys() {
         Return False
     }
     Else If ControlGetFocus(PluginWinCriteria) == 0 {
-    TurnHotkeysOff()
-    Return False
+        TurnHotkeysOff()
+        Return False
     }
     Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
-    TurnHotkeysOff()
-    Return False
+        TurnHotkeysOff()
+        Return False
     }
     Else {
-    TurnHotkeysOn()
-    Return True
+        TurnHotkeysOn()
+        Return True
     }
     Else
     If WinExist("ahk_class #32768") {
-    TurnHotkeysOff()
-    Return False
+        TurnHotkeysOff()
+        Return False
     }
     Else {
-    For Program In Standalone.List
-    If WinActive(Program["WinCriteria"]) {
-    StandaloneWinCriteria := Program["WinCriteria"]
-    TurnHotkeysOn()
-    Return True
+        For Program In Standalone.List
+        If WinActive(Program["WinCriteria"]) {
+            StandaloneWinCriteria := Program["WinCriteria"]
+            TurnHotkeysOn()
+            Return True
+        }
+        TurnHotkeysOff()
+        Return False
     }
-    TurnHotkeysOff()
-    Return False
-    }
-    }
-    
-    TurnHotkeysOff() {
+}
+
+TurnHotkeysOff() {
     Global PluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
@@ -159,9 +208,9 @@ ManageHotkeys() {
     Hotkey "^R", "Off"
     If WinActive(PluginWinCriteria) And WinExist("ahk_class #32768")
     Hotkey "F6", "Off"
-    }
-    
-    TurnHotkeysOn() {
+}
+
+TurnHotkeysOn() {
     Global PluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
@@ -179,5 +228,4 @@ ManageHotkeys() {
     Hotkey "^R", "On"
     If WinActive(PluginWinCriteria) And !WinExist("ahk_class #32768")
     Hotkey "F6", "On"
-    }
-        
+}

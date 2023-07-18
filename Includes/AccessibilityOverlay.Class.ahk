@@ -101,6 +101,9 @@ Class AccessibilityOverlay {
                 ClonedTabControl.AddTabs(CurrentTab.Clone())
             }
         }
+        For PropertyName, PropertyValue In This.OwnProps()
+        If !HasProp(Clone, PropertyName)
+        Clone.%PropertyName% := PropertyValue
         Return Clone
     }
     
