@@ -20,7 +20,6 @@ Class AccessibilityOverlay {
         AccessibilityOverlay.TotalNumberOfControls++
         This.ControlID := AccessibilityOverlay.TotalNumberOfControls
         This.Label := Label
-        This.FocusableControlIDs := This.GetFocusableControlIDs()
         AccessibilityOverlay.AllControls.Push(This)
     }
     
@@ -61,6 +60,7 @@ Class AccessibilityOverlay {
     AddControl(Control) {
         Control.SuperordinateControlID := This.ControlID
         This.ChildControls.Push(Control)
+        This.FocusableControlIDs := This.GetFocusableControlIDs()
         Return This.ChildControls[This.ChildControls.Length]
     }
     
