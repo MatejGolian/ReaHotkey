@@ -50,13 +50,26 @@ ChooseStandaloneOverlay(*) {
 
 CreateOverlayMenu(Found, Type) {
     OverlayList := Found.GetOverlays()
+    SortedOverlayList := Map()
+    For OverlayNumber, OverlayEntry In OverlayList
+    If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And OverlayEntry.Metadata["Product"] != ""
+    SortedOverlayList.Set(OverlayEntry.Metadata["Product"], OverlayNumber)
+    Else
+    SortedOverlayList.Set(OverlayEntry.Label, OverlayNumber)
     OverlayMenu := Menu()
     OverlayMenu.OverlayNumbers := Array()
     If OverlayList.Length > 0 {
         VendorList := Array()
+        VendorMenuList := Map()
+        For OverlayEntry In OverlayList
+        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Vendor") And OverlayEntry.Metadata["Vendor"] != ""
+        VendorMenuList.Set(OverlayEntry.Metadata["Vendor"], OverlayEntry.Metadata["Vendor"])
+        For VendorMenu In VendorMenuList
+        OverlayMenu.Add(VendorMenu, Menu())
         VendorMenuList := Array()
-        For OverlayNumber, OverlayEntry In OverlayList {
-            If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Vendor") {
+        For OverlayText, OverlayNumber In SortedOverlayList {
+            OverlayEntry := OverlayList[OverlayNumber]
+            If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Vendor") And OverlayEntry.Metadata["Vendor"] != "" {
                 If !InArray(OverlayEntry.Metadata["Vendor"], VendorList) {
                     VendorList.Push(OverlayEntry.Metadata["Vendor"])
                     VendorMenuList.Push(Menu())
