@@ -168,7 +168,7 @@ ImportOverlays() {
 }
 
 ManageHotkeys() {
-    Global PluginWinCriteria, StandaloneWinCriteria
+    Global FoundPlugin, FoundStandalone, PluginWinCriteria, StandaloneWinCriteria
     If WinActive(PluginWinCriteria)
     If WinExist("ahk_class #32768") {
         TurnHotkeysOff()
@@ -184,6 +184,11 @@ ManageHotkeys() {
     }
     Else {
         TurnHotkeysOn()
+        If FoundPlugin Is Plugin And FoundPlugin.Overlay.GetCurrentControl().ControlType == "Edit" {
+            HotIfWinActive(PluginWinCriteria)
+            Hotkey "Enter", "Off"
+            Hotkey "Space", "Off"
+        }
         Return True
     }
     Else
@@ -196,6 +201,11 @@ ManageHotkeys() {
         If WinActive(Program["WinCriteria"]) {
             StandaloneWinCriteria := Program["WinCriteria"]
             TurnHotkeysOn()
+            If FoundStandalone Is Standalone And FoundStandalone.Overlay.GetCurrentControl().ControlType == "Edit" {
+                HotIf
+                Hotkey "Enter", "Off"
+                Hotkey "Space", "Off"
+            }
             Return True
         }
         TurnHotkeysOff()
@@ -204,7 +214,7 @@ ManageHotkeys() {
 }
 
 TurnHotkeysOff() {
-    Global PluginWinCriteria
+    Global FoundPluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
     Else
