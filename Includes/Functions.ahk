@@ -33,18 +33,18 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
 ChoosePluginOverlay(*) {
     Global FoundPlugin
     SetTimer ManageHotkeys, 0
-    TurnHotkeysOff()
+    TurnAllHotkeysOff()
     CreateOverlayMenu(FoundPlugin, "Plugin").Show()
-    TurnHotkeysOn()
+    TurnAllHotkeysOn()
     SetTimer ManageHotkeys, 100
 }
 
 ChooseStandaloneOverlay(*) {
     Global FoundStandalone
     SetTimer ManageHotkeys, 0
-    TurnHotkeysOff()
+    TurnAllHotkeysOff()
     CreateOverlayMenu(FoundStandalone, "Standalone").Show()
-    TurnHotkeysOn()
+    TurnAllHotkeysOn()
     SetTimer ManageHotkeys, 100
 }
 
@@ -170,55 +170,82 @@ ImportOverlays() {
 ManageHotkeys() {
     Global FoundPlugin, FoundStandalone, PluginWinCriteria, StandaloneWinCriteria
     If WinActive(PluginWinCriteria)
+    HotIfWinActive(PluginWinCriteria)
+    Else
+    HotIf
+    If WinActive(PluginWinCriteria)
     If WinExist("ahk_class #32768") {
-        TurnHotkeysOff()
+        TurnAllHotkeysOff()
         Return False
     }
     Else If ControlGetFocus(PluginWinCriteria) == 0 {
-        TurnHotkeysOff()
+        TurnAllHotkeysOff()
         Return False
     }
     Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
-        TurnHotkeysOff()
+        TurnAllHotkeysOff()
         Return False
     }
     Else {
-        TurnHotkeysOn()
+        Hotkey "F6", "On"
+        Hotkey "Tab", "On"
+        Hotkey "+Tab", "On"
+        Hotkey "Right", "On"
+        Hotkey "^Tab", "On"
+        Hotkey "Left", "On"
+        Hotkey "^+Tab", "On"
         If FoundPlugin Is Plugin And FoundPlugin.Overlay.GetCurrentControl().ControlType == "Edit" {
-            HotIfWinActive(PluginWinCriteria)
-            Hotkey "Enter", "Off"
             Hotkey "Space", "Off"
+            Hotkey "Enter", "Off"
         }
+        Else {
+            Hotkey "Space", "On"
+            Hotkey "Enter", "On"
+        }
+        Hotkey "Ctrl", "On"
+        Hotkey "^R", "On"
         Return True
     }
     Else
     If WinExist("ahk_class #32768") {
-        TurnHotkeysOff()
+        TurnAllHotkeysOff()
         Return False
     }
     Else {
         For Program In Standalone.List
         If WinActive(Program["WinCriteria"]) {
             StandaloneWinCriteria := Program["WinCriteria"]
-            TurnHotkeysOn()
+            Hotkey "Tab", "On"
+            Hotkey "+Tab", "On"
+            Hotkey "Right", "On"
+            Hotkey "^Tab", "On"
+            Hotkey "Left", "On"
+            Hotkey "^+Tab", "On"
             If FoundStandalone Is Standalone And FoundStandalone.Overlay.GetCurrentControl().ControlType == "Edit" {
-                HotIf
-                Hotkey "Enter", "Off"
                 Hotkey "Space", "Off"
+                Hotkey "Enter", "Off"
             }
+            Else {
+                Hotkey "Space", "On"
+                Hotkey "Enter", "On"
+            }
+            Hotkey "Ctrl", "On"
+            Hotkey "^R", "On"
             Return True
         }
-        TurnHotkeysOff()
+        TurnAllHotkeysOff()
         Return False
     }
 }
 
-TurnHotkeysOff() {
+TurnAllHotkeysOff() {
     Global FoundPluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
     Else
     HotIf
+    If WinActive(PluginWinCriteria) And WinExist("ahk_class #32768")
+    Hotkey "F6", "Off"
     Hotkey "Tab", "Off"
     Hotkey "+Tab", "Off"
     Hotkey "Right", "Off"
@@ -229,16 +256,16 @@ TurnHotkeysOff() {
     Hotkey "Enter", "Off"
     Hotkey "Ctrl", "Off"
     Hotkey "^R", "Off"
-    If WinActive(PluginWinCriteria) And WinExist("ahk_class #32768")
-    Hotkey "F6", "Off"
 }
 
-TurnHotkeysOn() {
+TurnAllHotkeysOn() {
     Global PluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
     Else
     HotIf
+    If WinActive(PluginWinCriteria) And !WinExist("ahk_class #32768")
+    Hotkey "F6", "On"
     Hotkey "Tab", "On"
     Hotkey "+Tab", "On"
     Hotkey "Right", "On"
@@ -249,6 +276,4 @@ TurnHotkeysOn() {
     Hotkey "Enter", "On"
     Hotkey "Ctrl", "On"
     Hotkey "^R", "On"
-    If WinActive(PluginWinCriteria) And !WinExist("ahk_class #32768")
-    Hotkey "F6", "On"
 }
