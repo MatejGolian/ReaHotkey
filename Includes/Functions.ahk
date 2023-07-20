@@ -33,18 +33,18 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
 ChoosePluginOverlay(*) {
     Global FoundPlugin
     SetTimer ManageHotkeys, 0
-    TurnAllHotkeysOff()
+    TurnHotkeysOff()
     CreateOverlayMenu(FoundPlugin, "Plugin").Show()
-    TurnAllHotkeysOn()
+    TurnHotkeysOn()
     SetTimer ManageHotkeys, 100
 }
 
 ChooseStandaloneOverlay(*) {
     Global FoundStandalone
     SetTimer ManageHotkeys, 0
-    TurnAllHotkeysOff()
+    TurnHotkeysOff()
     CreateOverlayMenu(FoundStandalone, "Standalone").Show()
-    TurnAllHotkeysOn()
+    TurnHotkeysOn()
     SetTimer ManageHotkeys, 100
 }
 
@@ -175,15 +175,15 @@ ManageHotkeys() {
     HotIf
     If WinActive(PluginWinCriteria)
     If WinExist("ahk_class #32768") {
-        TurnAllHotkeysOff()
+        TurnHotkeysOff()
         Return False
     }
     Else If ControlGetFocus(PluginWinCriteria) == 0 {
-        TurnAllHotkeysOff()
+        TurnHotkeysOffExceptF6()
         Return False
     }
     Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
-        TurnAllHotkeysOff()
+        TurnHotkeysOffExceptF6()
         Return False
     }
     Else {
@@ -210,7 +210,7 @@ ManageHotkeys() {
     }
     Else
     If WinExist("ahk_class #32768") {
-        TurnAllHotkeysOff()
+        TurnHotkeysOff()
         Return False
     }
     Else {
@@ -237,12 +237,12 @@ ManageHotkeys() {
             }
             Return True
         }
-        TurnAllHotkeysOff()
+        TurnHotkeysOff()
         Return False
     }
 }
 
-TurnAllHotkeysOff() {
+TurnHotkeysOff() {
     Global FoundPluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
@@ -262,7 +262,25 @@ TurnAllHotkeysOff() {
     Hotkey "^R", "Off"
 }
 
-TurnAllHotkeysOn() {
+TurnHotkeysOffExceptF6() {
+    Global FoundPluginWinCriteria
+    If WinActive(PluginWinCriteria)
+    HotIfWinActive(PluginWinCriteria)
+    Else
+    HotIf
+    Hotkey "Tab", "Off"
+    Hotkey "+Tab", "Off"
+    Hotkey "^Tab", "Off"
+    Hotkey "Right", "Off"
+    Hotkey "^+Tab", "Off"
+    Hotkey "Left", "Off"
+    Hotkey "Enter", "Off"
+    Hotkey "Space", "Off"
+    Hotkey "Ctrl", "Off"
+    Hotkey "^R", "Off"
+}
+
+TurnHotkeysOn() {
     Global PluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
