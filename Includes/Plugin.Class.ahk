@@ -2,31 +2,42 @@
 
 Class Plugin {
     
+    Chooser := True
     ControlClass := ""
     FocusFunction := ""
     SingleInstance := False
     Name := ""
     Overlay := AccessibilityOverlay()
+    Overlays := Array()
     Static ChooserOverlay := AccessibilityOverlay()
     Static DefaultOverlay := AccessibilityOverlay()
     Static Instances := Array()
     Static List := Array()
     Static UnnamedPluginName := "Unnamed Plugin"
     
-    __New(Name, ControlClass, FocusFunction := "", SingleInstance := False) {
+    __New(Name, ControlClass, FocusFunction := "", SingleInstance := False, Chooser := True) {
         If Name == ""
         This.Name := Plugin.UnnamedPluginName
         Else
         This.Name := Name
         This.ControlClass := ControlClass
         This.FocusFunction := FocusFunction
-        If SingleInstance != True And SingleInstance != False
+        If SingleInstance == True Or SingleInstance == False
+        This.SingleInstance := SingleInstance
+        Else
         This.SingleInstance := False
-        Overlays := Plugin.GetOverlays(Name)
-        If Overlays.Length == 1 {
-            This.Overlay := Overlays[1].Clone()
+        If Chooser == True Or Chooser == False
+        This.Chooser := Chooser
+        Else
+        This.Chooser := True
+        This.Overlays := Plugin.GetOverlays(Name)
+        If This.Overlays.Length == 1 {
+            This.Overlay := This.Overlays[1].Clone()
         }
-        Else If Overlays.Length > 1 {
+        Else If This.Overlays.Length > 1 And This.Chooser == False {
+            This.Overlay := This.Overlays[1].Clone()
+        }
+        Else If This.Overlays.Length > 1 And This.Chooser == True {
             This.Overlay := AccessibilityOverlay()
             This.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
         }
@@ -46,7 +57,7 @@ Class Plugin {
     }
     
     GetOverlays() {
-        Return Plugin.GetOverlays(This.Name)
+        Return This.Overlays
     }
     
     Static FindClass(ClassName) {
@@ -71,6 +82,7 @@ Class Plugin {
         If PluginNumber > 0 {
             PluginName := Plugin.List[PluginNumber]["Name"]
             SingleInstance := Plugin.List[PluginNumber]["SingleInstance"]
+            Chooser := Plugin.List[PluginNumber]["Chooser"]
             If SingleInstance == True {
                 For PluginInstance In Plugin.Instances
                 If PluginInstance.Name == PluginName
@@ -82,7 +94,7 @@ Class Plugin {
                 If PluginInstance.ControlClass == ControlClass
                 Return PluginInstance
             }
-            PluginInstance := Plugin(Plugin.List[PluginNumber]["Name"], ControlClass, Plugin.List[PluginNumber]["FocusFunction"], SingleInstance)
+            PluginInstance := Plugin(Plugin.List[PluginNumber]["Name"], ControlClass, Plugin.List[PluginNumber]["FocusFunction"], SingleInstance, Chooser)
             Plugin.Instances.Push(PluginInstance)
             Return PluginInstance
         }
@@ -100,12 +112,14 @@ Class Plugin {
         Return Array()
     }
     
-    Static Register(PluginName, ControlClasses, FocusFunction := "", SingleInstance := False) {
+    Static Register(PluginName, ControlClasses, FocusFunction := "", SingleInstance := False, Chooser := True) {
         If Plugin.FindName(PluginName) == False {
             If PluginName == ""
             PluginName := Plugin.UnnamedPluginName
             If SingleInstance != True And SingleInstance != False
             SingleInstance := False
+            If Chooser != True And Chooser != False
+            Chooser := False
             PluginEntry := Map()
             PluginEntry["Name"] := PluginName
             If ControlClasses Is Array
@@ -114,6 +128,7 @@ Class Plugin {
             PluginEntry["ControlClasses"] := Array(ControlClasses)
             PluginEntry["FocusFunction"] := FocusFunction
             PluginEntry["SingleInstance"] := SingleInstance
+            PluginEntry["Chooser"] := Chooser
             PluginEntry["Overlays"] := Array()
             Plugin.List.Push(PluginEntry)
         }

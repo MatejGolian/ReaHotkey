@@ -2,8 +2,10 @@
 
 Class Standalone {
     
+    Chooser := True
     Name := ""
     Overlay := AccessibilityOverlay()
+    Overlays := Array()
     WindowID := ""
     Static ChooserOverlay := AccessibilityOverlay()
     Static DefaultOverlay := AccessibilityOverlay()
@@ -11,17 +13,24 @@ Class Standalone {
     Static List := Array()
     Static UnnamedProgramName := "Unnamed Program"
     
-    __New(Name, WindowID) {
+    __New(Name, WindowID, Chooser := True) {
         If Name == ""
         This.Name := Standalone.UnnamedProgramName
         Else
         This.Name := Name
         This.WindowID := WindowID
-        Overlays := Standalone.GetOverlays(Name)
-        If Overlays.Length == 1 {
-            This.Overlay := Overlays[1].Clone()
+        If Chooser == True Or Chooser == False
+        This.Chooser := Chooser
+        Else
+        This.Chooser := True
+        This.Overlays := Standalone.GetOverlays(Name)
+        If This.Overlays.Length == 1 {
+            This.Overlay := This.Overlays[1].Clone()
         }
-        Else If Overlays.Length > 1 {
+        Else If This.Overlays.Length > 1 And This.Chooser == False {
+            This.Overlay := This.Overlays[1].Clone()
+        }
+        Else If This.Overlays.Length > 1 And This.Chooser == True {
             This.Overlay := AccessibilityOverlay()
             This.Overlay.AddControl(Standalone.ChooserOverlay.Clone())
         }
@@ -36,7 +45,7 @@ Class Standalone {
     }
     
     GetOverlays() {
-        Return Standalone.GetOverlays(This.Name)
+        Return This.Overlays
     }
     
     Static FindCriteria(WinCriteria) {
@@ -61,7 +70,7 @@ Class Standalone {
         Return ProgramInstance
         ProgramNumber := Standalone.FindCriteria(WinCriteria)
         If ProgramNumber != False {
-            ProgramInstance := Standalone(Standalone.List[ProgramNumber]["Name"], WinGetID("A"))
+            ProgramInstance := Standalone(Standalone.List[ProgramNumber]["Name"], WinGetID("A"), Standalone.List[ProgramNumber]["Chooser"])
             Standalone.Instances.Push(ProgramInstance)
             Return ProgramInstance
         }
@@ -79,13 +88,16 @@ Class Standalone {
         Return Array()
     }
     
-    Static Register(ProgramName, WinCriteria) {
+    Static Register(ProgramName, WinCriteria, Chooser := True) {
         If Standalone.FindName(ProgramName) == False {
             If ProgramName == ""
             ProgramName := Standalone.UnnamedProgramName
+            If Chooser != True And Chooser != False
+            Chooser := True
             ProgramEntry := Map()
             ProgramEntry["Name"] := ProgramName
             ProgramEntry["WinCriteria"] := WinCriteria
+            ProgramEntry["Chooser"] := Chooser
             ProgramEntry["Overlays"] := Array()
             Standalone.List.Push(ProgramEntry)
         }
