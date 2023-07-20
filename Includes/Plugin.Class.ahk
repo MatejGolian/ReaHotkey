@@ -30,7 +30,8 @@ Class Plugin {
         This.Chooser := Chooser
         Else
         This.Chooser := True
-        This.Overlays := Plugin.GetOverlays(Name)
+        For Overlay In Plugin.GetOverlays(Name)
+        This.Overlays.Push(Overlay.Clone())
         If This.Overlays.Length == 1 {
             This.Overlay := This.Overlays[1].Clone()
         }

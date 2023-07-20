@@ -23,7 +23,8 @@ Class Standalone {
         This.Chooser := Chooser
         Else
         This.Chooser := True
-        This.Overlays := Standalone.GetOverlays(Name)
+        For Overlay In Standalone.GetOverlays(Name)
+        This.Overlays.Push(Overlay.Clone())
         If This.Overlays.Length == 1 {
             This.Overlay := This.Overlays[1].Clone()
         }
