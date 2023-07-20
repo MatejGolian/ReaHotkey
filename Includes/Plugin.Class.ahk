@@ -38,7 +38,7 @@ Class Plugin {
     
     Focus() {
         If This.FocusFunction != ""
-        %this.FocusFunction%(This)
+        %This.FocusFunction.Name%(This)
     }
     
     GetOverlay() {

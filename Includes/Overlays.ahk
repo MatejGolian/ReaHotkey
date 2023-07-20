@@ -1,14 +1,14 @@
 #Requires AutoHotkey v2.0
 
 Plugin.DefaultOverlay := AccessibilityOverlay()
-Plugin.DefaultOverlay.AddCustomControl("FocusDefaultOverlay")
+Plugin.DefaultOverlay.AddCustomControl(FocusDefaultOverlay)
 Plugin.ChooserOverlay := AccessibilityOverlay()
-Plugin.ChooserOverlay.AddCustomButton("Choose overlay", "", "ChoosePluginOverlay")
+Plugin.ChooserOverlay.AddCustomButton("Choose overlay", "", ChoosePluginOverlay)
 
 Standalone.DefaultOverlay := AccessibilityOverlay()
-Standalone.DefaultOverlay.AddCustomControl("FocusDefaultOverlay")
+Standalone.DefaultOverlay.AddCustomControl(FocusDefaultOverlay)
 Standalone.ChooserOverlay := AccessibilityOverlay()
-Standalone.ChooserOverlay.AddCustomButton("Choose overlay", "", "ChooseStandaloneOverlay")
+Standalone.ChooserOverlay.AddCustomButton("Choose overlay", "", ChooseStandaloneOverlay)
 
 AreiaOverlay := AccessibilityOverlay("Areia")
 AreiaOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Areia")
@@ -28,7 +28,7 @@ EnginePluginHelpTab := HotspotTab("Help", 850, 124)
 EnginePluginOverlay.AddTabControl("", EnginePluginQuickEditTab, EnginePluginProEditTab, EnginePluginBrowserTab, EnginePluginMixerTab, EnginePluginPreferencesTab, EnginePluginHelpTab)
 EnginePluginEngineTab := HotspotTab("Engine", 576, 168)
 EnginePluginLibrariesTab := HotspotTab("Libraries", 650, 168)
-EnginePluginAddLibraryButton := EnginePluginLibrariesTab.AddHotspotButton("Add library", 652, 204, "FocusedEnginePluginAddLibraryButton")
+EnginePluginAddLibraryButton := EnginePluginLibrariesTab.AddHotspotButton("Add library", 652, 204, FocusedEnginePluginAddLibraryButton)
 EnginePluginUserFolderTab := HotspotTab("User folder", 716, 168)
 EnginePluginOutputSurrTab := HotspotTab("Output/Surr", 788, 168)
 EnginePluginMiscTab := HotspotTab("Misc.", 872, 168)
