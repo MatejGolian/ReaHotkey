@@ -637,28 +637,28 @@ Class CustomControl {
     SuperordinateControlID := 0
     
     __New(OnFocusFunction := "", OnActivateFunction := "") {
-    AccessibilityOverlay.TotalNumberOfControls++
-    This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-    This.OnFocusFunction := OnFocusFunction
-    This.OnAcTivateFunction := OnActivateFunction
-    AccessibilityOverlay.AllControls.Push(This)
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        This.OnFocusFunction := OnFocusFunction
+        This.OnAcTivateFunction := OnActivateFunction
+        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Activate(*) {
-    If This.OnActivateFunction != ""
-    %This.OnActivateFunction.Name%(This)
-    Return 1
+        If This.OnActivateFunction != ""
+        %This.OnActivateFunction.Name%(This)
+        Return 1
     }
     
     Focus(*) {
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    Return 1
+        If This.OnFocusFunction != ""
+        %This.OnFocusFunction.Name%(This)
+        Return 1
     }
     
-    }
-    
-    Class CustomEdit {
+}
+
+Class CustomEdit {
     
     ControlID := 0
     ControlType := "Edit"
@@ -670,36 +670,36 @@ Class CustomControl {
     UnlabelledString := "unlabelled"
     
     __New(Label, OnFocusFunction := "") {
-    AccessibilityOverlay.TotalNumberOfControls++
-    This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-    This.Label := Label
-    This.OnFocusFunction := OnFocusFunction
-    AccessibilityOverlay.AllControls.Push(This)
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        This.Label := Label
+        This.OnFocusFunction := OnFocusFunction
+        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Focus(CurrentControlID := 0) {
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
-    }
-    Return 1
+        If This.OnFocusFunction != ""
+        %This.OnFocusFunction.Name%(This)
+        If This.ControlID != CurrentControlID {
+            If This.Label == ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
+        }
+        Return 1
     }
     
     GetValue() {
-    Return This.Value
+        Return This.Value
     }
     
     SetValue(Value) {
-    This.Value := Value
+        This.Value := Value
     }
     
-    }
-    
-    Class CustomTab Extends AccessibilityOverlay {
+}
+
+Class CustomTab Extends AccessibilityOverlay {
     
     ControlType := "Tab"
     ControlTypeLabel := "tab"
@@ -707,28 +707,28 @@ Class CustomControl {
     UnlabelledString := "unlabelled"
     
     __New(Label, OnFocusFunction := "") {
-    AccessibilityOverlay.TotalNumberOfControls++
-    This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-    This.Label := Label
-    This.OnFocusFunction := OnFocusFunction
-    AccessibilityOverlay.AllControls.Push(This)
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        This.Label := Label
+        This.OnFocusFunction := OnFocusFunction
+        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Focus(ControlID := 0) {
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != ControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    
+        If This.OnFocusFunction != ""
+        %This.OnFocusFunction.Name%(This)
+        If This.ControlID != ControlID {
+            If This.Label == ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+        }
+        Return 1
     }
     
-    Class GraphicButton {
+}
+
+Class GraphicButton {
     
     ControlID := 0
     ControlType := "Button"
@@ -755,225 +755,225 @@ Class CustomControl {
     UnlabelledString := "unlabelled"
     
     __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage := "", OnHoverImage := "", OffHoverImage := "", OnFocusFunction := "", OnActivateFunction := "") {
-    AccessibilityOverlay.TotalNumberOfControls++
-    This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-    This.Label := Label
-    This.RegionX1Coordinate := RegionX1Coordinate
-    This.RegionY1Coordinate := RegionY1Coordinate
-    This.RegionX2Coordinate := RegionX2Coordinate
-    This.RegionY2Coordinate := RegionY2Coordinate
-    If OnImage == "" Or !FileExist(OnImage)
-    OnImage := ""
-    If OffImage == "" Or !FileExist(OffImage)
-    OffImage := ""
-    If OnHoverImage == "" Or !FileExist(OnHoverImage)
-    OnHoverImage := ""
-    If OffHoverImage == "" Or !FileExist(OffHoverImage)
-    OffHoverImage := ""
-    If OnImage != "" And OffImage != "" And OnImage != OffImage
-    This.IsToggle := 1
-    This.OnImage := OnImage
-    This.OffImage := OffImage
-    This.OnHoverImage := OnHoverImage
-    This.OffHoverImage := OffHoverImage
-    This.OnFocusFunction := OnFocusFunction
-    This.OnActivateFunction := OnActivateFunction
-    AccessibilityOverlay.AllControls.Push(This)
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        This.Label := Label
+        This.RegionX1Coordinate := RegionX1Coordinate
+        This.RegionY1Coordinate := RegionY1Coordinate
+        This.RegionX2Coordinate := RegionX2Coordinate
+        This.RegionY2Coordinate := RegionY2Coordinate
+        If OnImage == "" Or !FileExist(OnImage)
+        OnImage := ""
+        If OffImage == "" Or !FileExist(OffImage)
+        OffImage := ""
+        If OnHoverImage == "" Or !FileExist(OnHoverImage)
+        OnHoverImage := ""
+        If OffHoverImage == "" Or !FileExist(OffHoverImage)
+        OffHoverImage := ""
+        If OnImage != "" And OffImage != "" And OnImage != OffImage
+        This.IsToggle := 1
+        This.OnImage := OnImage
+        This.OffImage := OffImage
+        This.OnHoverImage := OnHoverImage
+        This.OffHoverImage := OffHoverImage
+        This.OnFocusFunction := OnFocusFunction
+        This.OnActivateFunction := OnActivateFunction
+        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Activate(CurrentControlID := 0) {
-    If This.IsToggle == 1 And This.ToggleState == 0 {
-    If This.CheckIfInactive() == 1 {
-    This.ToggleState := 1
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OnString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
-    }
-    If This.OnActivateFunction != ""
-    %This.OnActivateFunction.Name%(This)
-    Return 1
-    }
-    If This.CheckIfActive() == 1 {
-    This.ToggleState := 0
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OffString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.OffString)
-    }
-    If This.OnActivateFunction != ""
-    %This.OnActivateFunction.Name%(This)
-    Return 1
-    }
-    }
-    Else If This.IsToggle == 1 And This.ToggleState == 1 {
-    If This.CheckIfActive() == 1 {
-    This.ToggleState := 0
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OffString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.OffString)
-    }
-    If This.OnActivateFunction != ""
-    %This.OnActivateFunction.Name%(This)
-    Return 1
-    }
-    If This.CheckIfInactive() == 1 {
-    This.ToggleState := 1
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OnString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
-    }
-    If This.OnActivateFunction != ""
-    %This.OnActivateFunction.Name%(This)
-    Return 1
-    }
-    }
-    Else {
-    If This.CheckIfActive() == 1 {
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnActivateFunction != ""
-    %This.OnActivateFunction.Name%(This)
-    Return 1
-    }
-    }
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
-    }
-    Return 0
+        If This.IsToggle == 1 And This.ToggleState == 0 {
+            If This.CheckIfInactive() == 1 {
+                This.ToggleState := 1
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OnString)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
+                }
+                If This.OnActivateFunction != ""
+                %This.OnActivateFunction.Name%(This)
+                Return 1
+            }
+            If This.CheckIfActive() == 1 {
+                This.ToggleState := 0
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OffString)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.OffString)
+                }
+                If This.OnActivateFunction != ""
+                %This.OnActivateFunction.Name%(This)
+                Return 1
+            }
+        }
+        Else If This.IsToggle == 1 And This.ToggleState == 1 {
+            If This.CheckIfActive() == 1 {
+                This.ToggleState := 0
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OffString)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.OffString)
+                }
+                If This.OnActivateFunction != ""
+                %This.OnActivateFunction.Name%(This)
+                Return 1
+            }
+            If This.CheckIfInactive() == 1 {
+                This.ToggleState := 1
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OnString)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
+                }
+                If This.OnActivateFunction != ""
+                %This.OnActivateFunction.Name%(This)
+                Return 1
+            }
+        }
+        Else {
+            If This.CheckIfActive() == 1 {
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.OnActivateFunction != ""
+                %This.OnActivateFunction.Name%(This)
+                Return 1
+            }
+        }
+        If This.ControlID != CurrentControlID {
+            If This.Label == ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+        }
+        Return 0
     }
     
     CheckIfActive() {
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
-    If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) == 1 {
-    This.FoundXCoordinate := FoundXCoordinate
-    This.FoundYCoordinate := FoundYCoordinate
-    Return 1
-    }
-    If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) == 1 {
-    This.FoundXCoordinate := FoundXCoordinate
-    This.FoundYCoordinate := FoundYCoordinate
-    Return 1
-    }
-    This.FoundXCoordinate := 0
-    This.FoundYCoordinate := 0
-    Return 0
+        FoundXCoordinate := 0
+        FoundYCoordinate := 0
+        If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) == 1 {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) == 1 {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        This.FoundXCoordinate := 0
+        This.FoundYCoordinate := 0
+        Return 0
     }
     
     CheckIfInactive() {
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
-    If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffImage) == 1 {
-    This.FoundXCoordinate := FoundXCoordinate
-    This.FoundYCoordinate := FoundYCoordinate
-    Return 1
-    }
-    If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffHoverImage) == 1 {
-    This.FoundXCoordinate := FoundXCoordinate
-    This.FoundYCoordinate := FoundYCoordinate
-    Return 1
-    }
-    This.FoundXCoordinate := 0
-    This.FoundYCoordinate := 0
-    Return 0
+        FoundXCoordinate := 0
+        FoundYCoordinate := 0
+        If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffImage) == 1 {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffHoverImage) == 1 {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        This.FoundXCoordinate := 0
+        This.FoundYCoordinate := 0
+        Return 0
     }
     
     Focus(CurrentControlID := 0) {
-    If This.IsToggle == 1 And This.ToggleState == 0 {
-    If This.CheckIfInactive() == 1 {
-    This.ToggleState := 0
-    MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    If This.CheckIfActive() == 1 {
-    This.ToggleState := 1
-    MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    }
-    Else If This.IsToggle == 1 And This.ToggleState == 1 {
-    If This.CheckIfActive() == 1 {
-    This.ToggleState := 1
-    MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    If This.CheckIfInactive() == 1 {
-    This.ToggleState := 0
-    MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    }
-    Else {
-    If This.CheckIfActive() == 1 {
-    MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    }
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
-    }
-    Return 0
-    }
-    
+        If This.IsToggle == 1 And This.ToggleState == 0 {
+            If This.CheckIfInactive() == 1 {
+                This.ToggleState := 0
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+            If This.CheckIfActive() == 1 {
+                This.ToggleState := 1
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+        }
+        Else If This.IsToggle == 1 And This.ToggleState == 1 {
+            If This.CheckIfActive() == 1 {
+                This.ToggleState := 1
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+            If This.CheckIfInactive() == 1 {
+                This.ToggleState := 0
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+        }
+        Else {
+            If This.CheckIfActive() == 1 {
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+        }
+        If This.ControlID != CurrentControlID {
+            If This.Label == ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+        }
+        Return 0
     }
     
-    Class GraphicCheckbox {
+}
+
+Class GraphicCheckbox {
     
     ControlID := 0
     ControlType := "Checkbox"
@@ -999,201 +999,201 @@ Class CustomControl {
     UnlabelledString := "unlabelled"
     
     __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, CheckedImage, UncheckedImage, CheckedHoverImage := "", UncheckedHoverImage := "", OnFocusFunction := "", OnActivateFunction := "") {
-    AccessibilityOverlay.TotalNumberOfControls++
-    This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-    This.Label := Label
-    This.RegionX1Coordinate := RegionX1Coordinate
-    This.RegionY1Coordinate := RegionY1Coordinate
-    This.RegionX2Coordinate := RegionX2Coordinate
-    This.RegionY2Coordinate := RegionY2Coordinate
-    If CheckedImage == "" Or !FileExist(CheckedImage)
-    CheckedImage := ""
-    If UncheckedImage == "" Or !FileExist(UncheckedImage)
-    UncheckedImage := ""
-    If CheckedHoverImage == "" Or !FileExist(CheckedHoverImage)
-    CheckedHoverImage := ""
-    If UncheckedHoverImage == "" Or !FileExist(UncheckedHoverImage)
-    UncheckedHoverImage := ""
-    This.CheckedImage := CheckedImage
-    This.UncheckedImage := UncheckedImage
-    This.CheckedHoverImage := CheckedHoverImage
-    This.UncheckedHoverImage := UncheckedHoverImage
-    This.OnFocusFunction := OnFocusFunction
-    This.OnActivateFunction := OnActivateFunction
-    AccessibilityOverlay.AllControls.Push(This)
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        This.Label := Label
+        This.RegionX1Coordinate := RegionX1Coordinate
+        This.RegionY1Coordinate := RegionY1Coordinate
+        This.RegionX2Coordinate := RegionX2Coordinate
+        This.RegionY2Coordinate := RegionY2Coordinate
+        If CheckedImage == "" Or !FileExist(CheckedImage)
+        CheckedImage := ""
+        If UncheckedImage == "" Or !FileExist(UncheckedImage)
+        UncheckedImage := ""
+        If CheckedHoverImage == "" Or !FileExist(CheckedHoverImage)
+        CheckedHoverImage := ""
+        If UncheckedHoverImage == "" Or !FileExist(UncheckedHoverImage)
+        UncheckedHoverImage := ""
+        This.CheckedImage := CheckedImage
+        This.UncheckedImage := UncheckedImage
+        This.CheckedHoverImage := CheckedHoverImage
+        This.UncheckedHoverImage := UncheckedHoverImage
+        This.OnFocusFunction := OnFocusFunction
+        This.OnActivateFunction := OnActivateFunction
+        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Activate(CurrentControlID := 0) {
-    If This.ToggleState == 0 {
-    If This.CheckIfInactive() == 1 {
-    This.ToggleState := 1
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OnString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
-    }
-    If This.OnActivateFunction != ""
-    %This.OnActivateFunction.Name%(This)
-    Return 1
-    }
-    If This.CheckIfActive() == 1 {
-    This.ToggleState := 0
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.UncheckedString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.UncheckedString)
-    }
-    If This.OnActivateFunction != ""
-    %This.OnActivateFunction.Name%(This)
-    Return 1
-    }
-    }
-    Else {
-    If This.CheckIfActive() == 1 {
-    This.ToggleState := 0
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.UncheckedString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.UncheckedString)
-    }
-    If This.OnActivateFunction != ""
-    %This.OnActivateFunction.Name%(This)
-    Return 1
-    }
-    If This.CheckIfInactive() == 1 {
-    This.ToggleState := 1
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OnString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
-    }
-    If This.OnActivateFunction != ""
-    %This.OnActivateFunction.Name%(This)
-    Return 1
-    }
-    }
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
-    }
-    Return 0
+        If This.ToggleState == 0 {
+            If This.CheckIfInactive() == 1 {
+                This.ToggleState := 1
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OnString)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
+                }
+                If This.OnActivateFunction != ""
+                %This.OnActivateFunction.Name%(This)
+                Return 1
+            }
+            If This.CheckIfActive() == 1 {
+                This.ToggleState := 0
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.UncheckedString)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.UncheckedString)
+                }
+                If This.OnActivateFunction != ""
+                %This.OnActivateFunction.Name%(This)
+                Return 1
+            }
+        }
+        Else {
+            If This.CheckIfActive() == 1 {
+                This.ToggleState := 0
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.UncheckedString)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.UncheckedString)
+                }
+                If This.OnActivateFunction != ""
+                %This.OnActivateFunction.Name%(This)
+                Return 1
+            }
+            If This.CheckIfInactive() == 1 {
+                This.ToggleState := 1
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OnString)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
+                }
+                If This.OnActivateFunction != ""
+                %This.OnActivateFunction.Name%(This)
+                Return 1
+            }
+        }
+        If This.ControlID != CurrentControlID {
+            If This.Label == ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+        }
+        Return 0
     }
     
     CheckIfActive() {
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
-    If This.CheckedImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.CheckedImage) == 1 {
-    This.FoundXCoordinate := FoundXCoordinate
-    This.FoundYCoordinate := FoundYCoordinate
-    Return 1
-    }
-    If This.CheckedHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.CheckedHoverImage) == 1 {
-    This.FoundXCoordinate := FoundXCoordinate
-    This.FoundYCoordinate := FoundYCoordinate
-    Return 1
-    }
-    This.FoundXCoordinate := 0
-    This.FoundYCoordinate := 0
-    Return 0
+        FoundXCoordinate := 0
+        FoundYCoordinate := 0
+        If This.CheckedImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.CheckedImage) == 1 {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        If This.CheckedHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.CheckedHoverImage) == 1 {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        This.FoundXCoordinate := 0
+        This.FoundYCoordinate := 0
+        Return 0
     }
     
     CheckIfInactive() {
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
-    If This.UncheckedImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.UncheckedImage) == 1 {
-    This.FoundXCoordinate := FoundXCoordinate
-    This.FoundYCoordinate := FoundYCoordinate
-    Return 1
-    }
-    If This.UncheckedHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.UncheckedHoverImage) == 1 {
-    This.FoundXCoordinate := FoundXCoordinate
-    This.FoundYCoordinate := FoundYCoordinate
-    Return 1
-    }
-    This.FoundXCoordinate := 0
-    This.FoundYCoordinate := 0
-    Return 0
+        FoundXCoordinate := 0
+        FoundYCoordinate := 0
+        If This.UncheckedImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.UncheckedImage) == 1 {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        If This.UncheckedHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.UncheckedHoverImage) == 1 {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        This.FoundXCoordinate := 0
+        This.FoundYCoordinate := 0
+        Return 0
     }
     
     Focus(CurrentControlID := 0) {
-    If This.ToggleState == 0 {
-    If This.CheckIfInactive() == 1 {
-    This.ToggleState := 0
-    MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    If This.CheckIfActive() == 1 {
-    This.ToggleState := 1
-    MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    }
-    Else {
-    If This.CheckIfActive() == 1 {
-    This.ToggleState := 1
-    MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    If This.CheckIfInactive() == 1 {
-    This.ToggleState := 0
-    MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    }
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
-    }
-    Return 0
-    }
-    
+        If This.ToggleState == 0 {
+            If This.CheckIfInactive() == 1 {
+                This.ToggleState := 0
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+            If This.CheckIfActive() == 1 {
+                This.ToggleState := 1
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+        }
+        Else {
+            If This.CheckIfActive() == 1 {
+                This.ToggleState := 1
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+            If This.CheckIfInactive() == 1 {
+                This.ToggleState := 0
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != CurrentControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+        }
+        If This.ControlID != CurrentControlID {
+            If This.Label == ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+        }
+        Return 0
     }
     
-    Class GraphicTab Extends AccessibilityOverlay {
+}
+
+Class GraphicTab Extends AccessibilityOverlay {
     
     ControlType := "Tab"
     ControlTypeLabel := "tab"
@@ -1213,144 +1213,144 @@ Class CustomControl {
     UnlabelledString := "unlabelled"
     
     __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage := "", OnHoverImage := "", OffHoverImage := "", OnFocusFunction := "") {
-    AccessibilityOverlay.TotalNumberOfControls++
-    This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-    This.Label := Label
-    This.RegionX1Coordinate := RegionX1Coordinate
-    This.RegionY1Coordinate := RegionY1Coordinate
-    This.RegionX2Coordinate := RegionX2Coordinate
-    This.RegionY2Coordinate := RegionY2Coordinate
-    If OnImage == "" Or !FileExist(OnImage)
-    OnImage := ""
-    If OffImage == "" Or !FileExist(OffImage)
-    OffImage := ""
-    If OnHoverImage == "" Or !FileExist(OnHoverImage)
-    OnHoverImage := ""
-    If OffHoverImage == "" Or !FileExist(OffHoverImage)
-    OffHoverImage := ""
-    If OnImage != "" And OffImage != "" And OnImage != OffImage
-    This.IsToggle := 1
-    This.OnImage := OnImage
-    This.OffImage := OffImage
-    This.OnHoverImage := OnHoverImage
-    This.OffHoverImage := OffHoverImage
-    This.OnFocusFunction := OnFocusFunction
-    AccessibilityOverlay.AllControls.Push(This)
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        This.Label := Label
+        This.RegionX1Coordinate := RegionX1Coordinate
+        This.RegionY1Coordinate := RegionY1Coordinate
+        This.RegionX2Coordinate := RegionX2Coordinate
+        This.RegionY2Coordinate := RegionY2Coordinate
+        If OnImage == "" Or !FileExist(OnImage)
+        OnImage := ""
+        If OffImage == "" Or !FileExist(OffImage)
+        OffImage := ""
+        If OnHoverImage == "" Or !FileExist(OnHoverImage)
+        OnHoverImage := ""
+        If OffHoverImage == "" Or !FileExist(OffHoverImage)
+        OffHoverImage := ""
+        If OnImage != "" And OffImage != "" And OnImage != OffImage
+        This.IsToggle := 1
+        This.OnImage := OnImage
+        This.OffImage := OffImage
+        This.OnHoverImage := OnHoverImage
+        This.OffHoverImage := OffHoverImage
+        This.OnFocusFunction := OnFocusFunction
+        AccessibilityOverlay.AllControls.Push(This)
     }
     
     CheckIfActive() {
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
-    If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) == 1 {
-    This.FoundXCoordinate := FoundXCoordinate
-    This.FoundYCoordinate := FoundYCoordinate
-    Return 1
-    }
-    If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) == 1 {
-    This.FoundXCoordinate := FoundXCoordinate
-    This.FoundYCoordinate := FoundYCoordinate
-    Return 1
-    }
-    This.FoundXCoordinate := 0
-    This.FoundYCoordinate := 0
-    Return 0
+        FoundXCoordinate := 0
+        FoundYCoordinate := 0
+        If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) == 1 {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) == 1 {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        This.FoundXCoordinate := 0
+        This.FoundYCoordinate := 0
+        Return 0
     }
     
     CheckIfInactive() {
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
-    If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffImage) == 1 {
-    This.FoundXCoordinate := FoundXCoordinate
-    This.FoundYCoordinate := FoundYCoordinate
-    Return 1
-    }
-    If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffHoverImage) == 1 {
-    This.FoundXCoordinate := FoundXCoordinate
-    This.FoundYCoordinate := FoundYCoordinate
-    Return 1
-    }
-    This.FoundXCoordinate := 0
-    This.FoundYCoordinate := 0
-    Return 0
+        FoundXCoordinate := 0
+        FoundYCoordinate := 0
+        If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffImage) == 1 {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffHoverImage) == 1 {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        This.FoundXCoordinate := 0
+        This.FoundYCoordinate := 0
+        Return 0
     }
     
     Focus(ControlID := 0) {
-    If This.IsToggle == 1 And This.ToggleState == 0 {
-    If This.CheckIfInactive() == 1 {
-    This.ToggleState := 0
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != ControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    If This.CheckIfActive() == 1 {
-    This.ToggleState := 1
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != ControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    }
-    Else If This.IsToggle == 1 And This.ToggleState == 1 {
-    If This.CheckIfActive() == 1 {
-    This.ToggleState := 1
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != ControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    If This.CheckIfInactive() == 1 {
-    This.ToggleState := 0
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != ControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    }
-    Else {
-    If This.CheckIfActive() == 1 {
-    Click This.FoundXCoordinate, This.FoundYCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != ControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    }
-    Return 0
-    }
-    
+        If This.IsToggle == 1 And This.ToggleState == 0 {
+            If This.CheckIfInactive() == 1 {
+                This.ToggleState := 0
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != ControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+            If This.CheckIfActive() == 1 {
+                This.ToggleState := 1
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != ControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+        }
+        Else If This.IsToggle == 1 And This.ToggleState == 1 {
+            If This.CheckIfActive() == 1 {
+                This.ToggleState := 1
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != ControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+            If This.CheckIfInactive() == 1 {
+                This.ToggleState := 0
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != ControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+        }
+        Else {
+            If This.CheckIfActive() == 1 {
+                If This.OnFocusFunction != ""
+                %This.OnFocusFunction.Name%(This)
+                Click This.FoundXCoordinate, This.FoundYCoordinate
+                If This.ControlID != ControlID {
+                    If This.Label == ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                }
+                Return 1
+            }
+        }
+        Return 0
     }
     
-    Class HotspotButton {
+}
+
+Class HotspotButton {
     
     ControlID := 0
     ControlType := "Button"
@@ -1364,45 +1364,45 @@ Class CustomControl {
     UnlabelledString := "unlabelled"
     
     __New(Label, XCoordinate, YCoordinate, OnFocusFunction := "", OnActivateFunction := "") {
-    AccessibilityOverlay.TotalNumberOfControls++
-    This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-    This.Label := Label
-    This.XCoordinate := XCoordinate
-    This.YCoordinate := YCoordinate
-    This.OnFocusFunction := OnFocusFunction
-    This.OnAcTivateFunction := OnActivateFunction
-    AccessibilityOverlay.AllControls.Push(This)
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        This.Label := Label
+        This.XCoordinate := XCoordinate
+        This.YCoordinate := YCoordinate
+        This.OnFocusFunction := OnFocusFunction
+        This.OnAcTivateFunction := OnActivateFunction
+        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Activate(CurrentControlID := 0) {
-    Click This.XCoordinate, This.YCoordinate
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    If This.OnActivateFunction != ""
-    %This.OnActivateFunction.Name%(This)
-    Return 1
+        Click This.XCoordinate, This.YCoordinate
+        If This.ControlID != CurrentControlID {
+            If This.Label == ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+        }
+        If This.OnActivateFunction != ""
+        %This.OnActivateFunction.Name%(This)
+        Return 1
     }
     
     Focus(CurrentControlID := 0) {
-    MouseMove This.XCoordinate, This.YCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    
+        MouseMove This.XCoordinate, This.YCoordinate
+        If This.OnFocusFunction != ""
+        %This.OnFocusFunction.Name%(This)
+        If This.ControlID != CurrentControlID {
+            If This.Label == ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+        }
+        Return 1
     }
     
-    Class HotspotEdit {
+}
+
+Class HotspotEdit {
     
     ControlID := 0
     ControlType := "Edit"
@@ -1416,39 +1416,39 @@ Class CustomControl {
     UnlabelledString := "unlabelled"
     
     __New(Label, XCoordinate, YCoordinate, OnFocusFunction := "") {
-    AccessibilityOverlay.TotalNumberOfControls++
-    This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-    This.Label := Label
-    This.XCoordinate := XCoordinate
-    This.YCoordinate := YCoordinate
-    This.OnFocusFunction := OnFocusFunction
-    AccessibilityOverlay.AllControls.Push(This)
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        This.Label := Label
+        This.XCoordinate := XCoordinate
+        This.YCoordinate := YCoordinate
+        This.OnFocusFunction := OnFocusFunction
+        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Focus(CurrentControlID := 0) {
-    Click This.XCoordinate, This.YCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != CurrentControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
-    }
-    Return 1
+        Click This.XCoordinate, This.YCoordinate
+        If This.OnFocusFunction != ""
+        %This.OnFocusFunction.Name%(This)
+        If This.ControlID != CurrentControlID {
+            If This.Label == ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
+        }
+        Return 1
     }
     
     GetValue() {
-    Return This.Value
+        Return This.Value
     }
     
     SetValue(Value) {
-    This.Value := Value
+        This.Value := Value
     }
     
-    }
-    
-    Class HotspotTab Extends AccessibilityOverlay {
+}
+
+Class HotspotTab Extends AccessibilityOverlay {
     
     ControlType := "Tab"
     ControlTypeLabel := "tab"
@@ -1458,31 +1458,31 @@ Class CustomControl {
     UnlabelledString := "unlabelled"
     
     __New(Label, XCoordinate, YCoordinate, OnFocusFunction := "") {
-    AccessibilityOverlay.TotalNumberOfControls++
-    This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-    This.Label := Label
-    This.XCoordinate := XCoordinate
-    This.YCoordinate := YCoordinate
-    This.OnFocusFunction := OnFocusFunction
-    AccessibilityOverlay.AllControls.Push(This)
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        This.Label := Label
+        This.XCoordinate := XCoordinate
+        This.YCoordinate := YCoordinate
+        This.OnFocusFunction := OnFocusFunction
+        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Focus(ControlID := 0) {
-    Click This.XCoordinate, This.YCoordinate
-    If This.OnFocusFunction != ""
-    %This.OnFocusFunction.Name%(This)
-    If This.ControlID != ControlID {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
-    }
-    
+        Click This.XCoordinate, This.YCoordinate
+        If This.OnFocusFunction != ""
+        %This.OnFocusFunction.Name%(This)
+        If This.ControlID != ControlID {
+            If This.Label == ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+        }
+        Return 1
     }
     
-    Class TabControl {
+}
+
+Class TabControl {
     
     ControlID := 0
     ControlType := "TabControl"
@@ -1496,92 +1496,91 @@ Class CustomControl {
     UnlabelledString := ""
     
     __New(Label := "", Tabs*) {
-    AccessibilityOverlay.TotalNumberOfControls++
-    This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-    This.Label := Label
-    If Tabs.Length > 0
-    For Tab In Tabs
-    This.AddTabs(Tab)
-    AccessibilityOverlay.AllControls.Push(This)
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        This.Label := Label
+        If Tabs.Length > 0
+        For Tab In Tabs
+        This.AddTabs(Tab)
+        AccessibilityOverlay.AllControls.Push(This)
     }
     
     AddTabs(Tabs*) {
-    If Tabs.Length > 0
-    For Tab In Tabs {
-    Tab.SuperordinateControlID := This.ControlID
-    This.Tabs.Push(Tab)
-    }
+        If Tabs.Length > 0
+        For Tab In Tabs {
+            Tab.SuperordinateControlID := This.ControlID
+            This.Tabs.Push(Tab)
+        }
     }
     
     Focus(CurrentControlID := 0) {
-    If This.Tabs.Length > 0 {
-    If This.Tabs[This.CurrentTab].Focus(This.Tabs[This.CurrentTab].ControlID) == 1 {
-    If This.ControlID == CurrentControlID {
-    If This.Tabs[This.CurrentTab].Label == ""
-    AccessibilityOverlay.Speak(This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString)
-    Else
-    AccessibilityOverlay.Speak(This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString)
-    }
-    Else {
-    If This.Label == "" {
-    If This.Tabs[This.CurrentTab].Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString)
-    Else
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString)
-    }
-    Else {
-    If This.Tabs[This.CurrentTab].Label == ""
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString)
-    }
-    }
-    }
-    Else {
-    If This.ControlID == CurrentControlID {
-    If This.Tabs[This.CurrentTab].Label == ""
-    AccessibilityOverlay.Speak(This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString)
-    Else
-    AccessibilityOverlay.Speak(This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString)
-    }
-    Else {
-    If This.Label == "" {
-    If This.Tabs[This.CurrentTab].Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString)
-    Else
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString)
-    }
-    Else {
-    If This.Tabs[This.CurrentTab].Label == ""
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString)
-    }
-    }
-    }
-    }
-    Else {
-    If This.Label == ""
-    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-    Else
-    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-    }
-    Return 1
+        If This.Tabs.Length > 0 {
+            If This.Tabs[This.CurrentTab].Focus(This.Tabs[This.CurrentTab].ControlID) == 1 {
+                If This.ControlID == CurrentControlID {
+                    If This.Tabs[This.CurrentTab].Label == ""
+                    AccessibilityOverlay.Speak(This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString)
+                    Else
+                    AccessibilityOverlay.Speak(This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString)
+                }
+                Else {
+                    If This.Label == "" {
+                        If This.Tabs[This.CurrentTab].Label == ""
+                        AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString)
+                        Else
+                        AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString)
+                    }
+                    Else {
+                        If This.Tabs[This.CurrentTab].Label == ""
+                        AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString)
+                        Else
+                        AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString)
+                    }
+                }
+            }
+            Else {
+                If This.ControlID == CurrentControlID {
+                    If This.Tabs[This.CurrentTab].Label == ""
+                    AccessibilityOverlay.Speak(This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString)
+                    Else
+                    AccessibilityOverlay.Speak(This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString)
+                }
+                Else {
+                    If This.Label == "" {
+                        If This.Tabs[This.CurrentTab].Label == ""
+                        AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString)
+                        Else
+                        AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString)
+                    }
+                    Else {
+                        If This.Tabs[This.CurrentTab].Label == ""
+                        AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString)
+                        Else
+                        AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString)
+                    }
+                }
+            }
+        }
+        Else {
+            If This.Label == ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+        }
+        Return 1
     }
     
     GetCurrentTab() {
-    Return This.Tabs.Get(This.CurrentTab, 0)
+        Return This.Tabs.Get(This.CurrentTab, 0)
     }
     
     GetTab(TabNumber) {
-    Return This.Tabs.Get(TabNumber, 0)
+        Return This.Tabs.Get(TabNumber, 0)
     }
     
     Reset() {
-    This.CurrentTab := 1
-    For Tab In This.Tabs
-    Tab.Reset()
+        This.CurrentTab := 1
+        For Tab In This.Tabs
+        Tab.Reset()
     }
     
-    }
-        
+}
