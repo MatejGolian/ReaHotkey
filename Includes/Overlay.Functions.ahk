@@ -2,7 +2,7 @@
 
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
     Global FoundPlugin
-    OverlayList := FoundPlugin.GetOverlays()
+    OverlayList := Plugin.GetOverlays(FoundPlugin.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
     If FoundPlugin.Overlay.Label != OverlayList[OverlayNumber].Label {
         FoundPlugin.Overlay := AccessibilityOverlay(ItemName)
@@ -17,7 +17,7 @@ ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
 
 ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
     Global FoundStandalone
-    OverlayList := FoundStandalone.GetOverlays()
+    OverlayList := Standalone.GetOverlays(FoundStandalone.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
     If FoundStandalone.Overlay.Label != OverlayList[OverlayNumber].Label {
         FoundStandalone.Overlay := AccessibilityOverlay(ItemName)
@@ -49,7 +49,7 @@ ChooseStandaloneOverlay(*) {
 }
 
 CreateOverlayMenu(Found, Type) {
-    OverlayList := Found.GetOverlays()
+    OverlayList := %Type%.GetOverlays(Found.Name)
     SortedOverlayList := Map()
     For OverlayNumber, OverlayEntry In OverlayList
     If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And OverlayEntry.Metadata["Product"] != ""
