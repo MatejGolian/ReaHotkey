@@ -64,6 +64,15 @@ Class AccessibilityOverlay {
         Return This.ChildControls[This.ChildControls.Length]
     }
     
+    AddControlAt(Index, Control) {
+        If Index <= 0 Or Index > This.ChildControls.Length
+        Index := This.ChildControls.Length + 1
+        Control.SuperordinateControlID := This.ControlID
+        This.ChildControls.InsertAt(Index, Control)
+        This.FocusableControlIDs := This.GetFocusableControlIDs()
+        Return This.ChildControls[Index]
+    }
+    
     Clone() {
         Switch(This.__Class) {
             Case "AccessibilityOverlay":
@@ -271,6 +280,34 @@ Class AccessibilityOverlay {
             }
         }
         Return FocusableControlIDs
+    }
+    
+    RemoveControl() {
+        If This.ChildControls.Length > 0 {
+            This.ChildControls.Pop()
+            This.FocusableControlIDs := This.GetFocusableControlIDs()
+            Found := This.FindFocusableControlID(This.CurrentControlID)
+            If Found == 0
+            This.CurrentControlID := 0
+            This.SetCurrentControlID(This.CurrentControlID)
+            Return 1
+        }
+        Return 0
+    }
+    
+    RemoveControlAt(Index) {
+        If This.ChildControls.Get(Index) {
+            This.ChildControls.RemoveAt(Index)
+            This.FocusableControlIDs := This.GetFocusableControlIDs()
+            Found := This.FindFocusableControlID(This.CurrentControlID)
+            If Found <= 1
+            This.CurrentControlID := This.FocusableControlIDs[This.FocusableControlIDs.Length]
+            Else
+            This.CurrentControlID := This.FocusableControlIDs[Found - 1]
+            This.SetCurrentControlID(This.CurrentControlID)
+            Return 1
+        }
+        Return 0
     }
     
     Reset() {
