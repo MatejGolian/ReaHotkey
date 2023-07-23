@@ -106,6 +106,8 @@ Class AccessibilityOverlay {
                 Clone.AddHotspotButton(CurrentControl.Label, CurrentControl.XCoordinate, CurrentControl.YCoordinate, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
                 Case "HotspotEdit":
                 Clone.AddHotspotEdit(CurrentControl.Label, CurrentControl.XCoordinate, CurrentControl.YCoordinate, CurrentControl.OnFocusFunction)
+                Case "SpeechOutput":
+                Clone.AddSpeechOutput(CurrentControl.Message)
                 Case "TabControl":
                 If CurrentControl.Tabs.Length == 0 {
                     Clone.AddTabControl(CurrentControl.Label)
@@ -637,6 +639,11 @@ Class AccessibilityOverlay {
     
     AddHotspotEdit(Label, XCoordinate, YCoordinate, OnFocusFunction := "") {
         Control := HotspotEdit(Label, XCoordinate, YCoordinate, OnFocusFunction)
+        Return This.AddControl(Control)
+    }
+    
+    AddSpeechOutput(Message := "") {
+        Control := SpeechOutput(Message)
         Return This.AddControl(Control)
     }
     
@@ -1546,6 +1553,28 @@ Class HotspotTab Extends AccessibilityOverlay {
             Else
             AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
         }
+        Return 1
+    }
+    
+}
+
+Class SpeechOutput {
+    
+    ControlID := 0
+    ControlType := "SpeechOutput"
+    ControlTypeLabel := "speech output"
+    Message := ""
+    SuperordinateControlID := 0
+    
+    __New(Message := "") {
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        This.Message := Message
+        AccessibilityOverlay.AllControls.Push(This)
+    }
+    
+    Focus(*) {
+        AccessibilityOverlay.Speak(This.Message)
         Return 1
     }
     

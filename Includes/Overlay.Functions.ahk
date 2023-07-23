@@ -117,10 +117,6 @@ CreateOverlayMenu(Found, Type) {
     Return OverlayMenu
 }
 
-FocusDefaultOverlay(Overlay) {
-    AccessibilityOverlay.Speak("No overlay defined")
-}
-
 FocusEnginePlugin(EngineInstance) {
     EngineOverlay := EngineInstance.GetOverlay()
     CurrentEngineControl := EngineOverlay.GetCurrentControl()

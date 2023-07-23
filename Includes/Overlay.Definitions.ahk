@@ -1,12 +1,12 @@
 #Requires AutoHotkey v2.0
 
 Plugin.DefaultOverlay := AccessibilityOverlay()
-Plugin.DefaultOverlay.AddCustomControl(FocusDefaultOverlay)
+Plugin.DefaultOverlay.AddSpeechOutput("No overlay defined")
 Plugin.ChooserOverlay := AccessibilityOverlay()
 Plugin.ChooserOverlay.AddCustomButton("Choose overlay",, ChoosePluginOverlay)
 
 Standalone.DefaultOverlay := AccessibilityOverlay()
-Standalone.DefaultOverlay.AddCustomControl(FocusDefaultOverlay)
+Standalone.DefaultOverlay.AddSpeechOutput("No overlay defined")
 Standalone.ChooserOverlay := AccessibilityOverlay()
 Standalone.ChooserOverlay.AddCustomButton("Choose overlay",, ChooseStandaloneOverlay)
 
