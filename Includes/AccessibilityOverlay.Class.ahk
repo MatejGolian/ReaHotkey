@@ -248,6 +248,10 @@ Class AccessibilityOverlay {
         Return 0
     }
     
+    GetChildControl(Index) {
+        Return This.ChildControls.Get(Index, 0)
+    }
+    
     GetCurrentControl() {
         Return AccessibilityOverlay.GetControl(This.CurrentControlID)
     }
