@@ -3,6 +3,7 @@
 Class Standalone {
     
     Chooser := True
+    InitFunction := ""
     Name := ""
     Overlay := AccessibilityOverlay()
     Overlays := Array()
@@ -13,12 +14,13 @@ Class Standalone {
     Static List := Array()
     Static UnnamedProgramName := "Unnamed Program"
     
-    __New(Name, WindowID, Chooser := True) {
+    __New(Name, WindowID, InitFunction := "", Chooser := True) {
         If Name == ""
         This.Name := Standalone.UnnamedProgramName
         Else
         This.Name := Name
         This.WindowID := WindowID
+        This.InitFunction := InitFunction
         If Chooser == True Or Chooser == False
         This.Chooser := Chooser
         Else
@@ -47,6 +49,11 @@ Class Standalone {
     
     GetOverlays() {
         Return This.Overlays
+    }
+    
+    Init() {
+        If This.InitFunction != ""
+        %This.InitFunction.Name%(This)
     }
     
     Static FindCriteria(WinCriteria) {
@@ -80,8 +87,9 @@ Class Standalone {
         Return ProgramInstance
         ProgramNumber := Standalone.FindCriteria(WinCriteria)
         If ProgramNumber != False {
-            ProgramInstance := Standalone(Standalone.List[ProgramNumber]["Name"], WinGetID("A"), Standalone.List[ProgramNumber]["Chooser"])
+            ProgramInstance := Standalone(Standalone.List[ProgramNumber]["Name"], WinGetID("A"), Standalone.List[ProgramNumber]["InitFunction"], Standalone.List[ProgramNumber]["Chooser"])
             Standalone.Instances.Push(ProgramInstance)
+            ProgramInstance.Init()
             Return ProgramInstance
         }
         Return Standalone("", WinID)
@@ -127,7 +135,7 @@ Class Standalone {
         }
     }
     
-    Static Register(ProgramName, WinCriteria, Chooser := True) {
+    Static Register(ProgramName, WinCriteria, InitFunction := "", Chooser := True) {
         If Standalone.FindName(ProgramName) == False {
             If ProgramName == ""
             ProgramName := Standalone.UnnamedProgramName
@@ -136,6 +144,7 @@ Class Standalone {
             ProgramEntry := Map()
             ProgramEntry["Name"] := ProgramName
             ProgramEntry["WinCriteria"] := WinCriteria
+            ProgramEntry["InitFunction"] := InitFunction
             ProgramEntry["Chooser"] := Chooser
             ProgramEntry["Overlays"] := Array()
             ProgramEntry["Timers"] := Array()
