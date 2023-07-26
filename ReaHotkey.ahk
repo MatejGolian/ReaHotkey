@@ -37,3 +37,4 @@ ImportOverlays()
 #Include Includes/Standalone.Context.ahk
 
 SetTimer ManageHotkeys, 100
+SetTimer ManageTimers, 100

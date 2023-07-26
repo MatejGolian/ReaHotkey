@@ -65,6 +65,15 @@ Class Standalone {
         Return 0
     }
     
+    Static FindTimer(ProgramName, Function) {
+        ProgramNumber := Standalone.FindName(ProgramName)
+        If ProgramNumber > 0
+        For TimerNumber, TimerParams In Standalone.List[ProgramNumber]["Timers"]
+        If TimerParams["Function"] == Function
+        Return TimerNumber
+        Return 0
+    }
+    
     Static Get(WinCriteria, WinID) {
         For ProgramInstance In Standalone.Instances
         If ProgramInstance.WindowID == WinID
@@ -89,6 +98,35 @@ Class Standalone {
         Return Array()
     }
     
+    Static GetTimers(ProgramName) {
+        ProgramNumber := Standalone.FindName(ProgramName)
+        If ProgramNumber > 0
+        Return Standalone.List[ProgramNumber]["Timers"]
+        Return Array()
+    }
+    
+    Static SetTimer(ProgramName, Function, Period := "", Priority := "") {
+        ProgramNumber := Standalone.FindName(ProgramName)
+        TimerNumber := Standalone.FindTimer(ProgramName, Function)
+        If ProgramNumber > 0 And TimerNumber == 0 {
+            If Period == ""
+            Period := 250
+            If Priority == ""
+            Priority := 0
+            Standalone.List[ProgramNumber]["Timers"].Push(Map("Function", Function, "Period", Period, "Priority", Priority, "Enabled", False))
+        }
+        Else {
+            If TimerNumber > 0 {
+                If Period == ""
+                Period := Standalone.List[ProgramNumber]["Timers"][TimerNumber]["Period"]
+                If Priority == ""
+                Priority := Standalone.List[ProgramNumber]["Timers"][TimerNumber]["Priority"]
+                Standalone.List[ProgramNumber]["Timers"][TimerNumber]["Period"] := Period
+                Standalone.List[ProgramNumber]["Timers"][TimerNumber]["Priority"] := Priority
+            }
+        }
+    }
+    
     Static Register(ProgramName, WinCriteria, Chooser := True) {
         If Standalone.FindName(ProgramName) == False {
             If ProgramName == ""
@@ -100,6 +138,7 @@ Class Standalone {
             ProgramEntry["WinCriteria"] := WinCriteria
             ProgramEntry["Chooser"] := Chooser
             ProgramEntry["Overlays"] := Array()
+            ProgramEntry["Timers"] := Array()
             Standalone.List.Push(ProgramEntry)
         }
     }

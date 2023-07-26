@@ -99,6 +99,49 @@ ManageHotkeys() {
     }
 }
 
+ManageTimers() {
+    Global PluginWinCriteria
+    Local FoundPlugin, FoundStandalone, StandaloneWinCriteria
+    If WinActive(PluginWinCriteria) {
+        TurnStandaloneTimersOff()
+        If WinExist("ahk_class #32768") {
+            TurnPluginTimersOff()
+            Return False
+        }
+        Else If ControlGetFocus(PluginWinCriteria) == 0 {
+            TurnPluginTimersOff()
+            Return False
+        }
+        Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
+            TurnPluginTimersOff()
+            Return False
+        }
+        Else {
+            FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
+            TurnPluginTimersOn(FoundPlugin.Name)
+            Return True
+        }
+    }
+    Else {
+        TurnPluginTimersOff()
+        If WinExist("ahk_class #32768") {
+            TurnStandaloneTimersOff()
+            Return False
+        }
+        Else {
+            For Program In Standalone.List
+            If WinActive(Program["WinCriteria"]) {
+                StandaloneWinCriteria := Program["WinCriteria"]
+                FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
+                TurnStandaloneTimersOn(FoundStandalone.Name)
+                Return True
+            }
+            TurnStandaloneTimersOff()
+            Return False
+        }
+    }
+}
+
 TurnHotkeysOff() {
     Global FoundPluginWinCriteria
     If WinActive(PluginWinCriteria)
@@ -155,4 +198,80 @@ TurnHotkeysOn() {
     Hotkey "Space", "On"
     Hotkey "Ctrl", "On"
     Hotkey "^R", "On"
+}
+
+TurnPluginTimersOff(Name := "") {
+    If Name == "" {
+        PluginList := Plugin.GetList()
+        For PluginEntry In PluginList
+        For Timer In PluginEntry["Timers"]
+        If Timer["Enabled"] == True {
+            Timer["Enabled"] := False
+            SetTimer Timer["Function"], 0
+        }
+    }
+    Else {
+        For Timer In Plugin.GetTimers(Name)
+        If Timer["Enabled"] == True {
+            Timer["Enabled"] := False
+            SetTimer Timer["Function"], 0
+        }
+    }
+}
+
+TurnPluginTimersOn(Name := "") {
+    If Name == "" {
+        PluginList := Plugin.GetList()
+        For PluginEntry In PluginList
+        For Timer In PluginEntry["Timers"]
+        If Timer["Enabled"] == False {
+            Timer["Enabled"] := True
+            SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
+        }
+    }
+    Else {
+        For Timer In Plugin.GetTimers(Name)
+        If Timer["Enabled"] == False {
+            Timer["Enabled"] := True
+            SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
+        }
+    }
+}
+
+TurnStandaloneTimersOff(Name := "") {
+    If Name == "" {
+        StandaloneList := Standalone.GetList()
+        For StandaloneEntry In StandaloneList
+        For Timer In StandaloneEntry["Timers"]
+        If Timer["Enabled"] == True {
+            Timer["Enabled"] := False
+            SetTimer Timer["Function"], 0
+        }
+    }
+    Else {
+        For Timer In Standalone.GetTimers(Name)
+        If Timer["Enabled"] == True {
+            Timer["Enabled"] := False
+            SetTimer Timer["Function"], 0
+        }
+    }
+}
+
+TurnStandaloneTimersOn(Name := "") {
+    If Name == "" {
+        StandaloneList := Standalone.GetList()
+        For StandaloneEntry In StandaloneList
+        For Timer In StandaloneEntry["Timers"]
+        If Timer["Enabled"] == False {
+            Timer["Enabled"] := True
+            SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
+        }
+    }
+    Else {
+        For Timer In Standalone.GetTimers(Name)
+        If Timer["Enabled"] == False {
+            Timer["Enabled"] := True
+            SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
+        }
+    }
 }

@@ -78,6 +78,15 @@ Class Plugin {
         Return 0
     }
     
+    Static FindTimer(PluginName, Function) {
+        PluginNumber := Plugin.FindName(PluginName)
+        If PluginNumber > 0
+        For TimerNumber, TimerParams In Plugin.List[PluginNumber]["Timers"]
+        If TimerParams["Function"] == Function
+        Return TimerNumber
+        Return 0
+    }
+    
     Static GetByClass(ControlClass) {
         PluginNumber := Plugin.FindClass(ControlClass)
         If PluginNumber > 0 {
@@ -113,6 +122,35 @@ Class Plugin {
         Return Array()
     }
     
+    Static GetTimers(PluginName) {
+        PluginNumber := Plugin.FindName(PluginName)
+        If PluginNumber > 0
+        Return Plugin.List[PluginNumber]["Timers"]
+        Return Array()
+    }
+    
+    Static SetTimer(PluginName, Function, Period := "", Priority := "") {
+        PluginNumber := Plugin.FindName(PluginName)
+        TimerNumber := Plugin.FindTimer(PluginName, Function)
+        If PluginNumber > 0 And TimerNumber == 0 {
+            If Period == ""
+            Period := 250
+            If Priority == ""
+            Priority := 0
+            Plugin.List[PluginNumber]["Timers"].Push(Map("Function", Function, "Period", Period, "Priority", Priority, "Enabled", False))
+        }
+        Else {
+            If TimerNumber > 0 {
+                If Period == ""
+                Period := Plugin.List[PluginNumber]["Timers"][TimerNumber]["Period"]
+                If Priority == ""
+                Priority := Plugin.List[PluginNumber]["Timers"][TimerNumber]["Priority"]
+                Plugin.List[PluginNumber]["Timers"][TimerNumber]["Period"] := Period
+                Plugin.List[PluginNumber]["Timers"][TimerNumber]["Priority"] := Priority
+            }
+        }
+    }
+    
     Static Register(PluginName, ControlClasses, FocusFunction := "", SingleInstance := False, Chooser := True) {
         If Plugin.FindName(PluginName) == False {
             If PluginName == ""
@@ -131,6 +169,7 @@ Class Plugin {
             PluginEntry["SingleInstance"] := SingleInstance
             PluginEntry["Chooser"] := Chooser
             PluginEntry["Overlays"] := Array()
+            PluginEntry["Timers"] := Array()
             Plugin.List.Push(PluginEntry)
         }
     }
