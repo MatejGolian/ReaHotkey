@@ -7,6 +7,8 @@ This is an AutoHotkey scripth I wrote in order to make certain virtual instrumen
   - Only works inside REAPER.
 * Makes it possible to switch between the classic and modern mixes in Audio Imperia's Nucleus library.
   - Only works inside REAPER.
+* Makes it possible to switch between the classic and modern mixes in Audio Imperia's Talos library.
+  - Only works inside REAPER.
 * Makes it possible to activate/deactivate multitracked guitars/basses in Impact Soundworks Shreddage-series instruments.
   - Only works inside REAPER.
 * Makes it possible to load instruments and add libraries in Best Service Engine 2.
