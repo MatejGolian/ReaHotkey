@@ -58,9 +58,9 @@ Class Standalone {
     
     Static FindCriteria(WinCriteria) {
         For ProgramNumber, ProgramEntry In Standalone.List
-        For WinCriterium In ProgramEntry["WinCriteria"]
-        If WinCriterium != ""
-        If RegExMatch(WinCriteria, WinCriterium)
+        For WinCriterion In ProgramEntry["WinCriteria"]
+        If WinCriterion != ""
+        If RegExMatch(WinCriteria, WinCriterion)
         Return ProgramNumber
         Return 0
     }
