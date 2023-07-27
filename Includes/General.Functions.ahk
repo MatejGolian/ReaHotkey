@@ -72,8 +72,9 @@ ManageHotkeys() {
     }
     Else {
         For Program In Standalone.List
-        If WinActive(Program["WinCriteria"]) {
-            StandaloneWinCriteria := Program["WinCriteria"]
+        For WinCriterium In Program["WinCriteria"]
+        If WinActive(WinCriterium) {
+            StandaloneWinCriteria := WinCriterium
             Hotkey "Tab", "On"
             Hotkey "+Tab", "On"
             Hotkey "^Tab", "On"
@@ -130,8 +131,9 @@ ManageTimers() {
         }
         Else {
             For Program In Standalone.List
-            If WinActive(Program["WinCriteria"]) {
-                StandaloneWinCriteria := Program["WinCriteria"]
+            For WinCriterium In Program["WinCriteria"]
+            If WinActive(WinCriterium) {
+                StandaloneWinCriteria := WinCriterium
                 FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
                 TurnStandaloneTimersOn(FoundStandalone.Name)
                 Return True

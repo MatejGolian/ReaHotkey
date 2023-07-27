@@ -57,11 +57,11 @@ Class Standalone {
     }
     
     Static FindCriteria(WinCriteria) {
-        For ProgramNumber, ProgramEntry In Standalone.List {
-            If ProgramEntry["WinCriteria"] != ""
-            If RegExMatch(WinCriteria, ProgramEntry["WinCriteria"])
-            Return ProgramNumber
-        }
+        For ProgramNumber, ProgramEntry In Standalone.List
+        For WinCriterium In ProgramEntry["WinCriteria"]
+        If WinCriterium != ""
+        If RegExMatch(WinCriteria, WinCriterium)
+        Return ProgramNumber
         Return 0
     }
     
@@ -143,7 +143,10 @@ Class Standalone {
             Chooser := True
             ProgramEntry := Map()
             ProgramEntry["Name"] := ProgramName
+            If WinCriteria Is Array
             ProgramEntry["WinCriteria"] := WinCriteria
+            Else
+            ProgramEntry["WinCriteria"] := Array(WinCriteria)
             ProgramEntry["InitFunction"] := InitFunction
             ProgramEntry["Chooser"] := Chooser
             ProgramEntry["Overlays"] := Array()
