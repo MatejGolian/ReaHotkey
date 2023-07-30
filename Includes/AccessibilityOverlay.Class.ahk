@@ -12,8 +12,9 @@ Class AccessibilityOverlay {
     SuperordinateControlID := 0
     UnlabelledString := ""
     Static AllControls := Array()
+    Static JAWS := AccessibilityOverlay.SetupJAWS()
     Static TotalNumberOfControls := 0
-    Static SAPI := ComObject("SAPI.SpVoice")
+    Static SAPI := AccessibilityOverlay.SetupSAPI()
     Static Translations := AccessibilityOverlay.SetupTranslations()
     
     __New(Label := "") {
@@ -452,6 +453,22 @@ Class AccessibilityOverlay {
         Return 0
     }
     
+    Static SetupJAWS() {
+        Try
+        JAWS := ComObject("FreedomSci.JawsApi")
+        Catch
+        JAWS := False
+        Return JAWS
+    }
+    
+    Static SetupSAPI() {
+        Try
+        SAPI := ComObject("SAPI.SpVoice")
+        Catch
+        SAPI := False
+        Return SAPI
+    }
+    
     Static SetupTranslations() {
         English := Map(
         "AccessibilityOverlay", Map(
@@ -591,18 +608,25 @@ Class AccessibilityOverlay {
     }
     
     Static Speak(Message) {
-        If FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
-            DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_cancelSpeech")
-            DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_speakText", "Wstr", Message)
+        If (AccessibilityOverlay.JAWS != False And ProcessExist("jfw.exe")) Or (FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")) {
+            If AccessibilityOverlay.JAWS != False And ProcessExist("jfw.exe") {
+                AccessibilityOverlay.JAWS.SayString(Message)
+            }
+            If FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
+                DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_cancelSpeech")
+                DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_speakText", "Wstr", Message)
+            }
         }
         Else {
-            AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
-            AccessibilityOverlay.SAPI.Speak(Message, 0x1)
+            If AccessibilityOverlay.SAPI != False {
+                AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
+                AccessibilityOverlay.SAPI.Speak(Message, 0x1)
+            }
         }
     }
     
     Static StopSpeech() {
-        If !FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")
+        If (AccessibilityOverlay.JAWS != False Or !ProcessExist("jfw.exe")) And (!FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning"))
         AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
     }
     
