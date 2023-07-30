@@ -350,6 +350,7 @@ Speak(Message) {
 StopSpeech() {
     Global JAWS, SAPI
     If (JAWS != False Or !ProcessExist("jfw.exe")) And (!FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning"))
+    If SAPI != False
     SAPI.Speak("", 0x1|0x2)
 }
 

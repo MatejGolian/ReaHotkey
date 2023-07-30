@@ -12,8 +12,8 @@ Class AccessibilityOverlay {
     SuperordinateControlID := 0
     UnlabelledString := ""
     Static AllControls := Array()
-    Static JAWS := AccessibilityOverlay.SetupJAWS()
     Static TotalNumberOfControls := 0
+    Static JAWS := AccessibilityOverlay.SetupJAWS()
     Static SAPI := AccessibilityOverlay.SetupSAPI()
     Static Translations := AccessibilityOverlay.SetupTranslations()
     
@@ -627,6 +627,7 @@ Class AccessibilityOverlay {
     
     Static StopSpeech() {
         If (AccessibilityOverlay.JAWS != False Or !ProcessExist("jfw.exe")) And (!FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning"))
+        If AccessibilityOverlay.SAPI != False
         AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
     }
     
