@@ -15,8 +15,17 @@ Hotspots := Array()
 KeyboardMode := 0
 MouseXPosition := ""
 MouseYPosition := ""
-SAPI := ComObject("SAPI.SpVoice")
 UnlabelledHotspotLabel := "unlabelled Hotspot"
+
+Try
+JAWS := ComObject("FreedomSci.JawsApi")
+Catch
+JAWS := False
+
+Try
+SAPI := ComObject("SAPI.SpVoice")
+Catch
+SAPI := False
 
 A_IconTip := AppName
 A_TrayMenu.Delete()
@@ -320,20 +329,27 @@ SelectPreviousHotspot() {
 }
 
 Speak(Message) {
-    Global SAPI
-    If FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
-        DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_cancelSpeech")
-        DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_speakText", "wstr", Message)
+    Global JAWS, SAPI
+    If (JAWS != False And ProcessExist("jfw.exe")) Or (FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")) {
+        If JAWS != False And ProcessExist("jfw.exe") {
+            JAWS.SayString(Message)
+        }
+        If FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
+            DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_cancelSpeech")
+            DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_speakText", "Wstr", Message)
+        }
     }
     Else {
-        SAPI.Speak("", 0x1|0x2)
-        SAPI.Speak(Message, 0x1)
+        If SAPI != False {
+            SAPI.Speak("", 0x1|0x2)
+            SAPI.Speak(Message, 0x1)
+        }
     }
 }
 
 StopSpeech() {
-    Global SAPI
-    If !FileExist("nvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("nvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")
+    Global JAWS, SAPI
+    If (JAWS != False Or !ProcessExist("jfw.exe")) And (!FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning"))
     SAPI.Speak("", 0x1|0x2)
 }
 
