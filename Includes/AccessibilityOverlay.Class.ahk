@@ -707,12 +707,8 @@ Class CustomButton {
     }
     
     Activate(CurrentControlID := 0) {
-        If This.ControlID != CurrentControlID {
-            If This.Label == ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-        }
+        If HasMethod(This, "Focus") And CurrentControlID != This.ControlID
+        This.Focus()
         If This.OnActivateFunction != ""
         %This.OnActivateFunction.Name%(This)
         Return 1
@@ -749,13 +745,15 @@ Class CustomControl {
         AccessibilityOverlay.AllControls.Push(This)
     }
     
-    Activate(*) {
+    Activate(CurrentControlID := 0) {
+        If HasMethod(This, "Focus") And CurrentControlID != This.ControlID
+        This.Focus()
         If This.OnActivateFunction != ""
         %This.OnActivateFunction.Name%(This)
         Return 1
     }
     
-    Focus(*) {
+    Focus(CurrentControlID := 0) {
         If This.OnFocusFunction != ""
         %This.OnFocusFunction.Name%(This)
         Return 1
@@ -1480,13 +1478,9 @@ Class HotspotButton {
     }
     
     Activate(CurrentControlID := 0) {
+        If HasMethod(This, "Focus") And CurrentControlID != This.ControlID
+        This.Focus()
         Click This.XCoordinate, This.YCoordinate
-        If This.ControlID != CurrentControlID {
-            If This.Label == ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-        }
         If This.OnActivateFunction != ""
         %This.OnActivateFunction.Name%(This)
         Return 1
@@ -1602,7 +1596,7 @@ Class SpeechOutput {
         AccessibilityOverlay.AllControls.Push(This)
     }
     
-    Focus(*) {
+    Focus(CurrentControlID := 0) {
         AccessibilityOverlay.Speak(This.Message)
         Return 1
     }
@@ -1702,12 +1696,6 @@ Class TabControl {
     
     GetTab(TabNumber) {
         Return This.Tabs.Get(TabNumber, 0)
-    }
-    
-    Reset() {
-        This.CurrentTab := 1
-        For Tab In This.Tabs
-        Tab.Reset()
     }
     
 }
