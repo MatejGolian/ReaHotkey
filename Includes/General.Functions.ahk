@@ -39,7 +39,7 @@ ManageHotkeys() {
         TurnHotkeysOffExceptF6()
         Return False
     }
-    Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
+    Else If !WinExist(PluginWinCriteria) Or Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
         TurnHotkeysOffExceptF6()
         Return False
     }
