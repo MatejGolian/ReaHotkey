@@ -147,18 +147,36 @@ CopyHotspotsToClipboard() {
         ConfirmationDialog := MsgBox("Copy hotspots to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
             ClipboardData := ""
+            ConfirmationDialog := MsgBox("Compensate for the position of the currently focused control?", AppName, 4)
+            If ConfirmationDialog == "Yes" {
+                WinWaitActive("ahk_id " . WinGetID("A"))
+                If ControlGetFocus("ahk_id " . WinGetID("A")) == 0 {
+                    Speak("Focused control not found")
+                }
+                Else {
+                    ControlGetPos &ControlX, &ControlY,,, ControlGetClassNN(ControlGetFocus("ahk_id " . WinGetID("A"))), "ahk_id " . WinGetID("A")
+                    For Value In Hotspots {
+                        Label := Value["Label"]
+                        MouseXCoordinate := Value["XCoordinate"] - ControlX
+                        MouseYCoordinate := Value["YCoordinate"] - ControlY
+                        ClipboardData .= "`"" . Label . "`", " . MouseXCoordinate . ", " . MouseYCoordinate . "`r`n"
+                    }
+                }
+        }
+        Else {
             For Value In Hotspots {
                 Label := Value["Label"]
                 MouseXCoordinate := Value["XCoordinate"]
                 MouseYCoordinate := Value["YCoordinate"]
                 ClipboardData .= "`"" . Label . "`", " . MouseXCoordinate . ", " . MouseYCoordinate . "`r`n"
             }
-            ClipboardData := RTrim(ClipboardData, "`r`n")
-            A_Clipboard := ClipboardData
-            Speak("Hotspots copied to clipboard")
         }
-        DialogOpen := 0
+        ClipboardData := RTrim(ClipboardData, "`r`n")
+        A_Clipboard := ClipboardData
+        Speak("Hotspots copied to clipboard")
     }
+    DialogOpen := 0
+}
 }
 
 CopyProcessNameToClipboard() {
