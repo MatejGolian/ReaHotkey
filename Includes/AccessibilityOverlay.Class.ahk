@@ -1493,9 +1493,9 @@ Class HotspotButton {
     }
     
     Focus(CurrentControlID := 0) {
-        MouseMove This.XCoordinate, This.YCoordinate
         If This.OnFocusFunction != ""
         %This.OnFocusFunction.Name%(This)
+        MouseMove This.XCoordinate, This.YCoordinate
         If This.ControlID != CurrentControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
@@ -1531,9 +1531,9 @@ Class HotspotEdit {
     }
     
     Focus(CurrentControlID := 0) {
-        Click This.XCoordinate, This.YCoordinate
         If This.OnFocusFunction != ""
         %This.OnFocusFunction.Name%(This)
+        Click This.XCoordinate, This.YCoordinate
         If This.ControlID != CurrentControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
@@ -1573,9 +1573,9 @@ Class HotspotTab Extends AccessibilityOverlay {
     }
     
     Focus(ControlID := 0) {
-        Click This.XCoordinate, This.YCoordinate
         If This.OnFocusFunction != ""
         %This.OnFocusFunction.Name%(This)
+        Click This.XCoordinate, This.YCoordinate
         If This.ControlID != ControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
