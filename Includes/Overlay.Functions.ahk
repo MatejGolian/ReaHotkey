@@ -30,15 +30,15 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
     }
 }
 
-CompensatePluginClick(PluginControl) {
+CompensatePluginCoordinates(PluginControl) {
     Global PluginWinCriteria
-    If !HasProp(PluginControl, "OriginalX")
-    PluginControl.OriginalX := PluginControl.XCoordinate
-    If !HasProp(PluginControl, "OriginalY")
-    PluginControl.OriginalY := PluginControl.YCoordinate
-    ControlGetPos &PluginControlX, &PluginControlY,,, ControlGetClassNN(ControlGetFocus(PluginWinCriteria)), PluginWinCriteria
-    PluginControl.XCoordinate := PluginControlX + PluginControl.OriginalX
-    PluginControl.YCoordinate := PluginControlY + PluginControl.OriginalY
+    If !HasProp(PluginControl, "OriginalXCoordinate")
+    PluginControl.OriginalXCoordinate := PluginControl.XCoordinate
+    If !HasProp(PluginControl, "OriginalYCoordinate")
+    PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
+    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(PluginWinCriteria)), PluginWinCriteria
+    PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
+    PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
     Return PluginControl
 }
 
@@ -149,6 +149,6 @@ FocusedEnginePluginAddLibraryButton(OverlayObject := False) {
     If OverlayObject Is Object
     AddLibraryButton := OverlayObject
     If AddLibraryButton Is Object
-    AddLibraryButton := CompensatePluginClick(AddLibraryButton)
+    AddLibraryButton := CompensatePluginCoordinates(AddLibraryButton)
     Return AddLibraryButton
 }
