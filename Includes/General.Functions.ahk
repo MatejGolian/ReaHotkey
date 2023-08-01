@@ -25,6 +25,7 @@ ImportOverlays() {
 }
 
 ManageHotkeys() {
+    Critical
     Global FoundPlugin, FoundStandalone, PluginWinCriteria, StandaloneWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
@@ -101,6 +102,7 @@ ManageHotkeys() {
 }
 
 ManageTimers() {
+    Critical
     Global PluginWinCriteria
     Local FoundPlugin, FoundStandalone, StandaloneWinCriteria
     If WinActive(PluginWinCriteria) {
