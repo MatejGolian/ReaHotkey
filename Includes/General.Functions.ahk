@@ -104,7 +104,7 @@ ManageHotkeys() {
 ManageTimers() {
     Critical
     Global PluginWinCriteria
-    Local FoundPlugin, FoundStandalone, StandaloneWinCriteria
+    Local FoundPlugin, FoundStandalone
     If WinActive(PluginWinCriteria) {
         TurnStandaloneTimersOff()
         If WinExist("ahk_class #32768") {
@@ -135,7 +135,6 @@ ManageTimers() {
             For Program In Standalone.List
             For WinCriterion In Program["WinCriteria"]
             If WinActive(WinCriterion) {
-                StandaloneWinCriteria := WinCriterion
                 FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
                 TurnStandaloneTimersOn(FoundStandalone.Name)
                 Return True
