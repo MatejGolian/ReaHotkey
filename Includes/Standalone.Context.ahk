@@ -4,14 +4,14 @@
 
 Tab:: {
     Global FoundStandalone
-    FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
+    FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusNextControl()
 }
 
 +Tab:: {
     Global FoundStandalone
-    FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
+    FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusPreviousControl()
 }
@@ -19,7 +19,7 @@ Tab:: {
 ^Tab::
 Right:: {
     Global FoundStandalone
-    FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
+    FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusNextTab()
 }
@@ -27,7 +27,7 @@ Right:: {
 ^+Tab::
 Left:: {
     Global FoundStandalone
-    FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
+    FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusPreviousTab()
 }
@@ -35,7 +35,7 @@ Left:: {
 Enter::
 Space:: {
     Global FoundStandalone
-    FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
+    FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.ActivateCurrentControl()
 }
@@ -46,7 +46,7 @@ Ctrl:: {
 
 ^R:: {
     Global FoundStandalone
-    FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
+    FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.Reset()
     AccessibilityOverlay.Speak(StandaloneOverlay.Label . " overlay reset")

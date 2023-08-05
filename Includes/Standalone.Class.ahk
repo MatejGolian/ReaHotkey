@@ -56,11 +56,11 @@ Class Standalone {
         %This.InitFunction.Name%(This)
     }
     
-    Static FindCriteria(WinCriteria) {
+    Static FindByActiveWindow() {
         For ProgramNumber, ProgramEntry In Standalone.List
         For WinCriterion In ProgramEntry["WinCriteria"]
         If WinCriterion != ""
-        If RegExMatch(WinCriteria, WinCriterion)
+        If WinActive(WinCriterion)
         Return ProgramNumber
         Return 0
     }
@@ -81,11 +81,11 @@ Class Standalone {
         Return 0
     }
     
-    Static Get(WinCriteria, WinID) {
+    Static GetByWindowID(WinID) {
         For ProgramInstance In Standalone.Instances
         If ProgramInstance.WindowID == WinID
         Return ProgramInstance
-        ProgramNumber := Standalone.FindCriteria(WinCriteria)
+        ProgramNumber := Standalone.FindByActiveWindow()
         If ProgramNumber != False {
             ProgramInstance := Standalone(Standalone.List[ProgramNumber]["Name"], WinGetID("A"), Standalone.List[ProgramNumber]["InitFunction"], Standalone.List[ProgramNumber]["Chooser"])
             Standalone.Instances.Push(ProgramInstance)

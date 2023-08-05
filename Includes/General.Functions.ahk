@@ -136,7 +136,7 @@ ManageTimers() {
             For WinCriterion In Program["WinCriteria"]
             If WinActive(WinCriterion) {
                 StandaloneWinCriteria := WinCriterion
-                FoundStandalone := Standalone.Get(StandaloneWinCriteria, WinGetID("A"))
+                FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
                 TurnStandaloneTimersOn(FoundStandalone.Name)
                 Return True
             }
