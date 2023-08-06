@@ -26,7 +26,7 @@ ImportOverlays() {
 
 ManageHotkeys() {
     Critical
-    Global FoundPlugin, FoundStandalone, PluginWinCriteria, StandaloneWinCriteria
+    Global FoundPlugin, FoundStandalone, PluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
     Else
@@ -75,7 +75,6 @@ ManageHotkeys() {
         For Program In Standalone.List
         For WinCriterion In Program["WinCriteria"]
         If WinActive(WinCriterion) {
-            StandaloneWinCriteria := WinCriterion
             Hotkey "Tab", "On"
             Hotkey "+Tab", "On"
             Hotkey "^Tab", "On"
