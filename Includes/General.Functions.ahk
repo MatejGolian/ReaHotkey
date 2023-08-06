@@ -278,3 +278,27 @@ TurnStandaloneTimersOn(Name := "") {
         }
     }
 }
+
+UpdateState() {
+    Critical
+    Global FoundPlugin, FoundStandalone, PluginWinCriteria, StandaloneWinCriteria
+    If WinActive(PluginWinCriteria) {
+        FoundStandalone := False
+        StandaloneWinCriteria := False
+        If !GetPluginControl()
+        FoundPlugin := False
+        Else
+        FoundPlugin := Plugin.GetByClass(ControlGetClassNN(GetPluginControl()))
+    }
+    Else {
+        FoundPlugin := False
+        FoundStandalone := False
+        StandaloneWinCriteria := False
+        For Program In Standalone.List
+        For WinCriterion In Program["WinCriteria"]
+        If WinActive(WinCriterion) {
+            FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+            StandaloneWinCriteria := WinCriterion
+        }
+    }
+}
