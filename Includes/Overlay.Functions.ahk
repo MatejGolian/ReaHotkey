@@ -148,7 +148,5 @@ FocusedEnginePluginAddLibraryButton(OverlayObject := False) {
     AddLibraryButton := False
     If OverlayObject Is Object
     AddLibraryButton := OverlayObject
-    If AddLibraryButton Is Object
-    AddLibraryButton := CompensatePluginCoordinates(AddLibraryButton)
     Return AddLibraryButton
 }
