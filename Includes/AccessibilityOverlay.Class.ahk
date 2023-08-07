@@ -717,8 +717,8 @@ Class CustomButton {
     }
     
     Activate(CurrentControlID := 0) {
-        If HasMethod(This, "Focus") And CurrentControlID != This.ControlID
-        This.Focus()
+        If HasMethod(This, "Focus")
+        This.Focus(CurrentControlID)
         For OnActivateFunction In This.OnActivateFunction
         %OnActivateFunction.Name%(This)
         Return 1
@@ -766,8 +766,8 @@ Class CustomControl {
     }
     
     Activate(CurrentControlID := 0) {
-        If HasMethod(This, "Focus") And CurrentControlID != This.ControlID
-        This.Focus()
+        If HasMethod(This, "Focus")
+        This.Focus(CurrentControlID)
         For OnActivateFunction In This.OnActivateFunction
         %OnActivateFunction.Name%(This)
         Return 1
@@ -1543,8 +1543,8 @@ Class HotspotButton {
     }
     
     Activate(CurrentControlID := 0) {
-        If HasMethod(This, "Focus") And CurrentControlID != This.ControlID
-        This.Focus()
+        If HasMethod(This, "Focus")
+        This.Focus(CurrentControlID)
         Click This.XCoordinate, This.YCoordinate
         For OnActivateFunction In This.OnActivateFunction
         %OnActivateFunction.Name%(This)
