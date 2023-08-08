@@ -30,18 +30,6 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
     }
 }
 
-CompensatePluginCoordinates(PluginControl) {
-    Global FoundPlugin, PluginWinCriteria
-    If !HasProp(PluginControl, "OriginalXCoordinate")
-    PluginControl.OriginalXCoordinate := PluginControl.XCoordinate
-    If !HasProp(PluginControl, "OriginalYCoordinate")
-    PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
-    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, FoundPlugin.ControlClass, PluginWinCriteria
-    PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
-    PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
-    Return PluginControl
-}
-
 ChoosePluginOverlay(*) {
     Global FoundPlugin
     SetTimer ManageHotkeys, 0
@@ -58,6 +46,18 @@ ChooseStandaloneOverlay(*) {
     CreateOverlayMenu(FoundStandalone, "Standalone").Show()
     TurnHotkeysOn()
     SetTimer ManageHotkeys, 100
+}
+
+CompensatePluginCoordinates(PluginControl) {
+    Global PluginWinCriteria
+    If !HasProp(PluginControl, "OriginalXCoordinate")
+    PluginControl.OriginalXCoordinate := PluginControl.XCoordinate
+    If !HasProp(PluginControl, "OriginalYCoordinate")
+    PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
+    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(PluginWinCriteria)), PluginWinCriteria
+    PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
+    PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
+    Return PluginControl
 }
 
 CreateOverlayMenu(Found, Type) {
