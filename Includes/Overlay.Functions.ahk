@@ -43,7 +43,6 @@ CompensatePluginCoordinates(PluginControl) {
 }
 
 ChoosePluginOverlay(*) {
-    Critical "Off"
     Global FoundPlugin
     SetTimer ManageHotkeys, 0
     TurnHotkeysOff()
@@ -53,7 +52,6 @@ ChoosePluginOverlay(*) {
 }
 
 ChooseStandaloneOverlay(*) {
-    Critical "Off"
     Global FoundStandalone
     SetTimer ManageHotkeys, 0
     TurnHotkeysOff()
