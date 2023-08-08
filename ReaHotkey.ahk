@@ -8,6 +8,7 @@ SetTitleMatchMode "RegEx"
 SetWorkingDir A_InitialWorkingDir
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
+Critical
 
 #Include Includes/AccessibilityOverlay.Class.ahk
 #Include Includes/Plugin.Class.ahk

@@ -43,6 +43,7 @@ CompensatePluginCoordinates(PluginControl) {
 }
 
 ChoosePluginOverlay(*) {
+    Critical "Off"
     Global FoundPlugin
     SetTimer ManageHotkeys, 0
     TurnHotkeysOff()
@@ -52,6 +53,7 @@ ChoosePluginOverlay(*) {
 }
 
 ChooseStandaloneOverlay(*) {
+    Critical "Off"
     Global FoundStandalone
     SetTimer ManageHotkeys, 0
     TurnHotkeysOff()
@@ -149,4 +151,11 @@ FocusedEnginePluginAddLibraryButton(OverlayObject := False) {
     If OverlayObject Is Object
     AddLibraryButton := OverlayObject
     Return AddLibraryButton
+}
+
+InArray(Needle, Haystack) {
+    For FoundIndex, FoundValue In Haystack
+    If FoundValue == Needle
+    Return FoundIndex
+    Return False
 }

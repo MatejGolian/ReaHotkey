@@ -13,19 +13,11 @@ GetPluginControl() {
     Return False
 }
 
-InArray(Needle, Haystack) {
-    For FoundIndex, FoundValue In Haystack
-    If FoundValue == Needle
-    Return FoundIndex
-    Return False
-}
-
 ImportOverlays() {
     #Include Overlay.Definitions.ahk
 }
 
 ManageHotkeys() {
-    Critical
     Global FoundPlugin, FoundStandalone, PluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
@@ -101,9 +93,7 @@ ManageHotkeys() {
 }
 
 ManageTimers() {
-    Critical
-    Global PluginWinCriteria
-    Local FoundPlugin, FoundStandalone
+    Global FoundPlugin, FoundStandalone, PluginWinCriteria
     If WinActive(PluginWinCriteria) {
         TurnStandaloneTimersOff()
         If WinExist("ahk_class #32768") {
@@ -118,8 +108,11 @@ ManageTimers() {
             TurnPluginTimersOff()
             Return False
         }
+        Else If FoundPlugin == False {
+            TurnPluginTimersOff()
+            Return False
+        }
         Else {
-            FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
             TurnPluginTimersOn(FoundPlugin.Name)
             Return True
         }
@@ -130,18 +123,16 @@ ManageTimers() {
             TurnStandaloneTimersOff()
             Return False
         }
-        Else {
-            For Program In Standalone.List
-            For WinCriterion In Program["WinCriteria"]
-            If WinActive(WinCriterion) {
-                FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
-                TurnStandaloneTimersOn(FoundStandalone.Name)
-                Return True
-            }
+        Else If FoundStandalone == False {
             TurnStandaloneTimersOff()
             Return False
         }
+        Else {
+            TurnStandaloneTimersOn(FoundStandalone.Name)
+            Return True
+        }
     }
+    Return False
 }
 
 TurnHotkeysOff() {
@@ -279,7 +270,6 @@ TurnStandaloneTimersOn(Name := "") {
 }
 
 UpdateState() {
-    Critical
     Global FoundPlugin, FoundStandalone, PluginWinCriteria, StandaloneWinCriteria
     If WinActive(PluginWinCriteria) {
         FoundStandalone := False
