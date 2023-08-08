@@ -1048,26 +1048,26 @@ Class GraphicButton {
                 This.ToggleState := 0
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
             If This.CheckIfActive() == 1 {
                 This.ToggleState := 1
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
         }
@@ -1076,26 +1076,26 @@ Class GraphicButton {
                 This.ToggleState := 1
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
             If This.CheckIfInactive() == 1 {
                 This.ToggleState := 0
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
         }
@@ -1103,13 +1103,13 @@ Class GraphicButton {
             If This.CheckIfActive() == 1 {
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
         }
@@ -1300,26 +1300,26 @@ Class GraphicCheckbox {
                 This.ToggleState := 0
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
             If This.CheckIfActive() == 1 {
                 This.ToggleState := 1
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
         }
@@ -1328,26 +1328,26 @@ Class GraphicCheckbox {
                 This.ToggleState := 1
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
             If This.CheckIfInactive() == 1 {
                 This.ToggleState := 0
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
+                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
         }
@@ -1570,13 +1570,13 @@ Class HotspotButton {
     Focus(CurrentControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
         %OnFocusFunction.Name%(This)
+        MouseMove This.XCoordinate, This.YCoordinate
         If This.ControlID != CurrentControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
             Else
             AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
         }
-        MouseMove This.XCoordinate, This.YCoordinate
         Return 1
     }
     

@@ -31,12 +31,12 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
 }
 
 CompensatePluginCoordinates(PluginControl) {
-    Global PluginWinCriteria
+    Global FoundPlugin, PluginWinCriteria
     If !HasProp(PluginControl, "OriginalXCoordinate")
     PluginControl.OriginalXCoordinate := PluginControl.XCoordinate
     If !HasProp(PluginControl, "OriginalYCoordinate")
     PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
-    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(PluginWinCriteria)), PluginWinCriteria
+    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, FoundPlugin.ControlClass, PluginWinCriteria
     PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
     PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
     Return PluginControl
