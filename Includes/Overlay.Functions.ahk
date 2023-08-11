@@ -151,9 +151,21 @@ FocusedEnginePluginAddLibraryButton(OverlayObject := False) {
     Return AddLibraryButton
 }
 
+FocusStandaloneOverlay() {
+    Global FoundStandalone
+    If FoundStandalone Is Standalone {
+        Sleep 500
+        FoundStandalone.Overlay.Focus()
+    }
+}
+
 InArray(Needle, Haystack) {
     For FoundIndex, FoundValue In Haystack
     If FoundValue == Needle
     Return FoundIndex
     Return False
+}
+
+InitEngineStandalone(*) {
+    Standalone.SetTimer("Engine", FocusStandaloneOverlay, -1)
 }

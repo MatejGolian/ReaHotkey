@@ -274,6 +274,7 @@ UpdateState() {
     If WinActive(PluginWinCriteria) {
         FoundStandalone := False
         StandaloneWinCriteria := False
+        WinWaitActive(PluginWinCriteria)
         If !GetPluginControl()
         FoundPlugin := False
         Else
@@ -286,7 +287,10 @@ UpdateState() {
         For Program In Standalone.List
         For WinCriterion In Program["WinCriteria"]
         If WinActive(WinCriterion) {
+            Try
             FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+            Catch
+            Return
             StandaloneWinCriteria := WinCriterion
         }
     }

@@ -29,7 +29,7 @@ AccessibilityOverlay.Speak(AppName . " ready")
 
 Plugin.Register("Engine", "Plugin[0-9A-F]{17}", FocusEnginePlugin)
 Plugin.Register("Kontakt/Komplete Kontrol", ["NIVSTChildWindow00007.*", "Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1"],, True)
-Standalone.Register("Engine", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe")
+Standalone.Register("Engine", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe", InitEngineStandalone)
 
 ImportOverlays()
 
