@@ -2,13 +2,15 @@
 
 GetPluginControl() {
     Global PluginWinCriteria
-    Controls := WinGetControls(PluginWinCriteria)
-    For PluginEntry In Plugin.List {
-        If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
-        For ControlClass In PluginEntry["ControlClasses"]
-        For Control In Controls
-        If RegExMatch(Control, ControlClass)
-        Return Control
+    If WinActive(PluginWinCriteria) {
+        Controls := WinGetControls(PluginWinCriteria)
+        For PluginEntry In Plugin.List {
+            If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
+            For ControlClass In PluginEntry["ControlClasses"]
+            For Control In Controls
+            If RegExMatch(Control, ControlClass)
+            Return Control
+        }
     }
     Return False
 }
@@ -274,7 +276,6 @@ UpdateState() {
     If WinActive(PluginWinCriteria) {
         FoundStandalone := False
         StandaloneWinCriteria := False
-        WinWaitActive(PluginWinCriteria)
         If !GetPluginControl()
         FoundPlugin := False
         Else
@@ -287,11 +288,15 @@ UpdateState() {
         For Program In Standalone.List
         For WinCriterion In Program["WinCriteria"]
         If WinActive(WinCriterion) {
-            Try
-            FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
-            Catch
-            Return
-            StandaloneWinCriteria := WinCriterion
+            Try {
+                FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+                StandaloneWinCriteria := WinCriterion
+            }
+            Catch {
+                FoundStandalone := False
+                StandaloneWinCriteria := False
+                Return
+            }
         }
     }
 }
