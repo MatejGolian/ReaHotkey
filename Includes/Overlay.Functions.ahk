@@ -155,6 +155,7 @@ FocusStandaloneOverlay() {
     Global FoundStandalone
     If FoundStandalone Is Standalone {
         Sleep 500
+        If FoundStandalone Is Standalone
         FoundStandalone.Overlay.Focus()
     }
 }
