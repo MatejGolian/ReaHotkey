@@ -25,57 +25,29 @@ ManageHotkeys() {
     HotIfWinActive(PluginWinCriteria)
     Else
     HotIf
-    If WinActive(PluginWinCriteria)
-    If WinExist("ahk_class #32768") {
-        TurnHotkeysOff()
-        Return False
-    }
-    Else If ControlGetFocus(PluginWinCriteria) == 0 {
-        TurnHotkeysOffExceptF6()
-        Return False
-    }
-    Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
-        TurnHotkeysOffExceptF6()
-        Return False
-    }
-    Else {
-        Hotkey "F6", "On"
-        Hotkey "Tab", "On"
-        Hotkey "+Tab", "On"
-        Hotkey "^Tab", "On"
-        Hotkey "^+Tab", "On"
-        Hotkey "Ctrl", "On"
-        Hotkey "^R", "On"
-        If FoundPlugin Is Plugin And FoundPlugin.Overlay.GetCurrentControl() Is Object And FoundPlugin.Overlay.GetCurrentControl().ControlType == "Edit" {
-            Hotkey "Right", "Off"
-            Hotkey "Left", "Off"
-            Hotkey "Enter", "Off"
-            Hotkey "Space", "Off"
+    Try {
+        If WinActive(PluginWinCriteria)
+        If WinExist("ahk_class #32768") {
+            TurnHotkeysOff()
+            Return False
+        }
+        Else If ControlGetFocus(PluginWinCriteria) == 0 {
+            TurnHotkeysOffExceptF6()
+            Return False
+        }
+        Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
+            TurnHotkeysOffExceptF6()
+            Return False
         }
         Else {
-            Hotkey "Right", "On"
-            Hotkey "Left", "On"
-            Hotkey "Enter", "On"
-            Hotkey "Space", "On"
-        }
-        Return True
-    }
-    Else
-    If WinExist("ahk_class #32768") {
-        TurnHotkeysOff()
-        Return False
-    }
-    Else {
-        For Program In Standalone.List
-        For WinCriterion In Program["WinCriteria"]
-        If WinActive(WinCriterion) {
+            Hotkey "F6", "On"
             Hotkey "Tab", "On"
             Hotkey "+Tab", "On"
             Hotkey "^Tab", "On"
             Hotkey "^+Tab", "On"
             Hotkey "Ctrl", "On"
             Hotkey "^R", "On"
-            If FoundStandalone Is Standalone And FoundStandalone.Overlay.GetCurrentControl() Is Object And FoundStandalone.Overlay.GetCurrentControl().ControlType == "Edit" {
+            If FoundPlugin Is Plugin And FoundPlugin.Overlay.GetCurrentControl() Is Object And FoundPlugin.Overlay.GetCurrentControl().ControlType == "Edit" {
                 Hotkey "Right", "Off"
                 Hotkey "Left", "Off"
                 Hotkey "Enter", "Off"
@@ -89,52 +61,90 @@ ManageHotkeys() {
             }
             Return True
         }
-        TurnHotkeysOff()
+        Else
+        If WinExist("ahk_class #32768") {
+            TurnHotkeysOff()
+            Return False
+        }
+        Else {
+            For Program In Standalone.List
+            For WinCriterion In Program["WinCriteria"]
+            If WinActive(WinCriterion) {
+                Hotkey "Tab", "On"
+                Hotkey "+Tab", "On"
+                Hotkey "^Tab", "On"
+                Hotkey "^+Tab", "On"
+                Hotkey "Ctrl", "On"
+                Hotkey "^R", "On"
+                If FoundStandalone Is Standalone And FoundStandalone.Overlay.GetCurrentControl() Is Object And FoundStandalone.Overlay.GetCurrentControl().ControlType == "Edit" {
+                    Hotkey "Right", "Off"
+                    Hotkey "Left", "Off"
+                    Hotkey "Enter", "Off"
+                    Hotkey "Space", "Off"
+                }
+                Else {
+                    Hotkey "Right", "On"
+                    Hotkey "Left", "On"
+                    Hotkey "Enter", "On"
+                    Hotkey "Space", "On"
+                }
+                Return True
+            }
+            TurnHotkeysOff()
+            Return False
+        }
+    }
+    Catch {
         Return False
     }
 }
 
 ManageTimers() {
     Global FoundPlugin, FoundStandalone, PluginWinCriteria
-    If WinActive(PluginWinCriteria) {
-        TurnStandaloneTimersOff()
-        If WinExist("ahk_class #32768") {
-            TurnPluginTimersOff()
-            Return False
-        }
-        Else If ControlGetFocus(PluginWinCriteria) == 0 {
-            TurnPluginTimersOff()
-            Return False
-        }
-        Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
-            TurnPluginTimersOff()
-            Return False
-        }
-        Else If FoundPlugin == False {
-            TurnPluginTimersOff()
-            Return False
+    Try {
+        If WinActive(PluginWinCriteria) {
+            TurnStandaloneTimersOff()
+            If WinExist("ahk_class #32768") {
+                TurnPluginTimersOff()
+                Return False
+            }
+            Else If ControlGetFocus(PluginWinCriteria) == 0 {
+                TurnPluginTimersOff()
+                Return False
+            }
+            Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
+                TurnPluginTimersOff()
+                Return False
+            }
+            Else If FoundPlugin == False {
+                TurnPluginTimersOff()
+                Return False
+            }
+            Else {
+                TurnPluginTimersOn(FoundPlugin.Name)
+                Return True
+            }
         }
         Else {
-            TurnPluginTimersOn(FoundPlugin.Name)
-            Return True
+            TurnPluginTimersOff()
+            If WinExist("ahk_class #32768") {
+                TurnStandaloneTimersOff()
+                Return False
+            }
+            Else If FoundStandalone == False {
+                TurnStandaloneTimersOff()
+                Return False
+            }
+            Else {
+                TurnStandaloneTimersOn(FoundStandalone.Name)
+                Return True
+            }
         }
+        Return False
     }
-    Else {
-        TurnPluginTimersOff()
-        If WinExist("ahk_class #32768") {
-            TurnStandaloneTimersOff()
-            Return False
-        }
-        Else If FoundStandalone == False {
-            TurnStandaloneTimersOff()
-            Return False
-        }
-        Else {
-            TurnStandaloneTimersOn(FoundStandalone.Name)
-            Return True
-        }
+    Catch {
+        Return False
     }
-    Return False
 }
 
 TurnHotkeysOff() {
