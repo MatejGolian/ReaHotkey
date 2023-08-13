@@ -11,15 +11,8 @@ F6:: {
     Else If GetPluginControl() {
         ControlFocus(GetPluginControl(), PluginWinCriteria)
         FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
-        PluginOverlay := FoundPlugin.GetOverlay()
-        If HasProp(PluginOverlay, "Metadata") And PluginOverlay.Metadata.Has("Product") And PluginOverlay.Metadata["Product"] != ""
-        AccessibilityOverlay.Speak(PluginOverlay.Metadata["Product"] . " overlay active")
-        Else If PluginOverlay.Label == ""
-        AccessibilityOverlay.Speak(FoundPlugin.Name . " overlay active")
-        Else
-        AccessibilityOverlay.Speak(PluginOverlay.Label . " overlay active")
         FoundPlugin.Focus()
-        PluginOverlay.FocusCurrentControl()
+        FocusPluginOverlay()
     }
     Else {
         Send "{F6}"
