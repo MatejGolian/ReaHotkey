@@ -43,6 +43,10 @@ Class Standalone {
         }
     }
     
+    GetHotkeys() {
+        Return Standalone.GetHotkeys(This.Name)
+    }
+    
     GetOverlay() {
         Return This.Overlay
     }
@@ -62,6 +66,15 @@ Class Standalone {
         If WinCriterion != ""
         If WinActive(WinCriterion)
         Return ProgramNumber
+        Return 0
+    }
+    
+    Static FindHotkey(ProgramName, Combination) {
+        ProgramNumber := Standalone.FindName(ProgramName)
+        If ProgramNumber > 0
+        For HotkeyNumber, HotkeyParams In Standalone.List[ProgramNumber]["Hotkeys"]
+        If HotkeyParams["Combination"] == Combination
+        Return HotkeyNumber
         Return 0
     }
     
@@ -93,6 +106,13 @@ Class Standalone {
             Return ProgramInstance
         }
         Return Standalone("", WinID)
+    }
+    
+    Static GetHotkeys(ProgramName) {
+        ProgramNumber := Standalone.FindName(ProgramName)
+        If ProgramNumber > 0
+        Return Standalone.List[ProgramNumber]["Hotkeys"]
+        Return Array()
     }
     
     Static GetList() {
@@ -149,9 +169,24 @@ Class Standalone {
             ProgramEntry["WinCriteria"] := Array(WinCriteria)
             ProgramEntry["InitFunction"] := InitFunction
             ProgramEntry["Chooser"] := Chooser
+            ProgramEntry["Hotkeys"] := Array()
             ProgramEntry["Overlays"] := Array()
             ProgramEntry["Timers"] := Array()
             Standalone.List.Push(ProgramEntry)
+        }
+    }
+    
+    Static RegisterHotkey(ProgramName, Combination, Function) {
+        ProgramNumber := Standalone.FindName(ProgramName)
+        HotkeyNumber := Standalone.FindHotkey(ProgramName, Combination)
+        If ProgramNumber > 0 And HotkeyNumber == 0 {
+            Standalone.List[ProgramNumber]["Hotkeys"].Push(Map("Combination", Combination, "Function", Function))
+            Hotkey Combination, Function, "Off"
+        }
+        Else {
+            If HotkeyNumber > 0 {
+                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Function"] := Function
+            }
         }
     }
     

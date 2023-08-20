@@ -5,10 +5,10 @@ Class Plugin {
     Chooser := True
     ControlClass := ""
     FocusFunction := ""
-    SingleInstance := False
     Name := ""
     Overlay := AccessibilityOverlay()
     Overlays := Array()
+    SingleInstance := False
     Static ChooserOverlay := AccessibilityOverlay()
     Static DefaultOverlay := AccessibilityOverlay()
     Static Instances := Array()
@@ -53,6 +53,10 @@ Class Plugin {
         %This.FocusFunction.Name%(This)
     }
     
+    GetHotkeys() {
+        Return Plugin.GetHotkeys(This.Name)
+    }
+    
     GetOverlay() {
         Return This.Overlay
     }
@@ -68,6 +72,15 @@ Class Plugin {
             If RegExMatch(ClassName, ControlClass)
             Return PluginNumber
         }
+        Return 0
+    }
+    
+    Static FindHotkey(PluginName, Combination) {
+        PluginNumber := Plugin.FindName(PluginName)
+        If PluginNumber > 0
+        For HotkeyNumber, HotkeyParams In Plugin.List[PluginNumber]["Hotkeys"]
+        If HotkeyParams["Combination"] == Combination
+        Return HotkeyNumber
         Return 0
     }
     
@@ -109,6 +122,13 @@ Class Plugin {
             Return PluginInstance
         }
         Return Plugin("", ControlClass)
+    }
+    
+    Static GetHotkeys(PluginName) {
+        PluginNumber := Plugin.FindName(PluginName)
+        If PluginNumber > 0
+        Return Plugin.List[PluginNumber]["Hotkeys"]
+        Return Array()
     }
     
     Static GetList() {
@@ -168,9 +188,24 @@ Class Plugin {
             PluginEntry["FocusFunction"] := FocusFunction
             PluginEntry["SingleInstance"] := SingleInstance
             PluginEntry["Chooser"] := Chooser
+            PluginEntry["Hotkeys"] := Array()
             PluginEntry["Overlays"] := Array()
             PluginEntry["Timers"] := Array()
             Plugin.List.Push(PluginEntry)
+        }
+    }
+    
+    Static RegisterHotkey(PluginName, Combination, Function) {
+        PluginNumber := Plugin.FindName(PluginName)
+        HotkeyNumber := Plugin.FindHotkey(PluginName, Combination)
+        If PluginNumber > 0 And HotkeyNumber == 0 {
+            Plugin.List[PluginNumber]["Hotkeys"].Push(Map("Combination", Combination, "Function", Function))
+            Hotkey Combination, Function, "Off"
+        }
+        Else {
+            If HotkeyNumber > 0 {
+                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Function"] := Function
+            }
         }
     }
     

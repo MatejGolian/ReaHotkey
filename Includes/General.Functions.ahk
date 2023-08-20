@@ -59,6 +59,9 @@ ManageHotkeys() {
                 Hotkey "Enter", "On"
                 Hotkey "Space", "On"
             }
+            If FoundPlugin Is Plugin
+            For DefinedHotkey In FoundPlugin.GetHotkeys()
+            Hotkey DefinedHotkey["Combination"], DefinedHotkey["Function"], "On"
             Return True
         }
         Else
@@ -88,6 +91,9 @@ ManageHotkeys() {
                     Hotkey "Enter", "On"
                     Hotkey "Space", "On"
                 }
+                If FoundStandalone Is Standalone
+                For DefinedHotkey In FoundStandalone.GetHotkeys()
+                Hotkey DefinedHotkey["Combination"], DefinedHotkey["Function"], "On"
                 Return True
             }
             TurnHotkeysOff()
@@ -148,7 +154,7 @@ ManageTimers() {
 }
 
 TurnHotkeysOff() {
-    Global FoundPluginWinCriteria
+    Global PluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
     Else
@@ -165,10 +171,16 @@ TurnHotkeysOff() {
     Hotkey "Space", "Off"
     Hotkey "Ctrl", "Off"
     Hotkey "^R", "Off"
+    For PluginEntry In Plugin.GetList()
+    For DefinedHotkey In PluginEntry["Hotkeys"]
+    Hotkey DefinedHotkey["Combination"], "Off"
+    For ProgramEntry In Standalone.GetList()
+    For DefinedHotkey In ProgramEntry["Hotkeys"]
+    Hotkey DefinedHotkey["Combination"], "Off"
 }
 
 TurnHotkeysOffExceptF6() {
-    Global FoundPluginWinCriteria
+    Global PluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
     Else
@@ -183,10 +195,16 @@ TurnHotkeysOffExceptF6() {
     Hotkey "Space", "Off"
     Hotkey "Ctrl", "Off"
     Hotkey "^R", "Off"
+    For PluginEntry In Plugin.GetList()
+    For DefinedHotkey In PluginEntry["Hotkeys"]
+    Hotkey DefinedHotkey["Combination"], "Off"
+    For ProgramEntry In Standalone.GetList()
+    For DefinedHotkey In ProgramEntry["Hotkeys"]
+    Hotkey DefinedHotkey["Combination"], "Off"
 }
 
 TurnHotkeysOn() {
-    Global PluginWinCriteria
+    Global FoundPlugin, FoundStandalone, PluginWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
     Else
@@ -203,6 +221,12 @@ TurnHotkeysOn() {
     Hotkey "Space", "On"
     Hotkey "Ctrl", "On"
     Hotkey "^R", "On"
+    If FoundPlugin Is Plugin
+    For DefinedHotkey In FoundPlugin.GetHotkeys()
+    Hotkey DefinedHotkey["Combination"], DefinedHotkey["Function"], "On"
+    If FoundStandalone Is Standalone
+    For DefinedHotkey In FoundStandalone.GetHotkeys()
+    Hotkey DefinedHotkey["Combination"], DefinedHotkey["Function"], "On"
 }
 
 TurnPluginTimersOff(Name := "") {
