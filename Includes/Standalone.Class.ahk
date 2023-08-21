@@ -133,6 +133,25 @@ Class Standalone {
         Return Array()
     }
     
+    Static SetHotkey(ProgramName, KeyName, Action := "", Options := "") {
+        ProgramNumber := Standalone.FindName(ProgramName)
+        HotkeyNumber := Standalone.FindHotkey(ProgramName, KeyName)
+        If ProgramNumber > 0 And HotkeyNumber == 0 {
+            Standalone.List[ProgramNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options))
+            Hotkey KeyName, Action, "Off"
+        }
+        Else {
+            If HotkeyNumber > 0 {
+                If Action == ""
+                Action := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
+                If Options == ""
+                Options := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"]
+                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
+                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options
+            }
+        }
+    }
+    
     Static SetTimer(ProgramName, Function, Period := "", Priority := "") {
         ProgramNumber := Standalone.FindName(ProgramName)
         TimerNumber := Standalone.FindTimer(ProgramName, Function)
@@ -173,25 +192,6 @@ Class Standalone {
             ProgramEntry["Overlays"] := Array()
             ProgramEntry["Timers"] := Array()
             Standalone.List.Push(ProgramEntry)
-        }
-    }
-    
-    Static RegisterHotkey(ProgramName, KeyName, Action := "", Options := "") {
-        ProgramNumber := Standalone.FindName(ProgramName)
-        HotkeyNumber := Standalone.FindHotkey(ProgramName, KeyName)
-        If ProgramNumber > 0 And HotkeyNumber == 0 {
-            Standalone.List[ProgramNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options))
-            Hotkey KeyName, Action, "Off"
-        }
-        Else {
-            If HotkeyNumber > 0 {
-                If Action == ""
-                Action := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
-                If Options == ""
-                Options := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"]
-                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
-                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options
-            }
         }
     }
     

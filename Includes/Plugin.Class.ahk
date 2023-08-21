@@ -149,6 +149,25 @@ Class Plugin {
         Return Array()
     }
     
+    Static SetHotkey(PluginName, KeyName, Action := "", Options := "") {
+        PluginNumber := Plugin.FindName(PluginName)
+        HotkeyNumber := Plugin.FindHotkey(PluginName, KeyName)
+        If PluginNumber > 0 And HotkeyNumber == 0 {
+            Plugin.List[PluginNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options))
+            Hotkey KeyName, Action, "Off"
+        }
+        Else {
+            If HotkeyNumber > 0 {
+                If Action == ""
+                Action := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
+                If Options == ""
+                Options := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"]
+                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
+                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options
+            }
+        }
+    }
+    
     Static SetTimer(PluginName, Function, Period := "", Priority := "") {
         PluginNumber := Plugin.FindName(PluginName)
         TimerNumber := Plugin.FindTimer(PluginName, Function)
@@ -192,25 +211,6 @@ Class Plugin {
             PluginEntry["Overlays"] := Array()
             PluginEntry["Timers"] := Array()
             Plugin.List.Push(PluginEntry)
-        }
-    }
-    
-    Static RegisterHotkey(PluginName, KeyName, Action := "", Options := "") {
-        PluginNumber := Plugin.FindName(PluginName)
-        HotkeyNumber := Plugin.FindHotkey(PluginName, KeyName)
-        If PluginNumber > 0 And HotkeyNumber == 0 {
-            Plugin.List[PluginNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options))
-            Hotkey KeyName, Action, "Off"
-        }
-        Else {
-            If HotkeyNumber > 0 {
-                If Action == ""
-                Action := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
-                If Options == ""
-                Options := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"]
-                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
-                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options
-            }
         }
     }
     
