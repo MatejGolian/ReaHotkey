@@ -69,11 +69,11 @@ Class Standalone {
         Return 0
     }
     
-    Static FindHotkey(ProgramName, Combination) {
+    Static FindHotkey(ProgramName, KeyName) {
         ProgramNumber := Standalone.FindName(ProgramName)
         If ProgramNumber > 0
         For HotkeyNumber, HotkeyParams In Standalone.List[ProgramNumber]["Hotkeys"]
-        If HotkeyParams["Combination"] == Combination
+        If HotkeyParams["KeyName"] == KeyName
         Return HotkeyNumber
         Return 0
     }
@@ -176,16 +176,21 @@ Class Standalone {
         }
     }
     
-    Static RegisterHotkey(ProgramName, Combination, Function) {
+    Static RegisterHotkey(ProgramName, KeyName, Action := "", Options := "") {
         ProgramNumber := Standalone.FindName(ProgramName)
-        HotkeyNumber := Standalone.FindHotkey(ProgramName, Combination)
+        HotkeyNumber := Standalone.FindHotkey(ProgramName, KeyName)
         If ProgramNumber > 0 And HotkeyNumber == 0 {
-            Standalone.List[ProgramNumber]["Hotkeys"].Push(Map("Combination", Combination, "Function", Function))
-            Hotkey Combination, Function, "Off"
+            Standalone.List[ProgramNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options))
+            Hotkey KeyName, Action, "Off"
         }
         Else {
             If HotkeyNumber > 0 {
-                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Function"] := Function
+                If Action == ""
+                Action := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
+                If Options == ""
+                Options := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"]
+                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
+                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options
             }
         }
     }

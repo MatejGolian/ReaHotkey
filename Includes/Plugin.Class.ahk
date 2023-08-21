@@ -75,11 +75,11 @@ Class Plugin {
         Return 0
     }
     
-    Static FindHotkey(PluginName, Combination) {
+    Static FindHotkey(PluginName, KeyName) {
         PluginNumber := Plugin.FindName(PluginName)
         If PluginNumber > 0
         For HotkeyNumber, HotkeyParams In Plugin.List[PluginNumber]["Hotkeys"]
-        If HotkeyParams["Combination"] == Combination
+        If HotkeyParams["KeyName"] == KeyName
         Return HotkeyNumber
         Return 0
     }
@@ -195,16 +195,21 @@ Class Plugin {
         }
     }
     
-    Static RegisterHotkey(PluginName, Combination, Function) {
+    Static RegisterHotkey(PluginName, KeyName, Action := "", Options := "") {
         PluginNumber := Plugin.FindName(PluginName)
-        HotkeyNumber := Plugin.FindHotkey(PluginName, Combination)
+        HotkeyNumber := Plugin.FindHotkey(PluginName, KeyName)
         If PluginNumber > 0 And HotkeyNumber == 0 {
-            Plugin.List[PluginNumber]["Hotkeys"].Push(Map("Combination", Combination, "Function", Function))
-            Hotkey Combination, Function, "Off"
+            Plugin.List[PluginNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options))
+            Hotkey KeyName, Action, "Off"
         }
         Else {
             If HotkeyNumber > 0 {
-                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Function"] := Function
+                If Action == ""
+                Action := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
+                If Options == ""
+                Options := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"]
+                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
+                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options
             }
         }
     }
