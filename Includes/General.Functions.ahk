@@ -60,7 +60,8 @@ ManageHotkeys() {
                 Hotkey "Space", "On"
             }
             If FoundPlugin Is Plugin
-            For DefinedHotkey In FoundPlugin.GetHotkeys() {
+            For DefinedHotkey In FoundPlugin.GetHotkeys()
+            If DefinedHotkey["Action"] != "Off" {
                 Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
                 Hotkey DefinedHotkey["KeyName"], "On"
             }
@@ -94,7 +95,8 @@ ManageHotkeys() {
                     Hotkey "Space", "On"
                 }
                 If FoundStandalone Is Standalone
-                For DefinedHotkey In FoundStandalone.GetHotkeys() {
+                For DefinedHotkey In FoundStandalone.GetHotkeys()
+                If DefinedHotkey["Action"] != "Off" {
                     Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
                     Hotkey DefinedHotkey["KeyName"], "On"
                 }
@@ -239,13 +241,15 @@ TurnHotkeysOn() {
     Hotkey "^R", "On"
     If FoundPlugin Is Plugin
     HotIfWinActive(PluginWinCriteria)
-    For DefinedHotkey In FoundPlugin.GetHotkeys() {
+    For DefinedHotkey In FoundPlugin.GetHotkeys()
+    If DefinedHotkey["Action"] != "Off" {
         Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
         Hotkey DefinedHotkey["KeyName"], "On"
     }
     If FoundStandalone Is Standalone
     HotIf
-    For DefinedHotkey In FoundStandalone.GetHotkeys() {
+    For DefinedHotkey In FoundStandalone.GetHotkeys()
+    If DefinedHotkey["Action"] != "Off" {
         Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
         Hotkey DefinedHotkey["KeyName"], "On"
     }

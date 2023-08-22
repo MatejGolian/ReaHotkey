@@ -137,7 +137,7 @@ Class Standalone {
         ProgramNumber := Standalone.FindName(ProgramName)
         HotkeyNumber := Standalone.FindHotkey(ProgramName, KeyName)
         If ProgramNumber > 0 And HotkeyNumber == 0 {
-            Standalone.List[ProgramNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options))
+            Standalone.List[ProgramNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options, "BackupAction", Action))
         }
         Else {
             If HotkeyNumber > 0 {
@@ -145,8 +145,32 @@ Class Standalone {
                 Action := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
                 If Options == ""
                 Options := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"]
+                If Action Is Object {
+                    If Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] = "On" {
+                        Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
+                        Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                    }
+                    Else {
+                        Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                    }
+                }
+                Else {
+                    If Trim(Action) = "Toggle" {
+                        If Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] = "Off"
+                        Action := "On"
+                        Else
+                        Action := "Off"
+                    }
+                    If Trim(Action) = "On"
+                    Action := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"]
+                    If Not Action Is Object And Trim(Action) = "Off"
+                    If Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] != "On" And Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] != "Off"
+                    Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
+                    If                Not Action Is Object
+                    Action := Trim(Action)
+                }
                 Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
-                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options
+                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] := Trim(Options)
             }
         }
     }

@@ -153,7 +153,7 @@ Class Plugin {
         PluginNumber := Plugin.FindName(PluginName)
         HotkeyNumber := Plugin.FindHotkey(PluginName, KeyName)
         If PluginNumber > 0 And HotkeyNumber == 0 {
-            Plugin.List[PluginNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options))
+            Plugin.List[PluginNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options, "BackupAction", Action))
         }
         Else {
             If HotkeyNumber > 0 {
@@ -161,8 +161,32 @@ Class Plugin {
                 Action := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
                 If Options == ""
                 Options := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"]
+                If Action Is Object {
+                    If Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] = "On" {
+                        Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
+                        Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                    }
+                    Else {
+                        Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                    }
+                }
+                Else {
+                    If Trim(Action) = "Toggle" {
+                        If Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] = "Off"
+                        Action := "On"
+                        Else
+                        Action := "Off"
+                    }
+                    If Trim(Action) = "On"
+                    Action := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"]
+                    If Not Action Is Object And Trim(Action) = "Off"
+                    If Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] != "On" And Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] != "Off"
+                    Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
+                    If                Not Action Is Object
+                    Action := Trim(Action)
+                }
                 Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
-                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options
+                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"] := Trim(Options)
             }
         }
     }
