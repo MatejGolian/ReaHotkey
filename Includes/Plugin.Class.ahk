@@ -154,7 +154,6 @@ Class Plugin {
         HotkeyNumber := Plugin.FindHotkey(PluginName, KeyName)
         If PluginNumber > 0 And HotkeyNumber == 0 {
             Plugin.List[PluginNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options))
-            Hotkey KeyName, Action, "Off"
         }
         Else {
             If HotkeyNumber > 0 {

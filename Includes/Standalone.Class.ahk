@@ -138,7 +138,6 @@ Class Standalone {
         HotkeyNumber := Standalone.FindHotkey(ProgramName, KeyName)
         If ProgramNumber > 0 And HotkeyNumber == 0 {
             Standalone.List[ProgramNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options))
-            Hotkey KeyName, Action, "Off"
         }
         Else {
             If HotkeyNumber > 0 {
