@@ -137,7 +137,35 @@ Class Standalone {
         ProgramNumber := Standalone.FindName(ProgramName)
         HotkeyNumber := Standalone.FindHotkey(ProgramName, KeyName)
         If ProgramNumber > 0 And HotkeyNumber == 0 {
-            Standalone.List[ProgramNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options, "BackupAction", Action))
+            BackupAction := Action
+            OnOff := ""
+            B := ""
+            P := ""
+            S := ""
+            T := ""
+            I := ""
+            HotkeyOptions := StrSplit(Options, [A_Space, A_Tab])
+            If Not HotkeyOptions Is Array
+            HotkeyOptions := Array(Options)
+            Match := ""
+            For Option In HotkeyOptions {
+                If RegexMatch(Option, "i)((On)|(Off))", &Match)
+                OnOff := Match[1]
+                If RegexMatch(Option, "i)((B)|(B0))", &Match)
+                B := Match[1]
+                If RegexMatch(Option, "i)((P)|(P0)|(P[1-9][0-9]*))", &Match)
+                P := Match[1]
+                If RegexMatch(Option, "i)((S)|(S0))", &Match)
+                S := Match[1]
+                If RegexMatch(Option, "i)(T[1-255])", &Match)
+                T := Match[1]
+                If RegexMatch(Option, "i)(I[0-100])", &Match)
+                I := Match[1]
+            }
+            Options := Trim(OnOff . " " . B . " " . P . " " . S . " " . T . " " . I)
+            If OnOff = "Off"
+            Action := "Off"
+            Standalone.List[ProgramNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options, "BackupAction", BackupAction))
         }
         Else {
             If HotkeyNumber > 0 {
@@ -145,32 +173,85 @@ Class Standalone {
                 Action := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
                 If Options == ""
                 Options := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"]
-                If Action Is Object {
-                    If Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] = "On" {
-                        Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
-                        Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                If Action != Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] {
+                    If Action Is Object {
+                        If Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] != "Off" {
+                            Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                        }
+                        Else {
+                            Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                            Action := "Off"
+                        }
                     }
                     Else {
-                        Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                        If Trim(Action) = "Toggle" {
+                            If Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] = "Off"
+                            Action := "On"
+                            Else
+                            Action := "Off"
+                        }
+                        If Trim(Action) = "On"
+                        Action := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"]
+                        If Not Action Is Object And Trim(Action) = "Off"
+                        If Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] != "On" And Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] != "Off"
+                        Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
+                        If                Not Action Is Object
+                        Action := Trim(Action)
                     }
                 }
-                Else {
-                    If Trim(Action) = "Toggle" {
-                        If Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] = "Off"
-                        Action := "On"
-                        Else
-                        Action := "Off"
+                If Options != Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] {
+                    OnOff := ""
+                    B := ""
+                    P := ""
+                    S := ""
+                    T := ""
+                    I := ""
+                    CurrentOptions := StrSplit(Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"], [A_Space, A_Tab])
+                    NewOptions := StrSplit(Options, [A_Space, A_Tab])
+                    If Not CurrentOptions Is Array
+                    CurrentOptions := Array(Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"])
+                    If Not NewOptions Is Array
+                    NewOptions := Array(Options)
+                    Match := ""
+                    For Option In CurrentOptions {
+                        If RegexMatch(Option, "i)((On)|(Off))", &Match)
+                        OnOff := Match[1]
+                        If RegexMatch(Option, "i)((B)|(B0))", &Match)
+                        B := Match[1]
+                        If RegexMatch(Option, "i)((P)|(P0)|(P[1-9][0-9]*))", &Match)
+                        P := Match[1]
+                        If RegexMatch(Option, "i)((S)|(S0))", &Match)
+                        S := Match[1]
+                        If RegexMatch(Option, "i)(T[1-255])", &Match)
+                        T := Match[1]
+                        If RegexMatch(Option, "i)(I[0-100])", &Match)
+                        I := Match[1]
                     }
-                    If Trim(Action) = "On"
+                    For Option In NewOptions {
+                        If RegexMatch(Option, "i)((On)|(Off))", &Match)
+                        OnOff := Match[1]
+                        If RegexMatch(Option, "i)((B)|(B0))", &Match)
+                        B := Match[1]
+                        If RegexMatch(Option, "i)((P)|(P0)|(P[1-9][0-9]*))", &Match)
+                        P := Match[1]
+                        If RegexMatch(Option, "i)((S)|(S0))", &Match)
+                        S := Match[1]
+                        If RegexMatch(Option, "i)(T[1-255])", &Match)
+                        T := Match[1]
+                        If RegexMatch(Option, "i)(I[0-100])", &Match)
+                        I := Match[1]
+                    }
+                    Options := Trim(OnOff . " " . B . " " . P . " " . S . " " . T . " " . I)
+                    If OnOff = "On"
                     Action := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"]
-                    If Not Action Is Object And Trim(Action) = "Off"
-                    If Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] != "On" And Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] != "Off"
-                    Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
-                    If                Not Action Is Object
-                    Action := Trim(Action)
+                    If OnOff = "Off" {
+                        Action := "Off"
+                        If Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] != "On" And Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] != "Off"
+                        Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
+                    }
                 }
                 Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
-                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] := Trim(Options)
+                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options
             }
         }
     }

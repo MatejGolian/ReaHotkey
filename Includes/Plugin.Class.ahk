@@ -153,7 +153,35 @@ Class Plugin {
         PluginNumber := Plugin.FindName(PluginName)
         HotkeyNumber := Plugin.FindHotkey(PluginName, KeyName)
         If PluginNumber > 0 And HotkeyNumber == 0 {
-            Plugin.List[PluginNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options, "BackupAction", Action))
+            BackupAction := Action
+            OnOff := ""
+            B := ""
+            P := ""
+            S := ""
+            T := ""
+            I := ""
+            HotkeyOptions := StrSplit(Options, [A_Space, A_Tab])
+            If Not HotkeyOptions Is Array
+            HotkeyOptions := Array(Options)
+            Match := ""
+            For Option In HotkeyOptions {
+                If RegexMatch(Option, "i)((On)|(Off))", &Match)
+                OnOff := Match[1]
+                If RegexMatch(Option, "i)((B)|(B0))", &Match)
+                B := Match[1]
+                If RegexMatch(Option, "i)((P)|(P0)|(P[1-9][0-9]*))", &Match)
+                P := Match[1]
+                If RegexMatch(Option, "i)((S)|(S0))", &Match)
+                S := Match[1]
+                If RegexMatch(Option, "i)(T[1-255])", &Match)
+                T := Match[1]
+                If RegexMatch(Option, "i)(I[0-100])", &Match)
+                I := Match[1]
+            }
+            Options := Trim(OnOff . " " . B . " " . P . " " . S . " " . T . " " . I)
+            If OnOff = "Off"
+            Action := "Off"
+            Plugin.List[PluginNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options, "BackupAction", BackupAction))
         }
         Else {
             If HotkeyNumber > 0 {
@@ -161,32 +189,85 @@ Class Plugin {
                 Action := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
                 If Options == ""
                 Options := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"]
-                If Action Is Object {
-                    If Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] = "On" {
-                        Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
-                        Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                If Action != Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] {
+                    If Action Is Object {
+                        If Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] != "Off" {
+                            Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                        }
+                        Else {
+                            Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                            Action := "Off"
+                        }
                     }
                     Else {
-                        Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                        If Trim(Action) = "Toggle" {
+                            If Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] = "Off"
+                            Action := "On"
+                            Else
+                            Action := "Off"
+                        }
+                        If Trim(Action) = "On"
+                        Action := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"]
+                        If Not Action Is Object And Trim(Action) = "Off"
+                        If Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] != "On" And Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] != "Off"
+                        Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
+                        If                Not Action Is Object
+                        Action := Trim(Action)
                     }
                 }
-                Else {
-                    If Trim(Action) = "Toggle" {
-                        If Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] = "Off"
-                        Action := "On"
-                        Else
-                        Action := "Off"
+                If Options != Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"] {
+                    OnOff := ""
+                    B := ""
+                    P := ""
+                    S := ""
+                    T := ""
+                    I := ""
+                    CurrentOptions := StrSplit(Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"], [A_Space, A_Tab])
+                    NewOptions := StrSplit(Options, [A_Space, A_Tab])
+                    If Not CurrentOptions Is Array
+                    CurrentOptions := Array(Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"])
+                    If Not NewOptions Is Array
+                    NewOptions := Array(Options)
+                    Match := ""
+                    For Option In CurrentOptions {
+                        If RegexMatch(Option, "i)((On)|(Off))", &Match)
+                        OnOff := Match[1]
+                        If RegexMatch(Option, "i)((B)|(B0))", &Match)
+                        B := Match[1]
+                        If RegexMatch(Option, "i)((P)|(P0)|(P[1-9][0-9]*))", &Match)
+                        P := Match[1]
+                        If RegexMatch(Option, "i)((S)|(S0))", &Match)
+                        S := Match[1]
+                        If RegexMatch(Option, "i)(T[1-255])", &Match)
+                        T := Match[1]
+                        If RegexMatch(Option, "i)(I[0-100])", &Match)
+                        I := Match[1]
                     }
-                    If Trim(Action) = "On"
+                    For Option In NewOptions {
+                        If RegexMatch(Option, "i)((On)|(Off))", &Match)
+                        OnOff := Match[1]
+                        If RegexMatch(Option, "i)((B)|(B0))", &Match)
+                        B := Match[1]
+                        If RegexMatch(Option, "i)((P)|(P0)|(P[1-9][0-9]*))", &Match)
+                        P := Match[1]
+                        If RegexMatch(Option, "i)((S)|(S0))", &Match)
+                        S := Match[1]
+                        If RegexMatch(Option, "i)(T[1-255])", &Match)
+                        T := Match[1]
+                        If RegexMatch(Option, "i)(I[0-100])", &Match)
+                        I := Match[1]
+                    }
+                    Options := Trim(OnOff . " " . B . " " . P . " " . S . " " . T . " " . I)
+                    If OnOff = "On"
                     Action := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"]
-                    If Not Action Is Object And Trim(Action) = "Off"
-                    If Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] != "On" And Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] != "Off"
-                    Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
-                    If                Not Action Is Object
-                    Action := Trim(Action)
+                    If OnOff = "Off" {
+                        Action := "Off"
+                        If Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] != "On" And Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] != "Off"
+                        Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
+                    }
                 }
                 Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
-                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"] := Trim(Options)
+                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options
             }
         }
     }

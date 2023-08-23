@@ -179,13 +179,15 @@ TurnHotkeysOff() {
     Hotkey "^R", "Off"
     HotIfWinActive(PluginWinCriteria)
     For PluginEntry In Plugin.GetList()
-    For DefinedHotkey In PluginEntry["Hotkeys"] {
+    For DefinedHotkey In PluginEntry["Hotkeys"]
+    If DefinedHotkey["Action"] != "Off" {
         Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
         Hotkey DefinedHotkey["KeyName"], "Off"
     }
     HotIf
     For ProgramEntry In Standalone.GetList()
-    For DefinedHotkey In ProgramEntry["Hotkeys"] {
+    For DefinedHotkey In ProgramEntry["Hotkeys"]
+    If DefinedHotkey["Action"] != "Off" {
         Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
         Hotkey DefinedHotkey["KeyName"], "Off"
     }
@@ -209,13 +211,15 @@ TurnHotkeysOffExceptF6() {
     Hotkey "^R", "Off"
     HotIfWinActive(PluginWinCriteria)
     For PluginEntry In Plugin.GetList()
-    For DefinedHotkey In PluginEntry["Hotkeys"] {
+    For DefinedHotkey In PluginEntry["Hotkeys"]
+    If DefinedHotkey["Action"] != "Off" {
         Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
         Hotkey DefinedHotkey["KeyName"], "Off"
     }
     HotIf
     For ProgramEntry In Standalone.GetList()
-    For DefinedHotkey In ProgramEntry["Hotkeys"] {
+    For DefinedHotkey In ProgramEntry["Hotkeys"]
+    If DefinedHotkey["Action"] != "Off" {
         Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
         Hotkey DefinedHotkey["KeyName"], "Off"
     }
