@@ -211,8 +211,11 @@ Class Plugin {
                         If Not Action Is Object And Trim(Action) = "Off"
                         If Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] != "On" And Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] != "Off"
                         Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
-                        If                Not Action Is Object
-                        Action := Trim(Action)
+                        If                Not Action Is Object {
+                            Action := Trim(Action)
+                            If Action != "On" And Action != "Off"
+                            Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                        }
                     }
                 }
                 If Options != Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"] {

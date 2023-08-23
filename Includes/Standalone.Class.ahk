@@ -195,8 +195,11 @@ Class Standalone {
                         If Not Action Is Object And Trim(Action) = "Off"
                         If Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] != "On" And Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] != "Off"
                         Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
-                        If                Not Action Is Object
-                        Action := Trim(Action)
+                        If                Not Action Is Object {
+                            Action := Trim(Action)
+                            If Action != "On" And Action != "Off"
+                            Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["BackupAction"] := Action
+                        }
                     }
                 }
                 If Options != Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] {
