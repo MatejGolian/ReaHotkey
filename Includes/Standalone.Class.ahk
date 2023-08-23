@@ -149,18 +149,18 @@ Class Standalone {
             HotkeyOptions := Array(Options)
             Match := ""
             For Option In HotkeyOptions {
-                If RegexMatch(Option, "i)((On)|(Off))", &Match)
-                OnOff := Match[1]
-                If RegexMatch(Option, "i)((B)|(B0))", &Match)
-                B := Match[1]
-                If RegexMatch(Option, "i)((P)|(P0)|(P[1-9][0-9]*))", &Match)
-                P := Match[1]
-                If RegexMatch(Option, "i)((S)|(S0))", &Match)
-                S := Match[1]
-                If RegexMatch(Option, "i)(T[1-255])", &Match)
-                T := Match[1]
-                If RegexMatch(Option, "i)(I[0-100])", &Match)
-                I := Match[1]
+                If RegexMatch(Option, "i)^((On)|(Off))$", &Match)
+                OnOff := Match[0]
+                If RegexMatch(Option, "i)^(B0?)$", &Match)
+                B := Match[0]
+                If RegexMatch(Option, "i)^((P[1-9][0-9]*)|(P0?))$", &Match)
+                P := Match[0]
+                If RegexMatch(Option, "i)^(S0?)$", &Match)
+                S := Match[0]
+                If RegexMatch(Option, "i)^(T([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))$", &Match)
+                T := Match[0]
+                If RegexMatch(Option, "i)^(I([0-9]|[1-9][0-9]|100))$", &Match)
+                I := Match[0]
             }
             Options := Trim(OnOff . " " . B . " " . P . " " . S . " " . T . " " . I)
             If OnOff = "Off"
@@ -214,32 +214,32 @@ Class Standalone {
                     NewOptions := Array(Options)
                     Match := ""
                     For Option In CurrentOptions {
-                        If RegexMatch(Option, "i)((On)|(Off))", &Match)
-                        OnOff := Match[1]
-                        If RegexMatch(Option, "i)((B)|(B0))", &Match)
-                        B := Match[1]
-                        If RegexMatch(Option, "i)((P)|(P0)|(P[1-9][0-9]*))", &Match)
-                        P := Match[1]
-                        If RegexMatch(Option, "i)((S)|(S0))", &Match)
-                        S := Match[1]
-                        If RegexMatch(Option, "i)(T[1-255])", &Match)
-                        T := Match[1]
-                        If RegexMatch(Option, "i)(I[0-100])", &Match)
-                        I := Match[1]
+                        If RegexMatch(Option, "i)^((On)|(Off))$", &Match)
+                        OnOff := Match[0]
+                        If RegexMatch(Option, "i)^(B0?)$", &Match)
+                        B := Match[0]
+                        If RegexMatch(Option, "i)^((P[1-9][0-9]*)|(P0?))$", &Match)
+                        P := Match[0]
+                        If RegexMatch(Option, "i)^(S0?)$", &Match)
+                        S := Match[0]
+                        If RegexMatch(Option, "i)^(T([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))$", &Match)
+                        T := Match[0]
+                        If RegexMatch(Option, "i)^(I([0-9]|[1-9][0-9]|100))$", &Match)
+                        I := Match[0]
                     }
                     For Option In NewOptions {
-                        If RegexMatch(Option, "i)((On)|(Off))", &Match)
-                        OnOff := Match[1]
-                        If RegexMatch(Option, "i)((B)|(B0))", &Match)
-                        B := Match[1]
-                        If RegexMatch(Option, "i)((P)|(P0)|(P[1-9][0-9]*))", &Match)
-                        P := Match[1]
-                        If RegexMatch(Option, "i)((S)|(S0))", &Match)
-                        S := Match[1]
-                        If RegexMatch(Option, "i)(T[1-255])", &Match)
-                        T := Match[1]
-                        If RegexMatch(Option, "i)(I[0-100])", &Match)
-                        I := Match[1]
+                        If RegexMatch(Option, "i)^((On)|(Off))$", &Match)
+                        OnOff := Match[0]
+                        If RegexMatch(Option, "i)^(B0?)$", &Match)
+                        B := Match[0]
+                        If RegexMatch(Option, "i)^((P[1-9][0-9]*)|(P0?))$", &Match)
+                        P := Match[0]
+                        If RegexMatch(Option, "i)^(S0?)$", &Match)
+                        S := Match[0]
+                        If RegexMatch(Option, "i)^(T([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))$", &Match)
+                        T := Match[0]
+                        If RegexMatch(Option, "i)^(I([0-9]|[1-9][0-9]|100))$", &Match)
+                        I := Match[0]
                     }
                     Options := Trim(OnOff . " " . B . " " . P . " " . S . " " . T . " " . I)
                     If OnOff = "On"
