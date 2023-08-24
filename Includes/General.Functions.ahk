@@ -7,23 +7,20 @@ FocusNextTab(Overlay) {
         Overlay.FocusNextTab()
         Else
         If CurrentControl Is Object {
-            Found := Overlay.FindFocusableControlID(Overlay.CurrentControlID)
-            If Found > 1 {
-                FocusableControlIDs := Overlay.GetFocusableControlIDs()
-                I := Found - 1
-                Loop Found - 1 {
-                    FocusableControl := AccessibilityOverlay.GetControl(FocusableControlIDs[I])
-                    If FocusableControl Is TabControl {
-                        Overlay.SetCurrentControlID(FocusableControl.ControlID)
-                        If FocusableControl.CurrentTab < FocusableControl.Tabs.Length
-                        FocusableControl.CurrentTab++
-                        Else
-                        FocusableControl.CurrentTab := 1
-                        FocusableControl.Focus()
-                        Break
-                    }
-                    I--
+            SuperordinateControl := AccessibilityOverlay.GetControl(CurrentControl.SuperordinateControlID)
+            Loop AccessibilityOverlay.TotalNumberOfControls {
+                If SuperordinateControl == 0
+                Break
+                If SuperordinateControl Is TabControl {
+                    Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
+                    If SuperordinateControl.CurrentTab < SuperordinateControl.Tabs.Length
+                    SuperordinateControl.CurrentTab++
+                    Else
+                    SuperordinateControl.CurrentTab := 1
+                    SuperordinateControl.Focus()
+                    Break
                 }
+                SuperordinateControl := AccessibilityOverlay.GetControl(SuperordinateControl.SuperordinateControlID)
             }
         }
     }
@@ -36,23 +33,20 @@ FocusPreviousTab(Overlay) {
         Overlay.FocusPreviousTab()
         Else
         If CurrentControl Is Object {
-            Found := Overlay.FindFocusableControlID(Overlay.CurrentControlID)
-            If Found > 1 {
-                FocusableControlIDs := Overlay.GetFocusableControlIDs()
-                I := Found - 1
-                Loop Found - 1 {
-                    FocusableControl := AccessibilityOverlay.GetControl(FocusableControlIDs[I])
-                    If FocusableControl Is TabControl {
-                        Overlay.SetCurrentControlID(FocusableControl.ControlID)
-                        If FocusableControl.CurrentTab <= 1
-                        FocusableControl.CurrentTab := FocusableControl.Tabs.Length
-                        Else
-                        FocusableControl.CurrentTab--
-                        FocusableControl.Focus()
-                        Break
-                    }
-                    I--
+            SuperordinateControl := AccessibilityOverlay.GetControl(CurrentControl.SuperordinateControlID)
+            Loop AccessibilityOverlay.TotalNumberOfControls {
+                If SuperordinateControl == 0
+                Break
+                If SuperordinateControl Is TabControl {
+                    Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
+                    If SuperordinateControl.CurrentTab <= 1
+                    SuperordinateControl.CurrentTab := SuperordinateControl.Tabs.Length
+                    Else
+                    SuperordinateControl.CurrentTab--
+                    SuperordinateControl.Focus()
+                    Break
                 }
+                SuperordinateControl := AccessibilityOverlay.GetControl(SuperordinateControl.SuperordinateControlID)
             }
         }
     }
