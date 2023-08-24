@@ -15,7 +15,11 @@ FocusNextTab(Overlay) {
                     FocusableControl := AccessibilityOverlay.GetControl(FocusableControlIDs[I])
                     If FocusableControl Is TabControl {
                         Overlay.SetCurrentControlID(FocusableControl.ControlID)
-                        Overlay.FocusNextTab()
+                        If FocusableControl.CurrentTab < FocusableControl.Tabs.Length
+                        FocusableControl.CurrentTab++
+                        Else
+                        FocusableControl.CurrentTab := 1
+                        FocusableControl.Focus()
                         Break
                     }
                     I--
@@ -40,7 +44,11 @@ FocusPreviousTab(Overlay) {
                     FocusableControl := AccessibilityOverlay.GetControl(FocusableControlIDs[I])
                     If FocusableControl Is TabControl {
                         Overlay.SetCurrentControlID(FocusableControl.ControlID)
-                        Overlay.FocusPreviousTab()
+                        If FocusableControl.CurrentTab <= 1
+                        FocusableControl.CurrentTab := FocusableControl.Tabs.Length
+                        Else
+                        FocusableControl.CurrentTab--
+                        FocusableControl.Focus()
                         Break
                     }
                     I--
