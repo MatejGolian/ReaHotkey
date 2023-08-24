@@ -161,8 +161,6 @@ Class Plugin {
             T := ""
             I := ""
             HotkeyOptions := StrSplit(Options, [A_Space, A_Tab])
-            If Not HotkeyOptions Is Array
-            HotkeyOptions := Array(Options)
             Match := ""
             For Option In HotkeyOptions {
                 If RegexMatch(Option, "i)^((On)|(Off))$", &Match)
@@ -227,10 +225,6 @@ Class Plugin {
                     I := ""
                     CurrentOptions := StrSplit(Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"], [A_Space, A_Tab])
                     NewOptions := StrSplit(Options, [A_Space, A_Tab])
-                    If Not CurrentOptions Is Array
-                    CurrentOptions := Array(Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"])
-                    If Not NewOptions Is Array
-                    NewOptions := Array(Options)
                     Match := ""
                     For Option In CurrentOptions {
                         If RegexMatch(Option, "i)^((On)|(Off))$", &Match)

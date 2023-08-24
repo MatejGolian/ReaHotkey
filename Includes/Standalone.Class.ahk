@@ -145,8 +145,6 @@ Class Standalone {
             T := ""
             I := ""
             HotkeyOptions := StrSplit(Options, [A_Space, A_Tab])
-            If Not HotkeyOptions Is Array
-            HotkeyOptions := Array(Options)
             Match := ""
             For Option In HotkeyOptions {
                 If RegexMatch(Option, "i)^((On)|(Off))$", &Match)
@@ -211,10 +209,6 @@ Class Standalone {
                     I := ""
                     CurrentOptions := StrSplit(Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"], [A_Space, A_Tab])
                     NewOptions := StrSplit(Options, [A_Space, A_Tab])
-                    If Not CurrentOptions Is Array
-                    CurrentOptions := Array(Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"])
-                    If Not NewOptions Is Array
-                    NewOptions := Array(Options)
                     Match := ""
                     For Option In CurrentOptions {
                         If RegexMatch(Option, "i)^((On)|(Off))$", &Match)
