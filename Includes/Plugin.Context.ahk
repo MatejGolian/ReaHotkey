@@ -35,21 +35,31 @@ Tab:: {
     PluginOverlay.FocusPreviousControl()
 }
 
-^Tab::
+^Tab:: {
+    Global FoundPlugin
+    FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
+    PluginOverlay := FoundPlugin.GetOverlay()
+    FocusNextTab(PluginOverlay)
+}
+
+^+Tab:: {
+    Global FoundPlugin
+    FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
+    PluginOverlay := FoundPlugin.GetOverlay()
+    FocusPreviousTab(PluginOverlay)
+}
+
 Right:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is TabControl
     PluginOverlay.FocusNextTab()
 }
 
-^+Tab::
 Left:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is TabControl
     PluginOverlay.FocusPreviousTab()
 }
 

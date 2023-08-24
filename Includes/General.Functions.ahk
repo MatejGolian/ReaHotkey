@@ -1,5 +1,55 @@
 #Requires AutoHotkey v2.0
 
+FocusNextTab(Overlay) {
+    If Overlay Is AccessibilityOverlay And Overlay.ChildControls.Length > 0 {
+        CurrentControl := Overlay.GetCurrentControl()
+        If CurrentControl Is TabControl
+        Overlay.FocusNextTab()
+        Else
+        If CurrentControl Is Object {
+            Found := Overlay.FindFocusableControlID(Overlay.CurrentControlID)
+            If Found > 1 {
+                FocusableControlIDs := Overlay.GetFocusableControlIDs()
+                I := Found - 1
+                Loop Found - 1 {
+                    FocusableControl := AccessibilityOverlay.GetControl(FocusableControlIDs[I])
+                    If FocusableControl Is TabControl {
+                        Overlay.SetCurrentControlID(FocusableControl.ControlID)
+                        Overlay.FocusNextTab()
+                        Break
+                    }
+                    I--
+                }
+            }
+        }
+    }
+}
+
+FocusPreviousTab(Overlay) {
+    If Overlay Is AccessibilityOverlay And Overlay.ChildControls.Length > 0 {
+        CurrentControl := Overlay.GetCurrentControl()
+        If CurrentControl Is TabControl
+        Overlay.FocusPreviousTab()
+        Else
+        If CurrentControl Is Object {
+            Found := Overlay.FindFocusableControlID(Overlay.CurrentControlID)
+            If Found > 1 {
+                FocusableControlIDs := Overlay.GetFocusableControlIDs()
+                I := Found - 1
+                Loop Found - 1 {
+                    FocusableControl := AccessibilityOverlay.GetControl(FocusableControlIDs[I])
+                    If FocusableControl Is TabControl {
+                        Overlay.SetCurrentControlID(FocusableControl.ControlID)
+                        Overlay.FocusPreviousTab()
+                        Break
+                    }
+                    I--
+                }
+            }
+        }
+    }
+}
+
 GetPluginControl() {
     Global PluginWinCriteria
     If WinActive(PluginWinCriteria) {
