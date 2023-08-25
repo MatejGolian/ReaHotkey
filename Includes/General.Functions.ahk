@@ -1,30 +1,5 @@
 #Requires AutoHotkey v2.0
 
-FocusPluginOverlay() {
-    Global FoundPlugin
-    If FoundPlugin Is Plugin
-    If FoundPlugin.Overlay.ChildControls.Length > 0 And FoundPlugin.Overlay.GetFocusableControlIDs().Length > 0 {
-        FoundPlugin.Overlay.Focus()
-    }
-    Else {
-        If HasProp(FoundPlugin.Overlay, "Metadata") And FoundPlugin.Overlay.Metadata.Has("Product") And FoundPlugin.Overlay.Metadata["Product"] != ""
-        AccessibilityOverlay.Speak(FoundPlugin.Overlay.Metadata["Product"] . " overlay active")
-        Else If FoundPlugin.Overlay.Label == ""
-        AccessibilityOverlay.Speak(FoundPlugin.Name . " overlay active")
-        Else
-        AccessibilityOverlay.Speak(FoundPlugin.Overlay.Label . " overlay active")
-    }
-}
-
-FocusStandaloneOverlay() {
-    Global FoundStandalone
-    If FoundStandalone Is Standalone {
-        Sleep 500
-        If FoundStandalone Is Standalone
-        FoundStandalone.Overlay.Focus()
-    }
-}
-
 FocusNextTab(Overlay) {
     If Overlay Is AccessibilityOverlay And Overlay.ChildControls.Length > 0 {
         CurrentControl := Overlay.GetCurrentControl()
@@ -51,6 +26,22 @@ FocusNextTab(Overlay) {
     }
 }
 
+FocusPluginOverlay() {
+    Global FoundPlugin
+    If FoundPlugin Is Plugin
+    If FoundPlugin.Overlay.ChildControls.Length > 0 And FoundPlugin.Overlay.GetFocusableControlIDs().Length > 0 {
+        FoundPlugin.Overlay.Focus()
+    }
+    Else {
+        If HasProp(FoundPlugin.Overlay, "Metadata") And FoundPlugin.Overlay.Metadata.Has("Product") And FoundPlugin.Overlay.Metadata["Product"] != ""
+        AccessibilityOverlay.Speak(FoundPlugin.Overlay.Metadata["Product"] . " overlay active")
+        Else If FoundPlugin.Overlay.Label == ""
+        AccessibilityOverlay.Speak(FoundPlugin.Name . " overlay active")
+        Else
+        AccessibilityOverlay.Speak(FoundPlugin.Overlay.Label . " overlay active")
+    }
+}
+
 FocusPreviousTab(Overlay) {
     If Overlay Is AccessibilityOverlay And Overlay.ChildControls.Length > 0 {
         CurrentControl := Overlay.GetCurrentControl()
@@ -74,6 +65,15 @@ FocusPreviousTab(Overlay) {
                 SuperordinateControl := AccessibilityOverlay.GetControl(SuperordinateControl.SuperordinateControlID)
             }
         }
+    }
+}
+
+FocusStandaloneOverlay() {
+    Global FoundStandalone
+    If FoundStandalone Is Standalone {
+        Sleep 500
+        If FoundStandalone Is Standalone
+        FoundStandalone.Overlay.Focus()
     }
 }
 
@@ -292,19 +292,21 @@ TurnHotkeysOn() {
     Hotkey "Space", "On"
     Hotkey "Ctrl", "On"
     Hotkey "^R", "On"
-    If FoundPlugin Is Plugin
-    HotIfWinActive(PluginWinCriteria)
-    For DefinedHotkey In FoundPlugin.GetHotkeys()
-    If DefinedHotkey["Action"] != "Off" {
-        Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-        Hotkey DefinedHotkey["KeyName"], "On"
+    If FoundPlugin Is Plugin {
+        HotIfWinActive(PluginWinCriteria)
+        For DefinedHotkey In FoundPlugin.GetHotkeys()
+        If DefinedHotkey["Action"] != "Off" {
+            Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
+            Hotkey DefinedHotkey["KeyName"], "On"
+        }
     }
-    If FoundStandalone Is Standalone
-    HotIf
-    For DefinedHotkey In FoundStandalone.GetHotkeys()
-    If DefinedHotkey["Action"] != "Off" {
-        Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-        Hotkey DefinedHotkey["KeyName"], "On"
+    If FoundStandalone Is Standalone {
+        HotIf
+        For DefinedHotkey In FoundStandalone.GetHotkeys()
+        If DefinedHotkey["Action"] != "Off" {
+            Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
+            Hotkey DefinedHotkey["KeyName"], "On"
+        }
     }
 }
 
