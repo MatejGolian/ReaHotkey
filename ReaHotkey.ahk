@@ -19,7 +19,7 @@ AppName := "ReaHotkey"
 FoundPlugin := False
 FoundStandalone := False
 PluginWinCriteria := "ahk_exe reaper.exe ahk_class #32770"
-StandaloneWinCriteria := ""
+StandaloneWinCriteria := False
 
 A_IconTip := AppName
 A_TrayMenu.Delete("&Pause Script")
