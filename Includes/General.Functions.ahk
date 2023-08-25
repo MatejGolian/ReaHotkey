@@ -97,7 +97,7 @@ ImportOverlays() {
 }
 
 ManageInput() {
-    Global FoundPlugin, FoundStandalone, PluginWinCriteria
+    Global FoundPlugin, FoundStandalone, PluginWinCriteria, StandaloneWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
     Else
@@ -119,33 +119,38 @@ ManageInput() {
             Return False
         }
         Else {
-            Plugin.SetTimer(FoundPlugin.Name, FocusPluginOverlay, -1)
+            If FoundPlugin Is Plugin {
+                Plugin.SetTimer(FoundPlugin.Name, FocusPluginOverlay, -1)
+                Hotkey "F6", "On"
+                Hotkey "Tab", "On"
+                Hotkey "+Tab", "On"
+                Hotkey "^Tab", "On"
+                Hotkey "^+Tab", "On"
+                Hotkey "Ctrl", "On"
+                Hotkey "^R", "On"
+                If FoundPlugin Is Plugin And FoundPlugin.Overlay.GetCurrentControl() Is Object And FoundPlugin.Overlay.GetCurrentControl().ControlType == "Edit" {
+                    Hotkey "Right", "Off"
+                    Hotkey "Left", "Off"
+                    Hotkey "Enter", "Off"
+                    Hotkey "Space", "Off"
+                }
+                Else {
+                    Hotkey "Right", "On"
+                    Hotkey "Left", "On"
+                    Hotkey "Enter", "On"
+                    Hotkey "Space", "On"
+                }
+                If FoundPlugin Is Plugin
+                For DefinedHotkey In FoundPlugin.GetHotkeys()
+                If DefinedHotkey["Action"] != "Off" {
+                    Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
+                    Hotkey DefinedHotkey["KeyName"], "On"
+                }
+                Return True
+            }
+            TurnHotkeysOff()
             Hotkey "F6", "On"
-            Hotkey "Tab", "On"
-            Hotkey "+Tab", "On"
-            Hotkey "^Tab", "On"
-            Hotkey "^+Tab", "On"
-            Hotkey "Ctrl", "On"
-            Hotkey "^R", "On"
-            If FoundPlugin Is Plugin And FoundPlugin.Overlay.GetCurrentControl() Is Object And FoundPlugin.Overlay.GetCurrentControl().ControlType == "Edit" {
-                Hotkey "Right", "Off"
-                Hotkey "Left", "Off"
-                Hotkey "Enter", "Off"
-                Hotkey "Space", "Off"
-            }
-            Else {
-                Hotkey "Right", "On"
-                Hotkey "Left", "On"
-                Hotkey "Enter", "On"
-                Hotkey "Space", "On"
-            }
-            If FoundPlugin Is Plugin
-            For DefinedHotkey In FoundPlugin.GetHotkeys()
-            If DefinedHotkey["Action"] != "Off" {
-                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-                Hotkey DefinedHotkey["KeyName"], "On"
-            }
-            Return True
+            Return False
         }
         Else
         If WinExist("ahk_class #32768") {
@@ -153,9 +158,8 @@ ManageInput() {
             Return False
         }
         Else {
-            For Program In Standalone.List
-            For WinCriterion In Program["WinCriteria"]
-            If WinActive(WinCriterion) {
+            If FoundStandalone Is Standalone And StandaloneWinCriteria != False
+            If WinActive(StandaloneWinCriteria) {
                 Standalone.SetTimer(FoundStandalone.Name, FocusStandaloneOverlay, -1)
                 Hotkey "Tab", "On"
                 Hotkey "+Tab", "On"
@@ -272,6 +276,10 @@ TurnHotkeysOff() {
         Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
         Hotkey DefinedHotkey["KeyName"], "Off"
     }
+    If WinActive(PluginWinCriteria)
+    HotIfWinActive(PluginWinCriteria)
+    Else
+    HotIf
 }
 
 TurnHotkeysOn() {
@@ -308,6 +316,10 @@ TurnHotkeysOn() {
             Hotkey DefinedHotkey["KeyName"], "On"
         }
     }
+    If WinActive(PluginWinCriteria)
+    HotIfWinActive(PluginWinCriteria)
+    Else
+    HotIf
 }
 
 TurnPluginTimersOff(Name := "") {
@@ -388,30 +400,31 @@ TurnStandaloneTimersOn(Name := "") {
 
 UpdateState() {
     Global FoundPlugin, FoundStandalone, PluginWinCriteria, StandaloneWinCriteria
-    If WinActive(PluginWinCriteria) {
-        FoundStandalone := False
-        StandaloneWinCriteria := False
-        If !GetPluginControl()
-        FoundPlugin := False
-        Else
-        FoundPlugin := Plugin.GetByClass(ControlGetClassNN(GetPluginControl()))
-    }
-    Else {
-        FoundPlugin := False
-        FoundStandalone := False
-        StandaloneWinCriteria := False
-        For Program In Standalone.List
-        For WinCriterion In Program["WinCriteria"]
-        If WinActive(WinCriterion) {
-            Try {
+    Try {
+        If WinActive(PluginWinCriteria) {
+            FoundStandalone := False
+            StandaloneWinCriteria := False
+            If !GetPluginControl()
+            FoundPlugin := False
+            Else
+            FoundPlugin := Plugin.GetByClass(ControlGetClassNN(GetPluginControl()))
+            Return True
+        }
+        Else {
+            FoundPlugin := False
+            FoundStandalone := False
+            StandaloneWinCriteria := False
+            For Program In Standalone.List
+            For WinCriterion In Program["WinCriteria"]
+            If WinActive(WinCriterion) {
                 FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
                 StandaloneWinCriteria := WinCriterion
-            }
-            Catch {
-                FoundStandalone := False
-                StandaloneWinCriteria := False
-                Return
+                Return True
             }
         }
+        Return False
+    }
+    Catch {
+        Return False
     }
 }
