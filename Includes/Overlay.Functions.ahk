@@ -20,6 +20,7 @@ ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
         FoundPlugin.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
         FoundPlugin.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
         FoundPlugin.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
+        FoundPlugin.Overlay.SetCurrentControlID(FoundPlugin.Overlay.ChildControls[2].ChildControls[1].ControlID)
         FoundPlugin.Overlay.FocusControl(FoundPlugin.Overlay.ChildControls[2].ChildControls[1].ControlID)
     }
 }
@@ -35,6 +36,7 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
         FoundStandalone.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
         FoundStandalone.Overlay.AddControl(Standalone.ChooserOverlay.Clone())
         FoundStandalone.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
+        FoundStandalone.Overlay.SetCurrentControlID(FoundStandalone.Overlay.ChildControls[2].ChildControls[1].ControlID)
         FoundStandalone.Overlay.FocusControl(FoundStandalone.Overlay.ChildControls[2].ChildControls[1].ControlID)
     }
 }
