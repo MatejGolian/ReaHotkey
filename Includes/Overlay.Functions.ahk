@@ -6,6 +6,7 @@ ActivateEnginePluginAddLibraryButton(EngineAddLibraryButton) {
     EnginePreferencesTab.Focus(EnginePreferencesTab.ControlID)
     EngineLibrariesTab.Focus(EngineLibrariesTab.ControlID)
     EngineAddLibraryButton.Focus(EngineAddLibraryButton.ControlID)
+    AccessibilityOverlay.Speak("")
 }
 
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
