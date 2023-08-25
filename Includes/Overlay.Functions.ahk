@@ -1,5 +1,13 @@
 ﻿#Requires AutoHotkey v2.0
 
+ActivateEnginePluginAddLibraryButton(EngineAddLibraryButton) {
+    EngineLibrariesTab := AccessibilityOverlay.GetControl(EngineAddLibraryButton.SuperordinateControlID)
+    EnginePreferencesTab := AccessibilityOverlay.GetControl(EngineLibrariesTab.SuperordinateControlID)
+    EnginePreferencesTab.Focus(EnginePreferencesTab.ControlID)
+    EngineLibrariesTab.Focus(EngineLibrariesTab.ControlID)
+    EngineAddLibraryButton.Focus(EngineAddLibraryButton.ControlID)
+}
+
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
     Global FoundPlugin
     OverlayList := Plugin.GetOverlays(FoundPlugin.Name)
@@ -12,7 +20,7 @@ ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
         FoundPlugin.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
         FoundPlugin.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
         FoundPlugin.Overlay.FocusControl(FoundPlugin.Overlay.ChildControls[2].ChildControls[1].ControlID)
-        }
+    }
 }
 
 ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
@@ -127,28 +135,6 @@ CreateOverlayMenu(Found, Type) {
         OverlayMenu.Add("")
     }
     Return OverlayMenu
-}
-
-FocusEnginePlugin(EngineInstance) {
-    EngineOverlay := EngineInstance.GetOverlay()
-    CurrentEngineControl := EngineOverlay.GetCurrentControl()
-    EngineAddLibraryButton := FocusedEnginePluginAddLibraryButton()
-    If EngineAddLibraryButton Is Object And CurrentEngineControl == EngineAddLibraryButton {
-        EngineLibrariesTab := AccessibilityOverlay.GetControl(EngineAddLibraryButton.SuperordinateControlID)
-        EnginePreferencesTab := AccessibilityOverlay.GetControl(EngineLibrariesTab.SuperordinateControlID)
-        EnginePreferencesTab.Focus(EnginePreferencesTab.ControlID)
-        EngineLibrariesTab.Focus(EngineLibrariesTab.ControlID)
-        EngineAddLibraryButton.Focus(EngineAddLibraryButton.ControlID)
-    }
-}
-
-FocusedEnginePluginAddLibraryButton(OverlayObject := False) {
-    Static
-    If !IsSet(AddLibraryButton)
-    AddLibraryButton := False
-    If OverlayObject Is Object
-    AddLibraryButton := OverlayObject
-    Return AddLibraryButton
 }
 
 InArray(Needle, Haystack) {
