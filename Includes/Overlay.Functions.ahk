@@ -89,6 +89,7 @@ CreateOverlayMenu(Found, Type) {
         VendorMenuList.Set(OverlayEntry.Metadata["Vendor"], OverlayEntry.Metadata["Vendor"])
         For VendorMenu In VendorMenuList
         OverlayMenu.Add(VendorMenu, Menu())
+        OverlayMenu.OverlayNumbers.Push(0)
         VendorMenuList := Array()
         For OverlayText, OverlayNumber In SortedOverlayList {
             OverlayEntry := OverlayList[OverlayNumber]
@@ -99,9 +100,10 @@ CreateOverlayMenu(Found, Type) {
                     VendorMenuNumber := InArray(OverlayEntry.Metadata["Vendor"], VendorList)
                     VendorMenuList[VendorMenuNumber].OverlayNumbers := Array()
                     OverlayMenu.Add(OverlayEntry.Metadata["Vendor"], VendorMenuList[VendorMenuNumber])
+                    OverlayMenu.OverlayNumbers.Push(0)
                 }
                 VendorMenuNumber := InArray(OverlayEntry.Metadata["Vendor"], VendorList)
-                If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") {
+                If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And OverlayEntry.Metadata["Product"] != "" {
                     VendorMenuList[VendorMenuNumber].Add(OverlayEntry.Metadata["Product"], Change%Type%Overlay)
                     VendorMenuList[VendorMenuNumber].OverlayNumbers.Push(OverlayNumber)
                     If HasProp(Found.Overlay, "Metadata") And Found.Overlay.Metadata["Product"] == OverlayEntry.Metadata["Product"] {
@@ -110,6 +112,8 @@ CreateOverlayMenu(Found, Type) {
                     }
                 }
                 Else {
+                    If OverlayEntry.Label == ""
+                    OverlayEntry.Label := "unknown product"
                     VendorMenuList[VendorMenuNumber].Add(OverlayEntry.Label, Change%Type%Overlay)
                     VendorMenuList[VendorMenuNumber].OverlayNumbers.Push(OverlayNumber)
                     If Found.Overlay.Label == OverlayEntry.Label {
@@ -126,6 +130,8 @@ CreateOverlayMenu(Found, Type) {
                     OverlayMenu.Check(OverlayEntry.Metadata["Product"])
                 }
                 Else {
+                    If OverlayEntry.Label == ""
+                    OverlayEntry.Label := "unknown product"
                     OverlayMenu.Add(OverlayEntry.Label, Change%Type%Overlay)
                     OverlayMenu.OverlayNumbers.Push(OverlayNumber)
                     If Found.Overlay.Label == OverlayEntry.Label
