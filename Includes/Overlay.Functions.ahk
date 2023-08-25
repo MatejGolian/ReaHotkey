@@ -12,7 +12,7 @@ ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
         FoundPlugin.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
         FoundPlugin.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
         FoundPlugin.Overlay.FocusControl(FoundPlugin.Overlay.ChildControls[2].ChildControls[1].ControlID)
-    }
+        }
 }
 
 ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
@@ -32,20 +32,20 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
 
 ChoosePluginOverlay(*) {
     Global FoundPlugin
-    SetTimer ManageHotkeys, 0
+    SetTimer ManageInput, 0
     TurnHotkeysOff()
     CreateOverlayMenu(FoundPlugin, "Plugin").Show()
     TurnHotkeysOn()
-    SetTimer ManageHotkeys, 100
+    SetTimer ManageInput, 100
 }
 
 ChooseStandaloneOverlay(*) {
     Global FoundStandalone
-    SetTimer ManageHotkeys, 0
+    SetTimer ManageInput, 0
     TurnHotkeysOff()
     CreateOverlayMenu(FoundStandalone, "Standalone").Show()
     TurnHotkeysOn()
-    SetTimer ManageHotkeys, 100
+    SetTimer ManageInput, 100
 }
 
 CompensatePluginCoordinates(PluginControl) {
@@ -151,38 +151,9 @@ FocusedEnginePluginAddLibraryButton(OverlayObject := False) {
     Return AddLibraryButton
 }
 
-FocusPluginOverlay() {
-    Global FoundPlugin
-    If FoundPlugin Is Plugin
-    If FoundPlugin.Overlay.ChildControls.Length > 0 And FoundPlugin.Overlay.GetFocusableControlIDs().Length > 0 {
-        FoundPlugin.Overlay.Focus()
-    }
-    Else {
-        If HasProp(FoundPlugin.Overlay, "Metadata") And FoundPlugin.Overlay.Metadata.Has("Product") And FoundPlugin.Overlay.Metadata["Product"] != ""
-        AccessibilityOverlay.Speak(FoundPlugin.Overlay.Metadata["Product"] . " overlay active")
-        Else If FoundPlugin.Overlay.Label == ""
-        AccessibilityOverlay.Speak(FoundPlugin.Name . " overlay active")
-        Else
-        AccessibilityOverlay.Speak(FoundPlugin.Overlay.Label . " overlay active")
-    }
-}
-
-FocusStandaloneOverlay() {
-    Global FoundStandalone
-    If FoundStandalone Is Standalone {
-        Sleep 500
-        If FoundStandalone Is Standalone
-        FoundStandalone.Overlay.Focus()
-    }
-}
-
 InArray(Needle, Haystack) {
     For FoundIndex, FoundValue In Haystack
     If FoundValue == Needle
     Return FoundIndex
     Return False
-}
-
-InitEngineStandalone(*) {
-    Standalone.SetTimer("Engine", FocusStandaloneOverlay, -1)
 }

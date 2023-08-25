@@ -12,7 +12,6 @@ F6:: {
         ControlFocus(GetPluginControl(), PluginWinCriteria)
         FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
         FoundPlugin.Focus()
-        FocusPluginOverlay()
     }
     Else {
         Send "{F6}"
