@@ -127,7 +127,6 @@ ManageInput() {
                 Hotkey "^Tab", "On"
                 Hotkey "^+Tab", "On"
                 Hotkey "Ctrl", "On"
-                Hotkey "^R", "On"
                 If FoundPlugin Is Plugin And FoundPlugin.Overlay.GetCurrentControl() Is Object And FoundPlugin.Overlay.GetCurrentControl().ControlType == "Edit" {
                     Hotkey "Right", "Off"
                     Hotkey "Left", "Off"
@@ -166,7 +165,6 @@ ManageInput() {
                 Hotkey "^Tab", "On"
                 Hotkey "^+Tab", "On"
                 Hotkey "Ctrl", "On"
-                Hotkey "^R", "On"
                 If FoundStandalone Is Standalone And FoundStandalone.Overlay.GetCurrentControl() Is Object And FoundStandalone.Overlay.GetCurrentControl().ControlType == "Edit" {
                     Hotkey "Right", "Off"
                     Hotkey "Left", "Off"
@@ -261,7 +259,6 @@ TurnHotkeysOff() {
     Hotkey "Enter", "Off"
     Hotkey "Space", "Off"
     Hotkey "Ctrl", "Off"
-    Hotkey "^R", "Off"
     HotIfWinActive(PluginWinCriteria)
     For PluginEntry In Plugin.GetList()
     For DefinedHotkey In PluginEntry["Hotkeys"]
@@ -299,7 +296,6 @@ TurnHotkeysOn() {
     Hotkey "Enter", "On"
     Hotkey "Space", "On"
     Hotkey "Ctrl", "On"
-    Hotkey "^R", "On"
     If FoundPlugin Is Plugin {
         HotIfWinActive(PluginWinCriteria)
         For DefinedHotkey In FoundPlugin.GetHotkeys()

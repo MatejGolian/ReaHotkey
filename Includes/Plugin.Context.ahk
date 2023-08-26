@@ -74,11 +74,3 @@ Ctrl:: {
     Global FoundPlugin
     AccessibilityOverlay.StopSpeech()
 }
-
-^R:: {
-    Global FoundPlugin
-    FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
-    PluginOverlay := FoundPlugin.GetOverlay()
-    PluginOverlay.Reset()
-    AccessibilityOverlay.Speak(PluginOverlay.Label . " overlay reset")
-}

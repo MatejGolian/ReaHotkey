@@ -55,11 +55,3 @@ Space:: {
 Ctrl:: {
     AccessibilityOverlay.StopSpeech()
 }
-
-^R:: {
-    Global FoundStandalone
-    FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
-    StandaloneOverlay := FoundStandalone.GetOverlay()
-    StandaloneOverlay.Reset()
-    AccessibilityOverlay.Speak(StandaloneOverlay.Label . " overlay reset")
-}
