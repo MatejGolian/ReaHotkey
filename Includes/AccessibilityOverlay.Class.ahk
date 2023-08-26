@@ -139,7 +139,7 @@ Class AccessibilityOverlay {
         Return 0
     }
     
-    Focus() {
+    Focus(ControlID := 0) {
         If This.ChildControls.Length > 0 {
             This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
@@ -148,7 +148,10 @@ Class AccessibilityOverlay {
             This.SetCurrentControlID(This.CurrentControlID)
             CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
             If HasMethod(CurrentControl, "Focus") {
+                If This.ControlID != ControlID
                 CurrentControl.Focus()
+                Else
+                CurrentControl.Focus(CurrentControl.ControlID)
                 Return 1
             }
         }

@@ -61,7 +61,25 @@ ChooseStandaloneOverlay(*) {
     SetTimer ManageInput, 100
 }
 
-CompensatePluginCoordinates(PluginControl) {
+CompensatePluginGraphicCoordinates(PluginControl) {
+    Global PluginWinCriteria
+    If !HasProp(PluginControl, "OriginalRegionX1Coordinate")
+    PluginControl.OriginalRegionX1Coordinate := PluginControl.RegionX1Coordinate
+    If !HasProp(PluginControl, "OriginalRegionY1Coordinate")
+    PluginControl.OriginalRegionY1Coordinate := PluginControl.RegionY1Coordinate
+    If !HasProp(PluginControl, "OriginalRegionX2Coordinate")
+    PluginControl.OriginalRegionX2Coordinate := PluginControl.RegionX2Coordinate
+    If !HasProp(PluginControl, "OriginalRegionY2Coordinate")
+    PluginControl.OriginalRegionY2Coordinate := PluginControl.RegionY2Coordinate
+    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(PluginWinCriteria)), PluginWinCriteria
+    PluginControl.RegionX1Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX1Coordinate
+    PluginControl.RegionY1Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY1Coordinate
+    PluginControl.RegionX2Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX2Coordinate
+    PluginControl.RegionY2Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY2Coordinate
+    Return PluginControl
+}
+
+CompensatePluginHotspotCoordinates(PluginControl) {
     Global PluginWinCriteria
     If !HasProp(PluginControl, "OriginalXCoordinate")
     PluginControl.OriginalXCoordinate := PluginControl.XCoordinate
