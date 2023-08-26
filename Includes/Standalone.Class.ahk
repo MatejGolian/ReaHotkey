@@ -25,8 +25,10 @@ Class Standalone {
         This.Chooser := Chooser
         Else
         This.Chooser := True
-        For Overlay In Standalone.GetOverlays(Name)
-        This.Overlays.Push(Overlay.Clone())
+        For Number, Overlay In Standalone.GetOverlays(Name) {
+            This.Overlays.Push(Overlay.Clone())
+            This.Overlays[Number].OverlayNumber := Number
+        }
         If This.Overlays.Length == 1 {
             This.Overlay := This.Overlays[1].Clone()
         }
@@ -36,16 +38,18 @@ Class Standalone {
         Else If This.Overlays.Length > 1 And This.Chooser == True {
             This.Overlay := AccessibilityOverlay()
             This.Overlay.AddControl(Standalone.ChooserOverlay.Clone())
+            This.Overlay.OverlayNumber := 0
         }
         Else {
             This.Overlay := AccessibilityOverlay()
             This.Overlay.AddControl(Standalone.DefaultOverlay.Clone())
+            This.Overlay.OverlayNumber := 0
         }
     }
     
     GetHotkeys() {
         Return Standalone.GetHotkeys(This.Name)
-    }
+        }
     
     GetOverlay() {
         Return This.Overlay

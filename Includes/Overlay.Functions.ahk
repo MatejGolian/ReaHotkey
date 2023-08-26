@@ -13,8 +13,9 @@ ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
     Global FoundPlugin
     OverlayList := Plugin.GetOverlays(FoundPlugin.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
-    If FoundPlugin.Overlay.Label != OverlayList[OverlayNumber].Label {
+    If FoundPlugin.Overlay.OverlayNumber != OverlayNumber {
         FoundPlugin.Overlay := AccessibilityOverlay(ItemName)
+        FoundPlugin.Overlay.OverlayNumber := OverlayNumber
         If HasProp(OverlayList[OverlayNumber], "Metadata")
         FoundPlugin.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
         FoundPlugin.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
@@ -29,8 +30,9 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
     Global FoundStandalone
     OverlayList := Standalone.GetOverlays(FoundStandalone.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
-    If FoundStandalone.Overlay.Label != OverlayList[OverlayNumber].Label {
+    If FoundStandalone.Overlay.OverlayNumber != OverlayNumber {
         FoundStandalone.Overlay := AccessibilityOverlay(ItemName)
+        FoundStandalone.Overlay.OverlayNumber := OverlayNumber
         If HasProp(OverlayList[OverlayNumber], "Metadata")
         FoundStandalone.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
         FoundStandalone.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
@@ -72,31 +74,33 @@ CompensatePluginCoordinates(PluginControl) {
 }
 
 CreateOverlayMenu(Found, Type) {
-    OverlayMenu := Menu()
-    OverlayMenu.OverlayNumbers := Array()
+    CurrentOverlay := Found.Overlay
     OverlayEntries := %Type%.GetOverlays(Found.Name)
     OverlayList := ""
-    If HasProp(Found.Overlay, "Metadata") And Found.Overlay.Metadata.Has("Vendor") And Found.Overlay.Metadata["Vendor"] != ""
-    FoundVendor := Found.Overlay.Metadata["Vendor"]
+    OverlayMenu := Menu()
+    OverlayMenu.OverlayNumbers := Array()
+    UnknownProductCounter := 1
+    If HasProp(CurrentOverlay, "Metadata") And CurrentOverlay.Metadata.Has("Vendor") And CurrentOverlay.Metadata["Vendor"] != ""
+    CurrentVendor := CurrentOverlay.Metadata["Vendor"]
     Else
-    FoundVendor := ""
-    If HasProp(Found.Overlay, "Metadata") And Found.Overlay.Metadata.Has("Product") And Found.Overlay.Metadata["Product"] != ""
-    FoundProduct := Found.Overlay.Metadata["Product"]
-    Else If Found.Overlay.Label != ""
-    FoundProduct := Found.Overlay.Label
-    Else
-    FoundProduct := "unknown product"
+    CurrentVendor := ""
     For OverlayNumber, OverlayEntry In OverlayEntries {
-        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Vendor") And OverlayEntry.Metadata["Vendor"] != ""
-        Vendor := OverlayEntry.Metadata["Vendor"]
-        Else
-        Vendor := ""
-        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And OverlayEntry.Metadata["Product"] != ""
-        Product := OverlayEntry.Metadata["Product"]
-        Else If OverlayEntry.Label != ""
-        Product := OverlayEntry.Label
-        Else
-        Product := "unknown product"
+        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Vendor") And OverlayEntry.Metadata["Vendor"] != "" {
+            Vendor := OverlayEntry.Metadata["Vendor"]
+        }
+        Else {
+            Vendor := ""
+        }
+        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And OverlayEntry.Metadata["Product"] != "" {
+            Product := OverlayEntry.Metadata["Product"]
+        }
+        Else If OverlayEntry.Label != "" {
+            Product := OverlayEntry.Label
+        }
+        Else {
+            Product := "unknown product " . UnknownProductCounter
+            UnknownProductCounter++
+        }
         OverlayList .= Vendor . "`t" . Product . "`t" . OverlayNumber . "`n"
         OverlayList := Sort(OverlayList)
     }
@@ -134,20 +138,20 @@ CreateOverlayMenu(Found, Type) {
         Submenu.OverlayNumbers := Array()
         For OverlayEntry In OverlayEntries {
             Submenu.Add(OverlayEntry["Product"], Change%Type%Overlay)
-            If OverlayEntry["Product"] == FoundProduct
+            If OverlayEntry["OverlayNumber"] == CurrentOverlay.OverlayNumber
             Submenu.Check(OverlayEntry["Product"])
             Submenu.OverlayNumbers.Push(OverlayEntry["OverlayNumber"])
         }
         Submenu.Add("")
         Submenu.OverlayNumbers.Push(0)
         OverlayMenu.Add(Vendor, Submenu)
-        If Vendor == FoundVendor
+        If Vendor == CurrentVendor
         OverlayMenu.Check(Vendor)
         OverlayMenu.OverlayNumbers.Push(0)
     }
     For OverlayEntry In MainMenuItems {
         OverlayMenu.Add(OverlayEntry["Product"], Change%Type%Overlay)
-        If FoundVendor == "" And OverlayEntry["Product"] == FoundProduct
+        If OverlayEntry["OverlayNumber"] == CurrentOverlay.OverlayNumber
         OverlayMenu.Check(OverlayEntry["Product"])
         OverlayMenu.OverlayNumbers.Push(OverlayEntry["OverlayNumber"])
     }

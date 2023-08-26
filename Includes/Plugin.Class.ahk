@@ -30,8 +30,10 @@ Class Plugin {
         This.Chooser := Chooser
         Else
         This.Chooser := True
-        For Overlay In Plugin.GetOverlays(Name)
-        This.Overlays.Push(Overlay.Clone())
+        For Number, Overlay In Plugin.GetOverlays(Name) {
+            This.Overlays.Push(Overlay.Clone())
+            This.Overlays[Number].OverlayNumber := Number
+        }
         If This.Overlays.Length == 1 {
             This.Overlay := This.Overlays[1].Clone()
         }
@@ -41,11 +43,13 @@ Class Plugin {
         Else If This.Overlays.Length > 1 And This.Chooser == True {
             This.Overlay := AccessibilityOverlay()
             This.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
+            This.Overlay.OverlayNumber := 0
         }
         Else {
             This.Overlay := AccessibilityOverlay()
             This.Overlay.AddControl(Plugin.DefaultOverlay.Clone())
-        }
+            This.Overlay.OverlayNumber := 0
+            }
     }
     
     Focus() {
