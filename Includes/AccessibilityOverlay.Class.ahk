@@ -105,14 +105,16 @@ Class AccessibilityOverlay {
                 Clone.AddGraphicCheckbox(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.CheckedImage, CurrentControl.UncheckedImage, CurrentControl.CheckedHoverImage, CurrentControl.UncheckedHoverImage, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
                 Case "HotspotButton":
                 Clone.AddHotspotButton(CurrentControl.Label, CurrentControl.XCoordinate, CurrentControl.YCoordinate, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
+                Case "HotspotComboBox":
+                Clone.AddHotspotComboBox(CurrentControl.Label, CurrentControl.XCoordinate, CurrentControl.YCoordinate, CurrentControl.OnFocusFunction)
                 Case "HotspotEdit":
                 Clone.AddHotspotEdit(CurrentControl.Label, CurrentControl.XCoordinate, CurrentControl.YCoordinate, CurrentControl.OnFocusFunction)
-                Case "SpeechOutput":
-                Clone.AddSpeechOutput(CurrentControl.Message)
                 Case "OCRComboBox":
                 Clone.AddOCRComboBox(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.Language, CurrentControl.Scale, CurrentControl.OnFocusFunction)
                 Case "OCREdit":
                 Clone.AddOCREdit(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.Language, CurrentControl.Scale, CurrentControl.OnFocusFunction)
+                Case "SpeechOutput":
+                Clone.AddSpeechOutput(CurrentControl.Message)
                 Case "TabControl":
                 If CurrentControl.Tabs.Length == 0 {
                     Clone.AddTabControl(CurrentControl.Label)
@@ -524,6 +526,9 @@ Class AccessibilityOverlay {
         "HotspotButton", Map(
         "ControlTypeLabel", "button",
         "UnlabelledString", "unlabelled"),
+        "HotspotComboBox", Map(
+        "ControlTypeLabel", "combo box",
+        "UnlabelledString", "unlabelled"),
         "HotspotEdit", Map(
         "ControlTypeLabel", "edit",
         "UnlabelledString", "unlabelled"),
@@ -573,6 +578,9 @@ Class AccessibilityOverlay {
         "HotspotButton", Map(
         "ControlTypeLabel", "tlačidlo",
         "UnlabelledString", "bez názvu"),
+        "HotspotComboBox", Map(
+        "ControlTypeLabel", "kombinovaný rámik",
+        "UnlabelledString", "bez názvu"),
         "HotspotEdit", Map(
         "ControlTypeLabel", "editačné",
         "UnlabelledString", "bez názvu"),
@@ -621,6 +629,9 @@ Class AccessibilityOverlay {
         "UnlabelledString", "namnlös"),
         "HotspotButton", Map(
         "ControlTypeLabel", "knapp",
+        "UnlabelledString", "namnlös"),
+        "HotspotComboBox", Map(
+        "ControlTypeLabel", "kombinationsruta",
         "UnlabelledString", "namnlös"),
         "HotspotEdit", Map(
         "ControlTypeLabel", "redigera",
@@ -707,13 +718,13 @@ Class AccessibilityOverlay {
         Return This.AddControl(Control)
     }
     
-    AddHotspotEdit(Label, XCoordinate, YCoordinate, OnFocusFunction := "") {
-        Control := HotspotEdit(Label, XCoordinate, YCoordinate, OnFocusFunction)
+    AddHotspotComboBox(Label, XCoordinate, YCoordinate, OnFocusFunction := "") {
+        Control := HotspotComboBox(Label, XCoordinate, YCoordinate, OnFocusFunction)
         Return This.AddControl(Control)
     }
     
-    AddSpeechOutput(Message := "") {
-        Control := SpeechOutput(Message)
+    AddHotspotEdit(Label, XCoordinate, YCoordinate, OnFocusFunction := "") {
+        Control := HotspotEdit(Label, XCoordinate, YCoordinate, OnFocusFunction)
         Return This.AddControl(Control)
     }
     
@@ -724,6 +735,11 @@ Class AccessibilityOverlay {
     
     AddOCREdit(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1, OnFocusFunction := "") {
         Control := OCREdit(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale, OnFocusFunction)
+        Return This.AddControl(Control)
+    }
+    
+    AddSpeechOutput(Message := "") {
+        Control := SpeechOutput(Message)
         Return This.AddControl(Control)
     }
     
@@ -1629,6 +1645,61 @@ Class HotspotButton {
             AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
         }
         Return 1
+    }
+    
+}
+
+Class HotspotComboBox {
+    
+    ControlID := 0
+    ControlType := "ComboBox"
+    ControlTypeLabel := "combo box"
+    OnFocusFunction := Array()
+    Label := ""
+    SuperordinateControlID := 0
+    Value := ""
+    XCoordinate := 0
+    YCoordinate := 0
+    UnlabelledString := "unlabelled"
+    
+    __New(Label, XCoordinate, YCoordinate, OnFocusFunction := "") {
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        This.Label := Label
+        This.XCoordinate := XCoordinate
+        This.YCoordinate := YCoordinate
+        If OnFocusFunction != "" {
+            If OnFocusFunction Is Array
+            This.OnFocusFunction := OnFocusFunction
+            Else
+            This.OnFocusFunction := Array(OnFocusFunction)
+        }
+        AccessibilityOverlay.AllControls.Push(This)
+    }
+    
+    Focus(CurrentControlID := 0, SpeakValueOnTrue := 0) {
+        For OnFocusFunction In This.OnFocusFunction
+        %OnFocusFunction.Name%(This)
+        If This.ControlID != CurrentControlID {
+            If This.Label == ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
+        }
+        Else {
+            If SpeakValueOnTrue == 1
+            AccessibilityOverlay.Speak(This.Value)
+        }
+        Click This.XCoordinate, This.YCoordinate
+        Return 1
+    }
+    
+    GetValue() {
+        Return This.Value
+    }
+    
+    SetValue(Value) {
+        This.Value := Value
     }
     
 }
