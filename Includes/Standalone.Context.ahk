@@ -30,14 +30,14 @@ Tab:: {
     FocusPreviousTab(StandaloneOverlay)
 }
 
-Right:: {
+~Right:: {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusNextTab()
 }
 
-Left:: {
+~Left:: {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
@@ -53,14 +53,14 @@ Left:: {
     StandaloneOverlay.GetCurrentControl().Focus(StandaloneOverlay.GetCurrentControl().ControlID, 1)
 }
 
-Enter::
-Space:: {
+~Enter::
+~Space:: {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.ActivateCurrentControl()
 }
 
-Ctrl:: {
+~Ctrl:: {
     AccessibilityOverlay.StopSpeech()
 }

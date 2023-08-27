@@ -121,26 +121,7 @@ ManageInput() {
         Else {
             If FoundPlugin Is Plugin {
                 Plugin.SetTimer(FoundPlugin.Name, FocusPluginOverlay, -1)
-                Hotkey "F6", "On"
-                Hotkey "Tab", "On"
-                Hotkey "+Tab", "On"
-                Hotkey "^Tab", "On"
-                Hotkey "^+Tab", "On"
-                Hotkey "Ctrl", "On"
-                If FoundPlugin Is Plugin And FoundPlugin.Overlay.GetCurrentControl() Is Object And FoundPlugin.Overlay.GetCurrentControl().ControlType == "Edit" {
-                    Hotkey "Right", "Off"
-                    Hotkey "Left", "Off"
-                    Hotkey "Enter", "Off"
-                    Hotkey "Space", "Off"
-                }
-                Else {
-                    Hotkey "Right", "On"
-                    Hotkey "Left", "On"
-                    Hotkey "Enter", "On"
-                    Hotkey "Space", "On"
-                }
-                Hotkey "~Up", "On"
-                Hotkey "~Down", "On"
+                TurnHotkeysOn()
                 If FoundPlugin Is Plugin
                 For DefinedHotkey In FoundPlugin.GetHotkeys()
                 If DefinedHotkey["Action"] != "Off" {
@@ -162,25 +143,7 @@ ManageInput() {
             If FoundStandalone Is Standalone And StandaloneWinCriteria != False
             If WinActive(StandaloneWinCriteria) {
                 Standalone.SetTimer(FoundStandalone.Name, FocusStandaloneOverlay, -1)
-                Hotkey "Tab", "On"
-                Hotkey "+Tab", "On"
-                Hotkey "^Tab", "On"
-                Hotkey "^+Tab", "On"
-                Hotkey "Ctrl", "On"
-                If FoundStandalone Is Standalone And FoundStandalone.Overlay.GetCurrentControl() Is Object And FoundStandalone.Overlay.GetCurrentControl().ControlType == "Edit" {
-                    Hotkey "Right", "Off"
-                    Hotkey "Left", "Off"
-                    Hotkey "Enter", "Off"
-                    Hotkey "Space", "Off"
-                }
-                Else {
-                    Hotkey "Right", "On"
-                    Hotkey "Left", "On"
-                    Hotkey "Enter", "On"
-                    Hotkey "Space", "On"
-                }
-                Hotkey "~Up", "On"
-                Hotkey "~Down", "On"
+                TurnHotkeysOn()
                 If FoundStandalone Is Standalone
                 For DefinedHotkey In FoundStandalone.GetHotkeys()
                 If DefinedHotkey["Action"] != "Off" {
@@ -258,13 +221,13 @@ TurnHotkeysOff() {
     Hotkey "+Tab", "Off"
     Hotkey "^Tab", "Off"
     Hotkey "^+Tab", "Off"
-    Hotkey "Right", "Off"
-    Hotkey "Left", "Off"
+    Hotkey "~Right", "Off"
+    Hotkey "~Left", "Off"
     Hotkey "~Up", "Off"
     Hotkey "~Down", "Off"
-    Hotkey "Enter", "Off"
-    Hotkey "Space", "Off"
-    Hotkey "Ctrl", "Off"
+    Hotkey "~Enter", "Off"
+    Hotkey "~Space", "Off"
+    Hotkey "~Ctrl", "Off"
     HotIfWinActive(PluginWinCriteria)
     For PluginEntry In Plugin.GetList()
     For DefinedHotkey In PluginEntry["Hotkeys"]
@@ -297,13 +260,13 @@ TurnHotkeysOn() {
     Hotkey "+Tab", "On"
     Hotkey "^Tab", "On"
     Hotkey "^+Tab", "On"
-    Hotkey "Left", "On"
-    Hotkey "Right", "On"
+    Hotkey "~Left", "On"
+    Hotkey "~Right", "On"
     Hotkey "~Up", "On"
     Hotkey "~Down", "On"
-    Hotkey "Enter", "On"
-    Hotkey "Space", "On"
-    Hotkey "Ctrl", "On"
+    Hotkey "~Enter", "On"
+    Hotkey "~Space", "On"
+    Hotkey "~Ctrl", "On"
     If FoundPlugin Is Plugin {
         HotIfWinActive(PluginWinCriteria)
         For DefinedHotkey In FoundPlugin.GetHotkeys()

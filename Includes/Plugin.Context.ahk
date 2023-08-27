@@ -2,7 +2,7 @@
 
 #HotIf WinActive("ahk_exe reaper.exe ahk_class #32770")
 
-F6:: ) {
+F6:: {
     Global FoundPlugin
     If ControlGetFocus(PluginWinCriteria) != 0
     If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) {
@@ -47,14 +47,14 @@ Tab:: {
     FocusPreviousTab(PluginOverlay)
 }
 
-Right:: {
+~Right:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
     PluginOverlay.FocusNextTab()
 }
 
-Left:: {
+~Left:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
@@ -70,15 +70,15 @@ Left:: {
     PluginOverlay.GetCurrentControl().Focus(PluginOverlay.GetCurrentControl().ControlID, 1)
 }
 
-Enter::
-Space:: {
+~Enter::
+~Space:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
     PluginOverlay.ActivateCurrentControl()
 }
 
-Ctrl:: {
+~Ctrl:: {
     Global FoundPlugin
     AccessibilityOverlay.StopSpeech()
 }
