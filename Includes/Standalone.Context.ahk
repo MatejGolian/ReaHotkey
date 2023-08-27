@@ -2,56 +2,74 @@
 
 #HotIf
 
-Tab:: {
+Tab::
+StandaloneNextControlHK(ThisHotkey) {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusNextControl()
 }
 
-+Tab:: {
++Tab::
+StandalonePreviousControlHK(ThisHotkey) {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusPreviousControl()
 }
 
-^Tab:: {
+^Tab::
+StandaloneNextTabHK1(ThisHotkey) {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     FocusNextTab(StandaloneOverlay)
 }
 
-^+Tab:: {
+^+Tab::
+StandalonePreviousTabHK1(ThisHotkey) {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     FocusPreviousTab(StandaloneOverlay)
 }
 
-Right:: {
+Right::
+StandaloneNextTabHK2(ThisHotkey) {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusNextTab()
 }
 
-Left:: {
+Left::
+StandalonePreviousTabHK2(ThisHotkey) {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusPreviousTab()
 }
 
+~Up::
+~Down::
+StandaloneChangeComboBoxValueHK(ThisHotkey) {
+    Global FoundStandalone
+    FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+    StandaloneOverlay := FoundStandalone.GetOverlay()
+    If StandaloneOverlay.GetCurrentControl().ControlType == "ComboBox"
+    StandaloneOverlay.GetCurrentControl().Focus(StandaloneOverlay.GetCurrentControl().ControlID, 1)
+}
+
 Enter::
-Space:: {
+Space::
+StandaloneActivateControlHK(ThisHotkey) {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.ActivateCurrentControl()
 }
 
-Ctrl:: {
+Ctrl::
+StandaloneStopSpeechHK(ThisHotkey) {
     AccessibilityOverlay.StopSpeech()
 }

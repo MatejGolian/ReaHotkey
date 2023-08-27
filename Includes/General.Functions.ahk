@@ -139,6 +139,8 @@ ManageInput() {
                     Hotkey "Enter", "On"
                     Hotkey "Space", "On"
                 }
+                Hotkey "~Up", "On"
+                Hotkey "~Down", "On"
                 If FoundPlugin Is Plugin
                 For DefinedHotkey In FoundPlugin.GetHotkeys()
                 If DefinedHotkey["Action"] != "Off" {
@@ -177,6 +179,8 @@ ManageInput() {
                     Hotkey "Enter", "On"
                     Hotkey "Space", "On"
                 }
+                Hotkey "~Up", "On"
+                Hotkey "~Down", "On"
                 If FoundStandalone Is Standalone
                 For DefinedHotkey In FoundStandalone.GetHotkeys()
                 If DefinedHotkey["Action"] != "Off" {
@@ -253,9 +257,11 @@ TurnHotkeysOff() {
     Hotkey "Tab", "Off"
     Hotkey "+Tab", "Off"
     Hotkey "^Tab", "Off"
-    Hotkey "Right", "Off"
     Hotkey "^+Tab", "Off"
+    Hotkey "Right", "Off"
     Hotkey "Left", "Off"
+    Hotkey "~Up", "Off"
+    Hotkey "~Down", "Off"
     Hotkey "Enter", "Off"
     Hotkey "Space", "Off"
     Hotkey "Ctrl", "Off"
@@ -290,9 +296,11 @@ TurnHotkeysOn() {
     Hotkey "Tab", "On"
     Hotkey "+Tab", "On"
     Hotkey "^Tab", "On"
-    Hotkey "Right", "On"
     Hotkey "^+Tab", "On"
     Hotkey "Left", "On"
+    Hotkey "Right", "On"
+    Hotkey "~Up", "On"
+    Hotkey "~Down", "On"
     Hotkey "Enter", "On"
     Hotkey "Space", "On"
     Hotkey "Ctrl", "On"

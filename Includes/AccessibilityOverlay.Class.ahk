@@ -109,8 +109,8 @@ Class AccessibilityOverlay {
                 Clone.AddHotspotEdit(CurrentControl.Label, CurrentControl.XCoordinate, CurrentControl.YCoordinate, CurrentControl.OnFocusFunction)
                 Case "SpeechOutput":
                 Clone.AddSpeechOutput(CurrentControl.Message)
-                Case "OCRCombobox":
-                Clone.AddOCRCombobox(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.Language, CurrentControl.Scale, CurrentControl.OnFocusFunction)
+                Case "OCRComboBox":
+                Clone.AddOCRComboBox(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.Language, CurrentControl.Scale, CurrentControl.OnFocusFunction)
                 Case "OCREdit":
                 Clone.AddOCREdit(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.Language, CurrentControl.Scale, CurrentControl.OnFocusFunction)
                 Case "TabControl":
@@ -530,7 +530,7 @@ Class AccessibilityOverlay {
         "HotspotTab", Map(
         "ControlTypeLabel", "tab",
         "UnlabelledString", "unlabelled"),
-        "OCRCombobox", Map(
+        "OCRComboBox", Map(
         "ControlTypeLabel", "combo box",
         "UnlabelledString", "unlabelled"),
         "OCREdit", Map(
@@ -579,7 +579,7 @@ Class AccessibilityOverlay {
         "HotspotTab", Map(
         "ControlTypeLabel", "záložka",
         "UnlabelledString", "bez názvu"),
-        "OCRCombobox", Map(
+        "OCRComboBox", Map(
         "ControlTypeLabel", "kombinovaný rámik",
         "UnlabelledString", "bez názvu"),
         "OCREdit", Map(
@@ -628,7 +628,7 @@ Class AccessibilityOverlay {
         "HotspotTab", Map(
         "ControlTypeLabel", "flik",
         "UnlabelledString", "namnlös"),
-        "OCRCombobox", Map(
+        "OCRComboBox", Map(
         "ControlTypeLabel", "kombinationsruta",
         "UnlabelledString", "namnlös"),
         "OCREdit", Map(
@@ -717,8 +717,8 @@ Class AccessibilityOverlay {
         Return This.AddControl(Control)
     }
     
-    AddOCRCombobox(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1, OnFocusFunction := "") {
-        Control := OCRCombobox(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language, Scale, OnFocusFunction)
+    AddOCRComboBox(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1, OnFocusFunction := "") {
+        Control := OCRComboBox(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language, Scale, OnFocusFunction)
         Return This.AddControl(Control)
     }
     
@@ -1723,10 +1723,10 @@ Class HotspotTab Extends AccessibilityOverlay {
     
 }
 
-Class OCRCombobox {
+Class OCRComboBox {
     
     ControlID := 0
-    ControlType := "Combobox"
+    ControlType := "ComboBox"
     ControlTypeLabel := "combo box"
     Label := ""
     SuperordinateControlID := 0
