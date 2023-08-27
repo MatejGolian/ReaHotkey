@@ -2,48 +2,42 @@
 
 #HotIf
 
-Tab::
-StandaloneNextControlHK(ThisHotkey) {
+Tab:: {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusNextControl()
 }
 
-+Tab::
-StandalonePreviousControlHK(ThisHotkey) {
++Tab:: {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusPreviousControl()
 }
 
-^Tab::
-StandaloneNextTabHK1(ThisHotkey) {
+^Tab:: {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     FocusNextTab(StandaloneOverlay)
 }
 
-^+Tab::
-StandalonePreviousTabHK1(ThisHotkey) {
+^+Tab:: {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     FocusPreviousTab(StandaloneOverlay)
 }
 
-Right::
-StandaloneNextTabHK2(ThisHotkey) {
+Right:: {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusNextTab()
 }
 
-Left::
-StandalonePreviousTabHK2(ThisHotkey) {
+Left:: {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
@@ -51,8 +45,7 @@ StandalonePreviousTabHK2(ThisHotkey) {
 }
 
 ~Up::
-~Down::
-StandaloneChangeComboBoxValueHK(ThisHotkey) {
+~Down:: {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
@@ -61,15 +54,13 @@ StandaloneChangeComboBoxValueHK(ThisHotkey) {
 }
 
 Enter::
-Space::
-StandaloneActivateControlHK(ThisHotkey) {
+Space:: {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
     StandaloneOverlay.ActivateCurrentControl()
 }
 
-Ctrl::
-StandaloneStopSpeechHK(ThisHotkey) {
+Ctrl:: {
     AccessibilityOverlay.StopSpeech()
 }

@@ -2,8 +2,7 @@
 
 #HotIf WinActive("ahk_exe reaper.exe ahk_class #32770")
 
-F6::
-PluginFocusPluginControlHK(ThisHotkey) {
+F6:: ) {
     Global FoundPlugin
     If ControlGetFocus(PluginWinCriteria) != 0
     If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) {
@@ -20,48 +19,42 @@ PluginFocusPluginControlHK(ThisHotkey) {
     Send "{F6}"
 }
 
-Tab::
-PluginNextControlHK(ThisHotkey) {
+Tab:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
     PluginOverlay.FocusNextControl()
 }
 
-+Tab::
-PluginPreviousControlHK(ThisHotkey) {
++Tab:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
     PluginOverlay.FocusPreviousControl()
 }
 
-^Tab::
-PluginNextTabHK1(ThisHotkey) {
+^Tab:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
     FocusNextTab(PluginOverlay)
 }
 
-^+Tab::
-PluginPreviousTabHK1(ThisHotkey) {
+^+Tab:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
     FocusPreviousTab(PluginOverlay)
 }
 
-Right::
-PluginNextTabHK2(ThisHotkey) {
+Right:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
     PluginOverlay.FocusNextTab()
 }
 
-Left::
-PluginPreviousTabHK2(ThisHotkey) {
+Left:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
@@ -69,8 +62,7 @@ PluginPreviousTabHK2(ThisHotkey) {
 }
 
 ~Up::
-~Down::
-PluginChangeComboBoxValueHK(ThisHotkey) {
+~Down:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
@@ -79,16 +71,14 @@ PluginChangeComboBoxValueHK(ThisHotkey) {
 }
 
 Enter::
-Space::
-PluginActivateControlHK(ThisHotkey) {
+Space:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
     PluginOverlay.ActivateCurrentControl()
 }
 
-Ctrl::
-PluginStopSpeechHK(ThisHotkey) {
+Ctrl:: {
     Global FoundPlugin
     AccessibilityOverlay.StopSpeech()
 }
