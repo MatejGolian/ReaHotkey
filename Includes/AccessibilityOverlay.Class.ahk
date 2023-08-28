@@ -112,15 +112,15 @@ Class AccessibilityOverlay {
                 Case "HotspotEdit":
                 Clone.AddHotspotEdit(CurrentControl.Label, CurrentControl.XCoordinate, CurrentControl.YCoordinate, CurrentControl.OnFocusFunction)
                 Case "OCRButton":
-                Clone.AddOCRButton(CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.Language, CurrentControl.Scale, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
+                Clone.AddOCRButton(CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OCRLanguage, CurrentControl.OCRScale, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
                 Case "OCRComboBox":
-                Clone.AddOCRComboBox(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.Language, CurrentControl.Scale, CurrentControl.OnFocusFunction)
+                Clone.AddOCRComboBox(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OCRLanguage, CurrentControl.OCRScale, CurrentControl.OnFocusFunction)
                 Case "OCREdit":
-                Clone.AddOCREdit(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.Language, CurrentControl.Scale, CurrentControl.OnFocusFunction)
+                Clone.AddOCREdit(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OCRLanguage, CurrentControl.OCRScale, CurrentControl.OnFocusFunction)
                 Case "OCRTab":
-                Clone.AddOCRTab(CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.Language, CurrentControl.Scale, CurrentControl.OnFocusFunction)
+                Clone.AddOCRTab(CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OCRLanguage, CurrentControl.OCRScale, CurrentControl.OnFocusFunction)
                 Case "OCRText":
-                Clone.AddOCRText(CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.Language, CurrentControl.Scale)
+                Clone.AddOCRText(CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OCRLanguage, CurrentControl.OCRScale)
                 Case "StaticText":
                 Clone.AddStaticText(CurrentControl.Text)
                 Case "TabControl":
@@ -486,6 +486,26 @@ Class AccessibilityOverlay {
         Return 0
     }
     
+    Static OCR(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1) {
+        AvailableLanguages := OCR.GetAvailableLanguages()
+        FirstAvailableLanguage := False
+        PreferredLanguage := False
+        Loop Parse, AvailableLanguages, "`n" {
+            If A_Index == 1 And A_LoopField != ""
+            FirstAvailableLanguage := A_LoopField
+            If A_LoopField == OCRLanguage And OCRLanguage != "" {
+                PreferredLanguage := True
+                Break
+            }
+        }
+        If PreferredLanguage == False And FirstAvailableLanguage != False
+        Return OCR.FromRect(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate - RegionX1Coordinate, RegionY2Coordinate - RegionY1Coordinate, FirstAvailableLanguage, OCRScale).Text
+        Else If PreferredLanguage == True
+        Return OCR.FromRect(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate - RegionX1Coordinate, RegionY2Coordinate - RegionY1Coordinate, OCRLanguage, OCRScale).Text
+        Else
+        Return ""
+    }
+    
     Static SetupJAWS() {
         Try
         JAWS := ComObject("FreedomSci.JawsApi")
@@ -777,28 +797,28 @@ Class AccessibilityOverlay {
         Return This.AddControl(Control)
     }
     
-    AddOCRButton(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1, OnFocusFunction := "", OnActivateFunction := "") {
-        Control := OCRButton(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language, Scale, OnFocusFunction, OnActivateFunction)
+    AddOCRButton(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "", OnActivateFunction := "") {
+        Control := OCRButton(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage, OCRScale, OnFocusFunction, OnActivateFunction)
         Return This.AddControl(Control)
     }
     
-    AddOCRComboBox(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1, OnFocusFunction := "") {
-        Control := OCRComboBox(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language, Scale, OnFocusFunction)
+    AddOCRComboBox(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "") {
+        Control := OCRComboBox(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage, OCRScale, OnFocusFunction)
         Return This.AddControl(Control)
     }
     
-    AddOCREdit(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1, OnFocusFunction := "") {
-        Control := OCREdit(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language, Scale, OnFocusFunction)
+    AddOCREdit(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "") {
+        Control := OCREdit(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage, OCRScale, OnFocusFunction)
         Return This.AddControl(Control)
     }
     
-    AddOCRTab(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1, OnFocusFunction := "") {
-        Control := OCRTab(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language, Scale, OnFocusFunction)
+    AddOCRTab(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "") {
+        Control := OCRTab(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage, OCRScale, OnFocusFunction)
         Return This.AddControl(Control)
     }
     
-    AddOCRText(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1) {
-        Control := OCRText(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language, Scale)
+    AddOCRText(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1) {
+        Control := OCRText(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage, OCRScale)
         Return This.AddControl(Control)
     }
     
@@ -1923,19 +1943,19 @@ Class OCRButton {
     RegionY1Coordinate := 0
     RegionX2Coordinate := 0
     RegionY2Coordinate := 0
-    Language := ""
-    Scale := 1
+    OCRLanguage := ""
+    OCRScale := 1
     UnlabelledString := ""
     
-    __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1, OnFocusFunction := "", OnActivateFunction := "") {
+    __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "", OnActivateFunction := "") {
         AccessibilityOverlay.TotalNumberOfControls++
         This.ControlID := AccessibilityOverlay.TotalNumberOfControls
         This.RegionX1Coordinate := RegionX1Coordinate
         This.RegionY1Coordinate := RegionY1Coordinate
         This.RegionX2Coordinate := RegionX2Coordinate
         This.RegionY2Coordinate := RegionY2Coordinate
-        This.Language := Language
-        This.Scale := Scale
+        This.OCRLanguage := OCRLanguage
+        This.OCRScale := OCRScale
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -1965,31 +1985,10 @@ Class OCRButton {
     Focus(CurrentControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
         %OnFocusFunction.Name%(This)
-        AvailableLanguages := OCR.GetAvailableLanguages()
-        FirstAvailableLanguage := False
-        PreferredLanguage := False
-        Loop Parse, AvailableLanguages, "`n" {
-            If A_Index == 1 And A_LoopField != ""
-            FirstAvailableLanguage := A_LoopField
-            If A_LoopField == This.Language And This.Language != "" {
-                PreferredLanguage := True
-                Break
-            }
-        }
-        If PreferredLanguage == False And FirstAvailableLanguage != False {
-            Result := OCR.FromRect(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate - This.RegionX1Coordinate, This.RegionY2Coordinate - This.RegionY1Coordinate, FirstAvailableLanguage, This.Scale)
-            This.Label := Result.Text
-        }
-        Else If PreferredLanguage == True {
-            Result := OCR.FromRect(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate - This.RegionX1Coordinate, This.RegionY2Coordinate - This.RegionY1Coordinate, This.Language, This.Scale)
-            This.Label := Result.Text
-        }
-        Else {
-            This.Label := ""
-        }
         XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
         YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
         MouseMove XCoordinate, YCoordinate
+        This.Label := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         If This.ControlID != CurrentControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
@@ -2013,12 +2012,12 @@ Class OCRComboBox {
     RegionY1Coordinate := 0
     RegionX2Coordinate := 0
     RegionY2Coordinate := 0
-    Language := ""
-    Scale := 1
+    OCRLanguage := ""
+    OCRScale := 1
     Value := ""
     UnlabelledString := "unlabelled"
     
-    __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1, OnFocusFunction := "") {
+    __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "") {
         AccessibilityOverlay.TotalNumberOfControls++
         This.ControlID := AccessibilityOverlay.TotalNumberOfControls
         This.Label := Label
@@ -2026,8 +2025,8 @@ Class OCRComboBox {
         This.RegionY1Coordinate := RegionY1Coordinate
         This.RegionX2Coordinate := RegionX2Coordinate
         This.RegionY2Coordinate := RegionY2Coordinate
-        This.Language := Language
-        This.Scale := Scale
+        This.OCRLanguage := OCRLanguage
+        This.OCRScale := OCRScale
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -2040,28 +2039,7 @@ Class OCRComboBox {
     Focus(CurrentControlID := 0, SpeakValueOnTrue := 0) {
         For OnFocusFunction In This.OnFocusFunction
         %OnFocusFunction.Name%(This)
-        AvailableLanguages := OCR.GetAvailableLanguages()
-        FirstAvailableLanguage := False
-        PreferredLanguage := False
-        Loop Parse, AvailableLanguages, "`n" {
-            If A_Index == 1 And A_LoopField != ""
-            FirstAvailableLanguage := A_LoopField
-            If A_LoopField == This.Language And This.Language != "" {
-                PreferredLanguage := True
-                Break
-            }
-        }
-        If PreferredLanguage == False And FirstAvailableLanguage != False {
-            Result := OCR.FromRect(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate - This.RegionX1Coordinate, This.RegionY2Coordinate - This.RegionY1Coordinate, FirstAvailableLanguage, This.Scale)
-            This.Value := Result.Text
-        }
-        Else If PreferredLanguage == True {
-            Result := OCR.FromRect(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate - This.RegionX1Coordinate, This.RegionY2Coordinate - This.RegionY1Coordinate, This.Language, This.Scale)
-            This.Value := Result.Text
-        }
-        Else {
-            This.Value := ""
-        }
+        This.Value := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         If This.ControlID != CurrentControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
@@ -2100,13 +2078,13 @@ Class OCREdit {
     RegionY1Coordinate := 0
     RegionX2Coordinate := 0
     RegionY2Coordinate := 0
-    Language := ""
-    Scale := 1
+    OCRLanguage := ""
+    OCRScale := 1
     Value := ""
     BlankString := "blank"
     UnlabelledString := "unlabelled"
     
-    __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1, OnFocusFunction := "") {
+    __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "") {
         AccessibilityOverlay.TotalNumberOfControls++
         This.ControlID := AccessibilityOverlay.TotalNumberOfControls
         This.Label := Label
@@ -2114,8 +2092,8 @@ Class OCREdit {
         This.RegionY1Coordinate := RegionY1Coordinate
         This.RegionX2Coordinate := RegionX2Coordinate
         This.RegionY2Coordinate := RegionY2Coordinate
-        This.Language := Language
-        This.Scale := Scale
+        This.OCRLanguage := OCRLanguage
+        This.OCRScale := OCRScale
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -2128,28 +2106,7 @@ Class OCREdit {
     Focus(CurrentControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
         %OnFocusFunction.Name%(This)
-        AvailableLanguages := OCR.GetAvailableLanguages()
-        FirstAvailableLanguage := False
-        PreferredLanguage := False
-        Loop Parse, AvailableLanguages, "`n" {
-            If A_Index == 1 And A_LoopField != ""
-            FirstAvailableLanguage := A_LoopField
-            If A_LoopField == This.Language And This.Language != "" {
-                PreferredLanguage := True
-                Break
-            }
-        }
-        If PreferredLanguage == False And FirstAvailableLanguage != False {
-            Result := OCR.FromRect(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate - This.RegionX1Coordinate, This.RegionY2Coordinate - This.RegionY1Coordinate, FirstAvailableLanguage, This.Scale)
-            This.Value := Result.Text
-        }
-        Else If PreferredLanguage == True {
-            Result := OCR.FromRect(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate - This.RegionX1Coordinate, This.RegionY2Coordinate - This.RegionY1Coordinate, This.Language, This.Scale)
-            This.Value := Result.Text
-        }
-        Else {
-            This.Value := ""
-        }
+        This.Value := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         If This.Value == ""
         Value := This.BlankString
         Else
@@ -2185,19 +2142,19 @@ Class OCRTab Extends AccessibilityOverlay {
     RegionY1Coordinate := 0
     RegionX2Coordinate := 0
     RegionY2Coordinate := 0
-    Language := ""
-    Scale := 1
+    OCRLanguage := ""
+    OCRScale := 1
     UnlabelledString := ""
     
-    __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1, OnFocusFunction := "") {
+    __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "") {
         AccessibilityOverlay.TotalNumberOfControls++
         This.ControlID := AccessibilityOverlay.TotalNumberOfControls
         This.RegionX1Coordinate := RegionX1Coordinate
         This.RegionY1Coordinate := RegionY1Coordinate
         This.RegionX2Coordinate := RegionX2Coordinate
         This.RegionY2Coordinate := RegionY2Coordinate
-        This.Language := Language
-        This.Scale := Scale
+        This.OCRLanguage := OCRLanguage
+        This.OCRScale := OCRScale
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -2210,28 +2167,7 @@ Class OCRTab Extends AccessibilityOverlay {
     Focus(ControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
         %OnFocusFunction.Name%(This)
-        AvailableLanguages := OCR.GetAvailableLanguages()
-        FirstAvailableLanguage := False
-        PreferredLanguage := False
-        Loop Parse, AvailableLanguages, "`n" {
-            If A_Index == 1 And A_LoopField != ""
-            FirstAvailableLanguage := A_LoopField
-            If A_LoopField == This.Language And This.Language != "" {
-                PreferredLanguage := True
-                Break
-            }
-        }
-        If PreferredLanguage == False And FirstAvailableLanguage != False {
-            Result := OCR.FromRect(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate - This.RegionX1Coordinate, This.RegionY2Coordinate - This.RegionY1Coordinate, FirstAvailableLanguage, This.Scale)
-            This.Label := Result.Text
-        }
-        Else If PreferredLanguage == True {
-            Result := OCR.FromRect(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate - This.RegionX1Coordinate, This.RegionY2Coordinate - This.RegionY1Coordinate, This.Language, This.Scale)
-            This.Label := Result.Text
-        }
-        Else {
-            This.Label := ""
-        }
+        This.Label := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         If This.ControlID != ControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
@@ -2256,45 +2192,24 @@ Class OCRText {
     RegionY1Coordinate := 0
     RegionX2Coordinate := 0
     RegionY2Coordinate := 0
-    Language := ""
-    Scale := 1
+    OCRLanguage := ""
+    OCRScale := 1
     Text := ""
     
-    __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, Language := "", Scale := 1) {
+    __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1) {
         AccessibilityOverlay.TotalNumberOfControls++
         This.ControlID := AccessibilityOverlay.TotalNumberOfControls
         This.RegionX1Coordinate := RegionX1Coordinate
         This.RegionY1Coordinate := RegionY1Coordinate
         This.RegionX2Coordinate := RegionX2Coordinate
         This.RegionY2Coordinate := RegionY2Coordinate
-        This.Language := Language
-        This.Scale := Scale
+        This.OCRLanguage := OCRLanguage
+        This.OCRScale := OCRScale
         AccessibilityOverlay.AllControls.Push(This)
     }
     
     Focus(CurrentControlID := 0) {
-        AvailableLanguages := OCR.GetAvailableLanguages()
-        FirstAvailableLanguage := False
-        PreferredLanguage := False
-        Loop Parse, AvailableLanguages, "`n" {
-            If A_Index == 1 And A_LoopField != ""
-            FirstAvailableLanguage := A_LoopField
-            If A_LoopField == This.Language And This.Language != "" {
-                PreferredLanguage := True
-                Break
-            }
-        }
-        If PreferredLanguage == False And FirstAvailableLanguage != False {
-            Result := OCR.FromRect(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate - This.RegionX1Coordinate, This.RegionY2Coordinate - This.RegionY1Coordinate, FirstAvailableLanguage, This.Scale)
-            This.Text := Result.Text
-        }
-        Else If PreferredLanguage == True {
-            Result := OCR.FromRect(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate - This.RegionX1Coordinate, This.RegionY2Coordinate - This.RegionY1Coordinate, This.Language, This.Scale)
-            This.Text := Result.Text
-        }
-        Else {
-            This.Text := ""
-        }
+        This.Text := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         If This.ControlID != CurrentControlID
         AccessibilityOverlay.Speak(This.Text)
         Return 1
