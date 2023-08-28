@@ -49,7 +49,7 @@ Tab:: {
     Global FoundStandalone
     FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := FoundStandalone.GetOverlay()
-    If StandaloneOverlay.GetCurrentControl().ControlType == "ComboBox"
+    If StandaloneOverlay.GetCurrentControl() Is Object And StandaloneOverlay.GetCurrentControl().ControlType == "ComboBox"
     StandaloneOverlay.GetCurrentControl().Focus(StandaloneOverlay.GetCurrentControl().ControlID, 1)
 }
 

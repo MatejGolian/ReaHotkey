@@ -66,7 +66,7 @@ Tab:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
     PluginOverlay := FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl().ControlType == "ComboBox"
+    If PluginOverlay.GetCurrentControl() Is Object And PluginOverlay.GetCurrentControl().ControlType == "ComboBox"
     PluginOverlay.GetCurrentControl().Focus(PluginOverlay.GetCurrentControl().ControlID, 1)
 }
 
