@@ -9,8 +9,8 @@ SetWorkingDir A_InitialWorkingDir
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
 
-#Include Includes/AccessibilityOverlay.Class.ahk
-#Include Includes/OCR.Class.ahk
+#Include Includes/AccessibilityOverlay.ahk
+#Include Includes/OCR.ahk
 #Include Includes/Plugin.Class.ahk
 #Include Includes/Standalone.Class.ahk
 #Include Includes/General.Functions.ahk
