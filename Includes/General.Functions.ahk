@@ -97,7 +97,7 @@ ImportOverlays() {
 }
 
 ManageInput() {
-    Global FoundPlugin, FoundStandalone, PluginWinCriteria, StandaloneWinCriteria
+    Global AutoFocusPluginOverlay, AutoFocusStandaloneOverlay, FoundPlugin, FoundStandalone, PluginWinCriteria, StandaloneWinCriteria
     If WinActive(PluginWinCriteria)
     HotIfWinActive(PluginWinCriteria)
     Else
@@ -120,7 +120,10 @@ ManageInput() {
         }
         Else {
             If FoundPlugin Is Plugin {
-                Plugin.SetTimer(FoundPlugin.Name, FocusPluginOverlay, -1)
+                If AutoFocusPluginOverlay == True {
+                    FocusPluginOverlay()
+                    AutoFocusPluginOverlay := False
+                }
                 TurnHotkeysOn()
                 If FoundPlugin Is Plugin
                 For DefinedHotkey In FoundPlugin.GetHotkeys()
@@ -142,7 +145,10 @@ ManageInput() {
         Else {
             If FoundStandalone Is Standalone And StandaloneWinCriteria != False
             If WinActive(StandaloneWinCriteria) {
-                Standalone.SetTimer(FoundStandalone.Name, FocusStandaloneOverlay, -1)
+                If AutoFocusStandaloneOverlay == True {
+                    FocusStandaloneOverlay()
+                    AutoFocusStandaloneOverlay := False
+                }
                 TurnHotkeysOn()
                 If FoundStandalone Is Standalone
                 For DefinedHotkey In FoundStandalone.GetHotkeys()
@@ -366,18 +372,23 @@ TurnStandaloneTimersOn(Name := "") {
 }
 
 UpdateState() {
-    Global FoundPlugin, FoundStandalone, PluginWinCriteria, StandaloneWinCriteria
+    Global AutoFocusPluginOverlay, AutoFocusStandaloneOverlay, FoundPlugin, FoundStandalone, PluginWinCriteria, StandaloneWinCriteria
     Try {
         If WinActive(PluginWinCriteria) {
+            AutoFocusStandaloneOverlay := True
             FoundStandalone := False
             StandaloneWinCriteria := False
-            If !GetPluginControl()
-            FoundPlugin := False
-            Else
-            FoundPlugin := Plugin.GetByClass(ControlGetClassNN(GetPluginControl()))
-            Return True
+            If !GetPluginControl() {
+                AutoFocusPluginOverlay := True
+                FoundPlugin := False
+            }
+            Else {
+                FoundPlugin := Plugin.GetByClass(ControlGetClassNN(GetPluginControl()))
+                Return True
+            }
         }
         Else {
+            AutoFocusPluginOverlay := True
             FoundPlugin := False
             FoundStandalone := False
             StandaloneWinCriteria := False
@@ -388,6 +399,7 @@ UpdateState() {
                 StandaloneWinCriteria := WinCriterion
                 Return True
             }
+            AutoFocusStandaloneOverlay := True
         }
         Return False
     }

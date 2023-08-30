@@ -17,6 +17,8 @@ CoordMode "Pixel", "Window"
 #Include Includes/Overlay.Functions.ahk
 
 AppName := "ReaHotkey"
+AutoFocusPluginOverlay := True
+AutoFocusStandaloneOverlay := True
 FoundPlugin := False
 FoundStandalone := False
 PluginWinCriteria := "ahk_exe reaper.exe ahk_class #32770"
@@ -38,5 +40,5 @@ ImportOverlays()
 #Include Includes/Standalone.Context.ahk
 
 SetTimer UpdateState, 100
-SetTimer ManageInput, 100
 SetTimer ManageTimers, 100
+SetTimer ManageInput, 100
