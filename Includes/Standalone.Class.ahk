@@ -49,7 +49,7 @@ Class Standalone {
     
     GetHotkeys() {
         Return Standalone.GetHotkeys(This.Name)
-        }
+    }
     
     GetOverlay() {
         Return This.Overlay
@@ -62,6 +62,21 @@ Class Standalone {
     Init() {
         If This.InitFunction != ""
         %This.InitFunction.Name%(This)
+    }
+    
+    SetHotkey(KeyName, Action := "", Options := "") {
+        Standalone.SetHotkey(This.Name, KeyName, Action, Options)
+    }
+    
+    SetTimer(Function, Period := "", Priority := "") {
+        Standalone.SetTimer(This.Name, Function, Period, Priority)
+    }
+    
+    RegisterOverlay(ProgramOverlay) {
+        Standalone.RegisterOverlay(This.Name, ProgramOverlay)
+        ProgramOverlay.OverlayNumber := Standalone.List[This.Name]["Overlays"].Length
+        For ProgramInstance In Standalone.Instances
+        ProgramInstance.Overlays.Push(ProgramOverlay.Clone())
     }
     
     Static FindByActiveWindow() {
