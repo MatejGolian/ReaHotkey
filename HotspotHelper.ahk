@@ -60,7 +60,7 @@ About(*) {
     Global DialogOpen
     If DialogOpen == 0 {
         DialogOpen := 1
-        MsgBox "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+X - Copy the pixel colour under the mouse into the clipboard`nCtrl - Stop speech`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot", "About " . AppName
+        MsgBox "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+X - Copy the pixel colour under the mouse to clipboard`nCtrl - Stop speech`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot", "About " . AppName
         DialogOpen := 0
     }
 }
@@ -279,6 +279,7 @@ ManageHotkeys() {
         Hotkey "#^+W", "On"
         Hotkey "#^+I", "On"
         Hotkey "#^+T", "On"
+        Hotkey "#^+X", "On"
         Hotkey "#^+Del", "Off"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "Off"
@@ -298,6 +299,7 @@ ManageHotkeys() {
         Hotkey "#^+W", "On"
         Hotkey "#^+I", "On"
         Hotkey "#^+T", "On"
+        Hotkey "#^+X", "On"
         Hotkey "#^+Del", "On"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "On"
@@ -317,6 +319,7 @@ ManageHotkeys() {
         Hotkey "#^+W", "On"
         Hotkey "#^+I", "On"
         Hotkey "#^+T", "On"
+        Hotkey "#^+X", "On"
         Hotkey "#^+Del", "Off"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "Off"
