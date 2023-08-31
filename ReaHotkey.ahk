@@ -9,12 +9,13 @@ SetWorkingDir A_InitialWorkingDir
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
 
-#Include Includes/AccessibilityOverlay.ahk
-#Include Includes/OCR.ahk
-#Include Includes/Plugin.Class.ahk
-#Include Includes/Standalone.Class.ahk
 #Include Includes/General.Functions.ahk
 #Include Includes/Overlay.Functions.ahk
+
+#Include <AccessibilityOverlay>
+#Include <OCR>
+#Include <Plugin>
+#Include <Standalone>
 
 AppName := "ReaHotkey"
 AutoFocusPluginOverlay := True
