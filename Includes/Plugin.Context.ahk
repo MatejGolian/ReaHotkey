@@ -11,7 +11,6 @@ F6:: {
     Else If GetPluginControl() {
         ControlFocus(GetPluginControl(), PluginWinCriteria)
         FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
-        FoundPlugin.Focus()
     }
     Else {
         Send "{F6}"
