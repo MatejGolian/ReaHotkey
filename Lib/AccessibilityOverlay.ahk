@@ -487,22 +487,25 @@ Class AccessibilityOverlay {
     }
     
     Static OCR(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1) {
-        AvailableLanguages := OCR.GetAvailableLanguages()
-        FirstAvailableLanguage := False
-        PreferredLanguage := False
-        Loop Parse, AvailableLanguages, "`n" {
-            If A_Index == 1 And A_LoopField != ""
-            FirstAvailableLanguage := A_LoopField
-            If A_LoopField == OCRLanguage And OCRLanguage != "" {
-                PreferredLanguage := True
-                Break
+        If IsSet(OCR) {
+            AvailableLanguages := OCR.GetAvailableLanguages()
+            FirstAvailableLanguage := False
+            PreferredLanguage := False
+            Loop Parse, AvailableLanguages, "`n" {
+                If A_Index == 1 And A_LoopField != ""
+                FirstAvailableLanguage := A_LoopField
+                If A_LoopField == OCRLanguage And OCRLanguage != "" {
+                    PreferredLanguage := True
+                    Break
+                }
             }
+            If PreferredLanguage == False And FirstAvailableLanguage != False
+            Return OCR.FromRect(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate - RegionX1Coordinate, RegionY2Coordinate - RegionY1Coordinate, FirstAvailableLanguage, OCRScale).Text
+            Else If PreferredLanguage == True
+            Return OCR.FromRect(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate - RegionX1Coordinate, RegionY2Coordinate - RegionY1Coordinate, OCRLanguage, OCRScale).Text
+            Else
+            Return ""
         }
-        If PreferredLanguage == False And FirstAvailableLanguage != False
-        Return OCR.FromRect(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate - RegionX1Coordinate, RegionY2Coordinate - RegionY1Coordinate, FirstAvailableLanguage, OCRScale).Text
-        Else If PreferredLanguage == True
-        Return OCR.FromRect(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate - RegionX1Coordinate, RegionY2Coordinate - RegionY1Coordinate, OCRLanguage, OCRScale).Text
-        Else
         Return ""
     }
     
@@ -1335,6 +1338,7 @@ Class GraphicCheckbox {
     OnFocusFunction := Array()
     OnActivateFunction := Array()
     SuperordinateControlID := 0
+    Checked := 0
     CheckedImage := ""
     UncheckedImage := ""
     CheckedHoverImage := ""
@@ -1345,7 +1349,6 @@ Class GraphicCheckbox {
     RegionY2Coordinate := 0
     FoundXCoordinate := 0
     FoundYCoordinate := 0
-    ToggleState := 0
     NotFoundString := "not found"
     CheckedString := "checked"
     UncheckedString := "unchecked"
@@ -1387,9 +1390,9 @@ Class GraphicCheckbox {
     }
     
     Activate(CurrentControlID := 0) {
-        If This.ToggleState == 0 {
+        If This.Checked == 0 {
             If This.CheckIfInactive() == 1 {
-                This.ToggleState := 1
+                This.Checked := 1
                 If This.ControlID != CurrentControlID {
                     If HasMethod(This, "Focus")
                     This.Focus(This.ControlID)
@@ -1404,7 +1407,7 @@ Class GraphicCheckbox {
                 Return 1
             }
             If This.CheckIfActive() == 1 {
-                This.ToggleState := 0
+                This.Checked := 0
                 If This.ControlID != CurrentControlID {
                     If HasMethod(This, "Focus")
                     This.Focus(This.ControlID)
@@ -1421,7 +1424,7 @@ Class GraphicCheckbox {
         }
         Else {
             If This.CheckIfActive() == 1 {
-                This.ToggleState := 0
+                This.Checked := 0
                 If This.ControlID != CurrentControlID {
                     If HasMethod(This, "Focus")
                     This.Focus(This.ControlID)
@@ -1436,7 +1439,7 @@ Class GraphicCheckbox {
                 Return 1
             }
             If This.CheckIfInactive() == 1 {
-                This.ToggleState := 1
+                This.Checked := 1
                 If This.ControlID != CurrentControlID {
                     If HasMethod(This, "Focus")
                     This.Focus(This.ControlID)
@@ -1497,9 +1500,9 @@ Class GraphicCheckbox {
     }
     
     Focus(CurrentControlID := 0) {
-        If This.ToggleState == 0 {
+        If This.Checked == 0 {
             If This.CheckIfInactive() == 1 {
-                This.ToggleState := 0
+                This.Checked := 0
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
@@ -1512,7 +1515,7 @@ Class GraphicCheckbox {
                 Return 1
             }
             If This.CheckIfActive() == 1 {
-                This.ToggleState := 1
+                This.Checked := 1
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
@@ -1527,7 +1530,7 @@ Class GraphicCheckbox {
         }
         Else {
             If This.CheckIfActive() == 1 {
-                This.ToggleState := 1
+                This.Checked := 1
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
@@ -1540,7 +1543,7 @@ Class GraphicCheckbox {
                 Return 1
             }
             If This.CheckIfInactive() == 1 {
-                This.ToggleState := 0
+                This.Checked := 0
                 For OnFocusFunction In This.OnFocusFunction
                 %OnFocusFunction.Name%(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
@@ -1815,6 +1818,7 @@ Class HotspotComboBox {
     Focus(CurrentControlID := 0, SpeakValueOnTrue := 0) {
         For OnFocusFunction In This.OnFocusFunction
         %OnFocusFunction.Name%(This)
+        Click This.XCoordinate, This.YCoordinate
         If This.ControlID != CurrentControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
@@ -1825,7 +1829,6 @@ Class HotspotComboBox {
             If SpeakValueOnTrue == 1
             AccessibilityOverlay.Speak(This.Value)
         }
-        Click This.XCoordinate, This.YCoordinate
         Return 1
     }
     
@@ -1871,13 +1874,13 @@ Class HotspotEdit {
     Focus(CurrentControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
         %OnFocusFunction.Name%(This)
+        Click This.XCoordinate, This.YCoordinate
         If This.ControlID != CurrentControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
             Else
             AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
         }
-        Click This.XCoordinate, This.YCoordinate
         Return 1
     }
     
@@ -1918,13 +1921,13 @@ Class HotspotTab Extends AccessibilityOverlay {
     Focus(ControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
         %OnFocusFunction.Name%(This)
+        Click This.XCoordinate, This.YCoordinate
         If This.ControlID != ControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
             Else
             AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
         }
-        Click This.XCoordinate, This.YCoordinate
         Return 1
     }
     
@@ -2040,6 +2043,9 @@ Class OCRComboBox {
         For OnFocusFunction In This.OnFocusFunction
         %OnFocusFunction.Name%(This)
         This.Value := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
+        XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
+        YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
+        Click XCoordinate, YCoordinate
         If This.ControlID != CurrentControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
@@ -2050,9 +2056,6 @@ Class OCRComboBox {
             If SpeakValueOnTrue == 1
             AccessibilityOverlay.Speak(This.Value)
         }
-        XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
-        YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
-        Click XCoordinate, YCoordinate
         Return 1
     }
     
@@ -2111,15 +2114,15 @@ Class OCREdit {
         Value := This.BlankString
         Else
         Value := This.Value
+        XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
+        YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
+        Click XCoordinate, YCoordinate
         If This.ControlID != CurrentControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . Value)
             Else
             AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . Value)
         }
-        XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
-        YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
-        Click XCoordinate, YCoordinate
         Return 1
     }
     
@@ -2168,15 +2171,15 @@ Class OCRTab Extends AccessibilityOverlay {
         For OnFocusFunction In This.OnFocusFunction
         %OnFocusFunction.Name%(This)
         This.Label := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
+        XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
+        YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
+        Click XCoordinate, YCoordinate
         If This.ControlID != ControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
             Else
             AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
         }
-        XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
-        YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
-        Click XCoordinate, YCoordinate
         Return 1
     }
     
