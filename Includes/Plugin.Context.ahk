@@ -2,22 +2,6 @@
 
 #HotIf WinActive("ahk_exe reaper.exe ahk_class #32770")
 
-F6:: {
-    Global FoundPlugin
-    If ControlGetFocus(PluginWinCriteria) != 0
-    If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) {
-        Send "{F6}"
-    }
-    Else If GetPluginControl() {
-        ControlFocus(GetPluginControl(), PluginWinCriteria)
-        FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
-    }
-    Else {
-        Send "{F6}"
-    }
-    Send "{F6}"
-}
-
 Tab:: {
     Global FoundPlugin
     FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))

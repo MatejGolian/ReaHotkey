@@ -114,12 +114,10 @@ ManageInput() {
         }
         Else If ControlGetFocus(PluginWinCriteria) == 0 {
             TurnHotkeysOff()
-            Hotkey "F6", "On"
             Return False
         }
         Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria))) == 0 {
             TurnHotkeysOff()
-            Hotkey "F6", "On"
             Return False
         }
         Else {
@@ -138,7 +136,6 @@ ManageInput() {
                 Return True
             }
             TurnHotkeysOff()
-            Hotkey "F6", "On"
             Return False
         }
         Else
@@ -253,8 +250,6 @@ TurnHotkeysOff() {
     HotIfWinActive(PluginWinCriteria)
     Else
     HotIf
-    If WinActive(PluginWinCriteria)
-    Hotkey "F6", "Off"
     Hotkey "Tab", "Off"
     Hotkey "+Tab", "Off"
     Hotkey "^Tab", "Off"
@@ -292,8 +287,6 @@ TurnHotkeysOn() {
     HotIfWinActive(PluginWinCriteria)
     Else
     HotIf
-    If WinActive(PluginWinCriteria)
-    Hotkey "F6", "On"
     Hotkey "Tab", "On"
     Hotkey "+Tab", "On"
     Hotkey "^Tab", "On"
