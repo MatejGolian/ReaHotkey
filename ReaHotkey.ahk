@@ -26,8 +26,9 @@ PluginWinCriteria := "ahk_exe reaper.exe ahk_class #32770"
 StandaloneWinCriteria := False
 
 A_IconTip := AppName
-A_TrayMenu.Delete("&Pause Script")
-A_TrayMenu.Rename("E&xit", "&Close")
+A_TrayMenu.Delete
+A_TrayMenu.Add("&Pause", PauseTheApp)
+A_TrayMenu.Add("&Close", CloseTheApp)
 
 AccessibilityOverlay.Speak(AppName . " ready")
 

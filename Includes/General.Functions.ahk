@@ -1,5 +1,9 @@
 #Requires AutoHotkey v2.0
 
+CloseTheApp(*) {
+    ExitApp
+}
+
 FocusNextTab(Overlay) {
     If Overlay Is AccessibilityOverlay And Overlay.ChildControls.Length > 0 {
         CurrentControl := Overlay.GetCurrentControl()
@@ -213,6 +217,34 @@ ManageTimers() {
     Catch {
         Return False
     }
+}
+
+PauseTheApp(*) {
+    Global PluginWinCriteria
+    A_TrayMenu.ToggleCheck("&Pause")
+    Suspend -1
+    If A_IsSuspended == 1 {
+        SetTimer UpdateState, 0
+        SetTimer ManageTimers, 0
+        SetTimer ManageInput, 0
+        HotIfWinActive(PluginWinCriteria)
+        TurnHotkeysOff()
+        TurnPluginTimersOff()
+        HotIf
+        TurnHotkeysOff()
+        TurnStandaloneTimersOff()
+    }
+    Else {
+        SetTimer UpdateState, 100
+        SetTimer ManageTimers, 100
+        SetTimer ManageInput, 100
+        HotIfWinActive(PluginWinCriteria)
+        TurnHotkeysOn()
+        TurnPluginTimersOn()
+        HotIf
+        TurnHotkeysOn()
+        TurnStandaloneTimersOn()
+        }
 }
 
 TurnHotkeysOff() {
