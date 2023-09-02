@@ -235,13 +235,7 @@ PauseTheApp(*) {
         SetTimer UpdateState, 100
         SetTimer ManageTimers, 100
         SetTimer ManageInput, 100
-        HotIfWinActive(PluginWinCriteria)
-        TurnHotkeysOn()
-        TurnPluginTimersOn()
-        HotIf
-        TurnHotkeysOn()
-        TurnStandaloneTimersOn()
-        }
+    }
 }
 
 TurnHotkeysOff() {
