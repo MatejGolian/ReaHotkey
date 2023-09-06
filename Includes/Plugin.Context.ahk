@@ -62,6 +62,5 @@ Tab:: {
 }
 
 ~Ctrl:: {
-    Global FoundPlugin
     AccessibilityOverlay.StopSpeech()
 }
