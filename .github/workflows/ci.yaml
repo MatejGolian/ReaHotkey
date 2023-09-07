@@ -1,0 +1,37 @@
+on:
+  push: {}
+  pull_request: {}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build with AHK v2.0.7
+        uses: Timtam/autohotkey-build@master
+        with:
+          version: v2.0.7
+          x64: true
+          x86: true
+          compression: none
+          in: ReaHotkey.ahk
+          out: "build"
+      - name: Convert Markdown to HTML
+        uses: natescherer/markdown-to-html-with-github-style-action@v1.1.0
+        with:
+          path: README.md
+          outputpath: build
+      -
+        name: "Prepare artifact"
+        run: |
+          xcopy Images build\Images /I
+          xcopy Sounds build\Sounds /I
+          xcopy nvdaControllerClient32.dll build
+          xcopy nvdaControllerClient64.dll build
+      -
+        name: "Upload artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          name: "ReaHotkey"
+          path: build/
