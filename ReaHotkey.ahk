@@ -12,6 +12,7 @@ CoordMode "Pixel", "Window"
 #Include Includes/Overlay.Functions.ahk
 
 #Include <AccessibilityOverlay>
+#Include <JXON>
 #Include <OCR>
 #Include <Plugin>
 #Include <ReaHotkey>
@@ -24,8 +25,10 @@ A_TrayMenu.Add("&Close", ReaHotkey.Close)
 
 AccessibilityOverlay.Speak("ReaHotkey ready")
 
+Plugin.Register("Dubler 2", "JUCE_18a5c54cc971", , , False)
 Plugin.Register("Engine", "^Plugin[0-9A-F]{17}")
 Plugin.Register("Kontakt/Komplete Kontrol", ["^NIVSTChildWindow00007.*", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1"],, True)
+Standalone.Register("Dubler 2", "Vochlea\sDubler\s2\.1 ahk_class Qt5155QWindowOwnDCIcon", DublerInit, True)
 Standalone.Register("Engine", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe")
 
 ReaHotkey.ImportOverlays()
