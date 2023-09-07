@@ -3,61 +3,53 @@
 #HotIf WinActive("ahk_exe reaper.exe ahk_class #32770")
 
 Tab:: {
-    Global FoundPlugin
-    FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
-    PluginOverlay := FoundPlugin.GetOverlay()
+    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     PluginOverlay.FocusNextControl()
 }
 
 +Tab:: {
-    Global FoundPlugin
-    FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
-    PluginOverlay := FoundPlugin.GetOverlay()
+    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     PluginOverlay.FocusPreviousControl()
 }
 
 ^Tab:: {
-    Global FoundPlugin
-    FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
-    PluginOverlay := FoundPlugin.GetOverlay()
-    FocusNextTab(PluginOverlay)
+    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
+    ReaHotkey.FocusNextTab(PluginOverlay)
 }
 
 ^+Tab:: {
-    Global FoundPlugin
-    FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
-    PluginOverlay := FoundPlugin.GetOverlay()
-    FocusPreviousTab(PluginOverlay)
+    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
+    ReaHotkey.FocusPreviousTab(PluginOverlay)
 }
 
 ~Right:: {
-    Global FoundPlugin
-    FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
-    PluginOverlay := FoundPlugin.GetOverlay()
+    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     PluginOverlay.FocusNextTab()
 }
 
 ~Left:: {
-    Global FoundPlugin
-    FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
-    PluginOverlay := FoundPlugin.GetOverlay()
+    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     PluginOverlay.FocusPreviousTab()
 }
 
 ~Up::
 ~Down:: {
-    Global FoundPlugin
-    FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
-    PluginOverlay := FoundPlugin.GetOverlay()
+    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     If PluginOverlay.GetCurrentControl() Is Object And PluginOverlay.GetCurrentControl().ControlType == "ComboBox"
     PluginOverlay.GetCurrentControl().Focus(PluginOverlay.GetCurrentControl().ControlID, 1)
 }
 
 ~Enter::
 ~Space:: {
-    Global FoundPlugin
-    FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(PluginWinCriteria)))
-    PluginOverlay := FoundPlugin.GetOverlay()
+    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     PluginOverlay.ActivateCurrentControl()
 }
 

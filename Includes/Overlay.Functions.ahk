@@ -10,71 +10,65 @@ ActivateEnginePluginAddLibraryButton(EngineAddLibraryButton) {
 }
 
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
-    Global FoundPlugin
-    OverlayList := Plugin.GetOverlays(FoundPlugin.Name)
+    OverlayList := Plugin.GetOverlays(ReaHotkey.FoundPlugin.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
-    If FoundPlugin.Overlay.OverlayNumber != OverlayNumber {
-        FoundPlugin.Overlay := AccessibilityOverlay(ItemName)
-        FoundPlugin.Overlay.OverlayNumber := OverlayNumber
+    If ReaHotkey.FoundPlugin.Overlay.OverlayNumber != OverlayNumber {
+        ReaHotkey.FoundPlugin.Overlay := AccessibilityOverlay(ItemName)
+        ReaHotkey.FoundPlugin.Overlay.OverlayNumber := OverlayNumber
         If HasProp(OverlayList[OverlayNumber], "Metadata")
-        FoundPlugin.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
-        FoundPlugin.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
-        FoundPlugin.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
-        FoundPlugin.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
-        FoundPlugin.Overlay.SetCurrentControlID(FoundPlugin.Overlay.ChildControls[2].ChildControls[1].ControlID)
-        FoundPlugin.Overlay.ChildControls[2].ChildControls[1].Focus()
+        ReaHotkey.FoundPlugin.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
+        ReaHotkey.FoundPlugin.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
+        ReaHotkey.FoundPlugin.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
+        ReaHotkey.FoundPlugin.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
+        ReaHotkey.FoundPlugin.Overlay.SetCurrentControlID(ReaHotkey.FoundPlugin.Overlay.ChildControls[2].ChildControls[1].ControlID)
+        ReaHotkey.FoundPlugin.Overlay.ChildControls[2].ChildControls[1].Focus()
     }
 }
 
 ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
-    Global FoundStandalone
-    OverlayList := Standalone.GetOverlays(FoundStandalone.Name)
+    OverlayList := Standalone.GetOverlays(ReaHotkey.FoundStandalone.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
-    If FoundStandalone.Overlay.OverlayNumber != OverlayNumber {
-        FoundStandalone.Overlay := AccessibilityOverlay(ItemName)
-        FoundStandalone.Overlay.OverlayNumber := OverlayNumber
+    If ReaHotkey.FoundStandalone.Overlay.OverlayNumber != OverlayNumber {
+        ReaHotkey.FoundStandalone.Overlay := AccessibilityOverlay(ItemName)
+        ReaHotkey.FoundStandalone.Overlay.OverlayNumber := OverlayNumber
         If HasProp(OverlayList[OverlayNumber], "Metadata")
-        FoundStandalone.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
-        FoundStandalone.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
-        FoundStandalone.Overlay.AddControl(Standalone.ChooserOverlay.Clone())
-        FoundStandalone.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
-        FoundStandalone.Overlay.SetCurrentControlID(FoundStandalone.Overlay.ChildControls[2].ChildControls[1].ControlID)
-        FoundStandalone.Overlay.ChildControls[2].ChildControls[1].Focus()
+        ReaHotkey.FoundStandalone.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
+        ReaHotkey.FoundStandalone.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
+        ReaHotkey.FoundStandalone.Overlay.AddControl(Standalone.ChooserOverlay.Clone())
+        ReaHotkey.FoundStandalone.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
+        ReaHotkey.FoundStandalone.Overlay.SetCurrentControlID(ReaHotkey.FoundStandalone.Overlay.ChildControls[2].ChildControls[1].ControlID)
+        ReaHotkey.FoundStandalone.Overlay.ChildControls[2].ChildControls[1].Focus()
     }
 }
 
 ChoosePluginOverlay(*) {
-    Global FoundPlugin
-    SetTimer ManageInput, 0
-    TurnHotkeysOff()
-    CreateOverlayMenu(FoundPlugin, "Plugin").Show()
-    TurnHotkeysOn()
-    SetTimer ManageInput, 100
+    SetTimer ReaHotkey.ManageInput, 0
+    ReaHotkey.TurnHotkeysOff()
+    CreateOverlayMenu(ReaHotkey.FoundPlugin, "Plugin").Show()
+    ReaHotkey.TurnHotkeysOn()
+    SetTimer ReaHotkey.ManageInput, 100
 }
 
 ChooseStandaloneOverlay(*) {
-    Global FoundStandalone
-    SetTimer ManageInput, 0
-    TurnHotkeysOff()
-    CreateOverlayMenu(FoundStandalone, "Standalone").Show()
-    TurnHotkeysOn()
-    SetTimer ManageInput, 100
+    SetTimer ReaHotkey.ManageInput, 0
+    ReaHotkey.TurnHotkeysOff()
+    CreateOverlayMenu(ReaHotkey.FoundStandalone, "Standalone").Show()
+    ReaHotkey.TurnHotkeysOn()
+    SetTimer ReaHotkey.ManageInput, 100
 }
 
 CompensatePluginPointCoordinates(PluginControl) {
-    Global PluginWinCriteria
     If !HasProp(PluginControl, "OriginalXCoordinate")
     PluginControl.OriginalXCoordinate := PluginControl.XCoordinate
     If !HasProp(PluginControl, "OriginalYCoordinate")
     PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
-    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(PluginWinCriteria)), PluginWinCriteria
+    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)), ReaHotkey.PluginWinCriteria
     PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
     PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
     Return PluginControl
 }
 
 CompensatePluginRegionCoordinates(PluginControl) {
-    Global PluginWinCriteria
     If !HasProp(PluginControl, "OriginalRegionX1Coordinate")
     PluginControl.OriginalRegionX1Coordinate := PluginControl.RegionX1Coordinate
     If !HasProp(PluginControl, "OriginalRegionY1Coordinate")
@@ -83,7 +77,7 @@ CompensatePluginRegionCoordinates(PluginControl) {
     PluginControl.OriginalRegionX2Coordinate := PluginControl.RegionX2Coordinate
     If !HasProp(PluginControl, "OriginalRegionY2Coordinate")
     PluginControl.OriginalRegionY2Coordinate := PluginControl.RegionY2Coordinate
-    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(PluginWinCriteria)), PluginWinCriteria
+    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)), ReaHotkey.PluginWinCriteria
     PluginControl.RegionX1Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX1Coordinate
     PluginControl.RegionY1Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY1Coordinate
     PluginControl.RegionX2Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX2Coordinate
