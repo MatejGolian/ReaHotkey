@@ -13,7 +13,6 @@ CoordMode "Pixel", "Window"
 #Include Includes/Overlay.Functions.ahk
 
 #Include <AccessibilityOverlay>
-#Include <JXON>
 #Include <OCR>
 #Include <Plugin>
 #Include <Standalone>
@@ -35,9 +34,7 @@ AccessibilityOverlay.Speak(AppName . " ready")
 
 Plugin.Register("Engine", "^Plugin[0-9A-F]{17}")
 Plugin.Register("Kontakt/Komplete Kontrol", ["^NIVSTChildWindow00007.*", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1"],, True)
-Plugin.Register("Dubler 2", "JUCE_18a5c54cc971", , , False)
 Standalone.Register("Engine", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe")
-Standalone.Register("Dubler 2", "Vochlea\sDubler\s2\.1 ahk_class Qt5155QWindowOwnDCIcon", DublerInit, True)
 
 ImportOverlays()
 

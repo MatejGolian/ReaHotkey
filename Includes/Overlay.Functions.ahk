@@ -177,12 +177,3 @@ CreateOverlayMenu(Found, Type) {
     OverlayMenu.OverlayNumbers.Push(0)
     Return OverlayMenu
 }
-
-InArray(Needle, Haystack) {
-    For FoundIndex, FoundValue In Haystack
-    If FoundValue == Needle
-    Return FoundIndex
-    Return False
-}
-
-#Include Overlays/Dubler2.ahk
