@@ -250,7 +250,7 @@ DublerDetectByImage(Trigger) {
     Local x, y
     Found := ImageSearch(&x, &y, Trigger["FromX"], Trigger["FromY"], Trigger["ToX"], Trigger["ToY"], "*20 HBITMAP:*" . Trigger["Image"])
 
-    If Found And Trigger.Has("Debug") And Trigger["Debug"] == True {
+    If Found And Trigger.Has("Debug") And Trigger["Debug"] == True And Not A_IsCompiled {
         AccessibilityOverlay.Speak(Trigger["Label"] . " detected, coordinates copied to clipboard.")
         A_Clipboard := "Coordinates for " . Trigger["Label"] . ": " . x . ", " . y
     }
