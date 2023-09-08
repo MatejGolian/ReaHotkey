@@ -874,13 +874,13 @@ Class CustomButton {
         If HasMethod(This, "Focus") And CurrentControlID != This.ControlID
         This.Focus()
         For OnActivateFunction In This.OnActivateFunction
-        %OnActivateFunction.Name%(This)
+        OnActivateFunction.Call(This)
         Return 1
     }
     
     Focus(CurrentControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         If This.ControlID != CurrentControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
@@ -918,7 +918,7 @@ Class CustomComboBox {
     
     Focus(CurrentControlID := 0, SpeakValueOnTrue := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         If This.ControlID != CurrentControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
@@ -973,13 +973,13 @@ Class CustomControl {
         If HasMethod(This, "Focus") And CurrentControlID != This.ControlID
         This.Focus()
         For OnActivateFunction In This.OnActivateFunction
-        %OnActivateFunction.Name%(This)
+        OnActivateFunction.Call(This)
         Return 1
     }
     
     Focus(CurrentControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         Return 1
     }
     
@@ -1012,7 +1012,7 @@ Class CustomEdit {
     
     Focus(CurrentControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         If This.ControlID != CurrentControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
@@ -1054,7 +1054,7 @@ Class CustomTab Extends AccessibilityOverlay {
     
     Focus(ControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         If This.ControlID != ControlID {
             If This.Label == ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
@@ -1142,7 +1142,7 @@ Class GraphicButton {
                     AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
                 }
                 For OnActivateFunction In This.OnActivateFunction
-                %OnActivateFunction.Name%(This)
+                OnActivateFunction.Call(This)
                 Click This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
@@ -1157,7 +1157,7 @@ Class GraphicButton {
                     AccessibilityOverlay.Speak(This.Label . " " . This.OffString)
                 }
                 For OnActivateFunction In This.OnActivateFunction
-                %OnActivateFunction.Name%(This)
+                OnActivateFunction.Call(This)
                 Click This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
@@ -1174,7 +1174,7 @@ Class GraphicButton {
                     AccessibilityOverlay.Speak(This.Label . " " . This.OffString)
                 }
                 For OnActivateFunction In This.OnActivateFunction
-                %OnActivateFunction.Name%(This)
+                OnActivateFunction.Call(This)
                 Click This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
@@ -1189,7 +1189,7 @@ Class GraphicButton {
                     AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
                 }
                 For OnActivateFunction In This.OnActivateFunction
-                %OnActivateFunction.Name%(This)
+                OnActivateFunction.Call(This)
                 Click This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
@@ -1197,7 +1197,7 @@ Class GraphicButton {
         Else {
             If This.CheckIfActive() == 1 {
                 For OnActivateFunction In This.OnActivateFunction
-                %OnActivateFunction.Name%(This)
+                OnActivateFunction.Call(This)
                 Click This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
@@ -1252,7 +1252,7 @@ Class GraphicButton {
             If This.CheckIfInactive() == 1 {
                 This.ToggleState := 0
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
@@ -1265,7 +1265,7 @@ Class GraphicButton {
             If This.CheckIfActive() == 1 {
                 This.ToggleState := 1
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
@@ -1280,7 +1280,7 @@ Class GraphicButton {
             If This.CheckIfActive() == 1 {
                 This.ToggleState := 1
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
@@ -1293,7 +1293,7 @@ Class GraphicButton {
             If This.CheckIfInactive() == 1 {
                 This.ToggleState := 0
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
@@ -1307,7 +1307,7 @@ Class GraphicButton {
         Else {
             If This.CheckIfActive() == 1 {
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
@@ -1402,7 +1402,7 @@ Class GraphicCheckbox {
                     AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
                 }
                 For OnActivateFunction In This.OnActivateFunction
-                %OnActivateFunction.Name%(This)
+                OnActivateFunction.Call(This)
                 Click This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
@@ -1417,7 +1417,7 @@ Class GraphicCheckbox {
                     AccessibilityOverlay.Speak(This.Label . " " . This.UncheckedString)
                 }
                 For OnActivateFunction In This.OnActivateFunction
-                %OnActivateFunction.Name%(This)
+                OnActivateFunction.Call(This)
                 Click This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
@@ -1434,7 +1434,7 @@ Class GraphicCheckbox {
                     AccessibilityOverlay.Speak(This.Label . " " . This.UncheckedString)
                 }
                 For OnActivateFunction In This.OnActivateFunction
-                %OnActivateFunction.Name%(This)
+                OnActivateFunction.Call(This)
                 Click This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
@@ -1449,7 +1449,7 @@ Class GraphicCheckbox {
                     AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
                 }
                 For OnActivateFunction In This.OnActivateFunction
-                %OnActivateFunction.Name%(This)
+                OnActivateFunction.Call(This)
                 Click This.FoundXCoordinate, This.FoundYCoordinate
                 Return 1
             }
@@ -1504,7 +1504,7 @@ Class GraphicCheckbox {
             If This.CheckIfInactive() == 1 {
                 This.Checked := 0
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
@@ -1517,7 +1517,7 @@ Class GraphicCheckbox {
             If This.CheckIfActive() == 1 {
                 This.Checked := 1
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
@@ -1532,7 +1532,7 @@ Class GraphicCheckbox {
             If This.CheckIfActive() == 1 {
                 This.Checked := 1
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
@@ -1545,7 +1545,7 @@ Class GraphicCheckbox {
             If This.CheckIfInactive() == 1 {
                 This.Checked := 0
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 MouseMove This.FoundXCoordinate, This.FoundYCoordinate
                 If This.ControlID != CurrentControlID {
                     If This.Label == ""
@@ -1658,7 +1658,7 @@ Class GraphicTab Extends AccessibilityOverlay {
             If This.CheckIfInactive() == 1 {
                 This.ToggleState := 0
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 If This.ControlID != ControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
@@ -1671,7 +1671,7 @@ Class GraphicTab Extends AccessibilityOverlay {
             If This.CheckIfActive() == 1 {
                 This.ToggleState := 1
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 If This.ControlID != ControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
@@ -1686,7 +1686,7 @@ Class GraphicTab Extends AccessibilityOverlay {
             If This.CheckIfActive() == 1 {
                 This.ToggleState := 1
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 If This.ControlID != ControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
@@ -1699,7 +1699,7 @@ Class GraphicTab Extends AccessibilityOverlay {
             If This.CheckIfInactive() == 1 {
                 This.ToggleState := 0
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 If This.ControlID != ControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
@@ -1713,7 +1713,7 @@ Class GraphicTab Extends AccessibilityOverlay {
         Else {
             If This.CheckIfActive() == 1 {
                 For OnFocusFunction In This.OnFocusFunction
-                %OnFocusFunction.Name%(This)
+                OnFocusFunction.Call(This)
                 If This.ControlID != ControlID {
                     If This.Label == ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
@@ -1767,14 +1767,14 @@ Class HotspotButton {
         If HasMethod(This, "Focus") And CurrentControlID != This.ControlID
         This.Focus()
         For OnActivateFunction In This.OnActivateFunction
-        %OnActivateFunction.Name%(This)
+        OnActivateFunction.Call(This)
         Click This.XCoordinate, This.YCoordinate
         Return 1
     }
     
     Focus(CurrentControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         MouseMove This.XCoordinate, This.YCoordinate
         If This.ControlID != CurrentControlID {
             If This.Label == ""
@@ -1817,7 +1817,7 @@ Class HotspotComboBox {
     
     Focus(CurrentControlID := 0, SpeakValueOnTrue := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         Click This.XCoordinate, This.YCoordinate
         If This.ControlID != CurrentControlID {
             If This.Label == ""
@@ -1873,7 +1873,7 @@ Class HotspotEdit {
     
     Focus(CurrentControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         Click This.XCoordinate, This.YCoordinate
         If This.ControlID != CurrentControlID {
             If This.Label == ""
@@ -1920,7 +1920,7 @@ Class HotspotTab Extends AccessibilityOverlay {
     
     Focus(ControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         Click This.XCoordinate, This.YCoordinate
         If This.ControlID != ControlID {
             If This.Label == ""
@@ -1978,7 +1978,7 @@ Class OCRButton {
         If HasMethod(This, "Focus") And CurrentControlID != This.ControlID
         This.Focus()
         For OnActivateFunction In This.OnActivateFunction
-        %OnActivateFunction.Name%(This)
+        OnActivateFunction.Call(This)
         XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
         YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
         Click XCoordinate, YCoordinate
@@ -1987,7 +1987,7 @@ Class OCRButton {
     
     Focus(CurrentControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
         YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
         MouseMove XCoordinate, YCoordinate
@@ -2041,7 +2041,7 @@ Class OCRComboBox {
     
     Focus(CurrentControlID := 0, SpeakValueOnTrue := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         This.Value := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
         YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
@@ -2108,7 +2108,7 @@ Class OCREdit {
     
     Focus(CurrentControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         This.Value := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         If This.Value == ""
         Value := This.BlankString
@@ -2169,7 +2169,7 @@ Class OCRTab Extends AccessibilityOverlay {
     
     Focus(ControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        %OnFocusFunction.Name%(This)
+        OnFocusFunction.Call(This)
         This.Label := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
         YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)

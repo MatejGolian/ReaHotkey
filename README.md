@@ -1,5 +1,5 @@
 # What's This And Who Is It For?
-This is an AutoHotkey scripth I wrote in order to make certain virtual instruments/sample libraries  and related programs at least a little more accessible to blind users. It is based on my [accessibilityOverlay](https://github.com/MatejGolian/accessibilityOverlay/) script and is primarily designed to run in tandem with the REAPER digital audio workstation, although in particular cases standalone versions of programs/instruments may be supported as well.
+This is an AutoHotkey scripth which aims to make certain virtual instruments/sample libraries  and related programs at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although in particular cases standalone versions of programs/instruments may be supported as well.
 ## Features
 * Makes it possible to switch between the classic and modern mixes in Audio Imperia's Areia library.
   - Only works inside REAPER.

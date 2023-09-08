@@ -1,14 +1,5 @@
 ﻿#Requires AutoHotkey v2.0
 
-ActivateEnginePluginAddLibraryButton(EngineAddLibraryButton) {
-    EngineLibrariesTab := AccessibilityOverlay.GetControl(EngineAddLibraryButton.SuperordinateControlID)
-    EnginePreferencesTab := AccessibilityOverlay.GetControl(EngineLibrariesTab.SuperordinateControlID)
-    EnginePreferencesTab.Focus(EnginePreferencesTab.ControlID)
-    EngineLibrariesTab.Focus(EngineLibrariesTab.ControlID)
-    EngineAddLibraryButton.Focus(EngineAddLibraryButton.ControlID)
-    AccessibilityOverlay.Speak("")
-}
-
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
     OverlayList := Plugin.GetOverlays(ReaHotkey.FoundPlugin.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]

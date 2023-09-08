@@ -2,13 +2,14 @@
 
 #MaxThreadsPerHotkey 1
 #SingleInstance Force
-#Warn LocalSameAsGlobal, Off
+#Warn All
 SendMode "Input"
 SetTitleMatchMode "RegEx"
 SetWorkingDir A_InitialWorkingDir
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
 
+#Include Includes/Overlay.Definitions.ahk
 #Include Includes/Overlay.Functions.ahk
 
 #Include <AccessibilityOverlay>
@@ -31,7 +32,7 @@ Plugin.Register("Kontakt/Komplete Kontrol", ["^NIVSTChildWindow00007.*", "^Qt6[0
 Standalone.Register("Dubler 2", "Vochlea\sDubler\s2\.1 ahk_class Qt5155QWindowOwnDCIcon", DublerInit, True)
 Standalone.Register("Engine", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe")
 
-ReaHotkey.ImportOverlays()
+ReaHotkey.InitOverlays()
 
 #Include Includes/Plugin.Context.ahk
 #Include Includes/Standalone.Context.ahk
