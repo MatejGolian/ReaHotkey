@@ -9,10 +9,6 @@ Class ReaHotkey {
     Static PluginWinCriteria := "ahk_exe reaper.exe ahk_class #32770"
     Static StandaloneWinCriteria := False
     
-    Static Close(*) {
-        ExitApp
-    }
-    
     Static FocusNextTab(Overlay) {
         If Overlay Is AccessibilityOverlay And Overlay.ChildControls.Length > 0 {
             CurrentControl := Overlay.GetCurrentControl()
@@ -102,28 +98,15 @@ Class ReaHotkey {
         Return False
     }
     
-    Static ImportOverlays() {
-        #Include ../Includes/Overlay.Definitions.ahk
-    }
-    
-    Static TogglePause(*) {
-        A_TrayMenu.ToggleCheck("&Pause")
-        Suspend -1
-        If A_IsSuspended == 1 {
-            SetTimer ReaHotkey.UpdateState, 0
-            SetTimer ReaHotkey.ManageTimers, 0
-            SetTimer ReaHotkey.ManageInput, 0
-            HotIfWinActive(ReaHotkey.PluginWinCriteria)
-            ReaHotkey.TurnHotkeysOff()
-            ReaHotkey.TurnPluginTimersOff()
-            HotIf
-            ReaHotkey.TurnHotkeysOff()
-            ReaHotkey.TurnStandaloneTimersOff()
-        }
-        Else {
-            SetTimer ReaHotkey.UpdateState, 100
-            SetTimer ReaHotkey.ManageTimers, 100
-            SetTimer ReaHotkey.ManageInput, 100
+    Static InitOverlays() {
+        Loop Files, "Includes/Overlays/*.ahk" {
+            If A_LoopFileExt == ""
+            Length := StrLen(A_LoopFileName)
+            Else
+            Length := StrLen(A_LoopFileName) - (StrLen(A_LoopFileExt) + 1)
+            FileNameNoExt := SubStr(A_LoopFileName, 1, Length)
+            Try
+            %FileNameNoExt%.Init()
         }
     }
     
@@ -277,6 +260,14 @@ Class ReaHotkey {
         }
     }
     
+    Class Close {
+        
+        Static Call(*) {
+            ExitApp
+        }
+        
+    }
+    
     Class ManageInput {
         
         Static Call() {
@@ -394,6 +385,31 @@ Class ReaHotkey {
             }
             Catch {
                 Return False
+            }
+        }
+        
+    }
+    
+    Class TogglePause {
+        
+        Static Call(*) {
+            A_TrayMenu.ToggleCheck("&Pause")
+            Suspend -1
+            If A_IsSuspended == 1 {
+                SetTimer ReaHotkey.UpdateState, 0
+                SetTimer ReaHotkey.ManageTimers, 0
+                SetTimer ReaHotkey.ManageInput, 0
+                HotIfWinActive(ReaHotkey.PluginWinCriteria)
+                ReaHotkey.TurnHotkeysOff()
+                ReaHotkey.TurnPluginTimersOff()
+                HotIf
+                ReaHotkey.TurnHotkeysOff()
+                ReaHotkey.TurnStandaloneTimersOff()
+            }
+            Else {
+                SetTimer ReaHotkey.UpdateState, 100
+                SetTimer ReaHotkey.ManageTimers, 100
+                SetTimer ReaHotkey.ManageInput, 100
             }
         }
         
