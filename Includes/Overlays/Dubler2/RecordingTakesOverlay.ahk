@@ -1,22 +1,19 @@
 #Requires AutoHotkey v2.0
 
-DublerShowRecordingTakesOverlay := False
-DublerTakesDetected := 0
+Static ShowRecordingTakesOverlay := False
+Static TakesDetected := 0
 
-DublerDetectRecordingTakesOverlay(*) {
-    Global DublerShowRecordingTakesOverlay
-    Return DublerShowRecordingTakesOverlay
+Static DetectRecordingTakesOverlay(*) {
+    Return Dubler2.ShowRecordingTakesOverlay
 }
 
-DublerSpeakRecordedTakes() {
+Static SpeakRecordedTakes() {
     Critical
 
-    Global DublerShowRecordingTakesOverlay, DublerTakesDetected
-    
-    If Not ReaHotkey.FoundStandalone Is Standalone Or Not ReaHotkey.FoundStandalone.Overlay.Label == "Dubler 2 Recording Takes" Or Not DublerShowRecordingTakesOverlay Or Not WinActive(ReaHotkey.StandaloneWinCriteria)
+    If Not ReaHotkey.FoundStandalone Is Standalone Or Not ReaHotkey.FoundStandalone.Overlay.Label == "Dubler 2 Recording Takes" Or Not Dubler2.ShowRecordingTakesOverlay Or Not WinActive(ReaHotkey.StandaloneWinCriteria)
         Return
 
-    OldTakes := DublerTakesDetected
+    OldTakes := Dubler2.TakesDetected
 
     For Take In [
                 [380, 348],
@@ -33,7 +30,7 @@ DublerSpeakRecordedTakes() {
                 [919, 337],
             ] {
 
-        If A_Index <= DublerTakesDetected
+        If A_Index <= Dubler2.TakesDetected
             Continue
 
         If Not InArray(PixelGetColor(Take[1], Take[2]), [
@@ -42,28 +39,26 @@ DublerSpeakRecordedTakes() {
                     0x272727,
                     0x262626,
                 ])
-            DublerTakesDetected += 1
+            Dubler2.TakesDetected += 1
 
         Break
     }
 
-    If DublerTakesDetected > OldTakes
-        AccessibilityOverlay.Speak(DublerTakesDetected . " takes")
+    If Dubler2.TakesDetected > OldTakes
+        AccessibilityOverlay.Speak(Dubler2.TakesDetected . " takes")
 }
 
-DublerClickStopRecordingTakesButton(*) {
-    Global DublerShowRecordingTakesOverlay
+Static ClickStopRecordingTakesButton(*) {
 
-    DublerShowRecordingTakesOverlay := False
-    CloseOverlay()
+    Dubler2.ShowRecordingTakesOverlay := False
+    Dubler2.CloseOverlay()
 }
 
-DublerCreateRecordingTakesOverlay(Overlay) {
-    Global DublerTakesDetected
+Static CreateRecordingTakesOverlay(Overlay) {
     
-    DublerTakesDetected := 0
+    Dubler2.TakesDetected := 0
 
-    Overlay.AddHotspotButton("Stop recording", 512, 295, FocusButton, DublerClickStopRecordingTakesButton)
+    Overlay.AddHotspotButton("Stop recording", 512, 295, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ClickStopRecordingTakesButton"))
 
     Return Overlay
 }

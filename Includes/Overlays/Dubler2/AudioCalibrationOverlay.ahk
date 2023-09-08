@@ -1,6 +1,6 @@
 #Requires AutoHotkey v2.0
 
-ReadDublerAudioSettings() {
+Static ReadDublerAudioSettings() {
     Obj := ComObject("MSXML2.DOMDocument.6.0")
     Obj.Async := false
     Data := FileRead(A_AppData . "\Vochlea\Dubler2\audiosettings.xml", "UTF-8")
@@ -18,8 +18,8 @@ ReadDublerAudioSettings() {
     )
 }
 
-DublerClickAudioCalibrationButton(*) {
-    CloseOverlay(ReaHotkey.FoundStandalone.Overlay.Label)
+Static ClickAudioCalibrationButton(*) {
+    Dubler2.CloseOverlay(ReaHotkey.FoundStandalone.Overlay.Label)
 
     ; audio device settings button
     Click(863, 55)
@@ -46,14 +46,14 @@ DublerClickAudioCalibrationButton(*) {
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-SetupAudioCalibrationButton(Overlay) {
-    ASettings := ReadDublerAudioSettings()
+Static SetupAudioCalibrationButton(Overlay) {
+    ASettings := Dubler2.ReadDublerAudioSettings()
 
-    Overlay.AddControl(CustomButton("Calibrate audio device: " . ASettings["audioInputDeviceName"], FocusButton, DublerClickAudioCalibrationButton))
+    Overlay.AddControl(CustomButton("Calibrate audio device: " . ASettings["audioInputDeviceName"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ClickAudioCalibrationButton")))
 }
 
-DublerCreateAudioCalibrationOverlay(Overlay) {
-    Overlay.AddHotspotButton("Back", 865, 120, FocusButton, CloseOverlay)
+Static CreateAudioCalibrationOverlay(Overlay) {
+    Overlay.AddHotspotButton("Back", 865, 120, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CloseOverlay"))
     
     Return Overlay
 }

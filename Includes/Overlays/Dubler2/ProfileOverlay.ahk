@@ -1,9 +1,9 @@
 #Requires AutoHotkey v2.0
 
-DublerAnnounceNotes := False
-DublerNoteAnnouncements := Map()
+Static AnnounceNotes := False
+Static NoteAnnouncements := Map()
 
-Class DublerHotspotCheckbox extends HotspotButton {
+Class HotspotCheckbox extends HotspotButton {
 
     Checked := False
 
@@ -33,7 +33,7 @@ Class DublerHotspotCheckbox extends HotspotButton {
     }
 }
 
-Class DublerCustomCheckbox extends CustomButton {
+Class CustomCheckbox extends CustomButton {
 
     Checked := False
 
@@ -63,7 +63,7 @@ Class DublerCustomCheckbox extends CustomButton {
     }
 }
 
-Class DublerTriggerButton extends CustomButton {
+Class TriggerButton extends CustomButton {
 
     Index := 0
     X := 0
@@ -71,7 +71,7 @@ Class DublerTriggerButton extends CustomButton {
 
 }
 
-SelectTab(Tab, *) {
+Static SelectTab(Tab, *) {
     For Ctrl In ReaHotkey.FoundStandalone.Overlay.ChildControls {
         If Ctrl.ControlType == "TabControl" {
             Ctrl.CurrentTab := Tab
@@ -82,45 +82,41 @@ SelectTab(Tab, *) {
     }
 }
 
-DublerCloseProfileOverlay(*) {
-    Global DublerOverlayPositions, DublerProfileLoaded
-    DublerProfileLoaded := Map(
+Static CloseProfileOverlay(*) {
+    Dubler2.ProfileLoaded := Map(
         "Index", 0,
         "File", "",
         "Current", "",
         "Backup", ""
     )
-    CloseOverlay()
-    DublerOverlayPositions.Delete("Dubler 2 Profile")
+    Dubler2.CloseOverlay()
+    Dubler2.OverlayPositions.Delete("Dubler 2 Profile")
 }
 
-DublerDetectProfile(Trigger) {
-    Global DublerProfileLoaded
+Static DetectProfile(Trigger) {
 
-    If DublerProfileLoaded["Index"] == 0
+    If Dubler2.ProfileLoaded["Index"] == 0
         Return False
 
-    return DublerDetectByImage(Trigger)
+    return Dubler2.DetectByImage(Trigger)
 }
 
-DublerRevertProfileButton(*) {
-    Global DublerProfileLoaded
+Static RevertProfileButton(*) {
 
-    CloseOverlay("Dubler 2 Profile")
+    Dubler2.CloseOverlay("Dubler 2 Profile")
 
     Click(362, 56)
-    DublerProfileLoaded.Set("Current", "")
+    Dubler2.ProfileLoaded.Set("Current", "")
     Sleep 1000
 
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    FileAppend(FixJson(Jxon_Dump(DublerProfileLoaded["Backup"], 4)), A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    DublerClickLoadProfileButton(DublerProfileLoaded["Index"])
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Backup"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-DublerAutoSaveProfile() {
-    Global DublerProfileLoaded
+Static AutoSaveProfile() {
 
     If Not ReaHotkey.FoundStandalone Is Standalone Or ReaHotkey.FoundStandalone.Overlay.Label != "Dubler 2 Profile" Or Not WinActive(ReaHotkey.StandaloneWinCriteria)
         Return
@@ -128,20 +124,19 @@ DublerAutoSaveProfile() {
         Click(635, 55)
         Sleep 300
 
-        Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"], "UTF-8")
-        DublerProfileLoaded.Set("Current", Jxon_Load(&Profile))
+        Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"], "UTF-8")
+        Dubler2.ProfileLoaded.Set("Current", Jxon_Load(&Profile))
     }
 }
 
-DublerActivateSynthPresetButton(Button) {
-    Global DublerProfileLoaded
+Static ActivateSynthPresetButton(Button) {
 
     PresetsMenu := Menu()
 
     For Preset In ["8 Bit Lead", "Bass Pluck", "Boards", "Pad", "Pure", "Trap Bass", "Trumpet Lead", "Wobble Bass"]
-        PresetsMenu.Add(Preset, DublerClickSynthPresetButton.Bind(Button, Preset))
+        PresetsMenu.Add(Preset, ObjBindMethod(Dubler2, "ClickSynthPresetButton", Button, Preset))
 
-    PresetsMenu.Check(DublerProfileLoaded["Current"]["synthPreset"])
+    PresetsMenu.Check(Dubler2.ProfileLoaded["Current"]["synthPreset"])
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
@@ -150,7 +145,7 @@ DublerActivateSynthPresetButton(Button) {
     SetTimer ReaHotkey.ManageInput, 100
 }
 
-DublerClickSynthPresetButton(Button, Preset, *) {
+Static ClickSynthPresetButton(Button, Preset, *) {
 
     Click(678, 620)
     Sleep 300
@@ -177,15 +172,14 @@ DublerClickSynthPresetButton(Button, Preset, *) {
     Button.Label := "Synth Preset: " . Preset
 }
 
-DublerActivateChordsVoicingPresetButton(Button) {
-    Global DublerProfileLoaded
+Static ActivateChordsVoicingPresetButton(Button) {
 
     PresetsMenu := Menu()
 
     For Preset In ["Cluster", "Spread"]
-        PresetsMenu.Add(Preset, DublerClickChordsVoicingPresetButton.Bind(Button, Preset))
+        PresetsMenu.Add(Preset, ObjBindMethod(Dubler2, "ClickChordsVoicingPresetButton", Button, Preset))
 
-    PresetsMenu.Check(DublerProfileLoaded["Current"]["Chords"]["voicingPreset"])
+    PresetsMenu.Check(Dubler2.ProfileLoaded["Current"]["Chords"]["voicingPreset"])
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
@@ -194,7 +188,7 @@ DublerActivateChordsVoicingPresetButton(Button) {
     SetTimer ReaHotkey.ManageInput, 100
 }
 
-DublerClickChordsVoicingPresetButton(Button, Preset, *) {
+Static ClickChordsVoicingPresetButton(Button, Preset, *) {
 
     Click(534, 566)
     Sleep 300
@@ -209,12 +203,11 @@ DublerClickChordsVoicingPresetButton(Button, Preset, *) {
     Button.Label := "Voicing Preset: " . Preset
 }
 
-DublerActivateChordPresetButton(Button) {
-    Global DublerProfileLoaded
+Static ActivateChordPresetButton(Button) {
 
     Local Presets
     
-    If DublerProfileLoaded["Current"]["Scale"]["patternName"] == "Chromatic"
+    If Dubler2.ProfileLoaded["Current"]["Scale"]["patternName"] == "Chromatic"
         Presets := ["Custom"]
     Else
         Presets := ["Triads", "Pop Simple", "Pop Advanced", "Custom"]
@@ -222,9 +215,9 @@ DublerActivateChordPresetButton(Button) {
     PresetsMenu := Menu()
 
     For Preset In Presets
-        PresetsMenu.Add(Preset, DublerClickChordPresetButton.Bind(Button, Preset))
+        PresetsMenu.Add(Preset, ObjBindMethod(Dubler2, "ClickChordPresetButton", Button, Preset))
 
-    PresetsMenu.Check(DublerProfileLoaded["Current"]["Chords"]["chordPreset"])
+    PresetsMenu.Check(Dubler2.ProfileLoaded["Current"]["Chords"]["chordPreset"])
     PresetsMenu.Disable("Custom")
 
     SetTimer ReaHotkey.ManageInput, 0
@@ -234,7 +227,7 @@ DublerActivateChordPresetButton(Button) {
     SetTimer ReaHotkey.ManageInput, 100
 }
 
-DublerClickChordPresetButton(Button, Preset, *) {
+Static ClickChordPresetButton(Button, Preset, *) {
 
     Click(253, 227)
     Sleep 300
@@ -251,16 +244,15 @@ DublerClickChordPresetButton(Button, Preset, *) {
     Button.Label := "Chord Preset: " . Preset
 }
 
-DublerActivateKeyButton(Button) {
-    Global DublerProfileLoaded
+Static ActivateKeyButton(Button) {
 
     KeyMenu := Menu()
 
     For Key In ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] {
-        KeyMenu.Add(Key, DublerClickKeyButton.Bind(Button, Key))
+        KeyMenu.Add(Key, ObjBindMethod(Dubler2, "ClickKeyButton", Button, Key))
     }
 
-    KeyMenu.Check(DublerProfileLoaded["Current"]["Scale"]["rootName"])
+    KeyMenu.Check(Dubler2.ProfileLoaded["Current"]["Scale"]["rootName"])
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
@@ -269,7 +261,7 @@ DublerActivateKeyButton(Button) {
     SetTimer ReaHotkey.ManageInput, 100
 }
 
-DublerClickKeyButton(Button, Key, *) {
+Static ClickKeyButton(Button, Key, *) {
 
     Click(543, 501)
     Sleep 300
@@ -304,16 +296,15 @@ DublerClickKeyButton(Button, Key, *) {
     Button.Label := "Key: " . Key
 }
 
-DublerActivateScaleButton(Button) {
-    Global DublerProfileLoaded
+Static ActivateScaleButton(Button) {
 
     ScaleMenu := Menu()
 
     For Scale In ["Major", "Minor", "Harmonic Minor", "Major Pentatonic", "Minor Pentatonic", "Blues", "Locrian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Hungarian (Gypsy) Minor", "Whole Tone", "Aeolian Dominant (Hindu)", "Chromatic"] {
-        ScaleMenu.Add(Scale, DublerClickScaleButton.Bind(Button, Scale))
+        ScaleMenu.Add(Scale, ObjBindMethod(Dubler2, "ClickScaleButton", Button, Scale))
     }
 
-    ScaleMenu.Check(DublerProfileLoaded["Current"]["Scale"]["patternName"])
+    ScaleMenu.Check(Dubler2.ProfileLoaded["Current"]["Scale"]["patternName"])
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
@@ -322,7 +313,7 @@ DublerActivateScaleButton(Button) {
     SetTimer ReaHotkey.ManageInput, 100
 }
 
-DublerClickScaleButton(Button, Scale, *) {
+Static ClickScaleButton(Button, Scale, *) {
 
     Click(662, 502)
     Sleep 300
@@ -363,21 +354,20 @@ DublerClickScaleButton(Button, Scale, *) {
     Button.Label := "Scale: " . Scale
 }
 
-DublerActivateNotesButton(Button) {
-    Global DublerProfileLoaded
+Static ActivateNotesButton(Button) {
 
-    Notes := DublerProfileLoaded["Current"]["Scale"]["scaleNotes"]["data"]
-    Enabled := DublerProfileLoaded["Current"]["Scale"]["toggleMask"]["data"]
+    Notes := Dubler2.ProfileLoaded["Current"]["Scale"]["scaleNotes"]["data"]
+    Enabled := Dubler2.ProfileLoaded["Current"]["Scale"]["toggleMask"]["data"]
 
     NotesMenu := Menu()
 
     If Notes != 4095 {
-        NotesMenu.Add("You cannot add new notes to this scale without changing the key or scale. Please select a different key and/or scale instead.", DublerClickNotesButton)
+        NotesMenu.Add("You cannot add new notes to this scale without changing the key or scale. Please select a different key and/or scale instead.", Dubler2.ClickNotesButton)
         NotesMenu.Disable("You cannot add new notes to this scale without changing the key or scale. Please select a different key and/or scale instead.")
     }
 
     For Note In ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] {
-        NotesMenu.Add(Note, DublerClickNotesButton.Bind(Note))
+        NotesMenu.Add(Note, ObjBindMethod(Dubler2, "ClickNotesButton", Note))
 
         If Enabled & (1 << (A_Index - 1)) > 0 And Notes & (1 << (A_Index - 1)) > 0
             NotesMenu.Check(Note)
@@ -393,7 +383,7 @@ DublerActivateNotesButton(Button) {
     SetTimer ReaHotkey.ManageInput, 100
 }
 
-DublerClickNotesButton(Note, *) {
+Static ClickNotesButton(Note, *) {
 
     Switch(Note) {
         Case "C":
@@ -423,12 +413,11 @@ DublerClickNotesButton(Note, *) {
     }
 }
 
-DublerActivatePitchStickinessButton(Button) {
-    Global DublerProfileLoaded
+Static ActivatePitchStickinessButton(Button) {
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
-    Stickiness := InputBox("Pitch Bend Stickiness in % (from 0 to 100):", "ReaHotkey", , Integer(DublerProfileLoaded["Current"]["Pitch"]["pitchStickiness"] * 100))
+    Stickiness := InputBox("Pitch Bend Stickiness in % (from 0 to 100):", "ReaHotkey", , Integer(Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchStickiness"] * 100))
     ReaHotkey.TurnHotkeysOn()
     SetTimer ReaHotkey.ManageInput, 100
 
@@ -444,27 +433,26 @@ DublerActivatePitchStickinessButton(Button) {
     Else If NStickiness < 0
         NStickiness := 0
 
-    DublerProfileLoaded["Current"]["Pitch"]["pitchStickiness"] := NStickiness / 100
+    Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchStickiness"] := NStickiness / 100
 
-    CloseOverlay("Dubler 2 Profile")
+    Dubler2.CloseOverlay("Dubler 2 Profile")
 
     Click(362, 56)
     Sleep 1000
 
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    FileAppend(FixJson(Jxon_Dump(DublerProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    DublerProfileLoaded.Set("Current", "")
-    DublerClickLoadProfileButton(DublerProfileLoaded["Index"])
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    Dubler2.ProfileLoaded.Set("Current", "")
+    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-DublerActivatePitchInputGainButton(Button) {
-    Global DublerProfileLoaded
+Static ActivatePitchInputGainButton(Button) {
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
-    Gain := InputBox("Pitch Input Gain in % (from 0 to 100):", "ReaHotkey", , Integer(DublerProfileLoaded["Current"]["Pitch"]["pitchInputGain"] * 100))
+    Gain := InputBox("Pitch Input Gain in % (from 0 to 100):", "ReaHotkey", , Integer(Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchInputGain"] * 100))
     ReaHotkey.TurnHotkeysOn()
     SetTimer ReaHotkey.ManageInput, 100
 
@@ -480,54 +468,51 @@ DublerActivatePitchInputGainButton(Button) {
     Else If NGain < 0
         NGain := 0
 
-    DublerProfileLoaded["Current"]["Pitch"]["pitchInputGain"] := NGain / 100
+    Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchInputGain"] := NGain / 100
 
-    CloseOverlay("Dubler 2 Profile")
+    Dubler2.CloseOverlay("Dubler 2 Profile")
 
     Click(362, 56)
     Sleep 1000
 
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    FileAppend(FixJson(Jxon_Dump(DublerProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    DublerProfileLoaded.Set("Current", "")
-    DublerClickLoadProfileButton(DublerProfileLoaded["Index"])
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    Dubler2.ProfileLoaded.Set("Current", "")
+    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-DublerEnableNotesAnnouncement(*) {
-    Global DublerAnnounceNotes
+Static EnableNotesAnnouncement(*) {
 
-    DublerAnnounceNotes := True
+    Dubler2.AnnounceNotes := True
 
     Local Ctrl
     Overlay := ReaHotkey.FoundStandalone.Overlay
 
-    If FindControlByLabel(&Overlay, "Announce detected notes (press Ctrl+N to toggle)", &Ctrl) {
+    If Dubler2.FindControlByLabel(&Overlay, "Announce detected notes (press Ctrl+N to toggle)", &Ctrl) {
         Ctrl.SetChecked(True)
-        FocusCheckbox(Ctrl)
+        Dubler2.FocusCheckbox(Ctrl)
     }
 }
 
-DublerDisableNotesAnnouncement(Emitter := "", *) {
-    Global DublerAnnounceNotes
+Static DisableNotesAnnouncement(Emitter := "", *) {
 
-    DublerAnnounceNotes := False
+    Dubler2.AnnounceNotes := False
 
     If Type(Emitter) != "String" And Emitter.ControlType == "Tab"
-        FocusTab()
+        Dubler2.FocusTab()
 
     Local Ctrl
     Overlay := ReaHotkey.FoundStandalone.Overlay
 
-    If FindControlByLabel(&Overlay, "Announce detected notes (press Ctrl+N to toggle)", &Ctrl) {
+    If Dubler2.FindControlByLabel(&Overlay, "Announce detected notes (press Ctrl+N to toggle)", &Ctrl) {
         Ctrl.SetChecked(False)
-        FocusCheckbox(Ctrl)
+        Dubler2.FocusCheckbox(Ctrl)
     }
 }
 
-DublerToggleNotesAnnouncement(*) {
-    Global DublerAnnounceNotes
+Static ToggleNotesAnnouncement(*) {
 
     If Not ReaHotkey.FoundStandalone Is Standalone Or Not ReaHotkey.FoundStandalone.Overlay.Label == "Dubler 2 Profile" Or Not WinActive(ReaHotkey.StandaloneWinCriteria)
         Return
@@ -537,18 +522,16 @@ DublerToggleNotesAnnouncement(*) {
             Return
     }
 
-    If Not DublerAnnounceNotes
-        DublerEnableNotesAnnouncement()
+    If Not Dubler2.AnnounceNotes
+        Dubler2.EnableNotesAnnouncement()
     Else
-        DublerDisableNotesAnnouncement()
+        Dubler2.DisableNotesAnnouncement()
 }
 
-DublerSpeakNotes() {
+Static SpeakNotes() {
     Critical
 
-    Global DublerAnnounceNotes, DublerNoteAnnouncements
-
-    If Not ReaHotkey.FoundStandalone Is Standalone Or Not ReaHotkey.FoundStandalone.Overlay.Label == "Dubler 2 Profile" Or Not DublerAnnounceNotes Or ReaHotkey.FoundStandalone.Overlay.ChildControls.Length <= 1 Or Not WinActive(ReaHotkey.StandaloneWinCriteria)
+    If Not ReaHotkey.FoundStandalone Is Standalone Or Not ReaHotkey.FoundStandalone.Overlay.Label == "Dubler 2 Profile" Or Not Dubler2.AnnounceNotes Or ReaHotkey.FoundStandalone.Overlay.ChildControls.Length <= 1 Or Not WinActive(ReaHotkey.StandaloneWinCriteria)
         Return
 
     For Position In [
@@ -568,42 +551,40 @@ DublerSpeakNotes() {
         Color := PixelGetColor(Position[1], Position[2])
         
         If Color != 0x242424 {
-            If DublerNoteAnnouncements.Has(Position[3]) And DublerNoteAnnouncements[Position[3]]
+            If Dubler2.NoteAnnouncements.Has(Position[3]) And Dubler2.NoteAnnouncements[Position[3]]
                 Continue
-            DublerNoteAnnouncements.Set(Position[3], True)
+            Dubler2.NoteAnnouncements.Set(Position[3], True)
             AccessibilityOverlay.Speak(Position[3])
             Break
         } Else
-            DublerNoteAnnouncements.Set(Position[3], False)
+            Dubler2.NoteAnnouncements.Set(Position[3], False)
     }
 }
 
-DublerClickTriggerButton(Button) {
-
-    Global DublerProfileLoaded
+Static ClickTriggerButton(Button) {
 
     Click(Button.X, Button.Y)
 
     TriggerMenu := Menu()
 
-    TriggerMenu.Add("Start recording takes...", DublerStartRecordingTakes)
-    TriggerMenu.Add("Mute trigger", DublerMuteTrigger.Bind(Button.Index))
-    TriggerMenu.Add("Velocity Response", DublerToggleTriggerVelocityResponse.Bind(Button.Index))
-    TriggerMenu.Add("MIDI Note: " . numberToMidiNote(DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["midiNote"]) . " (" . DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["midiNote"] . ")", DublerChangeTriggerMidiNote.Bind(Button.Index))
-    TriggerMenu.Add("Clear all takes", DublerClearAllTriggerTakes.Bind(Button.Index))
-    TriggerMenu.Add("Rename trigger...", DublerRenameTrigger.Bind(Button))
-    TriggerMenu.Add("Delete trigger...", DublerDeleteTrigger.Bind(Button.Index))
+    TriggerMenu.Add("Start recording takes...", ObjBindMethod(Dubler2, "StartRecordingTakes"))
+    TriggerMenu.Add("Mute trigger", ObjBindMethod(Dubler2, "MuteTrigger", Button.Index))
+    TriggerMenu.Add("Velocity Response", ObjBindMethod(Dubler2, "ToggleTriggerVelocityResponse", Button.Index))
+    TriggerMenu.Add("MIDI Note: " . Dubler2.NumberToMidiNote(Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["midiNote"]) . " (" . Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["midiNote"] . ")", ObjBindMethod(Dubler2, "ChangeTriggerMidiNote", Button.Index))
+    TriggerMenu.Add("Clear all takes", ObjBindMethod(Dubler2, "ClearAllTriggerTakes", Button.Index))
+    TriggerMenu.Add("Rename trigger...", ObjBindMethod(Dubler2, "RenameTrigger", Button))
+    TriggerMenu.Add("Delete trigger...", ObjBindMethod(Dubler2, "DeleteTrigger", Button.Index))
 
-    If DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["numExamples"] == 12
+    If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["numExamples"] == 12
         TriggerMenu.Disable("Start recording takes...")
 
-    If DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["muted"]
+    If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["muted"]
         TriggerMenu.Check("Mute trigger")
 
-    If DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["velocityResponse"]
+    If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["velocityResponse"]
         TriggerMenu.Check("Velocity Response")
 
-    If DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["numExamples"] == 0
+    If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["numExamples"] == 0
         TriggerMenu.Disable("Clear all takes")
 
     SetTimer ReaHotkey.ManageInput, 0
@@ -613,12 +594,11 @@ DublerClickTriggerButton(Button) {
     SetTimer ReaHotkey.ManageInput, 100
 }
 
-DublerRenameTrigger(Button, *) {
-    Global DublerProfileLoaded
+Static RenameTrigger(Button, *) {
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
-    Name := InputBox("Trigger Name: ", "ReaHotkey", , DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["name"])
+    Name := InputBox("Trigger Name: ", "ReaHotkey", , Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["name"])
     ReaHotkey.TurnHotkeysOn()
     SetTimer ReaHotkey.ManageInput, 100
 
@@ -627,17 +607,17 @@ DublerRenameTrigger(Button, *) {
     If Name.Result != "OK"
         Return
 
-    DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["name"] := Name.Value
+    Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["name"] := Name.Value
 
-    CloseOverlay("Dubler 2 Profile")
+    Dubler2.CloseOverlay("Dubler 2 Profile")
 
     Click(362, 56)
     Sleep 1000
 
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    FileAppend(FixJson(Jxon_Dump(DublerProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    DublerProfileLoaded.Set("Current", "")
-    DublerClickLoadProfileButton(DublerProfileLoaded["Index"])
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    Dubler2.ProfileLoaded.Set("Current", "")
+    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
     Sleep 1000
     
@@ -646,16 +626,14 @@ DublerRenameTrigger(Button, *) {
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-DublerDeleteTrigger(Index, *) {
-
-    Global DublerProfileLoaded
+Static DeleteTrigger(Index, *) {
 
     Criteria := ReaHotkey.StandaloneWinCriteria
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
 
-    Confirmation := MsgBox("Do you really want to delete the trigger " . DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["name"] . "?", "ReaHotkey", 4)
+    Confirmation := MsgBox("Do you really want to delete the trigger " . Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["name"] . "?", "ReaHotkey", 4)
     ReaHotkey.TurnHotkeysOn()
     SetTimer ReaHotkey.ManageInput, 100
 
@@ -666,19 +644,19 @@ DublerDeleteTrigger(Index, *) {
 
     WinActivate(Criteria)
 
-    CloseOverlay("Dubler 2 Profile")
+    Dubler2.CloseOverlay("Dubler 2 Profile")
 
     Click(362, 56)
     Sleep 1000
 
-    ID := DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["id"]
-    DublerProfileLoaded["Current"]["triggers"]["triggersInfo"].RemoveAt(Index)
-    DublerProfileLoaded["Current"]["triggers"]["triggersData"].Delete("" . ID)
-    DublerProfileLoaded["Current"]["triggers"]["numTriggers"] -= 1
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    FileAppend(FixJson(Jxon_Dump(DublerProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    DublerProfileLoaded.Set("Current", "")
-    DublerClickLoadProfileButton(DublerProfileLoaded["Index"])
+    ID := Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["id"]
+    Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"].RemoveAt(Index)
+    Dubler2.ProfileLoaded["Current"]["triggers"]["triggersData"].Delete("" . ID)
+    Dubler2.ProfileLoaded["Current"]["triggers"]["numTriggers"] -= 1
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    Dubler2.ProfileLoaded.Set("Current", "")
+    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
     Sleep 1000
     
@@ -687,40 +665,34 @@ DublerDeleteTrigger(Index, *) {
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-DublerMuteTrigger(Index, *) {
+Static MuteTrigger(Index, *) {
 
-    Global DublerProfileLoaded
-
-    DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["muted"] := !DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["muted"]
+    Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["muted"] := !Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["muted"]
 
     Click(885, 197)
 }
 
-DublerToggleTriggerVelocityResponse(Index, *) {
+Static ToggleTriggerVelocityResponse(Index, *) {
 
-    Global DublerProfileLoaded
-
-    DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["velocityResponse"] := !DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["velocityResponse"]
+    Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["velocityResponse"] := !Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["velocityResponse"]
 
     Click(581, 295)
 }
 
-DublerClearAllTriggerTakes(Index, *) {
+Static ClearAllTriggerTakes(Index, *) {
 
-    Global DublerProfileLoaded
-
-    CloseOverlay("Dubler 2 Profile")
+    Dubler2.CloseOverlay("Dubler 2 Profile")
 
     Click(362, 56)
     Sleep 1000
 
-    ID := DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["id"]
-    DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["numExamples"] := 0
-    DublerProfileLoaded["Current"]["triggers"]["triggersData"]["" . ID] := ""
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    FileAppend(FixJson(Jxon_Dump(DublerProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    DublerProfileLoaded.Set("Current", "")
-    DublerClickLoadProfileButton(DublerProfileLoaded["Index"])
+    ID := Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["id"]
+    Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["numExamples"] := 0
+    Dubler2.ProfileLoaded["Current"]["triggers"]["triggersData"]["" . ID] := ""
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    Dubler2.ProfileLoaded.Set("Current", "")
+    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
     Sleep 1000
     
@@ -729,12 +701,11 @@ DublerClearAllTriggerTakes(Index, *) {
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-DublerChangeTriggerMidiNote(Index, *) {
-    Global DublerProfileLoaded
+Static ChangeTriggerMidiNote(Index, *) {
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
-    MidiNote := InputBox("Midi Note (either note or numeric value):", "ReaHotkey", , DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["midiNote"])
+    MidiNote := InputBox("Midi Note (either note or numeric value):", "ReaHotkey", , Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["midiNote"])
     ReaHotkey.TurnHotkeysOn()
     SetTimer ReaHotkey.ManageInput, 100
 
@@ -746,7 +717,7 @@ DublerChangeTriggerMidiNote(Index, *) {
     If IsNumber(MidiNote.Value) {
         NMidiNote := Integer(MidiNote.Value)
     } Else {
-        NMidiNote := midiNoteToNumber(MidiNote.Value)
+        NMidiNote := Dubler2.MidiNoteToNumber(MidiNote.Value)
 
         If Not IsNumber(NMidiNote)
             Return
@@ -757,17 +728,17 @@ DublerChangeTriggerMidiNote(Index, *) {
     Else If NMidiNote < 0
         NMidiNote := 0
 
-    DublerProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["midiNote"] := NMidiNote
+    Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["midiNote"] := NMidiNote
 
-    CloseOverlay("Dubler 2 Profile")
+    Dubler2.CloseOverlay("Dubler 2 Profile")
 
     Click(362, 56)
     Sleep 1000
 
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    FileAppend(FixJson(Jxon_Dump(DublerProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    DublerProfileLoaded.Set("Current", "")
-    DublerClickLoadProfileButton(DublerProfileLoaded["Index"])
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    Dubler2.ProfileLoaded.Set("Current", "")
+    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
     Sleep 1000
     
@@ -776,25 +747,23 @@ DublerChangeTriggerMidiNote(Index, *) {
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-DublerStartRecordingTakes(*) {
-    Global DublerShowRecordingTakesOverlay
+Static StartRecordingTakes(*) {
 
     Click(512, 295)
 
-    DublerShowRecordingTakesOverlay := True
+    Dubler2.ShowRecordingTakesOverlay := True
 
-    CloseOverlay()
+    Dubler2.CloseOverlay()
 }
 
-DublerActivatePitchOctaveShiftButton(Button) {
-    Global DublerProfileLoaded
+Static ActivatePitchOctaveShiftButton(Button) {
 
     OctaveShiftMenu := Menu()
 
     For Octave In [-3, -2, -1, 0, 1, 2, 3]
-        OctaveShiftMenu.Add((Octave >= 0 ? "+" : "") . Octave, DublerClickPitchOctaveShiftButton.Bind(Button, Octave))
+        OctaveShiftMenu.Add((Octave >= 0 ? "+" : "") . Octave, ObjBindMethod(Dubler2, "ClickPitchOctaveShiftButton", Button, Octave))
 
-    OctaveShiftMenu.Check((DublerProfileLoaded["Current"]["DublerModel"]["octaveShift"] >= 0 ? "+" : "") . DublerProfileLoaded["Current"]["DublerModel"]["octaveShift"])
+    OctaveShiftMenu.Check((Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"])
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
@@ -803,33 +772,31 @@ DublerActivatePitchOctaveShiftButton(Button) {
     SetTimer ReaHotkey.ManageInput, 100
 }
 
-DublerClickPitchOctaveShiftButton(Button, Octave, *) {
-    Global DublerProfileLoaded
+Static ClickPitchOctaveShiftButton(Button, Octave, *) {
 
-    DublerProfileLoaded["Current"]["DublerModel"]["octaveShift"] := Octave
+    Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"] := Octave
 
-    CloseOverlay("Dubler 2 Profile")
+    Dubler2.CloseOverlay("Dubler 2 Profile")
 
     Click(362, 56)
     Sleep 1000
 
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    FileAppend(FixJson(Jxon_Dump(DublerProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    DublerProfileLoaded.Set("Current", "")
-    DublerClickLoadProfileButton(DublerProfileLoaded["Index"])
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    Dubler2.ProfileLoaded.Set("Current", "")
+    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-DublerActivateChordsOctaveShiftButton(Button) {
-    Global DublerProfileLoaded
+Static ActivateChordsOctaveShiftButton(Button) {
 
     OctaveShiftMenu := Menu()
 
     For Octave In [-3, -2, -1, 0, 1, 2, 3]
-        OctaveShiftMenu.Add((Octave >= 0 ? "+" : "") . Octave, DublerClickChordsOctaveShiftButton.Bind(Button, Octave))
+        OctaveShiftMenu.Add((Octave >= 0 ? "+" : "") . Octave, ObjBindMethod(Dubler2, "ClickChordsOctaveShiftButton", Button, Octave))
 
-    OctaveShiftMenu.Check((DublerProfileLoaded["Current"]["Chords"]["octaveShift"] >= 0 ? "+" : "") . DublerProfileLoaded["Current"]["Chords"]["octaveShift"])
+    OctaveShiftMenu.Check((Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"])
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
@@ -838,20 +805,19 @@ DublerActivateChordsOctaveShiftButton(Button) {
     SetTimer ReaHotkey.ManageInput, 100
 }
 
-DublerClickChordsOctaveShiftButton(Button, Octave, *) {
-    Global DublerProfileLoaded
+Static ClickChordsOctaveShiftButton(Button, Octave, *) {
 
-    DublerProfileLoaded["Current"]["Chords"]["octaveShift"] := Octave
+    Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"] := Octave
 
-    CloseOverlay("Dubler 2 Profile")
+    Dubler2.CloseOverlay("Dubler 2 Profile")
 
     Click(362, 56)
     Sleep 1000
 
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    FileAppend(FixJson(Jxon_Dump(DublerProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    DublerProfileLoaded.Set("Current", "")
-    DublerClickLoadProfileButton(DublerProfileLoaded["Index"])
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    Dubler2.ProfileLoaded.Set("Current", "")
+    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
     Sleep 1000
     
@@ -860,12 +826,11 @@ DublerClickChordsOctaveShiftButton(Button, Octave, *) {
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-DublerActivatePitchBendRangeButton(Button) {
-    Global DublerProfileLoaded
+Static ActivatePitchBendRangeButton(Button) {
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
-    Range := InputBox("Pitch Bend Range (From 1 to 48 semitones):", "ReaHotkey", , DublerProfileLoaded["Current"]["Pitch"]["pitchBendRange"])
+    Range := InputBox("Pitch Bend Range (From 1 to 48 semitones):", "ReaHotkey", , Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchBendRange"])
     ReaHotkey.TurnHotkeysOn()
     SetTimer ReaHotkey.ManageInput, 100
 
@@ -881,27 +846,26 @@ DublerActivatePitchBendRangeButton(Button) {
     Else If NRange < 1
         NRange := 1
 
-    DublerProfileLoaded["Current"]["Pitch"]["pitchBendRange"] := NRange
+    Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchBendRange"] := NRange
 
-    CloseOverlay("Dubler 2 Profile")
+    Dubler2.CloseOverlay("Dubler 2 Profile")
 
     Click(362, 56)
     Sleep 1000
 
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    FileAppend(FixJson(Jxon_Dump(DublerProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    DublerProfileLoaded.Set("Current", "")
-    DublerClickLoadProfileButton(DublerProfileLoaded["Index"])
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    Dubler2.ProfileLoaded.Set("Current", "")
+    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-DublerActivateTriggerSensitivityButton(Button) {
-    Global DublerProfileLoaded
+Static ActivateTriggerSensitivityButton(Button) {
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
-    Sensitivity := InputBox("Trigger Sensitivity in % (from 0 to 100):", "ReaHotkey", , Integer(DublerProfileLoaded["Current"]["DublerModel"]["triggerSensitivity"] * 100))
+    Sensitivity := InputBox("Trigger Sensitivity in % (from 0 to 100):", "ReaHotkey", , Integer(Dubler2.ProfileLoaded["Current"]["DublerModel"]["triggerSensitivity"] * 100))
     ReaHotkey.TurnHotkeysOn()
     SetTimer ReaHotkey.ManageInput, 100
 
@@ -917,17 +881,17 @@ DublerActivateTriggerSensitivityButton(Button) {
     Else If NSensitivity < 0
         NSensitivity := 0
 
-    DublerProfileLoaded["Current"]["DublerModel"]["triggerSensitivity"] := NSensitivity / 100
+    Dubler2.ProfileLoaded["Current"]["DublerModel"]["triggerSensitivity"] := NSensitivity / 100
 
-    CloseOverlay("Dubler 2 Profile")
+    Dubler2.CloseOverlay("Dubler 2 Profile")
 
     Click(362, 56)
     Sleep 1000
 
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    FileAppend(FixJson(Jxon_Dump(DublerProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"])
-    DublerProfileLoaded.Set("Current", "")
-    DublerClickLoadProfileButton(DublerProfileLoaded["Index"])
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    Dubler2.ProfileLoaded.Set("Current", "")
+    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
     Sleep 1000
     
@@ -936,7 +900,7 @@ DublerActivateTriggerSensitivityButton(Button) {
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-DublerCreateProfileOverlay(Overlay) {
+Static CreateProfileOverlay(Overlay) {
 
     SetupTriggers(Tab) {
         TriggerSlots := [
@@ -951,7 +915,7 @@ DublerCreateProfileOverlay(Overlay) {
         ]
 
         Loop ProfileObj["triggers"]["numTriggers"] {
-            TriggerButton := DublerTriggerButton(ProfileObj["triggers"]["triggersInfo"][A_Index]["name"] . " (" . ProfileObj["triggers"]["triggersInfo"][A_Index]["numExamples"] . " takes), Trigger " . A_Index . " Of " . ProfileObj["triggers"]["triggersInfo"].Length, FocusButton, DublerClickTriggerButton)
+            TriggerButton := Dubler2.TriggerButton(ProfileObj["triggers"]["triggersInfo"][A_Index]["name"] . " (" . ProfileObj["triggers"]["triggersInfo"][A_Index]["numExamples"] . " takes), Trigger " . A_Index . " Of " . ProfileObj["triggers"]["triggersInfo"].Length, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ClickTriggerButton"))
             TriggerButton.Index := A_Index
             TriggerButton.X := TriggerSlots[A_Index][1]
             TriggerButton.Y := TriggerSlots[A_Index][2]
@@ -959,64 +923,62 @@ DublerCreateProfileOverlay(Overlay) {
         }
 
         If ProfileObj["triggers"]["numTriggers"] < 8 {
-            Tab.AddHotspotButton("Add Trigger", TriggerSlots[ProfileObj["triggers"]["numTriggers"] + 1][1], TriggerSlots[ProfileObj["triggers"]["numTriggers"] + 1][2], FocusButton, CloseOverlay)
+            Tab.AddHotspotButton("Add Trigger", TriggerSlots[ProfileObj["triggers"]["numTriggers"] + 1][1], TriggerSlots[ProfileObj["triggers"]["numTriggers"] + 1][2], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CloseOverlay"))
         }
     }
 
-    Global DublerAnnounceNotes, DublerProfileLoaded
-
-    Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . DublerProfileLoaded["File"], "UTF-8")
+    Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"], "UTF-8")
     ProfileObj := Jxon_Load(&Profile)
 
-    If DublerProfileLoaded["Backup"] == "" {
-        DublerProfileLoaded.Set("Backup", ProfileObj)
+    If Dubler2.ProfileLoaded["Backup"] == "" {
+        Dubler2.ProfileLoaded.Set("Backup", ProfileObj)
     }
 
-    DublerProfileLoaded.Set("Current", ProfileObj)
+    Dubler2.ProfileLoaded.Set("Current", ProfileObj)
 
-    Overlay.AddCustomButton("Revert Changes", FocusButton, DublerRevertProfileButton)
-    Overlay.AddHotspotButton("Unload Profile", 362, 56, FocusButton, DublerCloseProfileOverlay)
+    Overlay.AddCustomButton("Revert Changes", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "RevertProfileButton"))
+    Overlay.AddHotspotButton("Unload Profile", 362, 56, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CloseProfileOverlay"))
     ;Overlay.AddHotspotButton("User Settings", 900, 57, FocusButton)
 
-    PlayTab := HotspotTab("Play (press Ctrl+1 to select)", 258, 104, DublerDisableNotesAnnouncement)
+    PlayTab := HotspotTab("Play (press Ctrl+1 to select)", 258, 104, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
 
-    PlayTab.AddControl(DublerHotspotCheckbox("Inbuilt audio enabled", 730, 619, ProfileObj["DublerModel"]["audioOutputEnabled"], FocusCheckbox, FocusCheckbox))
-    PlayTab.AddControl(CustomButton("Synth Preset: " . ProfileObj["synthPreset"], FocusButton, DublerActivateSynthPresetButton))
-    PlayTab.AddControl(DublerHotspotCheckbox("MIDI out enabled", 829, 621, ProfileObj["DublerModel"]["midiOutputEnabled"], FocusCheckbox, FocusCheckbox))
+    PlayTab.AddControl(Dubler2.HotspotCheckbox("Inbuilt audio enabled", 730, 619, ProfileObj["DublerModel"]["audioOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+    PlayTab.AddControl(CustomButton("Synth Preset: " . ProfileObj["synthPreset"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateSynthPresetButton")))
+    PlayTab.AddControl(Dubler2.HotspotCheckbox("MIDI out enabled", 829, 621, ProfileObj["DublerModel"]["midiOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 
-    PitchTab := HotspotTab("Pitch (press Ctrl+2 to select)", 258, 104, FocusTab)
+    PitchTab := HotspotTab("Pitch (press Ctrl+2 to select)", 258, 104, ObjBindMethod(Dubler2, "FocusTab"))
 
-    PitchTab.AddControl(DublerHotspotCheckbox("Pitch enabled", 371, 161, ProfileObj["Pitch"]["pitchEnabled"], FocusCheckbox, FocusCheckbox))
-    PitchTab.AddControl(CustomButton("Input Gain: " . Integer(ProfileObj["Pitch"]["pitchInputGain"] * 100) . "%", FocusButton, DublerActivatePitchInputGainButton))
-    PitchTab.AddControl(CustomButton("Octave shift: " . (ProfileObj["DublerModel"]["octaveShift"] >= 0 ? "+" : "") . ProfileObj["DublerModel"]["octaveShift"], FocusButton, DublerActivatePitchOctaveShiftButton))
-    PitchTab.AddControl(CustomButton("Key: " . ProfileObj["Scale"]["rootName"], FocusButton, DublerActivateKeyButton))
-    PitchTab.AddControl(CustomButton("Scale: " . ProfileObj["Scale"]["patternName"], FocusButton, DublerActivateScaleButton))
-    PitchTab.AddControl(CustomButton("Toggle active notes", FocusButton, DublerActivateNotesButton))
-    PitchTab.AddControl(DublerHotspotCheckbox("Pitch Bend enabled", 354, 501, ProfileObj["Pitch"]["pitchBendEnabled"], FocusCheckbox, FocusCheckbox))
-    PitchTab.AddControl(CustomButton("Stickiness: " . Integer(ProfileObj["Pitch"]["pitchStickiness"] * 100) . "%", FocusButton, DublerActivatePitchStickinessButton))
-    PitchTab.AddControl(CustomButton("Pitch Bend Range: " . ProfileObj["Pitch"]["pitchBendRange"] . " semitones", FocusButton, DublerActivatePitchBendRangeButton))
-    PitchTab.AddControl(DublerCustomCheckbox("Announce detected notes (press Ctrl+N to toggle)", DublerAnnounceNotes, FocusCheckbox, DublerEnableNotesAnnouncement))
+    PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch enabled", 371, 161, ProfileObj["Pitch"]["pitchEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+    PitchTab.AddControl(CustomButton("Input Gain: " . Integer(ProfileObj["Pitch"]["pitchInputGain"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchInputGainButton")))
+    PitchTab.AddControl(CustomButton("Octave shift: " . (ProfileObj["DublerModel"]["octaveShift"] >= 0 ? "+" : "") . ProfileObj["DublerModel"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchOctaveShiftButton")))
+    PitchTab.AddControl(CustomButton("Key: " . ProfileObj["Scale"]["rootName"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateKeyButton")))
+    PitchTab.AddControl(CustomButton("Scale: " . ProfileObj["Scale"]["patternName"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateScaleButton")))
+    PitchTab.AddControl(CustomButton("Toggle active notes", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateNotesButton")))
+    PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch Bend enabled", 354, 501, ProfileObj["Pitch"]["pitchBendEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+    PitchTab.AddControl(CustomButton("Stickiness: " . Integer(ProfileObj["Pitch"]["pitchStickiness"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchStickinessButton")))
+    PitchTab.AddControl(CustomButton("Pitch Bend Range: " . ProfileObj["Pitch"]["pitchBendRange"] . " semitones", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchBendRangeButton")))
+    PitchTab.AddControl(Dubler2.CustomCheckbox("Announce detected notes (press Ctrl+N to toggle)", ObjBindMethod(Dubler2, "AnnounceNotes"), ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "EnableNotesAnnouncement")))
 
-    TriggersTab := HotspotTab("Triggers (press Ctrl+3 to select)", 407, 105, DublerDisableNotesAnnouncement)
+    TriggersTab := HotspotTab("Triggers (press Ctrl+3 to select)", 407, 105, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
 
-    TriggersTab.AddControl(DublerHotspotCheckbox("Triggers enabled", 97, 158, ProfileObj["triggers"]["triggersEnabled"], FocusCheckbox, FocusCheckbox))
+    TriggersTab.AddControl(Dubler2.HotspotCheckbox("Triggers enabled", 97, 158, ProfileObj["triggers"]["triggersEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
     SetupTriggers(TriggersTab)
-    TriggersTab.AddControl(CustomButton("Sensitivity: " . Integer(ProfileObj["DublerModel"]["triggerSensitivity"] * 100) . "%", FocusButton, DublerActivateTriggerSensitivityButton))
+    TriggersTab.AddControl(CustomButton("Sensitivity: " . Integer(ProfileObj["DublerModel"]["triggerSensitivity"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateTriggerSensitivityButton")))
 
-    ChordsTab := HotspotTab("Chords (press Ctrl+4 to select)", 685, 101, DublerDisableNotesAnnouncement)
+    ChordsTab := HotspotTab("Chords (press Ctrl+4 to select)", 685, 101, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
 
-    ChordsTab.AddControl(DublerHotspotCheckbox("Chords enabled", 97, 159, ProfileObj["Chords"]["chordsEnabled"], FocusCheckbox, FocusCheckbox))
-    ChordsTab.AddControl(DublerHotspotCheckbox("Root Note Bassline", 575, 566, ProfileObj["Chords"]["rootNoteBassline"], FocusCheckbox, FocusCheckbox))
-    ChordsTab.AddControl(DublerHotspotCheckbox("Follow Octaves", 806, 567, ProfileObj["Chords"]["octaveFollow"], FocusCheckbox, FocusCheckbox))
-    ChordsTab.AddControl(CustomButton("Octave shift: " . (ProfileObj["Chords"]["octaveShift"] >= 0 ? "+" : "") . ProfileObj["Chords"]["octaveShift"], FocusButton, DublerActivateChordsOctaveShiftButton))
-    ChordsTab.AddControl(CustomButton("Voicing Preset: " . ProfileObj["Chords"]["voicingPreset"], FocusButton, DublerActivateChordsVoicingPresetButton))
-    ChordsTab.AddControl(CustomButton("Chord Preset: " . ProfileObj["Chords"]["chordPreset"], FocusButton, DublerActivateChordPresetButton))
+    ChordsTab.AddControl(Dubler2.HotspotCheckbox("Chords enabled", 97, 159, ProfileObj["Chords"]["chordsEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+    ChordsTab.AddControl(Dubler2.HotspotCheckbox("Root Note Bassline", 575, 566, ProfileObj["Chords"]["rootNoteBassline"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+    ChordsTab.AddControl(Dubler2.HotspotCheckbox("Follow Octaves", 806, 567, ProfileObj["Chords"]["octaveFollow"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+    ChordsTab.AddControl(CustomButton("Octave shift: " . (ProfileObj["Chords"]["octaveShift"] >= 0 ? "+" : "") . ProfileObj["Chords"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateChordsOctaveShiftButton")))
+    ChordsTab.AddControl(CustomButton("Voicing Preset: " . ProfileObj["Chords"]["voicingPreset"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateChordsVoicingPresetButton")))
+    ChordsTab.AddControl(CustomButton("Chord Preset: " . ProfileObj["Chords"]["chordPreset"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateChordPresetButton")))
 
     ;AssignTab := HotspotTab("Assign", 815, 104, DublerDisableNotesAnnouncement)
 
     Overlay.AddTabControl("Profile Settings", PlayTab, PitchTab, TriggersTab, ChordsTab)
 
-    SetupAudioCalibrationButton(Overlay)
+    Dubler2.SetupAudioCalibrationButton(Overlay)
 
     return Overlay
 }

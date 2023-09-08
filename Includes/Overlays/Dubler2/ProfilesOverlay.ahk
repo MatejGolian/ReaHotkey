@@ -1,31 +1,31 @@
 #Requires AutoHotkey v2.0
 
-Class DublerProfileButton extends CustomButton {
+Class ProfileButton extends CustomButton {
 
     Index := 0
     ProfileFile := ""
 
 }
 
-ActivateProfileButton(Button) {
+Static ActivateProfileButton(Button) {
     ActionsMenu := Menu()
     If Button.Index <= 5
-        ActionsMenu.Add("Load Profile", LoadProfile.Bind(Button.Index, Button.ProfileFile))
+        ActionsMenu.Add("Load Profile", ObjBindMethod(Dubler2, "LoadProfile", Button.Index, Button.ProfileFile))
     Else {
-        ActionsMenu.Add("Only active profiles can be loaded", LoadProfile.Bind(Button.Index))
+        ActionsMenu.Add("Only active profiles can be loaded", ObjBindMethod(Dubler2, "LoadProfile", Button.Index))
         ActionsMenu.Disable("Only active profiles can be loaded")
     }
     If Button.Index > 5 {
         MoveMenu := Menu()
-        MoveMenu.Add("Slot 1", MoveProfile.Bind(Button.ProfileFile, 1))
-        MoveMenu.Add("Slot 2", MoveProfile.Bind(Button.ProfileFile, 2))
-        MoveMenu.Add("Slot 3", MoveProfile.Bind(Button.ProfileFile, 3))
-        MoveMenu.Add("Slot 4", MoveProfile.Bind(Button.ProfileFile, 4))
-        MoveMenu.Add("Slot 5", MoveProfile.Bind(Button.ProfileFile, 5))
+        MoveMenu.Add("Slot 1", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 1))
+        MoveMenu.Add("Slot 2", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 2))
+        MoveMenu.Add("Slot 3", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 3))
+        MoveMenu.Add("Slot 4", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 4))
+        MoveMenu.Add("Slot 5", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 5))
         ActionsMenu.Add("Set Profile Active", MoveMenu)
     }
-    ActionsMenu.Add("Duplicate Profile", DuplicateProfile.Bind(Button.ProfileFile))
-    ActionsMenu.Add("Delete Profile", DeleteProfile.Bind(Button.ProfileFile, Button.Index))
+    ActionsMenu.Add("Duplicate Profile", ObjBindMethod(Dubler2, "DuplicateProfile", Button.ProfileFile))
+    ActionsMenu.Add("Delete Profile", ObjBindMethod(Dubler2, "DeleteProfile", Button.ProfileFile, Button.Index))
 
     SetTimer ReaHotkey.ManageInput, 0
     ReaHotkey.TurnHotkeysOff()
@@ -36,9 +36,7 @@ ActivateProfileButton(Button) {
     ReaHotkey.AutoFocusStandaloneOverlay := False
 }
 
-MoveProfile(ProfileFile, Slot, *) {
-
-    Global DublerRestartRequired
+Static MoveProfile(ProfileFile, Slot, *) {
 
     TempFile := A_AppData . "\Vochlea\Dubler2\" . ProfileFile . "_"
     SlotFile := A_AppData . "\Vochlea\Dubler2\Profile" . Slot . ".dubler"
@@ -46,13 +44,11 @@ MoveProfile(ProfileFile, Slot, *) {
     If FileExist(SlotFile) != ""
         FileMove(SlotFile, A_AppData . "\Vochlea\Dubler2\" . ProfileFile)
     FileMove(TempFile, SlotFile)
-    DublerRestartRequired := True
-    CloseOverlay()
+    Dubler2.RestartRequired := True
+    Dubler2.CloseOverlay()
 }
 
-DuplicateProfile(ProfileFile, *) {
-
-    Global DublerRestartRequired
+Static DuplicateProfile(ProfileFile, *) {
 
     Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . ProfileFile, "UTF-8")
     ProfileObj := Jxon_Load(&Profile)
@@ -74,15 +70,15 @@ DuplicateProfile(ProfileFile, *) {
 
     ProfileObj["profileName"] .= " (new)"
 
-    FileAppend(FixJson(Jxon_Dump(ProfileObj, 4)), A_AppData . "\Vochlea\Dubler2\Profile" . Slot . ".dubler")
+    FileAppend(Dubler2.FixJson(Jxon_Dump(ProfileObj, 4)), A_AppData . "\Vochlea\Dubler2\Profile" . Slot . ".dubler")
 
     If Slot <= 5
-        DublerRestartRequired := True
+        Dubler2.RestartRequired := True
 
-    CloseOverlay()
+    Dubler2.CloseOverlay()
 }
 
-DublerClickLoadProfileButton(Index) {
+Static ClickLoadProfileButton(Index) {
     Local X, Y
 
     If Index <= 2
@@ -100,17 +96,14 @@ DublerClickLoadProfileButton(Index) {
     Click(X, Y)
 }
 
-LoadProfile(Index, ProfileFile, *) {
-    Global DublerProfileLoaded
-    DublerClickLoadProfileButton(Index)
-    DublerProfileLoaded.Set("File", ProfileFile)
-    DublerProfileLoaded.Set("Index", Index)
-    CloseOverlay()
+Static LoadProfile(Index, ProfileFile, *) {
+    Dubler2.ClickLoadProfileButton(Index)
+    Dubler2.ProfileLoaded.Set("File", ProfileFile)
+    Dubler2.ProfileLoaded.Set("Index", Index)
+    Dubler2.CloseOverlay()
 }
 
-DeleteProfile(ProfileFile, Index, *) {
-
-    Global DublerRestartRequired
+Static DeleteProfile(ProfileFile, Index, *) {
 
     Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . ProfileFile, "UTF-8")
     ProfileObj := Jxon_Load(&Profile)
@@ -127,22 +120,22 @@ DeleteProfile(ProfileFile, Index, *) {
     FileDelete(A_AppData . "\Vochlea\Dubler2\" . ProfileFile)
 
     If Index <= 5
-        DublerRestartRequired := True
+        Dubler2.RestartRequired := True
 
-    CloseOverlay()
+    Dubler2.CloseOverlay()
     ReaHotkey.AutoFocusStandaloneOverlay := False
 }
 
-DublerCreateNewProfileButton(*) {
+Static CreateNewProfileButton(*) {
     Click(200, 256)
     Sleep 1000
     Click(362, 56)
     Sleep 300
 
-    CloseOverlay()
+    Dubler2.CloseOverlay()
 }
 
-DublerCreateProfilesOverlay(Overlay) {
+Static CreateProfilesOverlay(Overlay) {
 
     Profiles := Map()
     Loop Files A_AppData . "\Vochlea\Dubler2\*.dubler" {
@@ -170,14 +163,14 @@ DublerCreateProfilesOverlay(Overlay) {
         Else
             Suffix := "(Passive)"
 
-        Button := DublerProfileButton(Profiles[A_LoopField]["profileName"] . " " . Suffix, FocusButton, ActivateProfileButton)
+        Button := Dubler2.ProfileButton(Profiles[A_LoopField]["profileName"] . " " . Suffix, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateProfileButton"))
         Button.Index := A_Index
         Button.ProfileFile := A_LoopField
         Overlay.AddControl(Button)
     }
 
-    Overlay.AddCustomButton("Create new profile", FocusButton, DublerCreateNewProfileButton)
-    SetupAudioCalibrationButton(Overlay)
+    Overlay.AddCustomButton("Create new profile", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CreateNewProfileButton"))
+    Dubler2.SetupAudioCalibrationButton(Overlay)
     ;Overlay.AddHotspotButton("User Settings", 900, 57, FocusButton)
 
     return Overlay

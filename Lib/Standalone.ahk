@@ -61,7 +61,7 @@ Class Standalone {
     
     Init() {
         If This.InitFunction != ""
-        %This.InitFunction.Name%(This)
+        This.InitFunction(This)
     }
     
     SetHotkey(KeyName, Action := "", Options := "") {
