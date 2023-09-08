@@ -1,5 +1,6 @@
 # What's This And Who Is It For?
 This is an AutoHotkey scripth which aims to make certain virtual instruments/sample libraries  and related programs at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although in particular cases standalone versions of programs/instruments may be supported as well.
+
 ## Features
 * Makes it possible to switch between the classic and modern mixes in Audio Imperia's Areia library.
   - Only works inside REAPER.
@@ -16,6 +17,9 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
 * Enables accessibility for Dubler 2.1 by Vochlea
   - only standalone support for now
   - not all features are supported, nor do we know if they ever will be (see [below](#dubler2))
+
+## General Notes
+Because ReaHotkey also passes through some keys to the application window itself, it's highly recommended to enable the 'Send all keyboard input to plug-in' option in REAPER's FX menu, when interacting with a supported plug-in interface.
 
 ## <a name="dubler2"></a>Dubler 2 Accessibility
 

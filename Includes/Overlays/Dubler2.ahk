@@ -367,4 +367,6 @@ midiNoteToNumber(Note) {
 #Include Dubler2/RecordingTakesOverlay.ahk
 #Include Dubler2/SaveProfileOverlay.ahk
 
+Plugin.Register("Dubler 2", "JUCE_18a5c54cc971", , , False)
+Standalone.Register("Dubler 2", "Vochlea\sDubler\s2\.1 ahk_class Qt5155QWindowOwnDCIcon", DublerInit, True)
 Standalone.RegisterOverlay("Dubler 2", DublerCreateLoadingOverlay(AccessibilityOverlay()))

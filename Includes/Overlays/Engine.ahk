@@ -4,6 +4,9 @@ Class Engine {
     
     Static Init() {
         
+        Plugin.Register("Engine", "^Plugin[0-9A-F]{17}")
+        Standalone.Register("Engine", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe")
+        
         EnginePluginOverlay := AccessibilityOverlay("Engine")
         EnginePluginOverlay.Metadata := Map("Vendor", "Best Service", "Product", "Engine")
         EnginePluginOverlay.AddHotspotButton("Load instrument", 170, 185, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
@@ -58,3 +61,5 @@ Class Engine {
     }
     
 }
+
+Engine.Init()

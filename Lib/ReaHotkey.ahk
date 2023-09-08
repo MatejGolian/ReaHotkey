@@ -98,18 +98,6 @@ Class ReaHotkey {
         Return False
     }
     
-    Static InitOverlays() {
-        Loop Files, "Includes/Overlays/*.ahk" {
-            If A_LoopFileExt == ""
-            Length := StrLen(A_LoopFileName)
-            Else
-            Length := StrLen(A_LoopFileName) - (StrLen(A_LoopFileExt) + 1)
-            FileNameNoExt := SubStr(A_LoopFileName, 1, Length)
-            Try
-            %FileNameNoExt%.Init()
-        }
-    }
-    
     Static TurnHotkeysOff() {
         If WinActive(ReaHotkey.PluginWinCriteria)
         HotIfWinActive(ReaHotkey.PluginWinCriteria)
