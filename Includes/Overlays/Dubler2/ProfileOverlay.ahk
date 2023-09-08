@@ -976,7 +976,6 @@ DublerCreateProfileOverlay(Overlay) {
 
     Overlay.AddCustomButton("Revert Changes", FocusButton, DublerRevertProfileButton)
     Overlay.AddHotspotButton("Unload Profile", 362, 56, FocusButton, DublerCloseProfileOverlay)
-    ;Overlay.AddHotspotButton("Audio Device Settings", 863, 55, FocusButton)
     ;Overlay.AddHotspotButton("User Settings", 900, 57, FocusButton)
 
     PlayTab := HotspotTab("Play (press Ctrl+1 to select)", 258, 104, DublerDisableNotesAnnouncement)
@@ -1016,6 +1015,8 @@ DublerCreateProfileOverlay(Overlay) {
     ;AssignTab := HotspotTab("Assign", 815, 104, DublerDisableNotesAnnouncement)
 
     Overlay.AddTabControl("Profile Settings", PlayTab, PitchTab, TriggersTab, ChordsTab)
+
+    SetupAudioCalibrationButton(Overlay)
 
     return Overlay
 }

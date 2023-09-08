@@ -73,6 +73,15 @@ DUBLER_OVERLAY_TRIGGERS := Array(
         "Label", "Dubler 2 Profiles",
         "Generator", DublerCreateProfilesOverlay,
     ),
+    Map(
+        "Image", LoadPicture(A_ScriptDir . "\Images\Dubler2AudioCalibration.png"),
+        "FromX", 200,
+        "FromY", 150,
+        "ToX", 800,
+        "ToY", 550,
+        "Label", "Dubler 2 Audio Calibration",
+        "Generator", DublerCreateAudioCalibrationOverlay,
+    ),
 )
 
 DublerProfileLoaded := Map(
@@ -348,6 +357,7 @@ midiNoteToNumber(Note) {
 }
 
 #Include Dubler2/ApplyScalePopupOverlay.ahk
+#Include Dubler2/AudioCalibrationOverlay.ahk
 #Include Dubler2/AudioPopupOverlay.ahk
 #Include Dubler2/FixSettingsOverlay.ahk
 #Include Dubler2/LoadingOverlay.ahk

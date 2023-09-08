@@ -177,7 +177,7 @@ DublerCreateProfilesOverlay(Overlay) {
     }
 
     Overlay.AddCustomButton("Create new profile", FocusButton, DublerCreateNewProfileButton)
-    ;Overlay.AddHotspotButton("Audio Device Settings", 863, 55, FocusButton)
+    SetupAudioCalibrationButton(Overlay)
     ;Overlay.AddHotspotButton("User Settings", 900, 57, FocusButton)
 
     return Overlay
