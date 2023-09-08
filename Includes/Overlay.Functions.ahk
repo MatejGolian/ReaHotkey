@@ -169,5 +169,3 @@ InArray(Needle, Haystack) {
     Return FoundIndex
     Return False
 }
-
-#Include Overlays/Dubler2.ahk

@@ -48,7 +48,7 @@ Jxon_Load(&src, args*) {
 		if !InStr(next, ch, true) {
 			testArr := StrSplit(SubStr(src, 1, pos), "`n")
 			
-			ln := testArr.Length
+			Local ln := testArr.Length
 			col := pos - InStr(src, "`n",, -(StrLen(src)-pos+1))
 
 			msg := Format("{}: line {} col {} (char {})"
