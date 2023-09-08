@@ -39,3 +39,5 @@ Class KontaktKompleteKontrol {
     }
     
 }
+
+KontaktKompleteKontrol.Init()

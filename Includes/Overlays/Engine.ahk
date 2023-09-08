@@ -45,7 +45,6 @@ Class Engine {
     }
     
     Class ActivatePluginAddLibraryButton {
-        
         Static Call(EngineAddLibraryButton) {
             EngineLibrariesTab := AccessibilityOverlay.GetControl(EngineAddLibraryButton.SuperordinateControlID)
             EnginePreferencesTab := AccessibilityOverlay.GetControl(EngineLibrariesTab.SuperordinateControlID)
@@ -54,7 +53,8 @@ Class Engine {
             EngineAddLibraryButton.Focus(EngineAddLibraryButton.ControlID)
             AccessibilityOverlay.Speak("")
         }
-        
     }
     
 }
+
+Engine.Init()
