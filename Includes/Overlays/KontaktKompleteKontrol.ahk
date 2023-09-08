@@ -4,6 +4,8 @@ Class KontaktKompleteKontrol {
     
     Static Init() {
         
+        Plugin.Register("Kontakt/Komplete Kontrol", ["^NIVSTChildWindow00007.*", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1"],, True)
+        
         AreiaOverlay := AccessibilityOverlay("Areia")
         AreiaOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Areia")
         AreiaOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
