@@ -30,10 +30,8 @@ Class Plugin {
         This.Chooser := Chooser
         Else
         This.Chooser := True
-        For OverlayNumber, Overlay In Plugin.GetOverlays(Name) {
-            This.Overlays.Push(Overlay.Clone())
-            This.Overlays[OverlayNumber].OverlayNumber := OverlayNumber
-        }
+        For OverlayNumber, Overlay In Plugin.GetOverlays(Name)
+        This.Overlays.Push(Overlay.Clone())
         If This.Overlays.Length == 1 {
             This.Overlay := This.Overlays[1].Clone()
         }
@@ -79,9 +77,6 @@ Class Plugin {
     
     RegisterOverlay(PluginOverlay) {
         Plugin.RegisterOverlay(This.Name, PluginOverlay)
-        PluginOverlay.OverlayNumber := Plugin.List[This.Name]["Overlays"].Length
-        For PluginInstance In Plugin.Instances
-        PluginInstance.Overlays.Push(PluginOverlay.Clone())
     }
     
     Static FindClass(ClassName) {
@@ -337,8 +332,13 @@ Class Plugin {
     
     Static RegisterOverlay(PluginName, PluginOverlay) {
         PluginNumber := Plugin.FindName(PluginName)
-        If PluginNumber > 0
-        Plugin.List[PluginNumber]["Overlays"].Push(PluginOverlay.Clone())
+        If PluginNumber > 0 {
+            PluginOverlay.OverlayNumber := Plugin.List[PluginNumber]["Overlays"].Length + 1
+            Plugin.List[PluginNumber]["Overlays"].Push(PluginOverlay.Clone())
+            For PluginInstance In Plugin.Instances
+            If PluginName == PluginInstance.Name
+            PluginInstance.Overlays.Push(PluginOverlay.Clone())
+        }
     }
     
 }
