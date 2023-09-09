@@ -61,7 +61,8 @@ Class KontaktKompleteKontrol {
             If ReaHotkey.FoundPlugin.Overlay.OverlayNumber != OverlayEntry.OverlayNumber
             If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Image") And OverlayEntry.Metadata["Image"] != ""
             If FileExist(OverlayEntry.Metadata["Image"])
-            If ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenHeight, OverlayEntry.Metadata["Image"]) {
+            If ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenHeight, OverlayEntry.Metadata["Image"])
+            If ReaHotkey.FoundPlugin.Chooser == True {
                 ReaHotkey.FoundPlugin.Overlay := AccessibilityOverlay(OverlayEntry.Label)
                 ReaHotkey.FoundPlugin.Overlay.OverlayNumber := OverlayNumber
                 If HasProp(OverlayEntry, "Metadata")
@@ -72,6 +73,11 @@ Class KontaktKompleteKontrol {
                 AccessibilityOverlay.Speak(Product . " overlay active")
                 Break
             }
+            Else {
+                ReaHotkey.FoundPlugin.Overlay := OverlayEntry.Clone()
+                AccessibilityOverlay.Speak(Product . " overlay active")
+                Break
+                }
         }
     }
     
