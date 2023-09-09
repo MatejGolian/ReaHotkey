@@ -129,6 +129,14 @@ Class Dubler2 {
         Return Text
     }
 
+    Static SoundPlay(File) {
+        Try {
+            SoundPlay(A_ScriptDir . "\Sounds\" . File)
+        } Catch {
+            Return
+        }
+    }
+
     Static FindControlByLabel(&Control, Label, &OutVar) {
 
         If InArray(Control.ControlType, ["Overlay", "Tab"]) {
@@ -185,7 +193,7 @@ Class Dubler2 {
 
         Local NextControl, Controls
 
-        SoundPlay(A_ScriptDir . "\Sounds\OverlayClosed.mp3")
+        Dubler2.SoundPlay("OverlayClosed.mp3")
 
         If Not ReaHotkey.FoundStandalone Is Standalone
             Return
@@ -204,22 +212,22 @@ Class Dubler2 {
     }
 
     Static FocusButton(*) {
-        SoundPlay(A_ScriptDir . "\Sounds\FocusButton.mp3")
+        Dubler2.SoundPlay("FocusButton.mp3")
     }
 
     Static FocusCheckbox(Checkbox) {
         If Checkbox.Checked
-            SoundPlay(A_ScriptDir . "\Sounds\CheckboxChecked.mp3")
+            Dubler2.SoundPlay("CheckboxChecked.mp3")
         Else
-            SoundPlay(A_ScriptDir . "\Sounds\CheckboxUnchecked.mp3")
+            Dubler2.SoundPlay("CheckboxUnchecked.mp3")
     }
 
     Static FocusInput(*) {
-        SoundPlay(A_ScriptDir . "\Sounds\FocusInput.mp3")
+        Dubler2.SoundPlay("FocusInput.mp3")
     }
 
     Static FocusTab(*) {
-        SoundPlay(A_ScriptDir . "\Sounds\FocusTab.mp3")
+        Dubler2.SoundPlay("FocusTab.mp3")
     }
 
     Static Init(Instance) {
@@ -319,7 +327,7 @@ A_Clipboard := Trigger["Label"]
                 }
                 Overlay.Focus()
                 ReaHotkey.FoundStandalone.Overlay := Overlay
-                SoundPlay(A_ScriptDir . "\Sounds\OverlayShown.mp3")
+                Dubler2.SoundPlay("OverlayShown.mp3")
                 Break
             }
         }
