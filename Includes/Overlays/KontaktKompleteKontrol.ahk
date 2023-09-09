@@ -38,54 +38,8 @@ Class KontaktKompleteKontrol {
         ShreddageOverlay.AddHotspotButton("Guitar Number 4", 914, 471, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", ShreddageOverlay)
         
-;        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectLibrary"), 200)
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangeOverlay,, "Plugin", "Kontakt/Komplete Kontrol"), 200)
         
-    }
-    
-    Static DetectLibrary() {
-        OverlayList := Plugin.GetOverlays("Kontakt/Komplete Kontrol")
-        UnknownProductCounter := 1
-        For OverlayNumber, OverlayEntry In OverlayList {
-            FoundX := ""
-            FoundY := ""
-            WinWidth := ""
-            WinHeight := ""
-            WinGetPos ,, &WinWidth, &WinHeight, "A"
-            If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And OverlayEntry.Metadata["Product"] != "" {
-                Product := OverlayEntry.Metadata["Product"]
-            }
-            Else If OverlayEntry.Label != "" {
-                Product := OverlayEntry.Label
-            }
-            Else {
-                Product := "unknown product " . UnknownProductCounter
-                UnknownProductCounter++
-            }
-            If ReaHotkey.FoundPlugin.Overlay.OverlayNumber != OverlayEntry.OverlayNumber
-            If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Image") And OverlayEntry.Metadata["Image"] != ""
-            If FileExist(OverlayEntry.Metadata["Image"])
-            If ImageSearch(&FoundX, &FoundY, 0, 0, WinWidth, WinHeight, OverlayEntry.Metadata["Image"])
-            If ReaHotkey.FoundPlugin.Chooser == True {
-                ReaHotkey.FoundPlugin.Overlay := AccessibilityOverlay(OverlayEntry.Label)
-                ReaHotkey.FoundPlugin.Overlay.OverlayNumber := OverlayNumber
-                If HasProp(OverlayEntry, "Metadata")
-                ReaHotkey.FoundPlugin.Overlay.Metadata := OverlayEntry.Metadata
-                ReaHotkey.FoundPlugin.Overlay.AddControl(OverlayEntry.Clone())
-                ReaHotkey.FoundPlugin.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
-                ReaHotkey.FoundPlugin.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . Product
-                AccessibilityOverlay.Speak(Product . " overlay active")
-                Sleep 500
-                ReaHotkey.FoundPlugin.Overlay.Focus()
-                Break
-            }
-            Else {
-                ReaHotkey.FoundPlugin.Overlay := OverlayEntry.Clone()
-                AccessibilityOverlay.Speak(Product . " overlay active")
-                Sleep 500
-                ReaHotkey.FoundPlugin.Overlay.Focus()
-                Break
-            }
-        }
     }
     
 }

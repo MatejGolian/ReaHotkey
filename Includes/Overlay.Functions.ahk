@@ -1,5 +1,51 @@
 ﻿#Requires AutoHotkey v2.0
 
+AutoChangeOverlay(Type, Name) {
+    OverlayList := %Type%.GetOverlays(Name)
+    UnknownProductCounter := 1
+    For OverlayNumber, OverlayEntry In OverlayList {
+        FoundX := ""
+        FoundY := ""
+        WinWidth := ""
+        WinHeight := ""
+        WinGetPos ,, &WinWidth, &WinHeight, "A"
+        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And OverlayEntry.Metadata["Product"] != "" {
+            Product := OverlayEntry.Metadata["Product"]
+        }
+        Else If OverlayEntry.Label != "" {
+            Product := OverlayEntry.Label
+        }
+        Else {
+            Product := "unknown product " . UnknownProductCounter
+            UnknownProductCounter++
+        }
+        If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.Overlay.OverlayNumber != OverlayEntry.OverlayNumber
+        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Image") And OverlayEntry.Metadata["Image"] != ""
+        If FileExist(OverlayEntry.Metadata["Image"])
+        If ImageSearch(&FoundX, &FoundY, 0, 0, WinWidth, WinHeight, OverlayEntry.Metadata["Image"])
+        If ReaHotkey.Found%Type%.Chooser == True {
+            ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(OverlayEntry.Label)
+            ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
+            If HasProp(OverlayEntry, "Metadata")
+            ReaHotkey.Found%Type%.Overlay.Metadata := OverlayEntry.Metadata
+            ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
+            ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
+            ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . Product
+            AccessibilityOverlay.Speak(Product . " overlay active")
+            Sleep 500
+            ReaHotkey.Found%Type%.Overlay.Focus()
+            Break
+        }
+        Else {
+            ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
+            AccessibilityOverlay.Speak(Product . " overlay active")
+            Sleep 500
+            ReaHotkey.Found%Type%.Overlay.Focus()
+            Break
+        }
+    }
+}
+
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
     OverlayList := Plugin.GetOverlays(ReaHotkey.FoundPlugin.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
