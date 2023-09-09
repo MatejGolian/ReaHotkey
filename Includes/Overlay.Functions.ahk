@@ -1,6 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 
-AutoChangeOverlay(Type, Name) {
+AutoChangeOverlay(Type, Name, ReportChange := True) {
     OverlayList := %Type%.GetOverlays(Name)
     UnknownProductCounter := 1
     For OverlayNumber, OverlayEntry In OverlayList {
@@ -8,6 +8,7 @@ AutoChangeOverlay(Type, Name) {
         FoundY := ""
         WinWidth := ""
         WinHeight := ""
+        WinWaitActive("A")
         WinGetPos ,, &WinWidth, &WinHeight, "A"
         If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And OverlayEntry.Metadata["Product"] != "" {
             Product := OverlayEntry.Metadata["Product"]
@@ -31,15 +32,19 @@ AutoChangeOverlay(Type, Name) {
             ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
             ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
             ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . Product
-            AccessibilityOverlay.Speak(Product . " overlay active")
-            Sleep 500
+            If ReportChange == True {
+                AccessibilityOverlay.Speak(Product . " overlay active")
+                Sleep 500
+            }
             ReaHotkey.Found%Type%.Overlay.Focus()
             Break
         }
         Else {
             ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
-            AccessibilityOverlay.Speak(Product . " overlay active")
-            Sleep 500
+            If ReportChange == True {
+                AccessibilityOverlay.Speak(Product . " overlay active")
+                Sleep 500
+            }
             ReaHotkey.Found%Type%.Overlay.Focus()
             Break
         }
