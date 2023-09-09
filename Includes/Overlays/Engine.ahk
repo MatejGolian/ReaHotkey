@@ -19,7 +19,7 @@ Class Engine {
         EnginePluginOverlay.AddTabControl(, EnginePluginQuickEditTab, EnginePluginProEditTab, EnginePluginBrowserTab, EnginePluginMixerTab, EnginePluginPreferencesTab, EnginePluginHelpTab)
         EnginePluginEngineTab := HotspotTab("Engine", 396, 112, CompensatePluginPointCoordinates)
         EnginePluginLibrariesTab := HotspotTab("Libraries", 424, 112, CompensatePluginPointCoordinates)
-        EnginePluginAddLibraryButton := EnginePluginLibrariesTab.AddHotspotButton("Add library", 436, 146, CompensatePluginPointCoordinates, [CompensatePluginPointCoordinates, Engine.ActivatePluginAddLibraryButton])
+        EnginePluginAddLibraryButton := EnginePluginLibrariesTab.AddHotspotButton("Add library", 436, 146, CompensatePluginPointCoordinates, [CompensatePluginPointCoordinates, ObjBindMethod(Engine, "ActivatePluginAddLibraryButton")])
         EnginePluginUserFolderTab := HotspotTab("User folder", 488, 112, CompensatePluginPointCoordinates)
         EnginePluginOutputSurrTab := HotspotTab("Output/Surr", 572, 112, CompensatePluginPointCoordinates)
         EnginePluginMiscTab := HotspotTab("Misc.", 656, 112, CompensatePluginPointCoordinates)
@@ -47,17 +47,13 @@ Class Engine {
         
     }
     
-    Class ActivatePluginAddLibraryButton {
-        
-        Static Call(EngineAddLibraryButton) {
-            EngineLibrariesTab := AccessibilityOverlay.GetControl(EngineAddLibraryButton.SuperordinateControlID)
-            EnginePreferencesTab := AccessibilityOverlay.GetControl(EngineLibrariesTab.SuperordinateControlID)
-            EnginePreferencesTab.Focus(EnginePreferencesTab.ControlID)
-            EngineLibrariesTab.Focus(EngineLibrariesTab.ControlID)
-            EngineAddLibraryButton.Focus(EngineAddLibraryButton.ControlID)
-            AccessibilityOverlay.Speak("")
-        }
-        
+    Static ActivatePluginAddLibraryButton(EngineAddLibraryButton) {
+        EngineLibrariesTab := AccessibilityOverlay.GetControl(EngineAddLibraryButton.SuperordinateControlID)
+        EnginePreferencesTab := AccessibilityOverlay.GetControl(EngineLibrariesTab.SuperordinateControlID)
+        EnginePreferencesTab.Focus(EnginePreferencesTab.ControlID)
+        EngineLibrariesTab.Focus(EngineLibrariesTab.ControlID)
+        EngineAddLibraryButton.Focus(EngineAddLibraryButton.ControlID)
+        AccessibilityOverlay.Speak("")
     }
     
 }

@@ -25,10 +25,8 @@ Class Standalone {
         This.Chooser := Chooser
         Else
         This.Chooser := True
-        For OverlayNumber, Overlay In Standalone.GetOverlays(Name) {
-            This.Overlays.Push(Overlay.Clone())
-            This.Overlays[OverlayNumber].OverlayNumber := OverlayNumber
-        }
+        For OverlayNumber, Overlay In Standalone.GetOverlays(Name)
+        This.Overlays.Push(Overlay.Clone())
         If This.Overlays.Length == 1 {
             This.Overlay := This.Overlays[1].Clone()
         }
@@ -74,9 +72,6 @@ Class Standalone {
     
     RegisterOverlay(ProgramOverlay) {
         Standalone.RegisterOverlay(This.Name, ProgramOverlay)
-        ProgramOverlay.OverlayNumber := Standalone.List[This.Name]["Overlays"].Length
-        For ProgramInstance In Standalone.Instances
-        ProgramInstance.Overlays.Push(ProgramOverlay.Clone())
     }
     
     Static FindByActiveWindow() {
@@ -317,8 +312,13 @@ Class Standalone {
     
     Static RegisterOverlay(ProgramName, ProgramOverlay) {
         ProgramNumber := Standalone.FindName(ProgramName)
-        If ProgramNumber > 0
-        Standalone.List[ProgramNumber]["Overlays"].Push(ProgramOverlay.Clone())
+        If ProgramNumber > 0 {
+            ProgramOverlay.OverlayNumber := Standalone.List[ProgramNumber]["Overlays"].Length + 1
+            Standalone.List[ProgramNumber]["Overlays"].Push(ProgramOverlay.Clone())
+            For ProgramInstance In Standalone.Instances
+            If ProgramName == ProgramInstance.Name
+            ProgramInstance.Overlays.Push(ProgramOverlay.Clone())
+        }
     }
     
 }
