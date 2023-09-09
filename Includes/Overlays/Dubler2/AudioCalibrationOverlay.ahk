@@ -1,21 +1,31 @@
 #Requires AutoHotkey v2.0
 
 Static ReadDublerAudioSettings() {
-    Obj := ComObject("MSXML2.DOMDocument.6.0")
-    Obj.Async := false
-    Data := FileRead(A_AppData . "\Vochlea\Dubler2\audiosettings.xml", "UTF-8")
+    Settings := Map()
 
-    Obj.LoadXML(Data)
+    If FileExist(A_AppData . "\Vochlea\Dubler2\audiosettings.xml") {
+        Obj := ComObject("MSXML2.DOMDocument.6.0")
+        Obj.Async := false
+        Data := FileRead(A_AppData . "\Vochlea\Dubler2\audiosettings.xml", "UTF-8")
 
-    Node := Obj.SelectSingleNode("/DEVICESETUP")
+        Obj.LoadXML(Data)
 
-    Return Map(
-        "audioDeviceInChans", Integer(Node.getAttributeNode("audioDeviceInChans").Text),
-        "audioDeviceRate", Float(Node.getAttributeNode("audioDeviceRate").Text),
-        "audioInputDeviceName", Node.getAttributeNode("audioInputDeviceName").Text,
-        "audioOutputDeviceName", Node.getAttributeNode("audioOutputDeviceName").Text,
-        "deviceType", Node.getAttributeNode("deviceType").Text,
-    )
+        Node := Obj.SelectSingleNode("/DEVICESETUP")
+
+        Settings.Set("audioDeviceInChans", Integer(Node.getAttributeNode("audioDeviceInChans").Text))
+        Settings.Set("audioDeviceRate", Float(Node.getAttributeNode("audioDeviceRate").Text))
+        Settings.Set("audioInputDeviceName", Node.getAttributeNode("audioInputDeviceName").Text)
+        Settings.Set("audioOutputDeviceName", Node.getAttributeNode("audioOutputDeviceName").Text)
+        Settings.Set("deviceType", Node.getAttributeNode("deviceType").Text)
+    } Else {
+        Settings.Set("audioDeviceInChans", 0)
+        Settings.Set("audioDeviceRate", 0.0)
+        Settings.Set("audioInputDeviceName", "")
+        Settings.Set("audioOutputDeviceName", "")
+        Settings.Set("deviceType", "")
+    }
+    
+    Return Settings
 }
 
 Static ClickAudioCalibrationButton(*) {
@@ -49,7 +59,7 @@ Static ClickAudioCalibrationButton(*) {
 Static SetupAudioCalibrationButton(Overlay) {
     ASettings := Dubler2.ReadDublerAudioSettings()
 
-    Overlay.AddControl(CustomButton("Calibrate audio device: " . ASettings["audioInputDeviceName"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ClickAudioCalibrationButton")))
+    Overlay.AddControl(CustomButton("Calibrate audio device: " . (ASettings["audioInputDeviceName"] != "" ? ASettings["audioInputDeviceName"] : "Not calibrated"), ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ClickAudioCalibrationButton")))
 }
 
 Static CreateAudioCalibrationOverlay(Overlay) {
