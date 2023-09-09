@@ -49,7 +49,8 @@ AutoChangeOverlay(Type, Name) {
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
     OverlayList := Plugin.GetOverlays(ReaHotkey.FoundPlugin.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
-    If ReaHotkey.FoundPlugin.Overlay.OverlayNumber != OverlayNumber {
+    If ReaHotkey.FoundPlugin.Overlay.OverlayNumber != OverlayNumber
+    If ReaHotkey.FoundPlugin.Chooser == True {
         ReaHotkey.FoundPlugin.Overlay := AccessibilityOverlay(ItemName)
         ReaHotkey.FoundPlugin.Overlay.OverlayNumber := OverlayNumber
         If HasProp(OverlayList[OverlayNumber], "Metadata")
@@ -60,12 +61,17 @@ ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
         ReaHotkey.FoundPlugin.Overlay.SetCurrentControlID(ReaHotkey.FoundPlugin.Overlay.ChildControls[2].ChildControls[1].ControlID)
         ReaHotkey.FoundPlugin.Overlay.ChildControls[2].ChildControls[1].Focus()
     }
+    Else {
+        ReaHotkey.FoundPlugin.Overlay := OverlayList[OverlayNumber].Clone()
+        ReaHotkey.FoundPlugin.Overlay.Focus()
+    }
 }
 
 ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
     OverlayList := Standalone.GetOverlays(ReaHotkey.FoundStandalone.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
-    If ReaHotkey.FoundStandalone.Overlay.OverlayNumber != OverlayNumber {
+    If ReaHotkey.FoundStandalone.Overlay.OverlayNumber != OverlayNumber
+    If ReaHotkey.FoundStandalone.Chooser == True {
         ReaHotkey.FoundStandalone.Overlay := AccessibilityOverlay(ItemName)
         ReaHotkey.FoundStandalone.Overlay.OverlayNumber := OverlayNumber
         If HasProp(OverlayList[OverlayNumber], "Metadata")
@@ -75,6 +81,10 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
         ReaHotkey.FoundStandalone.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
         ReaHotkey.FoundStandalone.Overlay.SetCurrentControlID(ReaHotkey.FoundStandalone.Overlay.ChildControls[2].ChildControls[1].ControlID)
         ReaHotkey.FoundStandalone.Overlay.ChildControls[2].ChildControls[1].Focus()
+    }
+    Else {
+        ReaHotkey.FoundStandalone.Overlay := OverlayList[OverlayNumber].Clone()
+        ReaHotkey.FoundStandalone.Overlay.Focus()
     }
 }
 
