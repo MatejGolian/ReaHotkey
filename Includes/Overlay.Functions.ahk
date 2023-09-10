@@ -8,8 +8,13 @@ AutoChangeOverlay(Type, Name, ReportChange := True) {
         FoundY := ""
         WinWidth := ""
         WinHeight := ""
-        WinWaitActive("A")
-        WinGetPos ,, &WinWidth, &WinHeight, "A"
+        Try {
+            WinGetPos ,, &WinWidth, &WinHeight, "A"
+        }
+        Catch {
+            WinWidth := A_ScreenWidth
+            WinHeight := A_ScreenHeight
+        }
         If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And OverlayEntry.Metadata["Product"] != "" {
             Product := OverlayEntry.Metadata["Product"]
         }
@@ -21,32 +26,55 @@ AutoChangeOverlay(Type, Name, ReportChange := True) {
             UnknownProductCounter++
         }
         If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.Overlay.OverlayNumber != OverlayEntry.OverlayNumber
-        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Image") And OverlayEntry.Metadata["Image"] != ""
-        If FileExist(OverlayEntry.Metadata["Image"])
-        If ImageSearch(&FoundX, &FoundY, 0, 0, WinWidth, WinHeight, OverlayEntry.Metadata["Image"])
-        If ReaHotkey.Found%Type%.Chooser == True {
-            ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(OverlayEntry.Label)
-            ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
-            If HasProp(OverlayEntry, "Metadata")
-            ReaHotkey.Found%Type%.Overlay.Metadata := OverlayEntry.Metadata
-            ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
-            ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
-            ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . Product
-            If ReportChange == True {
-                AccessibilityOverlay.Speak(Product . " overlay active")
-                Sleep 500
+        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Image") And OverlayEntry.Metadata["Image"] != "" {
+            If Not OverlayEntry.Metadata["Image"] Is Map
+            OverlayMetadata := Map("File", OverlayEntry.Metadata["Image"])
+            Else
+            OverlayMetadata := OverlayEntry.Metadata["Image"].Clone()
+            If Not OverlayMetadata.Has("File")
+            OverlayMetadata.Set("File", OverlayEntry.Metadata["Image"])
+            If Not OverlayMetadata.Has("X1Coordinate")
+            OverlayMetadata.Set("X1Coordinate", 0)
+            If Not OverlayMetadata.Has("Y1Coordinate")
+            OverlayMetadata.Set("Y1Coordinate", 0)
+            If Not OverlayMetadata.Has("X2Coordinate")
+            OverlayMetadata.Set("X2Coordinate", WinWidth)
+            If Not OverlayMetadata.Has("Y2Coordinate")
+            OverlayMetadata.Set("Y2Coordinate", WinHeight)
+            If Not OverlayMetadata["X1Coordinate"] Is Number Or OverlayMetadata["X1Coordinate"] < 0
+            OverlayMetadata["X1Coordinate"] := 0
+            If Not OverlayMetadata["Y1Coordinate"] Is Number Or OverlayMetadata["Y1Coordinate"] < 0
+            OverlayMetadata["Y1Coordinate"] := 0
+            If Not OverlayMetadata["X2Coordinate"] Is Number Or OverlayMetadata["X2Coordinate"] <= 0
+            OverlayMetadata["X2Coordinate"] := WinWidth
+            If Not OverlayMetadata["Y2Coordinate"] Is Number Or OverlayMetadata["Y2Coordinate"] <= 0
+            OverlayMetadata["Y2Coordinate"] := WinHeight
+            If FileExist(OverlayMetadata["File"])
+            If ImageSearch(&FoundX, &FoundY, OverlayMetadata["X1Coordinate"], OverlayMetadata["Y1Coordinate"], OverlayMetadata["X2Coordinate"], OverlayMetadata["Y2Coordinate"], OverlayMetadata["File"])
+            If ReaHotkey.Found%Type%.Chooser == True {
+                ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(OverlayEntry.Label)
+                ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
+                If HasProp(OverlayEntry, "Metadata")
+                ReaHotkey.Found%Type%.Overlay.Metadata := OverlayEntry.Metadata
+                ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
+                ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
+                ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . Product
+                If ReportChange == True {
+                    AccessibilityOverlay.Speak(Product . " overlay active")
+                    Sleep 500
+                }
+                ReaHotkey.Found%Type%.Overlay.Focus()
+                Break
             }
-            ReaHotkey.Found%Type%.Overlay.Focus()
-            Break
-        }
-        Else {
-            ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
-            If ReportChange == True {
-                AccessibilityOverlay.Speak(Product . " overlay active")
-                Sleep 500
+            Else {
+                ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
+                If ReportChange == True {
+                    AccessibilityOverlay.Speak(Product . " overlay active")
+                    Sleep 500
+                }
+                ReaHotkey.Found%Type%.Overlay.Focus()
+                Break
             }
-            ReaHotkey.Found%Type%.Overlay.Focus()
-            Break
         }
     }
 }
