@@ -47,6 +47,7 @@ Enter::ClickHotspot()
 #^+Del::DeleteHotspot()
 #^+Q::Quit()
 #^+F2::RenameHotspot()
+#^+S::SearchForImage()
 Tab::SelectNextHotspot()
 +Tab::SelectPreviousHotspot()
 Ctrl::StopSpeech()
@@ -60,7 +61,7 @@ About(*) {
     Global DialogOpen
     If DialogOpen == 0 {
         DialogOpen := 1
-        MsgBox "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+X - Copy the pixel colour under the mouse to clipboard`nCtrl - Stop speech`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot", "About " . AppName
+        MsgBox "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+S - Search for image`nCtrl+Win+Shift+X - Copy the pixel colour under the mouse to clipboard`nCtrl - Stop speech`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot", "About " . AppName
         DialogOpen := 0
     }
 }
@@ -171,7 +172,7 @@ CopyHotspotsToClipboard() {
                 }
                 Else {
                     ControlGetPos &ControlX, &ControlY,,, ControlGetClassNN(ControlGetFocus("ahk_id " . WinGetID("A"))), "ahk_id " . WinGetID("A")
-                    ClipboardData .= "Compensating for X " . ControlX . ", Y " . ControlY . "`n"
+                    ClipboardData .= "Compensating for X " . ControlX . ", Y " . ControlY . "`r`n"
                     For Value In Hotspots {
                         Label := Value["Label"]
                         MouseXCoordinate := Value["XCoordinate"] - ControlX
@@ -179,21 +180,21 @@ CopyHotspotsToClipboard() {
                         ClipboardData .= "`"" . Label . "`", " . MouseXCoordinate . ", " . MouseYCoordinate . "`r`n"
                     }
                 }
-        }
-        Else {
-            For Value In Hotspots {
-                Label := Value["Label"]
-                MouseXCoordinate := Value["XCoordinate"]
-                MouseYCoordinate := Value["YCoordinate"]
-                ClipboardData .= "`"" . Label . "`", " . MouseXCoordinate . ", " . MouseYCoordinate . "`r`n"
             }
+            Else {
+                For Value In Hotspots {
+                    Label := Value["Label"]
+                    MouseXCoordinate := Value["XCoordinate"]
+                    MouseYCoordinate := Value["YCoordinate"]
+                    ClipboardData .= "`"" . Label . "`", " . MouseXCoordinate . ", " . MouseYCoordinate . "`r`n"
+                }
+            }
+            ClipboardData := RTrim(ClipboardData, "`r`n")
+            A_Clipboard := ClipboardData
+            Speak("Hotspots copied to clipboard")
         }
-        ClipboardData := RTrim(ClipboardData, "`r`n")
-        A_Clipboard := ClipboardData
-        Speak("Hotspots copied to clipboard")
+        DialogOpen := 0
     }
-    DialogOpen := 0
-}
 }
 
 CopyProcessNameToClipboard() {
@@ -284,6 +285,7 @@ ManageHotkeys() {
         Hotkey "#^+Del", "Off"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "Off"
+        Hotkey "#^+S", "On"
         Hotkey "Tab", "Off"
         Hotkey "+Tab", "Off"
         Hotkey "Ctrl", "Off"
@@ -304,6 +306,7 @@ ManageHotkeys() {
         Hotkey "#^+Del", "On"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "On"
+        Hotkey "#^+S", "On"
         Hotkey "Tab", "On"
         Hotkey "+Tab", "On"
         Hotkey "Ctrl", "On"
@@ -324,6 +327,7 @@ ManageHotkeys() {
         Hotkey "#^+Del", "Off"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "Off"
+        Hotkey "#^+S", "On"
         Hotkey "Tab", "Off"
         Hotkey "+Tab", "Off"
         Hotkey "Ctrl", "On"
@@ -357,6 +361,65 @@ RenameHotspot() {
     }
     Else {
         Speak("No Hotspot Selected")
+    }
+}
+
+SearchForImage() {
+    Global AppName, DialogOpen
+    If DialogOpen == 0 {
+        DialogOpen := 1
+        ImageFile := FileSelect(3,, "Choose Image", "Supported Images (*.ANI; *.BMP; *.CUR; *.EMF; *.Exif; *.GIF; *.ICO; *.JPG; *.PNG; *.TIF; *.WMF)")
+        If ImageFile != "" {
+            FoundX := ""
+            FoundY := ""
+            WinWidth := ""
+            WinHeight := ""
+            Try {
+                WinGetPos ,, &WinWidth, &WinHeight, "ahk_id " . WinGetID("A")
+            }
+            Catch {
+                WinWidth := A_ScreenWidth
+                WinHeight := A_ScreenHeight
+            }
+            WinWaitActive("ahk_id " . WinGetID("A"))
+            If ImageSearch(&FoundX, &FoundY, 0, 0, WinWidth, WinHeight, ImageFile) {
+                ConfirmationDialog := MsgBox("Your image has been found at X " . FoundX . ", Y " . FoundY . ".`nCopy its coordinates to clipboard?", AppName, 4)
+                If ConfirmationDialog == "Yes" {
+                    ClipboardData := ""
+                    ConfirmationDialog := MsgBox("Compensate for the position of the currently focused control?", AppName, 4)
+                    If ConfirmationDialog == "Yes" {
+                        WinWaitActive("ahk_id " . WinGetID("A"))
+                        If ControlGetFocus("ahk_id " . WinGetID("A")) == 0 {
+                            Speak("Focused control not found")
+                        }
+                        Else {
+                            ControlGetPos &ControlX, &ControlY,,, ControlGetClassNN(ControlGetFocus("ahk_id " . WinGetID("A"))), "ahk_id " . WinGetID("A")
+                            ClipboardData .= "Compensating for X " . ControlX . ", Y " . ControlY . "`r`n"
+                            If FoundX Is Number
+                            ImageXCoordinate := FoundX - ControlX
+                            Else
+                            ImageXCoordinate := ""
+                            If FoundY Is Number
+                            ImageYCoordinate := FoundY - ControlY
+                            Else
+                            ImageYCoordinate := ""
+                            ClipboardData .= "`"" . ImageFile . "`", " . ImageXCoordinate . ", " . ImageYCoordinate
+                        }
+                    }
+                    Else {
+                        ImageXCoordinate := FoundX
+                        ImageYCoordinate := FoundY
+                        ClipboardData .= "`"" . ImageFile . "`", " . ImageXCoordinate . ", " . ImageYCoordinate
+                    }
+                    A_Clipboard := ClipboardData
+                    Speak("Image coordinates copied to clipboard")
+                }
+            }
+            Else {
+                MsgBox "The image you selected has not been found on the screen.", AppName
+            }
+        }
+        DialogOpen := 0
     }
 }
 
