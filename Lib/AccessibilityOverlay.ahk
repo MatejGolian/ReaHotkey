@@ -592,7 +592,7 @@ Class AccessibilityOverlay {
         English.Default := ""
         Slovak := Map(
         "AccessibilityOverlay", Map(
-        "ControlTypeLabel", "pokrývka",
+        "ControlTypeLabel", "prekrytie",
         "UnlabelledString", ""),
         "CustomButton", Map(
         "ControlTypeLabel", "tlačidlo",
