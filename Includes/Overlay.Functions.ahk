@@ -61,7 +61,7 @@ AutoChangeOverlay(Type, Name, ReportChange := True) {
                 ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . Product
                 If ReportChange == True {
                     AccessibilityOverlay.Speak(Product . " overlay active")
-                    Sleep 500
+                    Sleep 1250
                 }
                 ReaHotkey.Found%Type%.Overlay.Focus()
                 Break
@@ -70,7 +70,7 @@ AutoChangeOverlay(Type, Name, ReportChange := True) {
                 ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
                 If ReportChange == True {
                     AccessibilityOverlay.Speak(Product . " overlay active")
-                    Sleep 500
+                    Sleep 1250
                 }
                 ReaHotkey.Found%Type%.Overlay.Focus()
                 Break
