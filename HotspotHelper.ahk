@@ -2,7 +2,7 @@
 
 #MaxThreadsPerHotkey 1
 #SingleInstance Force
-#Warn LocalSameAsGlobal, Off
+#Warn All
 SendMode "Input"
 SetTitleMatchMode 2
 SetWorkingDir A_InitialWorkingDir

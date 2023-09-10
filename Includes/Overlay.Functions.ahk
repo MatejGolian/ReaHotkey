@@ -1,9 +1,11 @@
 ﻿#Requires AutoHotkey v2.0
 
-AutoChangeOverlay(Type, Name, ReportChange := True) {
+AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := True) {
     OverlayList := %Type%.GetOverlays(Name)
     UnknownProductCounter := 1
     For OverlayNumber, OverlayEntry In OverlayList {
+        ControlXCoordinate := ""
+        ControlYCoordinate := ""
         FoundX := ""
         FoundY := ""
         WinWidth := ""
@@ -49,6 +51,23 @@ AutoChangeOverlay(Type, Name, ReportChange := True) {
             OverlayMetadata["X2Coordinate"] := WinWidth
             If Not OverlayMetadata["Y2Coordinate"] Is Number Or OverlayMetadata["Y2Coordinate"] <= 0
             OverlayMetadata["Y2Coordinate"] := WinHeight
+            If CompensatePluginCoordinates == True {
+                Try {
+                    ControlGetPos &ControlXCoordinate, &ControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)), ReaHotkey.PluginWinCriteria
+                }
+                Catch {
+                    ControlXCoordinate := 0
+                    ControlYCoordinate := 0
+                }
+                OverlayMetadata["X1Coordinate"] := ControlXCoordinate + OverlayMetadata["X1Coordinate"]
+                OverlayMetadata["Y1Coordinate"] := ControlYCoordinate + OverlayMetadata["Y1Coordinate"]
+                OverlayMetadata["X2Coordinate"] := ControlXCoordinate + OverlayMetadata["X2Coordinate"]
+                OverlayMetadata["Y2Coordinate"] := ControlYCoordinate + OverlayMetadata["Y2Coordinate"]
+                If OverlayMetadata["X2Coordinate"] > WinWidth
+                OverlayMetadata["X2Coordinate"] := WinWidth
+                If OverlayMetadata["Y2Coordinate"] > WinHeight
+                OverlayMetadata["Y2Coordinate"] := WinHeight
+            }
             If FileExist(OverlayMetadata["File"])
             If ImageSearch(&FoundX, &FoundY, OverlayMetadata["X1Coordinate"], OverlayMetadata["Y1Coordinate"], OverlayMetadata["X2Coordinate"], OverlayMetadata["Y2Coordinate"], OverlayMetadata["File"])
             If ReaHotkey.Found%Type%.Chooser == True {
@@ -142,9 +161,11 @@ CompensatePluginPointCoordinates(PluginControl) {
     PluginControl.OriginalXCoordinate := PluginControl.XCoordinate
     If !HasProp(PluginControl, "OriginalYCoordinate")
     PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
-    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)), ReaHotkey.PluginWinCriteria
-    PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
-    PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
+    Try {
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)), ReaHotkey.PluginWinCriteria
+        PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
+        PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
+    }
     Return PluginControl
 }
 
@@ -157,11 +178,13 @@ CompensatePluginRegionCoordinates(PluginControl) {
     PluginControl.OriginalRegionX2Coordinate := PluginControl.RegionX2Coordinate
     If !HasProp(PluginControl, "OriginalRegionY2Coordinate")
     PluginControl.OriginalRegionY2Coordinate := PluginControl.RegionY2Coordinate
-    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)), ReaHotkey.PluginWinCriteria
-    PluginControl.RegionX1Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX1Coordinate
-    PluginControl.RegionY1Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY1Coordinate
-    PluginControl.RegionX2Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX2Coordinate
-    PluginControl.RegionY2Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY2Coordinate
+    Try {
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)), ReaHotkey.PluginWinCriteria
+        PluginControl.RegionX1Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX1Coordinate
+        PluginControl.RegionY1Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY1Coordinate
+        PluginControl.RegionX2Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX2Coordinate
+        PluginControl.RegionY2Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY2Coordinate
+    }
     Return PluginControl
 }
 

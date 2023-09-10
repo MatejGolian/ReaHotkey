@@ -38,7 +38,7 @@ Class KontaktKompleteKontrol {
         ShreddageOverlay.AddHotspotButton("Guitar Number 4", 914, 471, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", ShreddageOverlay)
         
-        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangeOverlay,, "Plugin", "Kontakt/Komplete Kontrol"), 200)
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangeOverlay,, "Plugin", "Kontakt/Komplete Kontrol", True), 200)
         
     }
     
