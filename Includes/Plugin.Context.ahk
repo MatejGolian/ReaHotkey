@@ -42,7 +42,7 @@ Tab:: {
 ~Down:: {
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is Object And PluginOverlay.GetCurrentControl().ControlType == "ComboBox"
+    If PluginOverlay.GetCurrentControl() Is Object And PluginOverlay.GetCurrentControl().ControlType = "ComboBox"
     PluginOverlay.GetCurrentControl().Focus(PluginOverlay.GetCurrentControl().ControlID, 1)
 }
 

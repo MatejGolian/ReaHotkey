@@ -42,7 +42,7 @@ Tab:: {
 ~Down:: {
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
-    If StandaloneOverlay.GetCurrentControl() Is Object And StandaloneOverlay.GetCurrentControl().ControlType == "ComboBox"
+    If StandaloneOverlay.GetCurrentControl() Is Object And StandaloneOverlay.GetCurrentControl().ControlType = "ComboBox"
     StandaloneOverlay.GetCurrentControl().Focus(StandaloneOverlay.GetCurrentControl().ControlID, 1)
 }
 

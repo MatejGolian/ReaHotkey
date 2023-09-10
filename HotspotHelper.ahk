@@ -59,7 +59,7 @@ Speak(AppName . " ready")
 
 About(*) {
     Global DialogOpen
-    If DialogOpen == 0 {
+    If DialogOpen = 0 {
         DialogOpen := 1
         MsgBox "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+S - Search for image`nCtrl+Win+Shift+X - Copy the pixel colour under the mouse to clipboard`nCtrl - Stop speech`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot", "About " . AppName
         DialogOpen := 0
@@ -68,7 +68,7 @@ About(*) {
 
 AddHotspot() {
     Global AppName, CurrentHotspot, DialogOpen, Hotspots, MouseXposition, MouseYPosition, UnlabelledHotspotLabel
-    If DialogOpen == 0 {
+    If DialogOpen = 0 {
         DialogOpen := 1
         If CurrentHotspot < Hotspots.Length
         CurrentHotspot++
@@ -94,7 +94,7 @@ AddHotspot() {
 ClickHotspot() {
     Global CurrentHotspot, DialogOpen, Hotspots
     Global DialogOpen
-    If DialogOpen == 0
+    If DialogOpen = 0
     If Hotspots.Length > 0 And CurrentHotspot > 0 And CurrentHotspot <= Hotspots.Length {
         Click Hotspots[CurrentHotspot]["XCoordinate"], Hotspots[CurrentHotspot]["YCoordinate"]
         Speak("Hotspot clicked")
@@ -106,9 +106,9 @@ ClickHotspot() {
 
 CopyControlClassToClipboard() {
     Global AppName, DialogOpen
-    If DialogOpen == 0 {
+    If DialogOpen = 0 {
         DialogOpen := 1
-        If ControlGetFocus("ahk_id " . WinGetID("A")) == 0 {
+        If ControlGetFocus("ahk_id " . WinGetID("A")) = 0 {
             Speak("Focused control not found")
         }
         Else {
@@ -125,7 +125,7 @@ CopyControlClassToClipboard() {
 
 CopyPixelColourToClipboard() {
     Global AppName, DialogOpen, MouseXPosition, MouseYPosition
-    If DialogOpen == 0 {
+    If DialogOpen = 0 {
         DialogOpen := 1
         ConfirmationDialog := MsgBox("Copy the colour of the pixel currently under the mouse to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
@@ -139,9 +139,9 @@ CopyPixelColourToClipboard() {
 
 CopyControlPositionToClipboard() {
     Global AppName, DialogOpen
-    If DialogOpen == 0 {
+    If DialogOpen = 0 {
         DialogOpen := 1
-        If ControlGetFocus("ahk_id " . WinGetID("A")) == 0 {
+        If ControlGetFocus("ahk_id " . WinGetID("A")) = 0 {
             Speak("Focused control not found")
         }
         Else {
@@ -159,7 +159,7 @@ CopyControlPositionToClipboard() {
 
 CopyHotspotsToClipboard() {
     Global AppName, DialogOpen, Hotspots
-    If DialogOpen == 0 {
+    If DialogOpen = 0 {
         DialogOpen := 1
         ConfirmationDialog := MsgBox("Copy hotspots to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
@@ -167,7 +167,7 @@ CopyHotspotsToClipboard() {
             ConfirmationDialog := MsgBox("Compensate for the position of the currently focused control?", AppName, 4)
             If ConfirmationDialog == "Yes" {
                 WinWaitActive("ahk_id " . WinGetID("A"))
-                If ControlGetFocus("ahk_id " . WinGetID("A")) == 0 {
+                If ControlGetFocus("ahk_id " . WinGetID("A")) = 0 {
                     Speak("Focused control not found")
                 }
                 Else {
@@ -199,7 +199,7 @@ CopyHotspotsToClipboard() {
 
 CopyProcessNameToClipboard() {
     Global AppName, DialogOpen
-    If DialogOpen == 0 {
+    If DialogOpen = 0 {
         DialogOpen := 1
         ConfirmationDialog := MsgBox("Copy the process name for the active window to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
@@ -213,7 +213,7 @@ CopyProcessNameToClipboard() {
 
 CopyWindowClassToClipboard() {
     Global AppName, DialogOpen
-    If DialogOpen == 0 {
+    If DialogOpen = 0 {
         DialogOpen := 1
         ConfirmationDialog := MsgBox("Copy the class of the active window to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
@@ -227,7 +227,7 @@ CopyWindowClassToClipboard() {
 
 CopyWindowIDToClipboard() {
     Global AppName, DialogOpen
-    If DialogOpen == 0 {
+    If DialogOpen = 0 {
         DialogOpen := 1
         ConfirmationDialog := MsgBox("Copy the ID of the active window to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
@@ -241,7 +241,7 @@ CopyWindowIDToClipboard() {
 
 CopyWindowTitleToClipboard() {
     Global AppName, DialogOpen
-    If DialogOpen == 0 {
+    If DialogOpen = 0 {
         DialogOpen := 1
         ConfirmationDialog := MsgBox("Copy the title of the active window to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
@@ -256,7 +256,7 @@ CopyWindowTitleToClipboard() {
 DeleteHotspot() {
     Global CurrentHotspot, DialogOpen, Hotspots
     Global DialogOpen
-    If DialogOpen == 0
+    If DialogOpen = 0
     If Hotspots.Length > 0 And CurrentHotspot > 0 And CurrentHotspot <= Hotspots.Length {
         Hotspots.RemoveAt(CurrentHotspot)
         If CurrentHotspot > 1
@@ -270,7 +270,7 @@ DeleteHotspot() {
 
 ManageHotkeys() {
     Global DialogOpen, KeyboardMode
-    If DialogOpen == 1 Or WinActive("ahk_exe Explorer.Exe ahk_class Progman") Or WinActive("ahk_class Shell_TrayWnd" Or WinExist("ahk_class #32768") ) {
+    If DialogOpen = 1 Or WinActive("ahk_exe Explorer.Exe ahk_class Progman") Or WinActive("ahk_class Shell_TrayWnd" Or WinExist("ahk_class #32768") ) {
         Hotkey "#^+A", "On"
         Hotkey "#^+Enter", "Off"
         Hotkey "Enter", "Off"
@@ -291,7 +291,7 @@ ManageHotkeys() {
         Hotkey "Ctrl", "Off"
         Hotkey "#^+K", "Off"
     }
-    Else If KeyboardMode == 1 {
+    Else If KeyboardMode = 1 {
         Hotkey "#^+A", "On"
         Hotkey "#^+Enter", "On"
         Hotkey "Enter", "On"
@@ -337,7 +337,7 @@ ManageHotkeys() {
 
 Quit(*) {
     Global AppName, DialogOpen
-    If DialogOpen == 0 {
+    If DialogOpen = 0 {
         DialogOpen := 1
         ConfirmationDialog := MsgBox("Are you sure you want to quit the app?", "Quit " . AppName, 4)
         If ConfirmationDialog == "Yes" {
@@ -349,7 +349,7 @@ Quit(*) {
 
 RenameHotspot() {
     Global CurrentHotspot, DialogOpen, Hotspots
-    If DialogOpen == 0
+    If DialogOpen = 0
     If Hotspots.Length > 0 And CurrentHotspot > 0 And CurrentHotspot <= Hotspots.Length {
         DialogOpen := 1
         RenameDialog := InputBox("Enter a new name for this hotspot.", AppName, "", Hotspots[CurrentHotspot]["Label"])
@@ -366,7 +366,7 @@ RenameHotspot() {
 
 SearchForImage() {
     Global AppName, DialogOpen
-    If DialogOpen == 0 {
+    If DialogOpen = 0 {
         DialogOpen := 1
         ImageFile := FileSelect(3,, "Choose Image", "Supported Images (*.ANI; *.BMP; *.CUR; *.EMF; *.Exif; *.GIF; *.ICO; *.JPG; *.PNG; *.TIF; *.WMF)")
         If ImageFile != "" {
@@ -389,7 +389,7 @@ SearchForImage() {
                     ConfirmationDialog := MsgBox("Compensate for the position of the currently focused control?", AppName, 4)
                     If ConfirmationDialog == "Yes" {
                         WinWaitActive("ahk_id " . WinGetID("A"))
-                        If ControlGetFocus("ahk_id " . WinGetID("A")) == 0 {
+                        If ControlGetFocus("ahk_id " . WinGetID("A")) = 0 {
                             Speak("Focused control not found")
                         }
                         Else {
@@ -425,7 +425,7 @@ SearchForImage() {
 
 SelectNextHotspot() {
     Global CurrentHotspot, DialogOpen, Hotspots
-    If DialogOpen == 0
+    If DialogOpen = 0
     If Hotspots.Length > 0 {
         CurrentHotspot++
         If CurrentHotspot > Hotspots.Length
@@ -440,7 +440,7 @@ SelectNextHotspot() {
 
 SelectPreviousHotspot() {
     Global CurrentHotspot, DialogOpen, Hotspots
-    If DialogOpen == 0
+    If DialogOpen = 0
     If Hotspots.Length > 0 {
         CurrentHotspot--
         If CurrentHotspot < 1
@@ -481,7 +481,7 @@ StopSpeech() {
 
 ToggleKeyboardMode() {
     Global KeyboardMode
-    If  KeyboardMode == 0 {
+    If  KeyboardMode = 0 {
         KeyboardMode := 1
         Speak("Keyboard mode on")
     }

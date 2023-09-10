@@ -16,29 +16,29 @@ Class Plugin {
     Static UnnamedPluginName := "Unnamed Plugin"
     
     __New(Name, ControlClass, InitFunction := "", SingleInstance := False, Chooser := True) {
-        If Name == ""
+        If Name = ""
         This.Name := Plugin.UnnamedPluginName
         Else
         This.Name := Name
         This.ControlClass := ControlClass
         This.InitFunction := InitFunction
-        If SingleInstance == True Or SingleInstance == False
+        If SingleInstance = True Or SingleInstance = False
         This.SingleInstance := SingleInstance
         Else
         This.SingleInstance := False
-        If Chooser == True Or Chooser == False
+        If Chooser = True Or Chooser = False
         This.Chooser := Chooser
         Else
         This.Chooser := True
         For OverlayNumber, Overlay In Plugin.GetOverlays(Name)
         This.Overlays.Push(Overlay.Clone())
-        If This.Overlays.Length == 1 {
+        If This.Overlays.Length = 1 {
             This.Overlay := This.Overlays[1].Clone()
         }
-        Else If This.Overlays.Length > 1 And This.Chooser == False {
+        Else If This.Overlays.Length > 1 And This.Chooser = False {
             This.Overlay := This.Overlays[1].Clone()
         }
-        Else If This.Overlays.Length > 1 And This.Chooser == True {
+        Else If This.Overlays.Length > 1 And This.Chooser = True {
             This.Overlay := AccessibilityOverlay()
             This.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
             This.Overlay.OverlayNumber := 0
@@ -67,16 +67,16 @@ Class Plugin {
         %This.InitFunction.Name%(This)
     }
     
+    RegisterOverlay(PluginOverlay) {
+        Plugin.RegisterOverlay(This.Name, PluginOverlay)
+    }
+    
     SetHotkey(KeyName, Action := "", Options := "") {
         Plugin.SetHotkey(This.Name, KeyName, Action, Options)
     }
     
     SetTimer(Function, Period := "", Priority := "") {
         Plugin.SetTimer(This.Name, Function, Period, Priority)
-    }
-    
-    RegisterOverlay(PluginOverlay) {
-        Plugin.RegisterOverlay(This.Name, PluginOverlay)
     }
     
     Static FindClass(ClassName) {
@@ -93,14 +93,14 @@ Class Plugin {
         PluginNumber := Plugin.FindName(PluginName)
         If PluginNumber > 0
         For HotkeyNumber, HotkeyParams In Plugin.List[PluginNumber]["Hotkeys"]
-        If HotkeyParams["KeyName"] == KeyName
+        If HotkeyParams["KeyName"] = KeyName
         Return HotkeyNumber
         Return 0
     }
     
     Static FindName(PluginName) {
         For PluginNumber, PluginEntry In Plugin.List
-        If PluginEntry["Name"] == PluginName
+        If PluginEntry["Name"] = PluginName
         Return PluginNumber
         Return 0
     }
@@ -109,7 +109,7 @@ Class Plugin {
         PluginNumber := Plugin.FindName(PluginName)
         If PluginNumber > 0
         For TimerNumber, TimerParams In Plugin.List[PluginNumber]["Timers"]
-        If TimerParams["Function"] == Function
+        If TimerParams["Function"] = Function
         Return TimerNumber
         Return 0
     }
@@ -120,15 +120,15 @@ Class Plugin {
             PluginName := Plugin.List[PluginNumber]["Name"]
             SingleInstance := Plugin.List[PluginNumber]["SingleInstance"]
             Chooser := Plugin.List[PluginNumber]["Chooser"]
-            If SingleInstance == True {
+            If SingleInstance = True {
                 For PluginInstance In Plugin.Instances
-                If PluginInstance.Name == PluginName
+                If PluginInstance.Name = PluginName
                 Return PluginInstance
             }
             Else {
                 SingleInstance := False
                 For PluginInstance In Plugin.Instances
-                If PluginInstance.ControlClass == ControlClass
+                If PluginInstance.ControlClass = ControlClass
                 Return PluginInstance
             }
             PluginInstance := Plugin(Plugin.List[PluginNumber]["Name"], ControlClass, Plugin.List[PluginNumber]["InitFunction"], SingleInstance, Chooser)
@@ -164,10 +164,45 @@ Class Plugin {
         Return Array()
     }
     
+    Static Register(PluginName, ControlClasses, InitFunction := "", SingleInstance := False, Chooser := True) {
+        If Plugin.FindName(PluginName) = False {
+            If PluginName = ""
+            PluginName := Plugin.UnnamedPluginName
+            If SingleInstance != True And SingleInstance != False
+            SingleInstance := False
+            If Chooser != True And Chooser != False
+            Chooser := False
+            PluginEntry := Map()
+            PluginEntry["Name"] := PluginName
+            If ControlClasses Is Array
+            PluginEntry["ControlClasses"] := ControlClasses
+            Else
+            PluginEntry["ControlClasses"] := Array(ControlClasses)
+            PluginEntry["InitFunction"] := InitFunction
+            PluginEntry["SingleInstance"] := SingleInstance
+            PluginEntry["Chooser"] := Chooser
+            PluginEntry["Hotkeys"] := Array()
+            PluginEntry["Overlays"] := Array()
+            PluginEntry["Timers"] := Array()
+            Plugin.List.Push(PluginEntry)
+        }
+    }
+    
+    Static RegisterOverlay(PluginName, PluginOverlay) {
+        PluginNumber := Plugin.FindName(PluginName)
+        If PluginNumber > 0 {
+            PluginOverlay.OverlayNumber := Plugin.List[PluginNumber]["Overlays"].Length + 1
+            Plugin.List[PluginNumber]["Overlays"].Push(PluginOverlay.Clone())
+            For PluginInstance In Plugin.Instances
+            If PluginName = PluginInstance.Name
+            PluginInstance.Overlays.Push(PluginOverlay.Clone())
+        }
+    }
+    
     Static SetHotkey(PluginName, KeyName, Action := "", Options := "") {
         PluginNumber := Plugin.FindName(PluginName)
         HotkeyNumber := Plugin.FindHotkey(PluginName, KeyName)
-        If PluginNumber > 0 And HotkeyNumber == 0 {
+        If PluginNumber > 0 And HotkeyNumber = 0 {
             BackupAction := Action
             OnOff := ""
             B := ""
@@ -198,9 +233,9 @@ Class Plugin {
         }
         Else {
             If HotkeyNumber > 0 {
-                If Action == ""
+                If Action = ""
                 Action := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
-                If Options == ""
+                If Options = ""
                 Options := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"]
                 If Action != Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] {
                     If Action Is Object {
@@ -287,57 +322,22 @@ Class Plugin {
     Static SetTimer(PluginName, Function, Period := "", Priority := "") {
         PluginNumber := Plugin.FindName(PluginName)
         TimerNumber := Plugin.FindTimer(PluginName, Function)
-        If PluginNumber > 0 And TimerNumber == 0 {
-            If Period == ""
+        If PluginNumber > 0 And TimerNumber = 0 {
+            If Period = ""
             Period := 250
-            If Priority == ""
+            If Priority = ""
             Priority := 0
             Plugin.List[PluginNumber]["Timers"].Push(Map("Function", Function, "Period", Period, "Priority", Priority, "Enabled", False))
         }
         Else {
             If TimerNumber > 0 {
-                If Period == ""
+                If Period = ""
                 Period := Plugin.List[PluginNumber]["Timers"][TimerNumber]["Period"]
-                If Priority == ""
+                If Priority = ""
                 Priority := Plugin.List[PluginNumber]["Timers"][TimerNumber]["Priority"]
                 Plugin.List[PluginNumber]["Timers"][TimerNumber]["Period"] := Period
                 Plugin.List[PluginNumber]["Timers"][TimerNumber]["Priority"] := Priority
             }
-        }
-    }
-    
-    Static Register(PluginName, ControlClasses, InitFunction := "", SingleInstance := False, Chooser := True) {
-        If Plugin.FindName(PluginName) == False {
-            If PluginName == ""
-            PluginName := Plugin.UnnamedPluginName
-            If SingleInstance != True And SingleInstance != False
-            SingleInstance := False
-            If Chooser != True And Chooser != False
-            Chooser := False
-            PluginEntry := Map()
-            PluginEntry["Name"] := PluginName
-            If ControlClasses Is Array
-            PluginEntry["ControlClasses"] := ControlClasses
-            Else
-            PluginEntry["ControlClasses"] := Array(ControlClasses)
-            PluginEntry["InitFunction"] := InitFunction
-            PluginEntry["SingleInstance"] := SingleInstance
-            PluginEntry["Chooser"] := Chooser
-            PluginEntry["Hotkeys"] := Array()
-            PluginEntry["Overlays"] := Array()
-            PluginEntry["Timers"] := Array()
-            Plugin.List.Push(PluginEntry)
-        }
-    }
-    
-    Static RegisterOverlay(PluginName, PluginOverlay) {
-        PluginNumber := Plugin.FindName(PluginName)
-        If PluginNumber > 0 {
-            PluginOverlay.OverlayNumber := Plugin.List[PluginNumber]["Overlays"].Length + 1
-            Plugin.List[PluginNumber]["Overlays"].Push(PluginOverlay.Clone())
-            For PluginInstance In Plugin.Instances
-            If PluginName == PluginInstance.Name
-            PluginInstance.Overlays.Push(PluginOverlay.Clone())
         }
     }
     

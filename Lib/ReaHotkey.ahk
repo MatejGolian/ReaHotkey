@@ -18,7 +18,7 @@ Class ReaHotkey {
             If CurrentControl Is Object {
                 SuperordinateControl := AccessibilityOverlay.GetControl(CurrentControl.SuperordinateControlID)
                 Loop AccessibilityOverlay.TotalNumberOfControls {
-                    If SuperordinateControl == 0
+                    If SuperordinateControl = 0
                     Break
                     If SuperordinateControl Is TabControl {
                         Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
@@ -43,7 +43,7 @@ Class ReaHotkey {
         Else {
             If HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
             AccessibilityOverlay.Speak(ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] . " overlay active")
-            Else If ReaHotkey.FoundPlugin.Overlay.Label == ""
+            Else If ReaHotkey.FoundPlugin.Overlay.Label = ""
             AccessibilityOverlay.Speak(ReaHotkey.FoundPlugin.Name . " overlay active")
             Else
             AccessibilityOverlay.Speak(ReaHotkey.FoundPlugin.Overlay.Label . " overlay active")
@@ -59,7 +59,7 @@ Class ReaHotkey {
             If CurrentControl Is Object {
                 SuperordinateControl := AccessibilityOverlay.GetControl(CurrentControl.SuperordinateControlID)
                 Loop AccessibilityOverlay.TotalNumberOfControls {
-                    If SuperordinateControl == 0
+                    If SuperordinateControl = 0
                     Break
                     If SuperordinateControl Is TabControl {
                         Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
@@ -173,18 +173,18 @@ Class ReaHotkey {
     }
     
     Static TurnPluginTimersOff(Name := "") {
-        If Name == "" {
+        If Name = "" {
             PluginList := Plugin.GetList()
             For PluginEntry In PluginList
             For Timer In PluginEntry["Timers"]
-            If Timer["Enabled"] == True {
+            If Timer["Enabled"] = True {
                 Timer["Enabled"] := False
                 SetTimer Timer["Function"], 0
             }
         }
         Else {
             For Timer In Plugin.GetTimers(Name)
-            If Timer["Enabled"] == True {
+            If Timer["Enabled"] = True {
                 Timer["Enabled"] := False
                 SetTimer Timer["Function"], 0
             }
@@ -192,18 +192,18 @@ Class ReaHotkey {
     }
     
     Static TurnPluginTimersOn(Name := "") {
-        If Name == "" {
+        If Name = "" {
             PluginList := Plugin.GetList()
             For PluginEntry In PluginList
             For Timer In PluginEntry["Timers"]
-            If Timer["Enabled"] == False {
+            If Timer["Enabled"] = False {
                 Timer["Enabled"] := True
                 SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
             }
         }
         Else {
             For Timer In Plugin.GetTimers(Name)
-            If Timer["Enabled"] == False {
+            If Timer["Enabled"] = False {
                 Timer["Enabled"] := True
                 SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
             }
@@ -211,18 +211,18 @@ Class ReaHotkey {
     }
     
     Static TurnStandaloneTimersOff(Name := "") {
-        If Name == "" {
+        If Name = "" {
             StandaloneList := Standalone.GetList()
             For StandaloneEntry In StandaloneList
             For Timer In StandaloneEntry["Timers"]
-            If Timer["Enabled"] == True {
+            If Timer["Enabled"] = True {
                 Timer["Enabled"] := False
                 SetTimer Timer["Function"], 0
             }
         }
         Else {
             For Timer In Standalone.GetTimers(Name)
-            If Timer["Enabled"] == True {
+            If Timer["Enabled"] = True {
                 Timer["Enabled"] := False
                 SetTimer Timer["Function"], 0
             }
@@ -230,18 +230,18 @@ Class ReaHotkey {
     }
     
     Static TurnStandaloneTimersOn(Name := "") {
-        If Name == "" {
+        If Name = "" {
             StandaloneList := Standalone.GetList()
             For StandaloneEntry In StandaloneList
             For Timer In StandaloneEntry["Timers"]
-            If Timer["Enabled"] == False {
+            If Timer["Enabled"] = False {
                 Timer["Enabled"] := True
                 SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
             }
         }
         Else {
             For Timer In Standalone.GetTimers(Name)
-            If Timer["Enabled"] == False {
+            If Timer["Enabled"] = False {
                 Timer["Enabled"] := True
                 SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
             }
@@ -269,17 +269,17 @@ Class ReaHotkey {
                     ReaHotkey.TurnHotkeysOff()
                     Return False
                 }
-                Else If ControlGetFocus(ReaHotkey.PluginWinCriteria) == 0 {
+                Else If ControlGetFocus(ReaHotkey.PluginWinCriteria) = 0 {
                     ReaHotkey.TurnHotkeysOff()
                     Return False
                 }
-                Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) == 0 {
+                Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) = 0 {
                     ReaHotkey.TurnHotkeysOff()
                     Return False
                 }
                 Else {
                     If ReaHotkey.FoundPlugin Is Plugin {
-                        If ReaHotkey.AutoFocusPluginOverlay == True {
+                        If ReaHotkey.AutoFocusPluginOverlay = True {
                             ReaHotkey.FocusPluginOverlay()
                             ReaHotkey.AutoFocusPluginOverlay := False
                         }
@@ -303,7 +303,7 @@ Class ReaHotkey {
                 Else {
                     If ReaHotkey.FoundStandalone Is Standalone And ReaHotkey.StandaloneWinCriteria != False
                     If WinActive(ReaHotkey.StandaloneWinCriteria) {
-                        If ReaHotkey.AutoFocusStandaloneOverlay == True {
+                        If ReaHotkey.AutoFocusStandaloneOverlay = True {
                             ReaHotkey.FocusStandaloneOverlay()
                             ReaHotkey.AutoFocusStandaloneOverlay := False
                         }
@@ -337,15 +337,15 @@ Class ReaHotkey {
                         ReaHotkey.TurnPluginTimersOff()
                         Return False
                     }
-                    Else If ControlGetFocus(ReaHotkey.PluginWinCriteria) == 0 {
+                    Else If ControlGetFocus(ReaHotkey.PluginWinCriteria) = 0 {
                         ReaHotkey.TurnPluginTimersOff()
                         Return False
                     }
-                    Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) == 0 {
+                    Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) = 0 {
                         ReaHotkey.TurnPluginTimersOff()
                         Return False
                     }
-                    Else If ReaHotkey.FoundPlugin == False {
+                    Else If ReaHotkey.FoundPlugin = False {
                         ReaHotkey.TurnPluginTimersOff()
                         Return False
                     }
@@ -360,7 +360,7 @@ Class ReaHotkey {
                         ReaHotkey.TurnStandaloneTimersOff()
                         Return False
                     }
-                    Else If ReaHotkey.FoundStandalone == False {
+                    Else If ReaHotkey.FoundStandalone = False {
                         ReaHotkey.TurnStandaloneTimersOff()
                         Return False
                     }
@@ -383,7 +383,7 @@ Class ReaHotkey {
         Static Call(*) {
             A_TrayMenu.ToggleCheck("&Pause")
             Suspend -1
-            If A_IsSuspended == 1 {
+            If A_IsSuspended = 1 {
                 SetTimer ReaHotkey.UpdateState, 0
                 SetTimer ReaHotkey.ManageTimers, 0
                 SetTimer ReaHotkey.ManageInput, 0

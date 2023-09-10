@@ -51,7 +51,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             OverlayMetadata["X2Coordinate"] := WinWidth
             If Not OverlayMetadata["Y2Coordinate"] Is Number Or OverlayMetadata["Y2Coordinate"] <= 0
             OverlayMetadata["Y2Coordinate"] := WinHeight
-            If Type == "Plugin" And CompensatePluginCoordinates == True {
+            If Type = "Plugin" And CompensatePluginCoordinates = True {
                 Try {
                     ControlGetPos &ControlXCoordinate, &ControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)), ReaHotkey.PluginWinCriteria
                 }
@@ -70,7 +70,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             }
             If FileExist(OverlayMetadata["File"])
             If ImageSearch(&FoundX, &FoundY, OverlayMetadata["X1Coordinate"], OverlayMetadata["Y1Coordinate"], OverlayMetadata["X2Coordinate"], OverlayMetadata["Y2Coordinate"], OverlayMetadata["File"])
-            If ReaHotkey.Found%Type%.Chooser == True {
+            If ReaHotkey.Found%Type%.Chooser = True {
                 ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(OverlayEntry.Label)
                 ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
                 If HasProp(OverlayEntry, "Metadata")
@@ -78,7 +78,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                 ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
                 ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
                 ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . Product
-                If ReportChange == True {
+                If ReportChange = True {
                     AccessibilityOverlay.Speak(Product . " overlay active")
                     Sleep 1250
                 }
@@ -87,7 +87,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             }
             Else {
                 ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
-                If ReportChange == True {
+                If ReportChange = True {
                     AccessibilityOverlay.Speak(Product . " overlay active")
                     Sleep 1250
                 }
@@ -102,7 +102,7 @@ ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
     OverlayList := Plugin.GetOverlays(ReaHotkey.FoundPlugin.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
     If ReaHotkey.FoundPlugin.Overlay.OverlayNumber != OverlayNumber
-    If ReaHotkey.FoundPlugin.Chooser == True {
+    If ReaHotkey.FoundPlugin.Chooser = True {
         ReaHotkey.FoundPlugin.Overlay := AccessibilityOverlay(ItemName)
         ReaHotkey.FoundPlugin.Overlay.OverlayNumber := OverlayNumber
         If HasProp(OverlayList[OverlayNumber], "Metadata")
@@ -123,7 +123,7 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
     OverlayList := Standalone.GetOverlays(ReaHotkey.FoundStandalone.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
     If ReaHotkey.FoundStandalone.Overlay.OverlayNumber != OverlayNumber
-    If ReaHotkey.FoundStandalone.Chooser == True {
+    If ReaHotkey.FoundStandalone.Chooser = True {
         ReaHotkey.FoundStandalone.Overlay := AccessibilityOverlay(ItemName)
         ReaHotkey.FoundStandalone.Overlay.OverlayNumber := OverlayNumber
         If HasProp(OverlayList[OverlayNumber], "Metadata")
@@ -223,26 +223,26 @@ CreateOverlayMenu(Found, Type) {
     Submenus := Map()
     Loop parse, OverlayList, "`n" {
         OverlayEntry := StrSplit(A_LoopField, "`t")
-        If OverlayEntry.Length == 3 {
+        If OverlayEntry.Length = 3 {
             Vendor := OverlayEntry[1]
             For ElementIndex, ElementValue In OverlayEntry {
-                If Vendor == "" {
-                    If ElementIndex == 1
+                If Vendor = "" {
+                    If ElementIndex = 1
                     MainMenuItems.Push(Map("Product", "", "OverlayNumber", ""))
-                    If ElementIndex == 2
+                    If ElementIndex = 2
                     MainMenuItems[MainMenuItems.Length]["Product"] := ElementValue
-                    If ElementIndex == 3
+                    If ElementIndex = 3
                     MainMenuItems[MainMenuItems.Length]["OverlayNumber"] := ElementValue
                 }
                 Else {
-                    If ElementIndex == 1 {
+                    If ElementIndex = 1 {
                         If Not Submenus.Has(Vendor)
                         Submenus.Set(Vendor, Array())
                         Submenus[Vendor].Push(Map("Product", "", "OverlayNumber", ""))
                     }
-                    If ElementIndex == 2
+                    If ElementIndex = 2
                     Submenus[Vendor][Submenus[Vendor].Length]["Product"] := ElementValue
-                    If ElementIndex == 3
+                    If ElementIndex = 3
                     Submenus[Vendor][Submenus[Vendor].Length]["OverlayNumber"] := ElementValue
                 }
             }
@@ -253,20 +253,20 @@ CreateOverlayMenu(Found, Type) {
         Submenu.OverlayNumbers := Array()
         For OverlayEntry In OverlayEntries {
             Submenu.Add(OverlayEntry["Product"], Change%Type%Overlay)
-            If OverlayEntry["OverlayNumber"] == CurrentOverlay.OverlayNumber
+            If OverlayEntry["OverlayNumber"] = CurrentOverlay.OverlayNumber
             Submenu.Check(OverlayEntry["Product"])
             Submenu.OverlayNumbers.Push(OverlayEntry["OverlayNumber"])
         }
         Submenu.Add("")
         Submenu.OverlayNumbers.Push(0)
         OverlayMenu.Add(Vendor, Submenu)
-        If Vendor == CurrentVendor
+        If Vendor = CurrentVendor
         OverlayMenu.Check(Vendor)
         OverlayMenu.OverlayNumbers.Push(0)
     }
     For OverlayEntry In MainMenuItems {
         OverlayMenu.Add(OverlayEntry["Product"], Change%Type%Overlay)
-        If OverlayEntry["OverlayNumber"] == CurrentOverlay.OverlayNumber
+        If OverlayEntry["OverlayNumber"] = CurrentOverlay.OverlayNumber
         OverlayMenu.Check(OverlayEntry["Product"])
         OverlayMenu.OverlayNumbers.Push(OverlayEntry["OverlayNumber"])
     }
