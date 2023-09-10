@@ -171,6 +171,7 @@ CopyHotspotsToClipboard() {
                 }
                 Else {
                     ControlGetPos &ControlX, &ControlY,,, ControlGetClassNN(ControlGetFocus("ahk_id " . WinGetID("A"))), "ahk_id " . WinGetID("A")
+                    ClipboardData .= "Compensating for X " . ControlX . ", Y " . ControlY . "`n"
                     For Value In Hotspots {
                         Label := Value["Label"]
                         MouseXCoordinate := Value["XCoordinate"] - ControlX
