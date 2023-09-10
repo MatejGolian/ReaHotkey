@@ -51,7 +51,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             OverlayMetadata["X2Coordinate"] := WinWidth
             If Not OverlayMetadata["Y2Coordinate"] Is Number Or OverlayMetadata["Y2Coordinate"] <= 0
             OverlayMetadata["Y2Coordinate"] := WinHeight
-            If CompensatePluginCoordinates == True {
+            If Type == "Plugin" And CompensatePluginCoordinates == True {
                 Try {
                     ControlGetPos &ControlXCoordinate, &ControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)), ReaHotkey.PluginWinCriteria
                 }
