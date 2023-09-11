@@ -53,7 +53,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             OverlayMetadata["Y2Coordinate"] := WinHeight
             If Type = "Plugin" And CompensatePluginCoordinates = True {
                 Try {
-                    ControlGetPos &ControlXCoordinate, &ControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)), ReaHotkey.PluginWinCriteria
+                    ControlGetPos &ControlXCoordinate, &ControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
                 }
                 Catch {
                     ControlXCoordinate := 0
@@ -162,7 +162,7 @@ CompensatePluginPointCoordinates(PluginControl) {
     If !HasProp(PluginControl, "OriginalYCoordinate")
     PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
     Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)), ReaHotkey.PluginWinCriteria
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
         PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
         PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
     }
@@ -179,7 +179,7 @@ CompensatePluginRegionCoordinates(PluginControl) {
     If !HasProp(PluginControl, "OriginalRegionY2Coordinate")
     PluginControl.OriginalRegionY2Coordinate := PluginControl.RegionY2Coordinate
     Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)), ReaHotkey.PluginWinCriteria
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
         PluginControl.RegionX1Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX1Coordinate
         PluginControl.RegionY1Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY1Coordinate
         PluginControl.RegionX2Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX2Coordinate
