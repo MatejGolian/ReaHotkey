@@ -322,6 +322,10 @@ Class AccessibilityOverlay {
         Return FocusableControlIDs
     }
     
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
+    }
+    
     RemoveControl() {
         If This.ChildControls.Length > 0 {
             OldList := This.GetFocusableControlIDs()
@@ -885,6 +889,10 @@ Class CustomButton {
         Return 1
     }
     
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
+    }
+    
 }
 
 Class CustomComboBox {
@@ -925,6 +933,10 @@ Class CustomComboBox {
             AccessibilityOverlay.Speak(This.Value)
         }
         Return 1
+    }
+    
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
     }
     
     GetValue() {
@@ -978,6 +990,10 @@ Class CustomControl {
         Return 1
     }
     
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
+    }
+    
 }
 
 Class CustomEdit {
@@ -1015,6 +1031,10 @@ Class CustomEdit {
             AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
         }
         Return 1
+    }
+    
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
     }
     
     GetValue() {
@@ -1326,6 +1346,10 @@ Class GraphicButton {
         Return 0
     }
     
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
+    }
+    
 }
 
 Class GraphicCheckbox {
@@ -1568,6 +1592,10 @@ Class GraphicCheckbox {
         Return 0
     }
     
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
+    }
+    
 }
 
 Class GraphicTab Extends AccessibilityOverlay {
@@ -1792,6 +1820,10 @@ Class HotspotButton {
         Return 1
     }
     
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
+    }
+    
 }
 
 Class HotspotComboBox {
@@ -1837,6 +1869,10 @@ Class HotspotComboBox {
             AccessibilityOverlay.Speak(This.Value)
         }
         Return 1
+    }
+    
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
     }
     
     GetValue() {
@@ -1889,6 +1925,10 @@ Class HotspotEdit {
             AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
         }
         Return 1
+    }
+    
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
     }
     
     GetValue() {
@@ -2008,6 +2048,10 @@ Class OCRButton {
         Return 1
     }
     
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
+    }
+    
 }
 
 Class OCRComboBox {
@@ -2064,6 +2108,10 @@ Class OCRComboBox {
             AccessibilityOverlay.Speak(This.Value)
         }
         Return 1
+    }
+    
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
     }
     
     GetValue() {
@@ -2131,6 +2179,10 @@ Class OCREdit {
             AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . Value)
         }
         Return 1
+    }
+    
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
     }
     
     GetValue() {
@@ -2225,6 +2277,10 @@ Class OCRText {
         Return 1
     }
     
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
+    }
+    
 }
 
 Class StaticText {
@@ -2246,6 +2302,10 @@ Class StaticText {
         If CurrentControlID != This.ControlID
         AccessibilityOverlay.Speak(This.Text)
         Return 1
+    }
+    
+    GetSuperordinateControl() {
+        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
     }
     
 }

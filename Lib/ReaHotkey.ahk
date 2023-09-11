@@ -16,7 +16,7 @@ Class ReaHotkey {
             Overlay.FocusNextTab()
             Else
             If CurrentControl Is Object {
-                SuperordinateControl := AccessibilityOverlay.GetControl(CurrentControl.SuperordinateControlID)
+                SuperordinateControl := CurrentControl.GetSuperordinateControl()
                 Loop AccessibilityOverlay.TotalNumberOfControls {
                     If SuperordinateControl = 0
                     Break
@@ -29,7 +29,7 @@ Class ReaHotkey {
                         SuperordinateControl.Focus()
                         Break
                     }
-                    SuperordinateControl := AccessibilityOverlay.GetControl(SuperordinateControl.SuperordinateControlID)
+                    SuperordinateControl := SuperordinateControl.GetSuperordinateControl()
                 }
             }
         }
@@ -57,7 +57,7 @@ Class ReaHotkey {
             Overlay.FocusPreviousTab()
             Else
             If CurrentControl Is Object {
-                SuperordinateControl := AccessibilityOverlay.GetControl(CurrentControl.SuperordinateControlID)
+                SuperordinateControl := CurrentControl.GetSuperordinateControl()
                 Loop AccessibilityOverlay.TotalNumberOfControls {
                     If SuperordinateControl = 0
                     Break
@@ -70,7 +70,7 @@ Class ReaHotkey {
                         SuperordinateControl.Focus()
                         Break
                     }
-                    SuperordinateControl := AccessibilityOverlay.GetControl(SuperordinateControl.SuperordinateControlID)
+                    SuperordinateControl := SuperordinateControl.GetSuperordinateControl()
                 }
             }
         }
