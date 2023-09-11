@@ -29,28 +29,58 @@ Tab:: {
 Right:: {
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    PluginOverlay.FocusNextTab()
+    If PluginOverlay.GetCurrentControl() Is Object
+    Switch(PluginOverlay.GetCurrentControl().ControlType) {
+        Case "Edit":
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
+        Default:
+        PluginOverlay.FocusNextTab()
+    }
 }
 
 Left:: {
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    PluginOverlay.FocusPreviousTab()
+    If PluginOverlay.GetCurrentControl() Is Object
+    Switch(PluginOverlay.GetCurrentControl().ControlType) {
+        Case "Edit":
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
+        Default:
+        PluginOverlay.FocusPreviousTab()
+    }
 }
 
 Up::
 Down:: {
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is Object And PluginOverlay.GetCurrentControl().ControlType = "ComboBox"
-    PluginOverlay.GetCurrentControl().Focus(PluginOverlay.GetCurrentControl().ControlID, 1)
+    If PluginOverlay.GetCurrentControl() Is Object
+    Switch(PluginOverlay.GetCurrentControl().ControlType) {
+        Case "ComboBox":
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        PluginOverlay.GetCurrentControl().Focus(PluginOverlay.GetCurrentControl().ControlID, 1)
+        Hotkey A_ThisHotkey, "On"
+    }
 }
 
 Enter::
 Space:: {
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    PluginOverlay.ActivateCurrentControl()
+    If PluginOverlay.GetCurrentControl() Is Object
+    Switch(PluginOverlay.GetCurrentControl().ControlType) {
+        Case "Edit":
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
+        Default:
+        PluginOverlay.ActivateCurrentControl()
+    }
 }
 
 Ctrl:: {

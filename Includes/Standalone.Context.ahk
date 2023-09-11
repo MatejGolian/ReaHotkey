@@ -29,28 +29,58 @@ Tab:: {
 Right:: {
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
-    StandaloneOverlay.FocusNextTab()
+    If StandaloneOverlay.GetCurrentControl() Is Object
+    Switch(StandaloneOverlay.GetCurrentControl().ControlType) {
+        Case "Edit":
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
+        Default:
+        StandaloneOverlay.FocusNextTab()
+    }
 }
 
 Left:: {
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
-    StandaloneOverlay.FocusPreviousTab()
+    If StandaloneOverlay.GetCurrentControl() Is Object
+    Switch(StandaloneOverlay.GetCurrentControl().ControlType) {
+        Case "Edit":
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
+        Default:
+        StandaloneOverlay.FocusPreviousTab()
+    }
 }
 
 Up::
 Down:: {
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
-    If StandaloneOverlay.GetCurrentControl() Is Object And StandaloneOverlay.GetCurrentControl().ControlType = "ComboBox"
-    StandaloneOverlay.GetCurrentControl().Focus(StandaloneOverlay.GetCurrentControl().ControlID, 1)
+    If StandaloneOverlay.GetCurrentControl() Is Object
+    Switch(StandaloneOverlay.GetCurrentControl().ControlType) {
+        Case "ComboBox":
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        StandaloneOverlay.GetCurrentControl().Focus(StandaloneOverlay.GetCurrentControl().ControlID, 1)
+        Hotkey A_ThisHotkey, "On"
+    }
 }
 
 Enter::
 Space:: {
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
-    StandaloneOverlay.ActivateCurrentControl()
+    If StandaloneOverlay.GetCurrentControl() Is Object
+    Switch(StandaloneOverlay.GetCurrentControl().ControlType) {
+        Case "Edit":
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
+        Default:
+        StandaloneOverlay.ActivateCurrentControl()
+    }
 }
 
 Ctrl:: {
