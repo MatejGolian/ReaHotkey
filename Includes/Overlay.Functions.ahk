@@ -274,3 +274,22 @@ CreateOverlayMenu(Found, Type) {
     OverlayMenu.OverlayNumbers.Push(0)
     Return OverlayMenu
 }
+
+GetCurrentControlClass() {
+    Try
+    If ControlGetFocus("A") = 0
+    ControlClass := False
+    Else
+    ControlClass := ControlGetClassNN(ControlGetFocus("A"))
+    Catch
+    ControlClass := False
+    Return ControlClass
+}
+
+GetCurrentWindowID() {
+    Try
+    WindowID := WinGetID("A")
+    Catch
+    WindowID := False
+    Return WindowID
+}
