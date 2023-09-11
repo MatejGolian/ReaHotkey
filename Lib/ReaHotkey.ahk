@@ -89,8 +89,8 @@ Class ReaHotkey {
             Controls := WinGetControls(ReaHotkey.PluginWinCriteria)
             For PluginEntry In Plugin.List {
                 If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
-                For ControlClass In PluginEntry["ControlClasses"]
                 For Control In Controls
+                For ControlClass In PluginEntry["ControlClasses"]
                 If RegExMatch(Control, ControlClass)
                 Return Control
             }

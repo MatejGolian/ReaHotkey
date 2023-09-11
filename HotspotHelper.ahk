@@ -45,6 +45,7 @@ Enter::ClickHotspot()
 #^+T::CopyWindowTitleToClipboard()
 #^+X::CopyPixelColourToClipboard()
 #^+Del::DeleteHotspot()
+#^+F::ChooseControl()
 #^+Q::Quit()
 #^+F2::RenameHotspot()
 #^+S::SearchForImage()
@@ -61,7 +62,7 @@ About(*) {
     Global DialogOpen
     If DialogOpen = 0 {
         DialogOpen := 1
-        MsgBox "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+S - Search for image`nCtrl+Win+Shift+X - Copy the pixel colour under the mouse to clipboard`nCtrl - Stop speech`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot", "About " . AppName
+        MsgBox "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+L - Focus control`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+S - Search for image`nCtrl+Win+Shift+X - Copy the pixel colour under the mouse to clipboard`nCtrl - Stop speech`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot", "About " . AppName
         DialogOpen := 0
     }
 }
@@ -104,6 +105,34 @@ ClickHotspot() {
     Else {
         Sleep 25
         Speak("No hotspot selected")
+    }
+}
+
+ChooseControl() {
+    Global AppName, DialogOpen
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        Try {
+            WinWaitActive("A")
+            Controls := WinGetControls("A")
+        }
+        Catch {
+            Controls := Array()
+        }
+        If Controls.Length = 0 {
+            Speak("No controls found")
+        }
+        Else {
+            ControlMenu := Menu()
+            For Control In controls {
+                ControlMenu.Add(Control, FocusControl)
+                Try
+                If ControlGetClassNN(ControlGetFocus("A")) = Control
+                ControlMenu.Check(control)
+            }
+            ControlMenu.Show()
+        }
+        DialogOpen := 0
     }
 }
 
@@ -299,6 +328,21 @@ DeleteHotspot() {
     }
 }
 
+FocusControl(ControlName, ControlNumber, ControlMenu) {
+    Try {
+        WinWaitActive("A")
+        ControlFocus ControlName, "A"
+        If ControlGetClassNN(ControlGetFocus("A")) = ControlName {
+            Sleep 25
+            Speak(ControlName . " focused")
+        }
+    }
+    Catch {
+        Sleep 25
+        Speak("Control not found")
+    }
+}
+
 ManageHotkeys() {
     Global DialogOpen, KeyboardMode
     If DialogOpen = 1 Or WinActive("ahk_exe Explorer.Exe ahk_class Progman") Or WinActive("ahk_class Shell_TrayWnd" Or WinExist("ahk_class #32768") ) {
@@ -314,6 +358,7 @@ ManageHotkeys() {
         Hotkey "#^+T", "On"
         Hotkey "#^+X", "On"
         Hotkey "#^+Del", "Off"
+        Hotkey "#^+F", "On"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "Off"
         Hotkey "#^+S", "On"
@@ -335,6 +380,7 @@ ManageHotkeys() {
         Hotkey "#^+T", "On"
         Hotkey "#^+X", "On"
         Hotkey "#^+Del", "On"
+        Hotkey "#^+F", "On"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "On"
         Hotkey "#^+S", "On"
@@ -356,6 +402,7 @@ ManageHotkeys() {
         Hotkey "#^+T", "On"
         Hotkey "#^+X", "On"
         Hotkey "#^+Del", "Off"
+        Hotkey "#^+F", "On"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "Off"
         Hotkey "#^+S", "On"
