@@ -26,33 +26,33 @@ Tab:: {
     ReaHotkey.FocusPreviousTab(StandaloneOverlay)
 }
 
-~Right:: {
+Right:: {
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusNextTab()
 }
 
-~Left:: {
+Left:: {
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusPreviousTab()
 }
 
-~Up::
-~Down:: {
+Up::
+Down:: {
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     If StandaloneOverlay.GetCurrentControl() Is Object And StandaloneOverlay.GetCurrentControl().ControlType = "ComboBox"
     StandaloneOverlay.GetCurrentControl().Focus(StandaloneOverlay.GetCurrentControl().ControlID, 1)
 }
 
-~Enter::
-~Space:: {
+Enter::
+Space:: {
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     StandaloneOverlay.ActivateCurrentControl()
 }
 
-~Ctrl:: {
+Ctrl:: {
     AccessibilityOverlay.StopSpeech()
 }

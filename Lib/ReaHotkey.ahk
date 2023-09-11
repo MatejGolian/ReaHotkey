@@ -107,13 +107,13 @@ Class ReaHotkey {
         Hotkey "+Tab", "Off"
         Hotkey "^Tab", "Off"
         Hotkey "^+Tab", "Off"
-        Hotkey "~Right", "Off"
-        Hotkey "~Left", "Off"
-        Hotkey "~Up", "Off"
-        Hotkey "~Down", "Off"
-        Hotkey "~Enter", "Off"
-        Hotkey "~Space", "Off"
-        Hotkey "~Ctrl", "Off"
+        Hotkey "Right", "Off"
+        Hotkey "Left", "Off"
+        Hotkey "Up", "Off"
+        Hotkey "Down", "Off"
+        Hotkey "Enter", "Off"
+        Hotkey "Space", "Off"
+        Hotkey "Ctrl", "Off"
         HotIfWinActive(ReaHotkey.PluginWinCriteria)
         For PluginEntry In Plugin.GetList()
         For DefinedHotkey In PluginEntry["Hotkeys"]
@@ -143,13 +143,13 @@ Class ReaHotkey {
         Hotkey "+Tab", "On"
         Hotkey "^Tab", "On"
         Hotkey "^+Tab", "On"
-        Hotkey "~Left", "On"
-        Hotkey "~Right", "On"
-        Hotkey "~Up", "On"
-        Hotkey "~Down", "On"
-        Hotkey "~Enter", "On"
-        Hotkey "~Space", "On"
-        Hotkey "~Ctrl", "On"
+        Hotkey "Left", "On"
+        Hotkey "Right", "On"
+        Hotkey "Up", "On"
+        Hotkey "Down", "On"
+        Hotkey "Enter", "On"
+        Hotkey "Space", "On"
+        Hotkey "Ctrl", "On"
         If ReaHotkey.FoundPlugin Is Plugin {
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             For DefinedHotkey In ReaHotkey.FoundPlugin.GetHotkeys()

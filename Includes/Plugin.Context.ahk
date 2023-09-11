@@ -26,33 +26,33 @@ Tab:: {
     ReaHotkey.FocusPreviousTab(PluginOverlay)
 }
 
-~Right:: {
+Right:: {
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     PluginOverlay.FocusNextTab()
 }
 
-~Left:: {
+Left:: {
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     PluginOverlay.FocusPreviousTab()
 }
 
-~Up::
-~Down:: {
+Up::
+Down:: {
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     If PluginOverlay.GetCurrentControl() Is Object And PluginOverlay.GetCurrentControl().ControlType = "ComboBox"
     PluginOverlay.GetCurrentControl().Focus(PluginOverlay.GetCurrentControl().ControlID, 1)
 }
 
-~Enter::
-~Space:: {
+Enter::
+Space:: {
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     PluginOverlay.ActivateCurrentControl()
 }
 
-~Ctrl:: {
+Ctrl:: {
     AccessibilityOverlay.StopSpeech()
 }
