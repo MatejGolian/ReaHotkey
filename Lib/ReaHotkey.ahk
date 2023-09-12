@@ -256,154 +256,7 @@ Class ReaHotkey {
         
     }
     
-    Class ManageInput {
-        
-        Static Call() {
-            If WinActive(ReaHotkey.PluginWinCriteria)
-            HotIfWinActive(ReaHotkey.PluginWinCriteria)
-            Else
-            HotIf
-            Try {
-                If WinActive(ReaHotkey.PluginWinCriteria)
-                If WinExist("ahk_class #32768") {
-                    ReaHotkey.TurnHotkeysOff()
-                    Return False
-                }
-                Else If ControlGetFocus(ReaHotkey.PluginWinCriteria) = 0 {
-                    ReaHotkey.TurnHotkeysOff()
-                    Return False
-                }
-                Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) = 0 {
-                    ReaHotkey.TurnHotkeysOff()
-                    Return False
-                }
-                Else {
-                    If ReaHotkey.FoundPlugin Is Plugin {
-                        If ReaHotkey.AutoFocusPluginOverlay = True {
-                            ReaHotkey.FocusPluginOverlay()
-                            ReaHotkey.AutoFocusPluginOverlay := False
-                        }
-                        ReaHotkey.TurnHotkeysOn()
-                        If ReaHotkey.FoundPlugin Is Plugin
-                        For DefinedHotkey In ReaHotkey.FoundPlugin.GetHotkeys()
-                        If DefinedHotkey["Action"] != "Off" {
-                            Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-                            Hotkey DefinedHotkey["KeyName"], "On"
-                        }
-                        Return True
-                    }
-                    ReaHotkey.TurnHotkeysOff()
-                    Return False
-                }
-                Else
-                If WinExist("ahk_class #32768") {
-                    ReaHotkey.TurnHotkeysOff()
-                    Return False
-                }
-                Else {
-                    If ReaHotkey.FoundStandalone Is Standalone And ReaHotkey.StandaloneWinCriteria != False
-                    If WinActive(ReaHotkey.StandaloneWinCriteria) {
-                        If ReaHotkey.AutoFocusStandaloneOverlay = True {
-                            ReaHotkey.FocusStandaloneOverlay()
-                            ReaHotkey.AutoFocusStandaloneOverlay := False
-                        }
-                        ReaHotkey.TurnHotkeysOn()
-                        If ReaHotkey.FoundStandalone Is Standalone
-                        For DefinedHotkey In ReaHotkey.FoundStandalone.GetHotkeys()
-                        If DefinedHotkey["Action"] != "Off" {
-                            Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-                            Hotkey DefinedHotkey["KeyName"], "On"
-                        }
-                        Return True
-                    }
-                    ReaHotkey.TurnHotkeysOff()
-                    Return False
-                }
-            }
-            Catch {
-                Return False
-            }
-        }
-        
-    }
-    
-    Class ManageTimers {
-        
-        Static Call() {
-            Try {
-                If WinActive(ReaHotkey.PluginWinCriteria) {
-                    ReaHotkey.TurnStandaloneTimersOff()
-                    If WinExist("ahk_class #32768") {
-                        ReaHotkey.TurnPluginTimersOff()
-                        Return False
-                    }
-                    Else If ControlGetFocus(ReaHotkey.PluginWinCriteria) = 0 {
-                        ReaHotkey.TurnPluginTimersOff()
-                        Return False
-                    }
-                    Else If Plugin.FindClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) = 0 {
-                        ReaHotkey.TurnPluginTimersOff()
-                        Return False
-                    }
-                    Else If ReaHotkey.FoundPlugin = False {
-                        ReaHotkey.TurnPluginTimersOff()
-                        Return False
-                    }
-                    Else {
-                        ReaHotkey.TurnPluginTimersOn(ReaHotkey.FoundPlugin.Name)
-                        Return True
-                    }
-                }
-                Else {
-                    ReaHotkey.TurnPluginTimersOff()
-                    If WinExist("ahk_class #32768") {
-                        ReaHotkey.TurnStandaloneTimersOff()
-                        Return False
-                    }
-                    Else If ReaHotkey.FoundStandalone = False {
-                        ReaHotkey.TurnStandaloneTimersOff()
-                        Return False
-                    }
-                    Else {
-                        ReaHotkey.TurnStandaloneTimersOn(ReaHotkey.FoundStandalone.Name)
-                        Return True
-                    }
-                }
-                Return False
-            }
-            Catch {
-                Return False
-            }
-        }
-        
-    }
-    
-    Class TogglePause {
-        
-        Static Call(*) {
-            A_TrayMenu.ToggleCheck("&Pause")
-            Suspend -1
-            If A_IsSuspended = 1 {
-                SetTimer ReaHotkey.UpdateState, 0
-                SetTimer ReaHotkey.ManageTimers, 0
-                SetTimer ReaHotkey.ManageInput, 0
-                HotIfWinActive(ReaHotkey.PluginWinCriteria)
-                ReaHotkey.TurnHotkeysOff()
-                ReaHotkey.TurnPluginTimersOff()
-                HotIf
-                ReaHotkey.TurnHotkeysOff()
-                ReaHotkey.TurnStandaloneTimersOff()
-            }
-            Else {
-                SetTimer ReaHotkey.UpdateState, 100
-                SetTimer ReaHotkey.ManageTimers, 100
-                SetTimer ReaHotkey.ManageInput, 100
-            }
-        }
-        
-    }
-    
-    Class UpdateState {
+    Class ManageState {
         
         Static Call() {
             Try {
@@ -425,7 +278,6 @@ Class ReaHotkey {
                     }
                     Else {
                         ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ReaHotkey.GetPluginControl()))
-                        Return True
                     }
                 }
                 Else {
@@ -438,14 +290,69 @@ Class ReaHotkey {
                     If WinActive(WinCriterion) {
                         ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
                         ReaHotkey.StandaloneWinCriteria := WinCriterion
-                        Return True
+                        Break 2
                     }
+                    If ReaHotkey.FoundStandalone = False
                     ReaHotkey.AutoFocusStandaloneOverlay := True
                 }
-                Return False
             }
-            Catch {
-                Return False
+            If WinActive(ReaHotkey.PluginWinCriteria) {
+                ReaHotkey.TurnStandaloneTimersOff()
+                If Not ReaHotkey.FoundPlugin Is Plugin Or WinExist("ahk_class #32768") {
+                    ReaHotkey.TurnPluginTimersOff()
+                    ReaHotkey.TurnHotkeysOff()
+                }
+                Else {
+                    ReaHotkey.TurnPluginTimersOn(ReaHotkey.FoundPlugin.Name)
+                    If ReaHotkey.AutoFocusPluginOverlay = True {
+                        ReaHotkey.FocusPluginOverlay()
+                        ReaHotkey.AutoFocusPluginOverlay := False
+                    }
+                    ReaHotkey.TurnHotkeysOn()
+                }
+            }
+            Else If ReaHotkey.StandaloneWinCriteria != False And WinActive(ReaHotkey.StandaloneWinCriteria) {
+                ReaHotkey.TurnPluginTimersOff()
+                If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
+                    ReaHotkey.TurnStandaloneTimersOff()
+                }
+                Else {
+                    ReaHotkey.TurnStandaloneTimersOn(ReaHotkey.FoundStandalone.Name)
+                    If ReaHotkey.AutoFocusStandaloneOverlay = True {
+                        ReaHotkey.FocusStandaloneOverlay()
+                        ReaHotkey.AutoFocusStandaloneOverlay := False
+                    }
+                    ReaHotkey.TurnHotkeysOn()
+                }
+            }
+            Else {
+                ReaHotkey.TurnPluginTimersOff()
+                ReaHotkey.TurnStandaloneTimersOff()
+                HotIfWinActive(ReaHotkey.PluginWinCriteria)
+                ReaHotkey.TurnHotkeysOff()
+                HotIf
+                ReaHotkey.TurnHotkeysOff()
+            }
+        }
+        
+    }
+    
+    Class TogglePause {
+        
+        Static Call(*) {
+            A_TrayMenu.ToggleCheck("&Pause")
+            Suspend -1
+            If A_IsSuspended = 1 {
+                SetTimer ReaHotkey.ManageState, 0
+                HotIfWinActive(ReaHotkey.PluginWinCriteria)
+                ReaHotkey.TurnPluginTimersOff()
+                ReaHotkey.TurnHotkeysOff()
+                HotIf
+                ReaHotkey.TurnStandaloneTimersOff()
+                ReaHotkey.TurnHotkeysOff()
+            }
+            Else {
+                SetTimer ReaHotkey.ManageState, 100
             }
         }
         

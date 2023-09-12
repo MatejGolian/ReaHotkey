@@ -27,6 +27,4 @@ AccessibilityOverlay.Speak("ReaHotkey ready")
 #Include Includes/Plugin.Context.ahk
 #Include Includes/Standalone.Context.ahk
 
-SetTimer ReaHotkey.UpdateState, 100
-SetTimer ReaHotkey.ManageTimers, 100
-SetTimer ReaHotkey.ManageInput, 100
+SetTimer ReaHotkey.ManageState, 100

@@ -141,19 +141,23 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
 }
 
 ChoosePluginOverlay(*) {
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnPluginTimersOff()
     ReaHotkey.TurnHotkeysOff()
     CreateOverlayMenu(ReaHotkey.FoundPlugin, "Plugin").Show()
+    SetTimer ReaHotkey.ManageState, 100
+    ReaHotkey.TurnPluginTimersOn(ReaHotkey.FoundPlugin.Name)
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
 }
 
 ChooseStandaloneOverlay(*) {
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     CreateOverlayMenu(ReaHotkey.FoundStandalone, "Standalone").Show()
+    SetTimer ReaHotkey.ManageState, 100
+    ReaHotkey.TurnStandaloneTimersOn(ReaHotkey.FoundStandalone.Name)
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
 }
 
 CompensatePluginPointCoordinates(PluginControl) {
