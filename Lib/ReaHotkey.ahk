@@ -294,7 +294,7 @@ Class ReaHotkey {
                     ReaHotkey.StandaloneWinCriteria := WinCriterion
                     Break 2
                 }
-                If ReaHotkey.FoundStandalone = False
+                If GetStandalone = False
                 ReaHotkey.AutoFocusStandaloneOverlay := True
             }
             If GetPlugin = True
