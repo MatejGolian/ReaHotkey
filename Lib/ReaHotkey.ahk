@@ -415,6 +415,14 @@ Class ReaHotkey {
                         ReaHotkey.AutoFocusPluginOverlay := True
                         ReaHotkey.FoundPlugin := False
                     }
+                    Else If !ControlGetFocus(ReaHotkey.PluginWinCriteria) {
+                        ReaHotkey.AutoFocusPluginOverlay := True
+                        ReaHotkey.FoundPlugin := False
+                    }
+                    Else If !Plugin.FindClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) {
+                        ReaHotkey.AutoFocusPluginOverlay := True
+                        ReaHotkey.FoundPlugin := False
+                    }
                     Else {
                         ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ReaHotkey.GetPluginControl()))
                         Return True
