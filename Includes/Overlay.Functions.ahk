@@ -80,7 +80,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                 ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . Product
                 If ReportChange = True {
                     AccessibilityOverlay.Speak(Product . " overlay active")
-                    Sleep 1250
+                    ReaHotkey.Wait(1250)
                 }
                 ReaHotkey.Found%Type%.Overlay.Focus()
                 If ReaHotkey.AutoFocus%Type%Overlay = True
@@ -91,7 +91,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                 ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
                 If ReportChange = True {
                     AccessibilityOverlay.Speak(Product . " overlay active")
-                    Sleep 1250
+                    ReaHotkey.Wait(1250)
                 }
                 ReaHotkey.Found%Type%.Overlay.Focus()
                 If ReaHotkey.AutoFocus%Type%Overlay = True

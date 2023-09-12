@@ -78,7 +78,7 @@ Class ReaHotkey {
     
     Static FocusStandaloneOverlay() {
         If ReaHotkey.FoundStandalone Is Standalone {
-            Sleep 500
+            ReaHotkey.Wait(500)
             If ReaHotkey.FoundStandalone Is Standalone
             ReaHotkey.FoundStandalone.Overlay.Focus()
         }
@@ -438,6 +438,20 @@ Class ReaHotkey {
             }
             Catch {
                 Return False
+            }
+        }
+        
+    }
+    
+    Class Wait {
+        
+        Static Call(Period) {
+            If IsInteger(Period) And Period > 0 And Period <= 4294967295 {
+                PeriodEnd := A_TickCount + Period
+                Loop {
+                    If A_TickCount > PeriodEnd
+                    Break
+                }
             }
         }
         
