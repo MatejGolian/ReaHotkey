@@ -259,6 +259,8 @@ Class ReaHotkey {
     Class ManageState {
         
         Static Call() {
+            GetPlugin := False
+            GetStandalone := False
             Try
             If WinActive(ReaHotkey.PluginWinCriteria) {
                 ReaHotkey.AutoFocusStandaloneOverlay := True
@@ -277,7 +279,7 @@ Class ReaHotkey {
                     ReaHotkey.FoundPlugin := False
                 }
                 Else {
-                    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ReaHotkey.GetPluginControl()))
+                    GetPlugin := True
                 }
             }
             Else {
@@ -288,13 +290,17 @@ Class ReaHotkey {
                 For Program In Standalone.List
                 For WinCriterion In Program["WinCriteria"]
                 If WinActive(WinCriterion) {
-                    ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+                    GetStandalone := True
                     ReaHotkey.StandaloneWinCriteria := WinCriterion
                     Break 2
                 }
                 If ReaHotkey.FoundStandalone = False
                 ReaHotkey.AutoFocusStandaloneOverlay := True
             }
+            If GetPlugin = True
+            ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ReaHotkey.GetPluginControl()))
+            If GetStandalone = True
+            ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
             If WinActive(ReaHotkey.PluginWinCriteria) {
                 ReaHotkey.TurnStandaloneTimersOff()
                 If Not ReaHotkey.FoundPlugin Is Plugin Or WinExist("ahk_class #32768") {
