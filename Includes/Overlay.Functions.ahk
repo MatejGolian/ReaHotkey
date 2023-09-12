@@ -1,6 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 
-AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := True) {
+AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False) {
     OverlayList := %Type%.GetOverlays(Name)
     UnknownProductCounter := 1
     For OverlayNumber, OverlayEntry In OverlayList {
