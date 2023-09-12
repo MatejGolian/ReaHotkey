@@ -59,7 +59,7 @@ Class Standalone {
     
     Init() {
         If This.InitFunction != ""
-        %This.InitFunction.Name%(This)
+        This.InitFunction(This)
     }
     
     RegisterOverlay(ProgramOverlay) {

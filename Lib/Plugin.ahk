@@ -64,7 +64,7 @@ Class Plugin {
     
     Init() {
         If This.InitFunction != ""
-        %This.InitFunction.Name%(This)
+        This.InitFunction(This)
     }
     
     RegisterOverlay(PluginOverlay) {
