@@ -83,6 +83,8 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                     Sleep 1250
                 }
                 ReaHotkey.Found%Type%.Overlay.Focus()
+                If ReaHotkey.AutoFocus%Type%Overlay = True
+                ReaHotkey.AutoFocus%Type%Overlay := False
                 Break
             }
             Else {
@@ -92,6 +94,8 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                     Sleep 1250
                 }
                 ReaHotkey.Found%Type%.Overlay.Focus()
+                If ReaHotkey.AutoFocus%Type%Overlay = True
+                ReaHotkey.AutoFocus%Type%Overlay := False
                 Break
             }
         }
