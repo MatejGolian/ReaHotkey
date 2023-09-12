@@ -4,8 +4,8 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
     OverlayList := %Type%.GetOverlays(Name)
     UnknownProductCounter := 1
     For OverlayNumber, OverlayEntry In OverlayList {
-        ControlXCoordinate := ""
-        ControlYCoordinate := ""
+        PluginControlXCoordinate := ""
+        PluginControlYCoordinate := ""
         FoundX := ""
         FoundY := ""
         WinWidth := ""
@@ -53,16 +53,16 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             OverlayMetadata["Y2Coordinate"] := WinHeight
             If Type = "Plugin" And CompensatePluginCoordinates = True {
                 Try {
-                    ControlGetPos &ControlXCoordinate, &ControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+                    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
                 }
                 Catch {
-                    ControlXCoordinate := 0
-                    ControlYCoordinate := 0
+                    PluginControlXCoordinate := 210
+                    PluginControlYCoordinate := 53
                 }
-                OverlayMetadata["X1Coordinate"] := ControlXCoordinate + OverlayMetadata["X1Coordinate"]
-                OverlayMetadata["Y1Coordinate"] := ControlYCoordinate + OverlayMetadata["Y1Coordinate"]
-                OverlayMetadata["X2Coordinate"] := ControlXCoordinate + OverlayMetadata["X2Coordinate"]
-                OverlayMetadata["Y2Coordinate"] := ControlYCoordinate + OverlayMetadata["Y2Coordinate"]
+                OverlayMetadata["X1Coordinate"] := PluginControlXCoordinate + OverlayMetadata["X1Coordinate"]
+                OverlayMetadata["Y1Coordinate"] := PluginControlYCoordinate + OverlayMetadata["Y1Coordinate"]
+                OverlayMetadata["X2Coordinate"] := PluginControlXCoordinate + OverlayMetadata["X2Coordinate"]
+                OverlayMetadata["Y2Coordinate"] := PluginControlYCoordinate + OverlayMetadata["Y2Coordinate"]
                 If OverlayMetadata["X2Coordinate"] > WinWidth
                 OverlayMetadata["X2Coordinate"] := WinWidth
                 If OverlayMetadata["Y2Coordinate"] > WinHeight
@@ -163,9 +163,13 @@ CompensatePluginPointCoordinates(PluginControl) {
     PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
     Try {
         ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-        PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
-        PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
     }
+    Catch {
+        PluginControlXCoordinate := 210
+        PluginControlYCoordinate := 53
+    }
+    PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
+    PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
     Return PluginControl
 }
 
@@ -180,11 +184,15 @@ CompensatePluginRegionCoordinates(PluginControl) {
     PluginControl.OriginalRegionY2Coordinate := PluginControl.RegionY2Coordinate
     Try {
         ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-        PluginControl.RegionX1Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX1Coordinate
-        PluginControl.RegionY1Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY1Coordinate
-        PluginControl.RegionX2Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX2Coordinate
-        PluginControl.RegionY2Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY2Coordinate
     }
+    Catch {
+        PluginControlXCoordinate := 210
+        PluginControlYCoordinate := 53
+    }
+    PluginControl.RegionX1Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX1Coordinate
+    PluginControl.RegionY1Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY1Coordinate
+    PluginControl.RegionX2Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX2Coordinate
+    PluginControl.RegionY2Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY2Coordinate
     Return PluginControl
 }
 

@@ -3,30 +3,35 @@
 #HotIf WinActive("ahk_exe reaper.exe ahk_class #32770")
 
 Tab:: {
+    Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     PluginOverlay.FocusNextControl()
 }
 
 +Tab:: {
+    Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     PluginOverlay.FocusPreviousControl()
 }
 
 ^Tab:: {
+    Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     ReaHotkey.FocusNextTab(PluginOverlay)
 }
 
 ^+Tab:: {
+    Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     ReaHotkey.FocusPreviousTab(PluginOverlay)
 }
 
 Right:: {
+    Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     If PluginOverlay.GetCurrentControl() Is Object
@@ -41,6 +46,7 @@ Right:: {
 }
 
 Left:: {
+    Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     If PluginOverlay.GetCurrentControl() Is Object
@@ -56,6 +62,7 @@ Left:: {
 
 Up::
 Down:: {
+    Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     If PluginOverlay.GetCurrentControl() Is Object
@@ -70,6 +77,7 @@ Down:: {
 
 Enter::
 Space:: {
+    Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
     If PluginOverlay.GetCurrentControl() Is Object
@@ -84,5 +92,6 @@ Space:: {
 }
 
 Ctrl:: {
+    Thread "NoTimers"
     AccessibilityOverlay.StopSpeech()
 }

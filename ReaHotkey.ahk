@@ -3,11 +3,11 @@
 #MaxThreadsPerHotkey 1
 #SingleInstance Force
 #Warn All
+CoordMode "Mouse", "Window"
+CoordMode "Pixel", "Window"
 SendMode "Input"
 SetTitleMatchMode "RegEx"
 SetWorkingDir A_InitialWorkingDir
-CoordMode "Mouse", "Window"
-CoordMode "Pixel", "Window"
 
 #Include <AccessibilityOverlay>
 #Include <OCR>

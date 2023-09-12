@@ -3,30 +3,35 @@
 #HotIf
 
 Tab:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusNextControl()
 }
 
 +Tab:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusPreviousControl()
 }
 
 ^Tab:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     ReaHotkey.FocusNextTab(StandaloneOverlay)
 }
 
 ^+Tab:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     ReaHotkey.FocusPreviousTab(StandaloneOverlay)
 }
 
 Right:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     If StandaloneOverlay.GetCurrentControl() Is Object
@@ -41,6 +46,7 @@ Right:: {
 }
 
 Left:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     If StandaloneOverlay.GetCurrentControl() Is Object
@@ -56,6 +62,7 @@ Left:: {
 
 Up::
 Down:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     If StandaloneOverlay.GetCurrentControl() Is Object
@@ -70,6 +77,7 @@ Down:: {
 
 Enter::
 Space:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     If StandaloneOverlay.GetCurrentControl() Is Object
@@ -84,5 +92,6 @@ Space:: {
 }
 
 Ctrl:: {
+    Thread "NoTimers"
     AccessibilityOverlay.StopSpeech()
 }

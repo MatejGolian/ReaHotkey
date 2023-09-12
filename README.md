@@ -15,8 +15,5 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
 * Makes it possible to load instruments and add libraries in Best Service Engine 2.
   - Works both inside REAPER and in the standalone version of Engine 2.
 
-## Notes
-Because ReaHotkey also passes through some keys to the application window itself, it's highly recommended to enable the 'Send all keyboard input to plug-in' option in REAPER's FX menu, when interacting with a supported plug-in interface.
-
 ## About HotspotHelper
 HotspotHelper is a special utility to make developing these kind of scripts a little easier. It retrieves window and control info and creates labelled hotspots that can be copied to clipboard for subsequent use.
