@@ -70,7 +70,8 @@ Down:: {
         Case "ComboBox":
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"
-        StandaloneOverlay.GetCurrentControl().Focus(StandaloneOverlay.GetCurrentControl().ControlID, 1)
+        StandaloneOverlay.GetCurrentControl().ChangeValue()
+        StandaloneOverlay.GetCurrentControl().ReportValue()
         Hotkey A_ThisHotkey, "On"
     }
 }

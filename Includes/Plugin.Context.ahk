@@ -70,7 +70,8 @@ Down:: {
         Case "ComboBox":
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"
-        PluginOverlay.GetCurrentControl().Focus(PluginOverlay.GetCurrentControl().ControlID, 1)
+        PluginOverlay.GetCurrentControl().ChangeValue()
+        PluginOverlay.GetCurrentControl().ReportValue()
         Hotkey A_ThisHotkey, "On"
     }
 }
