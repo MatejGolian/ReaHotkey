@@ -76,6 +76,79 @@ Class FocusableCustom Extends AccessibilityOverlayControl {
     
 }
 
+Class GraphicalControl Extends AccessibilityOverlayControl {
+    
+    ControlType := "Graphics"
+    
+    FoundXCoordinate := 0
+    FoundYCoordinate := 0
+    OnImage := ""
+    OffImage := ""
+    OnHoverImage := ""
+    OffHoverImage := ""
+    RegionX1Coordinate := 0
+    RegionY1Coordinate := 0
+    RegionX2Coordinate := 0
+    RegionY2Coordinate := 0
+    
+    __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage := "", OnHoverImage := "", OffHoverImage := "") {
+        Super.__New()
+        This.RegionX1Coordinate := RegionX1Coordinate
+        This.RegionY1Coordinate := RegionY1Coordinate
+        This.RegionX2Coordinate := RegionX2Coordinate
+        This.RegionY2Coordinate := RegionY2Coordinate
+        If OnImage = "" Or !FileExist(OnImage)
+        OnImage := ""
+        If OffImage = "" Or !FileExist(OffImage)
+        OffImage := ""
+        If OnHoverImage = "" Or !FileExist(OnHoverImage)
+        OnHoverImage := ""
+        If OffHoverImage = "" Or !FileExist(OffHoverImage)
+        OffHoverImage := ""
+        This.OnImage := OnImage
+        This.OffImage := OffImage
+        This.OnHoverImage := OnHoverImage
+        This.OffHoverImage := OffHoverImage
+    }
+    
+    CheckIfActive() {
+        FoundXCoordinate := 0
+        FoundYCoordinate := 0
+        If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        This.FoundXCoordinate := 0
+        This.FoundYCoordinate := 0
+        Return 0
+    }
+    
+    CheckIfInactive() {
+        FoundXCoordinate := 0
+        FoundYCoordinate := 0
+        If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffImage) {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffHoverImage) {
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            Return 1
+        }
+        This.FoundXCoordinate := 0
+        This.FoundYCoordinate := 0
+        Return 0
+    }
+    
+}
+
 Class ActivatableHotspot Extends AccessibilityOverlayControl {
     
     ControlType := "Hotspot"
@@ -308,8 +381,8 @@ Class AccessibilityOverlay Extends AccessibilityOverlayControl {
             Clone := AccessibilityOverlay(This.Label)
             Case "CustomTab":
             Clone := CustomTab(This.Label, This.OnFocusFunction)
-            Case "GraphicTab":
-            Clone := GraphicTab(This.Label, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage, This.OffImage, This.OnHoverImage, This.OffHoverImage, This.MouseXOffset, This.MouseYOffset, This.OnFocusFunction)
+            Case "GraphicalTab":
+            Clone := GraphicalTab(This.Label, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage, This.OffImage, This.OnHoverImage, This.OffHoverImage, This.MouseXOffset, This.MouseYOffset, This.OnFocusFunction)
             Case "HotspotTab":
             Clone := HotspotTab(This.Label, This.XCoordinate, This.YCoordinate, This.OnFocusFunction)
             Case "OCRTab":
@@ -331,10 +404,10 @@ Class AccessibilityOverlay Extends AccessibilityOverlayControl {
                 Clone.AddCustomControl(CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
                 Case "CustomEdit":
                 Clone.AddCustomEdit(CurrentControl.Label, CurrentControl.OnFocusFunction)
-                Case "GraphicButton":
-                Clone.AddGraphicButton(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OnImage, CurrentControl.OffImage, CurrentControl.OnHoverImage, CurrentControl.OffHoverImage, CurrentControl.MouseXOffset, CurrentControl.MouseYOffset, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
-                Case "GraphicCheckbox":
-                Clone.AddGraphicCheckbox(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.CheckedImage, CurrentControl.UncheckedImage, CurrentControl.CheckedHoverImage, CurrentControl.UncheckedHoverImage, CurrentControl.MouseXOffset, CurrentControl.MouseYOffset, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
+                Case "GraphicalButton":
+                Clone.AddGraphicalButton(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OnImage, CurrentControl.OffImage, CurrentControl.OnHoverImage, CurrentControl.OffHoverImage, CurrentControl.MouseXOffset, CurrentControl.MouseYOffset, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
+                Case "GraphicalCheckbox":
+                Clone.AddGraphicalCheckbox(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OnImage, CurrentControl.OffImage, CurrentControl.OnHoverImage, CurrentControl.OffHoverImage, CurrentControl.MouseXOffset, CurrentControl.MouseYOffset, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
                 Case "HotspotButton":
                 Clone.AddHotspotButton(CurrentControl.Label, CurrentControl.XCoordinate, CurrentControl.YCoordinate, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
                 Case "HotspotComboBox":
@@ -771,19 +844,19 @@ Class AccessibilityOverlay Extends AccessibilityOverlayControl {
         "CustomTab", Map(
         "ControlTypeLabel", "tab",
         "UnlabelledString", "unlabelled"),
-        "GraphicButton", Map(
+        "GraphicalButton", Map(
         "ControlTypeLabel", "button",
         "NotFoundString", "not found",
         "OffString", "off",
         "OnString", "on",
         "UnlabelledString", "unlabelled"),
-        "GraphicCheckbox", Map(
+        "GraphicalCheckbox", Map(
         "ControlTypeLabel", "checkbox",
         "NotFoundString", "not found",
-        "CheckedString", "checked",
-        "UncheckedString", "unchecked",
+        "OnString", "checked",
+        "OffString", "unchecked",
         "UnlabelledString", "unlabelled"),
-        "GraphicTab", Map(
+        "GraphicalTab", Map(
         "ControlTypeLabel", "tab",
         "UnlabelledString", "unlabelled"),
         "HotspotButton", Map(
@@ -835,19 +908,19 @@ Class AccessibilityOverlay Extends AccessibilityOverlayControl {
         "CustomTab", Map(
         "ControlTypeLabel", "záložka",
         "UnlabelledString", "bez názvu"),
-        "GraphicButton", Map(
+        "GraphicalButton", Map(
         "ControlTypeLabel", "tlačidlo",
         "NotFoundString", "nenájdené",
         "OffString", "vypnuté",
         "OnString", "zapnuté",
         "UnlabelledString", "bez názvu"),
-        "GraphicCheckbox", Map(
+        "GraphicalCheckbox", Map(
         "ControlTypeLabel", "začiarkavacie políčko",
         "NotFoundString", "nenájdené",
-        "CheckedString", "začiarknuté",
-        "UncheckedString", "nezačiarknuté",
+        "OnString", "začiarknuté",
+        "OffString", "nezačiarknuté",
         "UnlabelledString", "bez názvu"),
-        "GraphicTab", Map(
+        "GraphicalTab", Map(
         "ControlTypeLabel", "záložka",
         "UnlabelledString", "bez názvu"),
         "HotspotButton", Map(
@@ -899,19 +972,19 @@ Class AccessibilityOverlay Extends AccessibilityOverlayControl {
         "CustomTab", Map(
         "ControlTypeLabel", "flik",
         "UnlabelledString", "namnlös"),
-        "GraphicButton", Map(
+        "GraphicalButton", Map(
         "ControlTypeLabel", "knapp",
         "NotFoundString", "hittades ej",
         "OffString", "av",
         "OnString", "på",
         "UnlabelledString", "namnlös"),
-        "GraphicCheckbox", Map(
+        "GraphicalCheckbox", Map(
         "ControlTypeLabel", "kryssruta",
         "NotFoundString", "hittades ej",
-        "CheckedString", "kryssad",
-        "UncheckedString", "inte kryssad",
+        "OnString", "kryssad",
+        "OffString", "inte kryssad",
         "UnlabelledString", "namnlös"),
-        "GraphicTab", Map(
+        "GraphicalTab", Map(
         "ControlTypeLabel", "flik",
         "UnlabelledString", "namnlös"),
         "HotspotButton", Map(
@@ -1003,13 +1076,13 @@ Class AccessibilityOverlay Extends AccessibilityOverlayControl {
         Return This.AddControl(Control)
     }
     
-    AddGraphicButton(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage := "", OnHoverImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
-        Control := GraphicButton(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage, OnHoverImage, OffHoverImage, MouseXOffset, MouseYOffset, OnFocusFunction, OnActivateFunction)
+    AddGraphicalButton(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage := "", OnHoverImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
+        Control := GraphicalButton(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage, OnHoverImage, OffHoverImage, MouseXOffset, MouseYOffset, OnFocusFunction, OnActivateFunction)
         Return This.AddControl(Control)
     }
     
-    AddGraphicCheckbox(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, CheckedImage, UncheckedImage, CheckedHoverImage := "", UncheckedHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
-        Control := GraphicCheckbox(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, CheckedImage, UncheckedImage, CheckedHoverImage, UncheckedHoverImage, MouseXOffset, MouseYOffset, OnFocusFunction, OnActivateFunction)
+    AddGraphicalCheckbox(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage, OnHoverImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
+        Control := GraphicalCheckbox(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage, OnHoverImage, OffHoverImage, MouseXOffset, MouseYOffset, OnFocusFunction, OnActivateFunction)
         Return This.AddControl(Control)
     }
     
@@ -1235,55 +1308,29 @@ Class CustomTab Extends AccessibilityOverlay {
     
 }
 
-Class GraphicButton Extends AccessibilityOverlayControl {
+Class GraphicalButton Extends GraphicalControl {
     
     ControlType := "Button"
     ControlTypeLabel := "button"
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
     IsToggle := 0
     Label := ""
     MouseXOffset := 0
     MouseYOffset := 0
     OnActivateFunction := Array()
     OnFocusFunction := Array()
-    OnImage := ""
-    OffImage := ""
-    OnHoverImage := ""
-    OffHoverImage := ""
-    RegionX1Coordinate := 0
-    RegionY1Coordinate := 0
-    RegionX2Coordinate := 0
-    RegionY2Coordinate := 0
-    ToggleState := 0
+    State := 0
     NotFoundString := "not found"
     OffString := "off"
     OnString := "on"
     UnlabelledString := "unlabelled"
     
     __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage := "", OnHoverImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New()
+        Super.__New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage, OnHoverImage, OffHoverImage)
         This.Label := Label
-        This.RegionX1Coordinate := RegionX1Coordinate
-        This.RegionY1Coordinate := RegionY1Coordinate
-        This.RegionX2Coordinate := RegionX2Coordinate
-        This.RegionY2Coordinate := RegionY2Coordinate
         This.MouseXOffset := MouseXOffset
         This.MouseYOffset := MouseYOffset
-        If OnImage = "" Or !FileExist(OnImage)
-        OnImage := ""
-        If OffImage = "" Or !FileExist(OffImage)
-        OffImage := ""
-        If OnHoverImage = "" Or !FileExist(OnHoverImage)
-        OnHoverImage := ""
-        If OffHoverImage = "" Or !FileExist(OffHoverImage)
-        OffHoverImage := ""
-        If OnImage != "" And OffImage != "" And OnImage != OffImage
+        If This.OnImage != "" And This.OffImage != "" And This.OnImage != This.OffImage
         This.IsToggle := 1
-        This.OnImage := OnImage
-        This.OffImage := OffImage
-        This.OnHoverImage := OnHoverImage
-        This.OffHoverImage := OffHoverImage
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -1299,67 +1346,71 @@ Class GraphicButton Extends AccessibilityOverlayControl {
     }
     
     Activate(CurrentControlID := 0) {
-        If This.IsToggle = 1 And This.ToggleState = 0 {
+        If This.IsToggle = 1 And This.State = 0 {
             If This.CheckIfInactive() = 1 {
-                This.ToggleState := 1
+                This.State := 1
+                If This.ControlID != CurrentControlID
+                If HasMethod(This, "Focus")
+                This.Focus(This.ControlID)
+                For OnActivateFunction In This.OnActivateFunction
+                OnActivateFunction(This)
+                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != CurrentControlID {
-                    If HasMethod(This, "Focus")
-                    This.Focus(This.ControlID)
                     If This.Label = ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OnString)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
                 }
-                For OnActivateFunction In This.OnActivateFunction
-                OnActivateFunction(This)
-                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 Return 1
             }
             If This.CheckIfActive() = 1 {
-                This.ToggleState := 0
+                This.State := 0
+                If This.ControlID != CurrentControlID
+                If HasMethod(This, "Focus")
+                This.Focus(This.ControlID)
+                For OnActivateFunction In This.OnActivateFunction
+                OnActivateFunction(This)
+                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != CurrentControlID {
-                    If HasMethod(This, "Focus")
-                    This.Focus(This.ControlID)
                     If This.Label = ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OffString)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.OffString)
                 }
-                For OnActivateFunction In This.OnActivateFunction
-                OnActivateFunction(This)
-                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 Return 1
             }
         }
-        Else If This.IsToggle = 1 And This.ToggleState = 1 {
+        Else If This.IsToggle = 1 And This.State = 1 {
             If This.CheckIfActive() = 1 {
-                This.ToggleState := 0
+                This.State := 0
+                If This.ControlID != CurrentControlID
+                If HasMethod(This, "Focus")
+                This.Focus(This.ControlID)
+                For OnActivateFunction In This.OnActivateFunction
+                OnActivateFunction(This)
+                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != CurrentControlID {
-                    If HasMethod(This, "Focus")
-                    This.Focus(This.ControlID)
                     If This.Label = ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OffString)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.OffString)
                 }
-                For OnActivateFunction In This.OnActivateFunction
-                OnActivateFunction(This)
-                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 Return 1
             }
             If This.CheckIfInactive() = 1 {
-                This.ToggleState := 1
+                This.State := 1
+                If This.ControlID != CurrentControlID
+                If HasMethod(This, "Focus")
+                This.Focus(This.ControlID)
+                For OnActivateFunction In This.OnActivateFunction
+                OnActivateFunction(This)
+                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != CurrentControlID {
-                    If HasMethod(This, "Focus")
-                    This.Focus(This.ControlID)
                     If This.Label = ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OnString)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
                 }
-                For OnActivateFunction In This.OnActivateFunction
-                OnActivateFunction(This)
-                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 Return 1
             }
         }
@@ -1380,46 +1431,10 @@ Class GraphicButton Extends AccessibilityOverlayControl {
         Return 0
     }
     
-    CheckIfActive() {
-        FoundXCoordinate := 0
-        FoundYCoordinate := 0
-        If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) = 1 {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            Return 1
-        }
-        If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) = 1 {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            Return 1
-        }
-        This.FoundXCoordinate := 0
-        This.FoundYCoordinate := 0
-        Return 0
-    }
-    
-    CheckIfInactive() {
-        FoundXCoordinate := 0
-        FoundYCoordinate := 0
-        If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffImage) = 1 {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            Return 1
-        }
-        If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffHoverImage) = 1 {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            Return 1
-        }
-        This.FoundXCoordinate := 0
-        This.FoundYCoordinate := 0
-        Return 0
-    }
-    
     Focus(CurrentControlID := 0) {
-        If This.IsToggle = 1 And This.ToggleState = 0 {
+        If This.IsToggle = 1 And This.State = 0 {
             If This.CheckIfInactive() = 1 {
-                This.ToggleState := 0
+                This.State := 0
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
                 MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
@@ -1432,7 +1447,7 @@ Class GraphicButton Extends AccessibilityOverlayControl {
                 Return 1
             }
             If This.CheckIfActive() = 1 {
-                This.ToggleState := 1
+                This.State := 1
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
                 MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
@@ -1445,9 +1460,9 @@ Class GraphicButton Extends AccessibilityOverlayControl {
                 Return 1
             }
         }
-        Else If This.IsToggle = 1 And This.ToggleState = 1 {
+        Else If This.IsToggle = 1 And This.State = 1 {
             If This.CheckIfActive() = 1 {
-                This.ToggleState := 1
+                This.State := 1
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
                 MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
@@ -1460,7 +1475,7 @@ Class GraphicButton Extends AccessibilityOverlayControl {
                 Return 1
             }
             If This.CheckIfInactive() = 1 {
-                This.ToggleState := 0
+                This.State := 0
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
                 MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
@@ -1498,52 +1513,26 @@ Class GraphicButton Extends AccessibilityOverlayControl {
     
 }
 
-Class GraphicCheckbox Extends AccessibilityOverlayControl {
+Class GraphicalCheckbox Extends GraphicalControl {
     
-    Checked := 0
     ControlType := "Checkbox"
     ControlTypeLabel := "checkbox"
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
     Label := ""
     MouseXOffset := 0
     MouseYOffset := 0
     OnActivateFunction := Array()
     OnFocusFunction := Array()
-    CheckedImage := ""
-    UncheckedImage := ""
-    CheckedHoverImage := ""
-    UncheckedHoverImage := ""
-    RegionX1Coordinate := 0
-    RegionY1Coordinate := 0
-    RegionX2Coordinate := 0
-    RegionY2Coordinate := 0
+    State := 0
     NotFoundString := "not found"
-    CheckedString := "checked"
-    UncheckedString := "unchecked"
+    OnString := "checked"
+    OffString := "unchecked"
     UnlabelledString := "unlabelled"
     
-    __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, CheckedImage, UncheckedImage, CheckedHoverImage := "", UncheckedHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New()
+    __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage, OnHoverImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage, OnHoverImage, OffHoverImage)
         This.Label := Label
-        This.RegionX1Coordinate := RegionX1Coordinate
-        This.RegionY1Coordinate := RegionY1Coordinate
-        This.RegionX2Coordinate := RegionX2Coordinate
-        This.RegionY2Coordinate := RegionY2Coordinate
         This.MouseXOffset := MouseXOffset
         This.MouseYOffset := MouseYOffset
-        If CheckedImage = "" Or !FileExist(CheckedImage)
-        CheckedImage := ""
-        If UncheckedImage = "" Or !FileExist(UncheckedImage)
-        UncheckedImage := ""
-        If CheckedHoverImage = "" Or !FileExist(CheckedHoverImage)
-        CheckedHoverImage := ""
-        If UncheckedHoverImage = "" Or !FileExist(UncheckedHoverImage)
-        UncheckedHoverImage := ""
-        This.CheckedImage := CheckedImage
-        This.UncheckedImage := UncheckedImage
-        This.CheckedHoverImage := CheckedHoverImage
-        This.UncheckedHoverImage := UncheckedHoverImage
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -1559,67 +1548,71 @@ Class GraphicCheckbox Extends AccessibilityOverlayControl {
     }
     
     Activate(CurrentControlID := 0) {
-        If This.Checked = 0 {
+        If This.State = 0 {
             If This.CheckIfInactive() = 1 {
-                This.Checked := 1
+                This.State := 1
+                If This.ControlID != CurrentControlID
+                If HasMethod(This, "Focus")
+                This.Focus(This.ControlID)
+                For OnActivateFunction In This.OnActivateFunction
+                OnActivateFunction(This)
+                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != CurrentControlID {
-                    If HasMethod(This, "Focus")
-                    This.Focus(This.ControlID)
                     If This.Label = ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OnString)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
                 }
-                For OnActivateFunction In This.OnActivateFunction
-                OnActivateFunction(This)
-                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 Return 1
             }
             If This.CheckIfActive() = 1 {
-                This.Checked := 0
-                If This.ControlID != CurrentControlID {
-                    If HasMethod(This, "Focus")
-                    This.Focus(This.ControlID)
-                    If This.Label = ""
-                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.UncheckedString)
-                    Else
-                    AccessibilityOverlay.Speak(This.Label . " " . This.UncheckedString)
-                }
+                This.State := 0
+                If This.ControlID != CurrentControlID
+                If HasMethod(This, "Focus")
+                This.Focus(This.ControlID)
                 For OnActivateFunction In This.OnActivateFunction
                 OnActivateFunction(This)
                 Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
+                If This.ControlID != CurrentControlID {
+                    If This.Label = ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OffString)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.OffString)
+                }
                 Return 1
             }
         }
         Else {
             If This.CheckIfActive() = 1 {
-                This.Checked := 0
-                If This.ControlID != CurrentControlID {
-                    If HasMethod(This, "Focus")
-                    This.Focus(This.ControlID)
-                    If This.Label = ""
-                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.UncheckedString)
-                    Else
-                    AccessibilityOverlay.Speak(This.Label . " " . This.UncheckedString)
-                }
+                This.State := 0
+                If This.ControlID != CurrentControlID
+                If HasMethod(This, "Focus")
+                This.Focus(This.ControlID)
                 For OnActivateFunction In This.OnActivateFunction
                 OnActivateFunction(This)
                 Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
+                If This.ControlID != CurrentControlID {
+                    If This.Label = ""
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OffString)
+                    Else
+                    AccessibilityOverlay.Speak(This.Label . " " . This.OffString)
+                }
                 Return 1
             }
             If This.CheckIfInactive() = 1 {
-                This.Checked := 1
+                This.State := 1
+                If This.ControlID != CurrentControlID
+                If HasMethod(This, "Focus")
+                This.Focus(This.ControlID)
+                For OnActivateFunction In This.OnActivateFunction
+                OnActivateFunction(This)
+                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != CurrentControlID {
-                    If HasMethod(This, "Focus")
-                    This.Focus(This.ControlID)
                     If This.Label = ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.OnString)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.OnString)
                 }
-                For OnActivateFunction In This.OnActivateFunction
-                OnActivateFunction(This)
-                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 Return 1
             }
         }
@@ -1632,95 +1625,59 @@ Class GraphicCheckbox Extends AccessibilityOverlayControl {
         Return 0
     }
     
-    CheckIfActive() {
-        FoundXCoordinate := 0
-        FoundYCoordinate := 0
-        If This.CheckedImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.CheckedImage) = 1 {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            Return 1
-        }
-        If This.CheckedHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.CheckedHoverImage) = 1 {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            Return 1
-        }
-        This.FoundXCoordinate := 0
-        This.FoundYCoordinate := 0
-        Return 0
-    }
-    
-    CheckIfInactive() {
-        FoundXCoordinate := 0
-        FoundYCoordinate := 0
-        If This.UncheckedImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.UncheckedImage) = 1 {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            Return 1
-        }
-        If This.UncheckedHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.UncheckedHoverImage) = 1 {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            Return 1
-        }
-        This.FoundXCoordinate := 0
-        This.FoundYCoordinate := 0
-        Return 0
-    }
-    
     Focus(CurrentControlID := 0) {
-        If This.Checked = 0 {
+        If This.State = 0 {
             If This.CheckIfInactive() = 1 {
-                This.Checked := 0
+                This.State := 0
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
                 MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != CurrentControlID {
                     If This.Label = ""
-                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OffString)
                     Else
-                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OffString)
                 }
                 Return 1
             }
             If This.CheckIfActive() = 1 {
-                This.Checked := 1
+                This.State := 1
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
                 MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != CurrentControlID {
                     If This.Label = ""
-                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OnString )
                     Else
-                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OnString)
                 }
                 Return 1
             }
         }
         Else {
             If This.CheckIfActive() = 1 {
-                This.Checked := 1
+                This.State := 1
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
                 MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != CurrentControlID {
                     If This.Label = ""
-                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OnString)
                     Else
-                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OnString)
                 }
                 Return 1
             }
             If This.CheckIfInactive() = 1 {
-                This.Checked := 0
+                This.State := 0
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
                 MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != CurrentControlID {
                     If This.Label = ""
-                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
+                    AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OffString)
                     Else
-                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
+                    AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OffString)
                 }
                 Return 1
             }
@@ -1736,7 +1693,7 @@ Class GraphicCheckbox Extends AccessibilityOverlayControl {
     
 }
 
-Class GraphicTab Extends AccessibilityOverlay {
+Class GraphicalTab Extends AccessibilityOverlay {
     
     ControlType := "Tab"
     ControlTypeLabel := "tab"
@@ -1754,7 +1711,7 @@ Class GraphicTab Extends AccessibilityOverlay {
     RegionY1Coordinate := 0
     RegionX2Coordinate := 0
     RegionY2Coordinate := 0
-    ToggleState := 0
+    State := 0
     UnlabelledString := "unlabelled"
     
     __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage := "", OnHoverImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "") {
@@ -1790,12 +1747,12 @@ Class GraphicTab Extends AccessibilityOverlay {
     CheckIfActive() {
         FoundXCoordinate := 0
         FoundYCoordinate := 0
-        If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) = 1 {
+        If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) {
             This.FoundXCoordinate := FoundXCoordinate
             This.FoundYCoordinate := FoundYCoordinate
             Return 1
         }
-        If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) = 1 {
+        If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) {
             This.FoundXCoordinate := FoundXCoordinate
             This.FoundYCoordinate := FoundYCoordinate
             Return 1
@@ -1808,12 +1765,12 @@ Class GraphicTab Extends AccessibilityOverlay {
     CheckIfInactive() {
         FoundXCoordinate := 0
         FoundYCoordinate := 0
-        If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffImage) = 1 {
+        If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffImage) {
             This.FoundXCoordinate := FoundXCoordinate
             This.FoundYCoordinate := FoundYCoordinate
             Return 1
         }
-        If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffHoverImage) = 1 {
+        If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffHoverImage) {
             This.FoundXCoordinate := FoundXCoordinate
             This.FoundYCoordinate := FoundYCoordinate
             Return 1
@@ -1824,59 +1781,59 @@ Class GraphicTab Extends AccessibilityOverlay {
     }
     
     Focus(ControlID := 0) {
-        If This.IsToggle = 1 And This.ToggleState = 0 {
+        If This.IsToggle = 1 And This.State = 0 {
             If This.CheckIfInactive() = 1 {
-                This.ToggleState := 0
+                This.State := 0
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
+                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != ControlID {
                     If This.Label = ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 Return 1
             }
             If This.CheckIfActive() = 1 {
-                This.ToggleState := 1
+                This.State := 1
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
+                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != ControlID {
                     If This.Label = ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 Return 1
             }
         }
-        Else If This.IsToggle = 1 And This.ToggleState = 1 {
+        Else If This.IsToggle = 1 And This.State = 1 {
             If This.CheckIfActive() = 1 {
-                This.ToggleState := 1
+                This.State := 1
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
+                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != ControlID {
                     If This.Label = ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 Return 1
             }
             If This.CheckIfInactive() = 1 {
-                This.ToggleState := 0
+                This.State := 0
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
                 If This.ControlID != ControlID {
+                    Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                     If This.Label = ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 Return 1
             }
         }
@@ -1884,13 +1841,13 @@ Class GraphicTab Extends AccessibilityOverlay {
             If This.CheckIfActive() = 1 {
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction(This)
+                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 If This.ControlID != ControlID {
                     If This.Label = ""
                     AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
                     Else
                     AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
                 }
-                Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
                 Return 1
             }
         }
