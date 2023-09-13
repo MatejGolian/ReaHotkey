@@ -125,6 +125,8 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
         ReaHotkey.Found%Type%.Overlay := OverlayList[OverlayNumber].Clone()
         ReaHotkey.Found%Type%.Overlay.Focus()
     }
+    Else
+    ReaHotkey.Found%Type%.Overlay.Focus()
 }
 
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
