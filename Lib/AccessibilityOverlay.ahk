@@ -6,6 +6,12 @@ Class AccessibilityOverlayControl {
     ControlType := "Control"
     SuperordinateControlID := 0
     
+    __New() {
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        AccessibilityOverlay.AllControls.Push(This)
+    }
+    
     GetSuperordinateControl() {
         Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
     }
@@ -19,8 +25,7 @@ Class ActivatableCustom Extends AccessibilityOverlayControl {
     OnFocusFunction := Array()
     
     __New(OnFocusFunction := "", OnActivateFunction := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        Super.__New()
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -33,7 +38,6 @@ Class ActivatableCustom Extends AccessibilityOverlayControl {
             Else
             This.OnActivateFunction := Array(OnActivateFunction)
         }
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Activate(CurrentControlID := 0) {
@@ -56,15 +60,13 @@ Class FocusableCustom Extends AccessibilityOverlayControl {
     OnFocusFunction := Array()
     
     __New(OnFocusFunction := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        Super.__New()
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
             Else
             This.OnFocusFunction := Array(OnFocusFunction)
         }
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Focus(CurrentControlID := 0) {
@@ -83,8 +85,7 @@ Class ActivatableHotspot Extends AccessibilityOverlayControl {
     YCoordinate := 0
     
     __New(XCoordinate, YCoordinate, OnFocusFunction := "", OnActivateFunction := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        Super.__New()
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
         If OnFocusFunction != "" {
@@ -99,7 +100,6 @@ Class ActivatableHotspot Extends AccessibilityOverlayControl {
             Else
             This.OnActivateFunction := Array(OnActivateFunction)
         }
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Activate(CurrentControlID := 0) {
@@ -126,8 +126,7 @@ Class FocusableHotspot Extends AccessibilityOverlayControl {
     YCoordinate := 0
     
     __New(XCoordinate, YCoordinate, OnFocusFunction := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        Super.__New()
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
         If OnFocusFunction != "" {
@@ -136,7 +135,6 @@ Class FocusableHotspot Extends AccessibilityOverlayControl {
             Else
             This.OnFocusFunction := Array(OnFocusFunction)
         }
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Focus(CurrentControlID := 0) {
@@ -147,27 +145,35 @@ Class FocusableHotspot Extends AccessibilityOverlayControl {
     
 }
 
-Class ActivatableOCR Extends AccessibilityOverlayControl {
+Class OCRControl Extends AccessibilityOverlayControl {
     
     ControlType := "OCR"
     OCRLanguage := ""
     OCRScale := 1
-    OnActivateFunction := Array()
-    OnFocusFunction := Array()
     RegionX1Coordinate := 0
     RegionY1Coordinate := 0
     RegionX2Coordinate := 0
     RegionY2Coordinate := 0
     
-    __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "", OnActivateFunction := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+    __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1) {
+        Super.__New()
         This.RegionX1Coordinate := RegionX1Coordinate
         This.RegionY1Coordinate := RegionY1Coordinate
         This.RegionX2Coordinate := RegionX2Coordinate
         This.RegionY2Coordinate := RegionY2Coordinate
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
+    }
+    
+}
+
+Class ActivatableOCR Extends OCRControl {
+    
+    OnActivateFunction := Array()
+    OnFocusFunction := Array()
+    
+    __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage, OCRScale)
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -180,7 +186,6 @@ Class ActivatableOCR Extends AccessibilityOverlayControl {
             Else
             This.OnActivateFunction := Array(OnActivateFunction)
         }
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Activate(CurrentControlID := 0) {
@@ -203,33 +208,18 @@ Class ActivatableOCR Extends AccessibilityOverlayControl {
     
 }
 
-Class FocusableOCR Extends AccessibilityOverlayControl {
+Class FocusableOCR Extends OCRControl {
     
-    ControlType := "OCR"
-    OCRLanguage := ""
-    OCRScale := 1
     OnFocusFunction := Array()
-    RegionX1Coordinate := 0
-    RegionY1Coordinate := 0
-    RegionX2Coordinate := 0
-    RegionY2Coordinate := 0
     
     __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-        This.RegionX1Coordinate := RegionX1Coordinate
-        This.RegionY1Coordinate := RegionY1Coordinate
-        This.RegionX2Coordinate := RegionX2Coordinate
-        This.RegionY2Coordinate := RegionY2Coordinate
-        This.OCRLanguage := OCRLanguage
-        This.OCRScale := OCRScale
+        Super.__New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage, OCRScale)
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
             Else
             This.OnFocusFunction := Array(OnFocusFunction)
         }
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Focus(CurrentControlID := 0) {
@@ -258,10 +248,8 @@ Class AccessibilityOverlay Extends AccessibilityOverlayControl {
     Static Translations := AccessibilityOverlay.SetupTranslations()
     
     __New(Label := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        Super.__New()
         This.Label := Label
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     ActivateControl(ControlID) {
@@ -1224,16 +1212,13 @@ Class CustomTab Extends AccessibilityOverlay {
     UnlabelledString := "unlabelled"
     
     __New(Label, OnFocusFunction := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-        This.Label := Label
+        Super.__New(Label)
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
             Else
             This.OnFocusFunction := Array(OnFocusFunction)
         }
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Focus(ControlID := 0) {
@@ -1250,15 +1235,18 @@ Class CustomTab Extends AccessibilityOverlay {
     
 }
 
-Class GraphicButton {
+Class GraphicButton Extends AccessibilityOverlayControl {
     
-    ControlID := 0
     ControlType := "Button"
     ControlTypeLabel := "button"
+    FoundXCoordinate := 0
+    FoundYCoordinate := 0
+    IsToggle := 0
     Label := ""
-    OnFocusFunction := Array()
+    MouseXOffset := 0
+    MouseYOffset := 0
     OnActivateFunction := Array()
-    SuperordinateControlID := 0
+    OnFocusFunction := Array()
     OnImage := ""
     OffImage := ""
     OnHoverImage := ""
@@ -1267,11 +1255,6 @@ Class GraphicButton {
     RegionY1Coordinate := 0
     RegionX2Coordinate := 0
     RegionY2Coordinate := 0
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
-    MouseXOffset := 0
-    MouseYOffset := 0
-    IsToggle := 0
     ToggleState := 0
     NotFoundString := "not found"
     OffString := "off"
@@ -1279,8 +1262,7 @@ Class GraphicButton {
     UnlabelledString := "unlabelled"
     
     __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage := "", OnHoverImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        Super.__New()
         This.Label := Label
         This.RegionX1Coordinate := RegionX1Coordinate
         This.RegionY1Coordinate := RegionY1Coordinate
@@ -1314,7 +1296,6 @@ Class GraphicButton {
             Else
             This.OnActivateFunction := Array(OnActivateFunction)
         }
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Activate(CurrentControlID := 0) {
@@ -1515,22 +1496,20 @@ Class GraphicButton {
         Return 0
     }
     
-    GetSuperordinateControl() {
-        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
-    }
-    
 }
 
-Class GraphicCheckbox {
+Class GraphicCheckbox Extends AccessibilityOverlayControl {
     
-    ControlID := 0
+    Checked := 0
     ControlType := "Checkbox"
     ControlTypeLabel := "checkbox"
+    FoundXCoordinate := 0
+    FoundYCoordinate := 0
     Label := ""
-    OnFocusFunction := Array()
+    MouseXOffset := 0
+    MouseYOffset := 0
     OnActivateFunction := Array()
-    SuperordinateControlID := 0
-    Checked := 0
+    OnFocusFunction := Array()
     CheckedImage := ""
     UncheckedImage := ""
     CheckedHoverImage := ""
@@ -1539,18 +1518,13 @@ Class GraphicCheckbox {
     RegionY1Coordinate := 0
     RegionX2Coordinate := 0
     RegionY2Coordinate := 0
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
-    MouseXOffset := 0
-    MouseYOffset := 0
     NotFoundString := "not found"
     CheckedString := "checked"
     UncheckedString := "unchecked"
     UnlabelledString := "unlabelled"
     
     __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, CheckedImage, UncheckedImage, CheckedHoverImage := "", UncheckedHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        Super.__New()
         This.Label := Label
         This.RegionX1Coordinate := RegionX1Coordinate
         This.RegionY1Coordinate := RegionY1Coordinate
@@ -1582,7 +1556,6 @@ Class GraphicCheckbox {
             Else
             This.OnActivateFunction := Array(OnActivateFunction)
         }
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Activate(CurrentControlID := 0) {
@@ -1761,16 +1734,17 @@ Class GraphicCheckbox {
         Return 0
     }
     
-    GetSuperordinateControl() {
-        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
-    }
-    
 }
 
 Class GraphicTab Extends AccessibilityOverlay {
     
     ControlType := "Tab"
     ControlTypeLabel := "tab"
+    FoundXCoordinate := 0
+    FoundYCoordinate := 0
+    IsToggle := 0
+    MouseXOffset := 0
+    MouseYOffset := 0
     OnFocusFunction := Array()
     OnImage := ""
     OffImage := ""
@@ -1780,18 +1754,11 @@ Class GraphicTab Extends AccessibilityOverlay {
     RegionY1Coordinate := 0
     RegionX2Coordinate := 0
     RegionY2Coordinate := 0
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
-    MouseXOffset := 0
-    MouseYOffset := 0
-    IsToggle := 0
     ToggleState := 0
     UnlabelledString := "unlabelled"
     
     __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OnImage, OffImage := "", OnHoverImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-        This.Label := Label
+        Super.__New(Label)
         This.RegionX1Coordinate := RegionX1Coordinate
         This.RegionY1Coordinate := RegionY1Coordinate
         This.RegionX2Coordinate := RegionX2Coordinate
@@ -1818,7 +1785,6 @@ Class GraphicTab Extends AccessibilityOverlay {
             Else
             This.OnFocusFunction := Array(OnFocusFunction)
         }
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     CheckIfActive() {
@@ -2064,9 +2030,7 @@ Class HotspotTab Extends AccessibilityOverlay {
     UnlabelledString := "unlabelled"
     
     __New(Label, XCoordinate, YCoordinate, OnFocusFunction := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-        This.Label := Label
+        Super.__New(Label)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
         If OnFocusFunction != "" {
@@ -2075,7 +2039,6 @@ Class HotspotTab Extends AccessibilityOverlay {
             Else
             This.OnFocusFunction := Array(OnFocusFunction)
         }
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Focus(ControlID := 0) {
@@ -2235,8 +2198,7 @@ Class OCRTab Extends AccessibilityOverlay {
     UnlabelledString := ""
     
     __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        Super.__New()
         This.RegionX1Coordinate := RegionX1Coordinate
         This.RegionY1Coordinate := RegionY1Coordinate
         This.RegionX2Coordinate := RegionX2Coordinate
@@ -2249,7 +2211,6 @@ Class OCRTab Extends AccessibilityOverlay {
             Else
             This.OnFocusFunction := Array(OnFocusFunction)
         }
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Focus(ControlID := 0) {
@@ -2270,79 +2231,47 @@ Class OCRTab Extends AccessibilityOverlay {
     
 }
 
-Class OCRText {
+Class OCRText Extends OCRControl {
     
-    ControlID := 0
     ControlType := "Text"
     ControlTypeLabel := "text"
-    SuperordinateControlID := 0
-    RegionX1Coordinate := 0
-    RegionY1Coordinate := 0
-    RegionX2Coordinate := 0
-    RegionY2Coordinate := 0
-    OCRLanguage := ""
-    OCRScale := 1
     Text := ""
     
     __New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1) {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-        This.RegionX1Coordinate := RegionX1Coordinate
-        This.RegionY1Coordinate := RegionY1Coordinate
-        This.RegionX2Coordinate := RegionX2Coordinate
-        This.RegionY2Coordinate := RegionY2Coordinate
-        This.OCRLanguage := OCRLanguage
-        This.OCRScale := OCRScale
-        AccessibilityOverlay.AllControls.Push(This)
+        Super.__New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage, OCRScale)
     }
     
     Focus(CurrentControlID := 0) {
         This.Text := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         If This.ControlID != CurrentControlID
         AccessibilityOverlay.Speak(This.Text)
-        Return 1
-    }
-    
-    GetSuperordinateControl() {
-        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
     }
     
 }
 
-Class StaticText {
+Class StaticText Extends AccessibilityOverlayControl {
     
-    ControlID := 0
     ControlType := "Text"
     ControlTypeLabel := "text"
-    SuperordinateControlID := 0
     Text := ""
     
     __New(Text := "") {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        Super.__New()
         This.Text := Text
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     Focus(CurrentControlID := 0) {
         If CurrentControlID != This.ControlID
         AccessibilityOverlay.Speak(This.Text)
-        Return 1
-    }
-    
-    GetSuperordinateControl() {
-        Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
     }
     
 }
 
-Class TabControl {
+Class TabControl Extends AccessibilityOverlayControl {
     
-    ControlID := 0
     ControlType := "TabControl"
     ControlTypeLabel := "tab control"
     Label := ""
-    SuperordinateControlID := 0
     CurrentTab := 1
     Tabs := Array()
     SelectedString := "selected"
@@ -2350,13 +2279,11 @@ Class TabControl {
     UnlabelledString := ""
     
     __New(Label := "", Tabs*) {
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        Super.__New()
         This.Label := Label
         If Tabs.Length > 0
         For Tab In Tabs
         This.AddTabs(Tab)
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     AddTabs(Tabs*) {
