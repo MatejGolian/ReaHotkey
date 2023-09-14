@@ -107,17 +107,24 @@ Class GraphicalControl Extends AccessibilityControl {
     SetState() {
         FoundXCoordinate := 0
         FoundYCoordinate := 0
-        If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            This.State := 1
+        Try {
+            If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) {
+                This.FoundXCoordinate := FoundXCoordinate
+                This.FoundYCoordinate := FoundYCoordinate
+                This.State := 1
+            }
+            Else If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) {
+                This.FoundXCoordinate := FoundXCoordinate
+                This.FoundYCoordinate := FoundYCoordinate
+                This.State := 1
+            }
+            Else {
+                This.FoundXCoordinate := 0
+                This.FoundYCoordinate := 0
+                This.State := 0
+            }
         }
-        Else If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            This.State := 1
-        }
-        Else {
+        Catch {
             This.FoundXCoordinate := 0
             This.FoundYCoordinate := 0
             This.State := 0
@@ -239,27 +246,34 @@ Class ToggleableGraphic Extends ActivatableGraphic {
     SetState() {
         FoundXCoordinate := 0
         FoundYCoordinate := 0
-        If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            This.State := 1
+        Try {
+            If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) {
+                This.FoundXCoordinate := FoundXCoordinate
+                This.FoundYCoordinate := FoundYCoordinate
+                This.State := 1
+            }
+            Else If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) {
+                This.FoundXCoordinate := FoundXCoordinate
+                This.FoundYCoordinate := FoundYCoordinate
+                This.State := 1
+            }
+            Else If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffImage) {
+                This.FoundXCoordinate := FoundXCoordinate
+                This.FoundYCoordinate := FoundYCoordinate
+                This.State := 0
+            }
+            Else If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffHoverImage) {
+                This.FoundXCoordinate := FoundXCoordinate
+                This.FoundYCoordinate := FoundYCoordinate
+                This.State := 0
+            }
+            Else {
+                This.FoundXCoordinate := 0
+                This.FoundYCoordinate := 0
+                This.State := -1
+            }
         }
-        Else If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            This.State := 1
-        }
-        Else If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffImage) {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            This.State := 0
-        }
-        Else If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffHoverImage) {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            This.State := 0
-        }
-        Else {
+        Catch {
             This.FoundXCoordinate := 0
             This.FoundYCoordinate := 0
             This.State := -1
@@ -1681,32 +1695,39 @@ Class GraphicalTab Extends AccessibilityOverlay {
     SetState() {
         FoundXCoordinate := 0
         FoundYCoordinate := 0
-        If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            This.State := 1
+        Try {
+            If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnImage) {
+                This.FoundXCoordinate := FoundXCoordinate
+                This.FoundYCoordinate := FoundYCoordinate
+                This.State := 1
+            }
+            Else If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) {
+                This.FoundXCoordinate := FoundXCoordinate
+                This.FoundYCoordinate := FoundYCoordinate
+                This.State := 1
+            }
+            Else If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffImage) {
+                This.FoundXCoordinate := FoundXCoordinate
+                This.FoundYCoordinate := FoundYCoordinate
+                This.State := 0
+            }
+            Else If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffHoverImage) {
+                This.FoundXCoordinate := FoundXCoordinate
+                This.FoundYCoordinate := FoundYCoordinate
+                This.State := 0
+            }
+            Else {
+                This.FoundXCoordinate := 0
+                This.FoundYCoordinate := 0
+                This.State := -1
+            }
         }
-        Else If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OnHoverImage) {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            This.State := 1
-        }
-        Else If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffImage) {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            This.State := 0
-        }
-        Else If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OffHoverImage) {
-            This.FoundXCoordinate := FoundXCoordinate
-            This.FoundYCoordinate := FoundYCoordinate
-            This.State := 0
-        }
-        Else {
+        Catch {
             This.FoundXCoordinate := 0
             This.FoundYCoordinate := 0
             This.State := -1
         }
-    }
+        }
     
 }
 
