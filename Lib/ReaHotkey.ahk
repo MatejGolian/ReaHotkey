@@ -173,74 +173,52 @@ Class ReaHotkey {
     }
     
     Static TurnPluginTimersOff(Name := "") {
-        If Name = "" {
-            PluginList := Plugin.GetList()
-            For PluginEntry In PluginList
-            For Timer In PluginEntry["Timers"]
-            If Timer["Enabled"] = True {
-                Timer["Enabled"] := False
-                SetTimer Timer["Function"], 0
-            }
-        }
-        Else {
-            For Timer In Plugin.GetTimers(Name)
-            If Timer["Enabled"] = True {
-                Timer["Enabled"] := False
-                SetTimer Timer["Function"], 0
-            }
-        }
+        ReaHotkey.TurnTimersOff("Plugin", Name)
     }
     
     Static TurnPluginTimersOn(Name := "") {
-        If Name = "" {
-            PluginList := Plugin.GetList()
-            For PluginEntry In PluginList
-            For Timer In PluginEntry["Timers"]
-            If Timer["Enabled"] = False {
-                Timer["Enabled"] := True
-                SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
-            }
-        }
-        Else {
-            For Timer In Plugin.GetTimers(Name)
-            If Timer["Enabled"] = False {
-                Timer["Enabled"] := True
-                SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
-            }
-        }
+        ReaHotkey.TurnTimersOn("Plugin", Name)
     }
     
     Static TurnStandaloneTimersOff(Name := "") {
-        If Name = "" {
-            StandaloneList := Standalone.GetList()
-            For StandaloneEntry In StandaloneList
-            For Timer In StandaloneEntry["Timers"]
-            If Timer["Enabled"] = True {
-                Timer["Enabled"] := False
-                SetTimer Timer["Function"], 0
-            }
-        }
-        Else {
-            For Timer In Standalone.GetTimers(Name)
-            If Timer["Enabled"] = True {
-                Timer["Enabled"] := False
-                SetTimer Timer["Function"], 0
-            }
-        }
+        ReaHotkey.TurnTimersOff("Standalone", Name)
     }
     
     Static TurnStandaloneTimersOn(Name := "") {
+        ReaHotkey.TurnTimersOn("Standalone", Name)
+    }
+    
+    Static TurnTimersOff(Type, Name := "") {
         If Name = "" {
-            StandaloneList := Standalone.GetList()
-            For StandaloneEntry In StandaloneList
-            For Timer In StandaloneEntry["Timers"]
+            TimerList := %Type%.GetList()
+            For TimerEntry In TimerList
+            For Timer In TimerEntry["Timers"]
+            If Timer["Enabled"] = True {
+                Timer["Enabled"] := False
+                SetTimer Timer["Function"], 0
+            }
+        }
+        Else {
+            For Timer In %Type%.GetTimers(Name)
+            If Timer["Enabled"] = True {
+                Timer["Enabled"] := False
+                SetTimer Timer["Function"], 0
+            }
+        }
+    }
+    
+    Static TurnTimersOn(Type, Name := "") {
+        If Name = "" {
+            TimerList := %Type%.GetList()
+            For TimerEntry In TimerList
+            For Timer In TimerEntry["Timers"]
             If Timer["Enabled"] = False {
                 Timer["Enabled"] := True
                 SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
             }
         }
         Else {
-            For Timer In Standalone.GetTimers(Name)
+            For Timer In %Type%.GetTimers(Name)
             If Timer["Enabled"] = False {
                 Timer["Enabled"] := True
                 SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
@@ -248,7 +226,7 @@ Class ReaHotkey {
         }
     }
     
-    Class Close {
+        Class Close {
         
         Static Call(*) {
             ExitApp
