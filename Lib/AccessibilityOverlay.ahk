@@ -1,6 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 
-Class AccessibilityOverlayControl {
+Class AccessibilityControl {
     
     ControlID := 0
     ControlType := "Control"
@@ -18,7 +18,7 @@ Class AccessibilityOverlayControl {
     
 }
 
-Class FocusableCustom Extends AccessibilityOverlayControl {
+Class FocusableCustom Extends AccessibilityControl {
     
     ControlType := "Custom"
     OnFocusFunction := Array()
@@ -40,7 +40,7 @@ Class FocusableCustom Extends AccessibilityOverlayControl {
     
 }
 
-Class ActivatableCustom Extends AccessibilityOverlayControl {
+Class ActivatableCustom Extends AccessibilityControl {
     
     ControlType := "Custom"
     OnActivateFunction := Array()
@@ -77,7 +77,7 @@ Class ActivatableCustom Extends AccessibilityOverlayControl {
     
 }
 
-Class GraphicalControl Extends AccessibilityOverlayControl {
+Class GraphicalControl Extends AccessibilityControl {
     
     ControlType := "Graphic"
     FoundXCoordinate := 0
@@ -268,7 +268,7 @@ Class ToggleableGraphic Extends ActivatableGraphic {
     
 }
 
-Class Hotspot Extends AccessibilityOverlayControl {
+Class HotspotControl Extends AccessibilityControl {
     
     ControlType := "Hotspot"
     XCoordinate := 0
@@ -282,7 +282,7 @@ Class Hotspot Extends AccessibilityOverlayControl {
     
 }
 
-Class FocusableHotspot Extends Hotspot {
+Class FocusableHotspot Extends HotspotControl {
     
     OnFocusFunction := Array()
     
@@ -306,7 +306,7 @@ Class FocusableHotspot Extends Hotspot {
     
 }
 
-Class ActivatableHotspot Extends Hotspot {
+Class ActivatableHotspot Extends HotspotControl {
     
     OnActivateFunction := Array()
     OnFocusFunction := Array()
@@ -345,7 +345,7 @@ Class ActivatableHotspot Extends Hotspot {
     
 }
 
-Class OCRControl Extends AccessibilityOverlayControl {
+Class OCRControl Extends AccessibilityControl {
     
     ControlType := "OCR"
     OCRLanguage := ""
@@ -436,7 +436,7 @@ Class ActivatableOCR Extends OCRControl {
     
 }
 
-Class AccessibilityOverlay Extends AccessibilityOverlayControl {
+Class AccessibilityOverlay Extends AccessibilityControl {
     
     ControlType := "Overlay"
     ControlTypeLabel := "overlay"
@@ -2060,7 +2060,7 @@ Class OCRText Extends OCRControl {
     
 }
 
-Class StaticText Extends AccessibilityOverlayControl {
+Class StaticText Extends AccessibilityControl {
     
     ControlType := "Text"
     ControlTypeLabel := "text"
@@ -2078,7 +2078,7 @@ Class StaticText Extends AccessibilityOverlayControl {
     
 }
 
-Class TabControl Extends AccessibilityOverlayControl {
+Class TabControl Extends AccessibilityControl {
     
     ControlType := "TabControl"
     ControlTypeLabel := "tab control"

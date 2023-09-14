@@ -12,7 +12,19 @@ Class KontaktKompleteKontrol {
         AreiaOverlay.AddHotspotButton("Modern Mix", 565, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", AreiaOverlay)
         
-        JaegerOverlay := AccessibilityOverlay("Jaeger")
+        CerberusOverlay := AccessibilityOverlay("Cerberus")
+        CerberusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Cerberus", "Image", Map("File", "Images/KontaktKompleteKontrol/Cerberus.png", "X1Coordinate", 0, "Y1Coordinate", 0, "X2Coordinate", 0, "Y2Coordinate", 0))
+        CerberusOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        CerberusOverlay.AddHotspotButton("Modern Mix", 565, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", CerberusOverlay)
+        
+        ChorusOverlay := AccessibilityOverlay("Chorus")
+        ChorusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Chorus", "Image", Map("File", "Images/KontaktKompleteKontrol/Chorus.png", "X1Coordinate", 0, "Y1Coordinate", 0, "X2Coordinate", 0, "Y2Coordinate", 0))
+        ChorusOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        ChorusOverlay.AddHotspotButton("Modern Mix", 565, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", ChorusOverlay)
+        
+                JaegerOverlay := AccessibilityOverlay("Jaeger")
         JaegerOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Jaeger", "Image", Map("File", "Images/KontaktKompleteKontrol/Jaeger.png", "X1Coordinate", 0, "Y1Coordinate", 0, "X2Coordinate", 0, "Y2Coordinate", 0))
         JaegerOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         JaegerOverlay.AddHotspotButton("Modern Mix", 565, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
@@ -24,19 +36,25 @@ Class KontaktKompleteKontrol {
         NucleusOverlay.AddHotspotButton("Modern Mix", 480, 379, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", NucleusOverlay)
         
+        SoloOverlay := AccessibilityOverlay("Solo")
+        SoloOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Solo", "Image", Map("File", "Images/KontaktKompleteKontrol/Solo.png", "X1Coordinate", 0, "Y1Coordinate", 0, "X2Coordinate", 0, "Y2Coordinate", 0))
+        SoloOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        SoloOverlay.AddHotspotButton("Modern Mix", 565, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", SoloOverlay)
+        
         TalosOverlay := AccessibilityOverlay("Talos")
         TalosOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Talos", "Image", Map("File", "Images/KontaktKompleteKontrol/Talos.png", "X1Coordinate", 0, "Y1Coordinate", 0, "X2Coordinate", 0, "Y2Coordinate", 0))
         TalosOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         TalosOverlay.AddHotspotButton("Modern Mix", 565, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", TalosOverlay)
         
-        ShreddageOverlay := AccessibilityOverlay("Shreddage Series")
-        ShreddageOverlay.Metadata := Map("Vendor", "Impact Soundworks", "Product", "Shreddage Series")
-        ShreddageOverlay.AddHotspotButton("Guitar Number 1", 842, 471, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        ShreddageOverlay.AddHotspotButton("Guitar Number 2", 866, 471, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        ShreddageOverlay.AddHotspotButton("Guitar Number 3", 890, 471, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        ShreddageOverlay.AddHotspotButton("Guitar Number 4", 914, 471, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", ShreddageOverlay)
+        Shreddage3Overlay := AccessibilityOverlay("Shreddage 3 Series")
+        Shreddage3Overlay.Metadata := Map("Vendor", "Impact Soundworks", "Product", "Shreddage 3 Series", "Image", Map("File", "Images/KontaktKompleteKontrol/Shreddage3.png", "X1Coordinate", 0, "Y1Coordinate", 0, "X2Coordinate", 0, "Y2Coordinate", 0))
+        Shreddage3Overlay.AddHotspotButton("Guitar Number 1", 842, 471, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        Shreddage3Overlay.AddHotspotButton("Guitar Number 2", 866, 471, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        Shreddage3Overlay.AddHotspotButton("Guitar Number 3", 890, 471, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        Shreddage3Overlay.AddHotspotButton("Guitar Number 4", 914, 471, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", Shreddage3Overlay)
         
         Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 200)
         

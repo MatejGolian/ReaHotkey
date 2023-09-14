@@ -285,6 +285,7 @@ Class ReaHotkey {
                 }
                 Else {
                     ReaHotkey.TurnPluginTimersOn(ReaHotkey.FoundPlugin.Name)
+                    Sleep 250
                     If ReaHotkey.AutoFocusPluginOverlay = True {
                         ReaHotkey.FocusPluginOverlay()
                         ReaHotkey.AutoFocusPluginOverlay := False
@@ -299,6 +300,7 @@ Class ReaHotkey {
                 }
                 Else {
                     ReaHotkey.TurnStandaloneTimersOn(ReaHotkey.FoundStandalone.Name)
+                    Sleep 250
                     If ReaHotkey.AutoFocusStandaloneOverlay = True {
                         ReaHotkey.FocusStandaloneOverlay()
                         ReaHotkey.AutoFocusStandaloneOverlay := False
