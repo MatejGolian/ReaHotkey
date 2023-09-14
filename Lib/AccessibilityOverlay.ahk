@@ -149,18 +149,27 @@ Class GraphicalControl Extends AccessibilityOverlayControl {
     
 }
 
-Class ActivatableHotspot Extends AccessibilityOverlayControl {
+Class Hotspot Extends AccessibilityOverlayControl {
     
     ControlType := "Hotspot"
-    OnActivateFunction := Array()
-    OnFocusFunction := Array()
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(XCoordinate, YCoordinate, OnFocusFunction := "", OnActivateFunction := "") {
+    __New(XCoordinate, YCoordinate) {
         Super.__New()
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
+    }
+    
+}
+
+Class ActivatableHotspot Extends Hotspot {
+    
+    OnActivateFunction := Array()
+    OnFocusFunction := Array()
+    
+    __New(XCoordinate, YCoordinate, OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New(XCoordinate, YCoordinate)
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -191,17 +200,12 @@ Class ActivatableHotspot Extends AccessibilityOverlayControl {
     
 }
 
-Class FocusableHotspot Extends AccessibilityOverlayControl {
+Class FocusableHotspot Extends Hotspot {
     
-    ControlType := "Hotspot"
     OnFocusFunction := Array()
-    XCoordinate := 0
-    YCoordinate := 0
     
     __New(XCoordinate, YCoordinate, OnFocusFunction := "") {
-        Super.__New()
-        This.XCoordinate := XCoordinate
-        This.YCoordinate := YCoordinate
+        Super.__New(XCoordinate, YCoordinate)
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -1222,20 +1226,7 @@ Class CustomComboBox Extends FocusableCustom {
 
 Class CustomControl Extends ActivatableCustom {
     
-    ControlType := "Custom"
     ControlTypeLabel := "custom"
-    
-    __New(OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(OnFocusFunction, OnActivateFunction)
-    }
-    
-    Activate(CurrentControlID := 0) {
-        Super.Activate(CurrentControlID)
-    }
-    
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-    }
     
 }
 
