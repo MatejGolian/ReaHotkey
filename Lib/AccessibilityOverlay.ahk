@@ -3,7 +3,7 @@
 Class AccessibilityControl {
     
     ControlID := 0
-    ControlType := "Control"
+    ControlType := "AccessibilityControl"
     SuperordinateControlID := 0
     
     __New() {
