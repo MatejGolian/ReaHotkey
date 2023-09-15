@@ -527,7 +527,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Clone.CurrentControlID := 0
         For PropertyName, PropertyValue In This.OwnProps()
         If PropertyName != "ChildControls" And PropertyName != "ControlID" And PropertyName != "CurrentControlID" And PropertyName != "SuperordinateControlID"
-        If Clone.%PropertyName% != PropertyValue
         Clone.%PropertyName% := PropertyValue
         For CurrentControl In This.ChildControls
         Switch(CurrentControl.__Class) {
