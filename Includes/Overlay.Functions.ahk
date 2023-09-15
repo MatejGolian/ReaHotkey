@@ -149,11 +149,11 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
 ChooseOverlay(Type) {
     SetTimer ReaHotkey.ManageState, 0
     ReaHotkey.Turn%Type%TimersOff()
-    ReaHotkey.TurnHotkeysOff()
+    ReaHotkey.Turn%Type%HotkeysOff()
     CreateOverlayMenu(ReaHotkey.FoundPlugin, Type).Show()
     SetTimer ReaHotkey.ManageState, 100
     ReaHotkey.Turn%Type%TimersOn(ReaHotkey.Found%Type%.Name)
-    ReaHotkey.TurnHotkeysOn()
+    ReaHotkey.Turn%Type%HotkeysOn()
 }
 
 ChoosePluginOverlay(*) {
