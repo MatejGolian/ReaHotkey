@@ -22,9 +22,11 @@ A_TrayMenu.Add("&Close", ReaHotkey.Close)
 
 AccessibilityOverlay.Speak("ReaHotkey ready")
 
-#Include Includes/Overlay.Definitions.ahk
-#Include Includes/Overlay.Functions.ahk
+ReaHotkey.TurnPluginHotkeysOff()
+ReaHotkey.TurnStandaloneHotkeysOff()
+SetTimer ReaHotkey.ManageState, 100
+
 #Include Includes/Plugin.Context.ahk
 #Include Includes/Standalone.Context.ahk
-
-SetTimer ReaHotkey.ManageState, 100
+#Include Includes/Overlay.Definitions.ahk
+#Include Includes/Overlay.Functions.ahk
