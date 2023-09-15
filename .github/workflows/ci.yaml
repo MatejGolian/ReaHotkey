@@ -25,7 +25,7 @@ jobs:
       -
         name: "Prepare artifact"
         run: |
-          xcopy Images build\Images /I
+          xcopy Images build\Images /I /S
           xcopy Sounds build\Sounds /I
           xcopy bassasio32.dll build
           xcopy bassasio64.dll build
