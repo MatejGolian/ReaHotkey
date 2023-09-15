@@ -3,56 +3,96 @@
 #HotIf
 
 Tab:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusNextControl()
 }
 
 +Tab:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     StandaloneOverlay.FocusPreviousControl()
 }
 
 ^Tab:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     ReaHotkey.FocusNextTab(StandaloneOverlay)
 }
 
 ^+Tab:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
     ReaHotkey.FocusPreviousTab(StandaloneOverlay)
 }
 
-~Right:: {
+Right:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
-    StandaloneOverlay.FocusNextTab()
+    If StandaloneOverlay.GetCurrentControl() Is Object
+    Switch(StandaloneOverlay.GetCurrentControl().ControlType) {
+        Case "Edit":
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
+        Default:
+        StandaloneOverlay.FocusNextTab()
+    }
 }
 
-~Left:: {
+Left:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
-    StandaloneOverlay.FocusPreviousTab()
+    If StandaloneOverlay.GetCurrentControl() Is Object
+    Switch(StandaloneOverlay.GetCurrentControl().ControlType) {
+        Case "Edit":
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
+        Default:
+        StandaloneOverlay.FocusPreviousTab()
+    }
 }
 
-~Up::
-~Down:: {
+Up::
+Down:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
-    If StandaloneOverlay.GetCurrentControl() Is Object And StandaloneOverlay.GetCurrentControl().ControlType == "ComboBox"
-    StandaloneOverlay.GetCurrentControl().Focus(StandaloneOverlay.GetCurrentControl().ControlID, 1)
+    If StandaloneOverlay.GetCurrentControl() Is Object
+    Switch(StandaloneOverlay.GetCurrentControl().ControlType) {
+        Case "ComboBox":
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        StandaloneOverlay.GetCurrentControl().ChangeValue()
+        StandaloneOverlay.GetCurrentControl().ReportValue()
+        Hotkey A_ThisHotkey, "On"
+    }
 }
 
-~Enter::
-~Space:: {
+Enter::
+Space:: {
+    Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
-    StandaloneOverlay.ActivateCurrentControl()
+    If StandaloneOverlay.GetCurrentControl() Is Object
+    Switch(StandaloneOverlay.GetCurrentControl().ControlType) {
+        Case "Edit":
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
+        Default:
+        StandaloneOverlay.ActivateCurrentControl()
+    }
 }
 
-~Ctrl:: {
+Ctrl:: {
+    Thread "NoTimers"
     AccessibilityOverlay.StopSpeech()
 }

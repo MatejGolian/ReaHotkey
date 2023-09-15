@@ -114,11 +114,13 @@ Static ActivateInputDeviceButton(Button) {
             DevsMenu.Check(Dev["Name"])
     }
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     DevsMenu.Show()
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static ClickInputDeviceChannelButton(Button, Device, Channel, *) {

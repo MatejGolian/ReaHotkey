@@ -18,6 +18,7 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
   - only standalone support for now
   - not all features are supported, nor do we know if they ever will be (see [below](#dubler2))
 
+<<<<<<< HEAD
 ## General Notes
 Because ReaHotkey also passes through some keys to the application window itself, it's highly recommended to enable the 'Send all keyboard input to plug-in' option in REAPER's FX menu, when interacting with a supported plug-in interface.
 

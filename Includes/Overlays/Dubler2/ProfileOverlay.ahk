@@ -138,11 +138,13 @@ Static ActivateSynthPresetButton(Button) {
 
     PresetsMenu.Check(Dubler2.ProfileLoaded["Current"]["synthPreset"])
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     PresetsMenu.Show()
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static ClickSynthPresetButton(Button, Preset, *) {
@@ -181,11 +183,13 @@ Static ActivateChordsVoicingPresetButton(Button) {
 
     PresetsMenu.Check(Dubler2.ProfileLoaded["Current"]["Chords"]["voicingPreset"])
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     PresetsMenu.Show()
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static ClickChordsVoicingPresetButton(Button, Preset, *) {
@@ -220,11 +224,13 @@ Static ActivateChordPresetButton(Button) {
     PresetsMenu.Check(Dubler2.ProfileLoaded["Current"]["Chords"]["chordPreset"])
     PresetsMenu.Disable("Custom")
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     PresetsMenu.Show()
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static ClickChordPresetButton(Button, Preset, *) {
@@ -254,11 +260,13 @@ Static ActivateKeyButton(Button) {
 
     KeyMenu.Check(Dubler2.ProfileLoaded["Current"]["Scale"]["rootName"])
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     KeyMenu.Show()
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static ClickKeyButton(Button, Key, *) {
@@ -306,11 +314,13 @@ Static ActivateScaleButton(Button) {
 
     ScaleMenu.Check(Dubler2.ProfileLoaded["Current"]["Scale"]["patternName"])
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     ScaleMenu.Show()
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static ClickScaleButton(Button, Scale, *) {
@@ -376,11 +386,13 @@ Static ActivateNotesButton(Button) {
             NotesMenu.Disable(Note)
     }
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     NotesMenu.Show()
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static ClickNotesButton(Note, *) {
@@ -415,11 +427,13 @@ Static ClickNotesButton(Note, *) {
 
 Static ActivatePitchStickinessButton(Button) {
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     Stickiness := InputBox("Pitch Bend Stickiness in % (from 0 to 100):", "ReaHotkey", , Integer(Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchStickiness"] * 100))
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
@@ -450,11 +464,13 @@ Static ActivatePitchStickinessButton(Button) {
 
 Static ActivatePitchInputGainButton(Button) {
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     Gain := InputBox("Pitch Input Gain in % (from 0 to 100):", "ReaHotkey", , Integer(Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchInputGain"] * 100))
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
@@ -587,20 +603,24 @@ Static ClickTriggerButton(Button) {
     If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["numExamples"] == 0
         TriggerMenu.Disable("Clear all takes")
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     TriggerMenu.Show()
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static RenameTrigger(Button, *) {
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     Name := InputBox("Trigger Name: ", "ReaHotkey", , Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["name"])
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
@@ -630,12 +650,15 @@ Static DeleteTrigger(Index, *) {
 
     Criteria := ReaHotkey.StandaloneWinCriteria
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
 
     Confirmation := MsgBox("Do you really want to delete the trigger " . Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["name"] . "?", "ReaHotkey", 4)
+
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
@@ -703,11 +726,13 @@ Static ClearAllTriggerTakes(Index, *) {
 
 Static ChangeTriggerMidiNote(Index, *) {
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     MidiNote := InputBox("Midi Note (either note or numeric value):", "ReaHotkey", , Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["midiNote"])
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
@@ -765,11 +790,13 @@ Static ActivatePitchOctaveShiftButton(Button) {
 
     OctaveShiftMenu.Check((Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"])
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     OctaveShiftMenu.Show()
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static ClickPitchOctaveShiftButton(Button, Octave, *) {
@@ -798,11 +825,13 @@ Static ActivateChordsOctaveShiftButton(Button) {
 
     OctaveShiftMenu.Check((Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"])
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     OctaveShiftMenu.Show()
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static ClickChordsOctaveShiftButton(Button, Octave, *) {
@@ -828,11 +857,13 @@ Static ClickChordsOctaveShiftButton(Button, Octave, *) {
 
 Static ActivatePitchBendRangeButton(Button) {
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     Range := InputBox("Pitch Bend Range (From 1 to 48 semitones):", "ReaHotkey", , Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchBendRange"])
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
@@ -863,11 +894,13 @@ Static ActivatePitchBendRangeButton(Button) {
 
 Static ActivateTriggerSensitivityButton(Button) {
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     Sensitivity := InputBox("Trigger Sensitivity in % (from 0 to 100):", "ReaHotkey", , Integer(Dubler2.ProfileLoaded["Current"]["DublerModel"]["triggerSensitivity"] * 100))
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 

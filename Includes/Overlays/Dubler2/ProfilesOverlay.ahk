@@ -27,11 +27,13 @@ Static ActivateProfileButton(Button) {
     ActionsMenu.Add("Duplicate Profile", ObjBindMethod(Dubler2, "DuplicateProfile", Button.ProfileFile))
     ActionsMenu.Add("Delete Profile", ObjBindMethod(Dubler2, "DeleteProfile", Button.ProfileFile, Button.Index))
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     ActionsMenu.Show()
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 }
@@ -53,11 +55,13 @@ Static DuplicateProfile(ProfileFile, *) {
     Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . ProfileFile, "UTF-8")
     ProfileObj := Jxon_Load(&Profile)
 
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
     Confirmation := MsgBox("Do you want to duplicate the profile " . ProfileObj["profileName"], "ReaHotkey", 4)
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 
     If Not Confirmation == "Yes"
         Return
@@ -107,12 +111,14 @@ Static DeleteProfile(ProfileFile, Index, *) {
 
     Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . ProfileFile, "UTF-8")
     ProfileObj := Jxon_Load(&Profile)
-    SetTimer ReaHotkey.ManageInput, 0
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnHotkeysOff()
 
     Confirmation := MsgBox("Do you really want to delete the profile " . ProfileObj["profileName"] . "?", "ReaHotkey", 4)
     ReaHotkey.TurnHotkeysOn()
-    SetTimer ReaHotkey.ManageInput, 100
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
 
     If Not Confirmation == "Yes"
         Return
