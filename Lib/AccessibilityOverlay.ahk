@@ -583,9 +583,15 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             For PropertyName, PropertyValue In CurrentControl.OwnProps()
             If !HasProp(LastAddedChild, PropertyName)
             LastAddedChild.%PropertyName% := PropertyValue
+            Else
+            If PropertyName != "ControlID"
+            LastAddedChild.%PropertyName% := PropertyValue
         }
         For PropertyName, PropertyValue In This.OwnProps()
         If !HasProp(Clone, PropertyName)
+        Clone.%PropertyName% := PropertyValue
+        Else
+        If PropertyName != "ControlID"
         Clone.%PropertyName% := PropertyValue
         Return Clone
     }
@@ -1727,7 +1733,7 @@ Class GraphicalTab Extends AccessibilityOverlay {
             This.FoundYCoordinate := 0
             This.State := -1
         }
-        }
+    }
     
 }
 
