@@ -533,59 +533,33 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Case "OCRTab":
             Clone := OCRTab(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale, This.OnFocusFunction)
         }
-        If This.ChildControls.Length > 0
-        For CurrentControl In This.ChildControls {
-            Switch(CurrentControl.__Class) {
-                Case "AccessibilityOverlay":
-                If CurrentControl.ChildControls.Length = 0
-                Clone.AddAccessibilityOverlay(CurrentControl.Label)
-                Else
-                Clone.AddControl(CurrentControl.Clone())
-                Case "CustomButton":
-                Clone.AddCustomButton(CurrentControl.Label, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
-                Case "CustomComboBox":
-                Clone.AddCustomComboBox(CurrentControl.Label, CurrentControl.OnFocusFunction, CurrentControl.OnChangeFunction)
-                Case "CustomControl":
-                Clone.AddCustomControl(CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
-                Case "CustomEdit":
-                Clone.AddCustomEdit(CurrentControl.Label, CurrentControl.OnFocusFunction)
-                Case "GraphicalButton":
-                Clone.AddGraphicalButton(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OnImage, CurrentControl.OnHoverImage, CurrentControl.OffImage, CurrentControl.OffHoverImage, CurrentControl.MouseXOffset, CurrentControl.MouseYOffset, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
-                Case "GraphicalCheckbox":
-                Clone.AddGraphicalCheckbox(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OnImage, CurrentControl.OnHoverImage, CurrentControl.OffImage, CurrentControl.OffHoverImage, CurrentControl.MouseXOffset, CurrentControl.MouseYOffset, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
-                Case "HotspotButton":
-                Clone.AddHotspotButton(CurrentControl.Label, CurrentControl.XCoordinate, CurrentControl.YCoordinate, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
-                Case "HotspotComboBox":
-                Clone.AddHotspotComboBox(CurrentControl.Label, CurrentControl.XCoordinate, CurrentControl.YCoordinate, CurrentControl.OnFocusFunction, CurrentControl.OnChangeFunction)
-                Case "HotspotEdit":
-                Clone.AddHotspotEdit(CurrentControl.Label, CurrentControl.XCoordinate, CurrentControl.YCoordinate, CurrentControl.OnFocusFunction)
-                Case "OCRButton":
-                Clone.AddOCRButton(CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OCRLanguage, CurrentControl.OCRScale, CurrentControl.OnFocusFunction, CurrentControl.OnActivateFunction)
-                Case "OCRComboBox":
-                Clone.AddOCRComboBox(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OCRLanguage, CurrentControl.OCRScale, CurrentControl.OnFocusFunction, CurrentControl.OnChangeFunction)
-                Case "OCREdit":
-                Clone.AddOCREdit(CurrentControl.Label, CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OCRLanguage, CurrentControl.OCRScale, CurrentControl.OnFocusFunction)
-                Case "OCRText":
-                Clone.AddOCRText(CurrentControl.RegionX1Coordinate, CurrentControl.RegionY1Coordinate, CurrentControl.RegionX2Coordinate, CurrentControl.RegionY2Coordinate, CurrentControl.OCRLanguage, CurrentControl.OCRScale)
-                Case "StaticText":
-                Clone.AddStaticText(CurrentControl.Text)
-                Case "TabControl":
-                If CurrentControl.Tabs.Length = 0 {
-                    Clone.AddTabControl(CurrentControl.Label)
-                }
-                Else {
-                    ClonedTabControl := Clone.AddTabControl(CurrentControl.Label)
-                    For CurrentTab In CurrentControl.Tabs
-                    ClonedTabControl.AddTabs(CurrentTab.Clone())
-                }
-            }
-            LastAddedChild := Clone.ChildControls[Clone.ChildControls.Length]
+        For CurrentControl In This.ChildControls
+        Switch(CurrentControl.__Class) {
+            Case "TabControl":
+            ClonedControl := Clone.AddTabControl(CurrentControl.Label)
+            For CurrentTab In CurrentControl.Tabs
+            ClonedControl.AddTabs(CurrentTab.Clone())
             For PropertyName, PropertyValue In CurrentControl.OwnProps()
-            If !HasProp(LastAddedChild, PropertyName)
-            LastAddedChild.%PropertyName% := PropertyValue
+            If !HasProp(ClonedControl, PropertyName)
+            ClonedControl.%PropertyName% := PropertyValue
+            Else
+            If PropertyName != "ControlID"And PropertyName != "CurrentTab" And PropertyName != "SuperordinateControlID" And PropertyName != "Tabs"
+            If ClonedControl.%PropertyName% != PropertyValue
+            ClonedControl.%PropertyName% := PropertyValue
+            Default:
+            ClonedControl := AccessibilityControl()
+            For PropertyName, PropertyValue In CurrentControl.OwnProps()
+            If PropertyName != "ControlID" And PropertyName != "SuperordinateControlID"
+            ClonedControl.%PropertyName% := PropertyValue
+            ClonedControl.Base := CurrentControl.Base
+            Clone.AddControl(ClonedControl)
         }
         For PropertyName, PropertyValue In This.OwnProps()
         If !HasProp(Clone, PropertyName)
+        Clone.%PropertyName% := PropertyValue
+        Else
+        If PropertyName != "ChildControls" And PropertyName != "ControlID" And PropertyName != "CurrentControlID" And PropertyName != "SuperordinateControlID"
+        If Clone.%PropertyName% != PropertyValue
         Clone.%PropertyName% := PropertyValue
         Return Clone
     }
@@ -1727,7 +1701,7 @@ Class GraphicalTab Extends AccessibilityOverlay {
             This.FoundYCoordinate := 0
             This.State := -1
         }
-        }
+    }
     
 }
 
