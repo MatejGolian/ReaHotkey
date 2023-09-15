@@ -27,6 +27,8 @@ jobs:
         run: |
           xcopy Images build\Images /I
           xcopy Sounds build\Sounds /I
+          xcopy bassasio32.dll build
+          xcopy bassasio64.dll build
           xcopy nvdaControllerClient32.dll build
           xcopy nvdaControllerClient64.dll build
       -

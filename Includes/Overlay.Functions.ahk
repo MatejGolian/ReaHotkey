@@ -1,5 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 
+Global A_IsUnicode := True
+
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
     OverlayList := Plugin.GetOverlays(ReaHotkey.FoundPlugin.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
@@ -168,4 +170,15 @@ InArray(Needle, Haystack) {
     If FoundValue == Needle
     Return FoundIndex
     Return False
+}
+
+ConvertBase(InputBase, OutputBase, nptr)    ; Base 2 - 36
+{
+    static u := A_IsUnicode ? "_wcstoui64" : "_strtoui64"
+    static v := A_IsUnicode ? "_i64tow"    : "_i64toa"
+    s := ""
+    VarSetStrCapacity(&s, 66)
+    value := DllCall("msvcrt.dll\" u, "Str", nptr, "UInt", 0, "UInt", InputBase, "CDECL Int64")
+    DllCall("msvcrt.dll\" v, "Int64", value, "Str", s, "UInt", OutputBase, "CDECL")
+    return s
 }

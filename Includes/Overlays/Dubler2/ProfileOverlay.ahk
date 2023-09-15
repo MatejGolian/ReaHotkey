@@ -978,7 +978,5 @@ Static CreateProfileOverlay(Overlay) {
 
     Overlay.AddTabControl("Profile Settings", PlayTab, PitchTab, TriggersTab, ChordsTab)
 
-    Dubler2.SetupAudioCalibrationButton(Overlay)
-
     return Overlay
 }

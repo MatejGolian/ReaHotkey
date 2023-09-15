@@ -9,6 +9,12 @@ Class Dubler2 {
             "Detector", ObjBindMethod(Dubler2, "DetectFixSettings"),
         ),
         Map(
+            "Label", "Dubler 2 Audio Calibration",
+            "Generator", ObjBindMethod(Dubler2, "CreateAudioCalibrationOverlay"),
+            "Detector", ObjBindMethod(Dubler2, "DetectAudioCalibrationOverlay"),
+            "Popup", True,
+        ),
+        Map(
             "Image", LoadPicture(A_ScriptDir . "\Images\Dubler2ApplyScalePopup.png"),
             "FromX", 0,
             "FromY", 0,
@@ -74,15 +80,6 @@ Class Dubler2 {
             "ToY", 300,
             "Label", "Dubler 2 Profiles",
             "Generator", ObjBindMethod(Dubler2, "CreateProfilesOverlay"),
-        ),
-        Map(
-            "Image", LoadPicture(A_ScriptDir . "\Images\Dubler2AudioCalibration.png"),
-            "FromX", 200,
-            "FromY", 150,
-            "ToX", 800,
-            "ToY", 550,
-            "Label", "Dubler 2 Audio Calibration",
-            "Generator", ObjBindMethod(Dubler2, "CreateAudioCalibrationOverlay"),
         ),
     )
 
