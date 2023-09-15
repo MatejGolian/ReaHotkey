@@ -311,6 +311,13 @@ ConvertBase(InputBase, OutputBase, nptr)    ; Base 2 - 36
     return s
 }
 
+StrJoin(obj,delimiter:="",OmitChars:=""){
+    S := obj[1]
+    Loop obj.Length - 1
+        S .= delimiter Trim(obj[A_Index+1],OmitChars)
+    return S
+}
+
 GetCurrentControlClass() {
     Try
     If ControlGetFocus("A") = 0

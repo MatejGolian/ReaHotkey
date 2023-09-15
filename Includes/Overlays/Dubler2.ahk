@@ -1,5 +1,68 @@
 #Requires AutoHotkey v2.0
 
+Class PopulatedComboBox extends CustomComboBox {
+
+    Values := Array()
+    
+    __New(Label, OnFocusFunction := "", OnChangeFunction := "") {
+
+        Change := Array(ObjBindMethod(This, "OnChange"))
+
+        If OnChangeFunction != "" {
+            If Not OnChangeFunction Is Array
+                Change.Push(OnChangeFunction)
+            Else
+                Change.Push(OnChangeFunction*)
+        }
+
+        Super.__New(Label, OnFocusFunction, Change)
+    }
+
+    AddItem(Label, Selector := "") {
+        This.Values.Push(Map(
+            "Label", Label,
+            "Selector", Selector,
+        ))
+
+        If This.Value == ""
+            This.Value := Label
+    }
+
+    OnChange(*) {
+
+        FI := 0
+        Hk := A_ThisHotkey
+        
+        If This.Values.Length == 0
+            Return
+
+        Loop This.Values.Length {
+            If This.Values[A_Index]["Label"] == This.Value {
+                FI := A_Index
+                Break
+            }
+        }
+
+        If FI == 0
+            Return
+        
+        If Hk == "Up" And FI > 1
+            FI -= 1
+        Else If Hk == "Down" And FI < This.Values.Length
+            FI += 1
+
+        This.SetValue(This.Values[FI]["Label"])
+        
+        If This.Values[FI]["Selector"] != ""
+            This.Values[FI]["Selector"]()
+    }
+
+    ClearItems() {
+        This.Values := Array()
+        This.SetValue("")
+    }
+}
+
 Class Dubler2 {
 
     Static OVERLAY_TRIGGERS := Array(

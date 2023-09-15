@@ -98,40 +98,6 @@ Static SetupAudioCalibrationButton(Overlay) {
     Overlay.AddControl(CustomButton("Calibrate audio device: " . (ASettings["audioInputDeviceName"] != "" ? ASettings["audioInputDeviceName"] : "Not calibrated"), ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ClickAudioCalibrationButton")))
 }
 
-Static ActivateInputDeviceButton(Button) {
-
-    DevsMenu := Menu()
-    
-    For Dev In Dubler2.ASIODevices {
-        DevMenu := Menu()
-        For Chan In Dev["InputChannels"] {
-            DevMenu.Add(Chan["Name"], ObjBindMethod(Dubler2, "ClickInputDeviceChannelButton", Button, Dev, A_Index))
-            If Dubler2.AudioSettings["audioInputDeviceName"] == Dev["Name"] And (1 << (A_Index - 1)) == ConvertBase(2, 10, Dubler2.AudioSettings["audioDeviceInChans"])
-                DevMenu.Check(Chan["Name"])
-        }
-        DevsMenu.Add(Dev["Name"], DevMenu)
-        If Dev["Name"] == Dubler2.AudioSettings["audioInputDeviceName"]
-            DevsMenu.Check(Dev["Name"])
-    }
-
-    SetTimer ReaHotkey.ManageState, 0
-    ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnHotkeysOff()
-    DevsMenu.Show()
-    ReaHotkey.TurnHotkeysOn()
-    ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
-}
-
-Static ClickInputDeviceChannelButton(Button, Device, Channel, *) {
-    Dubler2.AudioSettings["audioInputDeviceName"] := Device["Name"]
-    Dubler2.AudioSettings["audioOutputDeviceName"] := Device["Name"]
-    Dubler2.AudioSettings["audioDeviceInChans"] := ConvertBase(10, 2, 1 << (Channel - 1))
-    Dubler2.AudioSettings["audioDeviceRate"] := Device["Rate"]
-
-    Button.Label := "Input Device: " . Device["Name"] . ", " . Device["InputChannels"][Channel]["Name"]
-}
-
 Static CloseAudioCalibrationOverlay(*) {
     Dubler2.AudioSettings := ""
     Dubler2.ASIODevices := Array()
@@ -140,9 +106,62 @@ Static CloseAudioCalibrationOverlay(*) {
 }
 
 Static CreateAudioCalibrationOverlay(Overlay) {
+
+    SelectDevice(Device) {
+        AudioInputChannelCtrl.ClearItems()
+
+        For Chan in Device["InputChannels"] {
+            AudioInputChannelCtrl.AddItem(Chan["Name"])
+        }
+
+        AudioOutputChannelCtrl.ClearItems()
+
+        Groups := Map()
+
+        Loop Device["OutputChannels"].Length {
+            Group := Floor((A_Index - 1) / 2)
+            If Not Groups.Has(Group)
+                Groups.Set(Group, Array())
+            Groups[Group].Push(Device["OutputChannels"][A_Index]["Name"])
+        }
+
+        For _, Group In Groups {
+            AudioOutputChannelCtrl.AddItem(StrJoin(Group, " / "))
+        }
+
+        Dubler2.AudioSettings["audioInputDeviceName"] := Device["Name"]
+        Dubler2.AudioSettings["audioOutputDeviceName"] := Device["Name"]
+        Dubler2.AudioSettings["audioDeviceInChans"] := "1"
+        Dubler2.AudioSettings["audioDeviceOutChans"] := ""
+    }
+
+    CreateAudioDeviceControl() {
+
+        Ctrl := PopulatedComboBox("Audio Device")
+        
+        For Dev In Dubler2.ASIODevices {
+            Ctrl.AddItem(Dev["Name"], SelectDevice.Bind(Dev))
+
+            If Dubler2.AudioSettings["audioInputDeviceName"] == Dev["Name"] {
+                Ctrl.SetValue(Dev["Name"])
+                SelectDevice(Dev)
+            }
+        }
+
+        Ctrl.SetValue(Dubler2.AudioSettings["audioInputDeviceName"])
+
+        Return Ctrl
+    }
+
     Overlay.AddControl(CustomButton("Back", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CloseAudioCalibrationOverlay")))
-    
-    Overlay.AddControl(CustomButton("Input Device: " . (Dubler2.AudioSettings["audioInputDeviceName"] != "" ? Dubler2.AudioSettings["audioInputDeviceName"] : "not selected"), ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateInputDeviceButton")))
+
+    AudioInputChannelCtrl := PopulatedComboBox("Input channel")
+    AudioOutputChannelCtrl := PopulatedComboBox("Output Channel")
+    AudioDeviceCtrl := CreateAudioDeviceControl()
+
+    Overlay.AddControl(AudioDeviceCtrl)
+    Overlay.AddControl(AudioInputChannelCtrl)
+    Overlay.AddControl(AudioOutputChannelCtrl)
 
     Return Overlay
 }
