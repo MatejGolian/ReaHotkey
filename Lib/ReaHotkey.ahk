@@ -237,6 +237,15 @@ Class ReaHotkey {
         
     }
     
+    Class HandleError {
+        
+        Static Call(Exception, Mode) {
+            ReaHotkey.TurnPluginHotkeysOff()
+            ReaHotkey.TurnStandaloneHotkeysOff()
+        }
+        
+    }
+    
     Class ManageState {
         
         Static Call() {

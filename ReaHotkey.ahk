@@ -24,6 +24,7 @@ AccessibilityOverlay.Speak("ReaHotkey ready")
 
 ReaHotkey.TurnPluginHotkeysOff()
 ReaHotkey.TurnStandaloneHotkeysOff()
+OnError ReaHotkey.HandleError
 SetTimer ReaHotkey.ManageState, 100
 
 #Include Includes/Plugin.Context.ahk
