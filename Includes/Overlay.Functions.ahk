@@ -309,3 +309,16 @@ GetCurrentWindowID() {
     WindowID := False
     Return WindowID
 }
+
+TriggerHotkey(Type, HotkeyCommand) {
+    If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.Overlay Is AccessibilityOverlay
+    ReaHotkey.Found%Type%.Overlay.TriggerHotkey(HotkeyCommand)
+}
+
+TriggerPluginHotkey(HotkeyCommand) {
+    TriggerHotkey("Plugin", HotkeyCommand)
+}
+
+TriggerStandaloneHotkey(HotkeyCommand) {
+    TriggerHotkey("Standalone", HotkeyCommand)
+}
