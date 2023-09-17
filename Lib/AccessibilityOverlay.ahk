@@ -1035,6 +1035,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 ParentTabControl.CurrentTab := Index
                 If ReachableControl.ControlID != SiblingTab.ControlID
                 This.FocusControl(ParentTabControl.ControlID)
+                Else
+                ReachableControl.Focus(ReachableControl.controlID)
                 For HotkeyFunction In ReachableControl.HotkeyFunction
                 HotkeyFunction(ReachableControl)
                 Break 2
