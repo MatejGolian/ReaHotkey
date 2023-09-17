@@ -296,10 +296,10 @@ Class Dubler2 {
         Instance.SetTimer(ObjBindMethod(Dubler2, "SpeakNotes"), 100)
         Instance.SetTimer(ObjBindMethod(Dubler2, "SpeakRecordedTakes"), 100)
         Instance.SetHotkey("^N", ObjBindMethod(Dubler2, "ToggleNotesAnnouncement"))
-        Instance.SetHotkey("^1", ObjBindMethod(Dubler2, "SelectTab", 1))
-        Instance.SetHotkey("^2", ObjBindMethod(Dubler2, "SelectTab", 2))
-        Instance.SetHotkey("^3", ObjBindMethod(Dubler2, "SelectTab", 3))
-        Instance.SetHotkey("^4", ObjBindMethod(Dubler2, "SelectTab", 4))
+        Instance.SetHotkey("^1", TriggerStandaloneHotkey)
+        Instance.SetHotkey("^2", TriggerStandaloneHotkey)
+        Instance.SetHotkey("^3", TriggerStandaloneHotkey)
+        Instance.SetHotkey("^4", TriggerStandaloneHotkey)
         Dubler2.ProfileLoaded := Map(
             "Index", 0,
             "File", "",

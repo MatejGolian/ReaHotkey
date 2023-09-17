@@ -29,9 +29,9 @@ Static ActivateProfileButton(Button) {
 
     SetTimer ReaHotkey.ManageState, 0
     ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnHotkeysOff()
+    ReaHotkey.TurnStandaloneHotkeysOff()
     ActionsMenu.Show()
-    ReaHotkey.TurnHotkeysOn()
+    ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
     SetTimer ReaHotkey.ManageState, 100
 
@@ -57,9 +57,9 @@ Static DuplicateProfile(ProfileFile, *) {
 
     SetTimer ReaHotkey.ManageState, 0
     ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnHotkeysOff()
+    ReaHotkey.TurnStandaloneHotkeysOff()
     Confirmation := MsgBox("Do you want to duplicate the profile " . ProfileObj["profileName"], "ReaHotkey", 4)
-    ReaHotkey.TurnHotkeysOn()
+    ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
     SetTimer ReaHotkey.ManageState, 100
 
@@ -113,10 +113,10 @@ Static DeleteProfile(ProfileFile, Index, *) {
     ProfileObj := Jxon_Load(&Profile)
     SetTimer ReaHotkey.ManageState, 0
     ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnHotkeysOff()
+    ReaHotkey.TurnStandaloneHotkeysOff()
 
     Confirmation := MsgBox("Do you really want to delete the profile " . ProfileObj["profileName"] . "?", "ReaHotkey", 4)
-    ReaHotkey.TurnHotkeysOn()
+    ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
     SetTimer ReaHotkey.ManageState, 100
 
