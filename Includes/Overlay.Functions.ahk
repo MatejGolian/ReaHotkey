@@ -151,11 +151,11 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
 ChooseOverlay(Type) {
     SetTimer ReaHotkey.ManageState, 0
     ReaHotkey.Turn%Type%TimersOff()
-    ReaHotkey.TurnHotkeysOff()
+    ReaHotkey.Turn%Type%HotkeysOff()
     CreateOverlayMenu(ReaHotkey.FoundPlugin, Type).Show()
     SetTimer ReaHotkey.ManageState, 100
     ReaHotkey.Turn%Type%TimersOn(ReaHotkey.Found%Type%.Name)
-    ReaHotkey.TurnHotkeysOn()
+    ReaHotkey.Turn%Type%HotkeysOn()
 }
 
 ChoosePluginOverlay(*) {
@@ -335,4 +335,17 @@ GetCurrentWindowID() {
     Catch
     WindowID := False
     Return WindowID
+}
+
+TriggerHotkey(Type, HotkeyCommand) {
+    If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.Overlay Is AccessibilityOverlay
+    ReaHotkey.Found%Type%.Overlay.TriggerHotkey(HotkeyCommand)
+}
+
+TriggerPluginHotkey(HotkeyCommand) {
+    TriggerHotkey("Plugin", HotkeyCommand)
+}
+
+TriggerStandaloneHotkey(HotkeyCommand) {
+    TriggerHotkey("Standalone", HotkeyCommand)
 }
