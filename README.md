@@ -18,7 +18,6 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
   - only standalone support for now
   - not all features are supported, nor do we know if they ever will be (see [below](#dubler2))
 
-<<<<<<< HEAD
 ## General Notes
 Because ReaHotkey also passes through some keys to the application window itself, it's highly recommended to enable the 'Send all keyboard input to plug-in' option in REAPER's FX menu, when interacting with a supported plug-in interface.
 
@@ -36,6 +35,7 @@ This is a rather incomplete list of features we already support.
 * Full trigger support, including creation, renaming, deletion, recording and more
 * Full pitch and pitch bend support
 * Basic chords support, including enable/disable, voicing control and octave shifting
+* Audio Calibration support to use other microphones other than the Dubler Microphone
 
 ### Inaccessible Features
 
@@ -43,7 +43,6 @@ The following list also is a rather incomplete list of features that aren't curr
 
 * Extended chords support, like building custom chords presets
 * Dubler Companion Plug-in is currently not accessible
-* Audio settings are currently entirely inaccessible
 * Vowel envelopes are currently not controllable
 * User account settings aren't accessible
 * Some random pop-ups might not be accessible and disturb the workflow. Please let us know if you encounter one and tell us how to make them appear so that we can add support for them.
