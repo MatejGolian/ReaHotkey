@@ -301,8 +301,6 @@ Class Dubler2 {
     Static Init(Instance) {
         Instance.SetTimer(ObjBindMethod(Dubler2, "SetOverlay"), 100)
         Instance.SetTimer(ObjBindMethod(Dubler2, "AutoSaveProfile"), 100)
-        Instance.SetTimer(ObjBindMethod(Dubler2, "SpeakNotes"), 100)
-        Instance.SetTimer(ObjBindMethod(Dubler2, "SpeakRecordedTakes"), 100)
         Instance.SetHotkey("^N", ObjBindMethod(Dubler2, "ToggleNotesAnnouncement"))
         Instance.SetHotkey("^1", TriggerStandaloneHotkey)
         Instance.SetHotkey("^2", TriggerStandaloneHotkey)

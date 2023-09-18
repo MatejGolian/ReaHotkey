@@ -492,6 +492,8 @@ Static EnableNotesAnnouncement(*) {
 
     Dubler2.AnnounceNotes := True
 
+    Standalone.SetTimer("Dubler 2", ObjBindMethod(Dubler2, "SpeakNotes"), 100)
+
     Local Ctrl
     Overlay := ReaHotkey.FoundStandalone.Overlay
 
@@ -504,6 +506,8 @@ Static EnableNotesAnnouncement(*) {
 Static DisableNotesAnnouncement(Emitter := "", *) {
 
     Dubler2.AnnounceNotes := False
+
+    Standalone.SetTimer("Dubler 2", ObjBindMethod(Dubler2, "SpeakNotes"), 0)
 
     If Type(Emitter) != "String" And Emitter.ControlType == "Tab"
         Dubler2.FocusTab()
@@ -981,7 +985,7 @@ Static CreateProfileOverlay(Overlay) {
     PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch Bend enabled", 354, 501, ProfileObj["Pitch"]["pitchBendEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
     PitchTab.AddControl(CustomButton("Stickiness: " . Integer(ProfileObj["Pitch"]["pitchStickiness"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchStickinessButton")))
     PitchTab.AddControl(CustomButton("Pitch Bend Range: " . ProfileObj["Pitch"]["pitchBendRange"] . " semitones", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchBendRangeButton")))
-    PitchTab.AddControl(Dubler2.CustomCheckbox("Announce detected notes (press Ctrl+N to toggle)", ObjBindMethod(Dubler2, "AnnounceNotes"), ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "EnableNotesAnnouncement")))
+    PitchTab.AddControl(Dubler2.CustomCheckbox("Announce detected notes (press Ctrl+N to toggle)", Dubler2.AnnounceNotes, ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "ToggleNotesAnnouncement")))
 
     TriggersTab := HotspotTab("Triggers", 407, 105, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
 
