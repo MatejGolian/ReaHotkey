@@ -149,9 +149,11 @@ Static CreateAudioCalibrationOverlay(Overlay) {
 
     SelectInputChannel(Chan) {
         Dubler2.AudioSettings["audioDeviceInChans"] := ConvertBase(10, 2, 1 << (Chan - 1))
+        Dubler2.SelectComboBoxItem()
     }
 
     SelectOutputChannels(Group, Amount) {
+        Dubler2.SelectComboBoxItem()
 
         If Group == 1 {
             Dubler2.AudioSettings["audioDeviceOutChans"] := ""
@@ -204,12 +206,13 @@ Static CreateAudioCalibrationOverlay(Overlay) {
         If Not Init {
             Dubler2.AudioSettings["audioDeviceInChans"] := "1"
             Dubler2.AudioSettings["audioDeviceOutChans"] := ""
+            Dubler2.SelectComboBoxItem()
         }
     }
 
     CreateAudioDeviceControl() {
 
-        Ctrl := PopulatedComboBox("Audio Device")
+        Ctrl := PopulatedComboBox("Audio Device", ObjBindMethod(Dubler2, "FocusComboBox"))
         
         For Dev In Dubler2.ASIODevices {
             Ctrl.AddItem(Dev["Name"], SelectDevice.Bind(Dev))
@@ -227,8 +230,8 @@ Static CreateAudioCalibrationOverlay(Overlay) {
 
     Overlay.AddControl(CustomButton("Back", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CloseAudioCalibrationOverlay")))
 
-    AudioInputChannelCtrl := PopulatedComboBox("Input channel")
-    AudioOutputChannelCtrl := PopulatedComboBox("Output Channel")
+    AudioInputChannelCtrl := PopulatedComboBox("Input channel", ObjBindMethod(Dubler2, "FocusComboBox"))
+    AudioOutputChannelCtrl := PopulatedComboBox("Output Channel", ObjBindMethod(Dubler2, "FocusComboBox"))
     AudioDeviceCtrl := CreateAudioDeviceControl()
 
     Overlay.AddControl(AudioDeviceCtrl)

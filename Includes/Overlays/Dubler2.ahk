@@ -282,6 +282,14 @@ Class Dubler2 {
             Dubler2.SoundPlay("CheckboxUnchecked.mp3")
     }
 
+    Static FocusComboBox(*) {
+        Dubler2.SoundPlay("FocusCombobox.mp3")
+    }
+
+    Static SelectComboBoxItem(*) {
+        Dubler2.SoundPlay("ComboBoxSelected.mp3")
+    }
+
     Static FocusInput(*) {
         Dubler2.SoundPlay("FocusInput.mp3")
     }
