@@ -129,7 +129,6 @@ Static DetectAudioCalibrationOverlay(*) {
 Static ClickAudioCalibrationButton(*) {
     Dubler2.AudioSettings := Dubler2.ReadAudioSettings()
     Dubler2.ASIODevices := Dubler2.GetASIODevices()
-    Dubler2.CloseOverlay()
 }
 
 Static SetupAudioCalibrationButton(Overlay) {
