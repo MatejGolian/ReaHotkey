@@ -55,8 +55,8 @@ Class AccessibleMenu {
                 This.OpenSubmenu()
             }
             Else {
-                CurrentItem["CallbackOrSubmenu"](CurrentItem["Name"], This.CurrentItem, This)
                 This.Close()
+                CurrentItem["CallbackOrSubmenu"](CurrentItem["Name"], This.CurrentItem, This)
             }
             Else
             This.Close()
