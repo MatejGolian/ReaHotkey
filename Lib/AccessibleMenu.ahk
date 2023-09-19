@@ -1,6 +1,7 @@
 #Requires AutoHotkey v2.0
 
 Class AccessibleMenu {
+Class AccessibleMenu {
     
     CurrentItem := 0
     Items := Array()
@@ -169,6 +170,8 @@ Class AccessibleMenu {
     
     Insert(ItemToInsertBefore, NewItemName, CallbackOrSubmenu := "", Options := "") {
         If This.FindItem(ItemToInsertBefore) > 0 {
+            If CallbackOrSubmenu Is AccessibleMenu
+            CallbackOrSubmenu.ParrentMenu := This
             This.Items.InsertAt(This.FindItem(ItemToInsertBefore), Map("Name", NewItemName, "CallbackOrSubmenu", CallbackOrSubmenu, "Checked", 0, "Enabled", 1))
         }
     }
