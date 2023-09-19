@@ -1,7 +1,6 @@
 #Requires AutoHotkey v2.0
 
 Class AccessibleMenu {
-Class AccessibleMenu {
     
     CurrentItem := 0
     Items := Array()
