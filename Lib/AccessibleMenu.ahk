@@ -37,6 +37,16 @@ Class AccessibleMenu {
         }
     }
     
+    CloseSubmenu() {
+        If This.Items.Length > 0 {
+            If This.ParrentMenu Is AccessibleMenu {
+                This := This.ParrentMenu
+                This.FocusCurrentItem()
+                AccessibleMenu.CurrentMenu := This
+            }
+        }
+    }
+    
     ChooseItem() {
         If This.Items.Length > 0 {
             CurrentItem := This.GetCurrentItem()
@@ -52,16 +62,6 @@ Class AccessibleMenu {
             This.Close()
         }
         Return 0
-    }
-    
-    CloseSubmenu() {
-        If This.Items.Length > 0 {
-            If This.ParrentMenu Is AccessibleMenu {
-                This := This.ParrentMenu
-                This.FocusCurrentItem()
-                AccessibleMenu.CurrentMenu := This
-            }
-        }
     }
     
     Delete(MenuItemName) {
@@ -100,7 +100,7 @@ Class AccessibleMenu {
     }
     
     FocusCurrentItem() {
-        If This.Items.Length > 0 {
+        If This.Items.Length > 0 And This.CurrentItem > 0 {
             If This.Items[This.CurrentItem]["Enabled"] = 0 And This.Items[This.CurrentItem]["Checked"] = 1 {
                 If Not This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu
                 AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.DisabledString . " " . This.CheckedString)
@@ -154,7 +154,7 @@ Class AccessibleMenu {
     FocusPreviousItem() {
         If This.Items.Length > 0 {
             This.CurrentItem--
-            If This.CurrentItem = 0
+            If This.CurrentItem <= 0
             This.CurrentItem := This.Items.Length
             Return This.FocusCurrentItem()
         }
@@ -162,7 +162,7 @@ Class AccessibleMenu {
     }
     
     GetCurrentItem() {
-        If This.Items.Length >0
+        If This.Items.Length >0 And This.CurrentItem > 0 And This.CurrentItem <= This.Items.Length
         Return This.Items[This.CurrentItem]
         Return 0
     }
@@ -174,7 +174,7 @@ Class AccessibleMenu {
     }
     
     OpenSubmenu() {
-        If This.Items.Length > 0 {
+        If This.Items.Length > 0 And This.CurrentItem > 0 {
             If This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu And This.Items[This.CurrentItem]["Enabled"] = 1 {
                 This := This.Items[This.CurrentItem]["CallbackOrSubmenu"]
                 This.FocusFirstItem()
@@ -262,5 +262,4 @@ Class AccessibleMenu {
         Return Translations
     }
     
-    }
-        
+}
