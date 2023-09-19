@@ -10,6 +10,7 @@ SetTitleMatchMode "RegEx"
 SetWorkingDir A_InitialWorkingDir
 
 #Include <AccessibilityOverlay>
+#Include <AccessibleMenu>
 #Include <OCR>
 #Include <Plugin>
 #Include <ReaHotkey>

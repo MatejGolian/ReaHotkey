@@ -1,0 +1,266 @@
+#Requires AutoHotkey v2.0
+
+Class AccessibleMenu {
+    
+    CurrentItem := 0
+    Items := Array()
+    ParrentMenu := Object()
+    Static CurrentMenu := False
+    CheckedString := "checked"
+    ContextMenuString := "context menu"
+    DisabledString := "unavailable"
+    SubmenuString := "submenu"
+    Static Translations := AccessibleMenu.SetupTranslations()
+    
+    Add(MenuItemName, CallbackOrSubmenu := "", Options := "") {
+        If MenuItemName != "" {
+            If This.FindItem(MenuItemName) = 0 {
+                If CallbackOrSubmenu Is AccessibleMenu
+                CallbackOrSubmenu.ParrentMenu := This
+                This.Items.Push(Map("Name", MenuItemName, "CallbackOrSubmenu", CallbackOrSubmenu, "Checked", 0, "Enabled", 1))
+            }
+            Else {
+                This.Items[This.FindItem(MenuItemName)]["CallbackOrSubmenu"] := CallbackOrSubmenu
+            }
+        }
+    }
+    
+    Check(MenuItemName) {
+        If This.FindItem(MenuItemName) > 0 {
+        }
+        This.Items[This.FindItem(MenuItemName)]["Checked"] := 1
+    }
+    
+    Close() {
+        If AccessibleMenu.CurrentMenu = This {
+            AccessibleMenu.CurrentMenu := False
+        }
+    }
+    
+    ChooseItem() {
+        If This.Items.Length > 0 {
+            CurrentItem := This.GetCurrentItem()
+            If CurrentItem Is Object And CurrentItem["Enabled"] = 1
+            If CurrentItem["CallbackOrSubmenu"] Is AccessibleMenu {
+                This.OpenSubmenu()
+            }
+            Else {
+                CurrentItem["CallbackOrSubmenu"](CurrentItem["Name"], This.CurrentItem, This)
+                This.Close()
+            }
+            Else
+            This.Close()
+        }
+        Return 0
+    }
+    
+    CloseSubmenu() {
+        If This.Items.Length > 0 {
+            If This.ParrentMenu Is AccessibleMenu {
+                This := This.ParrentMenu
+                This.FocusCurrentItem()
+                AccessibleMenu.CurrentMenu := This
+            }
+        }
+    }
+    
+    Delete(MenuItemName) {
+        If This.FindItem(MenuItemName) > 0 {
+            This.Items.RemoveAt(This.FindItem(MenuItemName))
+        }
+    }
+    
+    Disable(MenuItemName) {
+        If This.FindItem(MenuItemName) > 0 {
+            This.Items[This.FindItem(MenuItemName)]["Enabled"] := 0
+        }
+    }
+    
+    Enable(MenuItemName) {
+        If This.FindItem(MenuItemName) > 0 {
+            This.Items[This.FindItem(MenuItemName)]["Enabled"] := 1
+        }
+    }
+    
+    FindItem(MenuItemName) {
+        If MenuItemName != "" And This.Items.Length > 0
+        If MenuItemName Is Integer And MenuItemName <= 0 {
+            Return 0
+        }
+        Else If MenuItemName Is Integer And MenuItemName > 0 {
+            If MenuItemName <= This.Items.Length
+            Return MenuItemName
+        }
+        Else {
+            For Position, Item In This.Items
+            If Item["Name"] = MenuItemName
+            Return Position
+        }
+        Return 0
+    }
+    
+    FocusCurrentItem() {
+        If This.Items.Length > 0 {
+            If This.Items[This.CurrentItem]["Enabled"] = 0 And This.Items[This.CurrentItem]["Checked"] = 1 {
+                If Not This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu
+                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.DisabledString . " " . This.CheckedString)
+                Else
+                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.DisabledString . " " . This.CheckedString . " " This.SubmenuString)
+                Return 1
+            }
+            Else If This.Items[This.CurrentItem]["Enabled"] = 0 {
+                If Not This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu
+                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.DisabledString)
+                Else
+                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.DisabledString . " " This.SubmenuString)
+                Return 1
+            }
+            Else If This.Items[This.CurrentItem]["Checked"] = 1 {
+                If Not This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu
+                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.CheckedString)
+                Else
+                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.CheckedString . " " This.SubmenuString)
+                Return 1
+            }
+            Else {
+                If Not This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu
+                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"])
+                Else
+                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.SubmenuString)
+                Return 1
+            }
+        }
+        Return 0
+    }
+    
+    FocusFirstItem() {
+        If This.Items.Length > 0 {
+            This.CurrentItem := 1
+            Return This.FocusCurrentItem()
+        }
+        Return 0
+    }
+    
+    FocusNextItem() {
+        If This.Items.Length > 0 {
+            This.CurrentItem++
+            If This.CurrentItem > This.Items.Length
+            This.CurrentItem := 1
+            Return This.FocusCurrentItem()
+        }
+        Return 0
+    }
+    
+    FocusPreviousItem() {
+        If This.Items.Length > 0 {
+            This.CurrentItem--
+            If This.CurrentItem = 0
+            This.CurrentItem := This.Items.Length
+            Return This.FocusCurrentItem()
+        }
+        Return 0
+    }
+    
+    GetCurrentItem() {
+        If This.Items.Length >0
+        Return This.Items[This.CurrentItem]
+        Return 0
+    }
+    
+    Insert(ItemToInsertBefore, NewItemName, CallbackOrSubmenu := "", Options := "") {
+        If This.FindItem(ItemToInsertBefore) > 0 {
+            This.Items.InsertAt(This.FindItem(ItemToInsertBefore), Map("Name", NewItemName, "CallbackOrSubmenu", CallbackOrSubmenu, "Checked", 0, "Enabled", 1))
+        }
+    }
+    
+    OpenSubmenu() {
+        If This.Items.Length > 0 {
+            If This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu And This.Items[This.CurrentItem]["Enabled"] = 1 {
+                This := This.Items[This.CurrentItem]["CallbackOrSubmenu"]
+                This.FocusFirstItem()
+                AccessibleMenu.CurrentMenu := This
+            }
+        }
+    }
+    
+    Rename(MenuItemName, NewName := "") {
+        If This.FindItem(MenuItemName) > 0 And NewName != "" {
+            This.Items[This.FindItem(MenuItemName)]["Name"] := NewName
+        }
+    }
+    
+    Show() {
+        AccessibilityOverlay.Speak(This.ContextMenuString)
+        AccessibleMenu.CurrentMenu := This
+    }
+    
+    ToggleCheck(MenuItemName) {
+        If This.FindItem(MenuItemName) > 0 {
+            If This.Items[This.FindItem(MenuItemName)]["Checked"] = 0
+            This.Items[This.FindItem(MenuItemName)]["Checked"] := 1
+            Else
+            This.Items[This.FindItem(MenuItemName)]["Checked"] := 0
+        }
+    }
+    
+    ToggleEnable(MenuItemName) {
+        If This.FindItem(MenuItemName) > 0 {
+            If This.Items[This.FindItem(MenuItemName)]["Enabled"] = 0
+            This.Items[This.FindItem(MenuItemName)]["Enabled"] := 1
+            Else
+            This.Items[This.FindItem(MenuItemName)]["Enabled"] := 0
+        }
+    }
+    
+    Translate(Translation := "") {
+        If Translation != "" {
+            If Not Translation Is Map
+            Translation := AccessibleMenu.Translations[Translation]
+            If Translation Is Map {
+                For Key, Value In Translation
+                This.%Key% := Value
+                For Item In This.Items
+                If Item["CallbackOrSubmenu"] Is AccessibleMenu
+                Item["CallbackOrSubmenu"].Translate(Translation)
+            }
+        }
+    }
+    
+    Uncheck(MenuItemName) {
+        If This.FindItem(MenuItemName) > 0 {
+            This.Items[This.FindItem(MenuItemName)]["Checked"] := 0
+        }
+    }
+    
+    Static SetupTranslations() {
+        English := Map(
+        "CheckedString", "checked",
+        "ContextMenuString", "context menu",
+        "DisabledString", "unavailable",
+        "SubmenuString", "submenu"
+        )
+        English.Default := ""
+        Slovak := Map(
+        "CheckedString", "začiarknuté",
+        "ContextMenuString", "kontext ponuka",
+        "DisabledString", "nedostupné",
+        "SubmenuString", "podmenu"
+        )
+        Slovak.Default := ""
+        Swedish := Map(
+        "CheckedString", "kryssad",
+        "ContextMenuString", "kontextmeny",
+        "DisabledString", "otillgänglig",
+        "SubmenuString", "undermeny"
+        )
+        Swedish.Default := ""
+        Translations := Map()
+        Translations["English"] := English
+        Translations["Slovak"] := Slovak
+        Translations["Swedish"] := Swedish
+        Translations.Default := ""
+        Return Translations
+    }
+    
+    }
+        

@@ -4,91 +4,142 @@
 
 Tab:: {
     Thread "NoTimers"
-    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
-    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    PluginOverlay.FocusNextControl()
+    If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+        SoundPlay "*48"
+    }
+    Else {
+        ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+        PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
+        PluginOverlay.FocusNextControl()
+    }
 }
 
 +Tab:: {
     Thread "NoTimers"
-    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
-    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    PluginOverlay.FocusPreviousControl()
+    If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+        SoundPlay "*48"
+    }
+    Else {
+        ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+        PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
+        PluginOverlay.FocusPreviousControl()
+    }
 }
 
 ^Tab:: {
     Thread "NoTimers"
-    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
-    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    ReaHotkey.FocusNextTab(PluginOverlay)
+    If Not AccessibleMenu.CurrentMenu Is AccessibleMenu {
+        ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+        PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
+        ReaHotkey.FocusNextTab(PluginOverlay)
+    }
 }
 
 ^+Tab:: {
     Thread "NoTimers"
-    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
-    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    ReaHotkey.FocusPreviousTab(PluginOverlay)
+    If Not AccessibleMenu.CurrentMenu Is AccessibleMenu {
+        ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+        PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
+        ReaHotkey.FocusPreviousTab(PluginOverlay)
+    }
 }
 
 Right:: {
     Thread "NoTimers"
-    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
-    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is Object
-    Switch(PluginOverlay.GetCurrentControl().ControlType) {
-        Case "Edit":
-        Hotkey A_ThisHotkey, "Off"
-        Send "{" . A_ThisHotkey . "}"
-        Hotkey A_ThisHotkey, "On"
-        Default:
-        PluginOverlay.FocusNextTab()
+    If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+        AccessibleMenu.CurrentMenu.OpenSubmenu()
+    }
+    Else {
+        ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+        PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
+        If PluginOverlay.GetCurrentControl() Is Object
+        Switch(PluginOverlay.GetCurrentControl().ControlType) {
+            Case "Edit":
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            Hotkey A_ThisHotkey, "On"
+            Default:
+            PluginOverlay.FocusNextTab()
+        }
     }
 }
 
 Left:: {
     Thread "NoTimers"
-    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
-    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is Object
-    Switch(PluginOverlay.GetCurrentControl().ControlType) {
-        Case "Edit":
-        Hotkey A_ThisHotkey, "Off"
-        Send "{" . A_ThisHotkey . "}"
-        Hotkey A_ThisHotkey, "On"
-        Default:
-        PluginOverlay.FocusPreviousTab()
+    If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+        AccessibleMenu.CurrentMenu.CloseSubmenu()
+    }
+    Else {
+        ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+        PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
+        If PluginOverlay.GetCurrentControl() Is Object
+        Switch(PluginOverlay.GetCurrentControl().ControlType) {
+            Case "Edit":
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            Hotkey A_ThisHotkey, "On"
+            Default:
+            PluginOverlay.FocusPreviousTab()
+        }
     }
 }
 
 Up::
 Down:: {
     Thread "NoTimers"
-    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
-    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is Object
-    Switch(PluginOverlay.GetCurrentControl().ControlType) {
-        Case "ComboBox":
-        Hotkey A_ThisHotkey, "Off"
-        Send "{" . A_ThisHotkey . "}"
-        PluginOverlay.GetCurrentControl().ChangeValue()
-        PluginOverlay.GetCurrentControl().ReportValue()
-        Hotkey A_ThisHotkey, "On"
+    If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+        If A_ThisHotkey = "Down"
+        AccessibleMenu.CurrentMenu.FocusNextItem()
+        Else
+        AccessibleMenu.CurrentMenu.FocusPreviousItem()
+    }
+    Else {
+        ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+        PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
+        If PluginOverlay.GetCurrentControl() Is Object
+        Switch(PluginOverlay.GetCurrentControl().ControlType) {
+            Case "ComboBox":
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            PluginOverlay.GetCurrentControl().ChangeValue()
+            PluginOverlay.GetCurrentControl().ReportValue()
+            Hotkey A_ThisHotkey, "On"
+        }
     }
 }
 
 Enter::
 Space:: {
     Thread "NoTimers"
-    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
-    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is Object
-    Switch(PluginOverlay.GetCurrentControl().ControlType) {
-        Case "Edit":
-        Hotkey A_ThisHotkey, "Off"
-        Send "{" . A_ThisHotkey . "}"
-        Hotkey A_ThisHotkey, "On"
-        Default:
-        PluginOverlay.ActivateCurrentControl()
+    If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+        If A_ThisHotkey = "Enter"
+        AccessibleMenu.CurrentMenu.ChooseItem()
+        Else
+        SoundPlay "*48"
+    }
+    Else {
+        ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+        PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
+        If PluginOverlay.GetCurrentControl() Is Object
+        Switch(PluginOverlay.GetCurrentControl().ControlType) {
+            Case "Edit":
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            Hotkey A_ThisHotkey, "On"
+            Default:
+            PluginOverlay.ActivateCurrentControl()
+        }
+    }
+}
+
+Escape:: {
+    If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+        AccessibleMenu.CurrentMenu.Close()
+    }
+    Else {
+        Hotkey "Escape", "Off"
+        Send "{Escape}"
+        Hotkey "Escape", "On"
     }
 }
 
