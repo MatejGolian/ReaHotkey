@@ -14,7 +14,7 @@ Class AccessibleMenu {
     Static Translations := AccessibleMenu.SetupTranslations()
     
     Add(MenuItemName, CallbackOrSubmenu := "", Options := "") {
-        Trim(MenuItemName)
+        MenuItemName := Trim(MenuItemName)
         If MenuItemName != "" {
             If This.FindItem(MenuItemName) = 0 {
                 If CallbackOrSubmenu Is AccessibleMenu
@@ -79,7 +79,7 @@ Class AccessibleMenu {
     }
     
     FindItem(MenuItemName) {
-        Trim(MenuItemName)
+        MenuItemName := Trim(MenuItemName)
         If MenuItemName != "" And This.Items.Length > 0
         If MenuItemName Is Integer And MenuItemName <= 0 {
             Return 0
@@ -146,7 +146,7 @@ Class AccessibleMenu {
     }
     
     Insert(ItemToInsertBefore, NewItemName, CallbackOrSubmenu := "", Options := "") {
-        Trim(NewItemName)
+        NewItemName := Trim(NewItemName)
         If This.FindItem(ItemToInsertBefore) > 0 And NewItemName != "" {
             If CallbackOrSubmenu Is AccessibleMenu
             CallbackOrSubmenu.ParrentMenu := This
@@ -165,7 +165,7 @@ Class AccessibleMenu {
     }
     
     Rename(MenuItemName, NewName := "") {
-        Trim(NewName)
+        NewName := Trim(NewName)
         If This.FindItem(MenuItemName) > 0 And NewName != "" {
             This.Items[This.FindItem(MenuItemName)]["Name"] := NewName
         }
