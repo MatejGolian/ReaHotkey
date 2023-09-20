@@ -8,7 +8,7 @@ Class ProfileButton extends CustomButton {
 }
 
 Static ActivateProfileButton(Button) {
-    ActionsMenu := Menu()
+    ActionsMenu := AccessibleMenu()
     If Button.Index <= 5
         ActionsMenu.Add("Load Profile", ObjBindMethod(Dubler2, "LoadProfile", Button.Index, Button.ProfileFile))
     Else {
@@ -16,7 +16,7 @@ Static ActivateProfileButton(Button) {
         ActionsMenu.Disable("Only active profiles can be loaded")
     }
     If Button.Index > 5 {
-        MoveMenu := Menu()
+        MoveMenu := AccessibleMenu()
         MoveMenu.Add("Slot 1", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 1))
         MoveMenu.Add("Slot 2", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 2))
         MoveMenu.Add("Slot 3", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 3))
@@ -27,15 +27,7 @@ Static ActivateProfileButton(Button) {
     ActionsMenu.Add("Duplicate Profile", ObjBindMethod(Dubler2, "DuplicateProfile", Button.ProfileFile))
     ActionsMenu.Add("Delete Profile", ObjBindMethod(Dubler2, "DeleteProfile", Button.ProfileFile, Button.Index))
 
-    SetTimer ReaHotkey.ManageState, 0
-    ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnStandaloneHotkeysOff()
     ActionsMenu.Show()
-    ReaHotkey.TurnStandaloneHotkeysOn()
-    ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
-
-    ReaHotkey.AutoFocusStandaloneOverlay := False
 }
 
 Static MoveProfile(ProfileFile, Slot, *) {

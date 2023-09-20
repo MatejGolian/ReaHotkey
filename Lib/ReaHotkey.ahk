@@ -114,6 +114,7 @@ Class ReaHotkey {
             Hotkey "Down", "Off"
             Hotkey "Enter", "Off"
             Hotkey "Space", "Off"
+            Hotkey "Escape", "Off"
             Hotkey "Ctrl", "Off"
             For HotkeyEntry In %Type%.GetList()
             For DefinedHotkey In HotkeyEntry["Hotkeys"]
@@ -144,6 +145,7 @@ Class ReaHotkey {
             Hotkey "Down", "On"
             Hotkey "Enter", "On"
             Hotkey "Space", "On"
+            Hotkey "Escape", "On"
             Hotkey "Ctrl", "On"
             If ReaHotkey.Found%Type% Is %Type% {
                 For DefinedHotkey In ReaHotkey.Found%Type%.GetHotkeys()
@@ -291,6 +293,7 @@ Class ReaHotkey {
                 If Not ReaHotkey.FoundPlugin Is Plugin Or WinExist("ahk_class #32768") {
                     ReaHotkey.TurnPluginTimersOff()
                     ReaHotkey.TurnPluginHotkeysOff()
+                    AccessibleMenu.CurrentMenu := False
                 }
                 Else {
                     ReaHotkey.TurnPluginTimersOn(ReaHotkey.FoundPlugin.Name)
@@ -308,6 +311,7 @@ Class ReaHotkey {
                 If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
                     ReaHotkey.TurnStandaloneTimersOff()
                     ReaHotkey.TurnStandaloneHotkeysOff()
+                    AccessibleMenu.CurrentMenu := False
                 }
                 Else {
                     ReaHotkey.TurnStandaloneTimersOn(ReaHotkey.FoundStandalone.Name)
@@ -324,7 +328,8 @@ Class ReaHotkey {
                 ReaHotkey.TurnPluginHotkeysOff()
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
-            }
+                AccessibleMenu.CurrentMenu := False
+                }
         }
         
     }
