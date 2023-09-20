@@ -225,6 +225,11 @@ Class AccessibleMenu {
     Show() {
         AccessibilityOverlay.Speak(This.ContextMenuString)
         AccessibleMenu.CurrentMenu := This
+        SetTimer ReaHotkey.ManageState, 0
+        ReaHotkey.TurnPluginTimersOff()
+        ReaHotkey.TurnStandaloneTimersOff()
+        ReaHotkey.TurnPluginHotkeysOff()
+        ReaHotkey.TurnStandaloneHotkeysOff()
         Loop {
             If AccessibleMenu.CurrentMenu = False
             Break
@@ -261,6 +266,7 @@ Class AccessibleMenu {
             If StrLen(TypedChar) = 1 And !AccessibleMenu.CurrentMenu.FocusByFirstCharacter(TypedChar)
             SoundPlay "*48"
         }
+        SetTimer ReaHotkey.ManageState, 100
     }
     
     SpeakItem(Item) {
