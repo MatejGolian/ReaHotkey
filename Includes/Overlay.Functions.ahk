@@ -208,7 +208,7 @@ CreateOverlayMenu(Found, Type) {
     CurrentOverlay := Found.Overlay
     OverlayEntries := %Type%.GetOverlays(Found.Name)
     OverlayList := ""
-    OverlayMenu := Menu()
+    OverlayMenu := AccessibleMenu()
     OverlayMenu.OverlayNumbers := Array()
     UnknownProductCounter := 1
     If HasProp(CurrentOverlay, "Metadata") And CurrentOverlay.Metadata.Has("Vendor") And CurrentOverlay.Metadata["Vendor"] != ""
@@ -265,7 +265,7 @@ CreateOverlayMenu(Found, Type) {
         }
     }
     For Vendor, OverlayEntries In Submenus {
-        Submenu := Menu()
+        Submenu := AccessibleMenu()
         Submenu.OverlayNumbers := Array()
         For OverlayEntry In OverlayEntries {
             Submenu.Add(OverlayEntry["Product"], Change%Type%Overlay)

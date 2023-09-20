@@ -31,12 +31,6 @@ Class AccessibleMenu {
         This.Items[This.FindItem(MenuItemName)]["Checked"] := 1
     }
     
-    Close() {
-        If AccessibleMenu.CurrentMenu = This {
-            AccessibleMenu.CurrentMenu := False
-        }
-    }
-    
     CloseSubmenu() {
         If This.Items.Length > 0 {
             If This.ParrentMenu Is AccessibleMenu {
@@ -55,11 +49,11 @@ Class AccessibleMenu {
                 This.OpenSubmenu()
             }
             Else {
-                This.Close()
+                This.Hide()
                 CurrentItem["CallbackOrSubmenu"](CurrentItem["Name"], This.CurrentItem, This)
             }
             Else
-            This.Close()
+            This.Hide()
         }
         Return 0
     }
@@ -165,6 +159,11 @@ Class AccessibleMenu {
         If This.Items.Length >0 And This.CurrentItem > 0 And This.CurrentItem <= This.Items.Length
         Return This.Items[This.CurrentItem]
         Return 0
+    }
+    
+    Hide() {
+        If AccessibleMenu.CurrentMenu = This
+        AccessibleMenu.CurrentMenu := False
     }
     
     Insert(ItemToInsertBefore, NewItemName, CallbackOrSubmenu := "", Options := "") {
