@@ -8,10 +8,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Build with AHK v2.0.7
+      - name: Build with AHK v2.0.9
         uses: Timtam/autohotkey-build@master
         with:
-          version: v2.0.7
+          version: v2.0.9
           x64: true
           x86: true
           compression: none
