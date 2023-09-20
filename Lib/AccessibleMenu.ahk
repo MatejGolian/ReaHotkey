@@ -229,7 +229,7 @@ Class AccessibleMenu {
             If AccessibleMenu.CurrentMenu = False
             Break
             TypedChar := AccessibleMenu.CurrentMenu.KeyWaitFirst()
-            If TypedChar = "LAlt" Or TypedChar = "RAlt" Or TypedChar = "LWin" Or TypedChar = "RWin" Or TypedChar = "AppsKey" {
+            If TypedChar = "AppsKey" Or TypedChar = "LAlt" Or TypedChar = "RAlt" Or TypedChar = "LWin" Or TypedChar = "RWin" {
                 AccessibleMenu.CurrentMenu.Hide(True)
                 Send "{" . TypedChar . "}"
                 Break
@@ -258,7 +258,7 @@ Class AccessibleMenu {
                 AccessibleMenu.CurrentMenu.ChooseItem()
                 Continue
             }
-            If TypedChar = "Tab" Or !AccessibleMenu.CurrentMenu.FocusByFirstCharacter(TypedChar)
+            If StrLen(TypedChar) = 1 And !AccessibleMenu.CurrentMenu.FocusByFirstCharacter(TypedChar)
             SoundPlay "*48"
         }
     }
