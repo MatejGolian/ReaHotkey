@@ -231,8 +231,9 @@ Class AccessibleMenu {
         ReaHotkey.TurnPluginHotkeysOff()
         ReaHotkey.TurnStandaloneHotkeysOff()
         Loop {
-            If AccessibleMenu.CurrentMenu = False
-            Break
+            If AccessibleMenu.CurrentMenu = False {
+                Break
+            }
             TypedChar := AccessibleMenu.CurrentMenu.KeyWaitFirst()
             If TypedChar = "AppsKey" Or TypedChar = "LAlt" Or TypedChar = "RAlt" Or TypedChar = "LWin" Or TypedChar = "RWin" {
                 AccessibleMenu.CurrentMenu.Hide(True)
