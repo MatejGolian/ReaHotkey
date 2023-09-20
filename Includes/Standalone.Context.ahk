@@ -47,6 +47,9 @@ Tab:: {
 Right:: {
     Thread "NoTimers"
     If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
         AccessibleMenu.CurrentMenu.OpenSubmenu()
     }
     Else {
@@ -59,6 +62,9 @@ Right:: {
             Send "{" . A_ThisHotkey . "}"
             Hotkey A_ThisHotkey, "On"
             Default:
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            Hotkey A_ThisHotkey, "On"
             StandaloneOverlay.FocusNextTab()
         }
     }
@@ -67,6 +73,9 @@ Right:: {
 Left:: {
     Thread "NoTimers"
     If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
         AccessibleMenu.CurrentMenu.CloseSubmenu()
     }
     Else {
@@ -79,6 +88,9 @@ Left:: {
             Send "{" . A_ThisHotkey . "}"
             Hotkey A_ThisHotkey, "On"
             Default:
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            Hotkey A_ThisHotkey, "On"
             StandaloneOverlay.FocusPreviousTab()
         }
     }
@@ -88,6 +100,9 @@ Up::
 Down:: {
     Thread "NoTimers"
     If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
         If A_ThisHotkey = "Down"
         AccessibleMenu.CurrentMenu.FocusNextItem()
         Else
@@ -103,6 +118,10 @@ Down:: {
             Send "{" . A_ThisHotkey . "}"
             StandaloneOverlay.GetCurrentControl().ChangeValue()
             StandaloneOverlay.GetCurrentControl().ReportValue()
+            Hotkey A_ThisHotkey, "On"
+            Default:
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
             Hotkey A_ThisHotkey, "On"
         }
     }
@@ -133,14 +152,11 @@ Space:: {
 }
 
 Escape:: {
-    If AccessibleMenu.CurrentMenu Is AccessibleMenu {
-        AccessibleMenu.CurrentMenu.Hide(True)
-    }
-    Else {
-        Hotkey "Escape", "Off"
-        Send "{Escape}"
-        Hotkey "Escape", "On"
-    }
+    Hotkey A_ThisHotkey, "Off"
+    Send "{" . A_ThisHotkey . "}"
+    Hotkey A_ThisHotkey, "On"
+    If AccessibleMenu.CurrentMenu Is AccessibleMenu
+    AccessibleMenu.CurrentMenu.Hide(True)
 }
 
 Ctrl:: {
