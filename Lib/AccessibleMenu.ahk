@@ -199,11 +199,8 @@ Class AccessibleMenu {
         IH.KeyOpt("{All}", "E")
         IH.Start()
         IH.Wait()
-        If IH.EndKey
-        EndKey := IH.EndKey
-        IH.Stop()
-        Return EndKey
-    }
+        Return IH.EndKey
+        }
     
     OpenSubmenu() {
         If This.Items.Length > 0 And This.CurrentItem > 0 {
