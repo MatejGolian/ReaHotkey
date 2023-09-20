@@ -114,7 +114,6 @@ Class ReaHotkey {
             Hotkey "Down", "Off"
             Hotkey "Enter", "Off"
             Hotkey "Space", "Off"
-            Hotkey "Escape", "Off"
             Hotkey "Ctrl", "Off"
             For HotkeyEntry In %Type%.GetList()
             For DefinedHotkey In HotkeyEntry["Hotkeys"]
@@ -145,7 +144,6 @@ Class ReaHotkey {
             Hotkey "Down", "On"
             Hotkey "Enter", "On"
             Hotkey "Space", "On"
-            Hotkey "Escape", "On"
             Hotkey "Ctrl", "On"
             If ReaHotkey.Found%Type% Is %Type% {
                 For DefinedHotkey In ReaHotkey.Found%Type%.GetHotkeys()

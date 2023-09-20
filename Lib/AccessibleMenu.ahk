@@ -44,9 +44,9 @@ Class AccessibleMenu {
     }
     
     ChooseItem() {
-        If This.Items.Length > 0 {
+        If This.Items.Length > 0 And This.CurrentItem > 0 And This.CurrentItem <= This.Items.Length {
             CurrentItem := This.GetCurrentItem()
-            If CurrentItem Is Object And CurrentItem["Enabled"] = 1
+            If CurrentItem Is Map And CurrentItem["Enabled"] = 1
             If CurrentItem["CallbackOrSubmenu"] Is AccessibleMenu {
                 This.OpenSubmenu()
             }
@@ -92,6 +92,45 @@ Class AccessibleMenu {
             For Position, Item In This.Items
             If Item["Name"] = MenuItemName
             Return Position
+        }
+        Return 0
+    }
+    
+    FocusByFirstCharacter(Character) {
+        If This.Items.Length > 0 {
+            Character := StrUpper(Character)
+            FirstCharacters := Map()
+            For Index, Value In This.Items
+            If FirstCharacters.Has(StrUpper(SubStr(Value["Name"], 1, 1)))
+            FirstCharacters[StrUpper(SubStr(Value["Name"], 1, 1))].Push(Index)
+            Else
+            FirstCharacters.Set(StrUpper(SubStr(Value["Name"], 1, 1)), Array(Index))
+            If FirstCharacters.Has(Character) {
+                If FirstCharacters[Character].Length = 1 {
+                    This.CurrentItem := FirstCharacters[Character][1]
+                    This.ChooseItem()
+                    Return 1
+                }
+                Else {
+                    CurrentItem := This.GetCurrentItem()
+                    If Not CurrentItem Is Map {
+                        This.CurrentItem := FirstCharacters[Character][1]
+                        This.SpeakItem(This.CurrentItem)
+                        Return 1
+                    }
+                    Else {
+                        For Index, Value In FirstCharacters[Character]
+                        If Value > This.CurrentItem {
+                            This.CurrentItem := Value
+                            This.SpeakItem(This.CurrentItem)
+                            Return 1
+                        }
+                        This.CurrentItem := FirstCharacters[Character][1]
+                        This.SpeakItem(This.CurrentItem)
+                        Return 1
+                    }
+                }
+            }
         }
         Return 0
     }
@@ -154,6 +193,18 @@ Class AccessibleMenu {
         }
     }
     
+    KeyWaitFirst() {
+        IH := InputHook()
+        IH.VisibleNonText := True
+        IH.KeyOpt("{All}", "E")
+        IH.Start()
+        IH.Wait()
+        If IH.EndKey
+        EndKey := IH.EndKey
+        IH.Stop()
+        Return EndKey
+    }
+    
     OpenSubmenu() {
         If This.Items.Length > 0 And This.CurrentItem > 0 {
             If This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu And This.Items[This.CurrentItem]["Enabled"] = 1 {
@@ -174,36 +225,73 @@ Class AccessibleMenu {
     Show() {
         AccessibilityOverlay.Speak(This.ContextMenuString)
         AccessibleMenu.CurrentMenu := This
+        Loop {
+            If AccessibleMenu.CurrentMenu = False
+            Break
+            TypedChar := AccessibleMenu.CurrentMenu.KeyWaitFirst()
+            If TypedChar = "LAlt" Or TypedChar = "RAlt" Or TypedChar = "LWin" Or TypedChar = "RWin" Or TypedChar = "AppsKey" {
+                AccessibleMenu.CurrentMenu.Hide(True)
+                Send "{" . TypedChar . "}"
+                Break
+            }
+            If TypedChar = "Escape" {
+                AccessibleMenu.CurrentMenu.Hide(True)
+                Break
+            }
+            If TypedChar = "Down" {
+                AccessibleMenu.CurrentMenu.FocusNextItem()
+                Continue
+            }
+            If TypedChar = "Up" {
+                AccessibleMenu.CurrentMenu.FocusPreviousItem()
+                Continue
+            }
+            If TypedChar = "Right" {
+                AccessibleMenu.CurrentMenu.OpenSubmenu()
+                Continue
+            }
+            If TypedChar = "Left" {
+                AccessibleMenu.CurrentMenu.CloseSubmenu()
+                Continue
+            }
+            If TypedChar = "Enter" {
+                AccessibleMenu.CurrentMenu.ChooseItem()
+                Continue
+            }
+            If TypedChar = "Tab" Or !AccessibleMenu.CurrentMenu.FocusByFirstCharacter(TypedChar)
+            SoundPlay "*48"
+        }
     }
     
     SpeakItem(Item) {
         If This.Items.Length > 0 And Item > 0 And Item <= This.Items.Length {
+            FirstChar := StrUpper(SubStr(This.Items[Item]["Name"], 1, 1))
             If This.Items[Item]["Enabled"] = 0 And This.Items[Item]["Checked"] = 1 {
                 If Not This.Items[Item]["CallbackOrSubmenu"] Is AccessibleMenu
-                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.DisabledString . " " . This.CheckedString)
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.DisabledString . " " . This.CheckedString . " " . FirstChar)
                 Else
-                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.DisabledString . " " . This.CheckedString . " " This.SubmenuString)
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.DisabledString . " " . This.CheckedString . " " This.SubmenuString . " " . FirstChar)
                 Return 1
             }
             Else If This.Items[Item]["Enabled"] = 0 {
                 If Not This.Items[Item]["CallbackOrSubmenu"] Is AccessibleMenu
-                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.DisabledString)
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.DisabledString . " " . FirstChar)
                 Else
-                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.DisabledString . " " This.SubmenuString)
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.DisabledString . " " This.SubmenuString . " " . FirstChar)
                 Return 1
             }
             Else If This.Items[Item]["Checked"] = 1 {
                 If Not This.Items[Item]["CallbackOrSubmenu"] Is AccessibleMenu
-                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.CheckedString)
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.CheckedString . " " . FirstChar)
                 Else
-                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.CheckedString . " " This.SubmenuString)
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.CheckedString . " " This.SubmenuString . " " . FirstChar)
                 Return 1
             }
             Else {
                 If Not This.Items[Item]["CallbackOrSubmenu"] Is AccessibleMenu
-                AccessibilityOverlay.Speak(This.Items[Item]["Name"])
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . FirstChar)
                 Else
-                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.SubmenuString)
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.SubmenuString . " " . FirstChar)
                 Return 1
             }
         }
