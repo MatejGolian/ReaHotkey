@@ -9,6 +9,7 @@ Class AccessibleMenu {
     CheckedString := "checked"
     ContextMenuString := "context menu"
     DisabledString := "unavailable"
+    LeavingMenuString := "leaving menu"
     SubmenuString := "submenu"
     Static Translations := AccessibleMenu.SetupTranslations()
     
@@ -97,34 +98,7 @@ Class AccessibleMenu {
     
     FocusCurrentItem() {
         If This.Items.Length > 0 And This.CurrentItem > 0 {
-            If This.Items[This.CurrentItem]["Enabled"] = 0 And This.Items[This.CurrentItem]["Checked"] = 1 {
-                If Not This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu
-                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.DisabledString . " " . This.CheckedString)
-                Else
-                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.DisabledString . " " . This.CheckedString . " " This.SubmenuString)
-                Return 1
-            }
-            Else If This.Items[This.CurrentItem]["Enabled"] = 0 {
-                If Not This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu
-                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.DisabledString)
-                Else
-                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.DisabledString . " " This.SubmenuString)
-                Return 1
-            }
-            Else If This.Items[This.CurrentItem]["Checked"] = 1 {
-                If Not This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu
-                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.CheckedString)
-                Else
-                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.CheckedString . " " This.SubmenuString)
-                Return 1
-            }
-            Else {
-                If Not This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu
-                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"])
-                Else
-                AccessibilityOverlay.Speak(This.Items[This.CurrentItem]["Name"] . " " . This.SubmenuString)
-                Return 1
-            }
+            Return This.SpeakItem(This.CurrentItem)
         }
         Return 0
     }
@@ -132,7 +106,7 @@ Class AccessibleMenu {
     FocusFirstItem() {
         If This.Items.Length > 0 {
             This.CurrentItem := 1
-            Return This.FocusCurrentItem()
+            Return This.SpeakItem(This.CurrentItem)
         }
         Return 0
     }
@@ -142,7 +116,7 @@ Class AccessibleMenu {
             This.CurrentItem++
             If This.CurrentItem > This.Items.Length
             This.CurrentItem := 1
-            Return This.FocusCurrentItem()
+            Return This.SpeakItem(This.CurrentItem)
         }
         Return 0
     }
@@ -152,7 +126,7 @@ Class AccessibleMenu {
             This.CurrentItem--
             If This.CurrentItem <= 0
             This.CurrentItem := This.Items.Length
-            Return This.FocusCurrentItem()
+            Return This.SpeakItem(This.CurrentItem)
         }
         Return 0
     }
@@ -163,9 +137,12 @@ Class AccessibleMenu {
         Return 0
     }
     
-    Hide() {
-        If AccessibleMenu.CurrentMenu = This
-        AccessibleMenu.CurrentMenu := False
+    Hide(Speak := 0) {
+        If AccessibleMenu.CurrentMenu = This {
+            If Speak
+            AccessibilityOverlay.Speak(This.LeavingMenuString)
+            AccessibleMenu.CurrentMenu := False
+        }
     }
     
     Insert(ItemToInsertBefore, NewItemName, CallbackOrSubmenu := "", Options := "") {
@@ -197,6 +174,40 @@ Class AccessibleMenu {
     Show() {
         AccessibilityOverlay.Speak(This.ContextMenuString)
         AccessibleMenu.CurrentMenu := This
+    }
+    
+    SpeakItem(Item) {
+        If This.Items.Length > 0 And Item > 0 And Item <= This.Items.Length {
+            If This.Items[Item]["Enabled"] = 0 And This.Items[Item]["Checked"] = 1 {
+                If Not This.Items[Item]["CallbackOrSubmenu"] Is AccessibleMenu
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.DisabledString . " " . This.CheckedString)
+                Else
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.DisabledString . " " . This.CheckedString . " " This.SubmenuString)
+                Return 1
+            }
+            Else If This.Items[Item]["Enabled"] = 0 {
+                If Not This.Items[Item]["CallbackOrSubmenu"] Is AccessibleMenu
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.DisabledString)
+                Else
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.DisabledString . " " This.SubmenuString)
+                Return 1
+            }
+            Else If This.Items[Item]["Checked"] = 1 {
+                If Not This.Items[Item]["CallbackOrSubmenu"] Is AccessibleMenu
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.CheckedString)
+                Else
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.CheckedString . " " This.SubmenuString)
+                Return 1
+            }
+            Else {
+                If Not This.Items[Item]["CallbackOrSubmenu"] Is AccessibleMenu
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"])
+                Else
+                AccessibilityOverlay.Speak(This.Items[Item]["Name"] . " " . This.SubmenuString)
+                Return 1
+            }
+        }
+        Return 0
     }
     
     ToggleCheck(MenuItemName) {
@@ -242,6 +253,7 @@ Class AccessibleMenu {
         "CheckedString", "checked",
         "ContextMenuString", "context menu",
         "DisabledString", "unavailable",
+        "LeavingMenuString", "leaving menu",
         "SubmenuString", "submenu"
         )
         English.Default := ""
@@ -249,6 +261,7 @@ Class AccessibleMenu {
         "CheckedString", "začiarknuté",
         "ContextMenuString", "kontext ponuka",
         "DisabledString", "nedostupné",
+        "LeavingMenuString", "opúšťam ponuku",
         "SubmenuString", "podmenu"
         )
         Slovak.Default := ""
@@ -256,6 +269,7 @@ Class AccessibleMenu {
         "CheckedString", "kryssad",
         "ContextMenuString", "kontextmeny",
         "DisabledString", "otillgänglig",
+        "LeavingMenuString", "lämnar menyn",
         "SubmenuString", "undermeny"
         )
         Swedish.Default := ""

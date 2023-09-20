@@ -134,8 +134,7 @@ Space:: {
 
 Escape:: {
     If AccessibleMenu.CurrentMenu Is AccessibleMenu {
-        AccessibilityOverlay.Speak("leaving menu")
-        AccessibleMenu.CurrentMenu.Hide()
+        AccessibleMenu.CurrentMenu.Hide(True)
     }
     Else {
         Hotkey "Escape", "Off"
