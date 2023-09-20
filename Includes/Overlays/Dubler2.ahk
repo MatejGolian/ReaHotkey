@@ -72,10 +72,19 @@ Class Dubler2 {
             "Detector", ObjBindMethod(Dubler2, "DetectFixSettings"),
         ),
         Map(
+            "Label", "Dubler 2 Recording Takes",
+            "Generator", ObjBindMethod(Dubler2, "CreateRecordingTakesOverlay"),
+            "Detector", ObjBindMethod(Dubler2, "DetectRecordingTakesOverlay"),
+        ),
+        Map(
+            "Label", "Dubler 2 Reading Gain",
+            "Generator", ObjBindMethod(Dubler2, "CreateReadingGainOverlay"),
+            "Detector", ObjBindMethod(Dubler2, "DetectReadingGainOverlay"),
+        ),
+        Map(
             "Label", "Dubler 2 Audio Calibration",
             "Generator", ObjBindMethod(Dubler2, "CreateAudioCalibrationOverlay"),
             "Detector", ObjBindMethod(Dubler2, "DetectAudioCalibrationOverlay"),
-            "Popup", True,
         ),
         Map(
             "Image", LoadPicture(A_ScriptDir . "\Images\Dubler2ApplyScalePopup.png"),
@@ -108,12 +117,6 @@ Class Dubler2 {
             "Generator", ObjBindMethod(Dubler2, "CreateSaveProfilePopupOverlay"),
             "Popup", True,
             "Debug", True,
-        ),
-        Map(
-            "Label", "Dubler 2 Recording Takes",
-            "Generator", ObjBindMethod(Dubler2, "CreateRecordingTakesOverlay"),
-            "Popup", True,
-            "Detector", ObjBindMethod(Dubler2, "DetectRecordingTakesOverlay"),
         ),
         Map(
             "Image", LoadPicture(A_ScriptDir . "\Images\Dubler2Login.png"),
@@ -299,7 +302,7 @@ Class Dubler2 {
     }
 
     Static Init(Instance) {
-        Instance.SetTimer(ObjBindMethod(Dubler2, "SetOverlay"), 100)
+        Instance.SetTimer(ObjBindMethod(Dubler2, "SetOverlay"), 300)
         Instance.SetTimer(ObjBindMethod(Dubler2, "AutoSaveProfile"), 100)
         Instance.SetHotkey("^N", ObjBindMethod(Dubler2, "ToggleNotesAnnouncement"))
         Instance.SetHotkey("^1", TriggerStandaloneHotkey)
@@ -373,16 +376,21 @@ Class Dubler2 {
             Return
         }
 
+        If Not ReaHotkey.FoundStandalone Is Standalone
+            Return
+
+        Label := ReaHotkey.FoundStandalone.Overlay.Label
+
         For Trigger In Dubler2.OVERLAY_TRIGGERS {
-            If Not ReaHotkey.FoundStandalone Is Standalone
+            If Not ReaHotkey.FoundStandalone Is Standalone Or ReaHotkey.FoundStandalone.Overlay.Label != Label
                 Return
+            Sleep(-1)
             If ReaHotkey.FoundStandalone.Overlay.Label != "" And (Not Trigger.Has("Popup") Or Trigger["Popup"] == False) Or (ReaHotkey.FoundStandalone.Overlay.Label == Trigger["Label"] And (Trigger.Has("Popup") And Trigger["Popup"] == True))
                 Continue
             If Trigger.Has("Detector")
                 Detector := Trigger["Detector"]
             Else
                 Detector := ObjBindMethod(Dubler2, "DetectByImage")
-A_Clipboard := Trigger["Label"]
             If Detector(Trigger) {
                 Overlay := AccessibilityOverlay(Trigger["Label"])
                 Overlay := Trigger["Generator"](Overlay)
@@ -437,6 +445,7 @@ A_Clipboard := Trigger["Label"]
     #Include Dubler2/LoginOverlay.ahk
     #Include Dubler2/ProfileOverlay.ahk
     #Include Dubler2/ProfilesOverlay.ahk
+    #Include Dubler2/ReadingGainOverlay.ahk
     #Include Dubler2/RecordingTakesOverlay.ahk
     #Include Dubler2/SaveProfileOverlay.ahk
 

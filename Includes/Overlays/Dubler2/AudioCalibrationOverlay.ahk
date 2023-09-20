@@ -2,6 +2,7 @@
 
 Static ASIODevices := Array()
 Static AudioSettings := ""
+Static ASIO_DLL := ""
 
 Static ReadAudioSettings() {
 
@@ -79,7 +80,6 @@ Static GetASIODevices() {
     I := 0
     Devices := Array()
     
-    hModule := DllCall("LoadLibrary", "Str", Dll, "Ptr")
     DllCall(Dll . "\BASS_ASIO_SetUnicode", "Char", True, "Char")
 
     While Success {
@@ -118,7 +118,6 @@ Static GetASIODevices() {
         Devices.Push(Device)
     }
 
-    DllCall("FreeLibrary", "Ptr", hModule)
     Return Devices
 }
 
@@ -127,8 +126,10 @@ Static DetectAudioCalibrationOverlay(*) {
 }
 
 Static ClickAudioCalibrationButton(*) {
+    Dubler2.ASIO_DLL := DllCall("LoadLibrary", "Str", A_ScriptDir . "\bassasio" . (A_PtrSize * 8) . ".dll", "Ptr")
     Dubler2.AudioSettings := Dubler2.ReadAudioSettings()
     Dubler2.ASIODevices := Dubler2.GetASIODevices()
+    Dubler2.CloseOverlay()
 }
 
 Static SetupAudioCalibrationButton(Overlay) {
@@ -140,11 +141,33 @@ Static SetupAudioCalibrationButton(Overlay) {
 Static CloseAudioCalibrationOverlay(*) {
     Dubler2.AudioSettings := ""
     Dubler2.ASIODevices := Array()
+    DllCall("FreeLibrary", "Ptr", Dubler2.ASIO_DLL)
+    Dubler2.ASIO_DLL := ""
 
     Dubler2.CloseOverlay()
 }
 
 Static CreateAudioCalibrationOverlay(Overlay) {
+
+    CheckValid() {
+
+        Dev := AudioDeviceCtrl.GetValue()
+        
+        For Device in Dubler2.ASIODevices
+            If Device["Name"] == Dev
+                Return True
+
+        Return False
+    }
+
+    StartReadingGain(*) {
+        If Not CheckValid()
+            Return
+
+        Dubler2.ShowReadingGainOverlay := True
+
+        Dubler2.CloseOverlay()
+    }
 
     SelectInputChannel(Chan) {
         Dubler2.AudioSettings["audioDeviceInChans"] := ConvertBase(10, 2, 1 << (Chan - 1))
@@ -205,6 +228,7 @@ Static CreateAudioCalibrationOverlay(Overlay) {
         If Not Init {
             Dubler2.AudioSettings["audioDeviceInChans"] := "1"
             Dubler2.AudioSettings["audioDeviceOutChans"] := ""
+            ReadingGainButton.Label := "Read Gain"
             Dubler2.SelectComboBoxItem()
         }
     }
@@ -230,11 +254,13 @@ Static CreateAudioCalibrationOverlay(Overlay) {
     Overlay.AddControl(CustomButton("Back", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CloseAudioCalibrationOverlay")))
 
     AudioInputChannelCtrl := PopulatedComboBox("Input channel", ObjBindMethod(Dubler2, "FocusComboBox"))
+    ReadingGainButton := CustomButton("Read Gain" . (CheckValid ? "" : "not available"), ObjBindMethod(Dubler2, "FocusButton"), StartReadingGain)
     AudioOutputChannelCtrl := PopulatedComboBox("Output Channel", ObjBindMethod(Dubler2, "FocusComboBox"))
     AudioDeviceCtrl := CreateAudioDeviceControl()
 
     Overlay.AddControl(AudioDeviceCtrl)
     Overlay.AddControl(AudioInputChannelCtrl)
+    Overlay.AddControl(ReadingGainButton)
     Overlay.AddControl(AudioOutputChannelCtrl)
 
     Overlay.AddControl(CustomButton("Save", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "SaveAudioSettings")))
