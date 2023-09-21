@@ -243,8 +243,14 @@ Class AccessibleMenu {
                 Break
             }
             KeyCombo := AccessibleMenu.CurrentMenu.KeyWaitCombo()
-            If KeyCombo = "!F4" Or KeyCombo = "!Tab" {
+            If KeyCombo = "!F4" {
                 AccessibleMenu.CurrentMenu.Hide(True)
+                Send "!{F4}"
+                Break
+            }
+            Else If KeyCombo = "!Tab" {
+                AccessibleMenu.CurrentMenu.Hide(True)
+                Send "!{Tab}"
                 Break
             }
             Else If KeyCombo = "^Tab" {
