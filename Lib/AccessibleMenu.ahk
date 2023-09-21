@@ -101,10 +101,12 @@ Class AccessibleMenu {
             Character := StrUpper(Character)
             FirstCharacters := Map()
             For Index, Value In This.Items
-            If FirstCharacters.Has(StrUpper(SubStr(Value["Name"], 1, 1)))
-            FirstCharacters[StrUpper(SubStr(Value["Name"], 1, 1))].Push(Index)
-            Else
-            FirstCharacters.Set(StrUpper(SubStr(Value["Name"], 1, 1)), Array(Index))
+            If Value["Enabled"] = 1 {
+                If FirstCharacters.Has(StrUpper(SubStr(Value["Name"], 1, 1)))
+                FirstCharacters[StrUpper(SubStr(Value["Name"], 1, 1))].Push(Index)
+                Else
+                FirstCharacters.Set(StrUpper(SubStr(Value["Name"], 1, 1)), Array(Index))
+            }
             If FirstCharacters.Has(Character) {
                 If FirstCharacters[Character].Length = 1 {
                     This.CurrentItem := FirstCharacters[Character][1]
