@@ -200,9 +200,9 @@ Class AccessibleMenu {
         IH.VisibleNonText := True
         IH.KeyOpt("{All}", "E")
         IH.KeyOpt("{LCtrl}{RCtrl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}", "-E")
-        IH.Timeout := 0.15
+        IH.Timeout := 0.125
         IH.Start()
-        IH.Wait(0.15)
+        IH.Wait(0.125)
         Return RegExReplace(IH.EndMods . IH.EndKey, "[<>](.)(?:>\1)?", "$1")
     }
     
@@ -235,11 +235,6 @@ Class AccessibleMenu {
     Show() {
         AccessibilityOverlay.Speak(This.ContextMenuString)
         AccessibleMenu.CurrentMenu := This
-        SetTimer ReaHotkey.ManageState, 0
-        ReaHotkey.TurnPluginTimersOff()
-        ReaHotkey.TurnStandaloneTimersOff()
-        ReaHotkey.TurnPluginHotkeysOff()
-        ReaHotkey.TurnStandaloneHotkeysOff()
         Loop {
             If AccessibleMenu.CurrentMenu = False {
                 Break
@@ -255,6 +250,10 @@ Class AccessibleMenu {
             }
             Else If KeyCombo = "^Tab" {
                 Continue
+            }
+            Else If KeyCombo = "+F10" {
+                AccessibleMenu.CurrentMenu.Hide(True)
+                Break
             }
             Else If KeyCombo = "+Tab" {
                 SoundPlay "*48"
@@ -302,7 +301,6 @@ Class AccessibleMenu {
                 SoundPlay "*48"
             }
         }
-        SetTimer ReaHotkey.ManageState, 100
     }
     
     SpeakItem(Item) {

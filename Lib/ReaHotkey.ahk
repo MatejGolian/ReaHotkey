@@ -293,6 +293,10 @@ Class ReaHotkey {
                     ReaHotkey.TurnPluginHotkeysOff()
                     AccessibleMenu.CurrentMenu := False
                 }
+                Else If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+                    ReaHotkey.TurnPluginTimersOff()
+                    ReaHotkey.TurnPluginHotkeysOff()
+                }
                 Else {
                     ReaHotkey.TurnPluginTimersOn(ReaHotkey.FoundPlugin.Name)
                     Sleep 250
@@ -311,6 +315,10 @@ Class ReaHotkey {
                     ReaHotkey.TurnStandaloneHotkeysOff()
                     AccessibleMenu.CurrentMenu := False
                 }
+                Else If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+                    ReaHotkey.TurnStandaloneTimersOff()
+                    ReaHotkey.TurnStandaloneHotkeysOff()
+                }
                 Else {
                     ReaHotkey.TurnStandaloneTimersOn(ReaHotkey.FoundStandalone.Name)
                     Sleep 250
@@ -327,7 +335,7 @@ Class ReaHotkey {
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 AccessibleMenu.CurrentMenu := False
-                }
+            }
         }
         
     }
