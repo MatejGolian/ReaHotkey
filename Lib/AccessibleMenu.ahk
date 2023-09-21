@@ -259,7 +259,12 @@ Class AccessibleMenu {
                 Continue
             }
             Else {
+                If SubStr(KeyCombo, 1, 1) = "+" And StrLen(SubStr(KeyCombo, 2)) = 1
+                SingleKey := SubStr(KeyCombo, 2)
+                Else
                 SingleKey := AccessibleMenu.CurrentMenu.KeyWaitSingle()
+                If SubStr(SingleKey, 1, 6) = "Numpad"
+                SingleKey := SubStr(SingleKey, 7)
                 If SingleKey = "AppsKey" Or SingleKey = "LAlt" Or SingleKey = "RAlt" Or SingleKey = "LWin" Or SingleKey = "RWin" {
                     AccessibleMenu.CurrentMenu.Hide(True)
                     Break
