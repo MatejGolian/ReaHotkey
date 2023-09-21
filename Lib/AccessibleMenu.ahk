@@ -198,9 +198,9 @@ Class AccessibleMenu {
         IH.VisibleNonText := True
         IH.KeyOpt("{All}", "E")
         IH.KeyOpt("{LCtrl}{RCtrl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}", "-E")
-        IH.Timeout := 0.1
+        IH.Timeout := 0.15
         IH.Start()
-        IH.Wait(0.1)
+        IH.Wait(0.15)
         Return RegExReplace(IH.EndMods . IH.EndKey, "[<>](.)(?:>\1)?", "$1")
     }
     
@@ -245,12 +245,10 @@ Class AccessibleMenu {
             KeyCombo := AccessibleMenu.CurrentMenu.KeyWaitCombo()
             If KeyCombo = "!F4" {
                 AccessibleMenu.CurrentMenu.Hide(True)
-                Send "!{F4}"
                 Break
             }
             Else If KeyCombo = "!Tab" {
                 AccessibleMenu.CurrentMenu.Hide(True)
-                Send "!{Tab}"
                 Break
             }
             Else If KeyCombo = "^Tab" {
@@ -264,7 +262,6 @@ Class AccessibleMenu {
                 SingleKey := AccessibleMenu.CurrentMenu.KeyWaitSingle()
                 If SingleKey = "AppsKey" Or SingleKey = "LAlt" Or SingleKey = "RAlt" Or SingleKey = "LWin" Or SingleKey = "RWin" {
                     AccessibleMenu.CurrentMenu.Hide(True)
-                    Send "{" . SingleKey . "}"
                     Break
                 }
                 If SingleKey = "Escape" {
