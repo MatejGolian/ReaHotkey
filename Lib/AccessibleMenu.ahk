@@ -261,40 +261,40 @@ Class AccessibleMenu {
                 Continue
             }
             Else {
-                SingleChar := AccessibleMenu.CurrentMenu.KeyWaitSingle()
-                If SingleChar = "AppsKey" Or SingleChar = "LAlt" Or SingleChar = "RAlt" Or SingleChar = "LWin" Or SingleChar = "RWin" {
+                SingleKey := AccessibleMenu.CurrentMenu.KeyWaitSingle()
+                If SingleKey = "AppsKey" Or SingleKey = "LAlt" Or SingleKey = "RAlt" Or SingleKey = "LWin" Or SingleKey = "RWin" {
                     AccessibleMenu.CurrentMenu.Hide(True)
-                    Send "{" . SingleChar . "}"
+                    Send "{" . SingleKey . "}"
                     Break
                 }
-                If SingleChar = "Escape" {
+                If SingleKey = "Escape" {
                     AccessibleMenu.CurrentMenu.Hide(True)
                     Break
                 }
-                If SingleChar = "Down" {
+                If SingleKey = "Down" {
                     AccessibleMenu.CurrentMenu.FocusNextItem()
                     Continue
                 }
-                If SingleChar = "Up" {
+                If SingleKey = "Up" {
                     AccessibleMenu.CurrentMenu.FocusPreviousItem()
                     Continue
                 }
-                If SingleChar = "Right" {
+                If SingleKey = "Right" {
                     AccessibleMenu.CurrentMenu.OpenSubmenu()
                     Continue
                 }
-                If SingleChar = "Left" {
+                If SingleKey = "Left" {
                     AccessibleMenu.CurrentMenu.CloseSubmenu()
                     Continue
                 }
-                If SingleChar = "Enter" {
+                If SingleKey = "Enter" {
                     AccessibleMenu.CurrentMenu.ChooseItem()
                     Continue
                 }
-                If SingleChar = "Space" Or SingleChar = "Tab"
+                If SingleKey = "Space" Or SingleKey = "Tab"
                 SoundPlay "*48"
                 Else
-                If StrLen(SingleChar) = 1 And !AccessibleMenu.CurrentMenu.FocusByFirstCharacter(SingleChar)
+                If StrLen(SingleKey) = 1 And !AccessibleMenu.CurrentMenu.FocusByFirstCharacter(SingleKey)
                 SoundPlay "*48"
             }
         }
