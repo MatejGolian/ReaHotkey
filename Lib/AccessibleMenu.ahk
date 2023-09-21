@@ -193,14 +193,25 @@ Class AccessibleMenu {
         }
     }
     
-    KeyWaitFirst() {
+    KeyWaitCombo() {
+        IH := InputHook()
+        IH.VisibleNonText := True
+        IH.KeyOpt("{All}", "E")
+        IH.KeyOpt("{LCtrl}{RCtrl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}", "-E")
+        IH.Timeout := 0.1
+        IH.Start()
+        IH.Wait(0.1)
+        Return RegExReplace(IH.EndMods . IH.EndKey, "[<>](.)(?:>\1)?", "$1")
+    }
+    
+    KeyWaitSingle() {
         IH := InputHook()
         IH.VisibleNonText := True
         IH.KeyOpt("{All}", "E")
         IH.Start()
         IH.Wait()
         Return IH.EndKey
-        }
+    }
     
     OpenSubmenu() {
         If This.Items.Length > 0 And This.CurrentItem > 0 {
@@ -231,38 +242,55 @@ Class AccessibleMenu {
             If AccessibleMenu.CurrentMenu = False {
                 Break
             }
-            TypedChar := AccessibleMenu.CurrentMenu.KeyWaitFirst()
-            If TypedChar = "AppsKey" Or TypedChar = "LAlt" Or TypedChar = "RAlt" Or TypedChar = "LWin" Or TypedChar = "RWin" {
-                AccessibleMenu.CurrentMenu.Hide(True)
-                Send "{" . TypedChar . "}"
-                Break
-            }
-            If TypedChar = "Escape" {
+            KeyCombo := AccessibleMenu.CurrentMenu.KeyWaitCombo()
+            If KeyCombo = "!F4" Or KeyCombo = "!Tab" {
                 AccessibleMenu.CurrentMenu.Hide(True)
                 Break
             }
-            If TypedChar = "Down" {
-                AccessibleMenu.CurrentMenu.FocusNextItem()
+            Else If KeyCombo = "^Tab" {
                 Continue
             }
-            If TypedChar = "Up" {
-                AccessibleMenu.CurrentMenu.FocusPreviousItem()
+            Else If KeyCombo = "+Tab" {
+                SoundPlay "*48"
                 Continue
             }
-            If TypedChar = "Right" {
-                AccessibleMenu.CurrentMenu.OpenSubmenu()
-                Continue
+            Else {
+                SingleChar := AccessibleMenu.CurrentMenu.KeyWaitSingle()
+                If SingleChar = "AppsKey" Or SingleChar = "LAlt" Or SingleChar = "RAlt" Or SingleChar = "LWin" Or SingleChar = "RWin" {
+                    AccessibleMenu.CurrentMenu.Hide(True)
+                    Send "{" . SingleChar . "}"
+                    Break
+                }
+                If SingleChar = "Escape" {
+                    AccessibleMenu.CurrentMenu.Hide(True)
+                    Break
+                }
+                If SingleChar = "Down" {
+                    AccessibleMenu.CurrentMenu.FocusNextItem()
+                    Continue
+                }
+                If SingleChar = "Up" {
+                    AccessibleMenu.CurrentMenu.FocusPreviousItem()
+                    Continue
+                }
+                If SingleChar = "Right" {
+                    AccessibleMenu.CurrentMenu.OpenSubmenu()
+                    Continue
+                }
+                If SingleChar = "Left" {
+                    AccessibleMenu.CurrentMenu.CloseSubmenu()
+                    Continue
+                }
+                If SingleChar = "Enter" {
+                    AccessibleMenu.CurrentMenu.ChooseItem()
+                    Continue
+                }
+                If SingleChar = "Space" Or SingleChar = "Tab"
+                SoundPlay "*48"
+                Else
+                If StrLen(SingleChar) = 1 And !AccessibleMenu.CurrentMenu.FocusByFirstCharacter(SingleChar)
+                SoundPlay "*48"
             }
-            If TypedChar = "Left" {
-                AccessibleMenu.CurrentMenu.CloseSubmenu()
-                Continue
-            }
-            If TypedChar = "Enter" {
-                AccessibleMenu.CurrentMenu.ChooseItem()
-                Continue
-            }
-            If StrLen(TypedChar) = 1 And !AccessibleMenu.CurrentMenu.FocusByFirstCharacter(TypedChar)
-            SoundPlay "*48"
         }
         SetTimer ReaHotkey.ManageState, 100
     }
