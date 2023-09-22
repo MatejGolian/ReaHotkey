@@ -5,12 +5,15 @@
 #Warn All
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
+InstallKeybdHook
 SendMode "Input"
 SetTitleMatchMode "RegEx"
 SetWorkingDir A_InitialWorkingDir
 
 #Include <AccessibilityOverlay>
 #Include <AccessibleMenu>
+#Include <AccessiblePluginMenu>
+#Include <AccessibleStandaloneMenu>
 #Include <JXON>
 #Include <OCR>
 #Include <Plugin>

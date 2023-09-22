@@ -327,7 +327,7 @@ Class ReaHotkey {
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 AccessibleMenu.CurrentMenu := False
-                }
+            }
         }
         
     }
