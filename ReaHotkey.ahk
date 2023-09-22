@@ -12,6 +12,8 @@ SetWorkingDir A_InitialWorkingDir
 
 #Include <AccessibilityOverlay>
 #Include <AccessibleMenu>
+#Include <AccessiblePluginMenu>
+#Include <AccessibleStandaloneMenu>
 #Include <OCR>
 #Include <Plugin>
 #Include <ReaHotkey>

@@ -147,11 +147,8 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
 }
 
 ChooseOverlay(Type) {
-    SetTimer ReaHotkey.ManageState, 0
-    ReaHotkey.Turn%Type%TimersOff()
-    ReaHotkey.Turn%Type%HotkeysOff()
-    CreateOverlayMenu(ReaHotkey.FoundPlugin, Type).Show()
-    SetTimer ReaHotkey.ManageState, 100
+    OverlayMenu := CreateOverlayMenu(ReaHotkey.FoundPlugin, Type)
+    OverlayMenu.Show()
 }
 
 ChoosePluginOverlay(*) {
@@ -206,7 +203,7 @@ CreateOverlayMenu(Found, Type) {
     CurrentOverlay := Found.Overlay
     OverlayEntries := %Type%.GetOverlays(Found.Name)
     OverlayList := ""
-    OverlayMenu := AccessibleMenu()
+    OverlayMenu := Accessible%Type%Menu()
     OverlayMenu.OverlayNumbers := Array()
     UnknownProductCounter := 1
     If HasProp(CurrentOverlay, "Metadata") And CurrentOverlay.Metadata.Has("Vendor") And CurrentOverlay.Metadata["Vendor"] != ""
@@ -263,7 +260,7 @@ CreateOverlayMenu(Found, Type) {
         }
     }
     For Vendor, OverlayEntries In Submenus {
-        Submenu := AccessibleMenu()
+        Submenu := Accessible%Type%Menu()
         Submenu.OverlayNumbers := Array()
         For OverlayEntry In OverlayEntries {
             Submenu.Add(OverlayEntry["Product"], Change%Type%Overlay)
