@@ -118,247 +118,12 @@ Static AutoSaveProfile() {
     }
 }
 
-Static ActivateSynthPresetButton(Button) {
-
-    PresetsMenu := Menu()
-
-    For Preset In ["8 Bit Lead", "Bass Pluck", "Boards", "Pad", "Pure", "Trap Bass", "Trumpet Lead", "Wobble Bass"]
-        PresetsMenu.Add(Preset, ObjBindMethod(Dubler2, "ClickSynthPresetButton", Button, Preset))
-
-    PresetsMenu.Check(Dubler2.ProfileLoaded["Current"]["synthPreset"])
-
-    SetTimer ReaHotkey.ManageState, 0
-    ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnStandaloneHotkeysOff()
-    PresetsMenu.Show()
-    ReaHotkey.TurnStandaloneHotkeysOn()
-    ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
-}
-
-Static ClickSynthPresetButton(Button, Preset, *) {
-
-    Click(678, 620)
-    Sleep 300
-
-    Switch(Preset) {
-        Case "Pure":
-            Click(679, 468)
-        Case "Pad":
-            Click(675, 490)
-        Case "Boards":
-            Click(686, 506)
-        Case "8 Bit Lead":
-            Click(699, 524)
-        Case "Bass Pluck":
-            Click(694, 542)
-        Case "Wobble Bass":
-            Click(700, 558)
-        Case "Trumpet Lead":
-            Click(699, 578)
-        Case "Trap Bass":
-            Click(693, 597)
-    }
-
-    Button.Label := "Synth Preset: " . Preset
-}
-
-Static ActivateChordsVoicingPresetButton(Button) {
-
-    PresetsMenu := Menu()
-
-    For Preset In ["Cluster", "Spread"]
-        PresetsMenu.Add(Preset, ObjBindMethod(Dubler2, "ClickChordsVoicingPresetButton", Button, Preset))
-
-    PresetsMenu.Check(Dubler2.ProfileLoaded["Current"]["Chords"]["voicingPreset"])
-
-    SetTimer ReaHotkey.ManageState, 0
-    ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnStandaloneHotkeysOff()
-    PresetsMenu.Show()
-    ReaHotkey.TurnStandaloneHotkeysOn()
-    ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
-}
-
-Static ClickChordsVoicingPresetButton(Button, Preset, *) {
-
-    Click(534, 566)
-    Sleep 300
-
-    Switch(Preset) {
-        Case "Cluster":
-            Click(508, 499)
-        Case "Spread":
-            Click(499, 533)
-    }
-
-    Button.Label := "Voicing Preset: " . Preset
-}
-
-Static ActivateChordPresetButton(Button) {
-
-    Local Presets
-    
-    If Dubler2.ProfileLoaded["Current"]["Scale"]["patternName"] == "Chromatic"
-        Presets := ["Custom"]
-    Else
-        Presets := ["Triads", "Pop Simple", "Pop Advanced", "Custom"]
-
-    PresetsMenu := Menu()
-
-    For Preset In Presets
-        PresetsMenu.Add(Preset, ObjBindMethod(Dubler2, "ClickChordPresetButton", Button, Preset))
-
-    PresetsMenu.Check(Dubler2.ProfileLoaded["Current"]["Chords"]["chordPreset"])
-    PresetsMenu.Disable("Custom")
-
-    SetTimer ReaHotkey.ManageState, 0
-    ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnStandaloneHotkeysOff()
-    PresetsMenu.Show()
-    ReaHotkey.TurnStandaloneHotkeysOn()
-    ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
-}
-
-Static ClickChordPresetButton(Button, Preset, *) {
-
-    Click(253, 227)
-    Sleep 300
-
-    Switch(Preset) {
-        Case "Triads":
-            Click(270, 264)
-        Case "Pop Simple":
-            Click(273, 298)
-        Case "Pop Advanced":
-            Click(252, 335)
-    }
-
-    Button.Label := "Chord Preset: " . Preset
-}
-
-Static ActivateKeyButton(Button) {
-
-    KeyMenu := Menu()
-
-    For Key In ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] {
-        KeyMenu.Add(Key, ObjBindMethod(Dubler2, "ClickKeyButton", Button, Key))
-    }
-
-    KeyMenu.Check(Dubler2.ProfileLoaded["Current"]["Scale"]["rootName"])
-
-    SetTimer ReaHotkey.ManageState, 0
-    ReaHotkey.TurnStandaloneStandaloneTimersOff()
-    ReaHotkey.TurnStandaloneHotkeysOff()
-    KeyMenu.Show()
-    ReaHotkey.TurnStandaloneHotkeysOn()
-    ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
-}
-
-Static ClickKeyButton(Button, Key, *) {
-
-    Click(543, 501)
-    Sleep 300
-
-    Switch(Key) {
-        Case "C":
-            Click(542, 198)
-        Case "C#":
-            Click(547, 223)
-        Case "D":
-            Click(543, 250)
-        Case "D#":
-            Click(548, 272)
-        Case "E":
-            Click(536, 295)
-        Case "F":
-            Click(543, 321)
-        Case "F#":
-            Click(543, 347)
-        Case "G":
-            Click(546, 370)
-        Case "G#":
-            Click(545, 393)
-        Case "A":
-            Click(544, 422)
-        Case "A#":
-            Click(542, 445)
-        Case "B":
-            Click(547, 467)
-    }
-
-    Button.Label := "Key: " . Key
-}
-
-Static ActivateScaleButton(Button) {
-
-    ScaleMenu := Menu()
-
-    For Scale In ["Major", "Minor", "Harmonic Minor", "Major Pentatonic", "Minor Pentatonic", "Blues", "Locrian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Hungarian (Gypsy) Minor", "Whole Tone", "Aeolian Dominant (Hindu)", "Chromatic"] {
-        ScaleMenu.Add(Scale, ObjBindMethod(Dubler2, "ClickScaleButton", Button, Scale))
-    }
-
-    ScaleMenu.Check(Dubler2.ProfileLoaded["Current"]["Scale"]["patternName"])
-
-    SetTimer ReaHotkey.ManageState, 0
-    ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnStandaloneHotkeysOff()
-    ScaleMenu.Show()
-    ReaHotkey.TurnStandaloneHotkeysOn()
-    ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
-}
-
-Static ClickScaleButton(Button, Scale, *) {
-
-    Click(662, 502)
-    Sleep 300
-
-    Switch(Scale) {
-        Case "Major":
-            Click(700, 97)
-        Case "Minor":
-            Click(682, 123)
-        Case "Harmonic Minor":
-            Click(690, 151)
-        Case "Major Pentatonic":
-            Click(690, 171)
-        Case "Minor Pentatonic":
-            Click(697, 193)
-        Case "Blues":
-            Click(698, 221)
-        Case "Locrian":
-            Click(699, 247)
-        Case "Dorian":
-            Click(683, 272)
-        Case "Phrygian":
-            Click(694, 295)
-        Case "Lydian":
-            Click(684, 326)
-        Case "Mixolydian":
-            Click(678, 344)
-        Case "Hungarian (Gypsy) Minor":
-            Click(723, 371)
-        Case "Whole Tone":
-            Click(681, 400)
-        Case "Aeolian Dominant (Hindu)":
-            Click(719, 420)
-        Case "Chromatic":
-            Click(684, 449)
-    }
-
-    Button.Label := "Scale: " . Scale
-}
-
 Static ActivateNotesButton(Button) {
 
     Notes := Dubler2.ProfileLoaded["Current"]["Scale"]["scaleNotes"]["data"]
     Enabled := Dubler2.ProfileLoaded["Current"]["Scale"]["toggleMask"]["data"]
 
-    NotesMenu := Menu()
+    NotesMenu := AccessibleStandaloneMenu()
 
     If Notes != 4095 {
         NotesMenu.Add("You cannot add new notes to this scale without changing the key or scale. Please select a different key and/or scale instead.", Dubler2.ClickNotesButton)
@@ -375,13 +140,7 @@ Static ActivateNotesButton(Button) {
             NotesMenu.Disable(Note)
     }
 
-    SetTimer ReaHotkey.ManageState, 0
-    ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnStandaloneHotkeysOff()
     NotesMenu.Show()
-    ReaHotkey.TurnStandaloneHotkeysOn()
-    ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static ClickNotesButton(Note, *) {
@@ -538,7 +297,6 @@ Static ToggleNotesAnnouncement(*) {
 }
 
 Static SpeakNotes() {
-    Critical
 
     If Not ReaHotkey.FoundStandalone Is Standalone Or Not ReaHotkey.FoundStandalone.Overlay.Label == "Dubler 2 Profile" Or Not Dubler2.AnnounceNotes Or ReaHotkey.FoundStandalone.Overlay.ChildControls.Length <= 1 Or Not WinActive(ReaHotkey.StandaloneWinCriteria)
         Return
@@ -557,6 +315,8 @@ Static SpeakNotes() {
         [419, 251, "A#"],
         [433, 235, "B"]] {
 
+        Sleep(-1)
+
         Color := PixelGetColor(Position[1], Position[2])
         
         If Color != 0x242424 {
@@ -574,7 +334,7 @@ Static ClickTriggerButton(Button) {
 
     Click(Button.X, Button.Y)
 
-    TriggerMenu := Menu()
+    TriggerMenu := AccessibleStandaloneMenu()
 
     TriggerMenu.Add("Start recording takes...", ObjBindMethod(Dubler2, "StartRecordingTakes"))
     TriggerMenu.Add("Mute trigger", ObjBindMethod(Dubler2, "MuteTrigger", Button.Index))
@@ -596,13 +356,7 @@ Static ClickTriggerButton(Button) {
     If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["numExamples"] == 0
         TriggerMenu.Disable("Clear all takes")
 
-    SetTimer ReaHotkey.ManageState, 0
-    ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnStandaloneHotkeysOff()
     TriggerMenu.Show()
-    ReaHotkey.TurnStandaloneHotkeysOn()
-    ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static RenameTrigger(Button, *) {
@@ -776,20 +530,14 @@ Static StartRecordingTakes(*) {
 
 Static ActivatePitchOctaveShiftButton(Button) {
 
-    OctaveShiftMenu := Menu()
+    OctaveShiftMenu := AccessibleStandaloneMenu()
 
     For Octave In [-3, -2, -1, 0, 1, 2, 3]
         OctaveShiftMenu.Add((Octave >= 0 ? "+" : "") . Octave, ObjBindMethod(Dubler2, "ClickPitchOctaveShiftButton", Button, Octave))
 
     OctaveShiftMenu.Check((Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"])
 
-    SetTimer ReaHotkey.ManageState, 0
-    ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnStandaloneHotkeysOff()
     OctaveShiftMenu.Show()
-    ReaHotkey.TurnStandaloneHotkeysOn()
-    ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static ClickPitchOctaveShiftButton(Button, Octave, *) {
@@ -811,20 +559,14 @@ Static ClickPitchOctaveShiftButton(Button, Octave, *) {
 
 Static ActivateChordsOctaveShiftButton(Button) {
 
-    OctaveShiftMenu := Menu()
+    OctaveShiftMenu := AccessibleStandaloneMenu()
 
     For Octave In [-3, -2, -1, 0, 1, 2, 3]
         OctaveShiftMenu.Add((Octave >= 0 ? "+" : "") . Octave, ObjBindMethod(Dubler2, "ClickChordsOctaveShiftButton", Button, Octave))
 
     OctaveShiftMenu.Check((Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"])
 
-    SetTimer ReaHotkey.ManageState, 0
-    ReaHotkey.TurnStandaloneTimersOff()
-    ReaHotkey.TurnStandaloneHotkeysOff()
     OctaveShiftMenu.Show()
-    ReaHotkey.TurnStandaloneHotkeysOn()
-    ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
 }
 
 Static ClickChordsOctaveShiftButton(Button, Octave, *) {
@@ -953,6 +695,126 @@ Static CreateProfileOverlay(Overlay) {
         }
     }
 
+    ClickSynthPreset(Preset) {
+        Click(678, 620)
+        Sleep 300
+
+        Switch(Preset) {
+            Case "Pure":
+                Click(679, 468)
+            Case "Pad":
+                Click(675, 490)
+            Case "Boards":
+                Click(686, 506)
+            Case "8 Bit Lead":
+                Click(699, 524)
+            Case "Bass Pluck":
+                Click(694, 542)
+            Case "Wobble Bass":
+                Click(700, 558)
+            Case "Trumpet Lead":
+                Click(699, 578)
+            Case "Trap Bass":
+                Click(693, 597)
+        }
+    }
+
+    ClickKey(Key) {
+        Click(543, 501)
+        Sleep 300
+
+        Switch(Key) {
+            Case "C":
+                Click(542, 198)
+            Case "C#":
+                Click(547, 223)
+            Case "D":
+                Click(543, 250)
+            Case "D#":
+                Click(548, 272)
+            Case "E":
+                Click(536, 295)
+            Case "F":
+                Click(543, 321)
+            Case "F#":
+                Click(543, 347)
+            Case "G":
+                Click(546, 370)
+            Case "G#":
+                Click(545, 393)
+            Case "A":
+                Click(544, 422)
+            Case "A#":
+                Click(542, 445)
+            Case "B":
+                Click(547, 467)
+        }
+    }
+
+    ClickScale(Scale) {
+        Click(662, 502)
+        Sleep 300
+
+        Switch(Scale) {
+            Case "Major":
+                Click(700, 97)
+            Case "Minor":
+                Click(682, 123)
+            Case "Harmonic Minor":
+                Click(690, 151)
+            Case "Major Pentatonic":
+                Click(690, 171)
+            Case "Minor Pentatonic":
+                Click(697, 193)
+            Case "Blues":
+                Click(698, 221)
+            Case "Locrian":
+                Click(699, 247)
+            Case "Dorian":
+                Click(683, 272)
+            Case "Phrygian":
+                Click(694, 295)
+            Case "Lydian":
+                Click(684, 326)
+            Case "Mixolydian":
+                Click(678, 344)
+            Case "Hungarian (Gypsy) Minor":
+                Click(723, 371)
+            Case "Whole Tone":
+                Click(681, 400)
+            Case "Aeolian Dominant (Hindu)":
+                Click(719, 420)
+            Case "Chromatic":
+                Click(684, 449)
+        }
+    }
+
+    ClickVoicingPreset(Preset) {
+        Click(534, 566)
+        Sleep 300
+
+        Switch(Preset) {
+            Case "Cluster":
+                Click(508, 499)
+            Case "Spread":
+                Click(499, 533)
+        }
+    }
+
+    ClickChordPreset(Preset) {
+        Click(253, 227)
+        Sleep 300
+
+        Switch(Preset) {
+            Case "Triads":
+                Click(270, 264)
+            Case "Pop Simple":
+                Click(273, 298)
+            Case "Pop Advanced":
+                Click(252, 335)
+        }
+    }
+
     Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"], "UTF-8")
     ProfileObj := Jxon_Load(&Profile)
 
@@ -970,7 +832,17 @@ Static CreateProfileOverlay(Overlay) {
 
     PlayTab.SetHotkey("^1", "Ctrl + 1")
     PlayTab.AddControl(Dubler2.HotspotCheckbox("Inbuilt audio enabled", 730, 619, ProfileObj["DublerModel"]["audioOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
-    PlayTab.AddControl(CustomButton("Synth Preset: " . ProfileObj["synthPreset"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateSynthPresetButton")))
+
+    SynthPresetCtrl := PopulatedComboBox("Synth Preset", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+
+    For Preset In ["8 Bit Lead", "Bass Pluck", "Boards", "Pad", "Pure", "Trap Bass", "Trumpet Lead", "Wobble Bass"] {
+        SynthPresetCtrl.AddItem(Preset, ClickSynthPreset.Bind(Preset))
+
+        If StrLower(Preset) == StrLower(ProfileObj["synthPreset"])
+            SynthPresetCtrl.SetValue(Preset)
+    }
+
+    PlayTab.AddControl(SynthPresetCtrl)
     PlayTab.AddControl(Dubler2.HotspotCheckbox("MIDI out enabled", 829, 621, ProfileObj["DublerModel"]["midiOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 
     PitchTab := HotspotTab("Pitch", 258, 104, ObjBindMethod(Dubler2, "FocusTab"))
@@ -979,8 +851,28 @@ Static CreateProfileOverlay(Overlay) {
     PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch enabled", 371, 161, ProfileObj["Pitch"]["pitchEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
     PitchTab.AddControl(CustomButton("Input Gain: " . Integer(ProfileObj["Pitch"]["pitchInputGain"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchInputGainButton")))
     PitchTab.AddControl(CustomButton("Octave shift: " . (ProfileObj["DublerModel"]["octaveShift"] >= 0 ? "+" : "") . ProfileObj["DublerModel"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchOctaveShiftButton")))
-    PitchTab.AddControl(CustomButton("Key: " . ProfileObj["Scale"]["rootName"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateKeyButton")))
-    PitchTab.AddControl(CustomButton("Scale: " . ProfileObj["Scale"]["patternName"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateScaleButton")))
+
+    KeyCtrl := PopulatedComboBox("Key", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+
+    For Key In ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] {
+        KeyCtrl.AddItem(Key, ClickKey.Bind(Key))
+
+        If StrLower(Key) == StrLower(ProfileObj["Scale"]["rootName"])
+            KeyCtrl.SetValue(Key)
+    }
+
+    PitchTab.AddControl(KeyCtrl)
+
+    ScaleCtrl := PopulatedComboBox("Scale", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+
+    For Scale In ["Major", "Minor", "Harmonic Minor", "Major Pentatonic", "Minor Pentatonic", "Blues", "Locrian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Hungarian (Gypsy) Minor", "Whole Tone", "Aeolian Dominant (Hindu)", "Chromatic"] {
+        ScaleCtrl.AddItem(Scale, ClickScale.Bind(Scale))
+
+        If StrLower(Scale) == StrLower(ProfileObj["Scale"]["patternName"])
+            ScaleCtrl.SetValue(Scale)
+    }
+
+    PitchTab.AddControl(ScaleCtrl)
     PitchTab.AddControl(CustomButton("Toggle active notes", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateNotesButton")))
     PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch Bend enabled", 354, 501, ProfileObj["Pitch"]["pitchBendEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
     PitchTab.AddControl(CustomButton("Stickiness: " . Integer(ProfileObj["Pitch"]["pitchStickiness"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchStickinessButton")))
@@ -1001,8 +893,35 @@ Static CreateProfileOverlay(Overlay) {
     ChordsTab.AddControl(Dubler2.HotspotCheckbox("Root Note Bassline", 575, 566, ProfileObj["Chords"]["rootNoteBassline"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
     ChordsTab.AddControl(Dubler2.HotspotCheckbox("Follow Octaves", 806, 567, ProfileObj["Chords"]["octaveFollow"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
     ChordsTab.AddControl(CustomButton("Octave shift: " . (ProfileObj["Chords"]["octaveShift"] >= 0 ? "+" : "") . ProfileObj["Chords"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateChordsOctaveShiftButton")))
-    ChordsTab.AddControl(CustomButton("Voicing Preset: " . ProfileObj["Chords"]["voicingPreset"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateChordsVoicingPresetButton")))
-    ChordsTab.AddControl(CustomButton("Chord Preset: " . ProfileObj["Chords"]["chordPreset"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateChordPresetButton")))
+
+    VoicingPresetCtrl := PopulatedComboBox("Voicing Preset", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+
+    For Preset In ["Cluster", "Spread"] {
+        VoicingPresetCtrl.AddItem(Preset, ClickVoicingPreset.Bind(Preset))
+
+        If StrLower(Preset) == StrLower(ProfileObj["Chords"]["voicingPreset"])
+            VoicingPresetCtrl.SetValue(Preset)
+    }
+
+    ChordsTab.AddControl(VoicingPresetCtrl)
+
+    ChordPresetCtrl := PopulatedComboBox("Chord Preset", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+
+    Local Presets
+    
+    If ProfileObj["Scale"]["patternName"] == "Chromatic"
+        Presets := ["Custom"]
+    Else
+        Presets := ["Triads", "Pop Simple", "Pop Advanced"]
+
+    For Preset In Presets {
+        ChordPresetCtrl.AddItem(Preset, ClickChordPreset.Bind(Preset))
+
+        If StrLower(Preset) == StrLower(ProfileObj["Chords"]["chordPreset"])
+            ChordPresetCtrl.SetValue(Preset)
+    }
+
+    ChordsTab.AddControl(ChordPresetCtrl)
 
     ;AssignTab := HotspotTab("Assign", 815, 104, DublerDisableNotesAnnouncement)
 

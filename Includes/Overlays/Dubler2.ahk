@@ -382,9 +382,9 @@ Class Dubler2 {
         Label := ReaHotkey.FoundStandalone.Overlay.Label
 
         For Trigger In Dubler2.OVERLAY_TRIGGERS {
+            Sleep(-1)
             If Not ReaHotkey.FoundStandalone Is Standalone Or ReaHotkey.FoundStandalone.Overlay.Label != Label
                 Return
-            Sleep(-1)
             If ReaHotkey.FoundStandalone.Overlay.Label != "" And (Not Trigger.Has("Popup") Or Trigger["Popup"] == False) Or (ReaHotkey.FoundStandalone.Overlay.Label == Trigger["Label"] And (Trigger.Has("Popup") And Trigger["Popup"] == True))
                 Continue
             If Trigger.Has("Detector")
