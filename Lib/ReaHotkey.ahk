@@ -339,12 +339,10 @@ Class ReaHotkey {
             Suspend -1
             If A_IsSuspended = 1 {
                 SetTimer ReaHotkey.ManageState, 0
-                HotIfWinActive(ReaHotkey.PluginWinCriteria)
                 ReaHotkey.TurnPluginTimersOff()
-                ReaHotkey.TurnHotkeysOff()
-                HotIf
+                ReaHotkey.TurnPluginHotkeysOff()
                 ReaHotkey.TurnStandaloneTimersOff()
-                ReaHotkey.TurnHotkeysOff()
+                ReaHotkey.TurnStandaloneHotkeysOff()
             }
             Else {
                 SetTimer ReaHotkey.ManageState, 100
