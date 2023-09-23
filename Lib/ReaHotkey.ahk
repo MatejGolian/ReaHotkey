@@ -343,6 +343,7 @@ Class ReaHotkey {
                 ReaHotkey.TurnPluginHotkeysOff()
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
+                AccessibleMenu.CurrentMenu := False
             }
             Else {
                 SetTimer ReaHotkey.ManageState, 100
