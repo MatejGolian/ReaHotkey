@@ -7,7 +7,21 @@ Class AccessibleStandaloneMenu Extends AccessibleMenu {
     Show() {
         ReaHotkey.TurnStandaloneTimersOff()
         ReaHotkey.TurnStandaloneHotkeysOff()
-        Super.Show()
+        AccessibilityOverlay.Speak(This.ContextMenuString)
+        AccessibleMenu.CurrentMenu := This
+        Loop {
+            If Not AccessibleMenu.CurrentMenu Is AccessibleStandaloneMenu {
+                AccessibleMenu.CurrentMenu := False
+                Break
+            }
+            Else If ReaHotkey.StandaloneWinCriteria = False Or Not WinActive(ReaHotkey.StandaloneWinCriteria) {
+                AccessibleMenu.CurrentMenu := False
+                Break
+            }
+            Else {
+                AccessibleMenu.CurrentMenu.Manage()
+            }
+        }
     }
     
 }

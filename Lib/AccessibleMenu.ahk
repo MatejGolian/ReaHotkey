@@ -215,6 +215,86 @@ Class AccessibleMenu {
         Return IH.EndKey
     }
     
+    Manage() {
+        If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+            KeyCombo := AccessibleMenu.CurrentMenu.KeyWaitCombo()
+            If KeyCombo = "!F4" {
+                If AccessibleMenu.CurrentMenu Is AccessibleMenu
+                AccessibleMenu.CurrentMenu.Hide(True)
+                Return
+            }
+            Else If KeyCombo = "!Tab" {
+                If AccessibleMenu.CurrentMenu Is AccessibleMenu
+                AccessibleMenu.CurrentMenu.Hide(True)
+                Return
+            }
+            Else If KeyCombo = "^Tab" {
+                Return
+            }
+            Else If KeyCombo = "+F10" {
+                If AccessibleMenu.CurrentMenu Is AccessibleMenu
+                AccessibleMenu.CurrentMenu.Hide(True)
+                Return
+            }
+            Else If KeyCombo = "+Tab" {
+                If AccessibleMenu.CurrentMenu Is AccessibleMenu
+                SoundPlay "*48"
+                Return
+            }
+            Else {
+                If SubStr(KeyCombo, 1, 1) = "+" And StrLen(SubStr(KeyCombo, 2)) = 1
+                SingleKey := SubStr(KeyCombo, 2)
+                Else
+                SingleKey := AccessibleMenu.CurrentMenu.KeyWaitSingle()
+                If SubStr(SingleKey, 1, 6) = "Numpad"
+                SingleKey := SubStr(SingleKey, 7)
+                If SingleKey = "AppsKey" Or SingleKey = "LAlt" Or SingleKey = "RAlt" Or SingleKey = "LWin" Or SingleKey = "RWin" {
+                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
+                    AccessibleMenu.CurrentMenu.Hide(True)
+                    Return
+                }
+                If SingleKey = "Escape" {
+                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
+                    AccessibleMenu.CurrentMenu.Hide(True)
+                    Return
+                }
+                If SingleKey = "Down" {
+                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
+                    AccessibleMenu.CurrentMenu.FocusNextItem()
+                    Return
+                }
+                If SingleKey = "Up" {
+                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
+                    AccessibleMenu.CurrentMenu.FocusPreviousItem()
+                    Return
+                }
+                If SingleKey = "Right" {
+                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
+                    AccessibleMenu.CurrentMenu.OpenSubmenu()
+                    Return
+                }
+                If SingleKey = "Left" {
+                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
+                    AccessibleMenu.CurrentMenu.CloseSubmenu()
+                    Return
+                }
+                If SingleKey = "Enter" {
+                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
+                    AccessibleMenu.CurrentMenu.ChooseItem()
+                    Return
+                }
+                If AccessibleMenu.CurrentMenu Is AccessibleMenu {
+                    If SingleKey = "Space" Or SingleKey = "Tab"
+                    SoundPlay "*48"
+                    Else
+                    If StrLen(SingleKey) = 1 And !AccessibleMenu.CurrentMenu.FocusByFirstCharacter(SingleKey)
+                    SoundPlay "*48"
+                    Return
+                }
+            }
+        }
+    }
+    
     OpenSubmenu() {
         If This.Items.Length > 0 And This.CurrentItem > 0 {
             If This.Items[This.CurrentItem]["CallbackOrSubmenu"] Is AccessibleMenu And This.Items[This.CurrentItem]["Enabled"] = 1 {
@@ -236,83 +316,9 @@ Class AccessibleMenu {
         AccessibilityOverlay.Speak(This.ContextMenuString)
         AccessibleMenu.CurrentMenu := This
         Loop {
-            If AccessibleMenu.CurrentMenu = False {
-                Break
-            }
-            KeyCombo := AccessibleMenu.CurrentMenu.KeyWaitCombo()
-            If KeyCombo = "!F4" {
-                If AccessibleMenu.CurrentMenu Is AccessibleMenu
-                AccessibleMenu.CurrentMenu.Hide(True)
-                Break
-            }
-            Else If KeyCombo = "!Tab" {
-                If AccessibleMenu.CurrentMenu Is AccessibleMenu
-                AccessibleMenu.CurrentMenu.Hide(True)
-                Break
-            }
-            Else If KeyCombo = "^Tab" {
-                Continue
-            }
-            Else If KeyCombo = "+F10" {
-                If AccessibleMenu.CurrentMenu Is AccessibleMenu
-                AccessibleMenu.CurrentMenu.Hide(True)
-                Break
-            }
-            Else If KeyCombo = "+Tab" {
-                If AccessibleMenu.CurrentMenu Is AccessibleMenu
-                SoundPlay "*48"
-                Continue
-            }
-            Else {
-                If SubStr(KeyCombo, 1, 1) = "+" And StrLen(SubStr(KeyCombo, 2)) = 1
-                SingleKey := SubStr(KeyCombo, 2)
-                Else
-                SingleKey := AccessibleMenu.CurrentMenu.KeyWaitSingle()
-                If SubStr(SingleKey, 1, 6) = "Numpad"
-                SingleKey := SubStr(SingleKey, 7)
-                If SingleKey = "AppsKey" Or SingleKey = "LAlt" Or SingleKey = "RAlt" Or SingleKey = "LWin" Or SingleKey = "RWin" {
-                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
-                    AccessibleMenu.CurrentMenu.Hide(True)
-                    Break
-                }
-                If SingleKey = "Escape" {
-                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
-                    AccessibleMenu.CurrentMenu.Hide(True)
-                    Break
-                }
-                If SingleKey = "Down" {
-                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
-                    AccessibleMenu.CurrentMenu.FocusNextItem()
-                    Continue
-                }
-                If SingleKey = "Up" {
-                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
-                    AccessibleMenu.CurrentMenu.FocusPreviousItem()
-                    Continue
-                }
-                If SingleKey = "Right" {
-                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
-                    AccessibleMenu.CurrentMenu.OpenSubmenu()
-                    Continue
-                }
-                If SingleKey = "Left" {
-                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
-                    AccessibleMenu.CurrentMenu.CloseSubmenu()
-                    Continue
-                }
-                If SingleKey = "Enter" {
-                    If AccessibleMenu.CurrentMenu Is AccessibleMenu
-                    AccessibleMenu.CurrentMenu.ChooseItem()
-                    Continue
-                }
-                If AccessibleMenu.CurrentMenu Is AccessibleMenu {
-                    If SingleKey = "Space" Or SingleKey = "Tab"
-                    SoundPlay "*48"
-                    Else
-                    If StrLen(SingleKey) = 1 And !AccessibleMenu.CurrentMenu.FocusByFirstCharacter(SingleKey)
-                    SoundPlay "*48"
-                }
-            }
+            If Not AccessibleMenu.CurrentMenu Is AccessibleMenu
+            Break
+            AccessibleMenu.CurrentMenu.Manage()
         }
     }
     
