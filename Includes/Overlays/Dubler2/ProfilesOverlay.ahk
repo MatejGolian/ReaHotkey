@@ -25,6 +25,7 @@ Static ActivateProfileButton(Button) {
         ActionsMenu.Add("Set Profile Active", MoveMenu)
     }
     ActionsMenu.Add("Duplicate Profile", ObjBindMethod(Dubler2, "DuplicateProfile", Button.ProfileFile))
+    ActionsMenu.Add("Rename Profile", ObjBindMethod(Dubler2, "RenameProfile", Button.ProfileFile))
     ActionsMenu.Add("Delete Profile", ObjBindMethod(Dubler2, "DeleteProfile", Button.ProfileFile, Button.Index))
 
     ActionsMenu.Show()
@@ -129,6 +130,32 @@ Static CreateNewProfileButton(*) {
     Sleep 1000
     Click(362, 56)
     Sleep 300
+
+    Dubler2.CloseOverlay()
+}
+
+Static RenameProfile(ProfileFile, *) {
+
+    Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . ProfileFile, "UTF-8")
+    ProfileObj := Jxon_Load(&Profile)
+
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
+    ReaHotkey.TurnStandaloneHotkeysOff()
+    Name := InputBox("Profile name:", "ReaHotkey", , ProfileObj["profileName"])
+    ReaHotkey.TurnStandaloneHotkeysOn()
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
+
+    ReaHotkey.AutoFocusStandaloneOverlay := False
+
+    If Name.Result != "OK"
+        Return
+
+    ProfileObj["profileName"] := Name.Value
+
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . ProfileFile)
+    FileAppend(Dubler2.FixJson(Jxon_Dump(ProfileObj, 4)), A_AppData . "\Vochlea\Dubler2\" . ProfileFile)
 
     Dubler2.CloseOverlay()
 }
