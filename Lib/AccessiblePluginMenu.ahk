@@ -14,6 +14,10 @@ Class AccessiblePluginMenu Extends AccessibleMenu {
                 AccessibleMenu.CurrentMenu := False
                 Break
             }
+            Else If WinExist("ahk_class #32768") {
+                AccessibleMenu.CurrentMenu := False
+                Break
+            }
             Else If Not WinActive(ReaHotkey.PluginWinCriteria) {
                 AccessibleMenu.CurrentMenu := False
                 Break
@@ -22,7 +26,6 @@ Class AccessiblePluginMenu Extends AccessibleMenu {
                 AccessibleMenu.CurrentMenu.Manage()
             }
         }
-        
     }
     
 }

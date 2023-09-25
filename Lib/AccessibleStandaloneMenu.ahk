@@ -14,6 +14,10 @@ Class AccessibleStandaloneMenu Extends AccessibleMenu {
                 AccessibleMenu.CurrentMenu := False
                 Break
             }
+            Else If WinExist("ahk_class #32768") {
+                AccessibleMenu.CurrentMenu := False
+                Break
+            }
             Else If ReaHotkey.StandaloneWinCriteria = False Or Not WinActive(ReaHotkey.StandaloneWinCriteria) {
                 AccessibleMenu.CurrentMenu := False
                 Break
