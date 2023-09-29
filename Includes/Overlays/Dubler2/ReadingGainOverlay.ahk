@@ -52,7 +52,16 @@ Static CreateReadingGainOverlay(Overlay) {
 
         LevelDB := Level > 0 ? 20 * Log(Level) : -144.0
         
-        AccessibilityOverlay.Speak(Round(LevelDB, 1) . " dB")
+        Recommendation := ""
+        
+        If LevelDB > -30
+            Recommendation := "To Loud"
+        Else If LevelDB < -40
+            Recommendation := "To Quiet"
+        Else
+            Recommendation := "Optimal Gain"
+
+        AccessibilityOverlay.Speak(Round(LevelDB, 1) . " dB (" . Recommendation . ")")
     }
 
     CB := CallbackCreate(DataCallback, "Fast")
@@ -68,7 +77,7 @@ Static CreateReadingGainOverlay(Overlay) {
 
     Overlay.AddControl(CustomButton("Stop Reading Gain", ObjBindMethod(Dubler2, "FocusButton"), StopReadingGain))
 
-    Standalone.SetTimer("Dubler 2", SpeakGain, 500)
+    Standalone.SetTimer("Dubler 2", SpeakGain, 1000)
 
     Return Overlay
 }
