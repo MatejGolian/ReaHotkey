@@ -256,6 +256,7 @@ Class Dubler2 {
         Local NextControl, Controls
 
         Dubler2.SoundPlay("OverlayClosed.mp3")
+        AccessibilityOverlay.Speak("Loading, please wait...")
 
         If Not ReaHotkey.FoundStandalone Is Standalone
             Return

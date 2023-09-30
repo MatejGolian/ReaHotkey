@@ -845,6 +845,24 @@ Static CreateProfileOverlay(Overlay) {
         }
     }
 
+    SelectPitchBendType(Type) {
+        Dubler2.ProfileLoaded["Current"]["PitchBendType"] := Type
+
+        Dubler2.CloseOverlay("Dubler 2 Profile")
+
+        Click(362, 56)
+        Sleep 1000
+
+        FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+        FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+        Dubler2.ProfileLoaded.Set("Current", "")
+        Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
+
+        Sleep 1000
+
+        ReaHotkey.FoundStandalone.Overlay.Label := ""
+    }
+
     Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"], "UTF-8")
     ProfileObj := Jxon_Load(&Profile)
 
@@ -863,6 +881,12 @@ Static CreateProfileOverlay(Overlay) {
     PlayTab.SetHotkey("^1", "Ctrl + 1")
     PlayTab.AddControl(CustomButton("Rename profile", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateRenameProfileButton")))
     PlayTab.AddControl(Dubler2.HotspotCheckbox("Inbuilt audio enabled", 730, 619, ProfileObj["DublerModel"]["audioOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+    PlayTab.AddControl(Dubler2.HotspotCheckbox("MIDI out enabled", 829, 621, ProfileObj["DublerModel"]["midiOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+
+    PitchTab := HotspotTab("Pitch", 258, 104, ObjBindMethod(Dubler2, "FocusTab"))
+
+    PitchTab.SetHotkey("^2", "Ctrl + 2")
+    PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch enabled", 371, 161, ProfileObj["Pitch"]["pitchEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 
     SynthPresetCtrl := PopulatedComboBox("Synth Preset", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
 
@@ -873,13 +897,7 @@ Static CreateProfileOverlay(Overlay) {
             SynthPresetCtrl.SetValue(Preset)
     }
 
-    PlayTab.AddControl(SynthPresetCtrl)
-    PlayTab.AddControl(Dubler2.HotspotCheckbox("MIDI out enabled", 829, 621, ProfileObj["DublerModel"]["midiOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
-
-    PitchTab := HotspotTab("Pitch", 258, 104, ObjBindMethod(Dubler2, "FocusTab"))
-
-    PitchTab.SetHotkey("^2", "Ctrl + 2")
-    PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch enabled", 371, 161, ProfileObj["Pitch"]["pitchEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+    PitchTab.AddControl(SynthPresetCtrl)
     PitchTab.AddControl(CustomButton("Input Gain: " . Integer(ProfileObj["Pitch"]["pitchInputGain"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchInputGainButton")))
     PitchTab.AddControl(CustomButton("Octave shift: " . (ProfileObj["DublerModel"]["octaveShift"] >= 0 ? "+" : "") . ProfileObj["DublerModel"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchOctaveShiftButton")))
 
@@ -905,14 +923,31 @@ Static CreateProfileOverlay(Overlay) {
 
     PitchTab.AddControl(ScaleCtrl)
     PitchTab.AddControl(CustomButton("Toggle active notes", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateNotesButton")))
-    PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch Bend enabled", 354, 501, ProfileObj["Pitch"]["pitchBendEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
-    PitchTab.AddControl(CustomButton("Stickiness: " . Integer(ProfileObj["Pitch"]["pitchStickiness"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchStickinessButton")))
-    PitchTab.AddControl(CustomButton("Pitch Bend Range: " . ProfileObj["Pitch"]["pitchBendRange"] . " semitones", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchBendRangeButton")))
     PitchTab.AddControl(Dubler2.CustomCheckbox("Announce detected notes (press Ctrl+N to toggle)", Dubler2.AnnounceNotes, ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "ToggleNotesAnnouncement")))
+
+    PitchBendTab := HotspotTab("Pitch Bend", 258, 104, ObjBindMethod(Dubler2, "FocusTab"))
+
+    PitchBendTab.SetHotkey("^3", "Ctrl + 3")
+
+    PitchBendTab.AddControl(Dubler2.HotspotCheckbox("Pitch Bend enabled", 354, 501, ProfileObj["Pitch"]["pitchBendEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+    PitchBendTab.AddControl(CustomButton("Stickiness: " . Integer(ProfileObj["Pitch"]["pitchStickiness"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchStickinessButton")))
+    PitchBendTab.AddControl(CustomButton("Pitch Bend Range: " . ProfileObj["Pitch"]["pitchBendRange"] . " semitones", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchBendRangeButton")))
+
+    PitchBendTypeCtrl := PopulatedComboBox("Pitch Bend Type", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+
+    PitchBendTypeCtrl.AddItem("IntelliBend", SelectPitchBendType.Bind(0))
+    PitchBendTypeCtrl.AddItem("TrueBend", SelectPitchBendType.Bind(1))
+
+    If ProfileObj["PitchBendType"] == 0
+        PitchBendTypeCtrl.Setvalue("IntelliBend")
+    Else
+        PitchBendTypeCtrl.SetValue("TrueBend")
+
+    PitchBendTab.AddControl(PitchBendTypeCtrl)
 
     TriggersTab := HotspotTab("Triggers", 407, 105, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
 
-    TriggersTab.SetHotkey("^3", "Ctrl + 3")
+    TriggersTab.SetHotkey("^5", "Ctrl + 5")
     TriggersTab.AddControl(Dubler2.HotspotCheckbox("Triggers enabled", 97, 158, ProfileObj["triggers"]["triggersEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
     SetupTriggers(TriggersTab)
     TriggersTab.AddControl(CustomButton("Sensitivity: " . Integer(ProfileObj["DublerModel"]["triggerSensitivity"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateTriggerSensitivityButton")))
@@ -954,9 +989,7 @@ Static CreateProfileOverlay(Overlay) {
 
     ChordsTab.AddControl(ChordPresetCtrl)
 
-    ;AssignTab := HotspotTab("Assign", 815, 104, DublerDisableNotesAnnouncement)
-
-    Overlay.AddTabControl("Profile Settings", PlayTab, PitchTab, TriggersTab, ChordsTab)
+    Overlay.AddTabControl("Profile Settings", PlayTab, PitchTab, PitchBendTab, ChordsTab, TriggersTab)
 
     return Overlay
 }
