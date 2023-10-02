@@ -1429,9 +1429,9 @@ Class CustomButton Extends ActivatableCustom {
         Super.Activate(CurrentControlID)
         If This.ControlID != CurrentControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
         }
     }
     
@@ -1439,9 +1439,9 @@ Class CustomButton Extends ActivatableCustom {
         Super.Focus(CurrentControlID)
         If This.ControlID != CurrentControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
         }
     }
     
@@ -1456,10 +1456,11 @@ Class CustomComboBox Extends FocusableCustom {
     
     ControlType := "ComboBox"
     ControlTypeLabel := "combo box"
+    CurrentOption := 1
     HotkeyLabel := ""
     Label := ""
     OnChangeFunction := Array()
-    Value := ""
+    Options := Array()
     UnlabelledString := "unlabelled"
     
     __New(Label, OnFocusFunction := "", OnChangeFunction := "") {
@@ -1471,16 +1472,15 @@ Class CustomComboBox Extends FocusableCustom {
             Else
             This.OnChangeFunction := Array(OnChangeFunction)
         }
-        
     }
     
     Focus(CurrentControlID := 0) {
         Super.Focus(CurrentControlID)
         If This.ControlID != CurrentControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.GetValue() . " " . This.HotkeyLabel)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.GetValue() . " " . This.HotkeyLabel)
         }
     }
     
@@ -1489,21 +1489,55 @@ Class CustomComboBox Extends FocusableCustom {
         This.HotkeyLabel := HotkeyLabel
     }
     
-    ChangeValue() {
+    GetValue() {
+        If This.Options.Length > 0 And This.CurrentOption Is Integer And This.CurrentOption > 0 And This.CurrentOption <= This.Options.Length
+        Return This.Options[This.CurrentOption]
+        Else
+        Return ""
+    }
+    
+    ReportValue() {
+        AccessibilityOverlay.Speak(This.GetValue())
+    }
+    
+    SelectNextOption() {
+        If This.Options.Length > 0 {
+            If This.CurrentOption < This.Options.Length
+            This.CurrentOption++
+            Else
+            This.CurrentOption := 1
+        }
         For OnChangeFunction In This.OnChangeFunction
         OnChangeFunction(This)
     }
     
-    GetValue() {
-        Return This.Value
+    SelectPreviousOption() {
+        If This.Options.Length > 0 {
+            If This.CurrentOption > 1
+            This.CurrentOption--
+            Else
+            This.CurrentOption := This.Options.Length
+        }
+        For OnChangeFunction In This.OnChangeFunction
+        OnChangeFunction(This)
     }
     
-    ReportValue() {
-        AccessibilityOverlay.Speak(This.Value)
+    SetOption(Option) {
+        If Not Option Is Integer Or Option < 1 Or Option > This.Options.Length
+        This.CurrentOption := 1
+        Else
+        This.CurrentOption := Option
     }
     
-    SetValue(Value) {
-        This.Value := Value
+    SetOptions(Options, DefaultOption := 1) {
+        If Options Is Array
+        This.Options := Options
+        Else
+        This.Options := Array(Options)
+        If Not DefaultOption Is Integer Or DefaultOption < 1 Or DefaultOption > This.Options.Length
+        This.CurrentOption := 1
+        Else
+        This.CurrentOption := DefaultOption
     }
     
 }
@@ -1537,11 +1571,15 @@ Class CustomEdit Extends FocusableCustom {
     
     Focus(CurrentControlID := 0) {
         Super.Focus(CurrentControlID)
+        If This.Value = ""
+        Value := This.BlankString
+        Else
+        Value := This.Value
         If This.ControlID != CurrentControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel . " " . Value)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel . " " . Value)
         }
     }
     
@@ -1589,9 +1627,9 @@ Class CustomTab Extends AccessibilityOverlay {
         OnFocusFunction(This)
         If This.ControlID != ControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
         }
         Return 1
     }
@@ -1633,9 +1671,9 @@ Class GraphicalButton Extends ToggleableGraphic {
         If This.IsToggle = 1 And This.State = 1 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OnString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OnString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OnString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OnString . " " . This.HotkeyLabel)
             }
             Else {
                 AccessibilityOverlay.Speak(This.OnString)
@@ -1644,9 +1682,9 @@ Class GraphicalButton Extends ToggleableGraphic {
         Else If This.IsToggle = 1 And This.State = 0 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OffString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OffString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.OffString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.OffString . " " . This.HotkeyLabel)
             }
             Else {
                 AccessibilityOverlay.Speak(This.OffString)
@@ -1655,17 +1693,17 @@ Class GraphicalButton Extends ToggleableGraphic {
         Else If This.IsToggle = 0 And This.State = 1 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             }
         }
         Else {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
             }
         }
     }
@@ -1675,33 +1713,33 @@ Class GraphicalButton Extends ToggleableGraphic {
         If This.IsToggle = 1 And This.State = 1 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OnString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OnString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OnString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OnString . " " . This.HotkeyLabel)
             }
         }
         Else If This.IsToggle = 1 And This.State = 0 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OffString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OffString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OffString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OffString . " " . This.HotkeyLabel)
             }
         }
         Else If This.IsToggle = 0 And This.State = 1 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             }
         }
         Else {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
             }
         }
     }
@@ -1735,9 +1773,9 @@ Class GraphicalCheckbox Extends ToggleableGraphic {
         If This.State = 1 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OnString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OnString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OnString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OnString . " " . This.HotkeyLabel)
             }
             Else {
                 AccessibilityOverlay.Speak(This.OnString)
@@ -1746,9 +1784,9 @@ Class GraphicalCheckbox Extends ToggleableGraphic {
         Else If This.State = 0 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OffString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OffString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OffString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OffString . " " . This.HotkeyLabel)
             }
             Else {
                 AccessibilityOverlay.Speak(This.OffString)
@@ -1757,9 +1795,9 @@ Class GraphicalCheckbox Extends ToggleableGraphic {
         Else {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
             }
         }
     }
@@ -1769,25 +1807,25 @@ Class GraphicalCheckbox Extends ToggleableGraphic {
         If This.State = 1 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OnString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OnString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OnString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OnString . " " . This.HotkeyLabel)
             }
         }
         Else If This.State = 0 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OffString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OffString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OffString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OffString . " " . This.HotkeyLabel)
             }
         }
         Else {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
             }
         }
     }
@@ -1861,17 +1899,17 @@ Class GraphicalTab Extends AccessibilityOverlay {
         If This.State != -1 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             }
         }
         Else {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
                 Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString)
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
             }
         }
         If This.State = -1
@@ -1946,9 +1984,9 @@ Class HotspotButton Extends ActivatableHotspot {
         Super.Activate(CurrentControlID)
         If This.ControlID != CurrentControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
         }
     }
     
@@ -1956,9 +1994,9 @@ Class HotspotButton Extends ActivatableHotspot {
         Super.Focus(CurrentControlID)
         If This.ControlID != CurrentControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
         }
     }
     
@@ -1973,10 +2011,11 @@ Class HotspotComboBox Extends FocusableHotspot {
     
     ControlType := "ComboBox"
     ControlTypeLabel := "combo box"
+    CurrentOption := 1
     HotkeyLabel := ""
     Label := ""
     OnChangeFunction := Array()
-    Value := ""
+    Options := Array()
     UnlabelledString := "unlabelled"
     
     __New(Label, XCoordinate, YCoordinate, OnFocusFunction := "", OnChangeFunction := "") {
@@ -1994,9 +2033,9 @@ Class HotspotComboBox Extends FocusableHotspot {
         Super.Focus(CurrentControlID)
         If This.ControlID != CurrentControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.GetValue() . " " . This.HotkeyLabel)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.GetValue() . " " . This.HotkeyLabel)
         }
     }
     
@@ -2005,21 +2044,55 @@ Class HotspotComboBox Extends FocusableHotspot {
         This.HotkeyLabel := HotkeyLabel
     }
     
-    ChangeValue() {
+    GetValue() {
+        If This.Options.Length > 0 And This.CurrentOption Is Integer And This.CurrentOption > 0 And This.CurrentOption <= This.Options.Length
+        Return This.Options[This.CurrentOption]
+        Else
+        Return ""
+    }
+    
+    ReportValue() {
+        AccessibilityOverlay.Speak(This.GetValue())
+    }
+    
+    SelectNextOption() {
+        If This.Options.Length > 0 {
+            If This.CurrentOption < This.Options.Length
+            This.CurrentOption++
+            Else
+            This.CurrentOption := 1
+        }
         For OnChangeFunction In This.OnChangeFunction
         OnChangeFunction(This)
     }
     
-    GetValue() {
-        Return This.Value
+    SelectPreviousOption() {
+        If This.Options.Length > 0 {
+            If This.CurrentOption > 1
+            This.CurrentOption--
+            Else
+            This.CurrentOption := This.Options.Length
+        }
+        For OnChangeFunction In This.OnChangeFunction
+        OnChangeFunction(This)
     }
     
-    ReportValue() {
-        AccessibilityOverlay.Speak(This.Value)
+    SetOption(Option) {
+        If Not Option Is Integer Or Option < 1 Or Option > This.Options.Length
+        This.CurrentOption := 1
+        Else
+        This.CurrentOption := Option
     }
     
-    SetValue(Value) {
-        This.Value := Value
+    SetOptions(Options, DefaultOption := 1) {
+        If Options Is Array
+        This.Options := Options
+        Else
+        This.Options := Array(Options)
+        If Not DefaultOption Is Integer Or DefaultOption < 1 Or DefaultOption > This.Options.Length
+        This.CurrentOption := 1
+        Else
+        This.CurrentOption := DefaultOption
     }
     
 }
@@ -2041,11 +2114,15 @@ Class HotspotEdit Extends FocusableHotspot {
     
     Focus(CurrentControlID := 0) {
         Super.Focus(CurrentControlID)
+        If This.Value = ""
+        Value := This.BlankString
+        Else
+        Value := This.Value
         If This.ControlID != CurrentControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel . " " . Value)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel . " " . Value)
         }
     }
     
@@ -2098,9 +2175,9 @@ Class HotspotTab Extends AccessibilityOverlay {
         Click This.XCoordinate, This.YCoordinate
         If This.ControlID != ControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
         }
         Return 1
     }
@@ -2135,9 +2212,9 @@ Class OCRButton Extends ActivatableOCR {
         This.Label := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         If This.ControlID != CurrentControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
         }
     }
     
@@ -2146,9 +2223,9 @@ Class OCRButton Extends ActivatableOCR {
         This.Label := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         If This.ControlID != CurrentControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
         }
     }
     
@@ -2166,7 +2243,6 @@ Class OCRComboBox Extends FocusableOCR {
     HotkeyLabel := ""
     Label := ""
     OnChangeFunction := Array()
-    Value := ""
     UnlabelledString := "unlabelled"
     
     __New(Label, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "", OnChangeFunction := "") {
@@ -2182,12 +2258,11 @@ Class OCRComboBox Extends FocusableOCR {
     
     Focus(CurrentControlID := 0) {
         Super.Focus(CurrentControlID)
-        This.Value := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         If This.ControlID != CurrentControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Value)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.GetValue() . " " . This.HotkeyLabel)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Value)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.GetValue() . " " . This.HotkeyLabel)
         }
     }
     
@@ -2196,21 +2271,22 @@ Class OCRComboBox Extends FocusableOCR {
         This.HotkeyLabel := HotkeyLabel
     }
     
-    ChangeValue() {
+    GetValue() {
+        Return AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
+    }
+    
+    ReportValue() {
+        AccessibilityOverlay.Speak(This.GetValue())
+    }
+    
+    SelectNextOption() {
         For OnChangeFunction In This.OnChangeFunction
         OnChangeFunction(This)
     }
     
-    GetValue() {
-        Return This.Value
-    }
-    
-    ReportValue() {
-        AccessibilityOverlay.Speak(This.Value)
-    }
-    
-    SetValue(Value) {
-        This.Value := Value
+    SelectPreviousOption() {
+        For OnChangeFunction In This.OnChangeFunction
+        OnChangeFunction(This)
     }
     
 }
@@ -2239,9 +2315,9 @@ Class OCREdit Extends FocusableOCR {
         Value := This.Value
         If This.ControlID != CurrentControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . Value)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel . " " . Value)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . Value)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel . " " . Value)
         }
     }
     
@@ -2305,9 +2381,9 @@ Class OCRTab Extends AccessibilityOverlay {
         Click XCoordinate, YCoordinate
         If This.ControlID != ControlID {
             If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.HotkeyLabel . " " . This.ControlTypeLabel)
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
         }
         Return 1
     }

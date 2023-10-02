@@ -76,7 +76,10 @@ Down:: {
         Case "ComboBox":
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"
-        StandaloneOverlay.GetCurrentControl().ChangeValue()
+        If A_ThisHotkey = "Up"
+        StandaloneOverlay.GetCurrentControl().SelectPreviousOption()
+        Else
+        StandaloneOverlay.GetCurrentControl().SelectNextOption()
         StandaloneOverlay.GetCurrentControl().ReportValue()
         Hotkey A_ThisHotkey, "On"
         Default:
