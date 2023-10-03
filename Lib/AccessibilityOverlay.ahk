@@ -2322,7 +2322,6 @@ Class OCRComboBox Extends FocusableOCR {
     }
     
     SelectPreviousOption() {
-        If This.CurrentOption > 1
         This.CurrentOption--
         For OnChangeFunction In This.OnChangeFunction
         OnChangeFunction(This)
