@@ -30,23 +30,7 @@ Tab:: {
     ReaHotkey.FocusPreviousTab(PluginOverlay)
 }
 
-Right:: {
-    Thread "NoTimers"
-    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
-    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    Switch(PluginOverlay.GetCurrentControlType()) {
-        Case "Edit":
-        Hotkey A_ThisHotkey, "Off"
-        Send "{" . A_ThisHotkey . "}"
-        Hotkey A_ThisHotkey, "On"
-        Default:
-        Hotkey A_ThisHotkey, "Off"
-        Send "{" . A_ThisHotkey . "}"
-        Hotkey A_ThisHotkey, "On"
-        PluginOverlay.FocusNextTab()
-    }
-}
-
+Right::
 Left:: {
     Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
@@ -60,7 +44,10 @@ Left:: {
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"
         Hotkey A_ThisHotkey, "On"
+        If A_ThisHotkey = "Left"
         PluginOverlay.FocusPreviousTab()
+        Else
+        PluginOverlay.FocusNextTab()
     }
 }
 

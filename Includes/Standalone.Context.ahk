@@ -30,23 +30,7 @@ Tab:: {
     ReaHotkey.FocusPreviousTab(StandaloneOverlay)
 }
 
-Right:: {
-    Thread "NoTimers"
-    ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
-    StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
-    Switch(StandaloneOverlay.GetCurrentControlType()) {
-        Case "Edit":
-        Hotkey A_ThisHotkey, "Off"
-        Send "{" . A_ThisHotkey . "}"
-        Hotkey A_ThisHotkey, "On"
-        Default:
-        Hotkey A_ThisHotkey, "Off"
-        Send "{" . A_ThisHotkey . "}"
-        Hotkey A_ThisHotkey, "On"
-        StandaloneOverlay.FocusNextTab()
-    }
-}
-
+Right::
 Left:: {
     Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
@@ -60,7 +44,10 @@ Left:: {
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"
         Hotkey A_ThisHotkey, "On"
+        If A_ThisHotkey = "Left"
         StandaloneOverlay.FocusPreviousTab()
+        Else
+        StandaloneOverlay.FocusNextTab()
     }
 }
 
