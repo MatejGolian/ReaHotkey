@@ -90,8 +90,7 @@ Space:: {
     Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is Object
-    Switch(PluginOverlay.GetCurrentControl().ControlType) {
+    Switch(PluginOverlay.GetCurrentControlType()) {
         Case "Edit":
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"

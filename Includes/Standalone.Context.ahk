@@ -90,8 +90,7 @@ Space:: {
     Thread "NoTimers"
     ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
     StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
-    If StandaloneOverlay.GetCurrentControl() Is Object
-    Switch(StandaloneOverlay.GetCurrentControl().ControlType) {
+    Switch(StandaloneOverlay.GetCurrentControlType()) {
         Case "Edit":
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"
