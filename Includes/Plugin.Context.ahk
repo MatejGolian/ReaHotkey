@@ -77,10 +77,9 @@ Down:: {
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"
         If A_ThisHotkey = "Up"
-        PluginOverlay.GetCurrentControl().SelectPreviousOption()
+        PluginOverlay.SelectPreviousOption()
         Else
-        PluginOverlay.GetCurrentControl().SelectNextOption()
-        PluginOverlay.GetCurrentControl().ReportValue()
+        PluginOverlay.SelectNextOption()
         Hotkey A_ThisHotkey, "On"
         Default:
         Hotkey A_ThisHotkey, "Off"

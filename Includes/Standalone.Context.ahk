@@ -77,10 +77,9 @@ Down:: {
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"
         If A_ThisHotkey = "Up"
-        StandaloneOverlay.GetCurrentControl().SelectPreviousOption()
+        StandaloneOverlay.SelectPreviousOption()
         Else
-        StandaloneOverlay.GetCurrentControl().SelectNextOption()
-        StandaloneOverlay.GetCurrentControl().ReportValue()
+        StandaloneOverlay.SelectNextOption()
         Hotkey A_ThisHotkey, "On"
         Default:
         Hotkey A_ThisHotkey, "Off"

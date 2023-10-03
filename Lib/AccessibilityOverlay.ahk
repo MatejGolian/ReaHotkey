@@ -953,6 +953,38 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         }
     }
     
+    SelectNextOption() {
+        If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
+            This.FocusableControlIDs := This.GetFocusableControlIDs()
+            Found := This.FindFocusableControlID(This.CurrentControlID)
+            If Found > 0 {
+                CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
+                If CurrentControl.ControlType = "ComboBox" {
+                    CurrentControl.SelectNextOption()
+                    CurrentControl.ReportValue()
+                    Return 1
+                }
+            }
+        }
+        Return 0
+    }
+    
+    SelectPreviousOption() {
+        If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
+            This.FocusableControlIDs := This.GetFocusableControlIDs()
+            Found := This.FindFocusableControlID(This.CurrentControlID)
+            If Found > 0 {
+                CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
+                If CurrentControl.ControlType = "ComboBox" {
+                    CurrentControl.SelectPreviousOption()
+                    CurrentControl.ReportValue()
+                    Return 1
+                }
+            }
+        }
+        Return 0
+    }
+    
     SetCurrentControlID(ControlID) {
         If This.ChildControls.Length > 0 {
             This.CurrentControlID := ControlID
