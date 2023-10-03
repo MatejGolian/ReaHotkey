@@ -821,6 +821,13 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return This.CurrentControlID
     }
     
+    GetCurrentControlType() {
+        CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
+        If CurrentControl Is Object
+        Return CurrentControl.ControlType
+        Return ""
+    }
+    
     GetFocusableControlIDs() {
         FocusableControlIDs := Array()
         If This.ChildControls.Length > 0
