@@ -967,7 +967,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
                 If CurrentControl.ControlType = "ComboBox" {
+                    CurrentOption := CurrentControl.CurrentOption
                     CurrentControl.SelectNextOption()
+                    If CurrentOption != CurrentControl.CurrentOption
                     CurrentControl.ReportValue()
                     Return 1
                 }
@@ -983,7 +985,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
                 If CurrentControl.ControlType = "ComboBox" {
+                    CurrentOption := CurrentControl.CurrentOption
                     CurrentControl.SelectPreviousOption()
+                    If CurrentOption != CurrentControl.CurrentOption
                     CurrentControl.ReportValue()
                     Return 1
                 }
@@ -1543,8 +1547,6 @@ Class CustomComboBox Extends FocusableCustom {
         If This.Options.Length > 0 {
             If This.CurrentOption < This.Options.Length
             This.CurrentOption++
-            Else
-            This.CurrentOption := 1
         }
         For OnChangeFunction In This.OnChangeFunction
         OnChangeFunction(This)
@@ -1554,8 +1556,6 @@ Class CustomComboBox Extends FocusableCustom {
         If This.Options.Length > 0 {
             If This.CurrentOption > 1
             This.CurrentOption--
-            Else
-            This.CurrentOption := This.Options.Length
         }
         For OnChangeFunction In This.OnChangeFunction
         OnChangeFunction(This)
@@ -2098,8 +2098,6 @@ Class HotspotComboBox Extends FocusableHotspot {
         If This.Options.Length > 0 {
             If This.CurrentOption < This.Options.Length
             This.CurrentOption++
-            Else
-            This.CurrentOption := 1
         }
         For OnChangeFunction In This.OnChangeFunction
         OnChangeFunction(This)
@@ -2109,8 +2107,6 @@ Class HotspotComboBox Extends FocusableHotspot {
         If This.Options.Length > 0 {
             If This.CurrentOption > 1
             This.CurrentOption--
-            Else
-            This.CurrentOption := This.Options.Length
         }
         For OnChangeFunction In This.OnChangeFunction
         OnChangeFunction(This)
@@ -2279,6 +2275,7 @@ Class OCRComboBox Extends FocusableOCR {
     
     ControlType := "ComboBox"
     ControlTypeLabel := "combo box"
+    CurrentOption := 1
     HotkeyLabel := ""
     Label := ""
     OnChangeFunction := Array()
@@ -2319,13 +2316,21 @@ Class OCRComboBox Extends FocusableOCR {
     }
     
     SelectNextOption() {
+        This.CurrentOption++
         For OnChangeFunction In This.OnChangeFunction
         OnChangeFunction(This)
     }
     
     SelectPreviousOption() {
+        If This.CurrentOption > 1
+        This.CurrentOption--
         For OnChangeFunction In This.OnChangeFunction
         OnChangeFunction(This)
+    }
+    
+    SetOption(Option) {
+        If Option Is Integer And Option > 0
+        This.CurrentOption := Option
     }
     
 }
