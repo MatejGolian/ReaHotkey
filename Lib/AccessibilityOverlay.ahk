@@ -1561,7 +1561,7 @@ Class CustomComboBox Extends FocusableCustom {
         OnChangeFunction(This)
     }
     
-    SetOption(Option) {
+    SelectOption(Option) {
         If Not Option Is Integer Or Option < 1 Or Option > This.Options.Length
         This.CurrentOption := 1
         Else
@@ -2112,7 +2112,7 @@ Class HotspotComboBox Extends FocusableHotspot {
         OnChangeFunction(This)
     }
     
-    SetOption(Option) {
+    SelectOption(Option) {
         If Not Option Is Integer Or Option < 1 Or Option > This.Options.Length
         This.CurrentOption := 1
         Else
@@ -2327,7 +2327,7 @@ Class OCRComboBox Extends FocusableOCR {
         OnChangeFunction(This)
     }
     
-    SetOption(Option) {
+    SelectOption(Option) {
         If Option Is Integer And Option > 0
         This.CurrentOption := Option
     }
