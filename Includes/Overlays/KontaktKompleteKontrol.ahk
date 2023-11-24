@@ -84,18 +84,19 @@ Class KontaktKompleteKontrol {
     
     Static OpenKontaktFileMenu(*) {
         Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
-        SingleKey := False
         Loop {
             ReaHotkey.TurnPluginHotkeysOff()
             ReaHotkey.TurnPluginTimersOff()
             SingleKey := KeyWaitSingle()
-            If ReaHotkey.FoundPlugin = False
-            Break
-            If SingleKey = "Enter" Or SingleKey = "Escape"
-            Break
+            Send "{" . SingleKey . "}"
+            If ReaHotkey.FoundPlugin Is Plugin {
+                If SingleKey = "Enter" Or SingleKey = "Escape"
+                Break
+            }
+            Else {
+                Break
+            }
         }
-        If SingleKey != False
-        Send "{" . SingleKey . "}"
     }
     
     Static OpenKontaktViewMenu(*) {
@@ -104,10 +105,15 @@ Class KontaktKompleteKontrol {
             ReaHotkey.TurnPluginHotkeysOff()
             ReaHotkey.TurnPluginTimersOff()
             SingleKey := KeyWaitSingle()
-            If SingleKey = "Enter" Or SingleKey = "Escape"
-            Break
+            Send "{" . SingleKey . "}"
+            If ReaHotkey.FoundPlugin Is Plugin {
+                If SingleKey = "Enter" Or SingleKey = "Escape"
+                Break
+            }
+            Else {
+                Break
+            }
         }
-        Send "{" . SingleKey . "}"
     }
     
 }
