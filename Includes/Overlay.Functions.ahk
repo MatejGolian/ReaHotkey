@@ -199,6 +199,30 @@ CompensatePluginRegionCoordinates(PluginControl) {
     Return PluginControl
 }
 
+CompensatePluginXCoordinate(PluginXCoordinate) {
+    Try {
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    }
+    Catch {
+        PluginControlXCoordinate := 210
+        PluginControlYCoordinate := 53
+    }
+    PluginXCoordinate := PluginControlXCoordinate + PluginXCoordinate
+    Return PluginXCoordinate
+}
+
+CompensatePluginYCoordinate(PluginYCoordinate) {
+    Try {
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    }
+    Catch {
+        PluginControlXCoordinate := 210
+        PluginControlYCoordinate := 53
+    }
+    PluginYCoordinate := PluginControlYCoordinate + PluginYCoordinate
+    Return PluginYCoordinate
+}
+
 CreateOverlayMenu(Found, Type) {
     CurrentOverlay := Found.Overlay
     OverlayEntries := %Type%.GetOverlays(Found.Name)

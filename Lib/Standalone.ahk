@@ -35,6 +35,7 @@ Class Standalone {
         }
         Else If This.Overlays.Length > 1 And This.Chooser = True {
             This.Overlay := AccessibilityOverlay()
+            This.Overlay.AddAccessibilityOverlay()
             This.Overlay.AddControl(Standalone.ChooserOverlay.Clone())
             This.Overlay.OverlayNumber := 0
         }
