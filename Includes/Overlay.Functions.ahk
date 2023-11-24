@@ -79,9 +79,10 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                     ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
                     If HasProp(OverlayEntry, "Metadata")
                     ReaHotkey.Found%Type%.Overlay.Metadata := OverlayEntry.Metadata
+                    ReaHotkey.Found%Type%.Overlay.AddAccessibilityOverlay()
                     ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
                     ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
-                    ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . Product
+                    ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[1].Label := "Overlay: " . Product
                     If ReportChange = True {
                         AccessibilityOverlay.Speak(Product . " overlay active")
                         ReaHotkey.Wait(1250)
@@ -124,11 +125,12 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
         ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
         If HasProp(OverlayList[OverlayNumber], "Metadata")
         ReaHotkey.Found%Type%.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
+        ReaHotkey.Found%Type%.Overlay.AddAccessibilityOverlay()
         ReaHotkey.Found%Type%.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
         ReaHotkey.Found%Type%.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
-        ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
-        ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].ControlID)
-        ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Focus()
+        ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[1].Label := "Overlay: " . ItemName
+        ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[1].ControlID)
+        ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[1].Focus()
     }
     Else {
         ReaHotkey.Found%Type%.Overlay := OverlayList[OverlayNumber].Clone()
