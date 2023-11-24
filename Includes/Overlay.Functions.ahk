@@ -329,6 +329,26 @@ GetCurrentWindowID() {
     Return WindowID
 }
 
+KeyWaitCombo() {
+    IH := InputHook()
+    IH.VisibleNonText := True
+    IH.KeyOpt("{All}", "E")
+    IH.KeyOpt("{LCtrl}{RCtrl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}", "-E")
+    IH.Timeout := 0.125
+    IH.Start()
+    IH.Wait(0.125)
+    Return RegExReplace(IH.EndMods . IH.EndKey, "[<>](.)(?:>\1)?", "$1")
+}
+
+KeyWaitSingle() {
+    IH := InputHook()
+    IH.VisibleNonText := True
+    IH.KeyOpt("{All}", "E")
+    IH.Start()
+    IH.Wait()
+    Return IH.EndKey
+}
+
 TriggerHotkey(Type, HotkeyCommand) {
     If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.Overlay Is AccessibilityOverlay
     ReaHotkey.Found%Type%.Overlay.TriggerHotkey(HotkeyCommand)
