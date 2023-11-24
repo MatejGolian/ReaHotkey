@@ -1,14 +1,17 @@
 ﻿#Requires AutoHotkey v2.0
 
 Class KontaktKompleteKontrol {
-
+    
     Static Init() {
         
         Plugin.Register("Kontakt/Komplete Kontrol", ["^NIVSTChildWindow00007.*", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1"],, True)
         
         KontaktHeader := AccessibilityOverlay("Kontakt Header")
-        KontaktHeader.AddCustomButton("File",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktFileMenu"))
-
+        KontaktHeader.AddCustomButton("FILE",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktFileMenu"))
+        KontaktHeader.AddHotspotButton("LIBRARY", CompensatePluginXCoordinate(237), CompensatePluginYCoordinate(70))
+        KontaktHeader.AddCustomButton("VIEW",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktViewMenu"))
+        KontaktHeader.AddHotspotButton("SHOP", CompensatePluginXCoordinate(828), CompensatePluginYCoordinate(70))
+        
         AreiaOverlay := AccessibilityOverlay("Areia")
         AreiaOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Areia", "Image", Map("File", "Images/KontaktKompleteKontrol/Areia.png", "X1Coordinate", 960, "Y1Coordinate", 200, "X2Coordinate", 1140, "Y2Coordinate", 280))
         AreiaOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
@@ -61,36 +64,31 @@ Class KontaktKompleteKontrol {
         Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 250)
         
     }
-
-Static ActivateKontaktMenuItem(ItemName, ItemNumber, KontaktMenu) {
-            Hotkey "Down", "Off"
-            Hotkey "Enter", "Off"
-                    Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
-                    Loop ItemNumber {
-                    Send "{Down}"
-                    Sleep 100
-                    }
-Send "{Enter}"
-Hotkey "Down", "On"
-            Hotkey "Enter", "On"
-}
-
-Static OpenKontaktFileMenu(*) {
-    KontaktFileMenu := AccessiblePluginMenu()
-                KontaktFileMenu.Add("Load...", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
-            KontaktFileMenu.Add("Load recent", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
-            KontaktFileMenu.Add("Save multi as...", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
-            KontaktFileMenu.Add("Reset multi", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
-            KontaktFileMenu.Add("Purge this instance", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
-            KontaktFileMenu.Add("Purge all instances", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
-            KontaktFileMenu.Add("Options...", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
-            KontaktFileMenu.Add("Help", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
-                        KontaktFileMenu.Disable("Load recent")
-            KontaktFileMenu.Disable("Purge this instance")
-            KontaktFileMenu.Disable("Purge all instances")
-                KontaktFileMenu.Show()
-}
-
+    
+    Static OpenKontaktFileMenu(*) {
+        Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
+        Loop {
+            ReaHotkey.TurnPluginHotkeysOff()
+            ReaHotkey.TurnPluginTimersOff()
+            SingleKey := KeyWaitSingle()
+            If SingleKey = "Enter" Or SingleKey = "Escape"
+            Break
+        }
+        Send "{" . SingleKey . "}"
+    }
+    
+    Static OpenKontaktViewMenu(*) {
+        Click CompensatePluginXCoordinate(298), CompensatePluginYCoordinate(70)
+        Loop {
+            ReaHotkey.TurnPluginHotkeysOff()
+            ReaHotkey.TurnPluginTimersOff()
+            SingleKey := KeyWaitSingle()
+            If SingleKey = "Enter" Or SingleKey = "Escape"
+            Break
+        }
+        Send "{" . SingleKey . "}"
+    }
+    
 }
 
 KontaktKompleteKontrol.Init()
