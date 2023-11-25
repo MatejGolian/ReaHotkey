@@ -4,82 +4,87 @@ Class KontaktKompleteKontrol {
     
     Static Init() {
         
-        Plugin.Register("Kontakt/Komplete Kontrol", ["^NIVSTChildWindow00007.*", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1"],, True)
+        Plugin.Register("Kontakt/Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1",, True)
         Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe")
         
-        KompleteKontrolPluginHeader := AccessibilityOverlay()
-        KompleteKontrolPluginHeader.AddHotspotButton("File", CompensatePluginXCoordinate(24), CompensatePluginYCoordinate(41))
-        KompleteKontrolPluginHeader.AddHotspotButton("Edit", CompensatePluginXCoordinate(60), CompensatePluginYCoordinate(41))
-        KompleteKontrolPluginHeader.AddHotspotButton("View", CompensatePluginXCoordinate(91), CompensatePluginYCoordinate(41))
-        KompleteKontrolPluginHeader.AddHotspotButton("Controller", CompensatePluginXCoordinate(146), CompensatePluginYCoordinate(41))
-        KompleteKontrolPluginHeader.AddHotspotButton("Help", CompensatePluginXCoordinate(202), CompensatePluginYCoordinate(41))
-        
-        KompleteKontrolStandaloneHeader := AccessibilityOverlay()
+        KompleteKontrolStandaloneHeader := AccessibilityOverlay("Komplete Kontrol")
         KompleteKontrolStandaloneHeader.AddHotspotButton("File", 24, 41)
         KompleteKontrolStandaloneHeader.AddHotspotButton("Edit", 60, 41)
         KompleteKontrolStandaloneHeader.AddHotspotButton("View", 91, 41)
         KompleteKontrolStandaloneHeader.AddHotspotButton("Controller", 146, 41)
         KompleteKontrolStandaloneHeader.AddHotspotButton("Help", 202, 41)
         
-        KontaktHeader := AccessibilityOverlay("Kontakt Header")
-        KontaktHeader.AddCustomButton("FILE",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktFileMenu"))
-        KontaktHeader.AddHotspotButton("LIBRARY", CompensatePluginXCoordinate(237), CompensatePluginYCoordinate(70))
-        KontaktHeader.AddCustomButton("VIEW",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktViewMenu"))
-        KontaktHeader.AddHotspotButton("SHOP", CompensatePluginXCoordinate(828), CompensatePluginYCoordinate(70))
-        
         AreiaOverlay := AccessibilityOverlay("Areia")
-        AreiaOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Areia", "Image", Map("File", "Images/KontaktKompleteKontrol/Areia.png", "X1Coordinate", 960, "Y1Coordinate", 200, "X2Coordinate", 1140, "Y2Coordinate", 280))
-        AreiaOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        AreiaOverlay.AddHotspotButton("Modern Mix", 565, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        AreiaOverlay.AddControlAt(1, KontaktHeader)
+        AreiaOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Areia", "Image", Map("File", "Images/KontaktKompleteKontrol/Areia.png"))
+        AreiaOverlay.AddAccessibilityOverlay()
+        AreiaOverlay.AddHotspotButton("Classic Mix", 100, 361, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        AreiaOverlay.AddHotspotButton("Modern Mix", 183, 361, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", AreiaOverlay)
         
         CerberusOverlay := AccessibilityOverlay("Cerberus")
-        CerberusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Cerberus", "Image", Map("File", "Images/KontaktKompleteKontrol/Cerberus.png", "X1Coordinate", 930, "Y1Coordinate", 200, "X2Coordinate", 1140, "Y2Coordinate", 260))
-        CerberusOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        CerberusOverlay.AddHotspotButton("Modern Mix", 565, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        CerberusOverlay.AddControlAt(1, KontaktHeader)
+        CerberusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Cerberus", "Image", Map("File", "Images/KontaktKompleteKontrol/Cerberus.png"))
+        CerberusOverlay.AddAccessibilityOverlay()
+        CerberusOverlay.AddHotspotButton("Classic Mix", 100, 361, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        CerberusOverlay.AddHotspotButton("Modern Mix", 183, 361, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", CerberusOverlay)
         
         ChorusOverlay := AccessibilityOverlay("Chorus")
-        ChorusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Chorus", "Image", Map("File", "Images/KontaktKompleteKontrol/Chorus.png", "X1Coordinate", 0, "Y1Coordinate", 0, "X2Coordinate", 0, "Y2Coordinate", 0))
-        ChorusOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        ChorusOverlay.AddHotspotButton("Modern Mix", 565, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        ChorusOverlay.AddControlAt(1, KontaktHeader)
+        ChorusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Chorus", "Image", Map("File", "Images/KontaktKompleteKontrol/Chorus.png"))
+        ChorusOverlay.AddAccessibilityOverlay()
+        ChorusOverlay.AddHotspotButton("Classic Mix", 100, 361, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        ChorusOverlay.AddHotspotButton("Modern Mix", 183, 361, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", ChorusOverlay)
         
         JaegerOverlay := AccessibilityOverlay("Jaeger")
-        JaegerOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Jaeger", "Image", Map("File", "Images/KontaktKompleteKontrol/Jaeger.png", "X1Coordinate", 960, "Y1Coordinate", 200, "X2Coordinate", 1140, "Y2Coordinate", 270))
-        JaegerOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        JaegerOverlay.AddHotspotButton("Modern Mix", 565, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        JaegerOverlay.AddControlAt(1, KontaktHeader)
+        JaegerOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Jaeger", "Image", Map("File", "Images/KontaktKompleteKontrol/Jaeger.png"))
+        JaegerOverlay.AddAccessibilityOverlay()
+        JaegerOverlay.AddHotspotButton("Classic Mix", 100,  361, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        JaegerOverlay.AddHotspotButton("Modern Mix", 183, 361, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", JaegerOverlay)
         
         NucleusOverlay := AccessibilityOverlay("Nucleus")
-        NucleusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Nucleus", "Image", Map("File", "Images/KontaktKompleteKontrol/Nucleus.png", "X1Coordinate", 930, "Y1Coordinate", 200, "X2Coordinate", 1160, "Y2Coordinate", 280))
-        NucleusOverlay.AddHotspotButton("Classic Mix", 480, 349, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        NucleusOverlay.AddHotspotButton("Modern Mix", 480, 379, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        NucleusOverlay.AddControlAt(1, KontaktHeader)
+        NucleusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Nucleus", "Image", Map("File", "Images/KontaktKompleteKontrol/Nucleus.png"))
+        NucleusOverlay.AddAccessibilityOverlay()
+        NucleusOverlay.AddHotspotButton("Classic Mix", 126, 316, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        NucleusOverlay.AddHotspotButton("Modern Mix", 164, 346, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", NucleusOverlay)
         
         SoloOverlay := AccessibilityOverlay("Solo")
-        SoloOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Solo", "Image", Map("File", "Images/KontaktKompleteKontrol/Solo.png", "X1Coordinate", 0, "Y1Coordinate", 0, "X2Coordinate", 0, "Y2Coordinate", 0))
-        SoloOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        SoloOverlay.AddHotspotButton("Modern Mix", 565, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        SoloOverlay.AddControlAt(1, KontaktHeader)
+        SoloOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Solo", "Image", Map("File", "Images/KontaktKompleteKontrol/Solo.png"))
+        SoloOverlay.AddAccessibilityOverlay()
+        SoloOverlay.AddHotspotButton("Classic Mix", 100, 361, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        SoloOverlay.AddHotspotButton("Modern Mix", 183, 361, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", SoloOverlay)
         
         TalosOverlay := AccessibilityOverlay("Talos")
-        TalosOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Talos", "Image", Map("File", "Images/KontaktKompleteKontrol/Talos.png", "X1Coordinate", 950, "Y1Coordinate", 200, "X2Coordinate", 1140, "Y2Coordinate", 280))
-        TalosOverlay.AddHotspotButton("Classic Mix", 468, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        TalosOverlay.AddHotspotButton("Modern Mix", 565, 395, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        TalosOverlay.AddControlAt(1, KontaktHeader)
+        TalosOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Talos", "Image", Map("File", "Images/KontaktKompleteKontrol/Talos.png"))
+        TalosOverlay.AddAccessibilityOverlay()
+        TalosOverlay.AddHotspotButton("Classic Mix", 100, 361, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        TalosOverlay.AddHotspotButton("Modern Mix", 183, 361, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", TalosOverlay)
         
         Standalone.RegisterOverlay("Komplete Kontrol", KompleteKontrolStandaloneHeader)
         
         Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 250)
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "LoadPluginHeader"), 250)
         
+    }
+    
+    Static LoadPluginHeader() {
+        Static currentHeader := "Kontakt"
+        KompleteKontrolPluginHeader := AccessibilityOverlay("Komplete Kontrol")
+        KompleteKontrolPluginHeader.AddHotspotButton("File", CompensatePluginXCoordinate(24), CompensatePluginYCoordinate(41))
+        KompleteKontrolPluginHeader.AddHotspotButton("Edit", CompensatePluginXCoordinate(60), CompensatePluginYCoordinate(41))
+        KompleteKontrolPluginHeader.AddHotspotButton("View", CompensatePluginXCoordinate(91), CompensatePluginYCoordinate(41))
+        KompleteKontrolPluginHeader.AddHotspotButton("Controller", CompensatePluginXCoordinate(146), CompensatePluginYCoordinate(41))
+        KompleteKontrolPluginHeader.AddHotspotButton("Help", CompensatePluginXCoordinate(202), CompensatePluginYCoordinate(41))
+        KontaktPluginHeader := AccessibilityOverlay("Kontakt")
+        KontaktPluginHeader.AddCustomButton("FILE",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktFileMenu"))
+        KontaktPluginHeader.AddHotspotButton("LIBRARY", CompensatePluginXCoordinate(237), CompensatePluginYCoordinate(70))
+        KontaktPluginHeader.AddCustomButton("VIEW",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktViewMenu"))
+        KontaktPluginHeader.AddHotspotButton("SHOP", CompensatePluginXCoordinate(828), CompensatePluginYCoordinate(70))
+        If ReaHotkey.FoundPlugin.Overlay.ChildControls[1].Label != currentHeader
+        ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPluginHeader.Clone()
     }
     
     Static OpenKontaktFileMenu(*) {
@@ -106,14 +111,14 @@ Class KontaktKompleteKontrol {
         KontaktFileMenu := AccessiblePluginMenu()
         KontaktFileMenu.Name := "File"
         KontaktFileMenu.Add("Load...", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
-;        KontaktFileMenu.Add("Load recent", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
+        ;        KontaktFileMenu.Add("Load recent", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
         KontaktFileMenu.Add("Save multi as...", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
         KontaktFileMenu.Add("Reset multi", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
         KontaktFileMenu.Add("Purge this instance", KontaktPurgeThisInstanceMenu)
         KontaktFileMenu.Add("Purge all instances", KontaktPurgeAllInstancesMenu)
         KontaktFileMenu.Add("Options...", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
         KontaktFileMenu.Add("Help", KontaktHelpMenu)
-;        KontaktFileMenu.Disable("Load recent")
+        ;        KontaktFileMenu.Disable("Load recent")
         KontaktFileMenu.Show()
     }
     
@@ -124,9 +129,9 @@ Class KontaktKompleteKontrol {
         KontaktViewMenu.Add("Info", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
         KontaktViewMenu.Add("Keyboard", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
         KontaktViewMenu.Add("Quick-Load", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
-;        KontaktViewMenu.Add("Zoom", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
+        ;        KontaktViewMenu.Add("Zoom", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
         KontaktViewMenu.Add("Set current view as default", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktMenuItem"))
-;        KontaktViewMenu.Disable("Zoom")
+        ;        KontaktViewMenu.Disable("Zoom")
         KontaktViewMenu.Show()
     }
     
