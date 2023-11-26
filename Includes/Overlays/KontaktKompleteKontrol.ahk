@@ -173,7 +173,7 @@ Class KontaktKompleteKontrol {
             Click CompensatePluginXCoordinate(298), CompensatePluginYCoordinate(70)
         }
         For KeyCommand In MenuItems[KontaktMenu.Name . " " . ItemName] {
-            Send KeyCommand
+            SendInput KeyCommand
             Sleep 5
         }
     }
