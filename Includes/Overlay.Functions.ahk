@@ -75,11 +75,12 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                 ImageFound := 0
                 If ImageFound = 1
                 If ReaHotkey.Found%Type%.Chooser = True {
+                    OverlayHeader := ReaHotkey.Found%Type%.Overlay.ChildControls[1].Clone()
                     ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(OverlayEntry.Label)
                     ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
                     If HasProp(OverlayEntry, "Metadata")
                     ReaHotkey.Found%Type%.Overlay.Metadata := OverlayEntry.Metadata
-                    ReaHotkey.Found%Type%.Overlay.AddAccessibilityOverlay()
+                    ReaHotkey.Found%Type%.Overlay.AddControl(OverlayHeader)
                     ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
                     ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
                     ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[1].Label := "Overlay: " . Product
@@ -121,11 +122,12 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
     If ReaHotkey.Found%Type%.Overlay.OverlayNumber != OverlayNumber
     If ReaHotkey.Found%Type%.Chooser = True {
+        OverlayHeader := ReaHotkey.Found%Type%.Overlay.ChildControls[1].Clone()
         ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(ItemName)
         ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
         If HasProp(OverlayList[OverlayNumber], "Metadata")
         ReaHotkey.Found%Type%.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
-        ReaHotkey.Found%Type%.Overlay.AddAccessibilityOverlay()
+        ReaHotkey.Found%Type%.Overlay.AddControl(OverlayHeader)
         ReaHotkey.Found%Type%.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
         ReaHotkey.Found%Type%.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
         ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[1].Label := "Overlay: " . ItemName
