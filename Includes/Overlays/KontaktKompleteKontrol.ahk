@@ -76,18 +76,17 @@ Class KontaktKompleteKontrol {
     
     Static LoadPluginHeader(PluginName) {
         KompleteKontrolPluginHeader := AccessibilityOverlay("Komplete Kontrol")
-        KompleteKontrolPluginHeader.AddHotspotButton("File", CompensatePluginXCoordinate(24), CompensatePluginYCoordinate(41))
-        KompleteKontrolPluginHeader.AddHotspotButton("Edit", CompensatePluginXCoordinate(60), CompensatePluginYCoordinate(41))
-        KompleteKontrolPluginHeader.AddHotspotButton("View", CompensatePluginXCoordinate(91), CompensatePluginYCoordinate(41))
-        KompleteKontrolPluginHeader.AddHotspotButton("Controller", CompensatePluginXCoordinate(146), CompensatePluginYCoordinate(41))
-        KompleteKontrolPluginHeader.AddHotspotButton("Help", CompensatePluginXCoordinate(202), CompensatePluginYCoordinate(41))
         KontaktPluginHeader := AccessibilityOverlay("Kontakt")
         KontaktPluginHeader.AddCustomButton("FILE",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktPluginFileMenu"))
         KontaktPluginHeader.AddHotspotButton("LIBRARY", CompensatePluginXCoordinate(237), CompensatePluginYCoordinate(70))
         KontaktPluginHeader.AddCustomButton("VIEW",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktPluginViewMenu"))
         KontaktPluginHeader.AddHotspotButton("SHOP", CompensatePluginXCoordinate(828), CompensatePluginYCoordinate(70))
-        If ReaHotkey.FoundPlugin.Overlay.ChildControls[1].Label != PluginName
-        ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPluginHeader.Clone()
+        If ReaHotkey.FoundPlugin.Overlay.ChildControls[1].Label != PluginName {
+            If PluginName = "Komplete Kontrol"
+            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KompleteKontrolPluginHeader.Clone()
+            If PluginName = "Kontakt"
+            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPluginHeader.Clone()
+        }
     }
     
     Static OpenKontaktPluginFileMenu(*) {
