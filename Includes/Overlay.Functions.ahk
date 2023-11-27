@@ -312,6 +312,37 @@ CreateOverlayMenu(Found, Type) {
     Return OverlayMenu
 }
 
+FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
+    FoundX := ""
+    FoundY := ""
+    WinWidth := ""
+    WinHeight := ""
+    Try {
+        WinGetPos ,, &WinWidth, &WinHeight, "A"
+    }
+    Catch {
+        WinWidth := A_ScreenWidth
+        WinHeight := A_ScreenHeight
+    }
+    If Not X1Coordinate Is Number Or X1Coordinate < 0
+    X1Coordinate := 0
+    If Not Y1Coordinate Is Number Or Y1Coordinate < 0
+    Y1Coordinate := 0
+    If Not X2Coordinate Is Number Or X2Coordinate <= 0
+    X2Coordinate := WinWidth
+    If Not Y2Coordinate Is Number Or Y2Coordinate <= 0
+    Y2Coordinate := WinHeight
+    If FileExist(ImageFile) {
+        Try
+        ImageFound := ImageSearch(&FoundX, &FoundY, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, ImageFile)
+        Catch
+        ImageFound := 0
+        If ImageFound = 1
+        Return Array(FoundX, FoundY)
+    }
+    Return False
+}
+
 GetCurrentControlClass() {
     Try
     If ControlGetFocus("A") = 0
