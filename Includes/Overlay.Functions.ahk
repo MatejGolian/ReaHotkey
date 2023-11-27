@@ -362,6 +362,28 @@ GetCurrentWindowID() {
     Return WindowID
 }
 
+GetPluginXCoordinate() {
+    Try {
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    }
+    Catch {
+        PluginControlXCoordinate := 210
+        PluginControlYCoordinate := 53
+    }
+    Return PluginControlXCoordinate
+}
+
+GetPluginYCoordinate() {
+    Try {
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    }
+    Catch {
+        PluginControlXCoordinate := 210
+        PluginControlYCoordinate := 53
+    }
+    Return PluginControlYCoordinate
+}
+
 KeyWaitCombo() {
     IH := InputHook()
     IH.VisibleNonText := True
