@@ -72,22 +72,82 @@ Class KontaktKompleteKontrol {
         
         Standalone.RegisterOverlay("Komplete Kontrol", KompleteKontrolStandaloneHeader)
         
-        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 250)
-        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectPlugin"), 250)
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 500)
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectPlugin"), 500)
         
     }
     
+    Static ActivateKontaktPluginMenuItem(ItemName, ItemNumber, KontaktMenu) {
+        MenuItems := Map()
+        MenuItems.Set("Purge this instance Reset markers", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Enter}"])
+        MenuItems.Set("Purge this instance Update sample pool", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Enter}"])
+        MenuItems.Set("Purge this instance Purge all samples", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("Purge this instance Reload all samples", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("Purge all instances Reset markers", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Enter}"])
+        MenuItems.Set("Purge all instances Update sample pool", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Enter}"])
+        MenuItems.Set("Purge all instances Purge all samples", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("Purge all instances Reload all samples", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("Help Launch Native Access", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Enter}"])
+        MenuItems.Set("Help Online Kontakt Documentation", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Enter}"])
+        MenuItems.Set("Help Online Kontakt Scripting Documentation", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("Help Online Kontakt API Documentation", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("Help Online Knowledge Base", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("Help About Kontakt", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("File Load...", ["{Down}", "{Enter}"])
+        MenuItems.Set("File Save multi as...", ["{Down}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("File Reset multi", ["{Down}", "{Down}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("File Options...", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("View Rack View", ["{Down}", "{Enter}"])
+        MenuItems.Set("View Info", ["{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("View Keyboard", ["{Down}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("View Quick-Load", ["{Down}", "{Down}", "{Down}", "{Down}", "{Enter}"])
+        MenuItems.Set("View Set current view as default", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}"])
+        Switch(KontaktMenu.Name) {
+            Case "File":
+            Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
+            Case "Purge this instance":
+            Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
+            Case "Purge all instances":
+            Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
+            Case "Help":
+            Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
+            Case "View":
+            Click CompensatePluginXCoordinate(298), CompensatePluginYCoordinate(70)
+        }
+        For KeyCommand In MenuItems[KontaktMenu.Name . " " . ItemName] {
+            SendInput KeyCommand
+            Sleep 5
+        }
+    }
+    
+    Static CloseKKPluginBrowser() {
+        If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" {
+            Sleep 2500
+            AccessibilityOverlay.Speak("Closing KK browser...")
+            Click CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)
+            Sleep 2500
+            If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) != "0x181818" {
+                AccessibilityOverlay.Speak("KK browser could not be closed. Some functions may not work correctly.")
+                Sleep 2500
+            }
+        }
+    }
+    
     Static DetectPlugin() {
-        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
-        KontaktKompleteKontrol.LoadPluginHeader("Komplete Kontrol")
-        Else
-        If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
-        KontaktKompleteKontrol.LoadPluginHeader("Kontakt")
+        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
+            KontaktKompleteKontrol.LoadPluginHeader("Komplete Kontrol")
+            KontaktKompleteKontrol.CloseKKPluginBrowser()
+        }
+        Else {
+            If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
+            KontaktKompleteKontrol.LoadPluginHeader("Kontakt")
+        }
     }
     
     Static LoadPluginHeader(PluginName) {
         KompleteKontrolPluginHeader := AccessibilityOverlay("Komplete Kontrol")
         KompleteKontrolPluginHeader.AddStaticText("Komplete Kontrol")
+        KompleteKontrolPluginHeader.AddHotspotButton("Menu", CompensatePluginXCoordinate(305), CompensatePluginYCoordinate(68))
         KontaktPluginHeader := AccessibilityOverlay("Kontakt")
         KontaktPluginHeader.AddStaticText("Kontakt")
         KontaktPluginHeader.AddCustomButton("FILE",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktPluginFileMenu"))
@@ -150,47 +210,13 @@ Class KontaktKompleteKontrol {
         KontaktViewMenu.Show()
     }
     
-    Static ActivateKontaktPluginMenuItem(ItemName, ItemNumber, KontaktMenu) {
-        MenuItems := Map()
-        MenuItems.Set("Purge this instance Reset markers", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Enter}"])
-        MenuItems.Set("Purge this instance Update sample pool", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Enter}"])
-        MenuItems.Set("Purge this instance Purge all samples", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("Purge this instance Reload all samples", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("Purge all instances Reset markers", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Enter}"])
-        MenuItems.Set("Purge all instances Update sample pool", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Enter}"])
-        MenuItems.Set("Purge all instances Purge all samples", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("Purge all instances Reload all samples", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("Help Launch Native Access", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Enter}"])
-        MenuItems.Set("Help Online Kontakt Documentation", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Enter}"])
-        MenuItems.Set("Help Online Kontakt Scripting Documentation", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("Help Online Kontakt API Documentation", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("Help Online Knowledge Base", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("Help About Kontakt", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("File Load...", ["{Down}", "{Enter}"])
-        MenuItems.Set("File Save multi as...", ["{Down}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("File Reset multi", ["{Down}", "{Down}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("File Options...", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("View Rack View", ["{Down}", "{Enter}"])
-        MenuItems.Set("View Info", ["{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("View Keyboard", ["{Down}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("View Quick-Load", ["{Down}", "{Down}", "{Down}", "{Down}", "{Enter}"])
-        MenuItems.Set("View Set current view as default", ["{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Down}", "{Enter}"])
-        Switch(KontaktMenu.Name) {
-            Case "File":
-            Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
-            Case "Purge this instance":
-            Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
-            Case "Purge all instances":
-            Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
-            Case "Help":
-            Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
-            Case "View":
-            Click CompensatePluginXCoordinate(298), CompensatePluginYCoordinate(70)
-        }
-        For KeyCommand In MenuItems[KontaktMenu.Name . " " . ItemName] {
-            SendInput KeyCommand
-            Sleep 5
-        }
+    Static ReturnPlugin() {
+        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
+        Return "KompleteKontrol"
+        Else
+        If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
+        Return "Kontakt"
+        Return False
     }
     
 }
