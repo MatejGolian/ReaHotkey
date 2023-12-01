@@ -81,7 +81,7 @@ Class KontaktKompleteKontrol {
         If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
         KontaktKompleteKontrol.LoadPluginHeader("Komplete Kontrol")
         Else
-;        If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
+        If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
         KontaktKompleteKontrol.LoadPluginHeader("Kontakt")
     }
     
