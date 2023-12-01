@@ -218,7 +218,7 @@ Class KontaktKompleteKontrol {
     
     Static ReturnPlugin() {
         If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
-        Return "KompleteKontrol"
+        Return "Komplete Kontrol"
         Else
         If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
         Return "Kontakt"
@@ -230,7 +230,7 @@ Class KontaktKompleteKontrol {
         If ReaHotkey.FoundPlugin Is Plugin And HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
         Product := ReaHotkey.FoundPlugin.Overlay.Metadata["Product"]
         Switch(KontaktKompleteKontrol.ReturnPlugin()) {
-            Case "KompleteKontrol":
+            Case "Komplete Kontrol":
             Switch(Product) {
                 Case "Areia":
                 Click CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461)
@@ -272,7 +272,7 @@ Class KontaktKompleteKontrol {
         If ReaHotkey.FoundPlugin Is Plugin And HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
         Product := ReaHotkey.FoundPlugin.Overlay.Metadata["Product"]
         Switch(KontaktKompleteKontrol.ReturnPlugin()) {
-            Case "KompleteKontrol":
+            Case "Komplete Kontrol":
             Switch(Product) {
                 Case "Areia":
                 Click CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461)
