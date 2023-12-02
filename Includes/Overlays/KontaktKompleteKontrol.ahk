@@ -22,6 +22,11 @@ Class KontaktKompleteKontrol {
         KontaktStandaloneHeader.AddCustomButton("VIEW",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktStandaloneViewMenu"))
         KontaktStandaloneHeader.AddHotspotButton("SHOP", 828, 70)
         
+        NoProductOverlay := AccessibilityOverlay("None")
+        NoProductOverlay.Metadata := Map("Product", "None")
+        NoProductOverlay.AddAccessibilityOverlay()
+        Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", NoProductOverlay)
+        
         AreiaOverlay := AccessibilityOverlay("Areia")
         AreiaOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Areia", "Image", Map("File", "Images/KontaktKompleteKontrol/Areia.png"))
         AreiaOverlay.AddAccessibilityOverlay()
@@ -129,6 +134,10 @@ Class KontaktKompleteKontrol {
         UnknownPluginHeader := AccessibilityOverlay("Unknown")
         UnknownPluginHeader.AddStaticText("Kontakt/Komplete Kontrol")
         UnknownPluginHeader.AddStaticText("Warning! The exact plugin could not be detected. Some functions may not work correctly.")
+        If ReaHotkey.FoundPlugin Is Plugin And Not HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") {
+            ReaHotkey.FoundPlugin.Overlay.Metadata := Map("Product", "None")
+            ReaHotkey.FoundPlugin.Overlay.OverlayNumber := 1
+        }
         If ReaHotkey.FoundPlugin.Overlay.ChildControls[1].Label != PluginName {
             If PluginName = "Komplete Kontrol"
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KompleteKontrolPluginHeader.Clone()
@@ -149,13 +158,26 @@ Class KontaktKompleteKontrol {
             If KeyCombo = "+Tab" {
                 SendInput "+{Tab}"
             }
+            Else If KeyCombo = "!F4" {
+                SendInput "{Escape}"
+                SendInput "!{F4}"
+                Break
+            }
             Else {
                 SingleKey := KeyWaitSingle()
-                If GetKeyState("Shift") And SingleKey = "Tab"
-                SendInput "+{Tab}"
-                Else
-                If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down"
-                SendInput "{" . SingleKey . "}"
+                If GetKeyState("Shift") And SingleKey = "Tab" {
+                    SendInput "+{Tab}"
+                }
+                Else If GetKeyState("Alt") And SingleKey = "F4" {
+                    SendInput "{Escape}"
+                    SendInput "!{F4}"
+                    Break
+                }
+                Else {
+                    If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down" {
+                        SendInput "{" . SingleKey . "}"
+                    }
+                }
                 If SingleKey = "Escape"
                 Break
             }
@@ -173,13 +195,26 @@ Class KontaktKompleteKontrol {
             If KeyCombo = "+Tab" {
                 SendInput "+{Tab}"
             }
+            Else If KeyCombo = "!F4" {
+                SendInput "{Escape}"
+                SendInput "!{F4}"
+                Break
+            }
             Else {
                 SingleKey := KeyWaitSingle()
-                If GetKeyState("Shift") And SingleKey = "Tab"
-                SendInput "+{Tab}"
-                Else
-                If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down"
-                SendInput "{" . SingleKey . "}"
+                If GetKeyState("Shift") And SingleKey = "Tab" {
+                    SendInput "+{Tab}"
+                }
+                Else If GetKeyState("Alt") And SingleKey = "F4" {
+                    SendInput "{Escape}"
+                    SendInput "!{F4}"
+                    Break
+                }
+                Else {
+                    If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down" {
+                        SendInput "{" . SingleKey . "}"
+                    }
+                }
                 If SingleKey = "Escape"
                 Break
             }
@@ -197,13 +232,26 @@ Class KontaktKompleteKontrol {
             If KeyCombo = "+Tab" {
                 SendInput "+{Tab}"
             }
+            Else If KeyCombo = "!F4" {
+                SendInput "{Escape}"
+                SendInput "!{F4}"
+                Break
+            }
             Else {
                 SingleKey := KeyWaitSingle()
-                If GetKeyState("Shift") And SingleKey = "Tab"
-                SendInput "+{Tab}"
-                Else
-                If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down"
-                SendInput "{" . SingleKey . "}"
+                If GetKeyState("Shift") And SingleKey = "Tab" {
+                    SendInput "+{Tab}"
+                }
+                Else If GetKeyState("Alt") And SingleKey = "F4" {
+                    SendInput "{Escape}"
+                    SendInput "!{F4}"
+                    Break
+                }
+                Else {
+                    If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down" {
+                        SendInput "{" . SingleKey . "}"
+                    }
+                }
                 If SingleKey = "Escape"
                 Break
             }
@@ -221,13 +269,26 @@ Class KontaktKompleteKontrol {
             If KeyCombo = "+Tab" {
                 SendInput "+{Tab}"
             }
+            Else If KeyCombo = "!F4" {
+                SendInput "{Escape}"
+                SendInput "!{F4}"
+                Break
+            }
             Else {
                 SingleKey := KeyWaitSingle()
-                If GetKeyState("Shift") And SingleKey = "Tab"
-                SendInput "+{Tab}"
-                Else
-                If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down"
-                SendInput "{" . SingleKey . "}"
+                If GetKeyState("Shift") And SingleKey = "Tab" {
+                    SendInput "+{Tab}"
+                }
+                Else If GetKeyState("Alt") And SingleKey = "F4" {
+                    SendInput "{Escape}"
+                    SendInput "!{F4}"
+                    Break
+                }
+                Else {
+                    If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down" {
+                        SendInput "{" . SingleKey . "}"
+                    }
+                }
                 If SingleKey = "Escape"
                 Break
             }
