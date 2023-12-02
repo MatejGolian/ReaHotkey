@@ -62,6 +62,14 @@ Class PopulatedComboBox extends CustomComboBox {
     }
 }
 
+Class TriggerButton extends CustomButton {
+
+    Index := 0
+    X := 0
+    Y := 0
+
+}
+
 Class Dubler2 {
 
     Static OVERLAY_TRIGGERS := Array(
