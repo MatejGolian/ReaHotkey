@@ -87,6 +87,8 @@ ClickChordsMidiChannel(Channel, Button, *) {
 
     Sleep 1000
 
+    Click(685, 101)
+
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 
     Button.Label := "Chords MIDI Channel: " . Channel
@@ -96,6 +98,7 @@ ChordsTab := HotspotTab("Chords", 685, 101, ObjBindMethod(Dubler2, "DisableNotes
 ChordsTab.SetHotkey("^4", "Ctrl + 4")
 
 ChordsTab.AddControl(Dubler2.HotspotCheckbox("Chords enabled", 97, 159, Dubler2.ProfileLoaded["Current"]["Chords"]["chordsEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+ChordsTab.AddControl(CustomButton("Chords MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["ChordsMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivateChordsMidiChannelButton))
 ChordsTab.AddControl(Dubler2.HotspotCheckbox("Root Note Bassline", 575, 566, Dubler2.ProfileLoaded["Current"]["Chords"]["rootNoteBassline"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 ChordsTab.AddControl(Dubler2.HotspotCheckbox("Follow Octaves", 806, 567, Dubler2.ProfileLoaded["Current"]["Chords"]["octaveFollow"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 ChordsTab.AddControl(CustomButton("Octave shift: " . (Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), ActivateChordsOctaveShiftButton))
@@ -128,4 +131,3 @@ For Preset In Presets {
 }
 
 ChordsTab.AddControl(ChordPresetCtrl)
-ChordsTab.AddControl(CustomButton("Chords MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["ChordsMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivateChordsMidiChannelButton))
