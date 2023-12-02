@@ -30,30 +30,12 @@ Tab:: {
     ReaHotkey.FocusPreviousTab(PluginOverlay)
 }
 
-Right:: {
-    Thread "NoTimers"
-    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
-    PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is Object
-    Switch(PluginOverlay.GetCurrentControl().ControlType) {
-        Case "Edit":
-        Hotkey A_ThisHotkey, "Off"
-        Send "{" . A_ThisHotkey . "}"
-        Hotkey A_ThisHotkey, "On"
-        Default:
-        Hotkey A_ThisHotkey, "Off"
-        Send "{" . A_ThisHotkey . "}"
-        Hotkey A_ThisHotkey, "On"
-        PluginOverlay.FocusNextTab()
-    }
-}
-
+Right::
 Left:: {
     Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is Object
-    Switch(PluginOverlay.GetCurrentControl().ControlType) {
+    Switch(PluginOverlay.GetCurrentControlType()) {
         Case "Edit":
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"
@@ -62,7 +44,10 @@ Left:: {
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"
         Hotkey A_ThisHotkey, "On"
+        If A_ThisHotkey = "Left"
         PluginOverlay.FocusPreviousTab()
+        Else
+        PluginOverlay.FocusNextTab()
     }
 }
 
@@ -71,13 +56,14 @@ Down:: {
     Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is Object
-    Switch(PluginOverlay.GetCurrentControl().ControlType) {
+    Switch(PluginOverlay.GetCurrentControlType()) {
         Case "ComboBox":
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"
-        PluginOverlay.GetCurrentControl().ChangeValue()
-        PluginOverlay.GetCurrentControl().ReportValue()
+        If A_ThisHotkey = "Up"
+        PluginOverlay.SelectPreviousOption()
+        Else
+        PluginOverlay.SelectNextOption()
         Hotkey A_ThisHotkey, "On"
         Default:
         Hotkey A_ThisHotkey, "Off"
@@ -91,8 +77,7 @@ Space:: {
     Thread "NoTimers"
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
     PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
-    If PluginOverlay.GetCurrentControl() Is Object
-    Switch(PluginOverlay.GetCurrentControl().ControlType) {
+    Switch(PluginOverlay.GetCurrentControlType()) {
         Case "Edit":
         Hotkey A_ThisHotkey, "Off"
         Send "{" . A_ThisHotkey . "}"

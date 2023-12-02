@@ -40,6 +40,7 @@ Class Plugin {
         }
         Else If This.Overlays.Length > 1 And This.Chooser = True {
             This.Overlay := AccessibilityOverlay()
+            This.Overlay.AddAccessibilityOverlay()
             This.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
             This.Overlay.OverlayNumber := 0
         }

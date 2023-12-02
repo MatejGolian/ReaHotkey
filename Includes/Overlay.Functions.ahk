@@ -3,6 +3,7 @@
 Global A_IsUnicode := True
 
 AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False) {
+    SetTimer ReaHotkey.ManageState, 0
     OverlayList := %Type%.GetOverlays(Name)
     UnknownProductCounter := 1
     For OverlayNumber, OverlayEntry In OverlayList {
@@ -77,18 +78,20 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                 ImageFound := 0
                 If ImageFound = 1
                 If ReaHotkey.Found%Type%.Chooser = True {
+                    OverlayHeader := ReaHotkey.Found%Type%.Overlay.ChildControls[1].Clone()
                     ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(OverlayEntry.Label)
                     ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
                     If HasProp(OverlayEntry, "Metadata")
                     ReaHotkey.Found%Type%.Overlay.Metadata := OverlayEntry.Metadata
+                    ReaHotkey.Found%Type%.Overlay.AddControl(OverlayHeader)
                     ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
                     ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
-                    ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . Product
+                    ;                    ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[2].Label := "Overlay: " . Product
                     If ReportChange = True {
                         AccessibilityOverlay.Speak(Product . " overlay active")
                         ReaHotkey.Wait(1250)
                     }
-                    ReaHotkey.Found%Type%.Overlay.Focus()
+                    ReaHotkey.Found%Type%.Overlay.FocusControl(ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[2].ControlID)
                     If ReaHotkey.AutoFocus%Type%Overlay = True
                     ReaHotkey.AutoFocus%Type%Overlay := False
                     Break
@@ -99,7 +102,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                         AccessibilityOverlay.Speak(Product . " overlay active")
                         ReaHotkey.Wait(1250)
                     }
-                    ReaHotkey.Found%Type%.Overlay.Focus()
+                    ReaHotkey.Found%Type%.Overlay.FocusControl(ReaHotkey.Found%Type%.Overlay.ChildControls[2].ControlID)
                     If ReaHotkey.AutoFocus%Type%Overlay = True
                     ReaHotkey.AutoFocus%Type%Overlay := False
                     Break
@@ -107,6 +110,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             }
         }
     }
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 AutoChangePluginOverlay(Name, CompensatePluginCoordinates := False, ReportChange := False) {
@@ -118,19 +122,22 @@ AutoChangeStandaloneOverlay(Name, ReportChange := False) {
 }
 
 ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
+    SetTimer ReaHotkey.ManageState, 0
     OverlayList := %Type%.GetOverlays(ReaHotkey.Found%Type%.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
     If ReaHotkey.Found%Type%.Overlay.OverlayNumber != OverlayNumber
     If ReaHotkey.Found%Type%.Chooser = True {
+        OverlayHeader := ReaHotkey.Found%Type%.Overlay.ChildControls[1].Clone()
         ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(ItemName)
         ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
         If HasProp(OverlayList[OverlayNumber], "Metadata")
         ReaHotkey.Found%Type%.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
+        ReaHotkey.Found%Type%.Overlay.AddControl(OverlayHeader)
         ReaHotkey.Found%Type%.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
         ReaHotkey.Found%Type%.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
-        ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Label := "Overlay: " . ItemName
-        ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].ControlID)
-        ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[1].Focus()
+        ;        ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[2].Label := "Overlay: " . ItemName
+        ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[2].ControlID)
+        ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[2].Focus()
     }
     Else {
         ReaHotkey.Found%Type%.Overlay := OverlayList[OverlayNumber].Clone()
@@ -138,6 +145,7 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
     }
     Else
     ReaHotkey.Found%Type%.Overlay.Focus()
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
@@ -199,6 +207,30 @@ CompensatePluginRegionCoordinates(PluginControl) {
     PluginControl.RegionX2Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX2Coordinate
     PluginControl.RegionY2Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY2Coordinate
     Return PluginControl
+}
+
+CompensatePluginXCoordinate(PluginXCoordinate) {
+    Try {
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    }
+    Catch {
+        PluginControlXCoordinate := 210
+        PluginControlYCoordinate := 53
+    }
+    PluginXCoordinate := PluginControlXCoordinate + PluginXCoordinate
+    Return PluginXCoordinate
+}
+
+CompensatePluginYCoordinate(PluginYCoordinate) {
+    Try {
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    }
+    Catch {
+        PluginControlXCoordinate := 210
+        PluginControlYCoordinate := 53
+    }
+    PluginYCoordinate := PluginControlYCoordinate + PluginYCoordinate
+    Return PluginYCoordinate
 }
 
 CreateOverlayMenu(Found, Type) {
@@ -313,6 +345,37 @@ StrJoin(obj,delimiter:="",OmitChars:=""){
     return S
 }
 
+FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
+    FoundX := ""
+    FoundY := ""
+    WinWidth := ""
+    WinHeight := ""
+    Try {
+        WinGetPos ,, &WinWidth, &WinHeight, "A"
+    }
+    Catch {
+        WinWidth := A_ScreenWidth
+        WinHeight := A_ScreenHeight
+    }
+    If Not X1Coordinate Is Number Or X1Coordinate < 0
+    X1Coordinate := 0
+    If Not Y1Coordinate Is Number Or Y1Coordinate < 0
+    Y1Coordinate := 0
+    If Not X2Coordinate Is Number Or X2Coordinate <= 0
+    X2Coordinate := WinWidth
+    If Not Y2Coordinate Is Number Or Y2Coordinate <= 0
+    Y2Coordinate := WinHeight
+    If FileExist(ImageFile) {
+        Try
+        ImageFound := ImageSearch(&FoundX, &FoundY, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, ImageFile)
+        Catch
+        ImageFound := 0
+        If ImageFound = 1
+        Return Array(FoundX, FoundY)
+    }
+    Return False
+}
+
 GetCurrentControlClass() {
     Try
     If ControlGetFocus("A") = 0
@@ -330,6 +393,48 @@ GetCurrentWindowID() {
     Catch
     WindowID := False
     Return WindowID
+}
+
+GetPluginXCoordinate() {
+    Try {
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    }
+    Catch {
+        PluginControlXCoordinate := 210
+        PluginControlYCoordinate := 53
+    }
+    Return PluginControlXCoordinate
+}
+
+GetPluginYCoordinate() {
+    Try {
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    }
+    Catch {
+        PluginControlXCoordinate := 210
+        PluginControlYCoordinate := 53
+    }
+    Return PluginControlYCoordinate
+}
+
+KeyWaitCombo() {
+    IH := InputHook()
+    IH.VisibleNonText := True
+    IH.KeyOpt("{All}", "E")
+    IH.KeyOpt("{LCtrl}{RCtrl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}", "-E")
+    IH.Timeout := 0.125
+    IH.Start()
+    IH.Wait(0.125)
+    Return RegExReplace(IH.EndMods . IH.EndKey, "[<>](.)(?:>\1)?", "$1")
+}
+
+KeyWaitSingle() {
+    IH := InputHook()
+    IH.VisibleNonText := True
+    IH.KeyOpt("{All}", "E")
+    IH.Start()
+    IH.Wait()
+    Return IH.EndKey
 }
 
 TriggerHotkey(Type, HotkeyCommand) {

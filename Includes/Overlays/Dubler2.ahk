@@ -51,10 +51,10 @@ Class PopulatedComboBox extends CustomComboBox {
         Else If Hk == "Down" And FI < This.Values.Length
             FI += 1
 
-        This.SetValue(This.Values[FI]["Label"])
-        
         If This.Values[FI]["Selector"] != ""
             This.Values[FI]["Selector"]()
+
+        This.SetValue(This.Values[FI]["Label"])
     }
 
     ClearItems() {
