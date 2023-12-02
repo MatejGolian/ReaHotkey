@@ -145,11 +145,20 @@ Class KontaktKompleteKontrol {
         ReaHotkey.TurnPluginTimersOff("Kontakt/Komplete Kontrol")
         Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
         Loop {
-            SingleKey := KeyWaitSingle()
-            If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down"
-            SendInput "{" . SingleKey . "}"
-            If SingleKey = "Escape"
-            Break
+            KeyCombo := KeyWaitCombo()
+            If KeyCombo = "+Tab" {
+                SendInput "+{Tab}"
+            }
+            Else {
+                SingleKey := KeyWaitSingle()
+                If GetKeyState("Shift") And SingleKey = "Tab"
+                SendInput "+{Tab}"
+                Else
+                If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down"
+                SendInput "{" . SingleKey . "}"
+                If SingleKey = "Escape"
+                Break
+            }
         }
         SetTimer ReaHotkey.ManageState, 100
     }
@@ -160,11 +169,20 @@ Class KontaktKompleteKontrol {
         ReaHotkey.TurnPluginTimersOff("Kontakt/Komplete Kontrol")
         Click CompensatePluginXCoordinate(298), CompensatePluginYCoordinate(70)
         Loop {
-            SingleKey := KeyWaitSingle()
-            If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down"
-            SendInput "{" . SingleKey . "}"
-            If SingleKey = "Escape"
-            Break
+            KeyCombo := KeyWaitCombo()
+            If KeyCombo = "+Tab" {
+                SendInput "+{Tab}"
+            }
+            Else {
+                SingleKey := KeyWaitSingle()
+                If GetKeyState("Shift") And SingleKey = "Tab"
+                SendInput "+{Tab}"
+                Else
+                If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down"
+                SendInput "{" . SingleKey . "}"
+                If SingleKey = "Escape"
+                Break
+            }
         }
         SetTimer ReaHotkey.ManageState, 100
     }
@@ -175,11 +193,20 @@ Class KontaktKompleteKontrol {
         ReaHotkey.TurnStandaloneTimersOff("Kontakt")
         Click 186, 70
         Loop {
-            SingleKey := KeyWaitSingle()
-            If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down"
-            SendInput "{" . SingleKey . "}"
-            If SingleKey = "Escape"
-            Break
+            KeyCombo := KeyWaitCombo()
+            If KeyCombo = "+Tab" {
+                SendInput "+{Tab}"
+            }
+            Else {
+                SingleKey := KeyWaitSingle()
+                If GetKeyState("Shift") And SingleKey = "Tab"
+                SendInput "+{Tab}"
+                Else
+                If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down"
+                SendInput "{" . SingleKey . "}"
+                If SingleKey = "Escape"
+                Break
+            }
         }
         SetTimer ReaHotkey.ManageState, 100
     }
@@ -190,11 +217,20 @@ Class KontaktKompleteKontrol {
         ReaHotkey.TurnStandaloneTimersOff("Kontakt")
         Click 298, 70
         Loop {
-            SingleKey := KeyWaitSingle()
-            If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down"
-            SendInput "{" . SingleKey . "}"
-            If SingleKey = "Escape"
-            Break
+            KeyCombo := KeyWaitCombo()
+            If KeyCombo = "+Tab" {
+                SendInput "+{Tab}"
+            }
+            Else {
+                SingleKey := KeyWaitSingle()
+                If GetKeyState("Shift") And SingleKey = "Tab"
+                SendInput "+{Tab}"
+                Else
+                If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down"
+                SendInput "{" . SingleKey . "}"
+                If SingleKey = "Escape"
+                Break
+            }
         }
         SetTimer ReaHotkey.ManageState, 100
     }
