@@ -7,6 +7,7 @@ Static Settings := Map(
         "showTrialReminders", False,
         "showAudioSetupOnStartup", False,
         "showAboutChromaticScalePopup", False,
+        "newFeatureAnnouncement", 0,
     )
 
 Static DetectFixSettings(*) {

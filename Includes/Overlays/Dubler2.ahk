@@ -452,5 +452,5 @@ Class Dubler2 {
 }
 
 Plugin.Register("Dubler 2", "JUCE_18a5c54cc971", , , False)
-Standalone.Register("Dubler 2", "Vochlea\sDubler\s2\.1 ahk_class Qt5155QWindowOwnDCIcon", Dubler2.Init, True)
+Standalone.Register("Dubler 2", "Vochlea\sDubler\s2\.2 ahk_class Qt5155QWindowOwnDCIcon", Dubler2.Init, True)
 Standalone.RegisterOverlay("Dubler 2", Dubler2.CreateLoadingOverlay(AccessibilityOverlay()))
