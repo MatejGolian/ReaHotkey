@@ -116,23 +116,27 @@ Class KontaktKompleteKontrol {
         }
         For KeyCommand In MenuItems[KontaktMenu.Name . " " . ItemName] {
             SendInput KeyCommand
-            Sleep 5
+            Sleep 100
         }
     }
     
     Static CloseKKPluginBrowser() {
         If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" {
-            AccessibilityOverlay.Speak("Closing KK browser...")
             Click CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)
             Sleep 2500
             If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) != "0x181818" {
                 AccessibilityOverlay.Speak("KK browser could not be closed. Some functions may not work correctly.")
                 Sleep 2500
             }
+            Else {
+                AccessibilityOverlay.Speak("KK browser closed.")
+                Sleep 2500
+            }
         }
     }
     
     Static DetectPlugin() {
+        SetTimer ReaHotkey.ManageState, 0
         If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
             KontaktKompleteKontrol.LoadPluginHeader("Komplete Kontrol")
             KontaktKompleteKontrol.CloseKKPluginBrowser()
@@ -143,6 +147,7 @@ Class KontaktKompleteKontrol {
         Else {
             KontaktKompleteKontrol.LoadPluginHeader("Unknown")
         }
+        SetTimer ReaHotkey.ManageState, 100
     }
     
     Static LoadPluginHeader(PluginName) {
@@ -192,14 +197,15 @@ Class KontaktKompleteKontrol {
         KontaktFileMenu := AccessiblePluginMenu()
         KontaktFileMenu.Name := "File"
         KontaktFileMenu.Add("Load...", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenuItem"))
-        ;        KontaktFileMenu.Add("Load recent", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenuItem"))
+;        KontaktFileMenu.Add("Load recent", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenuItem"))
         KontaktFileMenu.Add("Save multi as...", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenuItem"))
         KontaktFileMenu.Add("Reset multi", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenuItem"))
-        KontaktFileMenu.Add("Purge this instance", KontaktPurgeThisInstanceMenu)
+                KontaktFileMenu.Add("Purge this instance", KontaktPurgeThisInstanceMenu)
         KontaktFileMenu.Add("Purge all instances", KontaktPurgeAllInstancesMenu)
         KontaktFileMenu.Add("Options...", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenuItem"))
         KontaktFileMenu.Add("Help", KontaktHelpMenu)
-        ;        KontaktFileMenu.Disable("Load recent")
+;        KontaktFileMenu.Disable("Load recent")
+;        KontaktFileMenu.Disable("Save multi as...")
         KontaktFileMenu.Show()
     }
     
@@ -210,9 +216,9 @@ Class KontaktKompleteKontrol {
         KontaktViewMenu.Add("Info", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenuItem"))
         KontaktViewMenu.Add("Keyboard", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenuItem"))
         KontaktViewMenu.Add("Quick-Load", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenuItem"))
-        ;        KontaktViewMenu.Add("Zoom", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenuItem"))
+;       KontaktViewMenu.Add("Zoom", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenuItem"))
         KontaktViewMenu.Add("Set current view as default", ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenuItem"))
-        ;        KontaktViewMenu.Disable("Zoom")
+;        KontaktViewMenu.Disable("Zoom")
         KontaktViewMenu.Show()
     }
     
