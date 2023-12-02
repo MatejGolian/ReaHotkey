@@ -1,6 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 
 AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False) {
+    SetTimer ReaHotkey.ManageState, 0
     OverlayList := %Type%.GetOverlays(Name)
     UnknownProductCounter := 1
     For OverlayNumber, OverlayEntry In OverlayList {
@@ -83,7 +84,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                     ReaHotkey.Found%Type%.Overlay.AddControl(OverlayHeader)
                     ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
                     ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
-;                    ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[1].Label := "Overlay: " . Product
+                    ;                    ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[1].Label := "Overlay: " . Product
                     If ReportChange = True {
                         AccessibilityOverlay.Speak(Product . " overlay active")
                         ReaHotkey.Wait(1250)
@@ -107,6 +108,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             }
         }
     }
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 AutoChangePluginOverlay(Name, CompensatePluginCoordinates := False, ReportChange := False) {
@@ -118,6 +120,7 @@ AutoChangeStandaloneOverlay(Name, ReportChange := False) {
 }
 
 ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
+    SetTimer ReaHotkey.ManageState, 0
     OverlayList := %Type%.GetOverlays(ReaHotkey.Found%Type%.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
     If ReaHotkey.Found%Type%.Overlay.OverlayNumber != OverlayNumber
@@ -130,7 +133,7 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
         ReaHotkey.Found%Type%.Overlay.AddControl(OverlayHeader)
         ReaHotkey.Found%Type%.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
         ReaHotkey.Found%Type%.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
-;        ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[1].Label := "Overlay: " . ItemName
+        ;        ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[1].Label := "Overlay: " . ItemName
         ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[1].ControlID)
         ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[1].Focus()
     }
@@ -140,6 +143,7 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
     }
     Else
     ReaHotkey.Found%Type%.Overlay.Focus()
+    SetTimer ReaHotkey.ManageState, 100
 }
 
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
