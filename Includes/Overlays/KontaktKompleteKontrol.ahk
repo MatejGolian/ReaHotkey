@@ -16,7 +16,6 @@ Class KontaktKompleteKontrol {
         KompleteKontrolStandaloneHeader.AddHotspotButton("Help", 202, 41)
         
         KontaktStandaloneHeader := AccessibilityOverlay("Kontakt")
-        KontaktStandaloneHeader.AddStaticText("Kontakt")
         KontaktStandaloneHeader.AddCustomButton("FILE",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktStandaloneFileMenu"))
         KontaktStandaloneHeader.AddHotspotButton("LIBRARY", 237, 70)
         KontaktStandaloneHeader.AddCustomButton("VIEW",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktStandaloneViewMenu"))
