@@ -8,10 +8,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Build with AHK v2.0.9
+      - name: Write build number
+        uses: DamianReeves/write-file-action@master
+        with:
+          path: Includes/CIVersion.ahk
+          write-mode: overwrite
+          contents: |
+            BuildNumber := "${{ github.run_id }}"
+      - name: Build with AHK v2.0.10
         uses: Timtam/autohotkey-build@master
         with:
-          version: v2.0.9
+          version: v2.0.10
           x64: true
           x86: true
           compression: none
