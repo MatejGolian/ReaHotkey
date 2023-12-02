@@ -17,5 +17,8 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
 * Makes it possible to switch between the classic and modern mixes in Audio Imperia's Talos library.
   - Only works inside REAPER.
 
+## Known Issues
+If you find that your keyboard or ReaHotkey itself is not responding as expected after interacting with Kontakt menus, press the Escape key.
+
 ## About HotspotHelper
 HotspotHelper is a special utility to make developing these kind of scripts a little easier. It retrieves window and control info and creates labelled hotspots that can be copied to clipboard for subsequent use.
