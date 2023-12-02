@@ -148,6 +148,15 @@ Class KontaktKompleteKontrol {
         KontaktKompleteKontrol.MoveToOrClickAIPluginModernMix(Product, "MouseMove")
     }
     
+    Static GetPluginName() {
+        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
+        Return "Komplete Kontrol"
+        Else
+        If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
+        Return "Kontakt"
+        Return False
+    }
+    
     Static LoadPluginHeader(PluginName) {
         KompleteKontrolPluginHeader := AccessibilityOverlay("Komplete Kontrol")
         KompleteKontrolPluginHeader.AddStaticText("Komplete Kontrol")
@@ -176,7 +185,7 @@ Class KontaktKompleteKontrol {
     }
     
     Static MoveToOrClickAIPluginClassicMix(Product, MoveOrClick) {
-        Switch(KontaktKompleteKontrol.ReturnPlugin()) {
+        Switch(KontaktKompleteKontrol.GetPluginName()) {
             Case "Komplete Kontrol":
             Switch(Product) {
                 Case "Areia":
@@ -215,7 +224,7 @@ Class KontaktKompleteKontrol {
     }
     
     Static MoveToOrClickAIPluginModernMix(Product, MoveOrClick) {
-        Switch(KontaktKompleteKontrol.ReturnPlugin()) {
+        Switch(KontaktKompleteKontrol.GetPluginName()) {
             Case "Komplete Kontrol":
             Switch(Product) {
                 Case "Areia":
@@ -253,11 +262,7 @@ Class KontaktKompleteKontrol {
         }
     }
     
-    Static OpenKontaktPluginFileMenu(*) {
-        SetTimer ReaHotkey.ManageState, 0
-        ReaHotkey.TurnPluginHotkeysOff()
-        ReaHotkey.TurnPluginTimersOff("Kontakt/Komplete Kontrol")
-        Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
+    Static OpenKontaktMenu() {
         Loop {
             KeyCombo := KeyWaitCombo()
             If KeyCombo = "+Tab" {
@@ -287,6 +292,14 @@ Class KontaktKompleteKontrol {
                 Break
             }
         }
+    }
+    
+    Static OpenKontaktPluginFileMenu(*) {
+        SetTimer ReaHotkey.ManageState, 0
+        ReaHotkey.TurnPluginHotkeysOff()
+        ReaHotkey.TurnPluginTimersOff("Kontakt/Komplete Kontrol")
+        Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
+        KontaktKompleteKontrol.OpenKontaktMenu()
         SetTimer ReaHotkey.ManageState, 100
     }
     
@@ -295,35 +308,7 @@ Class KontaktKompleteKontrol {
         ReaHotkey.TurnPluginHotkeysOff()
         ReaHotkey.TurnPluginTimersOff("Kontakt/Komplete Kontrol")
         Click CompensatePluginXCoordinate(298), CompensatePluginYCoordinate(70)
-        Loop {
-            KeyCombo := KeyWaitCombo()
-            If KeyCombo = "+Tab" {
-                SendInput "+{Tab}"
-            }
-            Else If KeyCombo = "!F4" {
-                SendInput "{Escape}"
-                SendInput "!{F4}"
-                Break
-            }
-            Else {
-                SingleKey := KeyWaitSingle()
-                If GetKeyState("Shift") And SingleKey = "Tab" {
-                    SendInput "+{Tab}"
-                }
-                Else If GetKeyState("Alt") And SingleKey = "F4" {
-                    SendInput "{Escape}"
-                    SendInput "!{F4}"
-                    Break
-                }
-                Else {
-                    If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down" {
-                        SendInput "{" . SingleKey . "}"
-                    }
-                }
-                If SingleKey = "Escape"
-                Break
-            }
-        }
+        KontaktKompleteKontrol.OpenKontaktMenu()
         SetTimer ReaHotkey.ManageState, 100
     }
     
@@ -332,35 +317,7 @@ Class KontaktKompleteKontrol {
         ReaHotkey.TurnStandaloneHotkeysOff()
         ReaHotkey.TurnStandaloneTimersOff("Kontakt")
         Click 186, 70
-        Loop {
-            KeyCombo := KeyWaitCombo()
-            If KeyCombo = "+Tab" {
-                SendInput "+{Tab}"
-            }
-            Else If KeyCombo = "!F4" {
-                SendInput "{Escape}"
-                SendInput "!{F4}"
-                Break
-            }
-            Else {
-                SingleKey := KeyWaitSingle()
-                If GetKeyState("Shift") And SingleKey = "Tab" {
-                    SendInput "+{Tab}"
-                }
-                Else If GetKeyState("Alt") And SingleKey = "F4" {
-                    SendInput "{Escape}"
-                    SendInput "!{F4}"
-                    Break
-                }
-                Else {
-                    If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down" {
-                        SendInput "{" . SingleKey . "}"
-                    }
-                }
-                If SingleKey = "Escape"
-                Break
-            }
-        }
+        KontaktKompleteKontrol.OpenKontaktMenu()
         SetTimer ReaHotkey.ManageState, 100
     }
     
@@ -369,45 +326,8 @@ Class KontaktKompleteKontrol {
         ReaHotkey.TurnStandaloneHotkeysOff()
         ReaHotkey.TurnStandaloneTimersOff("Kontakt")
         Click 298, 70
-        Loop {
-            KeyCombo := KeyWaitCombo()
-            If KeyCombo = "+Tab" {
-                SendInput "+{Tab}"
-            }
-            Else If KeyCombo = "!F4" {
-                SendInput "{Escape}"
-                SendInput "!{F4}"
-                Break
-            }
-            Else {
-                SingleKey := KeyWaitSingle()
-                If GetKeyState("Shift") And SingleKey = "Tab" {
-                    SendInput "+{Tab}"
-                }
-                Else If GetKeyState("Alt") And SingleKey = "F4" {
-                    SendInput "{Escape}"
-                    SendInput "!{F4}"
-                    Break
-                }
-                Else {
-                    If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down" {
-                        SendInput "{" . SingleKey . "}"
-                    }
-                }
-                If SingleKey = "Escape"
-                Break
-            }
-        }
+        KontaktKompleteKontrol.OpenKontaktMenu()
         SetTimer ReaHotkey.ManageState, 100
-    }
-    
-    Static ReturnPlugin() {
-        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
-        Return "Komplete Kontrol"
-        Else
-        If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
-        Return "Kontakt"
-        Return False
     }
     
 }
