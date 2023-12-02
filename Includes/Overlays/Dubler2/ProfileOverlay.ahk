@@ -882,6 +882,39 @@ Static CreateProfileOverlay(Overlay) {
             PitchBendTypeCtrl.Label := "Pitch Bend Type: TrueBend"
     }
 
+    OpenChordsMidiChannelMenu(Btn, *) {
+        Local menu := AccessibleStandaloneMenu()
+
+        Loop 16 {
+            menu.Add(A_Index, SelectChordsMidiChannel.Bind(A_Index, Btn))
+            
+            If ProfileObj["ChordsMidiChannel"] == A_Index
+                menu.Check(A_Index)
+        }
+
+        menu.Show()
+    }
+
+    SelectChordsMidiChannel(Channel, Btn, *) {
+        Dubler2.ProfileLoaded["Current"]["ChordsMidiChannel"] := Channel
+
+        Dubler2.CloseOverlay("Dubler 2 Profile")
+
+        Click(362, 56)
+        Sleep 1000
+
+        FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+        FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+        Dubler2.ProfileLoaded.Set("Current", "")
+        Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
+
+        Sleep 1000
+
+        ReaHotkey.FoundStandalone.Overlay.Label := ""
+
+        Btn.Label := "Chords MIDI Channel: " . Channel
+    }
+
     Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"], "UTF-8")
     ProfileObj := Jxon_Load(&Profile)
 
@@ -1004,6 +1037,7 @@ Static CreateProfileOverlay(Overlay) {
     }
 
     ChordsTab.AddControl(ChordPresetCtrl)
+    ChordsTab.AddControl(CustomButton("Chords MIDI Channel: " . ProfileObj["ChordsMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), OpenChordsMidiChannelMenu))
 
     Overlay.AddTabControl("Profile Settings", PlayTab, PitchTab, PitchBendTab, ChordsTab, TriggersTab)
 
