@@ -30,56 +30,56 @@ Class KontaktKompleteKontrol {
         AreiaOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Areia", "Image", Map("File", "Images/KontaktKompleteKontrol/Areia.png"))
         AreiaOverlay.AddAccessibilityOverlay()
         AreiaOverlay.AddStaticText("Areia")
-        AreiaOverlay.AddCustomButton("Classic Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginClassicMix"))
-        AreiaOverlay.AddCustomButton("Modern Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginModernMix"))
+        AreiaOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
+        AreiaOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", AreiaOverlay)
         
         CerberusOverlay := AccessibilityOverlay("Cerberus")
         CerberusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Cerberus", "Image", Map("File", "Images/KontaktKompleteKontrol/Cerberus.png"))
         CerberusOverlay.AddAccessibilityOverlay()
         CerberusOverlay.AddStaticText("Cerberus")
-        CerberusOverlay.AddCustomButton("Classic Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginClassicMix"))
-        CerberusOverlay.AddCustomButton("Modern Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginModernMix"))
+        CerberusOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
+        CerberusOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", CerberusOverlay)
         
         ChorusOverlay := AccessibilityOverlay("Chorus")
         ChorusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Chorus", "Image", Map("File", "Images/KontaktKompleteKontrol/Chorus.png"))
         ChorusOverlay.AddAccessibilityOverlay()
         ChorusOverlay.AddStaticText("Chorus")
-        ChorusOverlay.AddCustomButton("Classic Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginClassicMix"))
-        ChorusOverlay.AddCustomButton("Modern Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginModernMix"))
+        ChorusOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
+        ChorusOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", ChorusOverlay)
         
         JaegerOverlay := AccessibilityOverlay("Jaeger")
         JaegerOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Jaeger", "Image", Map("File", "Images/KontaktKompleteKontrol/Jaeger.png"))
         JaegerOverlay.AddAccessibilityOverlay()
         JaegerOverlay.AddStaticText("Jaeger")
-        JaegerOverlay.AddCustomButton("Classic Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginClassicMix"))
-        JaegerOverlay.AddCustomButton("Modern Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginModernMix"))
+        JaegerOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
+        JaegerOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", JaegerOverlay)
         
         NucleusOverlay := AccessibilityOverlay("Nucleus")
         NucleusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Nucleus", "Image", Map("File", "Images/KontaktKompleteKontrol/Nucleus.png"))
         NucleusOverlay.AddAccessibilityOverlay()
         NucleusOverlay.AddStaticText("Nucleus")
-        NucleusOverlay.AddCustomButton("Classic Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginClassicMix"))
-        NucleusOverlay.AddCustomButton("Modern Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginModernMix"))
+        NucleusOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
+        NucleusOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", NucleusOverlay)
         
         SoloOverlay := AccessibilityOverlay("Solo")
         SoloOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Solo", "Image", Map("File", "Images/KontaktKompleteKontrol/Solo.png"))
         SoloOverlay.AddAccessibilityOverlay()
         SoloOverlay.AddStaticText("Solo")
-        SoloOverlay.AddCustomButton("Classic Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginClassicMix"))
-        SoloOverlay.AddCustomButton("Modern Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginModernMix"))
+        SoloOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
+        SoloOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", SoloOverlay)
         
         TalosOverlay := AccessibilityOverlay("Talos")
         TalosOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Talos", "Image", Map("File", "Images/KontaktKompleteKontrol/Talos.png"))
         TalosOverlay.AddAccessibilityOverlay()
         TalosOverlay.AddStaticText("Talos")
-        TalosOverlay.AddCustomButton("Classic Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginClassicMix"))
-        TalosOverlay.AddCustomButton("Modern Mix",, ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginModernMix"))
+        TalosOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
+        TalosOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", TalosOverlay)
         
         Standalone.RegisterOverlay("Komplete Kontrol", KompleteKontrolStandaloneHeader)
@@ -88,6 +88,20 @@ Class KontaktKompleteKontrol {
         Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 500)
         Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectPlugin"), 500)
         
+    }
+    
+    Static ActivateAIPluginClassicMix(*) {
+        Product := ""
+        If ReaHotkey.FoundPlugin Is Plugin And HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
+        Product := ReaHotkey.FoundPlugin.Overlay.Metadata["Product"]
+        KontaktKompleteKontrol.MoveToOrClickAIPluginClassicMix(Product, "Click")
+    }
+    
+    Static ActivateAIPluginModernMix(*) {
+        Product := ""
+        If ReaHotkey.FoundPlugin Is Plugin And HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
+        Product := ReaHotkey.FoundPlugin.Overlay.Metadata["Product"]
+        KontaktKompleteKontrol.MoveToOrClickAIPluginModernMix(Product, "Click")
     }
     
     Static CloseKKPluginBrowser() {
@@ -120,6 +134,20 @@ Class KontaktKompleteKontrol {
         SetTimer ReaHotkey.ManageState, 100
     }
     
+    Static FocusAIPluginClassicMix(*) {
+        Product := ""
+        If ReaHotkey.FoundPlugin Is Plugin And HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
+        Product := ReaHotkey.FoundPlugin.Overlay.Metadata["Product"]
+        KontaktKompleteKontrol.MoveToOrClickAIPluginClassicMix(Product, "MouseMove")
+    }
+    
+    Static FocusAIPluginModernMix(*) {
+        Product := ""
+        If ReaHotkey.FoundPlugin Is Plugin And HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
+        Product := ReaHotkey.FoundPlugin.Overlay.Metadata["Product"]
+        KontaktKompleteKontrol.MoveToOrClickAIPluginModernMix(Product, "MouseMove")
+    }
+    
     Static LoadPluginHeader(PluginName) {
         KompleteKontrolPluginHeader := AccessibilityOverlay("Komplete Kontrol")
         KompleteKontrolPluginHeader.AddStaticText("Komplete Kontrol")
@@ -144,6 +172,84 @@ Class KontaktKompleteKontrol {
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPluginHeader.Clone()
             Else
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := UnknownPluginHeader.Clone()
+        }
+    }
+    
+    Static MoveToOrClickAIPluginClassicMix(Product, MoveOrClick) {
+        Switch(KontaktKompleteKontrol.ReturnPlugin()) {
+            Case "Komplete Kontrol":
+            Switch(Product) {
+                Case "Areia":
+                %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
+                Case "Cerberus":
+                %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
+                Case "Chorus":
+                %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
+                Case "Jaeger":
+                %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
+                Case "Nucleus":
+                %MoveOrClick%(CompensatePluginXCoordinate(226), CompensatePluginYCoordinate(416))
+                Case "Solo":
+                %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
+                Case "Talos":
+                %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
+            }
+            Case "Kontakt":
+            Switch(Product) {
+                Case "Areia":
+                %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
+                Case "Cerberus":
+                %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
+                Case "Chorus":
+                %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
+                Case "Jaeger":
+                %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
+                Case "Nucleus":
+                %MoveOrClick%(CompensatePluginXCoordinate(126), CompensatePluginYCoordinate(316))
+                Case "Solo":
+                %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
+                Case "Talos":
+                %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
+            }
+        }
+    }
+    
+    Static MoveToOrClickAIPluginModernMix(Product, MoveOrClick) {
+        Switch(KontaktKompleteKontrol.ReturnPlugin()) {
+            Case "Komplete Kontrol":
+            Switch(Product) {
+                Case "Areia":
+                %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
+                Case "Cerberus":
+                %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
+                Case "Chorus":
+                %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
+                Case "Jaeger":
+                %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
+                Case "Nucleus":
+                %MoveOrClick%(CompensatePluginXCoordinate(264), CompensatePluginYCoordinate(446))
+                Case "Solo":
+                %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
+                Case "Talos":
+                %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
+            }
+            Case "Kontakt":
+            Switch(Product) {
+                Case "Areia":
+                %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
+                Case "Cerberus":
+                %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
+                Case "Chorus":
+                %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
+                Case "Jaeger":
+                %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
+                Case "Nucleus":
+                %MoveOrClick%(CompensatePluginXCoordinate(164), CompensatePluginYCoordinate(346))
+                Case "Solo":
+                %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
+                Case "Talos":
+                %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
+            }
         }
     }
     
@@ -302,90 +408,6 @@ Class KontaktKompleteKontrol {
         If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
         Return "Kontakt"
         Return False
-    }
-    
-    Static SelectAIPluginClassicMix(*) {
-        Product := ""
-        If ReaHotkey.FoundPlugin Is Plugin And HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
-        Product := ReaHotkey.FoundPlugin.Overlay.Metadata["Product"]
-        Switch(KontaktKompleteKontrol.ReturnPlugin()) {
-            Case "Komplete Kontrol":
-            Switch(Product) {
-                Case "Areia":
-                Click CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461)
-                Case "Cerberus":
-                Click CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461)
-                Case "Chorus":
-                Click CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461)
-                Case "Jaeger":
-                Click CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461)
-                Case "Nucleus":
-                Click CompensatePluginXCoordinate(226), CompensatePluginYCoordinate(416)
-                Case "Solo":
-                Click CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461)
-                Case "Talos":
-                Click CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461)
-            }
-            Case "Kontakt":
-            Switch(Product) {
-                Case "Areia":
-                Click CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361)
-                Case "Cerberus":
-                Click CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361)
-                Case "Chorus":
-                Click CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361)
-                Case "Jaeger":
-                Click CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361)
-                Case "Nucleus":
-                Click CompensatePluginXCoordinate(126), CompensatePluginYCoordinate(316)
-                Case "Solo":
-                Click CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361)
-                Case "Talos":
-                Click CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361)
-            }
-        }
-    }
-    
-    Static SelectAIPluginModernMix(*) {
-        Product := ""
-        If ReaHotkey.FoundPlugin Is Plugin And HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
-        Product := ReaHotkey.FoundPlugin.Overlay.Metadata["Product"]
-        Switch(KontaktKompleteKontrol.ReturnPlugin()) {
-            Case "Komplete Kontrol":
-            Switch(Product) {
-                Case "Areia":
-                Click CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461)
-                Case "Cerberus":
-                Click CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461)
-                Case "Chorus":
-                Click CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461)
-                Case "Jaeger":
-                Click CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461)
-                Case "Nucleus":
-                Click CompensatePluginXCoordinate(264), CompensatePluginYCoordinate(446)
-                Case "Solo":
-                Click CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461)
-                Case "Talos":
-                Click CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461)
-            }
-            Case "Kontakt":
-            Switch(Product) {
-                Case "Areia":
-                Click CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361)
-                Case "Cerberus":
-                Click CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361)
-                Case "Chorus":
-                Click CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361)
-                Case "Jaeger":
-                Click CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361)
-                Case "Nucleus":
-                Click CompensatePluginXCoordinate(164), CompensatePluginYCoordinate(346)
-                Case "Solo":
-                Click CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361)
-                Case "Talos":
-                Click CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361)
-            }
-        }
     }
     
 }
