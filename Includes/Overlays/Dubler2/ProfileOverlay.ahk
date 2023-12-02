@@ -845,7 +845,21 @@ Static CreateProfileOverlay(Overlay) {
         }
     }
 
-    SelectPitchBendType(Type) {
+    OpenPitchBendTypeMenu(*) {
+        Local menu := AccessibleStandaloneMenu()
+
+        menu.Add("IntelliBend", SelectPitchBendType.Bind(0))
+        menu.Add("TrueBend", SelectPitchBendType.Bind(1))
+
+        If ProfileObj["PitchBendType"] == 0
+            menu.Check("IntelliBend")
+        Else
+            menu.Check("TrueBend")
+
+        menu.Show()
+    }
+
+    SelectPitchBendType(Type, *) {
         Dubler2.ProfileLoaded["Current"]["PitchBendType"] := Type
 
         Dubler2.CloseOverlay("Dubler 2 Profile")
@@ -861,6 +875,11 @@ Static CreateProfileOverlay(Overlay) {
         Sleep 1000
 
         ReaHotkey.FoundStandalone.Overlay.Label := ""
+
+        If Type == 0
+            PitchBendTypeCtrl.Label := "Pitch Bend Type: IntelliBend"
+        Else
+            PitchBendTypeCtrl.Label := "Pitch Bend Type: TrueBend"
     }
 
     Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"], "UTF-8")
@@ -933,15 +952,12 @@ Static CreateProfileOverlay(Overlay) {
     PitchBendTab.AddControl(CustomButton("Stickiness: " . Integer(ProfileObj["Pitch"]["pitchStickiness"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchStickinessButton")))
     PitchBendTab.AddControl(CustomButton("Pitch Bend Range: " . ProfileObj["Pitch"]["pitchBendRange"] . " semitones", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivatePitchBendRangeButton")))
 
-    PitchBendTypeCtrl := PopulatedComboBox("Pitch Bend Type", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
-
-    PitchBendTypeCtrl.AddItem("IntelliBend", SelectPitchBendType.Bind(0))
-    PitchBendTypeCtrl.AddItem("TrueBend", SelectPitchBendType.Bind(1))
+    PitchBendTypeCtrl := CustomButton("", ObjBindMethod(Dubler2, "FocusButton"), OpenPitchBendTypeMenu)
 
     If ProfileObj["PitchBendType"] == 0
-        PitchBendTypeCtrl.Setvalue("IntelliBend")
+        PitchBendTypeCtrl.Label := "Pitch Bend Type: IntelliBend"
     Else
-        PitchBendTypeCtrl.SetValue("TrueBend")
+        PitchBendTypeCtrl.Label := "Pitch Bend Type: TrueBend"
 
     PitchBendTab.AddControl(PitchBendTypeCtrl)
 

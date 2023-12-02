@@ -23,43 +23,42 @@ Class PopulatedComboBox extends CustomComboBox {
             "Label", Label,
             "Selector", Selector,
         ))
+    }
 
-        If This.Value == ""
-            This.Value := Label
+    Focus(CurrentControlID := 0) {
+
+        Options := Array()
+        
+        Loop This.Values.Length {
+            Options.Push(This.Values[A_Index]["Label"])
+        }
+
+        This.SetOptions(Options, This.CurrentOption)
+
+        Super.Focus(CurrentControlID)
     }
 
     OnChange(*) {
 
-        FI := 0
-        Hk := A_ThisHotkey
-        
-        If This.Values.Length == 0
+        If This.Values.Length == 0 Or This.CurrentOption > This.Options.Length
             Return
 
-        Loop This.Values.Length {
-            If This.Values[A_Index]["Label"] == This.Value {
-                FI := A_Index
-                Break
-            }
-        }
-
-        If FI == 0
-            Return
-        
-        If Hk == "Up" And FI > 1
-            FI -= 1
-        Else If Hk == "Down" And FI < This.Values.Length
-            FI += 1
-
-        If This.Values[FI]["Selector"] != ""
-            This.Values[FI]["Selector"]()
-
-        This.SetValue(This.Values[FI]["Label"])
+        If This.Values[This.CurrentOption]["Selector"] != ""
+            This.Values[This.CurrentOption]["Selector"]()
     }
 
     ClearItems() {
         This.Values := Array()
-        This.SetValue("")
+        This.SetOptions(Array())
+    }
+
+    SetValue(Value) {
+        Loop This.Values.Length {
+            If This.Values[A_Index] == Value {
+                This.CurrentOption := A_Index
+                Break
+            }
+        }
     }
 }
 
