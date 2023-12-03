@@ -15,7 +15,7 @@ jobs:
           write-mode: overwrite
           contents: |
             BuildNumber := "${{ github.run_id }}"
-      - name: Build with AHK v2.0.10
+      - name: Build ReaHotkey with AHK v2.0.10
         uses: Timtam/autohotkey-build@master
         with:
           version: v2.0.10
@@ -24,9 +24,16 @@ jobs:
           compression: none
           in: ReaHotkey.ahk
           out: "build"
+          - name: Build HotspotHelper with AHK v2.0.10
+        uses: Timtam/autohotkey-build@master
+        with:
+          version: v2.0.10
+          x64: true
+          x86: true
+          compression: none
           in: HotspotHelper.ahk
           out: "build"
-      - name: Convert Markdown to HTML
+            - name: Convert Markdown to HTML
         uses: natescherer/markdown-to-html-with-github-style-action@v1.1.0
         with:
           path: README.md
