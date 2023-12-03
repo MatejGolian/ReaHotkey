@@ -85,8 +85,8 @@ Class KontaktKompleteKontrol {
         Standalone.RegisterOverlay("Komplete Kontrol", KompleteKontrolStandaloneHeader)
         Standalone.RegisterOverlay("Kontakt", KontaktStandaloneHeader)
         
-        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 500)
         Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectPlugin"), 500)
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 500)
         
     }
     
@@ -160,13 +160,13 @@ Class KontaktKompleteKontrol {
     Static LoadPluginHeader(PluginName) {
         KompleteKontrolPluginHeader := AccessibilityOverlay("Komplete Kontrol")
         KompleteKontrolPluginHeader.AddStaticText("Komplete Kontrol")
-        KompleteKontrolPluginHeader.AddHotspotButton("Menu", CompensatePluginXCoordinate(305), CompensatePluginYCoordinate(68))
+        KompleteKontrolPluginHeader.AddHotspotButton("Menu", 305, 68, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         KontaktPluginHeader := AccessibilityOverlay("Kontakt")
         KontaktPluginHeader.AddStaticText("Kontakt")
         KontaktPluginHeader.AddCustomButton("FILE",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktPluginFileMenu"))
-        KontaktPluginHeader.AddHotspotButton("LIBRARY", CompensatePluginXCoordinate(237), CompensatePluginYCoordinate(70))
+        KontaktPluginHeader.AddHotspotButton("LIBRARY", 237, 70, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         KontaktPluginHeader.AddCustomButton("VIEW",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktPluginViewMenu"))
-        KontaktPluginHeader.AddHotspotButton("SHOP", CompensatePluginXCoordinate(828), CompensatePluginYCoordinate(70))
+        KontaktPluginHeader.AddHotspotButton("SHOP", 828, 70, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         UnknownPluginHeader := AccessibilityOverlay("Unknown")
         UnknownPluginHeader.AddStaticText("Kontakt/Komplete Kontrol")
         UnknownPluginHeader.AddStaticText("Warning! The exact plugin could not be detected. Some functions may not work correctly.")
