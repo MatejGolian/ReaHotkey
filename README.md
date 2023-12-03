@@ -1,4 +1,6 @@
-# What's This And Who Is It For?
+# ReaHotkey
+
+## What's This And Who Is It For?
 This is an AutoHotkey scripth which aims to make certain virtual instruments/sample libraries  and related programs at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although in particular cases standalone versions of programs/instruments may be supported as well.
 
 ## Features
@@ -8,13 +10,7 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
   - Works both inside REAPER and in the standalone version of Komplete Kontrol. Note that Komplete Kontrol version 3 is required.
 * Makes it possible to interact with Kontakt menus.
   - Works both inside REAPER and in the standalone version of Kontakt. Note that Kontakt version 7.7.0 or higher is required.
-* Makes it possible to switch between the classic and modern mixes in Audio Imperia's Areia library.
-  - Only works inside REAPER.
-* Makes it possible to switch between the classic and modern mixes in Audio Imperia's Jaeger library.
-  - Only works inside REAPER.
-* Makes it possible to switch between the classic and modern mixes in Audio Imperia's Nucleus library.
-  - Only works inside REAPER.
-* Makes it possible to switch between the classic and modern mixes in Audio Imperia's Talos library.
+* Makes it possible to switch between the classic and modern mixes in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
   - Only works inside REAPER.
 
 ## Known Issues
