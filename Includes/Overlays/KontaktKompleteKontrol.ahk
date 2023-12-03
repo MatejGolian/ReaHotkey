@@ -85,8 +85,8 @@ Class KontaktKompleteKontrol {
         Standalone.RegisterOverlay("Komplete Kontrol", KompleteKontrolStandaloneHeader)
         Standalone.RegisterOverlay("Kontakt", KontaktStandaloneHeader)
         
-        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 500)
         Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectPlugin"), 500)
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 500)
         
     }
     
