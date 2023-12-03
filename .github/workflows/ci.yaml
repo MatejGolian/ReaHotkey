@@ -22,7 +22,6 @@ jobs:
           x64: true
           x86: true
           compression: none
-          in: ReaHotkey.ahk
           out: "build"
       - name: Convert Markdown to HTML
         uses: natescherer/markdown-to-html-with-github-style-action@v1.1.0
