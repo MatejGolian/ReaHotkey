@@ -22,6 +22,7 @@ SetWorkingDir A_InitialWorkingDir
 A_IconTip := "ReaHotkey"
 A_TrayMenu.Delete
 A_TrayMenu.Add("&Pause", ReaHotkey.TogglePause)
+A_TrayMenu.Add("View &Readme", ReaHotkey.ViewReadme)
 A_TrayMenu.Add("&About...", ReaHotkey.ShowAboutBox)
 A_TrayMenu.Add("&Close", ReaHotkey.Close)
 A_TrayMenu.Default := "&About..."

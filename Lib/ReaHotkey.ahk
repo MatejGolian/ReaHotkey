@@ -376,6 +376,15 @@ Class ReaHotkey {
         
     }
     
+    Class ViewReadme {
+        
+        Static Call(*) {
+            If FileExist("README.html") And Not InStr(FileExist("README.html"), "D")
+            Run "README.html"
+        }
+        
+    }
+    
     Class Wait {
         
         Static Call(Period) {
