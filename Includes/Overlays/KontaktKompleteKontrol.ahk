@@ -344,7 +344,7 @@ Class KontaktKompleteKontrol {
                 ChildOverlay.AddHotspotButton("M", 335, 464, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
             }
             Else If KontaktKompleteKontrol.GetPluginName() = "Kontakt" {
-                ChildOverlay.AddHotspotButton("C", 226, 364, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+                ChildOverlay.AddHotspotButton("C", 216, 364, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
                 ChildOverlay.AddHotspotButton("M", 235, 364, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
             }
             Else {
