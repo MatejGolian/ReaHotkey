@@ -231,46 +231,10 @@ ToggleNotesAnnouncement(*) {
         Dubler2.DisableNotesAnnouncement()
 }
 
-ActivatePitchMidiChannelButton(Button, *) {
-    Local menu := AccessibleStandaloneMenu()
-
-    Loop 16 {
-        menu.Add(A_Index, ClickPitchMidiChannel.Bind(A_Index, Button))
-            
-        If Dubler2.ProfileLoaded["Current"]["PitchMidiChannel"] == A_Index
-            menu.Check(A_Index)
-    }
-
-    menu.Show()
-}
-
-ClickPitchMidiChannel(Channel, Button, *) {
-    Dubler2.ProfileLoaded["Current"]["PitchMidiChannel"] := Channel
-
-    Dubler2.CloseOverlay("Dubler 2 Profile")
-
-    Click(362, 56)
-    Sleep 1000
-
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
-    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
-    Dubler2.ProfileLoaded.Set("Current", "")
-    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
-
-    Sleep 1000
-
-    Click(258, 104)
-
-    ReaHotkey.FoundStandalone.Overlay.Label := ""
-
-    Button.Label := "Pitch MIDI Channel: " . Channel
-}
-
 PitchTab := HotspotTab("Pitch", 258, 104, ObjBindMethod(Dubler2, "FocusTab"))
 PitchTab.SetHotkey("^2", "Ctrl + 2")
 
 PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch enabled", 371, 161, ProfileObj["Pitch"]["pitchEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
-PitchTab.AddControl(CustomButton("Pitch MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["PitchMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivatePitchMidiChannelButton))
 
 SynthPresetCtrl := PopulatedComboBox("Synth Preset", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
 

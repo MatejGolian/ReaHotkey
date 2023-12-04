@@ -59,46 +59,10 @@ ClickChordPreset(Preset) {
     }
 }
 
-ActivateChordsMidiChannelButton(Button, *) {
-    Local menu := AccessibleStandaloneMenu()
-
-    Loop 16 {
-        menu.Add(A_Index, ClickChordsMidiChannel.Bind(A_Index, Button))
-            
-        If Dubler2.ProfileLoaded["Current"]["ChordsMidiChannel"] == A_Index
-            menu.Check(A_Index)
-    }
-
-    menu.Show()
-}
-
-ClickChordsMidiChannel(Channel, Button, *) {
-    Dubler2.ProfileLoaded["Current"]["ChordsMidiChannel"] := Channel
-
-    Dubler2.CloseOverlay("Dubler 2 Profile")
-
-    Click(362, 56)
-    Sleep 1000
-
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
-    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
-    Dubler2.ProfileLoaded.Set("Current", "")
-    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
-
-    Sleep 1000
-
-    Click(685, 101)
-
-    ReaHotkey.FoundStandalone.Overlay.Label := ""
-
-    Button.Label := "Chords MIDI Channel: " . Channel
-}
-
 ChordsTab := HotspotTab("Chords", 685, 101, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
 ChordsTab.SetHotkey("^4", "Ctrl + 4")
 
 ChordsTab.AddControl(Dubler2.HotspotCheckbox("Chords enabled", 97, 159, Dubler2.ProfileLoaded["Current"]["Chords"]["chordsEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
-ChordsTab.AddControl(CustomButton("Chords MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["ChordsMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivateChordsMidiChannelButton))
 ChordsTab.AddControl(Dubler2.HotspotCheckbox("Root Note Bassline", 575, 566, Dubler2.ProfileLoaded["Current"]["Chords"]["rootNoteBassline"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 ChordsTab.AddControl(Dubler2.HotspotCheckbox("Follow Octaves", 806, 567, Dubler2.ProfileLoaded["Current"]["Chords"]["octaveFollow"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 ChordsTab.AddControl(CustomButton("Octave shift: " . (Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), ActivateChordsOctaveShiftButton))

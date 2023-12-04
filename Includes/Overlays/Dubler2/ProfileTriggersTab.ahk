@@ -264,45 +264,9 @@ ActivateTriggerSensitivityButton(Button) {
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-ActivateTriggersMidiChannelButton(Button, *) {
-    Local menu := AccessibleStandaloneMenu()
-
-    Loop 16 {
-        menu.Add(A_Index, ClickTriggersMidiChannel.Bind(A_Index, Button))
-            
-        If Dubler2.ProfileLoaded["Current"]["TriggersMidiChannel"] == A_Index
-            menu.Check(A_Index)
-    }
-
-    menu.Show()
-}
-
-ClickTriggersMidiChannel(Channel, Button, *) {
-    Dubler2.ProfileLoaded["Current"]["TriggersMidiChannel"] := Channel
-
-    Dubler2.CloseOverlay("Dubler 2 Profile")
-
-    Click(362, 56)
-    Sleep 1000
-
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
-    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
-    Dubler2.ProfileLoaded.Set("Current", "")
-    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
-
-    Sleep 1000
-
-    Click(407, 105)
-
-    ReaHotkey.FoundStandalone.Overlay.Label := ""
-
-    Button.Label := "Triggers MIDI Channel: " . Channel
-}
-
 TriggersTab := HotspotTab("Triggers", 407, 105, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
 TriggersTab.SetHotkey("^5", "Ctrl + 5")
 
 TriggersTab.AddControl(Dubler2.HotspotCheckbox("Triggers enabled", 97, 158, Dubler2.ProfileLoaded["Current"]["triggers"]["triggersEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
-TriggersTab.AddControl(CustomButton("Triggers MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["TriggersMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivateTriggersMidiChannelButton))
 SetupTriggers(TriggersTab)
 TriggersTab.AddControl(CustomButton("Sensitivity: " . Integer(Dubler2.ProfileLoaded["Current"]["DublerModel"]["triggerSensitivity"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ActivateTriggerSensitivityButton))

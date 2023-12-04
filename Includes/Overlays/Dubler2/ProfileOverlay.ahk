@@ -192,13 +192,14 @@ Static CreateProfileOverlay(Overlay) {
     Overlay.AddHotspotButton("Unload Profile", 362, 56, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CloseProfileOverlay"))
     ;Overlay.AddHotspotButton("User Settings", 900, 57, FocusButton)
 
+    #Include ProfileAssignTab.ahk
     #Include ProfileChordsTab.ahk
     #Include ProfilePitchBendTab.ahk
     #Include ProfilePitchTab.ahk
     #Include ProfilePlayTab.ahk
     #Include ProfileTriggersTab.ahk
 
-    Overlay.AddTabControl("Profile Settings", PlayTab, PitchTab, PitchBendTab, ChordsTab, TriggersTab)
+    Overlay.AddTabControl("Profile Settings", PlayTab, PitchTab, PitchBendTab, ChordsTab, TriggersTab, AssignTab)
 
     return Overlay
 }
