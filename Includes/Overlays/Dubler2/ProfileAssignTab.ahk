@@ -245,3 +245,7 @@ AssignTab.AddControl(CustomButton("Pitch MIDI Channel: " . Dubler2.ProfileLoaded
 AssignTab.AddControl(Dubler2.HotspotCheckbox("Chords bend enabled", 264, 446, Dubler2.ProfileLoaded["Current"]["PitchBendChords"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 AssignTab.AddControl(CustomButton("Chords MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["ChordsMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivateChordsMidiChannelButton))
 AssignTab.AddControl(CustomButton("Triggers MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["TriggersMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivateTriggersMidiChannelButton))
+AssignTab.AddControl(Dubler2.HotspotCheckbox("AAA enabled", 636, 230, Not Dubler2.ProfileLoaded["Current"]["AAALocked"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+AssignTab.AddControl(Dubler2.HotspotCheckbox("EEE enabled", 852, 230, Not Dubler2.ProfileLoaded["Current"]["EEELocked"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+AssignTab.AddControl(Dubler2.HotspotCheckbox("OOO enabled", 637, 447, Not Dubler2.ProfileLoaded["Current"]["OOOLocked"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+AssignTab.AddControl(Dubler2.HotspotCheckbox("ENV enabled", 854, 445, Dubler2.ProfileLoaded["Current"]["ENVEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
