@@ -179,7 +179,7 @@ Class KontaktKompleteKontrol {
             ReaHotkey.FoundPlugin.Overlay.Metadata := Map("Product", "None")
             ReaHotkey.FoundPlugin.Overlay.OverlayNumber := 1
         }
-        If ReaHotkey.FoundPlugin.Overlay.ChildControls[1].Label != PluginName {
+        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay.ChildControls[1].Label != PluginName {
             If PluginName = "Komplete Kontrol"
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KompleteKontrolPluginHeader.Clone()
             Else If PluginName = "Kontakt"
