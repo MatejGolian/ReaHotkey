@@ -24,6 +24,7 @@ A_TrayMenu.Delete
 A_TrayMenu.Add("&Pause", ReaHotkey.TogglePause)
 A_TrayMenu.Add("&About...", ReaHotkey.ShowAboutBox)
 A_TrayMenu.Add("&Close", ReaHotkey.Close)
+A_TrayMenu.Default := "&About..."
 
 AccessibilityOverlay.Speak("ReaHotkey ready")
 
