@@ -332,6 +332,30 @@ Class ReaHotkey {
         
     }
     
+    Class ShowAboutBox {
+        
+        Static Call(*) {
+            Static AboutBox := False
+            If AboutBox = False {
+                AboutBox := Gui(, "About ReaHotkey")
+                AboutBox.Add("Edit", "ReadOnly", "Version 2023.1")
+                AboutBox.Add("Link",, 'ReaHotkey on <a href="https://github.com/MatejGolian/ReaHotkey">GitHub</a>')
+                AboutBox.Add("Button", "Default", "OK").OnEvent("Click", CloseAboutBox)
+                AboutBox.OnEvent("Close", CloseAboutBox)
+                AboutBox.OnEvent("Escape", CloseAboutBox)
+                AboutBox.Show()
+            }
+            Else {
+                AboutBox.Show()
+            }
+            CloseAboutBox(*) {
+                AboutBox.Destroy()
+                AboutBox := False
+            }
+        }
+        
+    }
+    
     Class TogglePause {
         
         Static Call(*) {
