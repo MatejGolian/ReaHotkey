@@ -38,8 +38,9 @@ Class KontaktKompleteKontrol {
         CerberusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Cerberus", "Image", Map("File", "Images/KontaktKompleteKontrol/Cerberus.png"))
         CerberusOverlay.AddAccessibilityOverlay()
         CerberusOverlay.AddStaticText("Cerberus")
-        CerberusOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
-        CerberusOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
+        CerberusComboBox := CerberusOverlay.AddCustomComboBox("Patch type:", ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginCerberusPatchType"), ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginCerberusPatchType"))
+        CerberusComboBox.SetOptions(["Normal", "Epic Mix"])
+        CerberusOverlay.AddAccessibilityOverlay()
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", CerberusOverlay)
         
         ChorusOverlay := AccessibilityOverlay("Chorus")
@@ -90,17 +91,19 @@ Class KontaktKompleteKontrol {
         
     }
     
-    Static ActivateAIPluginClassicMix(*) {
+    Static ActivateAIPluginClassicMix(MixButton) {
         Product := ""
-        If ReaHotkey.FoundPlugin Is Plugin And HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
-        Product := ReaHotkey.FoundPlugin.Overlay.Metadata["Product"]
+        ParentOverlay := MixButton.GetSuperordinateControl()
+        If HasProp(ParentOverlay, "Metadata") And ParentOverlay.Metadata.Has("Product") And ParentOverlay.Metadata["Product"] != ""
+        Product := ParentOverlay.Metadata["Product"]
         KontaktKompleteKontrol.MoveToOrClickAIPluginClassicMix(Product, "Click")
     }
     
-    Static ActivateAIPluginModernMix(*) {
+    Static ActivateAIPluginModernMix(MixButton) {
         Product := ""
-        If ReaHotkey.FoundPlugin Is Plugin And HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
-        Product := ReaHotkey.FoundPlugin.Overlay.Metadata["Product"]
+        ParentOverlay := MixButton.GetSuperordinateControl()
+        If HasProp(ParentOverlay, "Metadata") And ParentOverlay.Metadata.Has("Product") And ParentOverlay.Metadata["Product"] != ""
+        Product := ParentOverlay.Metadata["Product"]
         KontaktKompleteKontrol.MoveToOrClickAIPluginModernMix(Product, "Click")
     }
     
@@ -134,17 +137,19 @@ Class KontaktKompleteKontrol {
         SetTimer ReaHotkey.ManageState, 100
     }
     
-    Static FocusAIPluginClassicMix(*) {
+    Static FocusAIPluginClassicMix(MixButton) {
         Product := ""
-        If ReaHotkey.FoundPlugin Is Plugin And HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
-        Product := ReaHotkey.FoundPlugin.Overlay.Metadata["Product"]
+        ParentOverlay := MixButton.GetSuperordinateControl()
+        If HasProp(ParentOverlay, "Metadata") And ParentOverlay.Metadata.Has("Product") And ParentOverlay.Metadata["Product"] != ""
+        Product := ParentOverlay.Metadata["Product"]
         KontaktKompleteKontrol.MoveToOrClickAIPluginClassicMix(Product, "MouseMove")
     }
     
-    Static FocusAIPluginModernMix(*) {
+    Static FocusAIPluginModernMix(MixButton) {
         Product := ""
-        If ReaHotkey.FoundPlugin Is Plugin And HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") And ReaHotkey.FoundPlugin.Overlay.Metadata.Has("Product") And ReaHotkey.FoundPlugin.Overlay.Metadata["Product"] != ""
-        Product := ReaHotkey.FoundPlugin.Overlay.Metadata["Product"]
+        ParentOverlay := MixButton.GetSuperordinateControl()
+        If HasProp(ParentOverlay, "Metadata") And ParentOverlay.Metadata.Has("Product") And ParentOverlay.Metadata["Product"] != ""
+        Product := ParentOverlay.Metadata["Product"]
         KontaktKompleteKontrol.MoveToOrClickAIPluginModernMix(Product, "MouseMove")
     }
     
@@ -328,6 +333,47 @@ Class KontaktKompleteKontrol {
         Click 298, 70
         KontaktKompleteKontrol.OpenKontaktMenu()
         SetTimer ReaHotkey.ManageState, 100
+    }
+    
+    Static SelectAIPluginCerberusPatchType(TypeCombo) {
+        ParentOverlay := TypeCombo.GetSuperordinateControl()
+        If TypeCombo.GetValue() = "Normal" {
+            ChildOverlay := AccessibilityOverlay()
+            If KontaktKompleteKontrol.GetPluginName() = "Komplete Kontrol" {
+                ChildOverlay.AddHotspotButton("C", 326, 464, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+                ChildOverlay.AddHotspotButton("M", 335, 464, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+            }
+            Else If KontaktKompleteKontrol.GetPluginName() = "Kontakt" {
+                ChildOverlay.AddHotspotButton("C", 226, 364, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+                ChildOverlay.AddHotspotButton("M", 235, 364, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+            }
+            Else {
+                ChildOverlay.AddStaticText("Mix choices not available")
+            }
+            ParentOverlay.ChildControls[4] := ChildOverlay
+        }
+        Else If TypeCombo.GetValue() = "Epic Mix" {
+            ChildOverlay := AccessibilityOverlay()
+            If KontaktKompleteKontrol.GetPluginName() = "Komplete Kontrol" {
+                ChildOverlay.AddHotspotButton("C", 221, 464, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+                ChildOverlay.AddHotspotButton("F", 251, 464, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+                ChildOverlay.AddHotspotButton("R", 281, 464, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+            }
+            Else If KontaktKompleteKontrol.GetPluginName() = "Kontakt" {
+                ChildOverlay.AddHotspotButton("C", 121, 364, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+                ChildOverlay.AddHotspotButton("F", 151, 364, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+                ChildOverlay.AddHotspotButton("R", 181, 364, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+            }
+            Else {
+                ChildOverlay.AddStaticText("Mix choices not available")
+            }
+            ParentOverlay.ChildControls[4] := ChildOverlay
+        }
+        Else {
+            ChildOverlay := AccessibilityOverlay()
+            ChildOverlay.AddStaticText("Invalid patch type")
+            ParentOverlay.ChildControls[4] := ChildOverlay
+        }
     }
     
 }
