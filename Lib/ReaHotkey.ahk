@@ -338,7 +338,7 @@ Class ReaHotkey {
             Static AboutBox := False
             If AboutBox = False {
                 AboutBox := Gui(, "About ReaHotkey")
-                AboutBox.Add("Edit", "ReadOnly", "Version 2023.1")
+                AboutBox.Add("Edit", "ReadOnly", "Version " . GetVersion())
                 AboutBox.Add("Link",, 'ReaHotkey on <a href="https://github.com/MatejGolian/ReaHotkey">GitHub</a>')
                 AboutBox.Add("Button", "Default", "OK").OnEvent("Click", CloseAboutBox)
                 AboutBox.OnEvent("Close", CloseAboutBox)
