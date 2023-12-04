@@ -265,7 +265,7 @@ ActivateTriggerSensitivityButton(Button) {
 }
 
 TriggersTab := HotspotTab("Triggers", 407, 105, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
-TriggersTab.SetHotkey("^5", "Ctrl + 5")
+TriggersTab.SetHotkey("^4", "Ctrl + 4")
 
 TriggersTab.AddControl(Dubler2.HotspotCheckbox("Triggers enabled", 97, 158, Dubler2.ProfileLoaded["Current"]["triggers"]["triggersEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 SetupTriggers(TriggersTab)

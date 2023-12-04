@@ -194,12 +194,11 @@ Static CreateProfileOverlay(Overlay) {
 
     #Include ProfileAssignTab.ahk
     #Include ProfileChordsTab.ahk
-    #Include ProfilePitchBendTab.ahk
     #Include ProfilePitchTab.ahk
     #Include ProfilePlayTab.ahk
     #Include ProfileTriggersTab.ahk
 
-    Overlay.AddTabControl("Profile Settings", PlayTab, PitchTab, PitchBendTab, ChordsTab, TriggersTab, AssignTab)
+    Overlay.AddTabControl("Profile Settings", PlayTab, PitchTab, ChordsTab, TriggersTab, AssignTab)
 
     return Overlay
 }

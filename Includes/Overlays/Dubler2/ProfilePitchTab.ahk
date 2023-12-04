@@ -34,6 +34,10 @@ ActivatePitchInputGainButton(Button) {
     Dubler2.ProfileLoaded.Set("Current", "")
     Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
+    Sleep 1000
+    
+    Click(258, 104)
+
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
@@ -150,6 +154,10 @@ ClickPitchOctaveShiftButton(Button, Octave, *) {
     Dubler2.ProfileLoaded.Set("Current", "")
     Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
+    Sleep 1000
+    
+    Click(258, 104)
+
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
@@ -234,7 +242,8 @@ ToggleNotesAnnouncement(*) {
 PitchTab := HotspotTab("Pitch", 258, 104, ObjBindMethod(Dubler2, "FocusTab"))
 PitchTab.SetHotkey("^2", "Ctrl + 2")
 
-PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch enabled", 371, 161, ProfileObj["Pitch"]["pitchEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch enabled", 371, 161, Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch Bend enabled", 354, 501, Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchBendEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 
 SynthPresetCtrl := PopulatedComboBox("Synth Preset", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
 

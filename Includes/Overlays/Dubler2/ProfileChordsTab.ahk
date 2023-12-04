@@ -60,7 +60,7 @@ ClickChordPreset(Preset) {
 }
 
 ChordsTab := HotspotTab("Chords", 685, 101, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
-ChordsTab.SetHotkey("^4", "Ctrl + 4")
+ChordsTab.SetHotkey("^3", "Ctrl + 3")
 
 ChordsTab.AddControl(Dubler2.HotspotCheckbox("Chords enabled", 97, 159, Dubler2.ProfileLoaded["Current"]["Chords"]["chordsEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 ChordsTab.AddControl(Dubler2.HotspotCheckbox("Root Note Bassline", 575, 566, Dubler2.ProfileLoaded["Current"]["Chords"]["rootNoteBassline"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))

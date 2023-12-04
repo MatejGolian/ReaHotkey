@@ -27,6 +27,10 @@ ActivateRenameProfileButton(Button) {
     Dubler2.ProfileLoaded.Set("Current", "")
     Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
 
+    Sleep 1000
+    
+    Click(258, 104)
+
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
@@ -34,5 +38,5 @@ PlayTab := HotspotTab("Play", 258, 104, ObjBindMethod(Dubler2, "DisableNotesAnno
 
 PlayTab.SetHotkey("^1", "Ctrl + 1")
 PlayTab.AddControl(CustomButton("Rename profile", ObjBindMethod(Dubler2, "FocusButton"), ActivateRenameProfileButton))
-PlayTab.AddControl(Dubler2.HotspotCheckbox("Inbuilt audio enabled", 730, 619, ProfileObj["DublerModel"]["audioOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
-PlayTab.AddControl(Dubler2.HotspotCheckbox("MIDI out enabled", 829, 621, ProfileObj["DublerModel"]["midiOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+PlayTab.AddControl(Dubler2.HotspotCheckbox("Inbuilt audio enabled", 730, 619, Dubler2.ProfileLoaded["Current"]["DublerModel"]["audioOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+PlayTab.AddControl(Dubler2.HotspotCheckbox("MIDI out enabled", 829, 621, Dubler2.ProfileLoaded["Current"]["DublerModel"]["midiOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
