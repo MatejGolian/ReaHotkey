@@ -16,8 +16,8 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
 ## Keyboard Shortcuts
 * ctrl+shift+windows+a - about
 * ctrl+shift+windows+p - pause
-* ctrl+shift+windows+r - view readme
 * ctrl+shift+windows+q - quit
+* ctrl+shift+windows+r - view readme
 
 ## Known Issues
 * If you find that your keyboard or ReaHotkey itself is not responding as expected after interacting with Kontakt menus, press the Escape key.
