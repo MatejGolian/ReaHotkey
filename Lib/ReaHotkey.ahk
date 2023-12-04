@@ -229,14 +229,6 @@ Class ReaHotkey {
         }
     }
     
-    Class Close {
-        
-        Static Call(*) {
-            ExitApp
-        }
-        
-    }
-    
     Class HandleError {
         
         Static Call(Exception, Mode) {
@@ -332,6 +324,14 @@ Class ReaHotkey {
         
     }
     
+    Class Quit {
+        
+        Static Call(*) {
+            ExitApp
+        }
+        
+    }
+    
     Class ShowAboutBox {
         
         Static Call(*) {
@@ -372,6 +372,15 @@ Class ReaHotkey {
             Else {
                 SetTimer ReaHotkey.ManageState, 100
             }
+        }
+        
+    }
+    
+    Class ViewReadme {
+        
+        Static Call(*) {
+            If FileExist("README.html") And Not InStr(FileExist("README.html"), "D")
+            Run "README.html"
         }
         
     }
