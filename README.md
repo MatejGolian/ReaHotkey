@@ -14,7 +14,8 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
   - Only works inside REAPER.
 
 ## Known Issues
-If you find that your keyboard or ReaHotkey itself is not responding as expected after interacting with Kontakt menus, press the Escape key.
+* If you find that your keyboard or ReaHotkey itself is not responding as expected after interacting with Kontakt menus, press the Escape key.
+* Using any other zoom value in Kontakt than 100% may result in ReaHotkey not working correctly and the Kontakt plugin not being detected.
 
 ## About HotspotHelper
 HotspotHelper is a special utility to make developing these kind of scripts a little easier. It retrieves window and control info and creates labelled hotspots that can be copied to clipboard for subsequent use.
