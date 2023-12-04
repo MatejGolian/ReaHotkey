@@ -226,6 +226,66 @@ ClickPitchBendType(Type, Button, *) {
         Button.Label := "Pitch Bend Type: TrueBend"
 }
 
+ActivateThresholdButton(ENV, Input, MinMax, Button) {
+
+    Local MinMaxText := ""
+    Local Min := 0.0
+    Local Max := 127.0
+    Local Key := ""
+
+    If Input
+        Key := ENV . "InputThresholds"
+    Else
+        Key := ENV . "OutputThresholds"
+
+    If MinMax == "min" {
+        MinMaxText := "Minimum"
+        Max := Float(Dubler2.ProfileLoaded["Current"][Key]["max"])
+    } Else {
+        MinMaxText := "Maximum"
+        Min := Float(Dubler2.ProfileLoaded["Current"][Key]["min"])
+    }
+
+    SetTimer ReaHotkey.ManageState, 0
+    ReaHotkey.TurnStandaloneTimersOff()
+    ReaHotkey.TurnStandaloneHotkeysOff()
+    Th := InputBox(ENV . " " . MinMaxText . " threshold (from " . Min . " to " . Max . "):", "ReaHotkey", , Float(Dubler2.ProfileLoaded["Current"][Key][MinMax]))
+    ReaHotkey.TurnStandaloneHotkeysOn()
+    ReaHotkey.TurnStandaloneTimersOn()
+    SetTimer ReaHotkey.ManageState, 100
+
+    ReaHotkey.AutoFocusStandaloneOverlay := False
+
+    If Th.Result != "OK" Or Not IsFloat(Th.Value)
+        Return
+
+    NTh := Float(Th.Value)
+
+    If NTh > Max
+        NTh := Max
+    Else If NTh < Min
+        NTh := Min
+
+    Dubler2.ProfileLoaded["Current"][Key][MinMax] := NTh
+
+    Dubler2.CloseOverlay("Dubler 2 Profile")
+
+    Click(362, 56)
+    Sleep 1000
+
+    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
+    Dubler2.ProfileLoaded.Set("Current", "")
+    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
+
+    Sleep 1000
+    
+    Click(821, 102)
+
+    ReaHotkey.FoundStandalone.Overlay.Label := ""
+    Button.Label := SubStr(Button.Label, 0, InStr(Button.Label, ":") + 1) . NTh
+}
+
 AssignTab := HotspotTab("Assign", 821, 102, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
 AssignTab.SetHotkey("^5", "Ctrl + 5")
 
@@ -245,7 +305,27 @@ AssignTab.AddControl(CustomButton("Pitch MIDI Channel: " . Dubler2.ProfileLoaded
 AssignTab.AddControl(Dubler2.HotspotCheckbox("Chords bend enabled", 264, 446, Dubler2.ProfileLoaded["Current"]["PitchBendChords"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 AssignTab.AddControl(CustomButton("Chords MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["ChordsMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivateChordsMidiChannelButton))
 AssignTab.AddControl(CustomButton("Triggers MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["TriggersMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivateTriggersMidiChannelButton))
+
 AssignTab.AddControl(Dubler2.HotspotCheckbox("AAA enabled", 636, 230, Not Dubler2.ProfileLoaded["Current"]["AAALocked"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+AssignTab.AddControl(CustomButton("AAA Input Threshold Minimum: " . Dubler2.ProfileLoaded["Current"]["AAAInputThresholds"]["min"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("AAA", True, "min")))
+AssignTab.AddControl(CustomButton("AAA Input Threshold Maximum: " . Dubler2.ProfileLoaded["Current"]["AAAInputThresholds"]["max"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("AAA", True, "max")))
+AssignTab.AddControl(CustomButton("AAA Output Threshold Minimum: " . Dubler2.ProfileLoaded["Current"]["AAAOutputThresholds"]["min"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("AAA", False, "min")))
+AssignTab.AddControl(CustomButton("AAA Output Threshold Maximum: " . Dubler2.ProfileLoaded["Current"]["AAAOutputThresholds"]["max"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("AAA", False, "max")))
+
 AssignTab.AddControl(Dubler2.HotspotCheckbox("EEE enabled", 852, 230, Not Dubler2.ProfileLoaded["Current"]["EEELocked"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+AssignTab.AddControl(CustomButton("EEE Input Threshold Minimum: " . Dubler2.ProfileLoaded["Current"]["EEEInputThresholds"]["min"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("EEE", True, "min")))
+AssignTab.AddControl(CustomButton("EEE Input Threshold Maximum: " . Dubler2.ProfileLoaded["Current"]["EEEInputThresholds"]["max"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("EEE", True, "max")))
+AssignTab.AddControl(CustomButton("EEE Output Threshold Minimum: " . Dubler2.ProfileLoaded["Current"]["EEEOutputThresholds"]["min"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("EEE", False, "min")))
+AssignTab.AddControl(CustomButton("EEE Output Threshold Maximum: " . Dubler2.ProfileLoaded["Current"]["EEEOutputThresholds"]["max"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("EEE", False, "max")))
+
 AssignTab.AddControl(Dubler2.HotspotCheckbox("OOO enabled", 637, 447, Not Dubler2.ProfileLoaded["Current"]["OOOLocked"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+AssignTab.AddControl(CustomButton("OOO Input Threshold Minimum: " . Dubler2.ProfileLoaded["Current"]["OOOInputThresholds"]["min"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("OOO", True, "min")))
+AssignTab.AddControl(CustomButton("OOO Input Threshold Maximum: " . Dubler2.ProfileLoaded["Current"]["OOOInputThresholds"]["max"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("OOO", True, "max")))
+AssignTab.AddControl(CustomButton("OOO Output Threshold Minimum: " . Dubler2.ProfileLoaded["Current"]["OOOOutputThresholds"]["min"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("OOO", False, "min")))
+AssignTab.AddControl(CustomButton("OOO Output Threshold Maximum: " . Dubler2.ProfileLoaded["Current"]["OOOOutputThresholds"]["max"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("OOO", False, "max")))
+
 AssignTab.AddControl(Dubler2.HotspotCheckbox("ENV enabled", 854, 445, Dubler2.ProfileLoaded["Current"]["ENVEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+AssignTab.AddControl(CustomButton("ENV Input Threshold Minimum: " . Dubler2.ProfileLoaded["Current"]["ENVInputThresholds"]["min"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("ENV", True, "min")))
+AssignTab.AddControl(CustomButton("ENV Input Threshold Maximum: " . Dubler2.ProfileLoaded["Current"]["ENVInputThresholds"]["max"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("ENV", True, "max")))
+AssignTab.AddControl(CustomButton("ENV Output Threshold Minimum: " . Dubler2.ProfileLoaded["Current"]["ENVOutputThresholds"]["min"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("ENV", False, "min")))
+AssignTab.AddControl(CustomButton("ENV Output Threshold Maximum: " . Dubler2.ProfileLoaded["Current"]["ENVOutputThresholds"]["max"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("ENV", False, "max")))
