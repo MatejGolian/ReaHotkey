@@ -24,7 +24,7 @@ A_TrayMenu.Delete
 A_TrayMenu.Add("&Pause", ReaHotkey.TogglePause)
 A_TrayMenu.Add("View &Readme", ReaHotkey.ViewReadme)
 A_TrayMenu.Add("&About...", ReaHotkey.ShowAboutBox)
-A_TrayMenu.Add("&Close", ReaHotkey.Close)
+A_TrayMenu.Add("&Quit", ReaHotkey.Quit)
 A_TrayMenu.Default := "&About..."
 
 AccessibilityOverlay.Speak("ReaHotkey ready")
@@ -34,6 +34,7 @@ ReaHotkey.TurnStandaloneHotkeysOff()
 OnError ReaHotkey.HandleError
 SetTimer ReaHotkey.ManageState, 100
 
+#Include Includes/Global.Context.ahk
 #Include Includes/Plugin.Context.ahk
 #Include Includes/Standalone.Context.ahk
 #Include Includes/Overlay.Definitions.ahk

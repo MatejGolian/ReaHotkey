@@ -13,6 +13,12 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
 * Makes it possible to switch between the classic and modern mixes in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
   - Only works inside REAPER.
 
+## Keyboard Shortcuts
+* ctrl+shift+windows+a - about
+* ctrl+shift+windows+p - pause
+* ctrl+shift+windows+r - view readme
+* ctrl+shift+windows+q - quit
+
 ## Known Issues
 * If you find that your keyboard or ReaHotkey itself is not responding as expected after interacting with Kontakt menus, press the Escape key.
 * Using any other zoom value in Kontakt than 100% may result in ReaHotkey not working correctly and the Kontakt plugin not being detected.

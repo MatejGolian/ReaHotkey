@@ -229,14 +229,6 @@ Class ReaHotkey {
         }
     }
     
-    Class Close {
-        
-        Static Call(*) {
-            ExitApp
-        }
-        
-    }
-    
     Class HandleError {
         
         Static Call(Exception, Mode) {
@@ -328,6 +320,14 @@ Class ReaHotkey {
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 AccessibleMenu.CurrentMenu := False
             }
+        }
+        
+    }
+    
+    Class Quit {
+        
+        Static Call(*) {
+            ExitApp
         }
         
     }
