@@ -25,7 +25,7 @@ A_TrayMenu.Add("&Pause", ReaHotkey.TogglePause)
 A_TrayMenu.Add("View &Readme", ReaHotkey.ViewReadme)
 A_TrayMenu.Add("&About...", ReaHotkey.ShowAboutBox)
 A_TrayMenu.Add("&Quit", ReaHotkey.Quit)
-A_TrayMenu.Default := "&About..."
+A_TrayMenu.Default := "&Pause"
 
 AccessibilityOverlay.Speak("ReaHotkey ready")
 
@@ -39,5 +39,5 @@ SetTimer ReaHotkey.ManageState, 100
 #Include Includes/Standalone.Context.ahk
 #Include Includes/Overlay.Definitions.ahk
 #Include Includes/Overlay.Functions.ahk
-#Include "Includes/Version.ahk"
-#Include "*i Includes/CIVersion.ahk"
+#Include Includes/Version.ahk
+#Include *i Includes/CIVersion.ahk
