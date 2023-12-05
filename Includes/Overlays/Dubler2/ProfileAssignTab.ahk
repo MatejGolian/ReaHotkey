@@ -187,45 +187,6 @@ ActivatePitchBendRangeButton(Button) {
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-ActivatePitchBendTypeButton(Button) {
-    Local menu := AccessibleStandaloneMenu()
-
-    menu.Add("IntelliBend", ClickPitchBendType.Bind(0, Button))
-    menu.Add("TrueBend", ClickPitchBendType.Bind(1, Button))
-
-    If Dubler2.ProfileLoaded["Current"]["PitchBendType"] == 0
-        menu.Check("IntelliBend")
-    Else
-        menu.Check("TrueBend")
-
-    menu.Show()
-}
-
-ClickPitchBendType(Type, Button, *) {
-    Dubler2.ProfileLoaded["Current"]["PitchBendType"] := Type
-
-    Dubler2.CloseOverlay("Dubler 2 Profile")
-
-    Click(362, 56)
-    Sleep 1000
-
-    FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
-    FileAppend(Dubler2.FixJson(Jxon_Dump(Dubler2.ProfileLoaded["Current"], 4)), A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
-    Dubler2.ProfileLoaded.Set("Current", "")
-    Dubler2.ClickLoadProfileButton(Dubler2.ProfileLoaded["Index"])
-
-    Sleep 1000
-
-    Click(821, 102)
-
-    ReaHotkey.FoundStandalone.Overlay.Label := ""
-
-    If Type == 0
-        Button.Label := "Pitch Bend Type: IntelliBend"
-    Else
-        Button.Label := "Pitch Bend Type: TrueBend"
-}
-
 ActivateThresholdButton(ENV, Input, MinMax, Button) {
 
     Local MinMaxText := ""
@@ -328,6 +289,18 @@ ActivateCCButton(ENV, Button) {
     Button.Label := SubStr(Button.Label, 0, InStr(Button.Label, ":") + 1) . NTh
 }
 
+ClickPitchBendType(Preset) {
+    Click(334, 519)
+    Sleep 300
+
+    Switch(Preset) {
+        Case 0:
+            Click(323, 556)
+        Case 1:
+            Click(332, 588)
+    }
+}
+
 AssignTab := HotspotTab("Assign", 821, 102, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
 AssignTab.SetHotkey("^5", "Ctrl + 5")
 
@@ -335,12 +308,20 @@ AssignTab.AddControl(Dubler2.HotspotCheckbox("Pitch bend enabled", 131, 446, Dub
 AssignTab.AddControl(CustomButton("Stickiness: " . Integer(Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchStickiness"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ActivatePitchStickinessButton))
 AssignTab.AddControl(CustomButton("Pitch Bend Range: " . Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchBendRange"] . " semitones", ObjBindMethod(Dubler2, "FocusButton"), ActivatePitchBendRangeButton))
 
-PitchBendTypeCtrl := CustomButton("", ObjBindMethod(Dubler2, "FocusButton"), ActivatePitchBendTypeButton)
+PitchBendTypeCtrl := PopulatedComboBox("Pitch Bend Type", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
 
-If Dubler2.ProfileLoaded["Current"]["PitchBendType"] == 0
-    PitchBendTypeCtrl.Label := "Pitch Bend Type: IntelliBend"
-Else
-    PitchBendTypeCtrl.Label := "Pitch Bend Type: TrueBend"
+For Preset In [0, 1] {
+
+    If Preset == 0
+        PresetText := "IntelliBend"
+    Else
+        PresetText := "TrueBend"
+
+    PitchBendTypeCtrl.AddItem(PresetText, ClickPitchBendType.Bind(Preset))
+
+    If Preset == Dubler2.ProfileLoaded["Current"]["PitchBendType"]
+        PitchBendTypeCtrl.SetValue(PresetText)
+}
 
 AssignTab.AddControl(PitchBendTypeCtrl)
 AssignTab.AddControl(CustomButton("Pitch MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["PitchMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivatePitchMidiChannelButton))
