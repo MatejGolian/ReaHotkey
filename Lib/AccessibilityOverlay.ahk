@@ -1076,10 +1076,16 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             For Index, Value In ParentTabControl.Tabs
             If Value = ReachableControl {
                 ParentTabControl.CurrentTab := Index
-                If ReachableControl.ControlID != SiblingTab.ControlID
-                This.FocusControl(ParentTabControl.ControlID)
-                Else
-                ReachableControl.Focus(ReachableControl.controlID)
+                If ReachableControl.ControlID != SiblingTab.ControlID {
+                    This.FocusControl(ParentTabControl.ControlID)
+                }
+                Else {
+                    If This.GetCurrentControlID() != ParentTabControl.ControlID
+                    This.FocusControl(ParentTabControl.ControlID)
+                    Else
+                    ReachableControl.Focus(ReachableControl.controlID)
+                    This.SetCurrentControlID(ParentTabControl.ControlID)
+                }
                 For HotkeyFunction In ReachableControl.HotkeyFunction
                 HotkeyFunction(ReachableControl)
                 Break 2
