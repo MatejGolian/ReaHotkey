@@ -35,6 +35,7 @@ This is a rather incomplete list of features we already support.
 * Full trigger support, including creation, renaming, deletion, recording and more
 * Full pitch and pitch bend support
 * Basic chords support, including enable/disable, voicing control and octave shifting
+* Vowel envelopes are entirely configurable
 * Audio Calibration support to use other microphones other than the Dubler Microphone
 
 ### Inaccessible Features
@@ -43,7 +44,6 @@ The following list also is a rather incomplete list of features that aren't curr
 
 * Extended chords support, like building custom chords presets
 * Dubler Companion Plug-in is currently not accessible
-* Vowel envelopes are currently not controllable
 * User account settings aren't accessible
 * Some random pop-ups might not be accessible and disturb the workflow. Please let us know if you encounter one and tell us how to make them appear so that we can add support for them.
 
