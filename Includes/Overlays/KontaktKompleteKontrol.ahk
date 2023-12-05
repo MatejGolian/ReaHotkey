@@ -41,6 +41,7 @@ Class KontaktKompleteKontrol {
         CerberusComboBox := CerberusOverlay.AddCustomComboBox("Patch type:", ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginCerberusPatchType"), ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginCerberusPatchType"))
         CerberusComboBox.SetOptions(["Normal", "Epic Mix"])
         CerberusOverlay.AddAccessibilityOverlay()
+        CerberusOverlay.AddCustomControl(ObjBindMethod(KontaktKompleteKontrol, "RedirectAIPluginCerberusKeyPress"))
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", CerberusOverlay)
         
         ChorusOverlay := AccessibilityOverlay("Chorus")
@@ -179,7 +180,7 @@ Class KontaktKompleteKontrol {
             ReaHotkey.FoundPlugin.Overlay.Metadata := Map("Product", "None")
             ReaHotkey.FoundPlugin.Overlay.OverlayNumber := 1
         }
-        If ReaHotkey.FoundPlugin.Overlay.ChildControls[1].Label != PluginName {
+        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay.ChildControls[1].Label != PluginName {
             If PluginName = "Komplete Kontrol"
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KompleteKontrolPluginHeader.Clone()
             Else If PluginName = "Kontakt"
@@ -195,8 +196,6 @@ Class KontaktKompleteKontrol {
             Switch(Product) {
                 Case "Areia":
                 %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
-                Case "Cerberus":
-                %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
                 Case "Chorus":
                 %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
                 Case "Jaeger":
@@ -211,8 +210,6 @@ Class KontaktKompleteKontrol {
             Case "Kontakt":
             Switch(Product) {
                 Case "Areia":
-                %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
-                Case "Cerberus":
                 %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
                 Case "Chorus":
                 %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
@@ -234,8 +231,6 @@ Class KontaktKompleteKontrol {
             Switch(Product) {
                 Case "Areia":
                 %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
-                Case "Cerberus":
-                %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
                 Case "Chorus":
                 %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
                 Case "Jaeger":
@@ -250,8 +245,6 @@ Class KontaktKompleteKontrol {
             Case "Kontakt":
             Switch(Product) {
                 Case "Areia":
-                %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
-                Case "Cerberus":
                 %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
                 Case "Chorus":
                 %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
@@ -335,6 +328,26 @@ Class KontaktKompleteKontrol {
         SetTimer ReaHotkey.ManageState, 100
     }
     
+    Static RedirectAIPluginCerberusKeyPress(OverlayControl) {
+        ParentOverlay := OverlayControl.GetSuperordinateControl()
+        MasterOverlay := ParentOverlay.GetSuperordinateControl()
+        If A_PriorHotkey = "+Tab" {
+            TypeCombo := ParentOverlay.ChildControls[3]
+            KontaktKompleteKontrol.SelectAIPluginCerberusPatchType(TypeCombo)
+            MasterOverlay.FocusPreviousControl()
+        }
+        Else If GetKeyState("Shift") And A_PriorHotkey = "Tab" {
+            TypeCombo := ParentOverlay.ChildControls[3]
+            KontaktKompleteKontrol.SelectAIPluginCerberusPatchType(TypeCombo)
+            MasterOverlay.FocusPreviousControl()
+        }
+        Else {
+            If A_PriorHotkey = "Tab" {
+                MasterOverlay.FocusNextControl()
+            }
+        }
+    }
+    
     Static SelectAIPluginCerberusPatchType(TypeCombo) {
         ParentOverlay := TypeCombo.GetSuperordinateControl()
         If TypeCombo.GetValue() = "Normal" {
@@ -344,7 +357,7 @@ Class KontaktKompleteKontrol {
                 ChildOverlay.AddHotspotButton("M", 335, 464, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
             }
             Else If KontaktKompleteKontrol.GetPluginName() = "Kontakt" {
-                ChildOverlay.AddHotspotButton("C", 226, 364, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+                ChildOverlay.AddHotspotButton("C", 216, 364, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
                 ChildOverlay.AddHotspotButton("M", 235, 364, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
             }
             Else {
