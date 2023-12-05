@@ -41,8 +41,7 @@ Class KontaktKompleteKontrol {
         CerberusComboBox := CerberusOverlay.AddCustomComboBox("Patch type:", ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginCerberusPatchType"), ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginCerberusPatchType"))
         CerberusComboBox.SetOptions(["Normal", "Epic Mix"])
         CerberusOverlay.AddAccessibilityOverlay()
-        CerberusOverlay.ChildControls[4].AddCustomButton("C", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginCerberusCMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginCerberusCMix"))
-        CerberusOverlay.ChildControls[4].AddCustomButton("M", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginCerberusMMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginCerberusMMix"))
+        CerberusOverlay.AddCustomControl(ObjBindMethod(KontaktKompleteKontrol, "RedirectAIPluginCerberusKeyPress"))
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", CerberusOverlay)
         
         ChorusOverlay := AccessibilityOverlay("Chorus")
@@ -93,14 +92,6 @@ Class KontaktKompleteKontrol {
         
     }
     
-    Static ActivateAIPluginCerberusCMix(*) {
-        KontaktKompleteKontrol.MoveToOrClickAIPluginCerberusCMix("Click")
-    }
-    
-    Static ActivateAIPluginCerberusMMix(*) {
-        KontaktKompleteKontrol.MoveToOrClickAIPluginCerberusMMix("Click")
-    }
-    
     Static ActivateAIPluginClassicMix(MixButton) {
         Product := ""
         ParentOverlay := MixButton.GetSuperordinateControl()
@@ -145,14 +136,6 @@ Class KontaktKompleteKontrol {
             KontaktKompleteKontrol.LoadPluginHeader("Unknown")
         }
         SetTimer ReaHotkey.ManageState, 100
-    }
-    
-    Static FocusAIPluginCerberusCMix(*) {
-        KontaktKompleteKontrol.MoveToOrClickAIPluginCerberusCMix("MouseMove")
-    }
-    
-    Static FocusAIPluginCerberusMMix(*) {
-        KontaktKompleteKontrol.MoveToOrClickAIPluginCerberusMMix("MouseMove")
     }
     
     Static FocusAIPluginClassicMix(MixButton) {
@@ -207,31 +190,11 @@ Class KontaktKompleteKontrol {
         }
     }
     
-    Static MoveToOrClickAIPluginCerberusCMix(MoveOrClick) {
-        Switch(KontaktKompleteKontrol.GetPluginName()) {
-            Case "Komplete Kontrol":
-            %MoveOrClick%(CompensatePluginXCoordinate(326), CompensatePluginYCoordinate(464))
-            Case "Kontakt":
-            %MoveOrClick%(CompensatePluginXCoordinate(216), CompensatePluginYCoordinate(364))
-        }
-    }
-    
-    Static MoveToOrClickAIPluginCerberusMMix(MoveOrClick) {
-        Switch(KontaktKompleteKontrol.GetPluginName()) {
-            Case "Komplete Kontrol":
-            %MoveOrClick%(CompensatePluginXCoordinate(335), CompensatePluginYCoordinate(464))
-            Case "Kontakt":
-            %MoveOrClick%(CompensatePluginXCoordinate(235), CompensatePluginYCoordinate(364))
-        }
-    }
-    
     Static MoveToOrClickAIPluginClassicMix(Product, MoveOrClick) {
         Switch(KontaktKompleteKontrol.GetPluginName()) {
             Case "Komplete Kontrol":
             Switch(Product) {
                 Case "Areia":
-                %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
-                Case "Cerberus":
                 %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
                 Case "Chorus":
                 %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
@@ -247,8 +210,6 @@ Class KontaktKompleteKontrol {
             Case "Kontakt":
             Switch(Product) {
                 Case "Areia":
-                %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
-                Case "Cerberus":
                 %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
                 Case "Chorus":
                 %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
@@ -270,8 +231,6 @@ Class KontaktKompleteKontrol {
             Switch(Product) {
                 Case "Areia":
                 %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
-                Case "Cerberus":
-                %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
                 Case "Chorus":
                 %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
                 Case "Jaeger":
@@ -286,8 +245,6 @@ Class KontaktKompleteKontrol {
             Case "Kontakt":
             Switch(Product) {
                 Case "Areia":
-                %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
-                Case "Cerberus":
                 %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
                 Case "Chorus":
                 %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
@@ -369,6 +326,26 @@ Class KontaktKompleteKontrol {
         Click 298, 70
         KontaktKompleteKontrol.OpenKontaktMenu()
         SetTimer ReaHotkey.ManageState, 100
+    }
+    
+    Static RedirectAIPluginCerberusKeyPress(OverlayControl) {
+        ParentOverlay := OverlayControl.GetSuperordinateControl()
+        MasterOverlay := ParentOverlay.GetSuperordinateControl()
+        If A_PriorHotkey = "+Tab" {
+            TypeCombo := ParentOverlay.ChildControls[3]
+            KontaktKompleteKontrol.SelectAIPluginCerberusPatchType(TypeCombo)
+            MasterOverlay.FocusPreviousControl()
+        }
+        Else If GetKeyState("Shift") And A_PriorHotkey = "Tab" {
+            TypeCombo := ParentOverlay.ChildControls[3]
+            KontaktKompleteKontrol.SelectAIPluginCerberusPatchType(TypeCombo)
+            MasterOverlay.FocusPreviousControl()
+        }
+        Else {
+            If A_PriorHotkey = "Tab" {
+                MasterOverlay.FocusNextControl()
+            }
+        }
     }
     
     Static SelectAIPluginCerberusPatchType(TypeCombo) {
