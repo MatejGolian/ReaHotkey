@@ -41,6 +41,8 @@ Class KontaktKompleteKontrol {
         CerberusComboBox := CerberusOverlay.AddCustomComboBox("Patch type:", ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginCerberusPatchType"), ObjBindMethod(KontaktKompleteKontrol, "SelectAIPluginCerberusPatchType"))
         CerberusComboBox.SetOptions(["Normal", "Epic Mix"])
         CerberusOverlay.AddAccessibilityOverlay()
+        CerberusOverlay.ChildControls[4].AddCustomButton("C", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginCerberusCMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginCerberusCMix"))
+        CerberusOverlay.ChildControls[4].AddCustomButton("M", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginCerberusMMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginCerberusMMix"))
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", CerberusOverlay)
         
         ChorusOverlay := AccessibilityOverlay("Chorus")
@@ -91,6 +93,14 @@ Class KontaktKompleteKontrol {
         
     }
     
+    Static ActivateAIPluginCerberusCMix(*) {
+        KontaktKompleteKontrol.MoveToOrClickAIPluginCerberusCMix("Click")
+    }
+    
+    Static ActivateAIPluginCerberusMMix(*) {
+        KontaktKompleteKontrol.MoveToOrClickAIPluginCerberusMMix("Click")
+    }
+    
     Static ActivateAIPluginClassicMix(MixButton) {
         Product := ""
         ParentOverlay := MixButton.GetSuperordinateControl()
@@ -135,6 +145,14 @@ Class KontaktKompleteKontrol {
             KontaktKompleteKontrol.LoadPluginHeader("Unknown")
         }
         SetTimer ReaHotkey.ManageState, 100
+    }
+    
+    Static FocusAIPluginCerberusCMix(*) {
+        KontaktKompleteKontrol.MoveToOrClickAIPluginCerberusCMix("MouseMove")
+    }
+    
+    Static FocusAIPluginCerberusMMix(*) {
+        KontaktKompleteKontrol.MoveToOrClickAIPluginCerberusMMix("MouseMove")
     }
     
     Static FocusAIPluginClassicMix(MixButton) {
@@ -186,6 +204,24 @@ Class KontaktKompleteKontrol {
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPluginHeader.Clone()
             Else
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := UnknownPluginHeader.Clone()
+        }
+    }
+    
+    Static MoveToOrClickAIPluginCerberusCMix(MoveOrClick) {
+        Switch(KontaktKompleteKontrol.GetPluginName()) {
+            Case "Komplete Kontrol":
+            %MoveOrClick%(CompensatePluginXCoordinate(326), CompensatePluginYCoordinate(464))
+            Case "Kontakt":
+            %MoveOrClick%(CompensatePluginXCoordinate(216), CompensatePluginYCoordinate(364))
+        }
+    }
+    
+    Static MoveToOrClickAIPluginCerberusMMix(MoveOrClick) {
+        Switch(KontaktKompleteKontrol.GetPluginName()) {
+            Case "Komplete Kontrol":
+            %MoveOrClick%(CompensatePluginXCoordinate(335), CompensatePluginYCoordinate(464))
+            Case "Kontakt":
+            %MoveOrClick%(CompensatePluginXCoordinate(235), CompensatePluginYCoordinate(364))
         }
     }
     
