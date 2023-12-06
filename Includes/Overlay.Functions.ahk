@@ -1,5 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 
+Global A_IsUnicode := True
+
 AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False) {
     SetTimer ReaHotkey.ManageState, 0
     OverlayList := %Type%.GetOverlays(Name)
@@ -314,6 +316,31 @@ CreateOverlayMenu(Found, Type) {
     OverlayMenu.Add("")
     OverlayMenu.OverlayNumbers.Push(0)
     Return OverlayMenu
+}
+
+InArray(Needle, Haystack) {
+    For FoundIndex, FoundValue In Haystack
+    If FoundValue == Needle
+    Return FoundIndex
+    Return False
+}
+
+ConvertBase(InputBase, OutputBase, nptr)    ; Base 2 - 36
+{
+    static u := A_IsUnicode ? "_wcstoui64" : "_strtoui64"
+    static v := A_IsUnicode ? "_i64tow"    : "_i64toa"
+    s := ""
+    VarSetStrCapacity(&s, 66)
+    value := DllCall("msvcrt.dll\" u, "Str", nptr, "UInt", 0, "UInt", InputBase, "CDECL Int64")
+    DllCall("msvcrt.dll\" v, "Int64", value, "Str", s, "UInt", OutputBase, "CDECL")
+    return s
+}
+
+StrJoin(obj,delimiter:="",OmitChars:=""){
+    S := obj[1]
+    Loop obj.Length - 1
+        S .= delimiter Trim(obj[A_Index+1],OmitChars)
+    return S
 }
 
 FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
