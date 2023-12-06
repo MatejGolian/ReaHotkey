@@ -66,7 +66,7 @@ jobs:
           path: ~/build/ReaHotkey
       - name: Zip Release
         run: |
-          zip -r ~/build/ReaHotkey-${{ github.ref }}-${{ github.run_number }}.zip ~/build/ReaHotkey
+          zip -r ~/build/ReaHotkey-${{ github.ref_name }}-${{ github.run_number }}.zip ~/build/ReaHotkey
           # get it out of the way so that the uploads don't freak out.
           rm -rf ~/build/ReaHotkey
       - name: Create Release
@@ -74,10 +74,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          title: ${{ github.ref }}-${{ github.run_number }}
+          title: ${{ github.ref_name }}-${{ github.run_number }}
       - name: Upload Artifacts
         uses: alexellis/upload-assets@0.4.0
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          asset_paths: '[ "/home/runner/build/ReaHotkey-${{ github.ref }}-${{ github.run_number }}.zip" ]'
+          asset_paths: '[ "/home/runner/build/ReaHotkey-${{ github.ref_name }}-${{ github.run_number }}.zip" ]'
