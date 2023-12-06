@@ -66,9 +66,10 @@ jobs:
           path: ~/build/ReaHotkey
       - name: Zip Release
         run: |
-          zip -r ~/build/ReaHotkey-${{ github.ref_name }}-${{ github.run_number }}.zip ~/build/ReaHotkey
+          cd ~/build
+          zip -r ReaHotkey-${{ github.ref_name }}-${{ github.run_number }}.zip ReaHotkey
           # get it out of the way so that the uploads don't freak out.
-          rm -rf ~/build/ReaHotkey
+          rm -rf ReaHotkey
       - name: Create Release
         uses: actions/create-release@v1
         env:
