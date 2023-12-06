@@ -14,7 +14,7 @@ jobs:
           path: Includes/CIVersion.ahk
           write-mode: overwrite
           contents: |
-            BuildNumber := "${{ github.run_id }}"
+            BuildNumber := "${{ github.run_number }}"
       - name: Build with AHK v2.0.10
         uses: Timtam/autohotkey-build@master
         with:
@@ -43,3 +43,30 @@ jobs:
         with:
           name: "ReaHotkey"
           path: build/
+  github_release:
+    needs: ["build"]
+    if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Build
+        uses: actions/download-artifact@v3
+        with:
+          name: "ReaHotkey"
+          path: ~/ReaHotkey
+      - name: Zip Release
+        run: |
+          zip -r ~/ReaHotkey.zip ~/ReaHotkey
+          # get it out of the way so that the uploads don't freak out.
+          rm -rf ~/ReaHotkey
+      - name: Create Release
+        uses: elgohr/Github-Release-Action@v5
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          title: ${{github.ref}}
+      - name: Upload Artifacts
+        uses: alexellis/upload-assets@0.4.0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          asset_paths: '[ "/home/runner/ReaHotkey.zip" ]'
