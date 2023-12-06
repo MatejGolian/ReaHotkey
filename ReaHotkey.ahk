@@ -19,8 +19,6 @@ SetWorkingDir A_InitialWorkingDir
 #Include <Plugin>
 #Include <ReaHotkey>
 #Include <Standalone>
-#Include "Includes/Version.ahk"
-#Include "*i Includes/CIVersion.ahk"
 
 A_IconTip := "ReaHotkey"
 A_TrayMenu.Delete
@@ -30,7 +28,7 @@ A_TrayMenu.Add("&About...", ReaHotkey.ShowAboutBox)
 A_TrayMenu.Add("&Quit", ReaHotkey.Quit)
 A_TrayMenu.Default := "&Pause"
 
-AccessibilityOverlay.Speak("ReaHotkey v" . GetVersion() . " ready")
+AccessibilityOverlay.Speak("ReaHotkey ready")
 
 ReaHotkey.TurnPluginHotkeysOff()
 ReaHotkey.TurnStandaloneHotkeysOff()
