@@ -54,7 +54,7 @@ Class PopulatedComboBox extends CustomComboBox {
 
     SetValue(Value) {
         Loop This.Values.Length {
-            If This.Values[A_Index] == Value {
+            If This.Values[A_Index]["Label"] == Value {
                 This.CurrentOption := A_Index
                 Break
             }
