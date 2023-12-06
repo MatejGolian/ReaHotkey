@@ -301,6 +301,30 @@ ClickPitchBendType(Preset) {
     }
 }
 
+ClickChordsPreset(Preset) {
+    Click(470, 372)
+    Sleep 300
+
+    Switch(Preset) {
+        Case "Pure":
+            Click(426, 118)
+        Case "Pad":
+            Click(459, 148)
+        Case "Boards":
+            Click(446, 177)
+        Case "8 Bit Lead":
+            Click(458, 208)
+        Case "Bass Pluck":
+            Click(462, 238)
+        Case "Wobble Bass":
+            Click(462, 276)
+        Case "Trumpet Lead":
+            Click(471, 304)
+        Case "Trap Bass":
+            Click(454, 337)
+    }
+}
+
 AssignTab := HotspotTab("Assign", 821, 102, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
 AssignTab.SetHotkey("^5", "Ctrl + 5")
 
@@ -327,6 +351,18 @@ AssignTab.AddControl(PitchBendTypeCtrl)
 AssignTab.AddControl(CustomButton("Pitch MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["PitchMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivatePitchMidiChannelButton))
 AssignTab.AddControl(Dubler2.HotspotCheckbox("Chords bend enabled", 264, 446, Dubler2.ProfileLoaded["Current"]["PitchBendChords"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 AssignTab.AddControl(CustomButton("Chords MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["ChordsMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivateChordsMidiChannelButton))
+
+ChordsPresetCtrl := PopulatedComboBox("Chords Preset", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+
+For Preset In ["8 Bit Lead", "Bass Pluck", "Boards", "Pad", "Pure", "Trap Bass", "Trumpet Lead", "Wobble Bass"] {
+    ChordsPresetCtrl.AddItem(Preset, ClickChordsPreset.Bind(Preset))
+
+    If StrLower(Preset) == StrLower(Dubler2.ProfileLoaded["Current"]["chordsPreset"])
+        ChordsPresetCtrl.SetValue(Preset)
+}
+
+AssignTab.AddControl(ChordsPresetCtrl)
+
 AssignTab.AddControl(CustomButton("Triggers MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["TriggersMidiChannel"], ObjBindMethod(Dubler2, "FocusButton"), ActivateTriggersMidiChannelButton))
 
 AssignTab.AddControl(Dubler2.HotspotCheckbox("AAA enabled", 636, 230, Not Dubler2.ProfileLoaded["Current"]["AAALocked"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
