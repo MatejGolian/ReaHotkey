@@ -19,7 +19,8 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
   - not all features are supported, nor do we know if they ever will be (see [below](#dubler2))
 
 ## General Notes
-Because ReaHotkey also passes through some keys to the application window itself, it's highly recommended to enable the 'Send all keyboard input to plug-in' option in REAPER's FX menu, when interacting with a supported plug-in interface.
+* Because ReaHotkey also passes through some keys to the application window itself, it's highly recommended to enable the 'Send all keyboard input to plug-in' option in REAPER's FX menu, when interacting with a supported plug-in interface.
+* In order to make ReaHotkey work successfully with a certain application such as REAPER, ReaHotkey should be run with at least the same user privileges as the application to be controlled, otherwise ReaHotkey keyboard commands may not function correctly. For instance, if you are running REAPER as administrator, you should run ReaHotkey as administrator as well.
 
 ## <a name="dubler2"></a>Dubler 2 Accessibility
 
