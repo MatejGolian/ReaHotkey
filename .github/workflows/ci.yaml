@@ -70,11 +70,12 @@ jobs:
           # get it out of the way so that the uploads don't freak out.
           rm -rf ~/build/ReaHotkey
       - name: Create Release
-        uses: elgohr/Github-Release-Action@v5
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          title: ${{ github.ref_name }}-${{ github.run_number }}
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref_name }}-${{ github.run_number }}
       - name: Upload Artifacts
         uses: alexellis/upload-assets@0.4.0
         env:
