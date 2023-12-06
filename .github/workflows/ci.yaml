@@ -5,15 +5,6 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    permissions:
-      contents: write
-      checks: write
-      actions: read
-      issues: read
-      packages: write
-      pull-requests: read
-      repository-projects: read
-      statuses: read
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -56,26 +47,37 @@ jobs:
     needs: ["build"]
     if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      checks: write
+      actions: read
+      issues: read
+      packages: write
+      pull-requests: read
+      repository-projects: read
+      statuses: read
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Download Build
         uses: actions/download-artifact@v3
         with:
           name: "ReaHotkey"
-          path: ~/ReaHotkey
+          path: ~/build/ReaHotkey
       - name: Zip Release
         run: |
-          zip -r ~/ReaHotkey.zip ~/ReaHotkey
+          zip -r ~/build/ReaHotkey-${{ github.ref }}-${{ github.run_number }}.zip ~/build/ReaHotkey
           # get it out of the way so that the uploads don't freak out.
-          rm -rf ~/ReaHotkey
+          rm -rf ~/build/ReaHotkey
       - name: Create Release
         uses: elgohr/Github-Release-Action@v5
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          title: ${{github.ref}}
+          title: ${{ github.ref }}-${{ github.run_number }}
       - name: Upload Artifacts
         uses: alexellis/upload-assets@0.4.0
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          asset_paths: '[ "/home/runner/ReaHotkey.zip" ]'
+          asset_paths: '[ "/home/runner/build/ReaHotkey-${{ github.ref }}-${{ github.run_number }}.zip" ]'
