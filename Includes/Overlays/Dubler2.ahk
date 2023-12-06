@@ -316,6 +316,7 @@ Class Dubler2 {
         Instance.SetHotkey("^2", TriggerStandaloneHotkey)
         Instance.SetHotkey("^3", TriggerStandaloneHotkey)
         Instance.SetHotkey("^4", TriggerStandaloneHotkey)
+        Instance.SetHotkey("^5", TriggerStandaloneHotkey)
         Dubler2.ProfileLoaded := Map(
             "Index", 0,
             "File", "",
