@@ -27,7 +27,7 @@ Class KontaktKompleteKontrol {
         KKPreferenceLibraryFactoryTab.AddHotspotButton("Rescan", 546, 417)
         KKPreferenceLibraryUserTab := HotspotTab("User", 240, 76)
         KKPreferenceLibraryUserTab.AddHotspotButton("Add Directory", 170, 420)
-        ;        KKPreferenceLibraryUserTab.AddCustomControl(ObjBindMethod(KontaktKompleteKontrol, "FocusKKStandaloneLibraryScanOption"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKKStandaloneLibraryScanOption"))
+        KKPreferenceLibraryUserTab.AddCustomControl(ObjBindMethod(KontaktKompleteKontrol, "FocusKKStandaloneLibraryScanOption"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKKStandaloneLibraryScanOption"))
         KKPreferenceLibraryUserTab.AddHotspotButton("Rescan", 546, 417)
         KKPreferenceLibraryTabTabControl.AddTabs(KKPreferenceLibraryFactoryTab, KKPreferenceLibraryUserTab)
         KKPreferencePluginTab := HotspotTab("Plug-ins", 56, 237)
@@ -129,7 +129,19 @@ Class KontaktKompleteKontrol {
     }
     
     Static ActivateKKStandaloneLibraryScanOption(*) {
-        Click 428, 386
+        Click 419, 394
+        Sleep 100
+        CheckedColor := "0xC5C5C5"
+        UncheckedColor := "0x5F5F5F"
+        CurrentColor := PixelGetColor(419, 394)
+        If CurrentColor = CheckedColor
+        Message := "checked"
+        Else If CurrentColor = UncheckedColor
+        Message := "unchecked"
+        Else {
+            Message := "Unable to detect state."
+        }
+        AccessibilityOverlay.Speak(Message)
     }
     
     Static CloseKKPluginBrowser() {
@@ -183,7 +195,17 @@ Class KontaktKompleteKontrol {
     }
     
     Static FocusKKStandaloneLibraryScanOption(*) {
-        Message := "Scan user content for changes at start-up checkbox"
+        MouseMove 419, 394
+        Sleep 100
+        CheckedColor := "0xC5C5C5"
+        UncheckedColor := "0x5F5F5F"
+        CurrentColor := PixelGetColor(419, 394)
+        If CurrentColor = CheckedColor
+        Message := "Scan user content for changes at start-up checkbox checked"
+        Else If CurrentColor = UncheckedColor
+        Message := "Scan user content for changes at start-up checkbox unchecked"
+        Else
+        Message := "Scan user content for changes at start-up"
         AccessibilityOverlay.Speak(Message)
     }
     
