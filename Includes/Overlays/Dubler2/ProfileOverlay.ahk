@@ -177,6 +177,22 @@ Static SpeakNotes() {
     }
 }
 
+Static ToggleNotesAnnouncement(*) {
+
+    If Not ReaHotkey.FoundStandalone Is Standalone Or Not ReaHotkey.FoundStandalone.Overlay.Label == "Dubler 2 Profile" Or Not WinActive(ReaHotkey.StandaloneWinCriteria)
+        Return
+
+    For Ctrl In ReaHotkey.FoundStandalone.Overlay.ChildControls {
+        If Ctrl.ControlType == "TabControl" And Ctrl.CurrentTab != 2
+            Return
+    }
+
+    If Not Dubler2.AnnounceNotes
+        Dubler2.EnableNotesAnnouncement()
+    Else
+        Dubler2.DisableNotesAnnouncement()
+}
+
 Static CreateProfileOverlay(Overlay) {
 
     Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"], "UTF-8")
