@@ -37,7 +37,7 @@ Class FocusableCustom Extends AccessibilityControl {
     
     Focus(CurrentControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction(This)
+        OnFocusFunction.Call(This)
     }
     
     SetHotkey(HotkeyCommand, HotkeyFunction := "") {
@@ -80,13 +80,13 @@ Class ActivatableCustom Extends AccessibilityControl {
         If HasMethod(This, "Focus")
         This.Focus(CurrentControlID)
         For OnActivateFunction In This.OnActivateFunction
-        OnActivateFunction(This)
+        OnActivateFunction.Call(This)
     }
     
     Focus(CurrentControlID := 0) {
         If CurrentControlID != This.ControlID
         For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction(This)
+        OnFocusFunction.Call(This)
     }
     
     SetHotkey(HotkeyCommand, HotkeyFunction := "") {
@@ -181,7 +181,7 @@ Class FocusableGraphic Extends GraphicalControl {
         This.SetState()
         If This.State = 1 And CurrentControlID != This.ControlID {
             For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction(This)
+            OnFocusFunction.Call(This)
             Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
         }
     }
@@ -238,7 +238,7 @@ Class ActivatableGraphic Extends GraphicalControl {
         This.SetState()
         If This.State = 1 And CurrentControlID != This.ControlID {
             For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction(This)
+            OnFocusFunction.Call(This)
             MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
         }
     }
@@ -288,7 +288,7 @@ Class ToggleableGraphic Extends ActivatableGraphic {
         This.SetState()
         If This.State = 1 And CurrentControlID != This.ControlID {
             For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction(This)
+            OnFocusFunction.Call(This)
             MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
         }
     }
@@ -375,7 +375,7 @@ Class FocusableHotspot Extends HotspotControl {
     Focus(CurrentControlID := 0) {
         If CurrentControlID != This.ControlID {
             For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction(This)
+            OnFocusFunction.Call(This)
             Click This.XCoordinate, This.YCoordinate
         }
     }
@@ -419,14 +419,14 @@ Class ActivatableHotspot Extends HotspotControl {
         If HasMethod(This, "Focus")
         This.Focus(CurrentControlID)
         For OnActivateFunction In This.OnActivateFunction
-        OnActivateFunction(This)
+        OnActivateFunction.Call(This)
         Click This.XCoordinate, This.YCoordinate
     }
     
     Focus(CurrentControlID := 0) {
         If CurrentControlID != This.ControlID {
             For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction(This)
+            OnFocusFunction.Call(This)
             MouseMove This.XCoordinate, This.YCoordinate
         }
     }
@@ -484,7 +484,7 @@ Class FocusableOCR Extends OCRControl {
     Focus(CurrentControlID := 0) {
         If CurrentControlID != This.ControlID {
             For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction(This)
+            OnFocusFunction.Call(This)
             XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
             YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
             Click XCoordinate, YCoordinate
@@ -530,7 +530,7 @@ Class ActivatableOCR Extends OCRControl {
         If HasMethod(This, "Focus")
         This.Focus(CurrentControlID)
         For OnActivateFunction In This.OnActivateFunction
-        OnActivateFunction(This)
+        OnActivateFunction.Call(This)
         XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
         YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
         Click XCoordinate, YCoordinate
@@ -539,7 +539,7 @@ Class ActivatableOCR Extends OCRControl {
     Focus(CurrentControlID := 0) {
         If CurrentControlID != This.ControlID {
             For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction(This)
+            OnFocusFunction.Call(This)
             XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
             YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
             MouseMove XCoordinate, YCoordinate
@@ -1555,7 +1555,7 @@ Class CustomComboBox Extends FocusableCustom {
             This.CurrentOption++
         }
         For OnChangeFunction In This.OnChangeFunction
-        OnChangeFunction(This)
+        OnChangeFunction.Call(This)
     }
     
     SelectPreviousOption() {
@@ -1564,7 +1564,7 @@ Class CustomComboBox Extends FocusableCustom {
             This.CurrentOption--
         }
         For OnChangeFunction In This.OnChangeFunction
-        OnChangeFunction(This)
+        OnChangeFunction.Call(This)
     }
     
     SelectOption(Option) {
@@ -1669,7 +1669,7 @@ Class CustomTab Extends AccessibilityOverlay {
     
     Focus(ControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction(This)
+        OnFocusFunction.Call(This)
         If This.ControlID != ControlID {
             If This.Label = ""
             AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
@@ -1940,7 +1940,7 @@ Class GraphicalTab Extends AccessibilityOverlay {
         This.SetState()
         If This.State != -1
         For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction(This)
+        OnFocusFunction.Call(This)
         If This.State != -1 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
@@ -2106,7 +2106,7 @@ Class HotspotComboBox Extends FocusableHotspot {
             This.CurrentOption++
         }
         For OnChangeFunction In This.OnChangeFunction
-        OnChangeFunction(This)
+        OnChangeFunction.Call(This)
     }
     
     SelectPreviousOption() {
@@ -2115,7 +2115,7 @@ Class HotspotComboBox Extends FocusableHotspot {
             This.CurrentOption--
         }
         For OnChangeFunction In This.OnChangeFunction
-        OnChangeFunction(This)
+        OnChangeFunction.Call(This)
     }
     
     SelectOption(Option) {
@@ -2212,7 +2212,7 @@ Class HotspotTab Extends AccessibilityOverlay {
     
     Focus(ControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction(This)
+        OnFocusFunction.Call(This)
         Click This.XCoordinate, This.YCoordinate
         If This.ControlID != ControlID {
             If This.Label = ""
@@ -2324,13 +2324,13 @@ Class OCRComboBox Extends FocusableOCR {
     SelectNextOption() {
         This.CurrentOption++
         For OnChangeFunction In This.OnChangeFunction
-        OnChangeFunction(This)
+        OnChangeFunction.Call(This)
     }
     
     SelectPreviousOption() {
         This.CurrentOption--
         For OnChangeFunction In This.OnChangeFunction
-        OnChangeFunction(This)
+        OnChangeFunction.Call(This)
     }
     
     SelectOption(Option) {
@@ -2423,7 +2423,7 @@ Class OCRTab Extends AccessibilityOverlay {
     
     Focus(ControlID := 0) {
         For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction(This)
+        OnFocusFunction.Call(This)
         This.Label := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
         XCoordinate := This.RegionX1Coordinate + Floor((This.RegionX2Coordinate - This.RegionX1Coordinate)/2)
         YCoordinate := This.RegionY1Coordinate + Floor((This.RegionY2Coordinate - This.RegionY1Coordinate)/2)
