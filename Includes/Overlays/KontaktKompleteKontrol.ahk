@@ -27,11 +27,12 @@ Class KontaktKompleteKontrol {
         KKPreferenceLibraryFactoryTab.AddHotspotButton("Rescan", 546, 417)
         KKPreferenceLibraryUserTab := HotspotTab("User", 240, 76)
         KKPreferenceLibraryUserTab.AddHotspotButton("Add Directory", 170, 420)
-;        KKPreferenceLibraryUserTab.AddCustomControl(ObjBindMethod(KontaktKompleteKontrol, "FocusKKStandaloneLibraryScanOption"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKKStandaloneLibraryScanOption"))
+        ;        KKPreferenceLibraryUserTab.AddCustomControl(ObjBindMethod(KontaktKompleteKontrol, "FocusKKStandaloneLibraryScanOption"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKKStandaloneLibraryScanOption"))
         KKPreferenceLibraryUserTab.AddHotspotButton("Rescan", 546, 417)
         KKPreferenceLibraryTabTabControl.AddTabs(KKPreferenceLibraryFactoryTab, KKPreferenceLibraryUserTab)
         KKPreferencePluginTab := HotspotTab("Plug-ins", 56, 237)
         KKPreferenceTabControl.AddTabs(KKPreferenceAudioTab, KKPreferenceMIDITab, KKPreferenceGeneralTab, KKPreferenceLibraryTab, KKPreferencePluginTab)
+        KKPreferenceOverlay.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol, "CloseKKStandalonePreferences"))
         
         KontaktStandaloneHeader := AccessibilityOverlay("Kontakt")
         KontaktStandaloneHeader.AddCustomButton("FILE",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktStandaloneFileMenu"))
@@ -144,6 +145,10 @@ Class KontaktKompleteKontrol {
                 Sleep 2500
             }
         }
+    }
+    
+    Static CloseKKStandalonePreferences(*) {
+        Send "!{F4}"
     }
     
     Static DetectPlugin() {
