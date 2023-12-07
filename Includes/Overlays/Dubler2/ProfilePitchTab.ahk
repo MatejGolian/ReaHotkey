@@ -223,22 +223,6 @@ ClickSynthPreset(Preset) {
     }
 }
 
-ToggleNotesAnnouncement(*) {
-
-    If Not ReaHotkey.FoundStandalone Is Standalone Or Not ReaHotkey.FoundStandalone.Overlay.Label == "Dubler 2 Profile" Or Not WinActive(ReaHotkey.StandaloneWinCriteria)
-        Return
-
-    For Ctrl In ReaHotkey.FoundStandalone.Overlay.ChildControls {
-        If Ctrl.ControlType == "TabControl" And Ctrl.CurrentTab != 2
-            Return
-    }
-
-    If Not Dubler2.AnnounceNotes
-        Dubler2.EnableNotesAnnouncement()
-    Else
-        Dubler2.DisableNotesAnnouncement()
-}
-
 PitchTab := HotspotTab("Pitch", 258, 104, ObjBindMethod(Dubler2, "FocusTab"))
 PitchTab.SetHotkey("^2", "Ctrl + 2")
 
@@ -281,4 +265,4 @@ For Scale In ["Major", "Minor", "Harmonic Minor", "Major Pentatonic", "Minor Pen
 
 PitchTab.AddControl(ScaleCtrl)
 PitchTab.AddControl(CustomButton("Toggle active notes", ObjBindMethod(Dubler2, "FocusButton"), ActivateNotesButton))
-PitchTab.AddControl(Dubler2.CustomCheckbox("Announce detected notes (press Ctrl+N to toggle)", Dubler2.AnnounceNotes, ObjBindMethod(Dubler2, "FocusCheckbox"), ToggleNotesAnnouncement))
+PitchTab.AddControl(Dubler2.CustomCheckbox("Announce detected notes (press Ctrl+N to toggle)", Dubler2.AnnounceNotes, ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "ToggleNotesAnnouncement")))
