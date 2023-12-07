@@ -7,7 +7,9 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
 * Makes it possible to load instruments and add libraries in Best Service Engine 2.
   - Works both inside REAPER and in the standalone version of Engine 2.
 * Makes it possible to interact with Komplete Kontrol menus.
-  - Works both inside REAPER and in the standalone version of Komplete Kontrol. Note that Komplete Kontrol version 3 is required.
+  - Works both inside REAPER and in the standalone version of Komplete Kontrol. Note that Komplete Kontrol version 3 is required in case of the plug-in.
+  * Makes it possible to add new user library folders and perform rescans in the standalone version of Komplete Kontrol.
+  - Komplete Kontrol version 3 is recommended, althoug this functionality may work in older versions as well.
 * Makes it possible to interact with Kontakt menus.
   - Works both inside REAPER and in the standalone version of Kontakt. Note that Kontakt version 7.7.0 or higher is required.
 * Makes it possible to switch Between various mixes in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
