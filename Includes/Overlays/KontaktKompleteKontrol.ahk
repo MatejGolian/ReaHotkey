@@ -103,12 +103,14 @@ Class KontaktKompleteKontrol {
         TalosOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", TalosOverlay)
         
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectPlugin"), 500)
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 500)
+        
         Standalone.RegisterOverlay("Komplete Kontrol", KKStandaloneHeader)
         Standalone.RegisterOverlay("Komplete Kontrol Preferences", KKPreferenceOverlay)
         Standalone.RegisterOverlay("Kontakt", KontaktStandaloneHeader)
         
-        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectPlugin"), 500)
-        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 500)
+        Standalone.SetHotkey("Komplete Kontrol Preferences", "^,", ObjBindMethod(KontaktKompleteKontrol, "ManageKKStandalonePreferenceWindow"))
         
     }
     
@@ -160,7 +162,7 @@ Class KontaktKompleteKontrol {
     }
     
     Static CloseKKStandalonePreferences(*) {
-        Send "!{F4}"
+        WinClose("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
     }
     
     Static DetectPlugin() {
@@ -248,6 +250,20 @@ Class KontaktKompleteKontrol {
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPluginHeader.Clone()
             Else
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := UnknownPluginHeader.Clone()
+        }
+    }
+    
+    Static ManageKKStandalonePreferenceWindow(*) {
+        If WinActive("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe") {
+            WinClose("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
+        }
+        Else If WinActive("Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe") And Not WinExist("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe") {
+            Hotkey "^,", "Off"
+            Send "^,"
+        }
+        Else {
+            If WinExist("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe") And Not WinActive("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
+            WinActivate("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
         }
     }
     
