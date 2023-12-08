@@ -1178,7 +1178,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "GraphicalCheckbox", Map(
         "ControlTypeLabel", "checkbox",
         "CheckedString", "checked",
-        "UncheckedString", "unchecked",
+        "UncheckedString", "not checked",
         "NotFoundString", "not found",
         "UnlabelledString", "unlabelled"),
         "GraphicalTab", Map(
@@ -1190,7 +1190,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "HotspotCheckbox", Map(
         "ControlTypeLabel", "checkbox",
         "CheckedString", "checked",
-        "UncheckedString", "unchecked",
+        "UncheckedString", "not checked",
         "UnknownStateString", "unknown state",
         "UnlabelledString", "unlabelled"),
         "HotspotComboBox", Map(
@@ -1827,7 +1827,7 @@ Class GraphicalCheckbox Extends ToggleableGraphic {
     HotkeyLabel := ""
     Label := ""
     CheckedString := "checked"
-    UncheckedString := "unchecked"
+    UncheckedString := "not checked"
     NotFoundString := "not found"
     UnlabelledString := "unlabelled"
     
@@ -2087,7 +2087,7 @@ Class HotspotCheckbox Extends ActivatableHotspot {
     CheckedColor := ""
     UncheckedColor := ""
     CheckedString := "checked"
-    UncheckedString := "unchecked"
+    UncheckedString := "not checked"
     UnknownStateString := "unknown state"
     UnlabelledString := "unlabelled"
     
