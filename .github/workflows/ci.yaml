@@ -70,6 +70,28 @@ jobs:
           zip -r ReaHotkey-${{ github.ref_name }}-${{ github.run_number }}.zip ReaHotkey
           # get it out of the way so that the uploads don't freak out.
           rm -rf ReaHotkey
+      - name: Update changelog
+        uses: thomaseizinger/keep-a-changelog-new-release@1.1.0
+        with:
+          version: ${{ github.ref_name }}
+      # In order to make a commit, we need to initialize a user.
+      # You may choose to write something less generic here if you want, it doesn't matter functionality wise.
+      - name: Initialize mandatory git config
+        run: |
+          git config user.name "GitHub actions"
+          git config user.email noreply@github.com
+      - name: Commit changelog
+        run: |
+          git add CHANGELOG.md
+          git commit --message "Prepare release ${{ github.ref_name }}"
+          git push origin main
+      - name: Parse changelog
+        id: changelog
+        run: |
+          chmod +x ./Scripts/parse-changelog.sh
+          echo 'CHANGELOG<<EOF' >> $GITHUB_OUTPUT
+          ./Scripts/parse-changelog.sh ${{ github.ref_name }} CHANGELOG.md >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
       - name: Create Release
         uses: actions/create-release@v1
         env:
@@ -77,6 +99,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref_name }}-${{ github.run_number }}
+          body: ${{ steps.changelog.outputs.CHANGELOG }}
       - name: Upload Artifacts
         uses: alexellis/upload-assets@0.4.0
         env:
