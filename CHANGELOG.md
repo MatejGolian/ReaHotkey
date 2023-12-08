@@ -7,19 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2023-12-08
+
 ### Added
 
-- Added support for several controls in Komplete Kontrol standalone
+-   Added support for several controls in Komplete Kontrol standalone
 
 ### Fixed
 
-- Fix crash when pressing Ctrl + N while in profile overlay of Dubler 2
+-   Fix crash when pressing Ctrl + N while in profile overlay of Dubler 2
 
 ## [0.1.0] - 2023-12-06
 
 ### Added
 
-- Initial release
+-   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.2.0...HEAD
+
+[0.2.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.1.0...0.2.0
+
 [0.1.0]: https://github.com/MatejGolian/ReaHotkey/releases/tag/0.1.0
