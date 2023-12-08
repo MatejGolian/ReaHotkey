@@ -31,6 +31,8 @@ Class KontaktKompleteKontrol {
         KKPreferenceLibraryUserTab.AddHotspotButton("Rescan", 546, 417)
         KKPreferenceLibraryTabTabControl.AddTabs(KKPreferenceLibraryFactoryTab, KKPreferenceLibraryUserTab)
         KKPreferencePluginTab := HotspotTab("Plug-ins", 56, 237)
+        KKPreferencePluginTab.AddHotspotCheckbox("Always Use Latest Version Of NI Plug-ins", 419, 394, "0xC5C5C5", "0x5F5F5F")
+        KKPreferencePluginTab.AddHotspotButton("Rescan", 546, 417)
         KKPreferenceTabControl.AddTabs(KKPreferenceAudioTab, KKPreferenceMIDITab, KKPreferenceGeneralTab, KKPreferenceLibraryTab, KKPreferencePluginTab)
         KKPreferenceOverlay.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol, "CloseKKStandalonePreferences"))
         
