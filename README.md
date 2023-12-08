@@ -3,6 +3,10 @@
 ## What's This And Who Is It For?
 This is an AutoHotkey scripth which aims to make certain virtual instruments/sample libraries  and related programs at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although in particular cases standalone versions of programs/instruments may be supported as well.
 
+## What's new?
+
+Our changelog can be found [in our dedicated changelog file](https://github.com/MatejGolian/ReaHotkey/blob/main/CHANGELOG.md).
+
 ## Features
 * Enables accessibility for Dubler 2.2 by Vochlea
   - only standalone support for now
