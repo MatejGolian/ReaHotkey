@@ -1,7 +1,7 @@
 # ReaHotkey
 
 ## What's This And Who Is It For?
-This is an AutoHotkey scripth which aims to make certain virtual instruments/sample libraries  and related programs at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although in particular cases standalone versions of programs/instruments may be supported as well.
+This is an AutoHotkey scripth which aims to make certain virtual instruments/sample libraries  and related software at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although in particular cases standalone versions of programs/instruments may be supported as well.
 
 ## Features
 * Enables accessibility for Dubler 2.2 by Vochlea
@@ -10,9 +10,10 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
 * Makes it possible to load instruments and add libraries in Best Service Engine 2.
   - Works both inside REAPER and in the standalone version of Engine 2.
 * Makes it possible to interact with Komplete Kontrol menus.
-  - Works both inside REAPER and in the standalone version of Komplete Kontrol. Note that Komplete Kontrol version 3 is required in case of the plug-in.
+  - Works both inside REAPER and in the standalone version of Komplete Kontrol. Note that Komplete Kontrol version 3 is absolutely required in case of the plug-in.
   * Makes it possible to add new user library folders and perform rescans in the standalone version of Komplete Kontrol. It's also possible to toggle the setting for user content scanning on start-up on/off.
-  - Komplete Kontrol version 3 is recommended, althoug the above functionality may work in older versions of the program as well.
+  - Komplete Kontrol version 3 is highly recommended.
+  - Most of the above functionality may work with older versions of Komplete Kontrol as well, althoug ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
 * Makes it possible to interact with Kontakt menus.
   - Works both inside REAPER and in the standalone version of Kontakt. Note that Kontakt version 7.7.0 or higher is required.
 * Makes it possible to switch Between various mixes in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
