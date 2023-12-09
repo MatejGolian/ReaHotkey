@@ -1315,7 +1315,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "ControlTypeLabel", "kryssruta",
         "CheckedString", "kryssad",
         "UncheckedString", "inte kryssad",
-        "UnknownStateString", "okänd status",
+        "UnknownStateString", "okänt läge",
         "UnlabelledString", "namnlös"),
         "CustomComboBox", Map(
         "ControlTypeLabel", "kombinationsruta",
@@ -1349,7 +1349,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "ControlTypeLabel", "kryssruta",
         "CheckedString", "kryssad",
         "UncheckedString", "inte kryssad",
-        "UnknownStateString", "okänd status",
+        "UnknownStateString", "okänt läge",
         "UnlabelledString", "namnlös"),
         "HotspotComboBox", Map(
         "ControlTypeLabel", "kombinationsruta",
