@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2023-12-09
+
 ### Fixed
 
 -   Fix checkboxes in KK standalone preferences
@@ -27,7 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.2.1...HEAD
+
+[0.2.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.2.0...0.2.1
 
 [0.2.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.1.0...0.2.0
 
