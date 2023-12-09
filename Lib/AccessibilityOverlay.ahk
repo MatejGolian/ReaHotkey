@@ -1568,7 +1568,7 @@ Class customCheckbox Extends ActivatableCustom {
     
     CheckState() {
         If This.CheckStateFunction Is Func
-        This.CheckStateFunction.Call(This)
+        This.Checked := This.CheckStateFunction.Call(This)
     }
     
     Activate(CurrentControlID := 0) {
