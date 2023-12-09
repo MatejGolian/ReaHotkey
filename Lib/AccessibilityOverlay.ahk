@@ -1423,7 +1423,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     AddCustomCheckbox(Label, CheckStateFunction, OnFocusFunction := "", OnActivateFunction := "") {
-        Control := HotspotCheckbox(Label, CheckStateFunction, OnFocusFunction, OnActivateFunction)
+        Control := CustomCheckbox(Label, CheckStateFunction, OnFocusFunction, OnActivateFunction)
         Return This.AddControl(Control)
     }
     
