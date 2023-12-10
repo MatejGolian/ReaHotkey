@@ -72,3 +72,11 @@ This is not how Dubler 2 behaves in general, but its a limitation we have to put
 
 ## About HotspotHelper
 HotspotHelper is a special utility to make developing these kind of scripts a little easier. It retrieves window and control info and creates labelled hotspots that can be copied to clipboard for subsequent use.
+
+## Roadmap
+
+This is an incomplete list of features we're planning to look into in the future or are currently developing. Noone can guarantee that they will ever become reality, but they might at some point, and you can always open an issue to either offer help or request a new entry on this list. This list doesn't necessarily include bugfixes or additional features for entries above, except if they require special treatment and time to investigate them.
+
+* Kontakt rack view accessibility to allow access of batch resaving again
+* Kontakt snapshot selection
+* Melodyne accessibility
