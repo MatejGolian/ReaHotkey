@@ -1087,7 +1087,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                     This.SetCurrentControlID(ParentTabControl.ControlID)
                 }
                 For HotkeyFunction In ReachableControl.HotkeyFunction
-                HotkeyFunction(ReachableControl)
+                HotkeyFunction.Call(ReachableControl)
                 Break 2
             }
         }
@@ -1097,7 +1097,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Else
             This.FocusControl(ReachableControl.ControlID)
             For HotkeyFunction In ReachableControl.HotkeyFunction
-            HotkeyFunction(ReachableControl)
+            HotkeyFunction.Call(ReachableControl)
             Break
         }
     }

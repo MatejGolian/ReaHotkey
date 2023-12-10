@@ -41,10 +41,10 @@ Class KontaktKompleteKontrol {
         KKPreferenceTabControl.AddTabs(KKPreferenceAudioTab, KKPreferenceMIDITab, KKPreferenceGeneralTab, KKPreferenceLibraryTab, KKPreferencePluginTab)
         
         KontaktStandaloneHeader := AccessibilityOverlay("Kontakt")
-        KontaktStandaloneHeader.AddCustomButton("FILE",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktStandaloneFileMenu"))
-        KontaktStandaloneHeader.AddHotspotButton("LIBRARY", 237, 70)
-        KontaktStandaloneHeader.AddCustomButton("VIEW",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktStandaloneViewMenu"))
-        KontaktStandaloneHeader.AddHotspotButton("SHOP", 828, 70)
+        KontaktStandaloneHeader.AddCustomButton("FILE", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
+        KontaktStandaloneHeader.AddCustomButton("LIBRARY", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
+        KontaktStandaloneHeader.AddCustomButton("VIEW", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
+        KontaktStandaloneHeader.AddCustomButton("SHOP", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
         
         NoProductOverlay := AccessibilityOverlay("None")
         NoProductOverlay.Metadata := Map("Product", "None")
@@ -136,6 +136,26 @@ Class KontaktKompleteKontrol {
         KontaktKompleteKontrol.MoveToOrClickAIPluginModernMix(Product, "Click")
     }
     
+    Static ActivateKontaktPluginMenu(MenuButton) {
+        If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuButton.Label, GetPluginXCoordinate() + 100, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100, "Click") {
+            If MenuButton.Label = "FILE" Or MenuButton.Label = "VIEW"
+            KontaktKompleteKontrol.OpenKontaktPluginMenu()
+        }
+        Else {
+            AccessibilityOverlay.Speak("Item not found")
+        }
+    }
+    
+    Static ActivateKontaktStandaloneMenu(MenuButton) {
+        If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuButton.Label, 100, 0, 900, 100, "Click") {
+            If MenuButton.Label = "FILE" Or MenuButton.Label = "VIEW"
+            KontaktKompleteKontrol.OpenKontaktStandaloneMenu()
+        }
+        Else {
+            AccessibilityOverlay.Speak("Item not found")
+        }
+    }
+    
     Static CloseKKPluginBrowser() {
         If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" {
             Click CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)
@@ -192,6 +212,14 @@ Class KontaktKompleteKontrol {
         KKInstance.Overlay.Focus()
     }
     
+    Static FocusKontaktPluginMenu(MenuButton) {
+        KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuButton.Label, GetPluginXCoordinate() + 100, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100, "MouseMove")
+    }
+    
+    Static FocusKontaktStandaloneMenu(MenuButton) {
+        KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuButton.Label, 100, 0, 900, 100, "MouseMove")
+    }
+    
     Static GetPluginName() {
         If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
         Return "Komplete Kontrol"
@@ -207,10 +235,10 @@ Class KontaktKompleteKontrol {
         KKPluginHeader.AddHotspotButton("Menu", 305, 68, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         KontaktPluginHeader := AccessibilityOverlay("Kontakt")
         KontaktPluginHeader.AddStaticText("Kontakt")
-        KontaktPluginHeader.AddCustomButton("FILE",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktPluginFileMenu"))
-        KontaktPluginHeader.AddHotspotButton("LIBRARY", 237, 70, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        KontaktPluginHeader.AddCustomButton("VIEW",, ObjBindMethod(KontaktKompleteKontrol, "OpenKontaktPluginViewMenu"))
-        KontaktPluginHeader.AddHotspotButton("SHOP", 828, 70, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        KontaktPluginHeader.AddCustomButton("FILE", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktPluginHeader.AddCustomButton("LIBRARY", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktPluginHeader.AddCustomButton("VIEW", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktPluginHeader.AddCustomButton("SHOP", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
         UnknownPluginHeader := AccessibilityOverlay("Unknown")
         UnknownPluginHeader.AddStaticText("Kontakt/Komplete Kontrol")
         UnknownPluginHeader.AddStaticText("Warning! The exact plugin could not be detected. Some functions may not work correctly.")
@@ -312,6 +340,20 @@ Class KontaktKompleteKontrol {
         }
     }
     
+    Static MoveToOrClickKontaktMenu(MenuLabel, CropX1, CropY1, CropX2, CropY2, MoveOrClick) {
+        OCRResult := OCR.FromWindow("A", "EN")
+        OCRResult := OCRResult.Crop(CropX1, CropY1, CropX2, CropY2)
+        For OCRLine In OCRResult.Lines
+        If Trim(OCRLine.Text, ",./<>?;'\:|`!@#$%^&*-=_+") = MenuLabel {
+            LineWidth := 0
+            For OCRWord In OCRLine.Words
+            LineWidth += OCRWord.BoundingRect.W
+            %MoveOrClick%(floor(OCRLine.Words[1].BoundingRect.X + (LineWidth / 2)), Floor(OCRLine.Words[1].BoundingRect.Y + (OCRLine.Words[1].BoundingRect.H / 2)))
+            Return 1
+        }
+        Return 0
+    }
+    
     Static OpenKontaktMenu() {
         Loop {
             KeyCombo := KeyWaitCombo()
@@ -344,38 +386,18 @@ Class KontaktKompleteKontrol {
         }
     }
     
-    Static OpenKontaktPluginFileMenu(*) {
+    Static OpenKontaktPluginMenu() {
         SetTimer ReaHotkey.ManageState, 0
         ReaHotkey.TurnPluginHotkeysOff()
         ReaHotkey.TurnPluginTimersOff("Kontakt/Komplete Kontrol")
-        Click CompensatePluginXCoordinate(186), CompensatePluginYCoordinate(70)
         KontaktKompleteKontrol.OpenKontaktMenu()
         SetTimer ReaHotkey.ManageState, 100
     }
     
-    Static OpenKontaktPluginViewMenu(*) {
-        SetTimer ReaHotkey.ManageState, 0
-        ReaHotkey.TurnPluginHotkeysOff()
-        ReaHotkey.TurnPluginTimersOff("Kontakt/Komplete Kontrol")
-        Click CompensatePluginXCoordinate(298), CompensatePluginYCoordinate(70)
-        KontaktKompleteKontrol.OpenKontaktMenu()
-        SetTimer ReaHotkey.ManageState, 100
-    }
-    
-    Static OpenKontaktStandaloneFileMenu(*) {
+    Static OpenKontaktStandaloneMenu() {
         SetTimer ReaHotkey.ManageState, 0
         ReaHotkey.TurnStandaloneHotkeysOff()
         ReaHotkey.TurnStandaloneTimersOff("Kontakt")
-        Click 186, 70
-        KontaktKompleteKontrol.OpenKontaktMenu()
-        SetTimer ReaHotkey.ManageState, 100
-    }
-    
-    Static OpenKontaktStandaloneViewMenu(*) {
-        SetTimer ReaHotkey.ManageState, 0
-        ReaHotkey.TurnStandaloneHotkeysOff()
-        ReaHotkey.TurnStandaloneTimersOff("Kontakt")
-        Click 298, 70
         KontaktKompleteKontrol.OpenKontaktMenu()
         SetTimer ReaHotkey.ManageState, 100
     }
