@@ -69,6 +69,7 @@ This is not how Dubler 2 behaves in general, but its a limitation we have to put
 * The ReaHotkey script can crash while In Dubler 2 audio calibration view. In that case just start the script again.
 * If you find that your keyboard or ReaHotkey itself is not responding as expected after interacting with Kontakt menus, press the Escape key.
 * Using any other zoom value in Kontakt than 100% may result in ReaHotkey not working correctly and the Kontakt plugin not being detected.
+* Attempting to open a Kontakt menu in the plug-in can fail at times, such as when trying to activate it directly after re-opening the REAPER FX chain window. When that happens, move around the interface a little and then try to open the given menu again.
 
 ## About HotspotHelper
 HotspotHelper is a special utility to make developing these kind of scripts a little easier. It retrieves window and control info and creates labelled hotspots that can be copied to clipboard for subsequent use.
