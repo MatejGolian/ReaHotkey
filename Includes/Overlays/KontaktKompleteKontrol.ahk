@@ -137,6 +137,7 @@ Class KontaktKompleteKontrol {
     }
     
     Static ActivateKontaktPluginMenu(MenuButton) {
+        KontaktKompleteKontrol.MoveToOrClickKontaktMenu("LIBRARY", GetPluginXCoordinate() + 100, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100, "MouseMove")
         If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuButton.Label, GetPluginXCoordinate() + 100, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100, "Click") {
             If MenuButton.Label = "FILE" Or MenuButton.Label = "VIEW"
             KontaktKompleteKontrol.OpenKontaktPluginMenu()
