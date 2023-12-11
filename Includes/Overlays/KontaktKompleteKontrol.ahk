@@ -10,11 +10,11 @@ Class KontaktKompleteKontrol {
         Standalone.Register("Kontakt", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
         
         KKStandaloneHeader := AccessibilityOverlay("Komplete Kontrol")
-        KKStandaloneHeader.AddHotspotButton("File", 24, 41)
-        KKStandaloneHeader.AddHotspotButton("Edit", 60, 41)
-        KKStandaloneHeader.AddHotspotButton("View", 91, 41)
-        KKStandaloneHeader.AddHotspotButton("Controller", 146, 41)
-        KKStandaloneHeader.AddHotspotButton("Help", 202, 41)
+        KKStandaloneHeader.AddHotspotButton("File menu", 24, 41)
+        KKStandaloneHeader.AddHotspotButton("Edit menu", 60, 41)
+        KKStandaloneHeader.AddHotspotButton("View menu", 91, 41)
+        KKStandaloneHeader.AddHotspotButton("Controller menu", 146, 41)
+        KKStandaloneHeader.AddHotspotButton("Help menu", 202, 41)
         
         KKPreferenceOverlay := AccessibilityOverlay()
         KKPreferenceTabControl := KKPreferenceOverlay.AddTabControl()
