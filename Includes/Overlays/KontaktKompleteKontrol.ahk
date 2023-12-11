@@ -41,10 +41,10 @@ Class KontaktKompleteKontrol {
         KKPreferenceTabControl.AddTabs(KKPreferenceAudioTab, KKPreferenceMIDITab, KKPreferenceGeneralTab, KKPreferenceLibraryTab, KKPreferencePluginTab)
         
         KontaktStandaloneHeader := AccessibilityOverlay("Kontakt")
-        KontaktStandaloneHeader.AddCustomButton("FILE", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
-        KontaktStandaloneHeader.AddCustomButton("LIBRARY", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
-        KontaktStandaloneHeader.AddCustomButton("VIEW", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
-        KontaktStandaloneHeader.AddCustomButton("SHOP", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
+        KontaktStandaloneHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
+        KontaktStandaloneHeader.AddCustomButton("LIBRARY menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
+        KontaktStandaloneHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
+        KontaktStandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
         
         NoProductOverlay := AccessibilityOverlay("None")
         NoProductOverlay.Metadata := Map("Product", "None")
@@ -137,9 +137,11 @@ Class KontaktKompleteKontrol {
     }
     
     Static ActivateKontaktPluginMenu(MenuButton) {
+        MenuLabel := StrSplit(MenuButton.Label, A_Space)
+        MenuLabel := MenuLabel[1]
         KontaktKompleteKontrol.MoveToOrClickKontaktMenu("LIBRARY", GetPluginXCoordinate() + 100, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100, "MouseMove")
-        If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuButton.Label, GetPluginXCoordinate() + 100, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100, "Click") {
-            If MenuButton.Label = "FILE" Or MenuButton.Label = "VIEW"
+        If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, GetPluginXCoordinate() + 100, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100, "Click") {
+            If MenuLabel = "FILE" Or MenuLabel = "VIEW"
             KontaktKompleteKontrol.OpenKontaktPluginMenu()
         }
         Else {
@@ -148,7 +150,9 @@ Class KontaktKompleteKontrol {
     }
     
     Static ActivateKontaktStandaloneMenu(MenuButton) {
-        If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuButton.Label, 100, 0, 900, 100, "Click") {
+        MenuLabel := StrSplit(MenuButton.Label, A_Space)
+        MenuLabel := MenuLabel[1]
+        If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, 100, 0, 900, 100, "Click") {
             If MenuButton.Label = "FILE" Or MenuButton.Label = "VIEW"
             KontaktKompleteKontrol.OpenKontaktStandaloneMenu()
         }
@@ -214,12 +218,16 @@ Class KontaktKompleteKontrol {
     }
     
     Static FocusKontaktPluginMenu(MenuButton) {
+        MenuLabel := StrSplit(MenuButton.Label, A_Space)
+        MenuLabel := MenuLabel[1]
         KontaktKompleteKontrol.MoveToOrClickKontaktMenu("LIBRARY", GetPluginXCoordinate() + 100, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100, "MouseMove")
-        KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuButton.Label, GetPluginXCoordinate() + 100, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100, "MouseMove")
+        KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, GetPluginXCoordinate() + 100, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100, "MouseMove")
     }
     
     Static FocusKontaktStandaloneMenu(MenuButton) {
-        KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuButton.Label, 100, 0, 900, 100, "MouseMove")
+        MenuLabel := StrSplit(MenuButton.Label, A_Space)
+        MenuLabel := MenuLabel[1]
+        KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, 100, 0, 900, 100, "MouseMove")
     }
     
     Static GetPluginName() {
@@ -237,10 +245,10 @@ Class KontaktKompleteKontrol {
         KKPluginHeader.AddHotspotButton("Menu", 305, 68, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         KontaktPluginHeader := AccessibilityOverlay("Kontakt")
         KontaktPluginHeader.AddStaticText("Kontakt")
-        KontaktPluginHeader.AddCustomButton("FILE", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
-        KontaktPluginHeader.AddCustomButton("LIBRARY", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
-        KontaktPluginHeader.AddCustomButton("VIEW", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
-        KontaktPluginHeader.AddCustomButton("SHOP", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktPluginHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktPluginHeader.AddCustomButton("LIBRARY menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktPluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktPluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
         UnknownPluginHeader := AccessibilityOverlay("Unknown")
         UnknownPluginHeader.AddStaticText("Kontakt/Komplete Kontrol")
         UnknownPluginHeader.AddStaticText("Warning! The exact plugin could not be detected. Some functions may not work correctly.")

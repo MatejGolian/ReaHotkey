@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Use OCR for Kontakt menu detection/activation instead of predefined coordinates
 - Change toggle pause announcements
-- Clarify menu buttons in KK standalone
+- Clarify KK and Kontakt menu buttons
+- Use OCR for Kontakt menu detection/activation instead of predefined coordinates
 
 ## [0.2.1] - 2023-12-09
 
