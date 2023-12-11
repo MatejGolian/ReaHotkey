@@ -213,6 +213,7 @@ Class KontaktKompleteKontrol {
     }
     
     Static FocusKontaktPluginMenu(MenuButton) {
+        KontaktKompleteKontrol.MoveToOrClickKontaktMenu("LIBRARY", GetPluginXCoordinate() + 100, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100, "MouseMove")
         KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuButton.Label, GetPluginXCoordinate() + 100, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100, "MouseMove")
     }
     
