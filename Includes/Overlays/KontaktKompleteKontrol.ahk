@@ -344,7 +344,7 @@ Class KontaktKompleteKontrol {
         OCRResult := OCR.FromWindow("A", "EN")
         OCRResult := OCRResult.Crop(CropX1, CropY1, CropX2, CropY2)
         For OCRLine In OCRResult.Lines
-        If Trim(OCRLine.Text, ",./<>?;'\:|`!@#$%^&*-=_+") = MenuLabel {
+        If RegExMatch(OCRLine.Text, "^(.*)(" . MenuLabel . ")(.*)$") {
             LineWidth := 0
             For OCRWord In OCRLine.Words
             LineWidth += OCRWord.BoundingRect.W
