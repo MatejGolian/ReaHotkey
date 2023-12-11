@@ -9,9 +9,9 @@
 ^+#P:: {
     ReaHotkey.TogglePause()
     If A_IsSuspended = 1
-    AccessibilityOverlay.Speak("ReaHotkey paused")
+    AccessibilityOverlay.Speak("Paused ReaHotkey")
     Else
-    AccessibilityOverlay.Speak("ReaHotkey unpaused")
+    AccessibilityOverlay.Speak("ReaHotkey ready")
 }
 
 ^+#Q:: {
