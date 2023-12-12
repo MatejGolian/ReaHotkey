@@ -139,8 +139,8 @@ Class KontaktKompleteKontrol {
     Static ActivateKontaktPluginMenu(MenuButton) {
         MenuLabel := StrSplit(MenuButton.Label, A_Space)
         MenuLabel := MenuLabel[1]
-        KontaktKompleteKontrol.MoveToOrClickKontaktMenu("LIBRARY", GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 120, "MouseMove")
-        If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 120, "Click") {
+        KontaktKompleteKontrol.MoveToOrClickKontaktMenu("LIBRARY", GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 1200, GetPluginYCoordinate() + 120, "MouseMove")
+        If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 1200, GetPluginYCoordinate() + 120, "Click") {
             If MenuLabel = "FILE" Or MenuLabel = "VIEW"
             KontaktKompleteKontrol.OpenKontaktPluginMenu()
         }
@@ -152,7 +152,7 @@ Class KontaktKompleteKontrol {
     Static ActivateKontaktStandaloneMenu(MenuButton) {
         MenuLabel := StrSplit(MenuButton.Label, A_Space)
         MenuLabel := MenuLabel[1]
-        If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, 80, 0, 900, 120, "Click") {
+        If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, 80, 0, 1200, 120, "Click") {
             If MenuLabel = "FILE" Or MenuLabel = "VIEW"
             KontaktKompleteKontrol.OpenKontaktStandaloneMenu()
         }
@@ -220,14 +220,14 @@ Class KontaktKompleteKontrol {
     Static FocusKontaktPluginMenu(MenuButton) {
         MenuLabel := StrSplit(MenuButton.Label, A_Space)
         MenuLabel := MenuLabel[1]
-        KontaktKompleteKontrol.MoveToOrClickKontaktMenu("LIBRARY", GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 120, "MouseMove")
-        KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 120, "MouseMove")
+        KontaktKompleteKontrol.MoveToOrClickKontaktMenu("LIBRARY", GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 1200, GetPluginYCoordinate() + 120, "MouseMove")
+        KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 1200, GetPluginYCoordinate() + 120, "MouseMove")
     }
     
     Static FocusKontaktStandaloneMenu(MenuButton) {
         MenuLabel := StrSplit(MenuButton.Label, A_Space)
         MenuLabel := MenuLabel[1]
-        KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, 80, 0, 900, 120, "MouseMove")
+        KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, 80, 0, 1200, 120, "MouseMove")
     }
     
     Static GetPluginName() {
