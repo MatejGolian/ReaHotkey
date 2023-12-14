@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added functionality to detect the 'Player' version of the Kontakt plug-in
+
 ### Changed
 
 - Change toggle pause announcements
