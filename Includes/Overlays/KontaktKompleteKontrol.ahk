@@ -374,14 +374,15 @@ Class KontaktKompleteKontrol {
         FirstAvailableLanguage := False
         FirstOCRLanguage := False
         PreferredLanguage := False
-        PreferredOCRLanguage := "en-US"
+        PreferredOCRLanguage := ""
         Loop Parse, AvailableLanguages, "`n" {
             If A_Index = 1 And A_LoopField != "" {
                 FirstAvailableLanguage := True
                 FirstOCRLanguage := A_LoopField
             }
-            If A_LoopField = PreferredOCRLanguage {
+            If SubStr(A_LoopField, 1, 3) = "en-" {
                 PreferredLanguage := True
+                PreferredOCRLanguage := A_LoopField
                 Break
             }
         }
