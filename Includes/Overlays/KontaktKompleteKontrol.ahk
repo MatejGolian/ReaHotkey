@@ -140,24 +140,32 @@ Class KontaktKompleteKontrol {
         MenuLabel := StrSplit(MenuButton.Label, A_Space)
         MenuLabel := MenuLabel[1]
         KontaktKompleteKontrol.MoveToOrClickKontaktMenu("LIBRARY", GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 1200, GetPluginYCoordinate() + 120, "MouseMove")
-        If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 1200, GetPluginYCoordinate() + 120, "Click") {
+        Result := KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 1200, GetPluginYCoordinate() + 120, "Click")
+        If Result = 1 {
             If MenuLabel = "FILE" Or MenuLabel = "VIEW"
             KontaktKompleteKontrol.OpenKontaktPluginMenu()
         }
-        Else {
+        Else If Result = 0 {
             AccessibilityOverlay.Speak("Item not found")
+        }
+        Else {
+            AccessibilityOverlay.Speak("OCR not available")
         }
     }
     
     Static ActivateKontaktStandaloneMenu(MenuButton) {
         MenuLabel := StrSplit(MenuButton.Label, A_Space)
         MenuLabel := MenuLabel[1]
-        If KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, 80, 0, 1200, 120, "Click") {
+        Result := KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, 80, 0, 1200, 120, "Click")
+        If Result = 1 {
             If MenuLabel = "FILE" Or MenuLabel = "VIEW"
             KontaktKompleteKontrol.OpenKontaktStandaloneMenu()
         }
-        Else {
+        Else If Result = 0 {
             AccessibilityOverlay.Speak("Item not found")
+        }
+        Else {
+            AccessibilityOverlay.Speak("OCR not available")
         }
     }
     
@@ -351,7 +359,28 @@ Class KontaktKompleteKontrol {
     }
     
     Static MoveToOrClickKontaktMenu(MenuLabel, CropX1, CropY1, CropX2, CropY2, MoveOrClick) {
-        OCRResult := OCR.FromWindow("A", "EN")
+        AvailableLanguages := OCR.GetAvailableLanguages()
+        FirstAvailableLanguage := False
+        FirstOCRLanguage := False
+        PreferredLanguage := False
+        PreferredOCRLanguage := "en-US"
+        Loop Parse, AvailableLanguages, "`n" {
+            If A_Index = 1 And A_LoopField != "" {
+                FirstAvailableLanguage := True
+                FirstOCRLanguage := A_LoopField
+            }
+            If A_LoopField = PreferredOCRLanguage {
+                PreferredLanguage := True
+                Break
+            }
+        }
+        If FirstAvailableLanguage = False And PreferredLanguage = False
+        Return -1
+        Else If PreferredLanguage = False
+        OCRLanguage := FirstOCRLanguage
+        Else
+        OCRLanguage := PreferredOCRLanguage
+        OCRResult := OCR.FromWindow("A", OCRLanguage)
         OCRResult := OCRResult.Crop(CropX1, CropY1, CropX2, CropY2)
         For OCRLine In OCRResult.Lines
         If RegExMatch(OCRLine.Text, "^(.*)(" . MenuLabel . ")(.*)$") {
