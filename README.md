@@ -8,6 +8,7 @@ This is an AutoHotkey scripth which aims to make certain virtual instruments/sam
 Our changelog can be found [in our dedicated changelog file](https://github.com/MatejGolian/ReaHotkey/blob/main/CHANGELOG.md).
 
 ## Features
+
 * Enables accessibility for Dubler 2.2 by Vochlea
   - only standalone support for now
   - not all features are supported, nor do we know if they ever will be (see [below](#dubler2))
@@ -19,11 +20,12 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - Komplete Kontrol version 3 is highly recommended.
   - Most of the above functionality may work with older versions of Komplete Kontrol as well, although ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
 * Makes it possible to interact with Kontakt menus.
-  - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.7.0 or higher is required.
+  - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.7.0 or higher is required, as well as Windows 10 or newer with OCR installed.
 * Makes it possible to switch Between various mixes in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
   - Only works inside REAPER.
 
 ## General Notes
+
 * Because ReaHotkey also passes through some keys to the application window itself, it's highly recommended to enable the 'Send all keyboard input to plug-in' option in REAPER's FX menu, when interacting with a supported plug-in interface.
 * In order to make ReaHotkey work successfully with a certain application such as REAPER, ReaHotkey should be run with at least the same user privileges as the application to be controlled, otherwise ReaHotkey keyboard commands may not function correctly. For instance, if you are running REAPER as administrator, you should run ReaHotkey as administrator as well.
 
@@ -59,6 +61,7 @@ ReaHotkey allows you to create as many profiles as you want. It however only all
 This is not how Dubler 2 behaves in general, but its a limitation we have to put onto the script because of how the GUI is designed. Thus, in order to make a profile loadable which isn't currently amongst the 5 active profiles, you'll have to push its button and use the move menu to switch it with a currently active profile. This process will restart Dubler for the changes to take effect. Just wait a few seconds until Dubler opens up again and you will be able to load the profile just fine.
 
 ## Keyboard Shortcuts
+
 * ctrl+shift+windows+a - about
 * ctrl+shift+windows+p - pause
 * ctrl+shift+windows+q - quit
@@ -72,6 +75,7 @@ This is not how Dubler 2 behaves in general, but its a limitation we have to put
 * Attempting to open a Kontakt menu in the plug-in can fail at times, such as when trying to activate it directly after re-opening the REAPER FX chain window. When that happens, move around the interface a little and then try to open the given menu again.
 
 ## About HotspotHelper
+
 HotspotHelper is a special utility to make developing these kind of scripts a little easier. It retrieves window and control info and creates labelled hotspots that can be copied to clipboard for subsequent use.
 
 ## Roadmap
