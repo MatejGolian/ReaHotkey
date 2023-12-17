@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Change toggle pause announcements
 - Clarify KK and Kontakt menu buttons
+- Remove Kontakt 'LIBRARY' menu buttons, since they don't appear useful to blind users
 - Use OCR for Kontakt menu detection/activation instead of predefined coordinates
 
 ## [0.2.1] - 2023-12-09
