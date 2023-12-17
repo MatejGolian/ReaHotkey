@@ -19,7 +19,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - Komplete Kontrol version 3 is highly recommended.
   - Most of the above functionality may work with older versions of Komplete Kontrol as well, although ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
 * Makes it possible to interact with Kontakt menus.
-  - Works both inside REAPER and in the standalone version of Kontakt. Note that Kontakt version 7.7.0 or higher is required.
+  - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.7.0 or higher is required.
 * Makes it possible to switch Between various mixes in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
   - Only works inside REAPER.
 
