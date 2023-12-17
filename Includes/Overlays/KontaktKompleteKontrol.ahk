@@ -265,7 +265,7 @@ Class KontaktKompleteKontrol {
         KontaktPlayerPluginHeader := AccessibilityOverlay("Kontakt Player")
         KontaktPlayerPluginHeader.AddStaticText("Kontakt Player")
         KontaktPlayerPluginHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
-        KontaktPlayerPluginHeader.AddCustomButton("LIBRARY menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        ; Removed because further investigation of usefulness is needed: KontaktPlayerPluginHeader.AddCustomButton("LIBRARY menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
         KontaktPlayerPluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
         KontaktPlayerPluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
         UnknownPluginHeader := AccessibilityOverlay("Unknown")
