@@ -170,7 +170,7 @@ Class KontaktKompleteKontrol {
     }
     
     Static CloseKKPluginBrowser() {
-        If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" {
+        If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" Or PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x6E8192" {
             Click CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)
             Sleep 2500
             If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) != "0x181818" {
