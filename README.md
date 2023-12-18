@@ -83,6 +83,5 @@ HotspotHelper is a special utility to make developing these kind of scripts a li
 This is an incomplete list of features we're planning to look into in the future or are currently developing. Noone can guarantee that they will ever become reality, but they might at some point, and you can always open an issue to either offer help or request a new entry on this list. This list doesn't necessarily include bugfixes or additional features for entries above, except if they require special treatment and time to investigate them.
 
 * Kontakt content missing dialog accessibility
-* Kontakt rack view accessibility to allow access of batch resaving again
 * Kontakt snapshot selection
 * Melodyne accessibility
