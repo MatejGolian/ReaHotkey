@@ -165,6 +165,30 @@ Class Plugin {
         Return Array()
     }
     
+    Static Instantiate(PluginName, ControlClass) {
+        PluginNumber := Plugin.FindName(PluginName)
+        If PluginNumber > 0 {
+            SingleInstance := Plugin.List[PluginNumber]["SingleInstance"]
+            Chooser := Plugin.List[PluginNumber]["Chooser"]
+            If SingleInstance = True {
+                For PluginInstance In Plugin.Instances
+                If PluginInstance.Name = PluginName
+                Return PluginInstance
+            }
+            Else {
+                SingleInstance := False
+                For PluginInstance In Plugin.Instances
+                If PluginInstance.Name = PluginName And PluginInstance.ControlClass = ControlClass
+                Return PluginInstance
+            }
+            PluginInstance := Plugin(PluginName, ControlClass, Plugin.List[PluginNumber]["InitFunction"], SingleInstance, Chooser)
+            Plugin.Instances.Push(PluginInstance)
+            PluginInstance.Init()
+            Return PluginInstance
+        }
+        Return Plugin("", ControlClass)
+    }
+    
     Static Register(PluginName, ControlClasses, InitFunction := "", SingleInstance := False, Chooser := True) {
         If Plugin.FindName(PluginName) = False {
             If PluginName = ""
