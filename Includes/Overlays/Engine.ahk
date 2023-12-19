@@ -4,7 +4,7 @@ Class Engine {
     
     Static Init() {
         
-        Plugin.Register("Engine", "^Plugin[0-9A-F]{17}$")
+        Plugin.Register("Engine", "^Plugin[0-9A-F]{17}$",, True, True)
         Standalone.Register("Engine", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe")
         
         EnginePluginOverlay := AccessibilityOverlay("Engine")

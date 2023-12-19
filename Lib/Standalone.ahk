@@ -5,6 +5,8 @@ Class Standalone {
     Chooser := True
     InitFunction := ""
     Name := ""
+    InstanceNumber := 0
+    ProgramNumber := 0
     Overlay := AccessibilityOverlay()
     Overlays := Array()
     WindowID := ""
@@ -15,6 +17,8 @@ Class Standalone {
     Static UnnamedProgramName := "Unnamed Program"
     
     __New(Name, WindowID, InitFunction := "", Chooser := True) {
+        This.InstanceNumber := Standalone.Instances.Length + 1
+        This.ProgramNumber := Standalone.FindName(Name)
         If Name = ""
         This.Name := Standalone.UnnamedProgramName
         Else

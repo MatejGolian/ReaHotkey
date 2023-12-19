@@ -6,6 +6,8 @@ Class Plugin {
     ControlClass := ""
     InitFunction := ""
     Name := ""
+    InstanceNumber := 0
+    PluginNumber := 0
     Overlay := AccessibilityOverlay()
     Overlays := Array()
     SingleInstance := False
@@ -16,6 +18,8 @@ Class Plugin {
     Static UnnamedPluginName := "Unnamed Plugin"
     
     __New(Name, ControlClass, InitFunction := "", SingleInstance := False, Chooser := True) {
+        This.InstanceNumber := Plugin.Instances.Length + 1
+        This.PluginNumber := Plugin.FindName(Name)
         If Name = ""
         This.Name := Plugin.UnnamedPluginName
         Else
@@ -123,13 +127,13 @@ Class Plugin {
             Chooser := Plugin.List[PluginNumber]["Chooser"]
             If SingleInstance = True {
                 For PluginInstance In Plugin.Instances
-                If PluginInstance.Name = PluginName
+                If PluginInstance.PluginNumber = PluginNumber
                 Return PluginInstance
             }
             Else {
                 SingleInstance := False
                 For PluginInstance In Plugin.Instances
-                If PluginInstance.ControlClass = ControlClass
+                If PluginInstance.PluginNumber = PluginNumber And PluginInstance.ControlClass = ControlClass
                 Return PluginInstance
             }
             PluginInstance := Plugin(Plugin.List[PluginNumber]["Name"], ControlClass, Plugin.List[PluginNumber]["InitFunction"], SingleInstance, Chooser)
@@ -172,13 +176,13 @@ Class Plugin {
             Chooser := Plugin.List[PluginNumber]["Chooser"]
             If SingleInstance = True {
                 For PluginInstance In Plugin.Instances
-                If PluginInstance.Name = PluginName
+                If PluginInstance.PluginNumber = PluginNumber
                 Return PluginInstance
             }
             Else {
                 SingleInstance := False
                 For PluginInstance In Plugin.Instances
-                If PluginInstance.Name = PluginName And PluginInstance.ControlClass = ControlClass
+                If PluginInstance.PluginNumber = PluginNumber And PluginInstance.ControlClass = ControlClass
                 Return PluginInstance
             }
             PluginInstance := Plugin(PluginName, ControlClass, Plugin.List[PluginNumber]["InitFunction"], SingleInstance, Chooser)
