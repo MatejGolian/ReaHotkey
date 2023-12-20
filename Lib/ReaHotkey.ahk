@@ -164,6 +164,7 @@ Class ReaHotkey {
     }
     
     Static TurnPluginHotkeysOn() {
+        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.NoHotkeys = False
         ReaHotkey.TurnHotkeysOn("Plugin")
     }
     
