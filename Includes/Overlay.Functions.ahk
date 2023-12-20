@@ -30,7 +30,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             Product := "unknown product " . UnknownProductCounter
             UnknownProductCounter++
         }
-        If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.Overlay.OverlayNumber != OverlayEntry.OverlayNumber
+        If ReaHotkey.Found%Type% Is %Type% And HasProp(ReaHotkey.Found%Type%.Overlay, "OverlayNumber") And ReaHotkey.Found%Type%.Overlay.OverlayNumber != OverlayEntry.OverlayNumber
         If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Image") And OverlayEntry.Metadata["Image"] != "" {
             If Not OverlayEntry.Metadata["Image"] Is Map
             OverlayMetadata := Map("File", OverlayEntry.Metadata["Image"])
@@ -134,8 +134,8 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
         ReaHotkey.Found%Type%.Overlay.AddControl(OverlayHeader)
         ReaHotkey.Found%Type%.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
         ReaHotkey.Found%Type%.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
-        ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[2].ControlID)
-        ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[2].Focus()
+        ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls.Length].ControlID)
+        ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls.Length].Focus()
     }
     Else {
         ReaHotkey.Found%Type%.Overlay := OverlayList[OverlayNumber].Clone()

@@ -16,37 +16,40 @@ Class Standalone {
     Static List := Array()
     Static UnnamedProgramName := "Unnamed Program"
     
-    __New(Name, WindowID, InitFunction := "", Chooser := True) {
+    __New(Name, WindowID) {
+        ProgramNumber := Standalone.FindName(Name)
         This.InstanceNumber := Standalone.Instances.Length + 1
-        This.ProgramNumber := Standalone.FindName(Name)
+        This.ProgramNumber := ProgramNumber
         If Name = ""
         This.Name := Standalone.UnnamedProgramName
         Else
         This.Name := Name
         This.WindowID := WindowID
-        This.InitFunction := InitFunction
-        If Chooser = True Or Chooser = False
-        This.Chooser := Chooser
-        Else
-        This.Chooser := True
-        For OverlayNumber, Overlay In Standalone.GetOverlays(Name)
-        This.Overlays.Push(Overlay.Clone())
-        If This.Overlays.Length = 1 {
-            This.Overlay := This.Overlays[1].Clone()
-        }
-        Else If This.Overlays.Length > 1 And This.Chooser = False {
-            This.Overlay := This.Overlays[1].Clone()
-        }
-        Else If This.Overlays.Length > 1 And This.Chooser = True {
-            This.Overlay := AccessibilityOverlay()
-            This.Overlay.AddAccessibilityOverlay()
-            This.Overlay.AddControl(Standalone.ChooserOverlay.Clone())
-            This.Overlay.OverlayNumber := 0
-        }
-        Else {
-            This.Overlay := AccessibilityOverlay()
-            This.Overlay.AddControl(Standalone.DefaultOverlay.Clone())
-            This.Overlay.OverlayNumber := 0
+        If ProgramNumber > 0 {
+            ProgramEntry := Standalone.List[ProgramNumber]
+            This.InitFunction := ProgramEntry["InitFunction"]
+            This.Chooser := ProgramEntry["Chooser"]
+            For OverlayNumber, Overlay In ProgramEntry["Overlays"]
+            This.Overlays.Push(Overlay.Clone())
+            If This.Overlays.Length = 1 {
+                This.Overlay := This.Overlays[1].Clone()
+            }
+            Else If This.Overlays.Length > 1 And This.Chooser = False {
+                This.Overlay := This.Overlays[1].Clone()
+            }
+            Else If This.Overlays.Length > 1 And This.Chooser = True {
+                This.Overlay := AccessibilityOverlay()
+                This.Overlay.AddAccessibilityOverlay()
+                This.Overlay.AddControl(Standalone.ChooserOverlay.Clone())
+                This.Overlay.OverlayNumber := 0
+            }
+            Else {
+                This.Overlay := AccessibilityOverlay()
+                This.Overlay.AddControl(Standalone.DefaultOverlay.Clone())
+                This.Overlay.OverlayNumber := 0
+            }
+            Standalone.Instances.Push(This)
+            This.Init()
         }
     }
     
@@ -119,9 +122,7 @@ Class Standalone {
         Return ProgramInstance
         ProgramNumber := Standalone.FindByActiveWindow()
         If ProgramNumber != False {
-            ProgramInstance := Standalone(Standalone.List[ProgramNumber]["Name"], WinGetID("A"), Standalone.List[ProgramNumber]["InitFunction"], Standalone.List[ProgramNumber]["Chooser"])
-            Standalone.Instances.Push(ProgramInstance)
-            ProgramInstance.Init()
+            ProgramInstance := Standalone(Standalone.List[ProgramNumber]["Name"], WinGetID("A"))
             Return ProgramInstance
         }
         Return Standalone("", WinID)

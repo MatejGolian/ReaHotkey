@@ -18,45 +18,42 @@ Class Plugin {
     Static List := Array()
     Static UnnamedPluginName := "Unnamed Plugin"
     
-    __New(Name, ControlClass, InitFunction := "", SingleInstance := False, Chooser := True, NoHotkeys := False) {
+    __New(Name, ControlClass) {
+        PluginNumber := Plugin.FindName(Name)
         This.InstanceNumber := Plugin.Instances.Length + 1
-        This.PluginNumber := Plugin.FindName(Name)
+        This.PluginNumber := PluginNumber
         If Name = ""
         This.Name := Plugin.UnnamedPluginName
         Else
         This.Name := Name
         This.ControlClass := ControlClass
-        This.InitFunction := InitFunction
-        If SingleInstance = True Or SingleInstance = False
-        This.SingleInstance := SingleInstance
-        Else
-        This.SingleInstance := False
-        If Chooser = True Or Chooser = False
-        This.Chooser := Chooser
-        Else
-        This.Chooser := True
-        If NoHotkeys = True Or NoHotkeys = False
-        This.NoHotkeys := NoHotkeys
-        Else
-        This.NoHotkeys := False
-        For OverlayNumber, Overlay In Plugin.GetOverlays(Name)
-        This.Overlays.Push(Overlay.Clone())
-        If This.Overlays.Length = 1 {
-            This.Overlay := This.Overlays[1].Clone()
-        }
-        Else If This.Overlays.Length > 1 And This.Chooser = False {
-            This.Overlay := This.Overlays[1].Clone()
-        }
-        Else If This.Overlays.Length > 1 And This.Chooser = True {
-            This.Overlay := AccessibilityOverlay()
-            This.Overlay.AddAccessibilityOverlay()
-            This.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
-            This.Overlay.OverlayNumber := 0
-        }
-        Else {
-            This.Overlay := AccessibilityOverlay()
-            This.Overlay.AddControl(Plugin.DefaultOverlay.Clone())
-            This.Overlay.OverlayNumber := 0
+        If PluginNumber > 0 {
+            PluginEntry := Plugin.List[PluginNumber]
+            This.InitFunction := PluginEntry["InitFunction"]
+            This.SingleInstance := PluginEntry["SingleInstance"]
+            This.Chooser := PluginEntry["Chooser"]
+            This.NoHotkeys := PluginEntry["NoHotkeys"]
+            For OverlayNumber, Overlay In PluginEntry["Overlays"]
+            This.Overlays.Push(Overlay.Clone())
+            If This.Overlays.Length = 1 {
+                This.Overlay := This.Overlays[1].Clone()
+            }
+            Else If This.Overlays.Length > 1 And This.Chooser = False {
+                This.Overlay := This.Overlays[1].Clone()
+            }
+            Else If This.Overlays.Length > 1 And This.Chooser = True {
+                This.Overlay := AccessibilityOverlay()
+                This.Overlay.AddAccessibilityOverlay()
+                This.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
+                This.Overlay.OverlayNumber := 0
+            }
+            Else {
+                This.Overlay := AccessibilityOverlay()
+                This.Overlay.AddControl(Plugin.DefaultOverlay.Clone())
+                This.Overlay.OverlayNumber := 0
+            }
+            Plugin.Instances.Push(This)
+            This.Init()
         }
     }
     
@@ -129,8 +126,6 @@ Class Plugin {
         If PluginNumber > 0 {
             PluginName := Plugin.List[PluginNumber]["Name"]
             SingleInstance := Plugin.List[PluginNumber]["SingleInstance"]
-            Chooser := Plugin.List[PluginNumber]["Chooser"]
-            NoHotkeys := Plugin.List[PluginNumber]["NoHotkeys"]
             If SingleInstance = True {
                 For PluginInstance In Plugin.Instances
                 If PluginInstance.PluginNumber = PluginNumber
@@ -142,9 +137,7 @@ Class Plugin {
                 If PluginInstance.PluginNumber = PluginNumber And PluginInstance.ControlClass = ControlClass
                 Return PluginInstance
             }
-            PluginInstance := Plugin(Plugin.List[PluginNumber]["Name"], ControlClass, Plugin.List[PluginNumber]["InitFunction"], SingleInstance, Chooser, NoHotkeys)
-            Plugin.Instances.Push(PluginInstance)
-            PluginInstance.Init()
+            PluginInstance := Plugin(Plugin.List[PluginNumber]["Name"], ControlClass)
             Return PluginInstance
         }
         Return Plugin("", ControlClass)
@@ -179,8 +172,6 @@ Class Plugin {
         PluginNumber := Plugin.FindName(PluginName)
         If PluginNumber > 0 {
             SingleInstance := Plugin.List[PluginNumber]["SingleInstance"]
-            Chooser := Plugin.List[PluginNumber]["Chooser"]
-            NoHotkeys := Plugin.List[PluginNumber]["NoHotkeys"]
             If SingleInstance = True {
                 For PluginInstance In Plugin.Instances
                 If PluginInstance.PluginNumber = PluginNumber
@@ -192,9 +183,7 @@ Class Plugin {
                 If PluginInstance.PluginNumber = PluginNumber And PluginInstance.ControlClass = ControlClass
                 Return PluginInstance
             }
-            PluginInstance := Plugin(PluginName, ControlClass, Plugin.List[PluginNumber]["InitFunction"], SingleInstance, Chooser, NoHotkeys)
-            Plugin.Instances.Push(PluginInstance)
-            PluginInstance.Init()
+            PluginInstance := Plugin(PluginName, ControlClass)
             Return PluginInstance
         }
         Return Plugin("", ControlClass)

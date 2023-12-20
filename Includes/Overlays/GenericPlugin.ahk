@@ -74,7 +74,7 @@ Class GenericPlugin {
         If PluginInstance Is Plugin And PluginInstance.InstanceNumber = InstanceNumber {
             ReaHotkey.TurnPluginTimersOff()
             ReaHotkey.TurnPluginHotkeysOff()
-            NewInstance := Plugin(Plugin.List[PluginNumber]["Name"], PluginInstance.ControlClass, Plugin.List[PluginNumber]["InitFunction"], Plugin.List[PluginNumber]["SingleInstance"], Plugin.List[PluginNumber]["Chooser"], Plugin.List[PluginNumber]["NoHotkeys"])
+            NewInstance := Plugin("Generic Plug-in", PluginInstance.ControlClass)
             NewInstance.InstanceNumber := InstanceNumber
             Plugin.Instances[InstanceIndex] := NewInstance
             ReaHotkey.FoundPlugin := NewInstance
