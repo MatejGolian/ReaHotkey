@@ -231,6 +231,17 @@ CompensatePluginYCoordinate(PluginYCoordinate) {
     Return PluginYCoordinate
 }
 
+ConvertBase(InputBase, OutputBase, nptr)    ; Base 2 - 36
+{
+    static u := A_IsUnicode ? "_wcstoui64" : "_strtoui64"
+    static v := A_IsUnicode ? "_i64tow"    : "_i64toa"
+    s := ""
+    VarSetStrCapacity(&s, 66)
+    value := DllCall("msvcrt.dll\" u, "Str", nptr, "UInt", 0, "UInt", InputBase, "CDECL Int64")
+    DllCall("msvcrt.dll\" v, "Int64", value, "Str", s, "UInt", OutputBase, "CDECL")
+    return s
+}
+
 CreateOverlayMenu(Found, Type) {
     CurrentOverlay := Found.Overlay
     OverlayEntries := %Type%.GetOverlays(Found.Name)
@@ -325,24 +336,6 @@ InArray(Needle, Haystack) {
     Return False
 }
 
-ConvertBase(InputBase, OutputBase, nptr)    ; Base 2 - 36
-{
-    static u := A_IsUnicode ? "_wcstoui64" : "_strtoui64"
-    static v := A_IsUnicode ? "_i64tow"    : "_i64toa"
-    s := ""
-    VarSetStrCapacity(&s, 66)
-    value := DllCall("msvcrt.dll\" u, "Str", nptr, "UInt", 0, "UInt", InputBase, "CDECL Int64")
-    DllCall("msvcrt.dll\" v, "Int64", value, "Str", s, "UInt", OutputBase, "CDECL")
-    return s
-}
-
-StrJoin(obj,delimiter:="",OmitChars:=""){
-    S := obj[1]
-    Loop obj.Length - 1
-        S .= delimiter Trim(obj[A_Index+1],OmitChars)
-    return S
-}
-
 FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
     FoundX := ""
     FoundY := ""
@@ -433,6 +426,13 @@ KeyWaitSingle() {
     IH.Start()
     IH.Wait()
     Return IH.EndKey
+}
+
+StrJoin(obj,delimiter:="",OmitChars:=""){
+    S := obj[1]
+    Loop obj.Length - 1
+    S .= delimiter Trim(obj[A_Index+1],OmitChars)
+    return S
 }
 
 TriggerHotkey(Type, HotkeyCommand) {

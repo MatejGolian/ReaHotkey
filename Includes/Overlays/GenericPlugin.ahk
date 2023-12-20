@@ -3,20 +3,18 @@
 Class GenericPlugin {
     
     Static Init() {
-        Plugin.Register("Generic Plug-in", "^Plugin[0-9A-F]{17}$",, True, False)
-        Plugin.RegisterOverlay("Generic Plug-in", AccessibilityOverlay("Generic Plug-in"))
-        Plugin.SetTimer("Generic Plug-in", ObjBindMethod(GenericPlugin, "DetectPlugin"), 500)
+        Plugin.Register("Generic Plug-in", "^Plugin[0-9A-F]{17}$",, True,, True)
+        Plugin.RegisterOverlay("Generic Plug-in", AccessibilityOverlay("Plug-in"))
+        Plugin.SetTimer("Generic Plug-in", ObjBindMethod(GenericPlugin, "DetectPlugin"), 100)
     }
     
-    Static AddTimersTo(PluginName) {
+    Static AddTimers(PluginName) {
         PluginNumber := Plugin.FindName(PluginName)
         If PluginNumber > 0 {
             GenericEntry := False
-            For PluginEntry In Plugin.List
-            If PluginEntry["Name"] = "Generic Plug-in" {
-                GenericEntry := PluginEntry
-                Break
-            }
+            GenericNumber := Plugin.FindName("Generic Plug-in")
+            If GenericNumber > 0
+            GenericEntry := Plugin.List[GenericNumber]
             If GenericEntry != False
             For TimerNumber, GenericTimer In GenericEntry["Timers"] {
                 TimerFound := False
@@ -34,11 +32,17 @@ Class GenericPlugin {
     }
     
     Static DetectPlugin() {
-        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Engine"
-        GenericPlugin.LoadInto(ReaHotkey.FoundPlugin.InstanceNumber, "Engine", ReaHotkey.FoundPlugin.ControlClass)
+        If FindImage("Images/Engine/Engine.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
+            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Engine"
+            GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "Engine", ReaHotkey.FoundPlugin.ControlClass)
+        }
+        Else {
+            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Generic Plug-in"
+            GenericPlugin.Unload(ReaHotkey.FoundPlugin.InstanceNumber)
+        }
     }
     
-    Static LoadInto(InstanceNumber, PluginName, ControlClass) {
+    Static Load(InstanceNumber, PluginName, ControlClass) {
         If Plugin.FindName(PluginName) > 0 {
             ReaHotkey.TurnPluginTimersOff("Generic Plug-in")
             GenericPlugin.OverridePluginInstance(InstanceNumber, Plugin.Instantiate(PluginName, ControlClass))
@@ -52,12 +56,29 @@ Class GenericPlugin {
         If NewInstance Is Plugin {
             For InstanceIndex, PluginInstance In Plugin.Instances
             If PluginInstance Is Plugin And PluginInstance.InstanceNumber = InstanceNumber {
+            NewInstance := NewInstance.Clone()
                 NewInstance.InstanceNumber := InstanceNumber
                 NewInstance.PluginNumber := PluginInstance.PluginNumber
                 Plugin.Instances[InstanceIndex] := NewInstance
-                GenericPlugin.AddTimersTo(NewInstance.Name)
+                GenericPlugin.AddTimers(NewInstance.Name)
                 Return True
             }
+        }
+        Return False
+    }
+    
+    Static Unload(InstanceNumber) {
+        PluginNumber := Plugin.FindName("Generic Plug-in")
+        If PluginNumber > 0
+        For InstanceIndex, PluginInstance In Plugin.Instances
+        If PluginInstance Is Plugin And PluginInstance.InstanceNumber = InstanceNumber {
+            ReaHotkey.TurnPluginTimersOff()
+            ReaHotkey.TurnPluginHotkeysOff()
+            NewInstance := Plugin(Plugin.List[PluginNumber]["Name"], PluginInstance.ControlClass, Plugin.List[PluginNumber]["InitFunction"], Plugin.List[PluginNumber]["SingleInstance"], Plugin.List[PluginNumber]["Chooser"], Plugin.List[PluginNumber]["NoHotkeys"])
+            NewInstance.InstanceNumber := InstanceNumber
+            Plugin.Instances[InstanceIndex] := NewInstance
+            ReaHotkey.FoundPlugin := NewInstance
+            Return True
         }
         Return False
     }
