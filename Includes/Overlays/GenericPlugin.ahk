@@ -3,7 +3,7 @@
 Class GenericPlugin {
     
     Static Init() {
-        Plugin.Register("Generic Plug-in", "^Plugin[0-9A-F]{17}$",, True,, True)
+        Plugin.Register("Generic Plug-in", "^Plugin[0-9A-F]{17}$",, True, False, True)
         Plugin.RegisterOverlay("Generic Plug-in", AccessibilityOverlay("Plug-in"))
         Plugin.SetTimer("Generic Plug-in", ObjBindMethod(GenericPlugin, "DetectPlugin"), 100)
     }
