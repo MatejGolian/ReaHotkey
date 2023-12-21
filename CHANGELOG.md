@@ -7,17 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2023-12-21
+
 ### Added
 
-- Added functionality to detect the 'Player' version of the Kontakt plug-in
+-   Added functionality to detect the 'Player' version of the Kontakt plug-in
 
 ### Changed
 
-- Change toggle pause announcements
-- Detect Engine plug-in based on ImageSearch
-- Clarify KK and Kontakt menu buttons
-- Remove Kontakt 'LIBRARY' menu buttons, since they don't appear useful to blind users
-- Use OCR for Kontakt menu detection/activation instead of predefined coordinates
+-   Change toggle pause announcements
+-   Detect Engine plug-in based on ImageSearch
+-   Clarify KK and Kontakt menu buttons
+-   Remove Kontakt 'LIBRARY' menu buttons, since they don't appear useful to blind users
+-   Use OCR for Kontakt menu detection/activation instead of predefined coordinates
 
 ## [0.2.1] - 2023-12-09
 
@@ -41,7 +43,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.2.1...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.3.0...HEAD
+
+[0.3.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.2.1...0.3.0
 
 [0.2.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.2.0...0.2.1
 
