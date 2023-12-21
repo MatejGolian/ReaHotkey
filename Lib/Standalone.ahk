@@ -7,6 +7,7 @@ Class Standalone {
     Name := ""
     InstanceNumber := 0
     ProgramNumber := 0
+    NoHotkeys := False
     Overlay := AccessibilityOverlay()
     Overlays := Array()
     WindowID := ""
@@ -29,6 +30,7 @@ Class Standalone {
             ProgramEntry := Standalone.List[ProgramNumber]
             This.InitFunction := ProgramEntry["InitFunction"]
             This.Chooser := ProgramEntry["Chooser"]
+            This.NoHotkeys := ProgramEntry["NoHotkeys"]
             For OverlayNumber, Overlay In ProgramEntry["Overlays"]
             This.Overlays.Push(Overlay.Clone())
             If This.Overlays.Length = 1 {
@@ -153,12 +155,14 @@ Class Standalone {
         Return Array()
     }
     
-    Static Register(ProgramName, WinCriteria, InitFunction := "", Chooser := True) {
+    Static Register(ProgramName, WinCriteria, InitFunction := "", Chooser := True, NoHotkeys := False) {
         If Standalone.FindName(ProgramName) = False {
             If ProgramName = ""
             ProgramName := Standalone.UnnamedProgramName
             If Chooser != True And Chooser != False
             Chooser := True
+            If NoHotkeys != True And NoHotkeys != False
+            NoHotkeys := False
             ProgramEntry := Map()
             ProgramEntry["Name"] := ProgramName
             If WinCriteria Is Array
@@ -167,6 +171,7 @@ Class Standalone {
             ProgramEntry["WinCriteria"] := Array(WinCriteria)
             ProgramEntry["InitFunction"] := InitFunction
             ProgramEntry["Chooser"] := Chooser
+            ProgramEntry["NoHotkeys"] := NoHotkeys
             ProgramEntry["Hotkeys"] := Array()
             ProgramEntry["Overlays"] := Array()
             ProgramEntry["Timers"] := Array()

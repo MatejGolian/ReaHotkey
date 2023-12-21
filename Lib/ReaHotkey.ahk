@@ -129,7 +129,8 @@ Class ReaHotkey {
     }
     
     Static TurnHotkeysOn(Type) {
-        If Type = "Plugin" Or Type = "Standalone" {
+        If Type = "Plugin" Or Type = "Standalone"
+        If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.NoHotkeys = False {
             If Type = "Plugin"
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If Type = "Standalone"
@@ -164,7 +165,6 @@ Class ReaHotkey {
     }
     
     Static TurnPluginHotkeysOn() {
-        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.NoHotkeys = False
         ReaHotkey.TurnHotkeysOn("Plugin")
     }
     

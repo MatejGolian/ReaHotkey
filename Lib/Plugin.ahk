@@ -208,8 +208,8 @@ Class Plugin {
             PluginEntry["InitFunction"] := InitFunction
             PluginEntry["SingleInstance"] := SingleInstance
             PluginEntry["Chooser"] := Chooser
-            PluginEntry["Hotkeys"] := Array()
             PluginEntry["NoHotkeys"] := NoHotkeys
+            PluginEntry["Hotkeys"] := Array()
             PluginEntry["Overlays"] := Array()
             PluginEntry["Timers"] := Array()
             Plugin.List.Push(PluginEntry)
