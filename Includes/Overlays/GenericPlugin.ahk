@@ -32,22 +32,25 @@ Class GenericPlugin {
     }
     
     Static DetectPlugin() {
+        ReaHotkey.AutoFocusPluginOverlay := False
         If FindImage("Images/Engine/Engine.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Engine"
-            GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "Engine", ReaHotkey.FoundPlugin.ControlClass)
+            ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "Engine", ReaHotkey.FoundPlugin.ControlClass)
         }
         Else {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Generic Plug-in"
-            GenericPlugin.Unload(ReaHotkey.FoundPlugin.InstanceNumber)
+            ReaHotkey.FoundPlugin := GenericPlugin.Unload(ReaHotkey.FoundPlugin.InstanceNumber)
         }
     }
     
     Static Load(InstanceNumber, PluginName, ControlClass) {
         If Plugin.FindName(PluginName) > 0 {
             ReaHotkey.TurnPluginTimersOff("Generic Plug-in")
-            GenericPlugin.OverridePluginInstance(InstanceNumber, Plugin.Instantiate(PluginName, ControlClass))
+            NewInstance := GenericPlugin.OverridePluginInstance(InstanceNumber, Plugin.Instantiate(PluginName, ControlClass))
             ReaHotkey.TurnPluginTimersOn(PluginName)
-            Return True
+            If NewInstance Is Plugin
+            NewInstance.Overlay.Focus()
+            Return NewInstance
         }
         Return False
     }
@@ -56,12 +59,12 @@ Class GenericPlugin {
         If NewInstance Is Plugin {
             For InstanceIndex, PluginInstance In Plugin.Instances
             If PluginInstance Is Plugin And PluginInstance.InstanceNumber = InstanceNumber {
-            NewInstance := NewInstance.Clone()
+                NewInstance := NewInstance.Clone()
                 NewInstance.InstanceNumber := InstanceNumber
                 NewInstance.PluginNumber := PluginInstance.PluginNumber
                 Plugin.Instances[InstanceIndex] := NewInstance
                 GenericPlugin.AddTimers(NewInstance.Name)
-                Return True
+                Return NewInstance
             }
         }
         Return False
@@ -77,8 +80,7 @@ Class GenericPlugin {
             NewInstance := Plugin("Generic Plug-in", PluginInstance.ControlClass)
             NewInstance.InstanceNumber := InstanceNumber
             Plugin.Instances[InstanceIndex] := NewInstance
-            ReaHotkey.FoundPlugin := NewInstance
-            Return True
+            Return NewInstance
         }
         Return False
     }
