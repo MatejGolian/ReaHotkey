@@ -155,7 +155,7 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
 }
 
 ChooseOverlay(Type) {
-    OverlayMenu := CreateOverlayMenu(ReaHotkey.Found%Type%, Type)
+    OverlayMenu := CreateOverlayMenu(Type)
     OverlayMenu.Show()
 }
 
@@ -242,7 +242,8 @@ ConvertBase(InputBase, OutputBase, nptr)    ; Base 2 - 36
     return s
 }
 
-CreateOverlayMenu(Found, Type) {
+CreateOverlayMenu(Type) {
+    Found := ReaHotkey.Found%Type%
     CurrentOverlay := Found.Overlay
     OverlayEntries := %Type%.GetOverlays(Found.Name)
     OverlayList := ""
