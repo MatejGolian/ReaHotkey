@@ -36,7 +36,7 @@ Class ReaHotkey {
     }
     
     Static FocusPluginOverlay() {
-        If ReaHotkey.FoundPlugin Is Plugin
+        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.NoHotkeys = False
         If ReaHotkey.FoundPlugin.Overlay.ChildControls.Length > 0 And ReaHotkey.FoundPlugin.Overlay.GetFocusableControlIDs().Length > 0 {
             ReaHotkey.FoundPlugin.Overlay.Focus()
         }
@@ -77,7 +77,7 @@ Class ReaHotkey {
     }
     
     Static FocusStandaloneOverlay() {
-        If ReaHotkey.FoundStandalone Is Standalone {
+        If ReaHotkey.FoundStandalone Is Standalone And ReaHotkey.FoundStandalone.NoHotkeys = False {
             ReaHotkey.Wait(500)
             If ReaHotkey.FoundStandalone Is Standalone
             ReaHotkey.FoundStandalone.Overlay.Focus()

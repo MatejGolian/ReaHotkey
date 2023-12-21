@@ -4,7 +4,7 @@ Class GenericPlugin {
     
     Static Init() {
         Plugin.Register("Generic Plug-in", "^Plugin[0-9A-F]{17}$",, True, False, True)
-        Plugin.RegisterOverlay("Generic Plug-in", AccessibilityOverlay("Plug-in"))
+        Plugin.RegisterOverlay("Generic Plug-in", AccessibilityOverlay())
         Plugin.SetTimer("Generic Plug-in", ObjBindMethod(GenericPlugin, "DetectPlugin"), 100)
     }
     
@@ -32,7 +32,6 @@ Class GenericPlugin {
     }
     
     Static DetectPlugin() {
-        ReaHotkey.AutoFocusPluginOverlay := False
         If FindImage("Images/Engine/Engine.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Engine"
             ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "Engine", ReaHotkey.FoundPlugin.ControlClass)
@@ -48,8 +47,6 @@ Class GenericPlugin {
             ReaHotkey.TurnPluginTimersOff("Generic Plug-in")
             NewInstance := GenericPlugin.OverridePluginInstance(InstanceNumber, Plugin.Instantiate(PluginName, ControlClass))
             ReaHotkey.TurnPluginTimersOn(PluginName)
-            If NewInstance Is Plugin
-            NewInstance.Overlay.Focus()
             Return NewInstance
         }
         Return False
