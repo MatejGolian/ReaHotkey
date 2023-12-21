@@ -36,6 +36,10 @@ Class GenericPlugin {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Engine"
             ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "Engine", ReaHotkey.FoundPlugin.ControlClass)
         }
+        Else If FindImage("Images/Sforzando/Sforzando.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
+            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "sforzando"
+            ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "sforzando", ReaHotkey.FoundPlugin.ControlClass)
+        }
         Else {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Generic Plug-in"
             ReaHotkey.FoundPlugin := GenericPlugin.Unload(ReaHotkey.FoundPlugin.InstanceNumber)

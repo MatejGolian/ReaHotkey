@@ -23,6 +23,8 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.7.0 or higher is required, as well as Windows 10 or newer with OCR installed.
 * Makes it possible to switch Between various mixes in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
   - Only works inside REAPER.
+* Makes it possible to load instruments, set polyphony and pitchbend range in Plogue sforzando.
+  - Works both inside REAPER and in the standalone version of sforzando.
 
 ## General Notes
 

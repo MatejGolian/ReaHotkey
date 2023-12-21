@@ -133,7 +133,7 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
         ReaHotkey.Found%Type%.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
         ReaHotkey.Found%Type%.Overlay.AddControl(OverlayHeader)
         ReaHotkey.Found%Type%.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
-        ReaHotkey.Found%Type%.Overlay.AddControl(Plugin.ChooserOverlay.Clone())
+        ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
         ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls.Length].ControlID)
         ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls.Length].Focus()
     }
@@ -155,7 +155,7 @@ ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
 }
 
 ChooseOverlay(Type) {
-    OverlayMenu := CreateOverlayMenu(ReaHotkey.FoundPlugin, Type)
+    OverlayMenu := CreateOverlayMenu(ReaHotkey.Found%Type%, Type)
     OverlayMenu.Show()
 }
 
