@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for Plogue sforzando
 - Added OCR functionality to HotspotHelper
 
+### Changed
+
+- Re-introduced Kontakt/Komplete Kontrol library menu buttons as 'LIBRARY Browser'
+- Updated Kontakt/Komplete Kontrol library browser closing
+- The script now attempts to close the Library Browser in Kontakt as well
+
 ## [0.3.0] - 2023-12-21
 
 ### Added

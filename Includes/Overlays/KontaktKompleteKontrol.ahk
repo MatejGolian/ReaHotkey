@@ -42,7 +42,7 @@ Class KontaktKompleteKontrol {
         
         KontaktStandaloneHeader := AccessibilityOverlay("Kontakt")
         KontaktStandaloneHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
-        ; Removed because further investigation of usefulness is needed: KontaktStandaloneHeader.AddCustomButton("LIBRARY menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
+        KontaktStandaloneHeader.AddCustomButton("LIBRARY Browser", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
         KontaktStandaloneHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
         KontaktStandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
         
@@ -117,6 +117,7 @@ Class KontaktKompleteKontrol {
         Standalone.RegisterOverlay("Kontakt", KontaktStandaloneHeader)
         
         Standalone.SetHotkey("Komplete Kontrol Preferences", "^,", ObjBindMethod(KontaktKompleteKontrol, "ManageKKStandalonePreferenceWindow"))
+        Standalone.SetTimer("Kontakt", ObjBindMethod(KontaktKompleteKontrol, "CloseKontaktStandaloneBrowser"), 500)
         
     }
     
@@ -139,7 +140,6 @@ Class KontaktKompleteKontrol {
     Static ActivateKontaktPluginMenu(MenuButton) {
         MenuLabel := StrSplit(MenuButton.Label, A_Space)
         MenuLabel := MenuLabel[1]
-        KontaktKompleteKontrol.MoveToOrClickKontaktMenu("LIBRARY", GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 1200, GetPluginYCoordinate() + 120, "MouseMove")
         Result := KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 1200, GetPluginYCoordinate() + 120, "Click")
         If Result = 1 {
             If MenuLabel = "FILE" Or MenuLabel = "VIEW"
@@ -172,20 +172,50 @@ Class KontaktKompleteKontrol {
     Static CloseKKPluginBrowser() {
         If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" Or PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x6E8192" {
             Click CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)
-            Sleep 2500
-            If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) != "0x181818" {
-                AccessibilityOverlay.Speak("KK browser could not be closed. Some functions may not work correctly.")
-                Sleep 2500
+            Sleep 2000
+            If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" Or PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x6E8192" {
+                AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
+                Sleep 2000
             }
             Else {
-                AccessibilityOverlay.Speak("KK browser closed.")
-                Sleep 2500
+                AccessibilityOverlay.Speak("Library Browser closed.")
+                Sleep 2000
             }
         }
     }
     
     Static CloseKKStandalonePreferences(*) {
         WinClose("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
+    }
+    
+    Static CloseKontaktPluginBrowser() {
+        If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x9A9A93" {
+            Click CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)
+            Sleep 2000
+            If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x9A9A93" {
+                AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
+                Sleep 2000
+            }
+            Else {
+                AccessibilityOverlay.Speak("Library Browser closed.")
+                Sleep 2000
+            }
+        }
+    }
+    
+    Static CloseKontaktStandaloneBrowser() {
+        If PixelGetColor(997, 125) = "0x9A9A93" {
+            Click 997, 125
+            Sleep 2000
+            If PixelGetColor(997, 125) = "0x9A9A93" {
+                AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
+                Sleep 2000
+            }
+            Else {
+                AccessibilityOverlay.Speak("Library Browser closed.")
+                Sleep 2000
+            }
+        }
     }
     
     Static DetectPlugin() {
@@ -196,9 +226,11 @@ Class KontaktKompleteKontrol {
         }
         Else If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
             KontaktKompleteKontrol.LoadPluginHeader("Kontakt")
+            KontaktKompleteKontrol.CloseKontaktPluginBrowser()
         }
         Else If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
             KontaktKompleteKontrol.LoadPluginHeader("Kontakt Player")
+            KontaktKompleteKontrol.CloseKontaktPluginBrowser()
         }
         Else {
             KontaktKompleteKontrol.LoadPluginHeader("Unknown")
@@ -231,7 +263,6 @@ Class KontaktKompleteKontrol {
     Static FocusKontaktPluginMenu(MenuButton) {
         MenuLabel := StrSplit(MenuButton.Label, A_Space)
         MenuLabel := MenuLabel[1]
-        KontaktKompleteKontrol.MoveToOrClickKontaktMenu("LIBRARY", GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 1200, GetPluginYCoordinate() + 120, "MouseMove")
         KontaktKompleteKontrol.MoveToOrClickKontaktMenu(MenuLabel, GetPluginXCoordinate() + 80, GetPluginYCoordinate(), GetPluginXCoordinate() + 1200, GetPluginYCoordinate() + 120, "MouseMove")
     }
     
@@ -259,13 +290,13 @@ Class KontaktKompleteKontrol {
         KontaktPluginHeader := AccessibilityOverlay("Kontakt")
         KontaktPluginHeader.AddStaticText("Kontakt")
         KontaktPluginHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
-        ; Removed because further investigation of usefulness is needed: KontaktPluginHeader.AddCustomButton("LIBRARY menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktPluginHeader.AddCustomButton("LIBRARY Browser", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
         KontaktPluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
         KontaktPluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
         KontaktPlayerPluginHeader := AccessibilityOverlay("Kontakt Player")
         KontaktPlayerPluginHeader.AddStaticText("Kontakt Player")
         KontaktPlayerPluginHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
-        ; Removed because further investigation of usefulness is needed: KontaktPlayerPluginHeader.AddCustomButton("LIBRARY menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktPlayerPluginHeader.AddCustomButton("LIBRARY Browser", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
         KontaktPlayerPluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
         KontaktPlayerPluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
         UnknownPluginHeader := AccessibilityOverlay("Unknown")
