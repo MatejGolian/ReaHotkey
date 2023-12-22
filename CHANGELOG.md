@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for Plogue sforzando
+- Added OCR functionality to HotspotHelper
 
 ## [0.3.0] - 2023-12-21
 

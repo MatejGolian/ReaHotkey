@@ -9,6 +9,8 @@ SetWorkingDir A_InitialWorkingDir
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
 
+#Include <OCR>
+
 AppName := "HotspotHelper"
 CurrentHotspot := 0
 DialogOpen := 0
@@ -46,6 +48,7 @@ Enter::ClickHotspot()
 #^+X::CopyPixelColourToClipboard()
 #^+Del::DeleteHotspot()
 #^+F::ChooseControl()
+#^+O::PerformOCR()
 #^+Q::Quit()
 #^+F2::RenameHotspot()
 #^+S::SearchForImage()
@@ -62,7 +65,7 @@ About(*) {
     Global DialogOpen
     If DialogOpen = 0 {
         DialogOpen := 1
-        MsgBox "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+L - Focus control`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+S - Search for image`nCtrl+Win+Shift+X - Copy the pixel colour under the mouse to clipboard`nCtrl - Stop speech`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot", "About " . AppName
+        MsgBox "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+L - Focus control`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+S - Search for image`nCtrl+Win+Shift+X - Copy the pixel colour under the mouse to clipboard`nCtrl - Stop speech`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot", "About " . AppName
         DialogOpen := 0
     }
 }
@@ -114,6 +117,7 @@ ChooseControl() {
         DialogOpen := 1
         Try {
             WinWaitActive("A")
+            Sleep 1000
             Controls := WinGetControls("A")
         }
         Catch {
@@ -140,18 +144,20 @@ CopyControlClassToClipboard() {
     Global AppName, DialogOpen
     If DialogOpen = 0 {
         DialogOpen := 1
-        Try
-        If ControlGetFocus("A") = 0 {
-            Sleep 25
-            Speak("Focused control not found")
-        }
-        Else {
-            ConfirmationDialog := MsgBox("Copy the class of the currently focused control to clipboard?", AppName, 4)
-            If ConfirmationDialog == "Yes" {
-                WinWaitActive("A")
-                A_Clipboard := ControlGetClassNN(ControlGetFocus("A"))
-                Sleep 25
-                Speak("Control class copied to clipboard")
+        Try {
+            WinWaitActive("A")
+            Sleep 1000
+            If ControlGetFocus("A") = 0 {
+                Speak("Focused control not found")
+            }
+            Else {
+                ConfirmationDialog := MsgBox("Copy the class of the currently focused control to clipboard?", AppName, 4)
+                If ConfirmationDialog == "Yes" {
+                    WinWaitActive("A")
+                    Sleep 1000
+                    A_Clipboard := ControlGetClassNN(ControlGetFocus("A"))
+                    Speak("Control class copied to clipboard")
+                }
             }
         }
         DialogOpen := 0
@@ -162,19 +168,21 @@ CopyControlPositionToClipboard() {
     Global AppName, DialogOpen
     If DialogOpen = 0 {
         DialogOpen := 1
-        Try
-        If ControlGetFocus("A") = 0 {
-            Sleep 25
-            Speak("Focused control not found")
-        }
-        Else {
-            ConfirmationDialog := MsgBox("Copy the position of the currently focused control to clipboard?", AppName, 4)
-            If ConfirmationDialog == "Yes" {
-                WinWaitActive("A")
-                ControlGetPos &ControlX, &ControlY,,, ControlGetClassNN(ControlGetFocus("A")), "A"
-                A_Clipboard := ControlX . ", " . ControlY
-                Sleep 25
-                Speak("Control position copied to clipboard")
+        Try {
+            WinWaitActive("A")
+            Sleep 1000
+            If ControlGetFocus("A") = 0 {
+                Speak("Focused control not found")
+            }
+            Else {
+                ConfirmationDialog := MsgBox("Copy the position of the currently focused control to clipboard?", AppName, 4)
+                If ConfirmationDialog == "Yes" {
+                    WinWaitActive("A")
+                    Sleep 1000
+                    ControlGetPos &ControlX, &ControlY,,, ControlGetClassNN(ControlGetFocus("A")), "A"
+                    A_Clipboard := ControlX . ", " . ControlY
+                    Speak("Control position copied to clipboard")
+                }
             }
         }
         DialogOpen := 0
@@ -192,8 +200,8 @@ CopyHotspotsToClipboard() {
             If ConfirmationDialog == "Yes" {
                 Try {
                     WinWaitActive("A")
+                    Sleep 1000
                     If ControlGetFocus("A") = 0 {
-                        Sleep 25
                         Speak("Focused control not found")
                     }
                     Else {
@@ -218,7 +226,6 @@ CopyHotspotsToClipboard() {
             }
             ClipboardData := RTrim(ClipboardData, "`r`n")
             A_Clipboard := ClipboardData
-            Sleep 25
             If Hotspots.Length = 1
             Speak("1 hotspot copied to clipboard")
             Else
@@ -234,9 +241,9 @@ CopyPixelColourToClipboard() {
         DialogOpen := 1
         ConfirmationDialog := MsgBox("Copy the colour of the pixel currently under the mouse to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
+            Sleep 1000
             MouseGetPos &mouseXPosition, &mouseYPosition
             A_Clipboard := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
-            Sleep 25
             Speak("Pixel colour copied to clipboard")
         }
         DialogOpen := 0
@@ -251,8 +258,8 @@ CopyProcessNameToClipboard() {
         If ConfirmationDialog == "Yes" {
             Try {
                 WinWaitActive("A")
+                Sleep 1000
                 A_Clipboard := WinGetProcessName("A")
-                Sleep 25
                 Speak("process name copied to clipboard")
             }
         }
@@ -268,8 +275,8 @@ CopyWindowClassToClipboard() {
         If ConfirmationDialog == "Yes" {
             Try {
                 WinWaitActive("A")
+                Sleep 1000
                 A_Clipboard := WinGetClass("A")
-                Sleep 25
                 Speak("Window class copied to clipboard")
             }
         }
@@ -285,8 +292,8 @@ CopyWindowIDToClipboard() {
         If ConfirmationDialog == "Yes" {
             Try {
                 WinWaitActive("A")
+                Sleep 1000
                 A_Clipboard := WinGetID("A")
-                Sleep 25
                 Speak("Window ID copied to clipboard")
             }
         }
@@ -302,8 +309,8 @@ CopyWindowTitleToClipboard() {
         If ConfirmationDialog == "Yes" {
             Try {
                 WinWaitActive("A")
+                Sleep 1000
                 A_Clipboard := WinGetTitle("A")
-                Sleep 25
                 Speak("Window title copied to clipboard")
             }
         }
@@ -331,14 +338,13 @@ DeleteHotspot() {
 FocusControl(ControlName, ControlNumber, ControlMenu) {
     Try {
         WinWaitActive("A")
+        Sleep 1000
         ControlFocus ControlName, "A"
         If ControlGetClassNN(ControlGetFocus("A")) = ControlName {
-            Sleep 25
             Speak(ControlName . " focused")
         }
     }
     Catch {
-        Sleep 25
         Speak("Control not found")
     }
 }
@@ -359,6 +365,7 @@ ManageHotkeys() {
         Hotkey "#^+X", "On"
         Hotkey "#^+Del", "Off"
         Hotkey "#^+F", "On"
+        Hotkey "#^+O", "On"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "Off"
         Hotkey "#^+S", "On"
@@ -381,6 +388,7 @@ ManageHotkeys() {
         Hotkey "#^+X", "On"
         Hotkey "#^+Del", "On"
         Hotkey "#^+F", "On"
+        Hotkey "#^+O", "On"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "On"
         Hotkey "#^+S", "On"
@@ -403,6 +411,7 @@ ManageHotkeys() {
         Hotkey "#^+X", "On"
         Hotkey "#^+Del", "Off"
         Hotkey "#^+F", "On"
+        Hotkey "#^+O", "On"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "Off"
         Hotkey "#^+S", "On"
@@ -410,6 +419,91 @@ ManageHotkeys() {
         Hotkey "+Tab", "Off"
         Hotkey "Ctrl", "On"
         Hotkey "#^+K", "On"
+    }
+}
+
+PerformOCR() {
+    Global AppName, DialogOpen
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        ConfirmationDialog := MsgBox("OCR the active Window and copy the results to clipboard?", AppName, 4)
+        If ConfirmationDialog == "Yes" {
+            AvailableLanguages := OCR.GetAvailableLanguages()
+            FirstAvailableLanguage := False
+            FirstOCRLanguage := False
+            PreferredLanguage := False
+            PreferredOCRLanguage := ""
+            Loop Parse, AvailableLanguages, "`n" {
+                If A_Index = 1 And A_LoopField != "" {
+                    FirstAvailableLanguage := True
+                    FirstOCRLanguage := A_LoopField
+                }
+                If SubStr(A_LoopField, 1, 3) = "en-" {
+                    PreferredLanguage := True
+                    PreferredOCRLanguage := A_LoopField
+                    Break
+                }
+            }
+            If FirstAvailableLanguage = False And PreferredLanguage = False {
+                Sleep 25
+                Speak("No OCR languages installed!")
+            }
+            Else {
+                If PreferredLanguage = False
+                OCRLanguage := FirstOCRLanguage
+                Else
+                OCRLanguage := PreferredOCRLanguage
+                OCRLines := Array()
+                OCRResult := OCR.FromWindow("A", OCRLanguage)
+                For OCRLine In OCRResult.Lines {
+                    LineWidth := 0
+                    For OCRWord In OCRLine.Words
+                    LineWidth += OCRWord.BoundingRect.W
+                    OCRLines.Push(Map("Text", OCRLine.Text, "X1", OCRLine.Words[1].BoundingRect.X, "Y1", OCRLine.Words[1].BoundingRect.Y, "X2", OCRLine.Words[1].BoundingRect.X + LineWidth, "Y2", OCRLine.Words[OCRLine.Words.Length].BoundingRect.Y + OCRLine.Words[OCRLine.Words.Length].BoundingRect.H))
+                }
+                ClipboardData := ""
+                ConfirmationDialog := MsgBox("Compensate for the position of the currently focused control?", AppName, 4)
+                If ConfirmationDialog == "Yes" {
+                    Try {
+                        WinWaitActive("A")
+                        Sleep 1000
+                        If ControlGetFocus("A") = 0 {
+                            Speak("Focused control not found")
+                        }
+                        Else {
+                            ControlGetPos &ControlX, &ControlY,,, ControlGetClassNN(ControlGetFocus("A")), "A"
+                            ClipboardData .= "Compensating for X " . ControlX . ", Y " . ControlY . "`r`n"
+                            For Value In OCRLines {
+                                Text := Value["Text"]
+                                X1Coordinate := Value["X1"] - ControlX
+                                Y1Coordinate := Value["Y1"] - ControlY
+                                X2Coordinate := Value["X2"] - ControlX
+                                Y2Coordinate := Value["Y2"] - ControlY
+                                ClipboardData .= "`"" . Text . "`"`r`nBeginning at X " . X1Coordinate . ", Y " . Y1Coordinate . "`r`nEnding approximately at X " . X2Coordinate . ", Y " . Y2Coordinate . "`r`n`r`n"
+                            }
+                        }
+                    }
+                }
+                Else {
+                    Sleep 1000
+                    For Value In OCRLines {
+                        Text := Value["Text"]
+                        X1Coordinate := Value["X1"]
+                        Y1Coordinate := Value["Y1"]
+                        X2Coordinate := Value["X2"]
+                        Y2Coordinate := Value["Y2"]
+                        ClipboardData .= "`"" . Text . "`"`r`nBeginning at X " . X1Coordinate . ", Y " . Y1Coordinate . "`r`nEnding approximately at X " . X2Coordinate . ", Y " . Y2Coordinate . "`r`n`r`n"
+                    }
+                }
+                ClipboardData := RTrim(ClipboardData, "`r`n")
+                A_Clipboard := ClipboardData
+                If OCRLines.Length = 1
+                Speak("1 OCR line copied to clipboard")
+                Else
+                Speak(OCRLines.Length . " OCR lines copied to clipboard")
+            }
+        }
+        DialogOpen := 0
     }
 }
 
@@ -463,6 +557,7 @@ SearchForImage() {
             }
             Try {
                 WinWaitActive("A")
+                Sleep 1000
                 If ImageSearch(&FoundX, &FoundY, 0, 0, WinWidth, WinHeight, ImageFile) {
                     ConfirmationDialog := MsgBox("Your image has been found at X " . FoundX . ", Y " . FoundY . ".`nCopy its coordinates to clipboard?", AppName, 4)
                     If ConfirmationDialog == "Yes" {
@@ -471,7 +566,6 @@ SearchForImage() {
                         If ConfirmationDialog == "Yes" {
                             WinWaitActive("A")
                             If ControlGetFocus("A") = 0 {
-                                Sleep 25
                                 Speak("Focused control not found")
                             }
                             Else {
@@ -494,7 +588,6 @@ SearchForImage() {
                             ClipboardData .= "`"" . ImageFile . "`", " . ImageXCoordinate . ", " . ImageYCoordinate
                         }
                         A_Clipboard := ClipboardData
-                        Sleep 25
                         Speak("Image coordinates copied to clipboard")
                     }
                 }
