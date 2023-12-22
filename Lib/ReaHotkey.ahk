@@ -242,6 +242,7 @@ Class ReaHotkey {
     Class ManageState {
         
         Static Call() {
+            Thread "NoTimers"
             Try
             If WinActive(ReaHotkey.PluginWinCriteria) {
                 ReaHotkey.AutoFocusStandaloneOverlay := True
@@ -278,6 +279,7 @@ Class ReaHotkey {
                 If ReaHotkey.FoundStandalone = False
                 ReaHotkey.AutoFocusStandaloneOverlay := True
             }
+            Thread "NoTimers", False
             If WinActive(ReaHotkey.PluginWinCriteria) {
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
@@ -299,7 +301,7 @@ Class ReaHotkey {
             Else If ReaHotkey.StandaloneWinCriteria != False And WinActive(ReaHotkey.StandaloneWinCriteria) {
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
-                If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
+                            If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
                     ReaHotkey.TurnStandaloneTimersOff()
                     ReaHotkey.TurnStandaloneHotkeysOff()
                     AccessibleMenu.CurrentMenu := False
