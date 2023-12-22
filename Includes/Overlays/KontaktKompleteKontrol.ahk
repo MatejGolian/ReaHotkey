@@ -173,14 +173,10 @@ Class KontaktKompleteKontrol {
         If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" Or PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x6E8192" {
             Click CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)
             Sleep 500
-            If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" Or PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x6E8192" {
-                AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
-                Sleep 2500
-            }
-            Else {
-                AccessibilityOverlay.Speak("Library Browser closed.")
-                Sleep 2500
-            }
+            If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" Or PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x6E8192"
+            AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
+            Else
+            AccessibilityOverlay.Speak("Library Browser closed.")
         }
     }
     
@@ -192,14 +188,10 @@ Class KontaktKompleteKontrol {
         If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x9A9A93" Or PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x999993" {
             Click CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)
             Sleep 500
-            If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x9A9A93" Or PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x999993" {
-                AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
-                Sleep 2500
-            }
-            Else {
-                AccessibilityOverlay.Speak("Library Browser closed.")
-                Sleep 2500
-            }
+            If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x9A9A93" Or PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x999993"
+            AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
+            Else
+            AccessibilityOverlay.Speak("Library Browser closed.")
         }
     }
     
@@ -207,19 +199,15 @@ Class KontaktKompleteKontrol {
         If PixelGetColor(997, 125) = "0x9A9A93" Or PixelGetColor(997, 125) = "0x999993" {
             Click 997, 125
             Sleep 500
-            If PixelGetColor(997, 125) = "0x9A9A93" Or PixelGetColor(997, 125) = "0x999993" {
-                AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
-                Sleep 2500
-            }
-            Else {
-                AccessibilityOverlay.Speak("Library Browser closed.")
-                Sleep 2500
-            }
+            If PixelGetColor(997, 125) = "0x9A9A93" Or PixelGetColor(997, 125) = "0x999993"
+            AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
+            Else
+            AccessibilityOverlay.Speak("Library Browser closed.")
         }
     }
     
     Static DetectPlugin() {
-    Critical
+        Critical
         If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
             KontaktKompleteKontrol.LoadPluginHeader("Komplete Kontrol")
             KontaktKompleteKontrol.CloseKKPluginBrowser()
@@ -272,7 +260,7 @@ Class KontaktKompleteKontrol {
     }
     
     Static GetPluginName() {
-    Critical
+        Critical
         If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
         Return "Komplete Kontrol"
         Else If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
@@ -471,14 +459,14 @@ Class KontaktKompleteKontrol {
     }
     
     Static OpenKontaktPluginMenu() {
-    Critical
+        Critical
         ReaHotkey.TurnPluginHotkeysOff()
         ReaHotkey.TurnPluginTimersOff("Kontakt/Komplete Kontrol")
         KontaktKompleteKontrol.OpenKontaktMenu()
     }
     
     Static OpenKontaktStandaloneMenu() {
-    Critical
+        Critical
         ReaHotkey.TurnStandaloneHotkeysOff()
         ReaHotkey.TurnStandaloneTimersOff("Kontakt")
         KontaktKompleteKontrol.OpenKontaktMenu()
