@@ -172,14 +172,14 @@ Class KontaktKompleteKontrol {
     Static CloseKKPluginBrowser() {
         If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" Or PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x6E8192" {
             Click CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)
-            Sleep 2000
+            Sleep 500
             If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" Or PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x6E8192" {
                 AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
-                Sleep 2000
+                Sleep 2500
             }
             Else {
                 AccessibilityOverlay.Speak("Library Browser closed.")
-                Sleep 2000
+                Sleep 2500
             }
         }
     }
@@ -191,14 +191,14 @@ Class KontaktKompleteKontrol {
     Static CloseKontaktPluginBrowser() {
         If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x9A9A93" Or PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x999993" {
             Click CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)
-            Sleep 2000
+            Sleep 500
             If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x9A9A93" Or PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x999993" {
                 AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
-                Sleep 2000
+                Sleep 2500
             }
             Else {
                 AccessibilityOverlay.Speak("Library Browser closed.")
-                Sleep 2000
+                Sleep 2500
             }
         }
     }
@@ -206,20 +206,20 @@ Class KontaktKompleteKontrol {
     Static CloseKontaktStandaloneBrowser() {
         If PixelGetColor(997, 125) = "0x9A9A93" Or PixelGetColor(997, 125) = "0x999993" {
             Click 997, 125
-            Sleep 2000
+            Sleep 500
             If PixelGetColor(997, 125) = "0x9A9A93" Or PixelGetColor(997, 125) = "0x999993" {
                 AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
-                Sleep 2000
+                Sleep 2500
             }
             Else {
                 AccessibilityOverlay.Speak("Library Browser closed.")
-                Sleep 2000
+                Sleep 2500
             }
         }
     }
     
     Static DetectPlugin() {
-        SetTimer ReaHotkey.ManageState, 0
+    Critical
         If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
             KontaktKompleteKontrol.LoadPluginHeader("Komplete Kontrol")
             KontaktKompleteKontrol.CloseKKPluginBrowser()
@@ -235,7 +235,6 @@ Class KontaktKompleteKontrol {
         Else {
             KontaktKompleteKontrol.LoadPluginHeader("Unknown")
         }
-        SetTimer ReaHotkey.ManageState, 100
     }
     
     Static FocusAIPluginClassicMix(MixButton) {
@@ -273,6 +272,7 @@ Class KontaktKompleteKontrol {
     }
     
     Static GetPluginName() {
+    Critical
         If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
         Return "Komplete Kontrol"
         Else If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
@@ -307,14 +307,13 @@ Class KontaktKompleteKontrol {
             ReaHotkey.FoundPlugin.Overlay.OverlayNumber := 1
         }
         If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay.ChildControls.Length > 0 And ReaHotkey.FoundPlugin.Overlay.ChildControls[1].Label != HeaderLabel {
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay.ChildControls.Length > 0 And HeaderLabel = "Komplete Kontrol"
+            If HeaderLabel = "Komplete Kontrol"
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KKPluginHeader.Clone()
-            Else If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay.ChildControls.Length > 0 And HeaderLabel = "Kontakt"
+            Else If HeaderLabel = "Kontakt"
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPluginHeader.Clone()
-            Else If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay.ChildControls.Length > 0 And HeaderLabel = "Kontakt Player"
+            Else If HeaderLabel = "Kontakt Player"
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPlayerPluginHeader.Clone()
             Else
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay.ChildControls.Length > 0
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := UnknownPluginHeader.Clone()
         }
     }
@@ -472,19 +471,17 @@ Class KontaktKompleteKontrol {
     }
     
     Static OpenKontaktPluginMenu() {
-        SetTimer ReaHotkey.ManageState, 0
+    Critical
         ReaHotkey.TurnPluginHotkeysOff()
         ReaHotkey.TurnPluginTimersOff("Kontakt/Komplete Kontrol")
         KontaktKompleteKontrol.OpenKontaktMenu()
-        SetTimer ReaHotkey.ManageState, 100
     }
     
     Static OpenKontaktStandaloneMenu() {
-        SetTimer ReaHotkey.ManageState, 0
+    Critical
         ReaHotkey.TurnStandaloneHotkeysOff()
         ReaHotkey.TurnStandaloneTimersOff("Kontakt")
         KontaktKompleteKontrol.OpenKontaktMenu()
-        SetTimer ReaHotkey.ManageState, 100
     }
     
     Static RedirectAIPluginCerberusKeyPress(OverlayControl) {

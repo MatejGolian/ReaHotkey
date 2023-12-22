@@ -3,7 +3,7 @@
 Global A_IsUnicode := True
 
 AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False) {
-    SetTimer ReaHotkey.ManageState, 0
+    Critical
     OverlayList := %Type%.GetOverlays(Name)
     UnknownProductCounter := 1
     For OverlayNumber, OverlayEntry In OverlayList {
@@ -109,7 +109,6 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             }
         }
     }
-    SetTimer ReaHotkey.ManageState, 100
 }
 
 AutoChangePluginOverlay(Name, CompensatePluginCoordinates := False, ReportChange := False) {
@@ -121,7 +120,7 @@ AutoChangeStandaloneOverlay(Name, ReportChange := False) {
 }
 
 ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
-    SetTimer ReaHotkey.ManageState, 0
+    Critical
     OverlayList := %Type%.GetOverlays(ReaHotkey.Found%Type%.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
     If ReaHotkey.Found%Type%.Overlay.OverlayNumber != OverlayNumber
@@ -143,7 +142,6 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
     }
     Else
     ReaHotkey.Found%Type%.Overlay.Focus()
-    SetTimer ReaHotkey.ManageState, 100
 }
 
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {

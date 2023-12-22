@@ -32,6 +32,7 @@ Class GenericPlugin {
     }
     
     Static DetectPlugin() {
+    Critical
         If FindImage("Images/Engine/Engine.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Engine"
             ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "Engine", ReaHotkey.FoundPlugin.ControlClass)
