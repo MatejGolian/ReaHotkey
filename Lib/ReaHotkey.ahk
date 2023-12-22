@@ -301,7 +301,7 @@ Class ReaHotkey {
             Else If ReaHotkey.StandaloneWinCriteria != False And WinActive(ReaHotkey.StandaloneWinCriteria) {
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
-                            If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
+                If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
                     ReaHotkey.TurnStandaloneTimersOff()
                     ReaHotkey.TurnStandaloneHotkeysOff()
                     AccessibleMenu.CurrentMenu := False
