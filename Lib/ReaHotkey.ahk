@@ -242,7 +242,7 @@ Class ReaHotkey {
     Class ManageState {
         
         Static Call() {
-            Thread "NoTimers"
+            Critical
             Try
             If WinActive(ReaHotkey.PluginWinCriteria) {
                 ReaHotkey.AutoFocusStandaloneOverlay := True
@@ -279,7 +279,7 @@ Class ReaHotkey {
                 If ReaHotkey.FoundStandalone = False
                 ReaHotkey.AutoFocusStandaloneOverlay := True
             }
-            Thread "NoTimers", False
+            Critical "Off"
             If WinActive(ReaHotkey.PluginWinCriteria) {
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
