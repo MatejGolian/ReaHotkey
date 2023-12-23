@@ -44,6 +44,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 * If you find that your keyboard or ReaHotkey itself is not responding as expected after interacting with Kontakt menus, press the Escape key.
 * Using any other zoom value in Kontakt than 100% may result in ReaHotkey not working correctly and the Kontakt plugin not being detected.
 * Attempting to open a Kontakt menu in the plug-in can fail at times, such as when trying to activate it directly after re-opening the REAPER FX chain window. When that happens, move around the interface a little and then try to open the given menu again.
+* ReaHotkey tries to automatically close the Library Browser in Kontakt and Komplete Kontrol whenever it appears, as it generally leads to better performance. That being said, the script may not always be able to determine whether the Library Browser is open or not. In that case you can close the Library Browser manually via the corresponding overlay buttons or menu items.
 
 ## <a name="dubler2"></a>Dubler 2 Accessibility
 
