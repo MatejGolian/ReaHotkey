@@ -2175,8 +2175,8 @@ Class HotspotCheckbox Extends ActivatableHotspot {
     ControlTypeLabel := "checkbox"
     HotkeyLabel := ""
     Label := ""
-    CheckedColor := ""
-    UncheckedColor := ""
+    CheckedColor := Array()
+    UncheckedColor := Array()
     CheckedString := "checked"
     UncheckedString := "not checked"
     UnknownStateString := "unknown state"
@@ -2185,20 +2185,29 @@ Class HotspotCheckbox Extends ActivatableHotspot {
     __New(Label, XCoordinate, YCoordinate, CheckedColor, UncheckedColor, OnFocusFunction := "", OnActivateFunction := "") {
         Super.__New(XCoordinate, YCoordinate, OnFocusFunction, OnActivateFunction)
         This.Label := Label
+        If Not CheckedColor Is Array
+        CheckedColor := Array(CheckedColor)
         This.CheckedColor := CheckedColor
+        If Not UncheckedColor Is Array
+        UncheckedColor := Array(UncheckedColor)
         This.UncheckedColor := UncheckedColor
     }
     
     CheckState() {
         Sleep 100
         CurrentColor := PixelGetColor(This.XCoordinate, This.YCoordinate)
-        If CurrentColor = This.CheckedColor
-        This.Checked := 1
-        Else If CurrentColor = This.UncheckedColor
-        This.Checked := 0
-        Else
+        For Color In This.CheckedColor
+        If CurrentColor = Color {
+            This.Checked := 1
+            Return 1
+        }
+        For Color In This.UncheckedColor
+        If CurrentColor = Color {
+            This.Checked := 0
+            Return 0
+        }
         This.Checked := -1
-        Return This.Checked
+        Return -1
     }
     
     Activate(CurrentControlID := 0) {
