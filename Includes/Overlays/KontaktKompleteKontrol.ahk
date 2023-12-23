@@ -171,10 +171,12 @@ Class KontaktKompleteKontrol {
     }
     
     Static CloseKKPluginBrowser() {
-        If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" Or PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x6E8192" Or PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x6F8193" {
+        Colors := ["0x6E8192", "0x6F8193", "0x97999A"]
+        For Color In Colors
+        If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = Color {
             Click CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)
             Sleep 500
-            If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x97999A" Or PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x6E8192" Or PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = "0x6F8193"
+            If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = Color
             AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
             Else
             AccessibilityOverlay.Speak("Library Browser closed.")
@@ -182,10 +184,12 @@ Class KontaktKompleteKontrol {
     }
     
     Static CloseKKStandaloneBrowser() {
-        If PixelGetColor(1002, 284) = "0x97999A" Or PixelGetColor(1002, 284) = "0x6E8192" Or PixelGetColor(1002, 284) = "0x6F8193" {
+        Colors := ["0x6E8192", "0x6F8193", "0x97999A"]
+        For Color In Colors
+        If PixelGetColor(1002, 284) = Color {
             Click 1002, 284
             Sleep 500
-            If PixelGetColor(1002, 284) = "0x97999A" Or PixelGetColor(1002, 284) = "0x6E8192" Or PixelGetColor(1002, 284) = "0x6F8193"
+            If PixelGetColor(1002, 284) = Color
             AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
             Else
             AccessibilityOverlay.Speak("Library Browser closed.")
@@ -197,10 +201,12 @@ Class KontaktKompleteKontrol {
     }
     
     Static CloseKontaktPluginBrowser() {
-        If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x9A9A93" Or PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x999993" {
+        Colors := ["0x999993", "0x9A9A93"]
+        For Color In Colors
+        If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = Color {
             Click CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)
             Sleep 500
-            If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x9A9A93" Or PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = "0x999993"
+            If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = Color
             AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
             Else
             AccessibilityOverlay.Speak("Library Browser closed.")
@@ -208,10 +214,12 @@ Class KontaktKompleteKontrol {
     }
     
     Static CloseKontaktStandaloneBrowser() {
-        If PixelGetColor(997, 125) = "0x9A9A93" Or PixelGetColor(997, 125) = "0x999993" {
+        Colors := ["0x999993", "0x9A9A93"]
+        For Color In Colors
+        If PixelGetColor(997, 125) = Color {
             Click 997, 125
             Sleep 500
-            If PixelGetColor(997, 125) = "0x9A9A93" Or PixelGetColor(997, 125) = "0x999993"
+            If PixelGetColor(997, 125) = Color
             AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
             Else
             AccessibilityOverlay.Speak("Library Browser closed.")
