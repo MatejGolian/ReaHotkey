@@ -87,12 +87,15 @@ Class ReaHotkey {
     Static GetPluginControl() {
         If WinActive(ReaHotkey.PluginWinCriteria) {
             Controls := WinGetControls(ReaHotkey.PluginWinCriteria)
-            For PluginEntry In Plugin.List {
+            For Index, Control In Controls
+            If Control = "reaperPluginHostWrapProc1" And Index < Controls.Length {
+                PluginControl := Controls[Index + 1]
+                For PluginEntry In Plugin.List
                 If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
-                For Control In Controls
                 For ControlClass In PluginEntry["ControlClasses"]
-                If RegExMatch(Control, ControlClass)
-                Return Control
+                If RegExMatch(PluginControl, ControlClass)
+                Return PluginControl
+                Break
             }
         }
         Return False
@@ -261,7 +264,7 @@ Class ReaHotkey {
                     ReaHotkey.FoundPlugin := False
                 }
                 Else {
-                    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ReaHotkey.GetPluginControl()))
+                    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
                 }
             }
             Else {
