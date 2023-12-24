@@ -316,13 +316,13 @@ Class KontaktKompleteKontrol {
         }
         If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay.ChildControls.Length > 0 And ReaHotkey.FoundPlugin.Overlay.ChildControls[1].Label != HeaderLabel {
             If HeaderLabel = "Komplete Kontrol"
-            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KKPluginHeader.Clone()
+            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KKPluginHeader
             Else If HeaderLabel = "Kontakt"
-            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPluginHeader.Clone()
+            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPluginHeader
             Else If HeaderLabel = "Kontakt Player"
-            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPlayerPluginHeader.Clone()
+            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPlayerPluginHeader
             Else
-            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := UnknownPluginHeader.Clone()
+            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := UnknownPluginHeader
         }
     }
     

@@ -12,11 +12,10 @@ Class Sforzando {
         PluginHeader.AddHotspotButton("Load instrument", 167, 78, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         PluginHeader.AddHotspotButton("Set polyphony", 511, 99, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         PluginHeader.AddHotspotButton("Set pitchbend range", 594, 99, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        If PluginInstance.Overlay.Label != "sforzando"
         PluginInstance.Overlay.Label := "sforzando"
         If PluginInstance.Overlay.ChildControls.Length = 0
         PluginInstance.Overlay.AddAccessibilityOverlay()
-        PluginInstance.Overlay.ChildControls[1] := PluginHeader.Clone()
+        PluginInstance.Overlay.ChildControls[1] := PluginHeader
     }
     
     Static InitStandalone(StandaloneInstance) {
@@ -24,11 +23,10 @@ Class Sforzando {
         StandaloneHeader.AddHotspotButton("Load instrument", 167, 78)
         StandaloneHeader.AddHotspotButton("Set polyphony", 511, 99)
         StandaloneHeader.AddHotspotButton("Set pitchbend range", 594, 99)
-        If StandaloneInstance.Overlay.Label != "sforzando"
         StandaloneInstance.Overlay.Label := "sforzando"
         If StandaloneInstance.Overlay.ChildControls.Length = 0
         StandaloneInstance.Overlay.AddAccessibilityOverlay()
-        StandaloneInstance.Overlay.ChildControls[1] := StandaloneHeader.Clone()
+        StandaloneInstance.Overlay.ChildControls[1] := StandaloneHeader
     }
     
 }
