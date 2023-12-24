@@ -32,7 +32,7 @@ Class GenericPlugin {
     }
     
     Static DetectPlugin() {
-    Critical
+        Critical
         If FindImage("Images/Engine/Engine.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Engine"
             ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "Engine", ReaHotkey.FoundPlugin.ControlClass)
@@ -51,6 +51,7 @@ Class GenericPlugin {
         If Plugin.FindName(PluginName) > 0 {
             ReaHotkey.TurnPluginTimersOff("Generic Plug-in")
             NewInstance := GenericPlugin.OverridePluginInstance(InstanceNumber, Plugin.Instantiate(PluginName, ControlClass))
+            GenericPlugin.AddTimers(NewInstance.Name)
             ReaHotkey.TurnPluginTimersOn(PluginName)
             Return NewInstance
         }
@@ -65,9 +66,27 @@ Class GenericPlugin {
                 NewInstance.InstanceNumber := InstanceNumber
                 NewInstance.PluginNumber := PluginInstance.PluginNumber
                 Plugin.Instances[InstanceIndex] := NewInstance
-                GenericPlugin.AddTimers(NewInstance.Name)
                 Return NewInstance
             }
+        }
+        Return False
+    }
+    
+    Static RemoveTimers(PluginName) {
+        PluginNumber := Plugin.FindName(PluginName)
+        If PluginNumber > 0 {
+            GenericEntry := False
+            GenericNumber := Plugin.FindName("Generic Plug-in")
+            If GenericNumber > 0
+            GenericEntry := Plugin.List[GenericNumber]
+            If GenericEntry != False
+            For GenericTimer In GenericEntry["Timers"]
+            For TimerNumber, PluginTimer In Plugin.List[PluginNumber]["Timers"]
+            If PluginTimer["Function"] = GenericTimer["Function"] {
+                Plugin.List[PluginNumber]["Timers"].RemoveAt(TimerNumber)
+                Break
+            }
+            Return True
         }
         Return False
     }
@@ -77,6 +96,7 @@ Class GenericPlugin {
         If PluginNumber > 0
         For InstanceIndex, PluginInstance In Plugin.Instances
         If PluginInstance Is Plugin And PluginInstance.InstanceNumber = InstanceNumber {
+            GenericPlugin.RemoveTimers(PluginInstance.Name)
             ReaHotkey.TurnPluginTimersOff()
             ReaHotkey.TurnPluginHotkeysOff()
             NewInstance := Plugin("Generic Plug-in", PluginInstance.ControlClass)
