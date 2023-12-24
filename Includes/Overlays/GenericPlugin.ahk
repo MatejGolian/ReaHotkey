@@ -100,9 +100,9 @@ Class GenericPlugin {
         If PluginNumber > 0
         For InstanceIndex, PluginInstance In Plugin.Instances
         If PluginInstance Is Plugin And PluginInstance.InstanceNumber = InstanceNumber {
-            GenericPlugin.RemoveTimers(PluginInstance.Name)
             ReaHotkey.TurnPluginTimersOff()
             ReaHotkey.TurnPluginHotkeysOff()
+            GenericPlugin.RemoveTimers(PluginInstance.Name)
             NewInstance := Plugin("Generic Plug-in", PluginInstance.ControlClass)
             NewInstance.InstanceNumber := InstanceNumber
             Plugin.Instances[InstanceIndex] := NewInstance
