@@ -9,24 +9,26 @@ Class GenericPlugin {
     }
     
     Static AddTimers(PluginName) {
-        PluginNumber := Plugin.FindName(PluginName)
-        If PluginNumber > 0 {
-            GenericEntry := False
-            GenericNumber := Plugin.FindName("Generic Plug-in")
-            If GenericNumber > 0
-            GenericEntry := Plugin.List[GenericNumber]
-            If GenericEntry != False
-            For TimerNumber, GenericTimer In GenericEntry["Timers"] {
-                TimerFound := False
-                For PluginTimer In Plugin.List[PluginNumber]["Timers"]
-                If PluginTimer["Function"] = GenericTimer["Function"] {
-                    TimerFound := True
-                    Break
+        If PluginName != "Generic Plug-in" {
+            PluginNumber := Plugin.FindName(PluginName)
+            If PluginNumber > 0 {
+                GenericEntry := False
+                GenericNumber := Plugin.FindName("Generic Plug-in")
+                If GenericNumber > 0
+                GenericEntry := Plugin.List[GenericNumber]
+                If GenericEntry != False
+                For TimerNumber, GenericTimer In GenericEntry["Timers"] {
+                    TimerFound := False
+                    For PluginTimer In Plugin.List[PluginNumber]["Timers"]
+                    If PluginTimer["Function"] = GenericTimer["Function"] {
+                        TimerFound := True
+                        Break
+                    }
+                    If TimerFound = False
+                    Plugin.List[PluginNumber]["Timers"].InsertAt(TimerNumber, GenericTimer)
                 }
-                If TimerFound = False
-                Plugin.List[PluginNumber]["Timers"].InsertAt(TimerNumber, GenericTimer)
+                Return True
             }
-            Return True
         }
         Return False
     }
@@ -73,18 +75,20 @@ Class GenericPlugin {
     }
     
     Static RemoveTimers(PluginName) {
-        PluginNumber := Plugin.FindName(PluginName)
-        If PluginNumber > 0 {
-            GenericEntry := False
-            GenericNumber := Plugin.FindName("Generic Plug-in")
-            If GenericNumber > 0
-            GenericEntry := Plugin.List[GenericNumber]
-            If GenericEntry != False
-            For GenericTimer In GenericEntry["Timers"]
-            For TimerNumber, PluginTimer In Plugin.List[PluginNumber]["Timers"]
-            If PluginTimer["Function"] = GenericTimer["Function"] {
-                Plugin.List[PluginNumber]["Timers"].RemoveAt(TimerNumber)
-                Break
+        If PluginName != "Generic Plug-in" {
+            PluginNumber := Plugin.FindName(PluginName)
+            If PluginNumber > 0 {
+                GenericEntry := False
+                GenericNumber := Plugin.FindName("Generic Plug-in")
+                If GenericNumber > 0
+                GenericEntry := Plugin.List[GenericNumber]
+                If GenericEntry != False
+                For GenericTimer In GenericEntry["Timers"]
+                For TimerNumber, PluginTimer In Plugin.List[PluginNumber]["Timers"]
+                If PluginTimer["Function"] = GenericTimer["Function"] {
+                    Plugin.List[PluginNumber]["Timers"].RemoveAt(TimerNumber)
+                    Break
+                }
             }
             Return True
         }
