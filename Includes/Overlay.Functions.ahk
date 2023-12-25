@@ -165,6 +165,24 @@ ChooseStandaloneOverlay(*) {
     ChooseOverlay("Standalone")
 }
 
+CompensateFocusedControlXCoordinate(ControlXCoordinate) {
+    Try
+    ControlGetPos &FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A"
+    Catch
+    Return False
+    ControlXCoordinate := FocusedControlXCoordinate + ControlXCoordinate
+    Return ControlXCoordinate
+}
+
+CompensateFocusedControlYCoordinate(ControlYCoordinate) {
+    Try
+    ControlGetPos &FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A"
+    Catch
+    Return False
+    ControlYCoordinate := FocusedControlYCoordinate + ControlYCoordinate
+    Return ControlYCoordinate
+}
+
 CompensatePluginPointCoordinates(PluginControl) {
     If !HasProp(PluginControl, "OriginalXCoordinate")
     PluginControl.OriginalXCoordinate := PluginControl.XCoordinate
