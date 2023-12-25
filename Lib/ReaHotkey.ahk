@@ -299,6 +299,7 @@ Class ReaHotkey {
     Class ManageState {
         
         Static Call() {
+            Static CurrentPluginName := False, PreviousPluginName := False, CurrentStandaloneName := False, PreviousStandaloneName := False
             Critical
             Try
             If WinActive(ReaHotkey.PluginWinCriteria) {
@@ -346,6 +347,14 @@ Class ReaHotkey {
                     AccessibleMenu.CurrentMenu := False
                 }
                 Else {
+                    CurrentPluginName := ReaHotkey.FoundPlugin.Name
+                    If PreviousPluginName = False
+                    PreviousPluginName := CurrentPluginName
+                    If CurrentPluginName != PreviousPluginName {
+                        ReaHotkey.TurnPluginTimersOff(PreviousPluginName)
+                        Sleep 250
+                    }
+                    PreviousPluginName := CurrentPluginName
                     ReaHotkey.TurnPluginTimersOn(ReaHotkey.FoundPlugin.Name)
                     Sleep 250
                     If ReaHotkey.AutoFocusPluginOverlay = True {
@@ -364,6 +373,14 @@ Class ReaHotkey {
                     AccessibleMenu.CurrentMenu := False
                 }
                 Else {
+                    CurrentStandaloneName := ReaHotkey.FoundStandalone.Name
+                    If PreviousStandaloneName = False
+                    PreviousStandaloneName := CurrentStandaloneName
+                    If CurrentStandaloneName != PreviousStandaloneName {
+                        ReaHotkey.TurnStandaloneTimersOff(PreviousStandaloneName)
+                        Sleep 250
+                    }
+                    PreviousStandaloneName := CurrentStandaloneName
                     ReaHotkey.TurnStandaloneTimersOn(ReaHotkey.FoundStandalone.Name)
                     Sleep 250
                     If ReaHotkey.AutoFocusStandaloneOverlay = True {
@@ -379,6 +396,7 @@ Class ReaHotkey {
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 AccessibleMenu.CurrentMenu := False
+                Sleep 250
             }
         }
         
