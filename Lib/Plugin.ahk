@@ -140,7 +140,7 @@ Class Plugin {
             PluginInstance := Plugin(Plugin.List[PluginNumber]["Name"], ControlClass)
             Return PluginInstance
         }
-        Return Plugin("", ControlClass)
+        Return False
     }
     
     Static GetHotkeys(PluginName) {
@@ -186,7 +186,7 @@ Class Plugin {
             PluginInstance := Plugin(PluginName, ControlClass)
             Return PluginInstance
         }
-        Return Plugin("", ControlClass)
+        Return False
     }
     
     Static Register(PluginName, ControlClasses, InitFunction := "", SingleInstance := False, Chooser := True, NoHotkeys := False) {

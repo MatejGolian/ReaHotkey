@@ -127,7 +127,7 @@ Class Standalone {
             ProgramInstance := Standalone(Standalone.List[ProgramNumber]["Name"], WinGetID("A"))
             Return ProgramInstance
         }
-        Return Standalone("", WinID)
+        Return False
     }
     
     Static GetHotkeys(ProgramName) {

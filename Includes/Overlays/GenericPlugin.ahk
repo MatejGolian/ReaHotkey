@@ -3,7 +3,7 @@
 Class GenericPlugin {
     
     Static Init() {
-        Plugin.Register("Generic Plug-in", "^(?!(#327701)|(Button[0-9]+)|(ComboBox[0-9]+)|(Edit[0-9]+)|(REAPERknob[0-9]+)|(reaperPluginHostWrapProc[0-9]+)|(Static[0-9]+)|(SysHeader321)|(SysListView321)|(SysTreeView321)|(Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1)).*$",, True, False, True)
+        Plugin.Register("Generic Plug-in", "^(?!(Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1)).*$",, True, False, True)
         Plugin.RegisterOverlay("Generic Plug-in", AccessibilityOverlay())
         Plugin.SetTimer("Generic Plug-in", ObjBindMethod(GenericPlugin, "DetectPlugin"), 100)
     }
@@ -35,15 +35,11 @@ Class GenericPlugin {
     
     Static DetectPlugin() {
         Critical
-        If ReaHotkey.GetPluginControl() And FindImage("Images/Engine/Engine.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
+        If FindImage("Images/Engine/Engine.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Engine"
             ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "Engine", ReaHotkey.FoundPlugin.ControlClass)
         }
-        Else If ReaHotkey.GetPluginControl() And FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Kontakt/Komplete Kontrol"
-            ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "Kontakt/Komplete Kontrol", ReaHotkey.FoundPlugin.ControlClass)
-        }
-        Else If ReaHotkey.GetPluginControl() And FindImage("Images/Sforzando/Sforzando.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
+        Else If FindImage("Images/Sforzando/Sforzando.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "sforzando"
             ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "sforzando", ReaHotkey.FoundPlugin.ControlClass)
         }

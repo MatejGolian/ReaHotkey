@@ -101,6 +101,54 @@ Class ReaHotkey {
         Return False
     }
     
+    Static InPluginControl(ControlToCheck) {
+        If WinActive(ReaHotkey.PluginWinCriteria) {
+            PluginControl := ReaHotkey.GetPluginControl()
+            If PluginControl != False {
+                Controls := WinGetControls(ReaHotkey.PluginWinCriteria)
+                PluginPosition := 0
+                For Index, Control In Controls
+                If Control = PluginControl {
+                    PluginPosition := Index
+                    Break
+                }
+                CheckPosition := 0
+                For Index, Control In Controls
+                If Control = ControlToCheck {
+                    CheckPosition := Index
+                    Break
+                }
+                If PluginPosition > 0 And CheckPosition > 0 And PluginPosition <= CheckPosition {
+                    ReaperControlPatterns := ["^#327701$", "^Button[0-9]+$", "^ComboBox[0-9]+$", "^Edit[0-9]+$", "^REAPERknob[0-9]+$", "^reaperPluginHostWrapProc[0-9]+$", "^Static[0-9]+$", "^SysHeader321$", "^SysListView321$", "^SysTreeView321$"]
+                    For ReaperControlPattern In ReaperControlPatterns
+                    If RegExMatch(ControlToCheck, ReaperControlPattern)
+                    Return False
+                    PluginInfo := Map("X1", 0, "Y1", 0, "X2", 0, "Y2", 0)
+                    CheckInfo := Map("X1", 0, "Y1", 0, "X2", 0, "Y2", 0)
+                    XPos := 0
+                    YPos := 0
+                    Width := 0
+                    Height := 0
+                    ControlGetPos &XPos, &YPos, &Width, &Height, PluginControl, ReaHotkey.PluginWinCriteria
+                    PluginInfo["X1"] := XPos
+                    PluginInfo["Y1"] := YPos
+                    PluginInfo["X2"] := XPos + Width
+                    PluginInfo["Y2"] := YPos + Height
+                    ControlGetPos &XPos, &YPos, &Width, &Height, ControlToCheck, ReaHotkey.PluginWinCriteria
+                    CheckInfo["X1"] := XPos
+                    CheckInfo["Y1"] := YPos
+                    CheckInfo["X2"] := XPos + Width
+                    CheckInfo["Y2"] := YPos + Height
+                    If CheckInfo["X1"] >= PluginInfo["X1"] And CheckInfo["Y1"] >= PluginInfo["Y1"] And CheckInfo["X2"] <= PluginInfo["X2"] And CheckInfo["Y2"] <= PluginInfo["Y2"]
+                    Return True
+                    Else
+                    Return False
+                }
+            }
+        }
+        Return False
+    }
+    
     Static TurnHotkeysOff(Type) {
         If Type = "Plugin" Or Type = "Standalone" {
             If Type = "Plugin"
@@ -259,12 +307,12 @@ Class ReaHotkey {
                     ReaHotkey.AutoFocusPluginOverlay := True
                     ReaHotkey.FoundPlugin := False
                 }
-                Else If !Plugin.FindClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) {
+                Else If !ReaHotkey.InPluginControl(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) {
                     ReaHotkey.AutoFocusPluginOverlay := True
                     ReaHotkey.FoundPlugin := False
                 }
                 Else {
-                    ReaHotkey.FoundPlugin := Plugin.GetByClass(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)))
+                    ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
                 }
             }
             Else {
