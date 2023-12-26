@@ -155,7 +155,7 @@ Class ReaHotkey {
         Return False
     }
     
-    Static TurnHotkeysOff(Type) {
+    Static TurnHotkeysOff(Type, Name := "") {
         If Type = "Plugin" Or Type = "Standalone" {
             If Type = "Plugin"
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
@@ -172,11 +172,20 @@ Class ReaHotkey {
             Hotkey "Enter", "Off"
             Hotkey "Space", "Off"
             Hotkey "Ctrl", "Off"
-            For HotkeyEntry In %Type%.GetList()
-            For DefinedHotkey In HotkeyEntry["Hotkeys"]
-            If DefinedHotkey["Action"] != "Off" {
-                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-                Hotkey DefinedHotkey["KeyName"], "Off"
+            If Name = "" {
+                For HotkeyEntry In %Type%.GetList()
+                For DefinedHotkey In HotkeyEntry["Hotkeys"]
+                If DefinedHotkey["Action"] != "Off" {
+                    Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
+                    Hotkey DefinedHotkey["KeyName"], "Off"
+                }
+            }
+            Else {
+                For DefinedHotkey In %Type%.GetHotkeys(Name)
+                If DefinedHotkey["Action"] != "Off" {
+                    Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
+                    Hotkey DefinedHotkey["KeyName"], "Off"
+                }
             }
             If WinActive(ReaHotkey.PluginWinCriteria)
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
@@ -185,7 +194,7 @@ Class ReaHotkey {
         }
     }
     
-    Static TurnHotkeysOn(Type) {
+    Static TurnHotkeysOn(Type, Name := "") {
         If Type = "Plugin" Or Type = "Standalone"
         If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.NoHotkeys = False {
             If Type = "Plugin"
@@ -203,8 +212,17 @@ Class ReaHotkey {
             Hotkey "Enter", "On"
             Hotkey "Space", "On"
             Hotkey "Ctrl", "On"
-            If ReaHotkey.Found%Type% Is %Type% {
-                For DefinedHotkey In ReaHotkey.Found%Type%.GetHotkeys()
+            If Name = "" {
+                If ReaHotkey.Found%Type% Is %Type% {
+                    For DefinedHotkey In ReaHotkey.Found%Type%.GetHotkeys()
+                    If DefinedHotkey["Action"] != "Off" {
+                        Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
+                        Hotkey DefinedHotkey["KeyName"], "On"
+                    }
+                }
+            }
+            Else {
+                For DefinedHotkey In %Type%.GetHotkeys(Name)
                 If DefinedHotkey["Action"] != "Off" {
                     Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
                     Hotkey DefinedHotkey["KeyName"], "On"
@@ -217,12 +235,12 @@ Class ReaHotkey {
         }
     }
     
-    Static TurnPluginHotkeysOff() {
-        ReaHotkey.TurnHotkeysOff("Plugin")
+    Static TurnPluginHotkeysOff(Name := "") {
+        ReaHotkey.TurnHotkeysOff("Plugin", Name)
     }
     
-    Static TurnPluginHotkeysOn() {
-        ReaHotkey.TurnHotkeysOn("Plugin")
+    Static TurnPluginHotkeysOn(Name := "") {
+        ReaHotkey.TurnHotkeysOn("Plugin", Name)
     }
     
     Static TurnPluginTimersOff(Name := "") {
@@ -233,12 +251,12 @@ Class ReaHotkey {
         ReaHotkey.TurnTimersOn("Plugin", Name)
     }
     
-    Static TurnStandaloneHotkeysOff() {
-        ReaHotkey.TurnHotkeysOff("Standalone")
+    Static TurnStandaloneHotkeysOff(Name := "") {
+        ReaHotkey.TurnHotkeysOff("Standalone", Name)
     }
     
-    Static TurnStandaloneHotkeysOn() {
-        ReaHotkey.TurnHotkeysOn("Standalone")
+    Static TurnStandaloneHotkeysOn(Name := "") {
+        ReaHotkey.TurnHotkeysOn("Standalone", Name)
     }
     
     Static TurnStandaloneTimersOff(Name := "") {
@@ -352,6 +370,7 @@ Class ReaHotkey {
                     PreviousPluginName := CurrentPluginName
                     If CurrentPluginName != PreviousPluginName {
                         ReaHotkey.TurnPluginTimersOff(PreviousPluginName)
+                        ReaHotkey.TurnPluginHotkeysOff(PreviousPluginName)
                         Sleep 250
                     }
                     PreviousPluginName := CurrentPluginName
@@ -378,6 +397,7 @@ Class ReaHotkey {
                     PreviousStandaloneName := CurrentStandaloneName
                     If CurrentStandaloneName != PreviousStandaloneName {
                         ReaHotkey.TurnStandaloneTimersOff(PreviousStandaloneName)
+                        ReaHotkey.TurnStandaloneHotkeysOff(PreviousStandaloneName)
                         Sleep 250
                     }
                     PreviousStandaloneName := CurrentStandaloneName
@@ -396,7 +416,6 @@ Class ReaHotkey {
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 AccessibleMenu.CurrentMenu := False
-                Sleep 250
             }
         }
         
