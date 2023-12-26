@@ -129,26 +129,7 @@ Class ReaHotkey {
                     For ReaperControlPattern In ReaperControlPatterns
                     If RegExMatch(ControlToCheck, ReaperControlPattern)
                     Return False
-                    PluginInfo := Map("X1", 0, "Y1", 0, "X2", 0, "Y2", 0)
-                    CheckInfo := Map("X1", 0, "Y1", 0, "X2", 0, "Y2", 0)
-                    XPos := 0
-                    YPos := 0
-                    Width := 0
-                    Height := 0
-                    ControlGetPos &XPos, &YPos, &Width, &Height, PluginControl, ReaHotkey.PluginWinCriteria
-                    PluginInfo["X1"] := XPos
-                    PluginInfo["Y1"] := YPos
-                    PluginInfo["X2"] := XPos + Width
-                    PluginInfo["Y2"] := YPos + Height
-                    ControlGetPos &XPos, &YPos, &Width, &Height, ControlToCheck, ReaHotkey.PluginWinCriteria
-                    CheckInfo["X1"] := XPos
-                    CheckInfo["Y1"] := YPos
-                    CheckInfo["X2"] := XPos + Width
-                    CheckInfo["Y2"] := YPos + Height
-                    If CheckInfo["X1"] >= PluginInfo["X1"] And CheckInfo["Y1"] >= PluginInfo["Y1"] And CheckInfo["X2"] <= PluginInfo["X2"] And CheckInfo["Y2"] <= PluginInfo["Y2"]
                     Return True
-                    Else
-                    Return False
                 }
             }
         }
