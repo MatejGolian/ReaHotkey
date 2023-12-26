@@ -300,41 +300,49 @@ Class ReaHotkey {
         Static Call() {
             Static CurrentPluginName := False, PreviousPluginName := False, CurrentStandaloneName := False, PreviousStandaloneName := False
             Critical
-            Try
-            If WinActive(ReaHotkey.PluginWinCriteria) {
-                ReaHotkey.AutoFocusStandaloneOverlay := True
-                ReaHotkey.FoundStandalone := False
-                ReaHotkey.StandaloneWinCriteria := False
-                If !ReaHotkey.GetPluginControl() {
-                    ReaHotkey.AutoFocusPluginOverlay := True
-                    ReaHotkey.FoundPlugin := False
-                }
-                Else If !ControlGetFocus(ReaHotkey.PluginWinCriteria) {
-                    ReaHotkey.AutoFocusPluginOverlay := True
-                    ReaHotkey.FoundPlugin := False
-                }
-                Else If !ReaHotkey.InPluginControl(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) {
-                    ReaHotkey.AutoFocusPluginOverlay := True
-                    ReaHotkey.FoundPlugin := False
+            Try {
+                If WinActive(ReaHotkey.PluginWinCriteria) {
+                    ReaHotkey.AutoFocusStandaloneOverlay := True
+                    ReaHotkey.FoundStandalone := False
+                    ReaHotkey.StandaloneWinCriteria := False
+                    If !ReaHotkey.GetPluginControl() {
+                        ReaHotkey.AutoFocusPluginOverlay := True
+                        ReaHotkey.FoundPlugin := False
+                    }
+                    Else If !ControlGetFocus(ReaHotkey.PluginWinCriteria) {
+                        ReaHotkey.AutoFocusPluginOverlay := True
+                        ReaHotkey.FoundPlugin := False
+                    }
+                    Else If !ReaHotkey.InPluginControl(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) {
+                        ReaHotkey.AutoFocusPluginOverlay := True
+                        ReaHotkey.FoundPlugin := False
+                    }
+                    Else {
+                        ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
+                    }
                 }
                 Else {
-                    ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
+                    ReaHotkey.AutoFocusPluginOverlay := True
+                    ReaHotkey.FoundPlugin := False
+                    ReaHotkey.FoundStandalone := False
+                    ReaHotkey.StandaloneWinCriteria := False
+                    For Program In Standalone.List
+                    For WinCriterion In Program["WinCriteria"]
+                    If WinActive(WinCriterion) {
+                        ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+                        ReaHotkey.StandaloneWinCriteria := WinCriterion
+                        Break 2
+                    }
+                    If ReaHotkey.FoundStandalone = False
+                    ReaHotkey.AutoFocusStandaloneOverlay := True
                 }
             }
-            Else {
+            Catch {
                 ReaHotkey.AutoFocusPluginOverlay := True
                 ReaHotkey.FoundPlugin := False
+                ReaHotkey.AutoFocusStandaloneOverlay := True
                 ReaHotkey.FoundStandalone := False
                 ReaHotkey.StandaloneWinCriteria := False
-                For Program In Standalone.List
-                For WinCriterion In Program["WinCriteria"]
-                If WinActive(WinCriterion) {
-                    ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
-                    ReaHotkey.StandaloneWinCriteria := WinCriterion
-                    Break 2
-                }
-                If ReaHotkey.FoundStandalone = False
-                ReaHotkey.AutoFocusStandaloneOverlay := True
             }
             Critical "Off"
             If WinActive(ReaHotkey.PluginWinCriteria) {
