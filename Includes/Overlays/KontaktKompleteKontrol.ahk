@@ -88,7 +88,7 @@ Class KontaktKompleteKontrol {
         Standalone.Register("Kontakt Content Missing", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
         
         KontaktStandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
-        KontaktStandaloneContentMissingOverlay.AddHotspotButton("Browse Folder", 226, 372)
+        KontaktStandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372)
         Standalone.RegisterOverlay("Kontakt Content Missing", KontaktStandaloneContentMissingOverlay)
         
         NoProductOverlay := AccessibilityOverlay("None")
