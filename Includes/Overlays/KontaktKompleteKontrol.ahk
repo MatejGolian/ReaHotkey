@@ -4,18 +4,14 @@ Class KontaktKompleteKontrol {
     
     Static Init() {
         
-        Plugin.Register("Komplete Kontrol Preferences", "^NIChildWindow[0-9A-F]{17}$",, False, False)
         Plugin.Register("Kontakt/Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$",, True)
-        Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe")
-        Standalone.Register("Komplete Kontrol Preferences", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(KontaktKompleteKontrol, "FocusKKStandalonePreferenceTab"))
-        Standalone.Register("Kontakt", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectPlugin"), 500)
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 500)
         
-        KKStandaloneHeader := AccessibilityOverlay("Komplete Kontrol")
-        KKStandaloneHeader.AddHotspotButton("File menu", 24, 41)
-        KKStandaloneHeader.AddHotspotButton("Edit menu", 60, 41)
-        KKStandaloneHeader.AddHotspotButton("View menu", 91, 41)
-        KKStandaloneHeader.AddHotspotButton("Controller menu", 146, 41)
-        KKStandaloneHeader.AddHotspotButton("Help menu", 202, 41)
+        Plugin.Register("Komplete Kontrol Preferences", "^NIChildWindow[0-9A-F]{17}$",, False, False)
+        Plugin.SetHotkey("Komplete Kontrol Preferences", "!F4", ObjBindMethod(KontaktKompleteKontrol, "CloseKKPluginPreferences"))
+        Plugin.SetHotkey("Komplete Kontrol Preferences", "Escape", ObjBindMethod(KontaktKompleteKontrol, "CloseKKPluginPreferences"))
+        Plugin.SetTimer("Komplete Kontrol Preferences", ObjBindMethod(KontaktKompleteKontrol, "DetectKKPluginPreferences"), 250)
         
         KKPreferenceOverlay := AccessibilityOverlay()
         KKPreferenceTabControl := KKPreferenceOverlay.AddTabControl()
@@ -39,6 +35,20 @@ Class KontaktKompleteKontrol {
         KKPreferencePluginTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol, "CloseKKPluginPreferences"))
         KKPreferenceTabControl.AddTabs(KKPreferenceMIDITab, KKPreferenceGeneralTab, KKPreferenceLibraryTab, KKPreferencePluginTab)
         Plugin.RegisterOverlay("Komplete Kontrol Preferences", KKPreferenceOverlay)
+        
+        Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe")
+        Standalone.SetTimer("Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "CloseKKStandaloneBrowser"), 500)
+        
+        KKStandaloneHeader := AccessibilityOverlay("Komplete Kontrol")
+        KKStandaloneHeader.AddHotspotButton("File menu", 24, 41)
+        KKStandaloneHeader.AddHotspotButton("Edit menu", 60, 41)
+        KKStandaloneHeader.AddHotspotButton("View menu", 91, 41)
+        KKStandaloneHeader.AddHotspotButton("Controller menu", 146, 41)
+        KKStandaloneHeader.AddHotspotButton("Help menu", 202, 41)
+        Standalone.RegisterOverlay("Komplete Kontrol", KKStandaloneHeader)
+        
+        Standalone.Register("Komplete Kontrol Preferences", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(KontaktKompleteKontrol, "FocusKKStandalonePreferenceTab"))
+        Standalone.SetHotkey("Komplete Kontrol Preferences", "^,", ObjBindMethod(KontaktKompleteKontrol, "ManageKKStandalonePreferenceWindow"))
         
         KKPreferenceOverlay := AccessibilityOverlay()
         KKPreferenceTabControl := KKPreferenceOverlay.AddTabControl()
@@ -65,11 +75,21 @@ Class KontaktKompleteKontrol {
         KKPreferenceTabControl.AddTabs(KKPreferenceAudioTab, KKPreferenceMIDITab, KKPreferenceGeneralTab, KKPreferenceLibraryTab, KKPreferencePluginTab)
         Standalone.RegisterOverlay("Komplete Kontrol Preferences", KKPreferenceOverlay)
         
+        Standalone.Register("Kontakt", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
+        Standalone.SetTimer("Kontakt", ObjBindMethod(KontaktKompleteKontrol, "CloseKontaktStandaloneBrowser"), 500)
+        
         KontaktStandaloneHeader := AccessibilityOverlay("Kontakt")
         KontaktStandaloneHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
         KontaktStandaloneHeader.AddCustomButton("LIBRARY Browser On/Off", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
         KontaktStandaloneHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
         KontaktStandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktStandaloneMenu"))
+        Standalone.RegisterOverlay("Kontakt", KontaktStandaloneHeader)
+        
+        Standalone.Register("Kontakt Content Missing", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
+        
+        KontaktStandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
+        KontaktStandaloneContentMissingOverlay.AddHotspotButton("Browse Folder", 226, 372)
+        Standalone.RegisterOverlay("Kontakt Content Missing", KontaktStandaloneContentMissingOverlay)
         
         NoProductOverlay := AccessibilityOverlay("None")
         NoProductOverlay.Metadata := Map("Product", "None")
@@ -133,19 +153,6 @@ Class KontaktKompleteKontrol {
         TalosOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
         TalosOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", TalosOverlay)
-        
-        Plugin.SetHotkey("Komplete Kontrol Preferences", "!F4", ObjBindMethod(KontaktKompleteKontrol, "CloseKKPluginPreferences"))
-        Plugin.SetHotkey("Komplete Kontrol Preferences", "Escape", ObjBindMethod(KontaktKompleteKontrol, "CloseKKPluginPreferences"))
-        Plugin.SetTimer("Komplete Kontrol Preferences", ObjBindMethod(KontaktKompleteKontrol, "DetectKKPluginPreferences"), 250)
-        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectPlugin"), 500)
-        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 500)
-        
-        Standalone.RegisterOverlay("Komplete Kontrol", KKStandaloneHeader)
-        Standalone.RegisterOverlay("Kontakt", KontaktStandaloneHeader)
-        
-        Standalone.SetHotkey("Komplete Kontrol Preferences", "^,", ObjBindMethod(KontaktKompleteKontrol, "ManageKKStandalonePreferenceWindow"))
-        Standalone.SetTimer("Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "CloseKKStandaloneBrowser"), 500)
-        Standalone.SetTimer("Kontakt", ObjBindMethod(KontaktKompleteKontrol, "CloseKontaktStandaloneBrowser"), 500)
         
     }
     
@@ -494,7 +501,7 @@ Class KontaktKompleteKontrol {
         Return 0
     }
     
-    Static OpenKontaktMenu() {
+    Static OpenKontaktMenu(Type) {
         Loop {
             KeyCombo := KeyWaitCombo()
             If KeyCombo = "+Tab" {
@@ -523,6 +530,10 @@ Class KontaktKompleteKontrol {
                 If SingleKey = "Escape"
                 Break
             }
+            If Type = "Plugin" And Not WinActive(ReaHotkey.PluginWinCriteria)
+            Break
+            If type = "Standalone" And Not WinActive("Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
+            Break
         }
     }
     
@@ -530,14 +541,14 @@ Class KontaktKompleteKontrol {
         Critical
         ReaHotkey.TurnPluginHotkeysOff()
         ReaHotkey.TurnPluginTimersOff("Kontakt/Komplete Kontrol")
-        KontaktKompleteKontrol.OpenKontaktMenu()
+        KontaktKompleteKontrol.OpenKontaktMenu("Plugin")
     }
     
     Static OpenKontaktStandaloneMenu() {
         Critical
         ReaHotkey.TurnStandaloneHotkeysOff()
         ReaHotkey.TurnStandaloneTimersOff("Kontakt")
-        KontaktKompleteKontrol.OpenKontaktMenu()
+        KontaktKompleteKontrol.OpenKontaktMenu("Standalone")
     }
     
     Static RedirectAIPluginCerberusKeyPress(OverlayControl) {
