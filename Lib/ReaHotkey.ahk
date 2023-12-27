@@ -349,6 +349,7 @@ Class ReaHotkey {
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 If Not ReaHotkey.FoundPlugin Is Plugin Or WinExist("ahk_class #32768") {
+                    PreviousPluginName := False
                     ReaHotkey.TurnPluginTimersOff()
                     ReaHotkey.TurnPluginHotkeysOff()
                     AccessibleMenu.CurrentMenu := False
@@ -376,6 +377,7 @@ Class ReaHotkey {
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
                 If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
+                    PreviousStandaloneName := False
                     ReaHotkey.TurnStandaloneTimersOff()
                     ReaHotkey.TurnStandaloneHotkeysOff()
                     AccessibleMenu.CurrentMenu := False
@@ -400,8 +402,10 @@ Class ReaHotkey {
                 }
             }
             Else {
+                PreviousPluginName := False
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
+                PreviousStandaloneName := False
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 AccessibleMenu.CurrentMenu := False
