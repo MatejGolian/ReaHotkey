@@ -3,7 +3,7 @@
 Class GenericPlugin {
     
     Static Init() {
-        Plugin.Register("Generic Plug-in", "^(?!(Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1)).*$",, True, False, True)
+        Plugin.Register("Generic Plug-in", ".*",, True, False, True)
         Plugin.RegisterOverlay("Generic Plug-in", AccessibilityOverlay())
         Plugin.SetTimer("Generic Plug-in", ObjBindMethod(GenericPlugin, "DetectPlugin"), 100)
     }
