@@ -10,8 +10,8 @@ Standalone.DefaultOverlay.AddStaticText("No overlay defined")
 Standalone.ChooserOverlay := AccessibilityOverlay()
 Standalone.ChooserOverlay.AddCustomButton("Choose overlay",, ChooseStandaloneOverlay)
 
-#Include Overlays/GenericPlugin.ahk
 #Include Overlays/Dubler2.ahk
-#Include Overlays/Engine.ahk
 #Include Overlays/KontaktKompleteKontrol.ahk
+#Include Overlays/GenericPlugin.ahk
+#Include Overlays/Engine.ahk
 #Include Overlays/Sforzando.ahk
