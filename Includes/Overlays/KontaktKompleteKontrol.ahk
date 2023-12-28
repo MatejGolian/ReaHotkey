@@ -274,10 +274,10 @@ Class KontaktKompleteKontrol {
     
     Static DetectKKPluginPreferences() {
         Critical
-        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Preferences" And WinExist("A") And WinGetTitle("A") != "Preferences"
+        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Preferences" And WinExist(ReaHotkey.PluginWinCriteria) And WinGetTitle(ReaHotkey.PluginWinCriteria) != "Preferences"
         ReaHotkey.FoundPlugin.NoHotkeys := True
         Else
-        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Preferences" And WinExist("A") And WinGetTitle("A") = "Preferences" And ReaHotkey.FoundPlugin.NoHotkeys = True
+        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Preferences" And WinExist(ReaHotkey.PluginWinCriteria) And WinGetTitle(ReaHotkey.PluginWinCriteria) = "Preferences" And ReaHotkey.FoundPlugin.NoHotkeys = True
         ReaHotkey.FoundPlugin.NoHotkeys := False
     }
     
@@ -503,51 +503,45 @@ Class KontaktKompleteKontrol {
     
     Static OpenKontaktMenu(Type) {
         Loop {
-            KeyCombo := KeyWaitCombo()
-            If KeyCombo = "+Tab" {
-                SendInput "+{Tab}"
-            }
-            Else If KeyCombo = "!F4" {
-                SendInput "{Escape}"
-                SendInput "!{F4}"
-                Break
-            }
-            Else {
-                SingleKey := KeyWaitSingle()
-                If GetKeyState("Shift") And SingleKey = "Tab" {
+            If (Type = "Plugin" And WinActive(ReaHotkey.PluginWinCriteria)) Or (type = "Standalone" And WinActive("Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")) {
+                ReaHotkey.Turn%type%HotkeysOff()
+                KeyCombo := KeyWaitCombo()
+                If KeyCombo = "+Tab" {
                     SendInput "+{Tab}"
                 }
-                Else If GetKeyState("Alt") And SingleKey = "F4" {
+                Else If KeyCombo = "!F4" {
                     SendInput "{Escape}"
                     SendInput "!{F4}"
                     Break
                 }
                 Else {
-                    If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down" {
-                        SendInput "{" . SingleKey . "}"
+                    SingleKey := KeyWaitSingle()
+                    If GetKeyState("Shift") And SingleKey = "Tab" {
+                        SendInput "+{Tab}"
                     }
+                    Else If GetKeyState("Alt") And SingleKey = "F4" {
+                        SendInput "!{F4}"
+                        Break
+                    }
+                    Else {
+                        If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down" {
+                            SendInput "{" . SingleKey . "}"
+                        }
+                    }
+                    If SingleKey = "Escape"
+                    Break
                 }
-                If SingleKey = "Escape"
-                Break
             }
-            If Type = "Plugin" And Not WinActive(ReaHotkey.PluginWinCriteria)
-            Break
-            If type = "Standalone" And Not WinActive("Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
+            If Type = "Standalone" And WinExist("Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
             Break
         }
     }
     
     Static OpenKontaktPluginMenu() {
-        Critical
-        ReaHotkey.TurnPluginHotkeysOff()
-        ReaHotkey.TurnPluginTimersOff("Kontakt/Komplete Kontrol")
         KontaktKompleteKontrol.OpenKontaktMenu("Plugin")
     }
     
     Static OpenKontaktStandaloneMenu() {
-        Critical
-        ReaHotkey.TurnStandaloneHotkeysOff()
-        ReaHotkey.TurnStandaloneTimersOff("Kontakt")
         KontaktKompleteKontrol.OpenKontaktMenu("Standalone")
     }
     
