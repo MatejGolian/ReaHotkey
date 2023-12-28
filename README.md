@@ -22,6 +22,8 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - Komplete Kontrol version 3 is highly recommended, although most of the above functionality may work with older versions of the application as well. That being said, ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
 * Makes it possible to interact with Kontakt menus.
   - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.7.0 or higher is required, as well as Windows 10 or newer with OCR installed.
+* Provides support for the 'Browse' button in the Kontakt Content Missing dialog.
+  - Works both inside REAPER and in the standalone version of Kontakt - this feature is not Accessible from within Komplete Kontrol.
 * Makes it possible to switch Between various mixes in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
   - Only works inside REAPER.
 * Makes it possible to load instruments, set polyphony and pitchbend range in Plogue sforzando.
@@ -46,7 +48,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 * If you find that your keyboard or ReaHotkey itself is not responding as expected after interacting with Kontakt menus, press the Escape key.
 * Using any other zoom value in Kontakt than 100% may result in ReaHotkey not working correctly and the Kontakt plugin not being detected.
 * Attempting to open a Kontakt menu in the plug-in can fail at times, such as when trying to activate it directly after re-opening the REAPER FX chain window. When that happens, move around the interface a little and then try to open the given menu again.
-* ReaHotkey tries to automatically close the Library Browser in Kontakt and Komplete Kontrol whenever it appears, as it generally leads to better performance. That being said, the script may not always be able to determine whether the Library Browser is open or not. In that case you can close the Library Browser manually via the corresponding overlay buttons or menu items.
+* When the Kontakt content Missing dialog appears, the 'Browse' button does not get focused automatically. To focus it, press the tab key a couple of times.
 
 ## <a name="dubler2"></a>Dubler 2 Accessibility
 
@@ -87,6 +89,5 @@ HotspotHelper is a special utility to make developing these kind of scripts a li
 
 This is an incomplete list of features we're planning to look into in the future or are currently developing. Noone can guarantee that they will ever become reality, but they might at some point, and you can always open an issue to either offer help or request a new entry on this list. This list doesn't necessarily include bugfixes or additional features for entries above, except if they require special treatment and time to investigate them.
 
-* Kontakt content missing dialog accessibility
 * Kontakt snapshot selection
 * Melodyne accessibility
