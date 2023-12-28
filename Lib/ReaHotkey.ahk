@@ -86,10 +86,14 @@ Class ReaHotkey {
     
     Static GetPluginControl() {
         If WinActive(ReaHotkey.PluginWinCriteria) {
+            ReaperControlPatterns := ["^#327701$", "^Button[0-9]+$", "^ComboBox[0-9]+$", "^Edit[0-9]+$", "^REAPERknob[0-9]+$", "^reaperPluginHostWrapProc[0-9]+$", "^Static[0-9]+$", "^SysHeader321$", "^SysListView321$", "^SysTreeView321$"]
             Controls := WinGetControls(ReaHotkey.PluginWinCriteria)
             For Index, Control In Controls
             If Control = "reaperPluginHostWrapProc1" And Index < Controls.Length {
                 PluginControl := Controls[Index + 1]
+                For ReaperControlPattern In ReaperControlPatterns
+                If RegExMatch(PluginControl, ReaperControlPattern)
+                Return False
                 For PluginEntry In Plugin.List
                 If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
                 For ControlClass In PluginEntry["ControlClasses"]
@@ -97,13 +101,17 @@ Class ReaHotkey {
                 Return PluginControl
                 Break
             }
-            If Controls.Length > 0
-            For PluginEntry In Plugin.List
-            If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
-            For ControlClass In PluginEntry["ControlClasses"]
-            If RegExMatch(Controls[1], ControlClass)
-            Return Controls[1]
+            If Controls.Length > 0 {
+                For ReaperControlPattern In ReaperControlPatterns
+                If RegExMatch(Controls[1], ReaperControlPattern)
+                Return False
+                For PluginEntry In Plugin.List
+                If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
+                For ControlClass In PluginEntry["ControlClasses"]
+                If RegExMatch(Controls[1], ControlClass)
+                Return Controls[1]
             }
+        }
         Return False
     }
     
