@@ -521,8 +521,10 @@ Class KontaktKompleteKontrol {
             If RegExMatch(OCRLine.Text, "^.*" . MenuLabel . ".*") {
                 DesiredMenu := False
                 For OCRWord In OCRLine.Words
-                If RegExMatch(OCRWord.Text, "^" . MenuLabel . ".*")
-                DesiredMenu := OCRWord.Text
+                If RegExMatch(OCRWord.Text, "^" . MenuLabel . ".*") {
+                    DesiredMenu := OCRWord.Text
+                    Break
+                }
                 If DesiredMenu != False {
                     Try
                     DesiredMenu := OCRResult.FindString(DesiredMenu)
