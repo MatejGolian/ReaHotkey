@@ -456,10 +456,7 @@ PerformOCR() {
                 OCRLines := Array()
                 OCRResult := OCR.FromWindow("A", OCRLanguage)
                 For OCRLine In OCRResult.Lines {
-                    LineWidth := 0
-                    For OCRWord In OCRLine.Words
-                    LineWidth += OCRWord.BoundingRect.W
-                    OCRLines.Push(Map("Text", OCRLine.Text, "X1", OCRLine.Words[1].BoundingRect.X, "Y1", OCRLine.Words[1].BoundingRect.Y, "X2", OCRLine.Words[1].BoundingRect.X + LineWidth, "Y2", OCRLine.Words[OCRLine.Words.Length].BoundingRect.Y + OCRLine.Words[OCRLine.Words.Length].BoundingRect.H))
+                    OCRLines.Push(Map("Text", OCRLine.Text, "X1", OCR.WordsBoundingRect(OCRLine.Words*).X, "Y1", OCR.WordsBoundingRect(OCRLine.Words*).Y, "X2", OCR.WordsBoundingRect(OCRLine.Words*).X + OCR.WordsBoundingRect(OCRLine.Words*).W, "Y2", OCR.WordsBoundingRect(OCRLine.Words*).Y + OCR.WordsBoundingRect(OCRLine.Words*).H))
                 }
                 ClipboardData := ""
                 ConfirmationDialog := MsgBox("Compensate for the position of the currently focused control?", AppName, 4)
@@ -479,7 +476,7 @@ PerformOCR() {
                                 Y1Coordinate := Value["Y1"] - ControlY
                                 X2Coordinate := Value["X2"] - ControlX
                                 Y2Coordinate := Value["Y2"] - ControlY
-                                ClipboardData .= "`"" . Text . "`"`r`nBeginning at X " . X1Coordinate . ", Y " . Y1Coordinate . "`r`nEnding approximately at X " . X2Coordinate . ", Y " . Y2Coordinate . "`r`n`r`n"
+                                ClipboardData .= "`"" . Text . "`"`r`nBeginning at X " . X1Coordinate . ", Y " . Y1Coordinate . "`r`nEnding at X " . X2Coordinate . ", Y " . Y2Coordinate . "`r`n`r`n"
                             }
                         }
                     }
@@ -492,7 +489,7 @@ PerformOCR() {
                         Y1Coordinate := Value["Y1"]
                         X2Coordinate := Value["X2"]
                         Y2Coordinate := Value["Y2"]
-                        ClipboardData .= "`"" . Text . "`"`r`nBeginning at X " . X1Coordinate . ", Y " . Y1Coordinate . "`r`nEnding approximately at X " . X2Coordinate . ", Y " . Y2Coordinate . "`r`n`r`n"
+                        ClipboardData .= "`"" . Text . "`"`r`nBeginning at X " . X1Coordinate . ", Y " . Y1Coordinate . "`r`nEnding at X " . X2Coordinate . ", Y " . Y2Coordinate . "`r`n`r`n"
                     }
                 }
                 ClipboardData := RTrim(ClipboardData, "`r`n")
