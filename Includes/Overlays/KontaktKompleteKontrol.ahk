@@ -504,20 +504,21 @@ Class KontaktKompleteKontrol {
         OCRLanguage := PreferredOCRLanguage
         OCRResult := OCR.FromWindow("A", OCRLanguage)
         OCRResult := OCRResult.Crop(CropX1, CropY1, CropX2, CropY2)
-        For OCRLine In OCRResult.Lines {
-            If RegExMatch(OCRLine.Text, "^(.*)(" . MenuLabel . ")(.*)$") And StrSplit(OCRLine.Text, A_Space).Length = 1 {
-                %MoveOrClick%(floor(OCR.WordsBoundingRect(OCRLine.Words*).X + (OCR.WordsBoundingRect(OCRLine.Words*).W / 2)), Floor(OCR.WordsBoundingRect(OCRLine.Words*).Y + (OCR.WordsBoundingRect(OCRLine.Words*).H / 2)))
-                Return 1
-            }
-            If RegExMatch(OCRLine.Text, "^(.*)(" . MenuLabel . ")(.*)$") And StrSplit(OCRLine.Text, A_Space).Length > 1 {
+        For OCRLine In OCRResult.Lines
+        If RegExMatch(OCRLine.Text, "^.*" . MenuLabel . ".*") {
+            DesiredMenu := False
+            For OCRWord In OCRLine.Words
+            If RegExMatch(OCRWord.Text, "^" . MenuLabel . ".*")
+            DesiredMenu := OCRWord.Text
+            If DesiredMenu != False {
                 Try
-                DesiredMenu := OCRResult.FindString(MenuLabel)
+                DesiredMenu := OCRResult.FindString(DesiredMenu)
                 Catch
                 DesiredMenu := False
-                If DesiredMenu {
-                    %MoveOrClick%(floor(OCR.WordsBoundingRect(DesiredMenu.Words*).X + (OCR.WordsBoundingRect(DesiredMenu.Words*).W / 2)), Floor(OCR.WordsBoundingRect(DesiredMenu.Words*).Y + (OCR.WordsBoundingRect(DesiredMenu.Words*).H / 2)))
-                    Return 1
-                }
+            }
+            If DesiredMenu != False {
+                %MoveOrClick%(floor(OCR.WordsBoundingRect(DesiredMenu.Words*).X + (OCR.WordsBoundingRect(DesiredMenu.Words*).W / 2)), Floor(OCR.WordsBoundingRect(DesiredMenu.Words*).Y + (OCR.WordsBoundingRect(DesiredMenu.Words*).H / 2)))
+                Return 1
             }
         }
         Return 0
