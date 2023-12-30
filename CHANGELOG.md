@@ -17,9 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - The script should now work properly with 3rd party (non-NI) plug-ins loaded inside Komplete Kontrol
-- Updated Kontakt/Komplete Kontrol library browser closing
-- The script now attempts to close the Library Browser in the standalone version of Komplete Kontrol as well
+- Updated Kontakt/Komplete Kontrol library browser closing (The script now attempts to close the Library Browser in the standalone version of Komplete Kontrol as well)
 - Re-introduced Kontakt library menu buttons labelled as 'LIBRARY Browser On/Off'
+- Improved Kontakt menu detection and added hard-coded mouse coordinates as a backup option in case of OCR failure
 
 ## [0.3.0] - 2023-12-21
 
