@@ -297,15 +297,15 @@ Class KontaktKompleteKontrol {
     
     Static DetectPlugin() {
         Critical
-        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
+        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
             KontaktKompleteKontrol.LoadPluginHeader("Komplete Kontrol")
             KontaktKompleteKontrol.CloseKKPluginBrowser()
         }
-        Else If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
+        Else If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
             KontaktKompleteKontrol.LoadPluginHeader("Kontakt")
             ; KontaktKompleteKontrol.CloseKontaktPluginBrowser()
         }
-        Else If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
+        Else If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
             KontaktKompleteKontrol.LoadPluginHeader("Kontakt Player")
             KontaktKompleteKontrol.CloseKontaktPluginBrowser()
         }
@@ -350,12 +350,12 @@ Class KontaktKompleteKontrol {
     
     Static GetPluginName() {
         Critical
-        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
+        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
         Return "Komplete Kontrol"
-        Else If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
+        Else If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
         Return "Kontakt"
         Else
-        If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array
+        If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
         Return "Kontakt"
         Return False
     }

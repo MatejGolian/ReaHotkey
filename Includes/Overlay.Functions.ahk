@@ -379,7 +379,7 @@ FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2
         Catch
         ImageFound := 0
         If ImageFound = 1
-        Return Array(FoundX, FoundY)
+        Return {X: FoundX, Y: FoundY}
     }
     Return False
 }
