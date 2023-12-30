@@ -47,7 +47,6 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 * The ReaHotkey script can crash while In Dubler 2 audio calibration view. In that case just start the script again.
 * If you find that your keyboard or ReaHotkey itself is not responding as expected after interacting with Kontakt menus, press the Escape key.
 * Using any other zoom value in Kontakt than 100% may result in ReaHotkey not working correctly and the Kontakt plugin not being detected.
-* Attempting to open a Kontakt menu in the plug-in can fail at times, such as when trying to activate it directly after re-opening the REAPER FX chain window. When that happens, move around the interface a little and then try to open the given menu again.
 * When the Kontakt content Missing dialog appears, the 'Browse' button does not get focused automatically. To focus it, press the tab key a couple of times.
 
 ## <a name="dubler2"></a>Dubler 2 Accessibility
