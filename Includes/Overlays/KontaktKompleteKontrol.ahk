@@ -535,6 +535,7 @@ Class KontaktKompleteKontrol {
                     %MoveOrClick%(floor(OCR.WordsBoundingRect(DesiredMenu.Words*).X + (OCR.WordsBoundingRect(DesiredMenu.Words*).W / 2)), Floor(OCR.WordsBoundingRect(DesiredMenu.Words*).Y + (OCR.WordsBoundingRect(DesiredMenu.Words*).H / 2)))
                     Return 1
                 }
+                Break
             }
         }
         MouseCoordinates := Map(
