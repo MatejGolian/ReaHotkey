@@ -7,19 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2023-12-31
+
 ### Added
 
-- Added support for the Preferences dialog in the Komplete Kontrol plug-in
-- Added support for the Content Missing dialog in the plug-in and standalone versions of Kontakt
-- Added support for Plogue sforzando
-- Added OCR functionality to HotspotHelper
+-   Added support for the Preferences dialog in the Komplete Kontrol plug-in
+-   Added support for the Content Missing dialog in the plug-in and standalone versions of Kontakt
+-   Added support for Plogue sforzando
+-   Added OCR functionality to HotspotHelper
 
 ### Changed
 
-- The script should now work properly with 3rd party (non-NI) plug-ins loaded inside Komplete Kontrol
-- Updated Kontakt/Komplete Kontrol library browser closing (The script now attempts to close the Library Browser in the standalone version of Komplete Kontrol as well)
-- Re-introduced Kontakt library menu buttons labelled as 'LIBRARY Browser On/Off'
-- Improved Kontakt menu detection and added hard-coded mouse coordinates as a backup option in case of OCR failure
+-   The script should now work properly with 3rd party (non-NI) plug-ins loaded inside Komplete Kontrol
+-   Updated Kontakt/Komplete Kontrol library browser closing (The script now attempts to close the Library Browser in the standalone version of Komplete Kontrol as well)
+-   Re-introduced Kontakt library menu buttons labelled as 'LIBRARY Browser On/Off'
+-   Improved Kontakt menu detection and added hard-coded mouse coordinates as a backup option in case of OCR failure
 
 ## [0.3.0] - 2023-12-21
 
@@ -57,7 +59,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.3.0...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.0...HEAD
+
+[0.4.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.3.0...0.4.0
 
 [0.3.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.2.1...0.3.0
 
