@@ -14,13 +14,12 @@ jobs:
           path: Includes/CIVersion.ahk
           write-mode: overwrite
           contents: |
-            BuildNumber := "${{ github.run_number }}"
-      - name: Replace version
+                - name: Replace version
         if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
         uses: Nambers/ReplaceStringInFile@v1.3
         with:
           oldString: '^Version\s:=\s\".*\"'
-          newString: 'Version := \"${{ github.ref_name }}\"'
+          newString: 'Version := \"${{ github.ref_name }}\", BuildNumber := "${{ github.run_number }}"'
           showFileContent: true
           path: ${{ github.workspace }}/Includes/Version.ahk
       - name: Build with AHK v2.0.11
