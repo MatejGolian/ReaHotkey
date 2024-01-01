@@ -42,3 +42,4 @@ SetTimer ReaHotkey.ManageState, 100
 #Include Includes/Overlay.Functions.ahk
 #Include Includes/Version.ahk
 #Include *i Includes/CIVersion.ahk
+#Include Includes/CompilerDirectives.ahk
