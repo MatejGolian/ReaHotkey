@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add version information to the executables built by Ahk2Exe
+
 ## [0.4.0] - 2023-12-31
 
 ### Added
