@@ -1121,16 +1121,23 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If A_Index = 1 And A_LoopField != ""
                 FirstAvailableLanguage := A_LoopField
                 If A_LoopField = OCRLanguage And OCRLanguage != "" {
-                    PreferredLanguage := True
+                    PreferredLanguage := OCRLanguage
                     Break
                 }
             }
-            If PreferredLanguage = False And FirstAvailableLanguage != False
-            Return OCR.FromRect(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate - RegionX1Coordinate, RegionY2Coordinate - RegionY1Coordinate, FirstAvailableLanguage, OCRScale).Text
-            Else If PreferredLanguage = True
-            Return OCR.FromRect(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate - RegionX1Coordinate, RegionY2Coordinate - RegionY1Coordinate, OCRLanguage, OCRScale).Text
-            Else
-            Return ""
+            If PreferredLanguage = False And FirstAvailableLanguage != False {
+                OCRResult := OCR.FromWindow("A", FirstAvailableLanguage, OCRScale)
+                OCRResult := OCRResult.Crop(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate)
+                Return OCRResult.Text
+            }
+            Else If PreferredLanguage = OCRLanguage{
+                OCRResult := OCR.FromWindow("A", PreferredLanguage, OCRScale)
+                OCRResult := OCRResult.Crop(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate)
+                Return OCRResult.Text
+            }
+            Else {
+                Return ""
+            }
         }
         Return ""
     }
