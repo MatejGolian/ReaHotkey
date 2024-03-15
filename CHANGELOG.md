@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2024-03-15
+
 ### Fixed/Changed
 
-- Fixed Engine and sforzando plug-ins no longer being detected
-- Added custom version information to the built executables
-- Updated readme
+-   Fixed Engine and sforzando plug-ins no longer being detected
+-   Added custom version information to the built executables
+-   Updated readme
 
 ## [0.4.0] - 2023-12-31
 
@@ -65,7 +67,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.1...HEAD
+
+[0.4.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.0...0.4.1
 
 [0.4.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.3.0...0.4.0
 
