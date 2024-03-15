@@ -95,6 +95,11 @@ Space:: {
             Hotkey A_ThisHotkey, "Off"
             Send "{" . A_ThisHotkey . "}"
             Hotkey A_ThisHotkey, "On"
+            Case "NativeControl":
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            StandaloneOverlay.ActivateCurrentControl()
+            Hotkey A_ThisHotkey, "On"
             Default:
             StandaloneOverlay.ActivateCurrentControl()
         }
