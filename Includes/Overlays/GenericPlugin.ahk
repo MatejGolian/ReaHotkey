@@ -35,11 +35,11 @@ Class GenericPlugin {
     
     Static DetectPlugin() {
         Critical
-        If FindImage("Images/Engine/Engine.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
+        If FindImage("Images/Engine/Engine.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Engine"
             ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "Engine", ReaHotkey.FoundPlugin.ControlClass)
         }
-        Else If FindImage("Images/Sforzando/Sforzando.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Array {
+        Else If FindImage("Images/Sforzando/Sforzando.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "sforzando"
             ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "sforzando", ReaHotkey.FoundPlugin.ControlClass)
         }

@@ -23,7 +23,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 * Makes it possible to interact with Kontakt menus.
   - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.7.0 or higher is required. Windows 10 or newer with OCR installed is recommended, although not mandatory.
 * Provides support for the 'Browse' button in the Kontakt Content Missing dialog.
-  - Works both inside REAPER and in the standalone version of Kontakt - this feature is not Accessible from within Komplete Kontrol.
+  - Works both inside REAPER and in the standalone version of Kontakt. This feature should also work with Komplete Kontrol, but it hasn't been tested extensively.
 * Makes it possible to switch Between various mixes in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
   - Only works inside REAPER.
 * Makes it possible to load instruments, set polyphony and pitchbend range in Plogue sforzando.

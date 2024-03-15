@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
+### Fixed/Changed
 
-- Add version information to the executables built by Ahk2Exe
+- Fixed Engine and sforzando plug-ins no longer being detected
+- Added custom version information to the built executables
+- Updated readme
 
 ## [0.4.0] - 2023-12-31
 
