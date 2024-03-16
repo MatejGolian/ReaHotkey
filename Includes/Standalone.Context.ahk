@@ -45,15 +45,7 @@ Left:: {
     If ReaHotkey.FoundStandalone Is Standalone {
         StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
         Switch(StandaloneOverlay.GetCurrentControlType()) {
-            Case "Edit":
-            Hotkey A_ThisHotkey, "Off"
-            Send "{" . A_ThisHotkey . "}"
-            Hotkey A_ThisHotkey, "On"
-            Case "Native":
-            Hotkey A_ThisHotkey, "Off"
-            Send "{" . A_ThisHotkey . "}"
-            Hotkey A_ThisHotkey, "On"
-            Default:
+            Case "TabControl":
             Hotkey A_ThisHotkey, "Off"
             Send "{" . A_ThisHotkey . "}"
             Hotkey A_ThisHotkey, "On"
@@ -61,6 +53,10 @@ Left:: {
             StandaloneOverlay.FocusPreviousTab()
             Else
             StandaloneOverlay.FocusNextTab()
+            Default:
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            Hotkey A_ThisHotkey, "On"
         }
     }
 }

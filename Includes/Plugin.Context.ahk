@@ -45,15 +45,7 @@ Left:: {
     If ReaHotkey.FoundPlugin Is Plugin {
         PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
         Switch(PluginOverlay.GetCurrentControlType()) {
-            Case "Edit":
-            Hotkey A_ThisHotkey, "Off"
-            Send "{" . A_ThisHotkey . "}"
-            Hotkey A_ThisHotkey, "On"
-            Case "Native":
-            Hotkey A_ThisHotkey, "Off"
-            Send "{" . A_ThisHotkey . "}"
-            Hotkey A_ThisHotkey, "On"
-            Default:
+            Case "TabControl":
             Hotkey A_ThisHotkey, "Off"
             Send "{" . A_ThisHotkey . "}"
             Hotkey A_ThisHotkey, "On"
@@ -61,6 +53,10 @@ Left:: {
             PluginOverlay.FocusPreviousTab()
             Else
             PluginOverlay.FocusNextTab()
+            Default:
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            Hotkey A_ThisHotkey, "On"
         }
     }
 }
