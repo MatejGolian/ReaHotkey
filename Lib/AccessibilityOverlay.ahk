@@ -2486,7 +2486,7 @@ Class NativeControl Extends AccessibilityControl {
     }
     
     Activate(CurrentControlID := 0) {
-        If This.ControlExist(This.NativeControlID) == False {
+        If This.GetControl() == False {
             If This.Label != ""
             AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
             Else
@@ -2504,15 +2504,8 @@ Class NativeControl Extends AccessibilityControl {
         }
     }
     
-    ControlExist(Control, WinTitle := "", WinText := "", ExcludeTitle :="", ExcludeText := "") {
-        Try
-        Return ControlGetHwnd(Control, WinTitle, WinText, ExcludeTitle, ExcludeText)
-        Catch
-        Return False
-    }
-    
     Focus(CurrentControlID := 0) {
-        If This.ControlExist(This.NativeControlID) == False {
+        If This.GetControl() == False {
             If This.Label != ""
             AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
             Else
@@ -2528,6 +2521,13 @@ Class NativeControl Extends AccessibilityControl {
                 AccessibilityOverlay.Speak(This.Label)
             }
         }
+    }
+    
+    GetControl() {
+        Try
+        Return ControlGetHwnd(This.NativeControlID, "A")
+        Catch
+        Return False
     }
     
     SetHotkey(HotkeyCommand, HotkeyFunction := "") {
