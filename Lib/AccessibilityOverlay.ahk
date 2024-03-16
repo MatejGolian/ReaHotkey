@@ -2458,7 +2458,7 @@ Class HotspotTab Extends AccessibilityOverlay {
 
 Class NativeControl Extends AccessibilityControl {
     
-    ControlType := "Custom"
+    ControlType := "Native"
     Label := ""
     HotkeyCommand := ""
     HotkeyFunction := Array()

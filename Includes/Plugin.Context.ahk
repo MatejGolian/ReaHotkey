@@ -49,6 +49,10 @@ Left:: {
             Hotkey A_ThisHotkey, "Off"
             Send "{" . A_ThisHotkey . "}"
             Hotkey A_ThisHotkey, "On"
+            Case "Native":
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            Hotkey A_ThisHotkey, "On"
             Default:
             Hotkey A_ThisHotkey, "Off"
             Send "{" . A_ThisHotkey . "}"
@@ -95,7 +99,7 @@ Space:: {
             Hotkey A_ThisHotkey, "Off"
             Send "{" . A_ThisHotkey . "}"
             Hotkey A_ThisHotkey, "On"
-            Case "NativeControl":
+            Case "Native":
             Hotkey A_ThisHotkey, "Off"
             Send "{" . A_ThisHotkey . "}"
             PluginOverlay.ActivateCurrentControl()
