@@ -100,6 +100,11 @@ Space:: {
             Send "{" . A_ThisHotkey . "}"
             PluginOverlay.ActivateCurrentControl()
             Hotkey A_ThisHotkey, "On"
+            Case "UIA":
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            PluginOverlay.ActivateCurrentControl()
+            Hotkey A_ThisHotkey, "On"
             Default:
             PluginOverlay.ActivateCurrentControl()
         }
