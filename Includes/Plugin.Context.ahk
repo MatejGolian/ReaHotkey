@@ -4,7 +4,10 @@
 
 Tab:: {
     Thread "NoTimers"
+    Try
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
+    Catch
+    ReaHotkey.FoundPlugin := False
     If ReaHotkey.FoundPlugin Is Plugin {
         PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
         PluginOverlay.FocusNextControl()
@@ -13,7 +16,10 @@ Tab:: {
 
 +Tab:: {
     Thread "NoTimers"
+    Try
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
+    Catch
+    ReaHotkey.FoundPlugin := False
     If ReaHotkey.FoundPlugin Is Plugin {
         PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
         PluginOverlay.FocusPreviousControl()
@@ -22,7 +28,10 @@ Tab:: {
 
 ^Tab:: {
     Thread "NoTimers"
+    Try
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
+    Catch
+    ReaHotkey.FoundPlugin := False
     If ReaHotkey.FoundPlugin Is Plugin {
         PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
         ReaHotkey.FocusNextTab(PluginOverlay)
@@ -31,7 +40,10 @@ Tab:: {
 
 ^+Tab:: {
     Thread "NoTimers"
+    Try
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
+    Catch
+    ReaHotkey.FoundPlugin := False
     If ReaHotkey.FoundPlugin Is Plugin {
         PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
         ReaHotkey.FocusPreviousTab(PluginOverlay)
@@ -41,7 +53,10 @@ Tab:: {
 Right::
 Left:: {
     Thread "NoTimers"
+    Try
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
+    Catch
+    ReaHotkey.FoundPlugin := False
     If ReaHotkey.FoundPlugin Is Plugin {
         PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
         Switch(PluginOverlay.GetCurrentControlType()) {
@@ -64,7 +79,10 @@ Left:: {
 Up::
 Down:: {
     Thread "NoTimers"
+    Try
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
+    Catch
+    ReaHotkey.FoundPlugin := False
     If ReaHotkey.FoundPlugin Is Plugin {
         PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
         Switch(PluginOverlay.GetCurrentControlType()) {
@@ -87,7 +105,10 @@ Down:: {
 Enter::
 Space:: {
     Thread "NoTimers"
+    Try
     ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
+    Catch
+    ReaHotkey.FoundPlugin := False
     If ReaHotkey.FoundPlugin Is Plugin {
         PluginOverlay := ReaHotkey.FoundPlugin.GetOverlay()
         Switch(PluginOverlay.GetCurrentControlType()) {

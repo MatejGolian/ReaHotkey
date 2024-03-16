@@ -4,7 +4,10 @@
 
 Tab:: {
     Thread "NoTimers"
-    ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
+    Try
+    ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+    Catch
+    ReaHotkey.FoundStandalone := False
     If ReaHotkey.FoundStandalone Is Standalone {
         StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
         StandaloneOverlay.FocusNextControl()
@@ -13,7 +16,10 @@ Tab:: {
 
 +Tab:: {
     Thread "NoTimers"
-    ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
+    Try
+    ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+    Catch
+    ReaHotkey.FoundStandalone := False
     If ReaHotkey.FoundStandalone Is Standalone {
         StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
         StandaloneOverlay.FocusPreviousControl()
@@ -22,7 +28,10 @@ Tab:: {
 
 ^Tab:: {
     Thread "NoTimers"
-    ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
+    Try
+    ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+    Catch
+    ReaHotkey.FoundStandalone := False
     If ReaHotkey.FoundStandalone Is Standalone {
         StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
         ReaHotkey.FocusNextTab(StandaloneOverlay)
@@ -31,7 +40,10 @@ Tab:: {
 
 ^+Tab:: {
     Thread "NoTimers"
-    ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
+    Try
+    ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+    Catch
+    ReaHotkey.FoundStandalone := False
     If ReaHotkey.FoundStandalone Is Standalone {
         StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
         ReaHotkey.FocusPreviousTab(StandaloneOverlay)
@@ -41,7 +53,10 @@ Tab:: {
 Right::
 Left:: {
     Thread "NoTimers"
-    ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
+    Try
+    ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+    Catch
+    ReaHotkey.FoundStandalone := False
     If ReaHotkey.FoundStandalone Is Standalone {
         StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
         Switch(StandaloneOverlay.GetCurrentControlType()) {
@@ -64,7 +79,10 @@ Left:: {
 Up::
 Down:: {
     Thread "NoTimers"
-    ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
+    Try
+    ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+    Catch
+    ReaHotkey.FoundStandalone := False
     If ReaHotkey.FoundStandalone Is Standalone {
         StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
         Switch(StandaloneOverlay.GetCurrentControlType()) {
@@ -87,7 +105,10 @@ Down:: {
 Enter::
 Space:: {
     Thread "NoTimers"
-    ReaHotkey.FoundStandalone :=  Standalone.GetByWindowID(WinGetID("A"))
+    Try
+    ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
+    Catch
+    ReaHotkey.FoundStandalone := False
     If ReaHotkey.FoundStandalone Is Standalone {
         StandaloneOverlay := ReaHotkey.FoundStandalone.GetOverlay()
         Switch(StandaloneOverlay.GetCurrentControlType()) {
