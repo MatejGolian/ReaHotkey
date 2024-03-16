@@ -19,6 +19,7 @@ SetWorkingDir A_InitialWorkingDir
 #Include <Plugin>
 #Include <ReaHotkey>
 #Include <Standalone>
+#Include <UIA>
 
 A_IconTip := "ReaHotkey"
 A_TrayMenu.Delete

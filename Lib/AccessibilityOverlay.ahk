@@ -1235,7 +1235,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "ControlTypeLabel", "tab control",
         "SelectedString", "selected",
         "NotFoundString", "not found",
-        "UnlabelledString", ""))
+        "UnlabelledString", ""),
+        "UIAControl", Map(
+        "NotFoundString", "not found"))
         English.Default := ""
         Slovak := Map(
         "AccessibilityOverlay", Map(
@@ -1313,7 +1315,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "ControlTypeLabel", "zoznam záložiek",
         "SelectedString", "vybraté",
         "NotFoundString", "nenájdené",
-        "UnlabelledString", ""))
+        "UnlabelledString", ""),
+        "UIAControl", Map(
+        "NotFoundString", "nenájdené"))
         Slovak.Default := ""
         Swedish := Map(
         "AccessibilityOverlay", Map(
@@ -1391,7 +1395,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "ControlTypeLabel", "flikar",
         "SelectedString", "markerad",
         "NotFoundString", "hittades ej",
-        "UnlabelledString", ""))
+        "UnlabelledString", ""),
+        "UIAControl", Map(
+        "NotFoundString", "hittades ej"))
         Swedish.Default := ""
         Translations := Map()
         Translations["English"] := English
@@ -1520,6 +1526,11 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If Tabs.Length > 0
         For Tab In Tabs
         Control.AddTabs(Tab)
+        Return This.AddControl(Control)
+    }
+    
+    AddUIAControl(UIAControlID, Label := "", OnFocusFunction := "", OnActivateFunction := "") {
+        Control := UIAControl(UIAControlID, Label, OnFocusFunction, OnActivateFunction)
         Return This.AddControl(Control)
     }
     
@@ -2880,6 +2891,95 @@ Class TabControl Extends AccessibilityControl {
     
     GetTab(TabNumber) {
         Return This.Tabs.Get(TabNumber, 0)
+    }
+    
+}
+
+Class UIAControl Extends AccessibilityControl {
+    
+    ControlType := "UIA"
+    Label := ""
+    HotkeyCommand := ""
+    HotkeyFunction := Array()
+    UIAControlID := ""
+    OnActivateFunction := Array()
+    OnFocusFunction := Array()
+    NotFoundString := "not found"
+    
+    __New(UIAControlID, Label := "", OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New()
+        This.UIAControlID := UIAControlID
+        This.Label := Label
+        If OnFocusFunction != "" {
+            If OnFocusFunction Is Array
+            This.OnFocusFunction := OnFocusFunction
+            Else
+            This.OnFocusFunction := Array(OnFocusFunction)
+        }
+        If OnActivateFunction != "" {
+            If OnActivateFunction Is Array
+            This.OnActivateFunction := OnActivateFunction
+            Else
+            This.OnActivateFunction := Array(OnActivateFunction)
+        }
+    }
+    
+    Activate(CurrentControlID := 0) {
+        If This.GetControl() == False {
+            If This.Label != ""
+            AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
+            Else
+            AccessibilityOverlay.Speak(This.NotFoundString)
+        }
+        else {
+            If HasMethod(This, "Focus")
+            This.Focus(CurrentControlID)
+            For OnActivateFunction In This.OnActivateFunction
+            OnActivateFunction.Call(This)
+            If This.ControlID != CurrentControlID {
+                If This.Label != ""
+                AccessibilityOverlay.Speak(This.Label)
+            }
+        }
+    }
+    
+    Focus(CurrentControlID := 0) {
+        If This.GetControl() == False {
+            If This.Label != ""
+            AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
+            Else
+            AccessibilityOverlay.Speak(This.NotFoundString)
+        }
+        else {
+            This.GetControl().Highlight()
+            If CurrentControlID != This.ControlID {
+                For OnFocusFunction In This.OnFocusFunction
+                OnFocusFunction.Call(This)
+                If This.Label != ""
+                AccessibilityOverlay.Speak(This.Label)
+            }
+        }
+    }
+    
+    GetControl() {
+        Try {
+            element := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+            element := element.FindElement({AutomationId:This.UIAControlID})
+        }
+        Catch {
+            Return False
+        }
+        Return Element
+    }
+    
+    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
+        This.HotkeyCommand := HotkeyCommand
+        If HotkeyFunction != "" {
+            If HotkeyFunction Is Array
+            This.HotkeyFunction := HotkeyFunction
+            Else
+            This.HotkeyFunction := Array(HotkeyFunction)
+        }
     }
     
 }

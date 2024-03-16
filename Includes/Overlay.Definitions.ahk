@@ -11,6 +11,7 @@ Standalone.ChooserOverlay := AccessibilityOverlay()
 Standalone.ChooserOverlay.AddCustomButton("Choose overlay",, ChooseStandaloneOverlay)
 
 #Include Overlays/Dubler2.ahk
+#Include Overlays/ExpansionManager.ahk
 #Include Overlays/KontaktKompleteKontrol.ahk
 #Include Overlays/GenericPlugin.ahk
 #Include Overlays/Engine.ahk
