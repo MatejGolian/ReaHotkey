@@ -443,85 +443,6 @@ Class ActivatableHotspot Extends HotspotControl {
     
 }
 
-Class NativeControl Extends AccessibilityControl {
-    
-    ControlType := "Custom"
-    Label := ""
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
-    NativeControlID := ""
-    OnActivateFunction := Array()
-    OnFocusFunction := Array()
-    NotFoundString := "not found"
-    
-    __New(NativeControlID, Label := "", OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New()
-        This.NativeControlID := NativeControlID
-        This.Label := Label
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
-        If OnActivateFunction != "" {
-            If OnActivateFunction Is Array
-            This.OnActivateFunction := OnActivateFunction
-            Else
-            This.OnActivateFunction := Array(OnActivateFunction)
-        }
-    }
-    
-    Activate(CurrentControlID := 0) {
-        If AccessibilityOverlay.NativeControlExist(This.NativeControlID) == False {
-            If This.Label != ""
-            AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
-            Else
-            AccessibilityOverlay.Speak(This.NotFoundString)
-        }
-        else {
-            If HasMethod(This, "Focus")
-            This.Focus(CurrentControlID)
-            For OnActivateFunction In This.OnActivateFunction
-            OnActivateFunction.Call(This)
-            If This.ControlID != CurrentControlID {
-                If This.Label != ""
-                AccessibilityOverlay.Speak(This.Label)
-            }
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        If AccessibilityOverlay.NativeControlExist(This.NativeControlID) == False {
-            If This.Label != ""
-            AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
-            Else
-            AccessibilityOverlay.Speak(This.NotFoundString)
-        }
-        else {
-            If ControlGetFocus("A") And ControlGetClassNN(ControlGetFocus("A")) != This.NativeControlID
-            ControlFocus This.NativeControlID, "A"
-            If CurrentControlID != This.ControlID {
-                For OnFocusFunction In This.OnFocusFunction
-                OnFocusFunction.Call(This)
-                If This.Label != ""
-                AccessibilityOverlay.Speak(This.Label)
-            }
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
-        }
-    }
-    
-}
-
 Class OCRControl Extends AccessibilityControl {
     
     ControlType := "OCR"
@@ -1189,13 +1110,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If ControlID > 0 And AccessibilityOverlay.AllControls.Length > 0 And AccessibilityOverlay.AllControls.Length >= ControlID
         Return AccessibilityOverlay.AllControls[ControlID]
         Return 0
-    }
-    
-    Static NativeControlExist(Control, WinTitle := "", WinText := "", ExcludeTitle :="", ExcludeText := "") {
-        Try
-        Return ControlGetHwnd(Control, WinTitle, WinText, ExcludeTitle, ExcludeText)
-        Catch
-        Return False
     }
     
     Static OCR(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1) {
@@ -2532,6 +2446,92 @@ Class HotspotTab Extends AccessibilityOverlay {
     SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
         This.HotkeyCommand := HotkeyCommand
         This.HotkeyLabel := HotkeyLabel
+        If HotkeyFunction != "" {
+            If HotkeyFunction Is Array
+            This.HotkeyFunction := HotkeyFunction
+            Else
+            This.HotkeyFunction := Array(HotkeyFunction)
+        }
+    }
+    
+}
+
+Class NativeControl Extends AccessibilityControl {
+    
+    ControlType := "Custom"
+    Label := ""
+    HotkeyCommand := ""
+    HotkeyFunction := Array()
+    NativeControlID := ""
+    OnActivateFunction := Array()
+    OnFocusFunction := Array()
+    NotFoundString := "not found"
+    
+    __New(NativeControlID, Label := "", OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New()
+        This.NativeControlID := NativeControlID
+        This.Label := Label
+        If OnFocusFunction != "" {
+            If OnFocusFunction Is Array
+            This.OnFocusFunction := OnFocusFunction
+            Else
+            This.OnFocusFunction := Array(OnFocusFunction)
+        }
+        If OnActivateFunction != "" {
+            If OnActivateFunction Is Array
+            This.OnActivateFunction := OnActivateFunction
+            Else
+            This.OnActivateFunction := Array(OnActivateFunction)
+        }
+    }
+    
+    Activate(CurrentControlID := 0) {
+        If This.ControlExist(This.NativeControlID) == False {
+            If This.Label != ""
+            AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
+            Else
+            AccessibilityOverlay.Speak(This.NotFoundString)
+        }
+        else {
+            If HasMethod(This, "Focus")
+            This.Focus(CurrentControlID)
+            For OnActivateFunction In This.OnActivateFunction
+            OnActivateFunction.Call(This)
+            If This.ControlID != CurrentControlID {
+                If This.Label != ""
+                AccessibilityOverlay.Speak(This.Label)
+            }
+        }
+    }
+    
+    ControlExist(Control, WinTitle := "", WinText := "", ExcludeTitle :="", ExcludeText := "") {
+        Try
+        Return ControlGetHwnd(Control, WinTitle, WinText, ExcludeTitle, ExcludeText)
+        Catch
+        Return False
+    }
+    
+    Focus(CurrentControlID := 0) {
+        If This.ControlExist(This.NativeControlID) == False {
+            If This.Label != ""
+            AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
+            Else
+            AccessibilityOverlay.Speak(This.NotFoundString)
+        }
+        else {
+            If ControlGetFocus("A") And ControlGetClassNN(ControlGetFocus("A")) != This.NativeControlID
+            ControlFocus This.NativeControlID, "A"
+            If CurrentControlID != This.ControlID {
+                For OnFocusFunction In This.OnFocusFunction
+                OnFocusFunction.Call(This)
+                If This.Label != ""
+                AccessibilityOverlay.Speak(This.Label)
+            }
+        }
+    }
+    
+    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
+        This.HotkeyCommand := HotkeyCommand
         If HotkeyFunction != "" {
             If HotkeyFunction Is Array
             This.HotkeyFunction := HotkeyFunction
