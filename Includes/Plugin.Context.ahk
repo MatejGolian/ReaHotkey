@@ -48,11 +48,11 @@ Left:: {
             Case "TabControl":
             Hotkey A_ThisHotkey, "Off"
             Send "{" . A_ThisHotkey . "}"
-            Hotkey A_ThisHotkey, "On"
             If A_ThisHotkey = "Left"
             PluginOverlay.FocusPreviousTab()
             Else
             PluginOverlay.FocusNextTab()
+            Hotkey A_ThisHotkey, "On"
             Default:
             Hotkey A_ThisHotkey, "Off"
             Send "{" . A_ThisHotkey . "}"
