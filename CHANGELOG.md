@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- In sforzando, the script now attempts to detect the currently loaded instrument, as well as pitchbend range and polyphony values.
+
 ## [0.4.1] - 2024-03-15
 
 ### Fixed/Changed
