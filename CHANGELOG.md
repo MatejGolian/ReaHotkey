@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Check screen resolution on startup
+
 ## [0.4.2] - 2024-03-17
 
 ### Changed
