@@ -29,11 +29,8 @@ A_TrayMenu.Add("&About...", ReaHotkey.ShowAboutBox)
 A_TrayMenu.Add("&Quit", ReaHotkey.Quit)
 A_TrayMenu.Default := "&Pause"
 
+ReaHotkey.CheckResolution()
 AccessibilityOverlay.Speak("ReaHotkey ready")
-
-ReaHotkey.TurnPluginHotkeysOff()
-ReaHotkey.TurnStandaloneHotkeysOff()
-OnError ReaHotkey.HandleError
 SetTimer ReaHotkey.ManageState, 100
 
 #Include Includes/Global.Context.ahk
