@@ -2,7 +2,7 @@
 
 Class GenericPlugin {
     
-    Static Init() {
+    Static __New() {
         Plugin.Register("Generic Plug-in", ".*",, True, False, True)
         Plugin.RegisterOverlay("Generic Plug-in", AccessibilityOverlay())
         Plugin.SetTimer("Generic Plug-in", ObjBindMethod(GenericPlugin, "DetectPlugin"), 100)
@@ -112,5 +112,3 @@ Class GenericPlugin {
     }
     
 }
-
-GenericPlugin.Init()

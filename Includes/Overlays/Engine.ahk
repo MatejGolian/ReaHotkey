@@ -2,7 +2,7 @@
 
 Class Engine {
     
-    Static Init() {
+    Static __New() {
         
         Plugin.Register("Engine", "^Plugin[0-9A-F]{17}$",, True)
         Standalone.Register("Engine", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe")
@@ -57,5 +57,3 @@ Class Engine {
     }
     
 }
-
-Engine.Init()

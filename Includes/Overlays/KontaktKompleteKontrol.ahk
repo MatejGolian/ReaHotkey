@@ -2,7 +2,7 @@
 
 Class KontaktKompleteKontrol {
     
-    Static Init() {
+    Static __New() {
         
         Plugin.Register("Kontakt/Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$",, True)
         Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectPlugin"), 500)
@@ -661,5 +661,3 @@ Class KontaktKompleteKontrol {
     }
     
 }
-
-KontaktKompleteKontrol.Init()
