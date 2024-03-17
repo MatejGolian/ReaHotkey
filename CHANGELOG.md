@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2024-03-17
+
 ### Changed
 
-- In sforzando, the script now attempts to detect the currently loaded instrument, as well as pitchbend range and polyphony values.
+-   In sforzando, the script now attempts to detect the currently loaded instrument, as well as pitchbend range and polyphony values.
 
 ## [0.4.1] - 2024-03-15
 
@@ -71,7 +73,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.1...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.2...HEAD
+
+[0.4.2]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.1...0.4.2
 
 [0.4.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.0...0.4.1
 
