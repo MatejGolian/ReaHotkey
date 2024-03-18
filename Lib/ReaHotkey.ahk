@@ -18,11 +18,11 @@ Class ReaHotkey {
     }
     
     Static CheckResolution() {
-        If A_ScreenWidth != ReaHotkey.RequiredScreenWidth Or A_ScreenHeight != ReaHotkey.RequiredScreenHeight {
+        If A_ScreenWidth != ReaHotkey.RequiredScreenWidth And A_ScreenHeight != ReaHotkey.RequiredScreenHeight {
             ConfirmationDialog := MsgBox("ReaHotkey requires a resolution of " . ReaHotkey.RequiredScreenWidth . " × " . ReaHotkey.RequiredScreenHeight . " in order to run properly.`nTry to change the resolution automatically?", "ReaHotkey", 4)
             If ConfirmationDialog == "Yes" {
                 ReaHotkey.ChangeResolution(ReaHotkey.RequiredScreenWidth, ReaHotkey.RequiredScreenHeight, 32)
-                If A_ScreenWidth != ReaHotkey.RequiredScreenWidth Or A_ScreenHeight != ReaHotkey.RequiredScreenHeight {
+                If A_ScreenWidth != ReaHotkey.RequiredScreenWidth And A_ScreenHeight != ReaHotkey.RequiredScreenHeight {
                     MsgBox "Your resolution could not be set to " . ReaHotkey.RequiredScreenWidth . " × " . ReaHotkey.RequiredScreenHeight . ".`nReaHotkey may not operate properly.", "ReaHotkey"
                     Sleep 500
                     Return False
@@ -37,7 +37,7 @@ Class ReaHotkey {
         Else {
             Return True
         }
-        If A_ScreenWidth != ReaHotkey.RequiredScreenWidth Or A_ScreenHeight != ReaHotkey.RequiredScreenHeight
+        If A_ScreenWidth != ReaHotkey.RequiredScreenWidth And A_ScreenHeight != ReaHotkey.RequiredScreenHeight
         MsgBox "Your resolution is not set to " . ReaHotkey.RequiredScreenWidth . " × " . ReaHotkey.RequiredScreenHeight . ".`nReaHotkey may not operate properly.", "ReaHotkey"
         Sleep 500
         Return False
