@@ -578,6 +578,14 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         This.Label := Label
     }
     
+    __Call(Value, Properties) {
+        If SubStr(Value, 1, 3) == "Add" And IsSet(%SubStr(Value, 4)%){
+            Control := %SubStr(Value, 4)%.Call(Properties*)
+            Return This.AddControl(Control)
+        }
+        Return False
+    }
+    
     ActivateControl(ControlID) {
         If This.ChildControls.Length > 0 {
             This.FocusableControlIDs := This.GetFocusableControlIDs()
