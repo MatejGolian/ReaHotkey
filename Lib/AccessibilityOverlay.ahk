@@ -1439,14 +1439,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
     }
     
-    AddTabControl(Label := "", Tabs*) {
-        Control := TabControl(Label)
-        If Tabs.Length > 0
-        For Tab In Tabs
-        Control.AddTabs(Tab)
-        Return This.AddControl(Control)
-    }
-    
     }
     
     Class CustomButton Extends ActivatableCustom {
