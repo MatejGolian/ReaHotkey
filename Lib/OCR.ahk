@@ -21,6 +21,18 @@
  *      Returns the bounding rectangle for multiple words
  * OCR.ClearAllHighlights()
  *      Removes all highlights created by Result.Highlight
+ * OCR.Cluster(objs, eps_x:=-1, eps_y:=-1, minPts:=1, compareFunc?, &noise?)
+ *      Clusters objects (by default based on distance from eachother). Can be used to create more
+ *      accurate "Line" results.
+ * OCR.SortArray(arr, optionsOrCallback:="N", key?)
+ *      Sorts an array in-place, optionally by object keys or using a callback function.
+ * OCR.ReverseArray(arr)
+ *      Reverses an array in-place.
+ * OCR.UniqueArray(arr)
+ *      Returns an array with unique values.
+ * OCR.FlattenArray(arr)
+ *      Returns a one-dimensional array from a multi-dimensional array
+ * 
  * 
  * Properties:
  * OCR.MaxImageDimension
@@ -170,7 +182,7 @@ class OCR {
     ; Returns all Word objects for the result. Equivalent to looping over all the Lines and getting the Words.
     Words {
         get {
-            local words := [], line
+            local words := [], line, word
             for line in this.Lines
                 for word in line.Words
                     words.Push(word)
@@ -187,10 +199,10 @@ class OCR {
      * otherwise the Relative objects Window.xy/Client.xy properties values will be added to the x and y coordinates as offsets.
      */
     Click(Obj, WhichButton?, ClickCount?, DownOrUp?) {
-        if !obj.HasOwnProp("x") && InStr(Type(obj), "OCR")
+        if !obj.HasProp("x") && InStr(Type(obj), "OCR")
             obj := this.__OCR.WordsBoundingRect(obj.Words)
         local x := obj.x, y := obj.y, w := obj.w, h := obj.h, mode := "Screen", hwnd
-        if this.HasOwnProp("Relative") {
+        if this.HasProp("Relative") {
             if this.Relative.HasOwnProp("Window")
                 mode := "Window", hwnd := this.Relative.Window.Hwnd
             else if this.Relative.HasOwnProp("Client")
@@ -210,19 +222,22 @@ class OCR {
     /**
      * ControlClicks an object
      * @param obj The object to click, which can be a OCR result object, Line, Word, or Object {x,y,w,h}
-     * If this object (the one Click is called from) contains a "Relative" property (this is
-     * added by default with OCR.FromWindow) containing a Hwnd property, then that window will be activated,
-     * otherwise the Relative properties values will be added to the x and y coordinates as offsets.
+     * If the result object originates from OCR.FromWindow which captured only the client area,
+     * then the result object will contain correct coordinates for the ControlClick. 
+     * If OCR.FromWindow captured the Window area, then the Relative property
+     * will contain Window property, and those coordinates will be adjusted to Client area.
+     * Otherwise, if additionally a WinTitle is provided then the coordinates are treated as Screen 
+     * coordinates and converted to Client coordinates.
      * @param WinTitle If WinTitle is set, then the coordinates stored in Obj will be converted to
      * client coordinates and ControlClicked.
      */
     ControlClick(obj, WinTitle?, WinText?, WhichButton?, ClickCount?, Options?, ExcludeTitle?, ExcludeText?) {
-        if !obj.HasOwnProp("x") && InStr(Type(obj), "OCR")
+        if !obj.HasProp("x") && InStr(Type(obj), "OCR")
             obj := this.__OCR.WordsBoundingRect(obj.Words)
         local x := obj.x, y := obj.y, w := obj.w, h := obj.h, hWnd
-        if this.HasOwnProp("Relative") && (this.Relative.HasOwnProp("Client") || this.Relative.HasOwnProp("Window")) {
+        if this.HasProp("Relative") && (this.Relative.HasOwnProp("Client") || this.Relative.HasOwnProp("Window")) {
             mode := this.Relative.HasOwnProp("Client") ? "Client" : "Window"
-            , obj := this.Relative.%mode%, x := obj.x, y := obj.y, hWnd := obj.hWnd
+            , obj := this.Relative.%mode%, x += obj.x, y += obj.y, hWnd := obj.hWnd
             if mode = "Window" {
                 ; Window -> Client
                 RECT := Buffer(16, 0), pt := Buffer(8, 0)
@@ -304,7 +319,7 @@ class OCR {
         else 
             rect := obj
         x := rect.x, y := rect.y, w := rect.w, h := rect.h
-        if this.HasOwnProp("Relative") && this.Relative.HasOwnProp("Screen")
+        if this.HasProp("Relative") && this.Relative.HasOwnProp("Screen")
             x += this.Relative.Screen.X, y += this.Relative.Screen.Y
 
         if !ResultGuis.Has(obj) {
@@ -341,7 +356,7 @@ class OCR {
      * @returns {Object} 
      */
     FindString(needle, i:=1, casesense:=False, wordCompareFunc?, searchArea?) {
-        local line, counter, found, x1, y1, x2, y2, splitNeedle, result
+        local line, counter, found, x1, y1, x2, y2, splitNeedle, result, word
         if !(needle is String)
             throw TypeError("Needle is required to be a string, not type " Type(needle), -1)
         if needle == ""
@@ -393,7 +408,7 @@ class OCR {
      * @returns {Array} 
      */
     FindStrings(needle, casesense:=False, wordCompareFunc?, searchArea?) {
-        local line, counter, found, x1, y1, x2, y2, splitNeedle, result
+        local line, counter, found, x1, y1, x2, y2, splitNeedle, result, word
         if !(needle is String)
             throw TypeError("Needle is required to be a string, not type " Type(needle), -1)
         if needle == ""
@@ -440,7 +455,7 @@ class OCR {
     Filter(callback) {
         if !HasMethod(callback)
             throw ValueError("Filter callback must be a function", -1)
-        local result := this.Clone(), line, croppedLines := [], croppedText := "", croppedWords := [], lineText := ""
+        local result := this.Clone(), line, croppedLines := [], croppedText := "", croppedWords := [], lineText := "", word
         ObjAddRef(result.ptr)
         for line in result.Lines {
             croppedWords := [], lineText := ""
@@ -498,6 +513,22 @@ class OCR {
                 this.DefineProp("Words", {Value:words})
                 return words
             }
+        }
+
+        BoundingRect {
+            get => this.DefineProp("BoundingRect", {Value:this.__OCR.WordsBoundingRect(this.Words*)}).BoundingRect
+        }
+        x {
+            get => this.BoundingRect.x
+        } 
+        y {
+            get => this.BoundingRect.y
+        }
+        w {
+            get => this.BoundingRect.w
+        }
+        h {
+            get => this.BoundingRect.h
         }
     }
 
@@ -706,7 +737,7 @@ class OCR {
             , ComCall(9, this.OcrEngineStatics, "ptr", Language, "ptr*", OcrEngine:=this.IBase())   ; TryCreateFromLanguage
         }
         if (OcrEngine.ptr = 0)
-            Throw Error("Can not use language `"" lang "`" for OCR, please install language pack.")
+            Throw Error(lang = "FirstFromAvailableLanguages" ? "Failed to use FirstFromAvailableLanguages for OCR:`nmake sure the primary language pack has OCR capabilities installed.`n`nAlternatively try `"en-us`" as the language." : "Can not use language `"" lang "`" for OCR, please install language pack.")
         this.OcrEngine := OcrEngine, this.CurrentLanguage := lang
     }
 
@@ -748,6 +779,169 @@ class OCR {
                 return result
         }
         return
+    }
+
+    /**
+     * Returns word clusters using a two-dimensional DBSCAN algorithm
+     * @param objs An array of objects (Words, Lines etc) to cluster. Must have x, y, w, h and Text properties.
+     * @param eps_x Optional epsilon value for x-axis. Default is infinite.
+     * @param eps_y Optional epsilon value for y-axis. Default is median height of objects divided by two.
+     * @param minPts Optional minimum cluster size.
+     * @param compareFunc Optional comparison function to judge the minimum distance between objects
+     * to consider it a cluster. Must accept to objects to compare.
+     * Default comparison function determines whether the difference of middle y-coordinates of 
+     * the objects are less than epsilon-y, and whether objects are less than eps_x apart on the x-axis.
+     * @param noise If provided, then will be set to an array of clusters that didn't satisfy minPts
+     * @returns {Array} Array of objects with {x,y,w,h,Text,Words} properties
+     */
+    static Cluster(objs, eps_x:=-1, eps_y:=-1, minPts:=1, compareFunc?, &noise?) {
+        local clusters := [], start := 0, cluster, word
+        visited := Map(), clustered := Map(), C := [], c_n := 0, sum := 0, noise := IsSet(noise) && (noise is Array) ? noise : []
+        if !IsObject(objs) || !(objs is Array)
+            throw ValueError("objs argument must be an Array", -1)
+        if IsSet(compareFunc) && !HasMethod(compareFunc)
+            throw ValueError("compareFunc must be a valid function", -1)
+        if !objs.Length
+            return []
+
+        if !IsSet(compareFunc)
+            compareFunc := (p1, p2) => Abs(p1.y+p1.h//2-p2.y-p2.h//2)<eps_y && (eps_x < 0 || (Abs(p1.x+p1.w-p2.x)<eps_x || Abs(p1.x-p2.x-p2.w)<eps_x))
+
+        if (eps_y < 0) {
+            for point in objs
+                sum += point.h
+            eps_y := (sum // objs.Length) // 2
+        }
+
+        ; DBSCAN adapted from https://github.com/ninopereira/DBSCAN_1D
+        for point in objs {
+            visited[point] := 1, neighbourPts := [], RegionQuery(point)
+            if !clustered.Has(point) {
+                C.Push([]), c_n += 1, C[c_n].Push(point), clustered[point] := 1
+                ExpandCluster(point)
+            }
+            if C[c_n].Length < minPts
+                noise.Push(C[c_n]), C.RemoveAt(c_n), c_n--
+        }
+
+        ; Sort clusters by x-coordinate, get cluster bounding rects, and concatenate word texts
+        for cluster in C {
+            OCR.SortArray(cluster,,"x")
+            br := OCR.WordsBoundingRect(cluster*), br.Words := cluster, br.Text := ""
+            for word in cluster
+                br.Text .= word.Text " "
+            br.Text := RTrim(br.Text)
+            clusters.Push(br)
+        }
+        ; Sort clusters/lines by y-coordinate
+        OCR.SortArray(clusters,,"y")
+        return clusters
+
+        ExpandCluster(P) {
+            local point
+            for point in neighbourPts {
+                if !visited.Has(point) {
+                    visited[point] := 1, RegionQuery(point)
+                    if !clustered.Has(point)
+                        C[c_n].Push(point), clustered[point] := 1
+                }
+            }
+        }
+
+        RegionQuery(P) {
+            local point
+            for point in objs
+                if !visited.Has(point)
+                    if compareFunc(P, point)
+                        neighbourPts.Push(point)
+        }
+    }
+
+    /**
+     * Sorts an array in-place, optionally by object keys or using a callback function.
+     * @param arr The array to be sorted
+     * @param OptionsOrCallback Optional: either a callback function, or one of the following:
+     * 
+     *     N => array is considered to consist of only numeric values. This is the default option.
+     *     C, C1 or COn => case-sensitive sort of strings
+     *     C0 or COff => case-insensitive sort of strings
+     * 
+     *     The callback function should accept two parameters elem1 and elem2 and return an integer:
+     *     Return integer < 0 if elem1 less than elem2
+     *     Return 0 is elem1 is equal to elem2
+     *     Return > 0 if elem1 greater than elem2
+     * @param Key Optional: Omit it if you want to sort a array of primitive values (strings, numbers etc).
+     *     If you have an array of objects, specify here the key by which contents the object will be sorted.
+     * @returns {Array}
+     */
+    static SortArray(arr, optionsOrCallback:="N", key?) {
+        static sizeofFieldType := 16 ; Same on both 32-bit and 64-bit
+        if HasMethod(optionsOrCallback)
+            pCallback := CallbackCreate(CustomCompare.Bind(optionsOrCallback), "F Cdecl", 2), optionsOrCallback := ""
+        else {
+            if InStr(optionsOrCallback, "N")
+                pCallback := CallbackCreate(IsSet(key) ? NumericCompareKey.Bind(key) : NumericCompare, "F CDecl", 2)
+            if RegExMatch(optionsOrCallback, "i)C(?!0)|C1|COn")
+                pCallback := CallbackCreate(IsSet(key) ? StringCompareKey.Bind(key,,True) : StringCompare.Bind(,,True), "F CDecl", 2)
+            if RegExMatch(optionsOrCallback, "i)C0|COff")
+                pCallback := CallbackCreate(IsSet(key) ? StringCompareKey.Bind(key) : StringCompare, "F CDecl", 2)
+            if InStr(optionsOrCallback, "Random")
+                pCallback := CallbackCreate(RandomCompare, "F CDecl", 2)
+            if !IsSet(pCallback)
+                throw ValueError("No valid options provided!", -1)
+        }
+        mFields := NumGet(ObjPtr(arr) + (8 + (VerCompare(A_AhkVersion, "<2.1-") > 0 ? 3 : 5)*A_PtrSize), "Ptr") ; in v2.0: 0 is VTable. 2 is mBase, 3 is mFields, 4 is FlatVector, 5 is mLength and 6 is mCapacity
+        DllCall("msvcrt.dll\qsort", "Ptr", mFields, "UInt", arr.Length, "UInt", sizeofFieldType, "Ptr", pCallback, "Cdecl")
+        CallbackFree(pCallback)
+        if RegExMatch(optionsOrCallback, "i)R(?!a)")
+            this.ReverseArray(arr)
+        if InStr(optionsOrCallback, "U")
+            arr := this.Unique(arr)
+        return arr
+
+        CustomCompare(compareFunc, pFieldType1, pFieldType2) => (ValueFromFieldType(pFieldType1, &fieldValue1), ValueFromFieldType(pFieldType2, &fieldValue2), compareFunc(fieldValue1, fieldValue2))
+        NumericCompare(pFieldType1, pFieldType2) => (ValueFromFieldType(pFieldType1, &fieldValue1), ValueFromFieldType(pFieldType2, &fieldValue2), fieldValue1 - fieldValue2)
+        NumericCompareKey(key, pFieldType1, pFieldType2) => (ValueFromFieldType(pFieldType1, &fieldValue1), ValueFromFieldType(pFieldType2, &fieldValue2), fieldValue1.%key% - fieldValue2.%key%)
+        StringCompare(pFieldType1, pFieldType2, casesense := False) => (ValueFromFieldType(pFieldType1, &fieldValue1), ValueFromFieldType(pFieldType2, &fieldValue2), StrCompare(fieldValue1 "", fieldValue2 "", casesense))
+        StringCompareKey(key, pFieldType1, pFieldType2, casesense := False) => (ValueFromFieldType(pFieldType1, &fieldValue1), ValueFromFieldType(pFieldType2, &fieldValue2), StrCompare(fieldValue1.%key% "", fieldValue2.%key% "", casesense))
+        RandomCompare(pFieldType1, pFieldType2) => (Random(0, 1) ? 1 : -1)
+
+        ValueFromFieldType(pFieldType, &fieldValue?) {
+            static SYM_STRING := 0, PURE_INTEGER := 1, PURE_FLOAT := 2, SYM_MISSING := 3, SYM_OBJECT := 5
+            switch SymbolType := NumGet(pFieldType + 8, "Int") {
+                case PURE_INTEGER: fieldValue := NumGet(pFieldType, "Int64") 
+                case PURE_FLOAT: fieldValue := NumGet(pFieldType, "Double") 
+                case SYM_STRING: fieldValue := StrGet(NumGet(pFieldType, "Ptr")+2*A_PtrSize)
+                case SYM_OBJECT: fieldValue := ObjFromPtrAddRef(NumGet(pFieldType, "Ptr")) 
+                case SYM_MISSING: return		
+            }
+        }
+    }
+    ; Reverses the array in-place
+    static ReverseArray(arr) {
+        local len := arr.Length + 1, max := (len // 2), i := 0
+        while ++i <= max
+            temp := arr[len - i], arr[len - i] := arr[i], arr[i] := temp
+        return arr
+    }
+    ; Returns a new array with only unique values
+    static UniqueArray(arr) {
+        local unique := Map()
+        for v in arr
+            unique[v] := 1
+        return [unique*]
+    }
+
+    ; Returns a one-dimensional array from a multi-dimensional array
+    static FlattenArray(arr) {
+        local r := []
+        for v in arr {
+            if v is Array
+                r.Push(this.FlattenArray(v)*)
+            else
+                r.Push(v)
+        }
+        return r
     }
 
     ;; Only internal methods ahead
