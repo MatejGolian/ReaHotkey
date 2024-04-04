@@ -232,7 +232,7 @@ Class Plugin {
         HotkeyNumber := Plugin.FindHotkey(PluginName, KeyName)
         If PluginNumber > 0 And HotkeyNumber = 0 {
             If Action = ""
-            Action := Plugin.TriggerHotkey
+            Action := Plugin.TriggerOverlayHotkey
             BackupAction := Action
             OnOff := ""
             B := ""
@@ -371,7 +371,7 @@ Class Plugin {
         }
     }
     
-    Class TriggerHotkey {
+    Class TriggerOverlayHotkey {
         Static Call(HotkeyCommand) {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay Is AccessibilityOverlay
             ReaHotkey.FoundPlugin.Overlay.TriggerHotkey(HotkeyCommand)

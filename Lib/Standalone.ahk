@@ -195,7 +195,7 @@ Class Standalone {
         HotkeyNumber := Standalone.FindHotkey(ProgramName, KeyName)
         If ProgramNumber > 0 And HotkeyNumber = 0 {
             If Action = ""
-            Action := Standalone.TriggerHotkey
+            Action := Standalone.TriggerOverlayHotkey
             BackupAction := Action
             OnOff := ""
             B := ""
@@ -334,7 +334,7 @@ Class Standalone {
         }
     }
     
-    Class TriggerHotkey {
+    Class TriggerOverlayHotkey {
         Static Call(HotkeyCommand) {
             If ReaHotkey.FoundStandalone Is Standalone And ReaHotkey.FoundStandalone.Overlay Is AccessibilityOverlay
             ReaHotkey.FoundStandalone.Overlay.TriggerHotkey(HotkeyCommand)
