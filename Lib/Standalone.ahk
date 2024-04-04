@@ -194,6 +194,8 @@ Class Standalone {
         ProgramNumber := Standalone.FindName(ProgramName)
         HotkeyNumber := Standalone.FindHotkey(ProgramName, KeyName)
         If ProgramNumber > 0 And HotkeyNumber = 0 {
+            If Action = ""
+            Action := Standalone.TriggerHotkey
             BackupAction := Action
             OnOff := ""
             B := ""
@@ -329,6 +331,13 @@ Class Standalone {
                 Standalone.List[ProgramNumber]["Timers"][TimerNumber]["Period"] := Period
                 Standalone.List[ProgramNumber]["Timers"][TimerNumber]["Priority"] := Priority
             }
+        }
+    }
+    
+    Class TriggerHotkey {
+        Static Call(HotkeyCommand) {
+            If ReaHotkey.FoundStandalone Is Standalone And ReaHotkey.FoundStandalone.Overlay Is AccessibilityOverlay
+            ReaHotkey.FoundStandalone.Overlay.TriggerHotkey(HotkeyCommand)
         }
     }
     

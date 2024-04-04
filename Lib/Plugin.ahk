@@ -231,6 +231,8 @@ Class Plugin {
         PluginNumber := Plugin.FindName(PluginName)
         HotkeyNumber := Plugin.FindHotkey(PluginName, KeyName)
         If PluginNumber > 0 And HotkeyNumber = 0 {
+            If Action = ""
+            Action := Plugin.TriggerHotkey
             BackupAction := Action
             OnOff := ""
             B := ""
@@ -366,6 +368,13 @@ Class Plugin {
                 Plugin.List[PluginNumber]["Timers"][TimerNumber]["Period"] := Period
                 Plugin.List[PluginNumber]["Timers"][TimerNumber]["Priority"] := Priority
             }
+        }
+    }
+    
+    Class TriggerHotkey {
+        Static Call(HotkeyCommand) {
+            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay Is AccessibilityOverlay
+            ReaHotkey.FoundPlugin.Overlay.TriggerHotkey(HotkeyCommand)
         }
     }
     

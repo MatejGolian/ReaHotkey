@@ -312,11 +312,11 @@ Class Dubler2 {
         Instance.SetTimer(ObjBindMethod(Dubler2, "SetOverlay"), 300)
         Instance.SetTimer(ObjBindMethod(Dubler2, "AutoSaveProfile"), 100)
         Instance.SetHotkey("^N", ObjBindMethod(Dubler2, "ToggleNotesAnnouncement"))
-        Instance.SetHotkey("^1", TriggerStandaloneHotkey)
-        Instance.SetHotkey("^2", TriggerStandaloneHotkey)
-        Instance.SetHotkey("^3", TriggerStandaloneHotkey)
-        Instance.SetHotkey("^4", TriggerStandaloneHotkey)
-        Instance.SetHotkey("^5", TriggerStandaloneHotkey)
+        Instance.SetHotkey("^1")
+        Instance.SetHotkey("^2")
+        Instance.SetHotkey("^3")
+        Instance.SetHotkey("^4")
+        Instance.SetHotkey("^5")
         Dubler2.ProfileLoaded := Map(
             "Index", 0,
             "File", "",
