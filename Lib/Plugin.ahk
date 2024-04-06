@@ -78,6 +78,10 @@ Class Plugin {
         Plugin.RegisterOverlay(This.Name, PluginOverlay)
     }
     
+    RegisterOverlayHotkeys(PluginOverlay) {
+        Plugin.RegisterOverlayHotkeys(This.Name, PluginOverlay)
+    }
+    
     SetHotkey(KeyName, Action := "", Options := "") {
         Plugin.SetHotkey(This.Name, KeyName, Action, Options)
     }
@@ -222,9 +226,18 @@ Class Plugin {
             PluginOverlay.OverlayNumber := Plugin.List[PluginNumber]["Overlays"].Length + 1
             Plugin.List[PluginNumber]["Overlays"].Push(PluginOverlay.Clone())
             For PluginInstance In Plugin.Instances
-            If PluginName = PluginInstance.Name
-            PluginInstance.Overlays.Push(PluginOverlay.Clone())
+            If PluginName = PluginInstance.Name {
+                PluginInstance.Overlays.Push(PluginOverlay.Clone())
+                Plugin.RegisterOverlayHotkeys(PluginName, PluginOverlay)
+            }
         }
+    }
+    
+    Static RegisterOverlayHotkeys(PluginName, PluginOverlay) {
+        PluginNumber := Plugin.FindName(PluginName)
+        If PluginNumber > 0 And PluginOverlay Is AccessibilityOverlay
+        For OverlayHotkey In PluginOverlay.GetHotkeys()
+        Plugin.SetHotkey(PluginName, OverlayHotkey)
     }
     
     Static SetHotkey(PluginName, KeyName, Action := "", Options := "") {

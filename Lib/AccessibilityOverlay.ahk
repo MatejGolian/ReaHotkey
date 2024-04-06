@@ -811,9 +811,27 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     GetAllControls() {
         AllControls := Array()
-        For Value In AccessibilityOverlay.AllControls
-        If Value.SuperordinateControlID = This.ControlID
-        AllControls.Push(Value)
+        If This.ChildControls.Length > 0
+        For CurrentControl In This.ChildControls {
+            Switch(CurrentControl.__Class) {
+                Case "AccessibilityOverlay":
+                If CurrentControl.ChildControls.Length > 0 {
+                    For ChildControl In CurrentControl.GetAllControls()
+                    AllControls.Push(ChildControl)
+                }
+                Case "TabControl":
+                AllControls.Push(CurrentControl)
+                If CurrentControl.Tabs.Length > 0 {
+                    For CurrentTab In CurrentControl.Tabs
+                    If CurrentTab.ChildControls.Length > 0 {
+                        For CurrentTabControl In CurrentTab.GetAllControls()
+                        AllControls.Push(CurrentTabControl)
+                    }
+                }
+                Default:
+                AllControls.Push(CurrentControl)
+            }
+        }
         Return AllControls
     }
     
@@ -870,6 +888,17 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         For FocusableControlID In This.FocusableControlIDs
         FocusableControls.Push(AccessibilityOverlay.GetControl(FocusableControlID))
         Return FocusableControls
+    }
+    
+    GetHotkeys() {
+        OverlayHotkeys := Array()
+        TempList := Map()
+        For OverlayControl In This.GetAllControls()
+        If OverlayControl.HasOwnProp("HotkeyCommand") And OverlayControl.HotkeyCommand != ""
+        TempList.Set(OverlayControl.HotkeyCommand, OverlayControl.HotkeyCommand)
+        For OverlayHotkey In TempList
+        OverlayHotkeys.Push(OverlayHotkey)
+        Return OverlayHotkeys
     }
     
     GetReachableControls() {

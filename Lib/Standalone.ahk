@@ -76,6 +76,10 @@ Class Standalone {
         Standalone.RegisterOverlay(This.Name, ProgramOverlay)
     }
     
+    RegisterOverlayHotkeys(ProgramOverlay) {
+        Standalone.RegisterOverlayHotkeys(This.Name, ProgramOverlay)
+    }
+    
     SetHotkey(KeyName, Action := "", Options := "") {
         Standalone.SetHotkey(This.Name, KeyName, Action, Options)
     }
@@ -185,9 +189,18 @@ Class Standalone {
             ProgramOverlay.OverlayNumber := Standalone.List[ProgramNumber]["Overlays"].Length + 1
             Standalone.List[ProgramNumber]["Overlays"].Push(ProgramOverlay.Clone())
             For ProgramInstance In Standalone.Instances
-            If ProgramName = ProgramInstance.Name
-            ProgramInstance.Overlays.Push(ProgramOverlay.Clone())
+            If ProgramName = ProgramInstance.Name {
+                ProgramInstance.Overlays.Push(ProgramOverlay.Clone())
+                Standalone.RegisterOverlayHotkeys(ProgramName, ProgramOverlay)
+            }
         }
+    }
+    
+    Static RegisterOverlayHotkeys(ProgramName, ProgramOverlay) {
+        ProgramNumber := Standalone.FindName(ProgramName)
+        If ProgramNumber > 0 And ProgramOverlay Is AccessibilityOverlay
+        For OverlayHotkey In ProgramOverlay.GetHotkeys()
+        Standalone.SetHotkey(ProgramName, OverlayHotkey)
     }
     
     Static SetHotkey(ProgramName, KeyName, Action := "", Options := "") {
