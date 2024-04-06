@@ -451,16 +451,3 @@ StrJoin(obj,delimiter:="",OmitChars:=""){
     S .= delimiter Trim(obj[A_Index+1],OmitChars)
     return S
 }
-
-TriggerHotkey(Type, HotkeyCommand) {
-    If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.Overlay Is AccessibilityOverlay
-    ReaHotkey.Found%Type%.Overlay.TriggerHotkey(HotkeyCommand)
-}
-
-TriggerPluginHotkey(HotkeyCommand) {
-    TriggerHotkey("Plugin", HotkeyCommand)
-}
-
-TriggerStandaloneHotkey(HotkeyCommand) {
-    TriggerHotkey("Standalone", HotkeyCommand)
-}
