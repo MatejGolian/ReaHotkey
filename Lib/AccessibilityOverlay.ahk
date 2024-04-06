@@ -815,6 +815,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         For CurrentControl In This.ChildControls {
             Switch(CurrentControl.__Class) {
                 Case "AccessibilityOverlay":
+                AllControls.Push(CurrentControl)
                 If CurrentControl.ChildControls.Length > 0 {
                     For ChildControl In CurrentControl.GetAllControls()
                     AllControls.Push(ChildControl)
@@ -822,10 +823,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 Case "TabControl":
                 AllControls.Push(CurrentControl)
                 If CurrentControl.Tabs.Length > 0 {
-                    For CurrentTab In CurrentControl.Tabs
-                    If CurrentTab.ChildControls.Length > 0 {
-                        For CurrentTabControl In CurrentTab.GetAllControls()
-                        AllControls.Push(CurrentTabControl)
+                    For CurrentTab In CurrentControl.Tabs {
+                        AllControls.Push(CurrentTab)
+                        If CurrentTab.ChildControls.Length > 0 {
+                            For CurrentTabControl In CurrentTab.GetAllControls()
+                            AllControls.Push(CurrentTabControl)
+                        }
                     }
                 }
                 Default:
