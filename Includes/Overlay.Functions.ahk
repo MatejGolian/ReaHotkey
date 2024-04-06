@@ -201,14 +201,14 @@ CompensatePluginPointCoordinates(PluginControl) {
 }
 
 CompensatePluginRegionCoordinates(PluginControl) {
-    If !HasProp(PluginControl, "OriginalRegionX1Coordinate")
-    PluginControl.OriginalRegionX1Coordinate := PluginControl.RegionX1Coordinate
-    If !HasProp(PluginControl, "OriginalRegionY1Coordinate")
-    PluginControl.OriginalRegionY1Coordinate := PluginControl.RegionY1Coordinate
-    If !HasProp(PluginControl, "OriginalRegionX2Coordinate")
-    PluginControl.OriginalRegionX2Coordinate := PluginControl.RegionX2Coordinate
-    If !HasProp(PluginControl, "OriginalRegionY2Coordinate")
-    PluginControl.OriginalRegionY2Coordinate := PluginControl.RegionY2Coordinate
+    If !HasProp(PluginControl, "OriginalX1Coordinate")
+    PluginControl.OriginalX1Coordinate := PluginControl.X1Coordinate
+    If !HasProp(PluginControl, "OriginalY1Coordinate")
+    PluginControl.OriginalY1Coordinate := PluginControl.Y1Coordinate
+    If !HasProp(PluginControl, "OriginalX2Coordinate")
+    PluginControl.OriginalX2Coordinate := PluginControl.X2Coordinate
+    If !HasProp(PluginControl, "OriginalY2Coordinate")
+    PluginControl.OriginalY2Coordinate := PluginControl.Y2Coordinate
     Try {
         ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
     }
@@ -216,10 +216,10 @@ CompensatePluginRegionCoordinates(PluginControl) {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
     }
-    PluginControl.RegionX1Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX1Coordinate
-    PluginControl.RegionY1Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY1Coordinate
-    PluginControl.RegionX2Coordinate := PluginControlXCoordinate + PluginControl.OriginalRegionX2Coordinate
-    PluginControl.RegionY2Coordinate := PluginControlYCoordinate + PluginControl.OriginalRegionY2Coordinate
+    PluginControl.X1Coordinate := PluginControlXCoordinate + PluginControl.OriginalX1Coordinate
+    PluginControl.Y1Coordinate := PluginControlYCoordinate + PluginControl.OriginalY1Coordinate
+    PluginControl.X2Coordinate := PluginControlXCoordinate + PluginControl.OriginalX2Coordinate
+    PluginControl.Y2Coordinate := PluginControlYCoordinate + PluginControl.OriginalY2Coordinate
     Return PluginControl
 }
 

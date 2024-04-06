@@ -39,15 +39,15 @@ Class Sforzando {
         LabelStatic := ""
         UnlabelledString := ""
         
-        __New(LabelStatic, DefaultLabelOCR, RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "", OnActivateFunction := "") {
-            Super.__New(RegionX1Coordinate, RegionY1Coordinate, RegionX2Coordinate, RegionY2Coordinate, OCRLanguage, OCRScale, OnFocusFunction, OnActivateFunction)
+        __New(LabelStatic, DefaultLabelOCR, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "", OnActivateFunction := "") {
+            Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, OnFocusFunction, OnActivateFunction)
             This.DefaultLabelOCR := DefaultLabelOCR
             This.LabelStatic := LabelStatic
         }
         
         Activate(CurrentControlID := 0) {
             Super.Activate(CurrentControlID)
-            This.LabelOCR := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
+            This.LabelOCR := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
             If This.LabelOCR = ""
             This.LabelOCR := This.DefaultLabelOCR
             If This.ControlID != CurrentControlID {
@@ -60,7 +60,7 @@ Class Sforzando {
         
         Focus(CurrentControlID := 0) {
             Super.Focus(CurrentControlID)
-            This.LabelOCR := AccessibilityOverlay.OCR(This.RegionX1Coordinate, This.RegionY1Coordinate, This.RegionX2Coordinate, This.RegionY2Coordinate, This.OCRLanguage, This.OCRScale)
+            This.LabelOCR := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
             If This.LabelOCR = ""
             This.LabelOCR := This.DefaultLabelOCR
             If This.ControlID != CurrentControlID {
