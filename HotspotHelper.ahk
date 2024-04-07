@@ -59,14 +59,27 @@ Ctrl::StopSpeech()
 
 SetTimer ManageHotkeys, 100
 About()
-Speak(AppName . " ready")
 
 About(*) {
-    Global DialogOpen
+    Global AppName, DialogOpen
+    Static FirstShow := True
     If DialogOpen = 0 {
         DialogOpen := 1
-        MsgBox "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+L - Focus control`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+S - Search for image`nCtrl+Win+Shift+X - Copy the pixel colour under the mouse to clipboard`nCtrl - Stop speech`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot", "About " . AppName
-        DialogOpen := 0
+        AboutBox := Gui(, "About " . AppName)
+        AboutBox.Add("Edit", "ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+L - Focus control`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+S - Search for image`nCtrl+Win+Shift+X - Copy the pixel colour under the mouse to clipboard`nCtrl - Stop speech`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot")
+        AboutBox.Add("Button", "Default", "OK").OnEvent("Click", CloseAboutBox)
+        AboutBox.OnEvent("Close", CloseAboutBox)
+        AboutBox.OnEvent("Escape", CloseAboutBox)
+        AboutBox.Show()
+        CloseAboutBox(*) {
+            AboutBox.Destroy()
+            DialogOpen := 0
+            If FirstShow = True {
+                FirstShow := False
+                Sleep 500
+                Speak(AppName . " ready")
+            }
+        }
     }
 }
 
@@ -670,3 +683,12 @@ ToggleKeyboardMode() {
         Speak("Keyboard mode off")
     }
 }
+
+Version := "0.2.0"
+;@Ahk2Exe-Let U_version = %A_PriorLine~U)^(.+"){1}(.+)".*$~$2%
+    ;@Ahk2Exe-Let U_OrigFilename = %A_ScriptName~\.[^\.]+$~.exe%
+    ;@Ahk2Exe-SetDescription HotspotHelper
+    ;@Ahk2Exe-SetFileVersion %U_Version%
+    ;@Ahk2Exe-SetProductName HotspotHelper
+    ;@Ahk2Exe-SetProductVersion %U_Version%
+;@Ahk2Exe-SetOrigFilename %U_OrigFilename%
