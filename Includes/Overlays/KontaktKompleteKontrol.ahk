@@ -301,8 +301,8 @@ Class KontaktKompleteKontrol {
             KontaktKompleteKontrol.LoadPluginHeader("Komplete Kontrol")
             KontaktKompleteKontrol.CloseKKPluginBrowser()
         }
-        Else If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
-            KontaktKompleteKontrol.LoadPluginHeader("Kontakt")
+        Else If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
+            KontaktKompleteKontrol.LoadPluginHeader("Kontakt Full")
             ; KontaktKompleteKontrol.CloseKontaktPluginBrowser()
         }
         Else If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
@@ -352,7 +352,7 @@ Class KontaktKompleteKontrol {
         Critical
         If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
         Return "Komplete Kontrol"
-        Else If FindImage("Images/KontaktKompleteKontrol/Kontakt.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
+        Else If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
         Return "Kontakt"
         Else
         If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
@@ -364,12 +364,12 @@ Class KontaktKompleteKontrol {
         KKPluginHeader := AccessibilityOverlay("Komplete Kontrol")
         KKPluginHeader.AddStaticText("Komplete Kontrol")
         KKPluginHeader.AddHotspotButton("Menu", 305, 68, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        KontaktPluginHeader := AccessibilityOverlay("Kontakt")
-        KontaktPluginHeader.AddStaticText("Kontakt")
-        KontaktPluginHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
-        KontaktPluginHeader.AddCustomButton("LIBRARY Browser On/Off", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
-        KontaktPluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
-        KontaktPluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktFullPluginHeader := AccessibilityOverlay("Kontakt Full")
+        KontaktFullPluginHeader.AddStaticText("Kontakt")
+        KontaktFullPluginHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktFullPluginHeader.AddCustomButton("LIBRARY Browser On/Off", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktFullPluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
+        KontaktFullPluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
         KontaktPlayerPluginHeader := AccessibilityOverlay("Kontakt Player")
         KontaktPlayerPluginHeader.AddStaticText("Kontakt Player")
         KontaktPlayerPluginHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol, "FocusKontaktPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivateKontaktPluginMenu"))
@@ -386,8 +386,8 @@ Class KontaktKompleteKontrol {
         If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay.ChildControls.Length > 0 And ReaHotkey.FoundPlugin.Overlay.ChildControls[1].Label != HeaderLabel {
             If HeaderLabel = "Komplete Kontrol"
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KKPluginHeader
-            Else If HeaderLabel = "Kontakt"
-            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPluginHeader
+            Else If HeaderLabel = "Kontakt Full"
+            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktFullPluginHeader
             Else If HeaderLabel = "Kontakt Player"
             ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktPlayerPluginHeader
             Else
