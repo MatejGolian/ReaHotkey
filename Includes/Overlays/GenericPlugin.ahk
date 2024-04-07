@@ -2,10 +2,18 @@
 
 Class GenericPlugin {
     
+    Static ImageChecks := Array()
+    
     Static __New() {
         Plugin.Register("Generic Plug-in", ".*",, True, False, True)
         Plugin.RegisterOverlay("Generic Plug-in", AccessibilityOverlay())
+        GenericPlugin.AddImageCheck("Engine 2", "Images/Engine2/Engine2.png")
+        GenericPlugin.AddImageCheck("sforzando", "Images/Sforzando/Sforzando.png")
         Plugin.SetTimer("Generic Plug-in", ObjBindMethod(GenericPlugin, "DetectPlugin"), 100)
+    }
+    
+    Static AddImageCheck(PluginName, ImageFile) {
+        GenericPlugin.ImageChecks.Push(Map("PluginName", PluginName, "ImageFile", ImageFile))
     }
     
     Static AddTimers(PluginName) {
@@ -35,18 +43,15 @@ Class GenericPlugin {
     
     Static DetectPlugin() {
         Critical
-        If FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Engine 2"
-            ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "Engine 2", ReaHotkey.FoundPlugin.ControlClass)
+        For ImageCheck In GenericPlugin.ImageChecks
+        If FindImage(ImageCheck["ImageFile"], GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
+            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != ImageCheck["PluginName"]
+            ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, ImageCheck["PluginName"], ReaHotkey.FoundPlugin.ControlClass)
+            Return True
         }
-        Else If FindImage("Images/Sforzando/Sforzando.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "sforzando"
-            ReaHotkey.FoundPlugin := GenericPlugin.Load(ReaHotkey.FoundPlugin.InstanceNumber, "sforzando", ReaHotkey.FoundPlugin.ControlClass)
-        }
-        Else {
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Generic Plug-in"
-            ReaHotkey.FoundPlugin := GenericPlugin.Unload(ReaHotkey.FoundPlugin.InstanceNumber)
-        }
+        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != "Generic Plug-in"
+        ReaHotkey.FoundPlugin := GenericPlugin.Unload(ReaHotkey.FoundPlugin.InstanceNumber)
+        Return False
     }
     
     Static Load(InstanceNumber, PluginName, ControlClass) {
