@@ -48,7 +48,7 @@ Class PluginLoader {
                 Return True
             }
         }
-        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != LoaderName
+        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != LoaderName And ReaHotkey.FoundPlugin.HasOwnProp("IsLoader") And ReaHotkey.FoundPlugin.IsLoader == True
         ReaHotkey.FoundPlugin := PluginLoader.Unload(LoaderName, ReaHotkey.FoundPlugin.InstanceNumber)
         Return False
     }
@@ -68,9 +68,11 @@ Class PluginLoader {
         If NewInstance Is Plugin {
             For InstanceIndex, PluginInstance In Plugin.Instances
             If PluginInstance Is Plugin And PluginInstance.InstanceNumber = InstanceNumber {
+                OriginalInstanceNumber := NewInstance.InstanceNumber
                 NewInstance := NewInstance.Clone()
-                NewInstance.OriginalInstanceNumber := NewInstance.InstanceNumber
+                NewInstance.IsLoader := True
                 NewInstance.InstanceNumber := InstanceNumber
+                NewInstance.OriginalInstanceNumber := OriginalInstanceNumber
                 NewInstance.PluginNumber := PluginInstance.PluginNumber
                 Plugin.Instances[InstanceIndex] := NewInstance
                 Return NewInstance
