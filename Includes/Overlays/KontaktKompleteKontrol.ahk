@@ -64,42 +64,14 @@ Class KontaktKompleteKontrol {
         TalosOverlay := AccessibilityOverlay("Talos")
         TalosOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Talos", "Image", Map("File", "Images/KontaktKompleteKontrol/Talos.png"))
         TalosOverlay.AddAccessibilityOverlay()
-        TalosOverlay := AccessibilityOverlay("Talos")
         TalosOverlay.AddStaticText("Talos")
         TalosOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
         TalosOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         KontaktKompleteKontrol.PluginOverlays.Push(TalosOverlay)
         
-        Plugin.Register("Kontakt/Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$",, True)
-        
-        For PluginOverlay In KontaktKompleteKontrol.PluginOverlays
-        Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", PluginOverlay)
-        
         KontaktKompleteKontrol.Kontakt.Init()
         KontaktKompleteKontrol.KompleteKontrol.Init()
         KontaktKompleteKontrol.PluginDialogs.Init()
-        
-        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectProduct"), 500)
-        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 500)
-    }
-    
-    Static DetectProduct() {
-        Critical
-        If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
-            KontaktKompleteKontrol.LoadProductHeader("Kontakt Full")
-            ; KontaktKompleteKontrol.Kontakt.ClosePluginBrowser()
-        }
-        Else If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
-            KontaktKompleteKontrol.LoadProductHeader("Kontakt Player")
-            KontaktKompleteKontrol.Kontakt.ClosePluginBrowser()
-        }
-        Else If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
-            KontaktKompleteKontrol.LoadProductHeader("Komplete Kontrol")
-            KontaktKompleteKontrol.KompleteKontrol.ClosePluginBrowser()
-        }
-        Else {
-            KontaktKompleteKontrol.LoadProductHeader("Unknown")
-        }
     }
     
     Static GetPluginName() {
@@ -112,26 +84,6 @@ Class KontaktKompleteKontrol {
         If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
         Return "Kontakt"
         Return False
-    }
-    
-    Static LoadProductHeader(HeaderLabel) {
-        UnknownPluginHeader := AccessibilityOverlay("Unknown")
-        UnknownPluginHeader.AddStaticText("Kontakt/Komplete Kontrol")
-        UnknownPluginHeader.AddStaticText("Warning! The exact plugin could not be detected. Some functions may not work correctly.")
-        If ReaHotkey.FoundPlugin Is Plugin And Not HasProp(ReaHotkey.FoundPlugin.Overlay, "Metadata") {
-            ReaHotkey.FoundPlugin.Overlay.Metadata := Map("Product", "None")
-            ReaHotkey.FoundPlugin.Overlay.OverlayNumber := 1
-        }
-        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay.ChildControls.Length > 0 And ReaHotkey.FoundPlugin.Overlay.ChildControls[1].Label != HeaderLabel {
-            If HeaderLabel = "Kontakt Full"
-            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktKompleteKontrol.Kontakt.FullPluginHeader.Clone()
-            Else If HeaderLabel = "Kontakt Player"
-            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktKompleteKontrol.Kontakt.PlayerPluginHeader.Clone()
-            Else If HeaderLabel = "Komplete Kontrol"
-            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := KontaktKompleteKontrol.KompleteKontrol.PluginHeader.Clone()
-            Else
-            ReaHotkey.FoundPlugin.Overlay.ChildControls[1] := UnknownPluginHeader
-        }
     }
     
     Static ActivateAIPluginClassicMix(MixButton) {
@@ -299,26 +251,17 @@ Class KontaktKompleteKontrol {
     
     Class Kontakt {
         
-        Static FullPluginHeader := Object()
-        Static PlayerPluginHeader := Object()
+        Static PluginHeader := Object()
         Static StandaloneHeader := Object()
         
         Static Init() {
-            FullPluginHeader := AccessibilityOverlay("Kontakt Full")
-            FullPluginHeader.AddStaticText("Kontakt")
-            FullPluginHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
-            FullPluginHeader.AddCustomButton("LIBRARY Browser On/Off", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivatePluginMenu"))
-            FullPluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
-            FullPluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
-            KontaktKompleteKontrol.Kontakt.FullPluginHeader := FullPluginHeader
-            
-            PlayerPluginHeader := AccessibilityOverlay("Kontakt Player")
-            PlayerPluginHeader.AddStaticText("Kontakt Player")
-            PlayerPluginHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
-            PlayerPluginHeader.AddCustomButton("LIBRARY Browser On/Off", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
-            PlayerPluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
-            PlayerPluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
-            KontaktKompleteKontrol.Kontakt.PlayerPluginHeader := PlayerPluginHeader
+            PluginHeader := AccessibilityOverlay("Kontakt Full")
+            PluginHeader.AddStaticText("Kontakt")
+            PluginHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
+            PluginHeader.AddCustomButton("LIBRARY Browser On/Off", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivatePluginMenu"))
+            PluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
+            PluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
+            KontaktKompleteKontrol.Kontakt.PluginHeader := PluginHeader
             
             StandaloneHeader := AccessibilityOverlay("Kontakt")
             StandaloneHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivateStandaloneMenu"))
@@ -327,15 +270,32 @@ Class KontaktKompleteKontrol {
             StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivateStandaloneMenu"))
             KontaktKompleteKontrol.Kontakt.StandaloneHeader := StandaloneHeader
             
+            Plugin.Register("Kontakt", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "InitPlugin"), True)
+            
+            For PluginOverlay In KontaktKompleteKontrol.PluginOverlays
+            Plugin.RegisterOverlay("Kontakt", PluginOverlay)
+            
+            Plugin.SetTimer("Kontakt", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt", True, True), 500)
+            
             Standalone.Register("Kontakt", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
             Standalone.RegisterOverlay("Kontakt", StandaloneHeader)
-            ; Standalone.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "CloseStandaloneBrowser"), 500)
+            ; Standalone.SetTimer("Kontakt", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "CloseStandaloneBrowser"), 500)
             
             Standalone.Register("Kontakt Content Missing", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
             
             KontaktStandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
             KontaktStandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372)
             Standalone.RegisterOverlay("Kontakt Content Missing", KontaktStandaloneContentMissingOverlay)
+        }
+        
+        Static InitPlugin(PluginInstance) {
+            If PluginInstance.Overlay.ChildControls.Length = 0
+            PluginInstance.Overlay.AddAccessibilityOverlay()
+            PluginInstance.Overlay.ChildControls[1] := KontaktKompleteKontrol.Kontakt.PluginHeader.Clone()
+            If Not HasProp(PluginInstance.Overlay, "Metadata") {
+                PluginInstance.Overlay.Metadata := Map("Product", "None")
+                PluginInstance.Overlay.OverlayNumber := 1
+            }
         }
         
         Static ActivatePluginMenu(MenuButton) {
@@ -549,9 +509,16 @@ Class KontaktKompleteKontrol {
             StandaloneHeader.AddHotspotButton("Help menu", 202, 41)
             KontaktKompleteKontrol.KompleteKontrol.StandaloneHeader := StandaloneHeader
             
+            Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "InitPlugin"), True)
+            
+            For PluginOverlay In KontaktKompleteKontrol.PluginOverlays
+            Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
+            
+            Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True), 500)
+            
             Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe")
             Standalone.RegisterOverlay("Komplete Kontrol", StandaloneHeader)
-            Standalone.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandaloneBrowser"), 500)
+            Standalone.SetTimer("Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandaloneBrowser"), 500)
             
             Standalone.Register("Komplete Kontrol Preferences", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "FocusStandalonePreferenceTab"))
             Standalone.SetHotkey("Komplete Kontrol Preferences", "^,", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ManageStandalonePreferenceWindow"))
@@ -580,6 +547,16 @@ Class KontaktKompleteKontrol {
             KKPreferencePluginTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
             KKPreferenceTabControl.AddTabs(KKPreferenceAudioTab, KKPreferenceMIDITab, KKPreferenceGeneralTab, KKPreferenceLibraryTab, KKPreferencePluginTab)
             Standalone.RegisterOverlay("Komplete Kontrol Preferences", KKPreferenceOverlay)
+        }
+        
+        Static InitPlugin(PluginInstance) {
+            If PluginInstance.Overlay.ChildControls.Length = 0
+            PluginInstance.Overlay.AddAccessibilityOverlay()
+            PluginInstance.Overlay.ChildControls[1] := KontaktKompleteKontrol.KompleteKontrol.PluginHeader.Clone()
+            If Not HasProp(PluginInstance.Overlay, "Metadata") {
+                PluginInstance.Overlay.Metadata := Map("Product", "None")
+                PluginInstance.Overlay.OverlayNumber := 1
+            }
         }
         
         Static ClosePluginBrowser() {

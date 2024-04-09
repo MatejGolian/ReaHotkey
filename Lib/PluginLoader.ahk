@@ -4,8 +4,8 @@ Class PluginLoader {
     
     Static ImageChecks := Array()
     
-    Static AddImageCheck(PluginName, ImageFile) {
-        PluginLoader.ImageChecks.Push(Map("PluginName", PluginName, "ImageFile", ImageFile))
+    Static AddImageCheck(PluginName, ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
+        PluginLoader.ImageChecks.Push(Map("PluginName", PluginName, "ImageFile", ImageFile, "X1Coordinate", X1Coordinate, "Y1Coordinate", Y1Coordinate, "X2Coordinate", X2Coordinate, "Y2Coordinate", Y2Coordinate))
     }
     
     Static AddTimers(LoaderName, PluginName) {
@@ -35,11 +35,18 @@ Class PluginLoader {
     
     Static DetectPlugin(LoaderName) {
         Critical
-        For ImageCheck In PluginLoader.ImageChecks
-        If FindImage(ImageCheck["ImageFile"], GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != ImageCheck["PluginName"]
-            ReaHotkey.FoundPlugin := PluginLoader.Load(LoaderName, ReaHotkey.FoundPlugin.InstanceNumber, ImageCheck["PluginName"], ReaHotkey.FoundPlugin.ControlClass)
-            Return True
+        For ImageCheck In PluginLoader.ImageChecks {
+            X2Coordinate := 0
+            If ImageCheck["X2Coordinate"] > 0
+            X2Coordinate := GetPluginXCoordinate() + ImageCheck["X2Coordinate"]
+            Y2Coordinate := 0
+            If ImageCheck["Y2Coordinate"] > 0
+            Y2Coordinate := GetPluginYCoordinate() + ImageCheck["Y2Coordinate"]
+            If FindImage(ImageCheck["ImageFile"], GetPluginXCoordinate() + ImageCheck["X1Coordinate"], GetPluginYCoordinate() + ImageCheck["Y1Coordinate"], X2Coordinate, Y2Coordinate) Is Object {
+                If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != ImageCheck["PluginName"]
+                ReaHotkey.FoundPlugin := PluginLoader.Load(LoaderName, ReaHotkey.FoundPlugin.InstanceNumber, ImageCheck["PluginName"], ReaHotkey.FoundPlugin.ControlClass)
+                Return True
+            }
         }
         If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != LoaderName
         ReaHotkey.FoundPlugin := PluginLoader.Unload(LoaderName, ReaHotkey.FoundPlugin.InstanceNumber)

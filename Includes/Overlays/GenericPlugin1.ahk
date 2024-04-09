@@ -7,7 +7,7 @@ Class GenericPlugin1 Extends PluginLoader {
         Plugin.RegisterOverlay("Generic Plug-in 1", AccessibilityOverlay())
         PluginLoader.AddImageCheck("Engine 2", "Images/Engine2/Engine2.png")
         PluginLoader.AddImageCheck("sforzando", "Images/Sforzando/Sforzando.png")
-        Plugin.SetTimer("Generic Plug-in 1", ObjBindMethod(PluginLoader, "DetectPlugin", "Generic Plug-in 1"), 250)
+        Plugin.SetTimer("Generic Plug-in 1", ObjBindMethod(PluginLoader, "DetectPlugin", "Generic Plug-in 1"), 200)
     }
     
 }
