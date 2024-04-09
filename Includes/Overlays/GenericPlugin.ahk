@@ -9,7 +9,7 @@ Class GenericPlugin {
         Plugin.RegisterOverlay("Generic Plug-in", AccessibilityOverlay())
         GenericPlugin.AddImageCheck("Engine 2", "Images/Engine2/Engine2.png")
         GenericPlugin.AddImageCheck("sforzando", "Images/Sforzando/Sforzando.png")
-        Plugin.SetTimer("Generic Plug-in", ObjBindMethod(GenericPlugin, "DetectPlugin"), 100)
+        Plugin.SetTimer("Generic Plug-in", ObjBindMethod(GenericPlugin, "DetectPlugin"), 250)
     }
     
     Static AddImageCheck(PluginName, ImageFile) {
@@ -70,6 +70,7 @@ Class GenericPlugin {
             For InstanceIndex, PluginInstance In Plugin.Instances
             If PluginInstance Is Plugin And PluginInstance.InstanceNumber = InstanceNumber {
                 NewInstance := NewInstance.Clone()
+                NewInstance.OriginalInstanceNumber := NewInstance.InstanceNumber
                 NewInstance.InstanceNumber := InstanceNumber
                 NewInstance.PluginNumber := PluginInstance.PluginNumber
                 Plugin.Instances[InstanceIndex] := NewInstance
@@ -108,6 +109,10 @@ Class GenericPlugin {
             ReaHotkey.TurnPluginTimersOff()
             ReaHotkey.TurnPluginHotkeysOff()
             GenericPlugin.RemoveTimers(PluginInstance.Name)
+            Plugin.Instances[PluginInstance.OriginalInstanceNumber].Overlay := PluginInstance.Overlay
+            Plugin.Instances[PluginInstance.OriginalInstanceNumber].Overlays := Array()
+            For PluginOverlay In PluginInstance.Overlays
+            Plugin.Instances[PluginInstance.OriginalInstanceNumber].Overlays.Push(PluginOverlay)
             NewInstance := Plugin("Generic Plug-in", PluginInstance.ControlClass)
             NewInstance.InstanceNumber := InstanceNumber
             Plugin.Instances[InstanceIndex] := NewInstance
