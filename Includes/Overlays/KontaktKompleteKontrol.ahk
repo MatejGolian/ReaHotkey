@@ -258,7 +258,7 @@ Class KontaktKompleteKontrol {
             PluginHeader := AccessibilityOverlay("Kontakt Full")
             PluginHeader.AddStaticText("Kontakt")
             PluginHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
-            PluginHeader.AddCustomButton("LIBRARY Browser On/Off", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol, "ActivatePluginMenu"))
+            PluginHeader.AddCustomButton("LIBRARY Browser On/Off", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
             PluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
             PluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
             KontaktKompleteKontrol.Kontakt.PluginHeader := PluginHeader
