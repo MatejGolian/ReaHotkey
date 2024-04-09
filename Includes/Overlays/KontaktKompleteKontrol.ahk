@@ -79,26 +79,26 @@ Class KontaktKompleteKontrol {
         KontaktKompleteKontrol.KompleteKontrol.Init()
         KontaktKompleteKontrol.PluginDialogs.Init()
         
-        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectPlugin"), 500)
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol, "DetectProduct"), 500)
         Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt/Komplete Kontrol", True, True), 500)
     }
     
-    Static DetectPlugin() {
+    Static DetectProduct() {
         Critical
         If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
-            KontaktKompleteKontrol.LoadPluginHeader("Kontakt Full")
+            KontaktKompleteKontrol.LoadProductHeader("Kontakt Full")
             ; KontaktKompleteKontrol.Kontakt.ClosePluginBrowser()
         }
         Else If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
-            KontaktKompleteKontrol.LoadPluginHeader("Kontakt Player")
+            KontaktKompleteKontrol.LoadProductHeader("Kontakt Player")
             KontaktKompleteKontrol.Kontakt.ClosePluginBrowser()
         }
         Else If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object {
-            KontaktKompleteKontrol.LoadPluginHeader("Komplete Kontrol")
+            KontaktKompleteKontrol.LoadProductHeader("Komplete Kontrol")
             KontaktKompleteKontrol.KompleteKontrol.ClosePluginBrowser()
         }
         Else {
-            KontaktKompleteKontrol.LoadPluginHeader("Unknown")
+            KontaktKompleteKontrol.LoadProductHeader("Unknown")
         }
     }
     
@@ -114,7 +114,7 @@ Class KontaktKompleteKontrol {
         Return False
     }
     
-    Static LoadPluginHeader(HeaderLabel) {
+    Static LoadProductHeader(HeaderLabel) {
         UnknownPluginHeader := AccessibilityOverlay("Unknown")
         UnknownPluginHeader.AddStaticText("Kontakt/Komplete Kontrol")
         UnknownPluginHeader.AddStaticText("Warning! The exact plugin could not be detected. Some functions may not work correctly.")
