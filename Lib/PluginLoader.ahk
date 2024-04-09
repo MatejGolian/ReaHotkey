@@ -2,13 +2,14 @@
 
 Class PluginLoader {
     
+    Static ImageChecks := Map()
     Static LastPlugin := False
     Static LastInstanceNumber := False
     
-    Static ImageChecks := Array()
-    
-    Static AddImageCheck(PluginName, ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
-        PluginLoader.ImageChecks.Push(Map("PluginName", PluginName, "ImageFile", ImageFile, "X1Coordinate", X1Coordinate, "Y1Coordinate", Y1Coordinate, "X2Coordinate", X2Coordinate, "Y2Coordinate", Y2Coordinate))
+    Static AddImageCheck(LoaderName, PluginName, ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
+        If !PluginLoader.ImageChecks.Has(LoaderName)
+        PluginLoader.ImageChecks.Set(LoaderName, Array())
+        PluginLoader.ImageChecks[LoaderName].Push(Map("PluginName", PluginName, "ImageFile", ImageFile, "X1Coordinate", X1Coordinate, "Y1Coordinate", Y1Coordinate, "X2Coordinate", X2Coordinate, "Y2Coordinate", Y2Coordinate))
     }
     
     Static AddTimers(LoaderName, PluginName) {
@@ -38,7 +39,8 @@ Class PluginLoader {
     
     Static DetectPlugin(LoaderName) {
         Critical
-        For ImageCheck In PluginLoader.ImageChecks {
+        If PluginLoader.ImageChecks.Has(LoaderName)
+        For ImageCheck In PluginLoader.ImageChecks[LoaderName] {
             X2Coordinate := 0
             If ImageCheck["X2Coordinate"] > 0
             X2Coordinate := GetPluginXCoordinate() + ImageCheck["X2Coordinate"]
