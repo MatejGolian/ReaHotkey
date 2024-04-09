@@ -2,6 +2,9 @@
 
 Class PluginLoader {
     
+    Static LastPlugin := False
+    Static LastInstanceNumber := False
+    
     Static ImageChecks := Array()
     
     Static AddImageCheck(PluginName, ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
@@ -50,12 +53,17 @@ Class PluginLoader {
         }
         If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != LoaderName And ReaHotkey.FoundPlugin.HasOwnProp("IsLoader") And ReaHotkey.FoundPlugin.IsLoader == True
         ReaHotkey.FoundPlugin := PluginLoader.Unload(LoaderName, ReaHotkey.FoundPlugin.InstanceNumber)
+        Else
+        If ReaHotkey.FoundPlugin == False And PluginLoader.LastPlugin != False
+        ReaHotkey.FoundPlugin := PluginLoader.Unload(LoaderName, PluginLoader.LastInstanceNumber)
         Return False
     }
     
     Static Load(LoaderName, InstanceNumber, PluginName, ControlClass) {
         If Plugin.FindName(PluginName) > 0 {
             ReaHotkey.TurnPluginTimersOff(LoaderName)
+            PluginLoader.LastPlugin := PluginName
+            PluginLoader.LastInstanceNumber := InstanceNumber
             NewInstance := PluginLoader.OverridePluginInstance(InstanceNumber, Plugin.Instantiate(PluginName, ControlClass))
             PluginLoader.AddTimers(LoaderName, NewInstance.Name)
             ReaHotkey.TurnPluginTimersOn(PluginName)
@@ -114,6 +122,8 @@ Class PluginLoader {
             Plugin.Instances[PluginInstance.OriginalInstanceNumber].Overlays := Array()
             For PluginOverlay In PluginInstance.Overlays
             Plugin.Instances[PluginInstance.OriginalInstanceNumber].Overlays.Push(PluginOverlay)
+            PluginLoader.LastPlugin := False
+            PluginLoader.LastInstanceNumber := False
             NewInstance := Plugin(LoaderName, PluginInstance.ControlClass)
             NewInstance.InstanceNumber := InstanceNumber
             Plugin.Instances[InstanceIndex] := NewInstance
