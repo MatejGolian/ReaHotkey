@@ -48,15 +48,19 @@ Class PluginLoader {
             If ImageCheck["Y2Coordinate"] > 0
             Y2Coordinate := GetPluginYCoordinate() + ImageCheck["Y2Coordinate"]
             If FindImage(ImageCheck["ImageFile"], GetPluginXCoordinate() + ImageCheck["X1Coordinate"], GetPluginYCoordinate() + ImageCheck["Y1Coordinate"], X2Coordinate, Y2Coordinate) Is Object {
-                If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != ImageCheck["PluginName"]
-                ReaHotkey.FoundPlugin := PluginLoader.Load(LoaderName, ReaHotkey.FoundPlugin.InstanceNumber, ImageCheck["PluginName"], ReaHotkey.FoundPlugin.ControlClass)
+                If ReaHotkey.FoundPlugin Is Plugin {
+                    If ReaHotkey.FoundPlugin.Name != ImageCheck["PluginName"]
+                    ReaHotkey.FoundPlugin := PluginLoader.Load(LoaderName, ReaHotkey.FoundPlugin.InstanceNumber, ImageCheck["PluginName"], ReaHotkey.FoundPlugin.ControlClass)
+                    Else
+                    PluginLoader.Update(ReaHotkey.FoundPlugin.InstanceNumber)
+                }
                 Return True
             }
         }
-        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != LoaderName And ReaHotkey.FoundPlugin.HasOwnProp("IsLoader") And ReaHotkey.FoundPlugin.IsLoader == True
+        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name != LoaderName And ReaHotkey.FoundPlugin.HasOwnProp("IsLoader") And ReaHotkey.FoundPlugin.IsLoader = True
         ReaHotkey.FoundPlugin := PluginLoader.Unload(LoaderName, ReaHotkey.FoundPlugin.InstanceNumber)
         Else
-        If ReaHotkey.FoundPlugin == False And PluginLoader.LastPlugin != False
+        If ReaHotkey.FoundPlugin = False And PluginLoader.LastPlugin != False
         ReaHotkey.FoundPlugin := PluginLoader.Unload(LoaderName, PluginLoader.LastInstanceNumber)
         Return False
     }
@@ -120,10 +124,7 @@ Class PluginLoader {
             ReaHotkey.TurnPluginTimersOff()
             ReaHotkey.TurnPluginHotkeysOff()
             PluginLoader.RemoveTimers(LoaderName, PluginInstance.Name)
-            Plugin.Instances[PluginInstance.OriginalInstanceNumber].Overlay := PluginInstance.Overlay
-            Plugin.Instances[PluginInstance.OriginalInstanceNumber].Overlays := Array()
-            For PluginOverlay In PluginInstance.Overlays
-            Plugin.Instances[PluginInstance.OriginalInstanceNumber].Overlays.Push(PluginOverlay)
+            PluginLoader.Update(PluginInstance.InstanceNumber)
             PluginLoader.LastPlugin := False
             PluginLoader.LastInstanceNumber := False
             NewInstance := Plugin(LoaderName, PluginInstance.ControlClass)
@@ -132,6 +133,16 @@ Class PluginLoader {
             Return NewInstance
         }
         Return False
+    }
+    
+    Static Update(InstanceNumber) {
+        For PluginInstance In Plugin.Instances
+        If PluginInstance Is Plugin And PluginInstance.InstanceNumber = InstanceNumber And PluginInstance.HasOwnProp("IsLoader") And PluginInstance.IsLoader = True {
+            Plugin.Instances[PluginInstance.OriginalInstanceNumber].Overlay := PluginInstance.Overlay
+            Plugin.Instances[PluginInstance.OriginalInstanceNumber].Overlays := Array()
+            For PluginOverlay In PluginInstance.Overlays
+            Plugin.Instances[PluginInstance.OriginalInstanceNumber].Overlays.Push(PluginOverlay)
+        }
     }
     
 }
