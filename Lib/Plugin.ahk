@@ -2,7 +2,6 @@
 
 Class Plugin {
     
-    CheckerFunction := ""
     Chooser := True
     ControlClass := ""
     InitFunction := ""
@@ -34,7 +33,6 @@ Class Plugin {
             This.SingleInstance := PluginEntry["SingleInstance"]
             This.Chooser := PluginEntry["Chooser"]
             This.NoHotkeys := PluginEntry["NoHotkeys"]
-            This.CheckerFunction := PluginEntry["CheckerFunction"]
             For OverlayNumber, Overlay In PluginEntry["Overlays"]
             This.Overlays.Push(Overlay.Clone())
             If This.Overlays.Length = 1 {
@@ -57,12 +55,6 @@ Class Plugin {
             Plugin.Instances.Push(This)
             This.Init()
         }
-    }
-    
-    Check() {
-        If This.CheckerFunction Is Func
-        Return This.CheckerFunction.Call(This)
-        Return False
     }
     
     GetHotkeys() {
@@ -96,10 +88,6 @@ Class Plugin {
     
     SetTimer(Function, Period := "", Priority := "") {
         Plugin.SetTimer(This.Name, Function, Period, Priority)
-    }
-    
-    Static DefaultChecker(*) {
-        Return True
     }
     
     Static FindClass(ClassName) {
@@ -144,17 +132,16 @@ Class Plugin {
             SingleInstance := Plugin.List[PluginNumber]["SingleInstance"]
             If SingleInstance = True {
                 For PluginInstance In Plugin.Instances
-                If PluginInstance.PluginNumber = PluginNumber And PluginInstance.Check() = True
+                If PluginInstance.PluginNumber = PluginNumber
                 Return PluginInstance
             }
             Else {
                 SingleInstance := False
                 For PluginInstance In Plugin.Instances
-                If PluginInstance.PluginNumber = PluginNumber And PluginInstance.ControlClass = ControlClass And PluginInstance.Check() = True
+                If PluginInstance.PluginNumber = PluginNumber And PluginInstance.ControlClass = ControlClass
                 Return PluginInstance
             }
             PluginInstance := Plugin(Plugin.List[PluginNumber]["Name"], ControlClass)
-            If PluginInstance.Check() = True
             Return PluginInstance
         }
         Return False
@@ -206,7 +193,7 @@ Class Plugin {
         Return False
     }
     
-    Static Register(PluginName, ControlClasses, InitFunction := "", SingleInstance := False, Chooser := True, NoHotkeys := False, CheckerFunction := "") {
+    Static Register(PluginName, ControlClasses, InitFunction := "", SingleInstance := False, Chooser := True, NoHotkeys := False) {
         If Plugin.FindName(PluginName) = False {
             If PluginName = ""
             PluginName := Plugin.UnnamedPluginName
@@ -216,8 +203,6 @@ Class Plugin {
             Chooser := False
             If NoHotkeys != True And NoHotkeys != False
             NoHotkeys := False
-            If Not CheckerFunction Is Func
-            CheckerFunction := ObjBindMethod(Plugin, "DefaultChecker")
             PluginEntry := Map()
             PluginEntry["Name"] := PluginName
             If ControlClasses Is Array
@@ -228,7 +213,6 @@ Class Plugin {
             PluginEntry["SingleInstance"] := SingleInstance
             PluginEntry["Chooser"] := Chooser
             PluginEntry["NoHotkeys"] := NoHotkeys
-            PluginEntry["CheckerFunction"] := CheckerFunction
             PluginEntry["Hotkeys"] := Array()
             PluginEntry["Overlays"] := Array()
             PluginEntry["Timers"] := Array()
