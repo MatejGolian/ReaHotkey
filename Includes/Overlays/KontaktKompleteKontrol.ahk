@@ -578,16 +578,16 @@ Class KontaktKompleteKontrol {
             Standalone.SetTimer("Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandaloneBrowser"), 500)
             
             Standalone.Register("Komplete Kontrol Preference Dialog", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "FocusStandalonePreferenceTab"))
-            Standalone.SetHotkey("Komplete Kontrol Preference Dialog", "^,", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ManageStandalonePreferenceWindow"))
+            Standalone.SetHotkey("Komplete Kontrol Preference Dialog", "^,", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ManageStandalonePreferenceDialog"))
             
             StandalonePreferenceOverlay := AccessibilityOverlay()
             StandalonePreferenceTabControl := StandalonePreferenceOverlay.AddTabControl()
             StandalonePreferenceAudioTab := HotspotTab("Audio", 56, 69)
-            StandalonePreferenceAudioTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
+            StandalonePreferenceAudioTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferenceDialog"))
             StandalonePreferenceMIDITab := HotspotTab("MIDI", 56, 114)
-            StandalonePreferenceMIDITab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
+            StandalonePreferenceMIDITab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferenceDialog"))
             StandalonePreferenceGeneralTab := HotspotTab("General", 56, 155)
-            StandalonePreferenceGeneralTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
+            StandalonePreferenceGeneralTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferenceDialog"))
             StandalonePreferenceLibraryTab := HotspotTab("Library", 56, 196)
             StandalonePreferenceLibraryTabTabControl := StandalonePreferenceLibraryTab.AddTabControl()
             StandalonePreferenceLibraryFactoryTab := HotspotTab("Factory", 156, 76)
@@ -597,11 +597,11 @@ Class KontaktKompleteKontrol {
             StandalonePreferenceLibraryUserTab.AddHotspotCheckbox("Scan user content for changes at start-up", 419, 394, "0xC5C5C5", "0x5F5F5F")
             StandalonePreferenceLibraryUserTab.AddHotspotButton("Rescan", 546, 417)
             StandalonePreferenceLibraryTabTabControl.AddTabs(StandalonePreferenceLibraryFactoryTab, StandalonePreferenceLibraryUserTab)
-            StandalonePreferenceLibraryTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
+            StandalonePreferenceLibraryTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferenceDialog"))
             StandalonePreferencePluginTab := HotspotTab("Plug-ins", 56, 237)
             StandalonePreferencePluginTab.AddHotspotCheckbox("Always Use Latest Version Of NI Plug-ins", 419, 394, "0xC5C5C5", "0x5F5F5F")
             StandalonePreferencePluginTab.AddHotspotButton("Rescan", 546, 417)
-            StandalonePreferencePluginTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
+            StandalonePreferencePluginTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferenceDialog"))
             StandalonePreferenceTabControl.AddTabs(StandalonePreferenceAudioTab, StandalonePreferenceMIDITab, StandalonePreferenceGeneralTab, StandalonePreferenceLibraryTab, StandalonePreferencePluginTab)
             Standalone.RegisterOverlay("Komplete Kontrol Preference Dialog", StandalonePreferenceOverlay)
         }
@@ -659,7 +659,7 @@ Class KontaktKompleteKontrol {
             }
         }
         
-        Static CloseStandalonePreferences(*) {
+        Static CloseStandalonePreferenceDialog(*) {
             WinClose("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
         }
         
@@ -669,7 +669,7 @@ Class KontaktKompleteKontrol {
             KKInstance.Overlay.Focus()
         }
         
-        Static ManageStandalonePreferenceWindow(*) {
+        Static ManageStandalonePreferenceDialog(*) {
             If WinActive("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe") {
                 WinClose("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
             }
