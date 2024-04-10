@@ -69,27 +69,18 @@ Class KontaktKompleteKontrol {
         TalosOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         KontaktKompleteKontrol.PluginOverlays.Push(TalosOverlay)
         
-        Plugin.Register("Kontakt / Komplete Kontrol", ["^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", "^NIChildWindow[0-9A-F]{17}$"],, True, False, True)
-        Plugin.RegisterOverlay("Kontakt / Komplete Kontrol", AccessibilityOverlay())
-        PluginLoader.AddImageCheck("Kontakt / Komplete Kontrol", "Kontakt", "Images/KontaktKompleteKontrol/KontaktFull.png", 0, 0, 300, 300)
-        PluginLoader.AddImageCheck("Kontakt / Komplete Kontrol", "Kontakt", "Images/KontaktKompleteKontrol/KontaktPlayer.png", 0, 0, 300, 300)
-        PluginLoader.AddImageCheck("Kontakt / Komplete Kontrol", "Komplete Kontrol", "Images/KontaktKompleteKontrol/KompleteKontrol.png", 0, 0, 300, 300)
-        PluginLoader.AddFunctionCheck("Kontakt / Komplete Kontrol", "Kontakt Content Missing Dialog", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "CheckPluginContentMissing"))
-        PluginLoader.AddFunctionCheck("Kontakt / Komplete Kontrol", "Komplete Kontrol Preference Dialog", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CheckPluginPreferences"))
-        Plugin.SetTimer("Kontakt / Komplete Kontrol", ObjBindMethod(PluginLoader, "DetectPlugin", "Kontakt / Komplete Kontrol"), 200)
-        
         KontaktKompleteKontrol.Kontakt.Init()
         KontaktKompleteKontrol.KompleteKontrol.Init()
     }
     
     Static GetPluginName() {
         Critical
-        If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
+        If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
         Return "Kontakt"
-        Else If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
+        Else If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
         Return "Kontakt"
         Else
-        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
+        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 100) Is Object
         Return "Komplete Kontrol"
         Return False
     }
@@ -278,12 +269,12 @@ Class KontaktKompleteKontrol {
             StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivateStandaloneMenu"))
             KontaktKompleteKontrol.Kontakt.StandaloneHeader := StandaloneHeader
             
-            Plugin.Register("Kontakt", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "InitPlugin"), True)
+            Plugin.Register("Kontakt", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "InitPlugin"), True, True, False, ObjBindMethod(KontaktKompleteKontrol.Kontakt, "CheckPlugin"))
             
             For PluginOverlay In KontaktKompleteKontrol.PluginOverlays
             Plugin.RegisterOverlay("Kontakt", PluginOverlay)
             
-            Plugin.Register("Kontakt Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False)
+            Plugin.Register("Kontakt Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KontaktKompleteKontrol.Kontakt, "CheckPluginContentMissing"))
             Plugin.SetHotkey("Kontakt Content Missing Dialog", "!F4", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ClosePluginContentMissingDialog"))
             Plugin.SetHotkey("Kontakt Content Missing Dialog", "Escape", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ClosePluginContentMissingDialog"))
             
@@ -302,16 +293,6 @@ Class KontaktKompleteKontrol {
             StandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
             StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372)
             Standalone.RegisterOverlay("Kontakt Content Missing Dialog", StandaloneContentMissingOverlay)
-        }
-        
-        Static InitPlugin(PluginInstance) {
-            If PluginInstance.Overlay.ChildControls.Length = 0
-            PluginInstance.Overlay.AddAccessibilityOverlay()
-            PluginInstance.Overlay.ChildControls[1] := KontaktKompleteKontrol.Kontakt.PluginHeader.Clone()
-            If Not HasProp(PluginInstance.Overlay, "Metadata") {
-                PluginInstance.Overlay.Metadata := Map("Product", "None")
-                PluginInstance.Overlay.OverlayNumber := 1
-            }
         }
         
         Static ActivatePluginMenu(MenuButton) {
@@ -344,6 +325,15 @@ Class KontaktKompleteKontrol {
             Else {
                 AccessibilityOverlay.Speak("OCR not available")
             }
+        }
+        
+        Static CheckPlugin(*) {
+            If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
+            Return True
+            Else
+            If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
+            Return True
+            Return False
         }
         
         Static CheckPluginContentMissing(*) {
@@ -399,6 +389,16 @@ Class KontaktKompleteKontrol {
             MenuLabel := StrSplit(MenuButton.Label, A_Space)
             MenuLabel := MenuLabel[1]
             KontaktKompleteKontrol.Kontakt.MoveToOrClickMenu("Standalone", MenuLabel, "MouseMove")
+        }
+        
+        Static InitPlugin(PluginInstance) {
+            If PluginInstance.Overlay.ChildControls.Length = 0
+            PluginInstance.Overlay.AddAccessibilityOverlay()
+            PluginInstance.Overlay.ChildControls[1] := KontaktKompleteKontrol.Kontakt.PluginHeader.Clone()
+            If Not HasProp(PluginInstance.Overlay, "Metadata") {
+                PluginInstance.Overlay.Metadata := Map("Product", "None")
+                PluginInstance.Overlay.OverlayNumber := 1
+            }
         }
         
         Static MoveToOrClickMenu(Type, MenuLabel, MoveOrClick) {
@@ -542,14 +542,14 @@ Class KontaktKompleteKontrol {
             StandaloneHeader.AddHotspotButton("Help menu", 202, 41)
             KontaktKompleteKontrol.KompleteKontrol.StandaloneHeader := StandaloneHeader
             
-            Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "InitPlugin"), True)
+            Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "InitPlugin"), True, True, False, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CheckPlugin"))
             
             For PluginOverlay In KontaktKompleteKontrol.PluginOverlays
             Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
             
             Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True), 500)
             
-            Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False)
+            Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CheckPluginPreferences"))
             Plugin.SetHotkey("Komplete Kontrol Preference Dialog", "!F4", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ClosePluginPreferenceDialog"))
             Plugin.SetHotkey("Komplete Kontrol Preference Dialog", "Escape", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ClosePluginPreferenceDialog"))
             
@@ -609,14 +609,10 @@ Class KontaktKompleteKontrol {
             Standalone.RegisterOverlay("Komplete Kontrol Preference Dialog", StandalonePreferenceOverlay)
         }
         
-        Static InitPlugin(PluginInstance) {
-            If PluginInstance.Overlay.ChildControls.Length = 0
-            PluginInstance.Overlay.AddAccessibilityOverlay()
-            PluginInstance.Overlay.ChildControls[1] := KontaktKompleteKontrol.KompleteKontrol.PluginHeader.Clone()
-            If Not HasProp(PluginInstance.Overlay, "Metadata") {
-                PluginInstance.Overlay.Metadata := Map("Product", "None")
-                PluginInstance.Overlay.OverlayNumber := 1
-            }
+        Static CheckPlugin(*) {
+            If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 100) Is Object
+            Return True
+            Return False
         }
         
         Static CheckPluginPreferences(*) {
@@ -670,6 +666,16 @@ Class KontaktKompleteKontrol {
             Sleep 1000
             If KKInstance.Overlay.CurrentControlID = 0
             KKInstance.Overlay.Focus()
+        }
+        
+        Static InitPlugin(PluginInstance) {
+            If PluginInstance.Overlay.ChildControls.Length = 0
+            PluginInstance.Overlay.AddAccessibilityOverlay()
+            PluginInstance.Overlay.ChildControls[1] := KontaktKompleteKontrol.KompleteKontrol.PluginHeader.Clone()
+            If Not HasProp(PluginInstance.Overlay, "Metadata") {
+                PluginInstance.Overlay.Metadata := Map("Product", "None")
+                PluginInstance.Overlay.OverlayNumber := 1
+            }
         }
         
         Static ManageStandalonePreferenceDialog(*) {

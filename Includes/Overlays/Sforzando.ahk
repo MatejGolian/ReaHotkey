@@ -3,8 +3,14 @@
 Class Sforzando {
     
     Static __New() {
-        Plugin.Register("sforzando", "^Plugin[0-9A-F]{17}$", ObjBindMethod(Sforzando, "InitPlugin"), True)
+        Plugin.Register("sforzando", "^Plugin[0-9A-F]{17}$", ObjBindMethod(Sforzando, "InitPlugin"), True, True, False, ObjBindMethod(Sforzando, "CheckPlugin"))
         Standalone.Register("sforzando", "Plogue Art et Technologie, Inc sforzando ahk_class PLGWindowClass ahk_exe sforzando( x64)?.exe", ObjBindMethod(Sforzando, "InitStandalone"))
+    }
+    
+    Static CheckPlugin(*) {
+        If FindImage("Images/Sforzando/Sforzando.png", GetPluginXCoordinate() + 500, GetPluginYCoordinate(), GetPluginXCoordinate() + 800, GetPluginYCoordinate() + 200) Is Object
+        Return True
+        Return False
     }
     
     Static InitPlugin(PluginInstance) {
