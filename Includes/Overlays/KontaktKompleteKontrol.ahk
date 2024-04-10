@@ -69,20 +69,25 @@ Class KontaktKompleteKontrol {
         TalosOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         KontaktKompleteKontrol.PluginOverlays.Push(TalosOverlay)
         
+        Plugin.Register("Kontakt/Komplete Kontrol Dialogs", "^NIChildWindow[0-9A-F]{17}$",, True, False, True)
+        Plugin.RegisterOverlay("Kontakt/Komplete Kontrol Dialogs", AccessibilityOverlay())
+        PluginLoader.AddFunctionCheck("Kontakt/Komplete Kontrol Dialogs", "Kontakt Content Missing Dialog", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "CheckPluginContentMissing"))
+        PluginLoader.AddFunctionCheck("Kontakt/Komplete Kontrol Dialogs", "Komplete Kontrol Preference Dialog", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CheckPluginPreferences"))
+        Plugin.SetTimer("Kontakt/Komplete Kontrol Dialogs", ObjBindMethod(PluginLoader, "DetectPlugin", "Kontakt/Komplete Kontrol Dialogs"), 200)
+        
         KontaktKompleteKontrol.Kontakt.Init()
         KontaktKompleteKontrol.KompleteKontrol.Init()
-        KontaktKompleteKontrol.PluginDialogs.Init()
     }
     
     Static GetPluginName() {
         Critical
-        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
-        Return "Komplete Kontrol"
-        Else If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
+        If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
+        Return "Kontakt"
+        Else If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
         Return "Kontakt"
         Else
-        If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
-        Return "Kontakt"
+        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
+        Return "Komplete Kontrol"
         Return False
     }
     
@@ -275,17 +280,25 @@ Class KontaktKompleteKontrol {
             For PluginOverlay In KontaktKompleteKontrol.PluginOverlays
             Plugin.RegisterOverlay("Kontakt", PluginOverlay)
             
+            Plugin.Register("Kontakt Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False)
+            Plugin.SetHotkey("Kontakt Content Missing Dialog", "!F4", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ClosePluginContentMissingDialog"))
+            Plugin.SetHotkey("Kontakt Content Missing Dialog", "Escape", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ClosePluginContentMissingDialog"))
+            
+            PluginContentMissingOverlay := AccessibilityOverlay("Content Missing")
+            PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372)
+            Plugin.RegisterOverlay("Kontakt Content Missing Dialog", PluginContentMissingOverlay)
+            
             Plugin.SetTimer("Kontakt", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt", True, True), 500)
             
             Standalone.Register("Kontakt", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
             Standalone.RegisterOverlay("Kontakt", StandaloneHeader)
             ; Standalone.SetTimer("Kontakt", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "CloseStandaloneBrowser"), 500)
             
-            Standalone.Register("Kontakt Content Missing", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
+            Standalone.Register("Kontakt Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
             
             KontaktStandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
             KontaktStandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372)
-            Standalone.RegisterOverlay("Kontakt Content Missing", KontaktStandaloneContentMissingOverlay)
+            Standalone.RegisterOverlay("Kontakt Content Missing Dialog", KontaktStandaloneContentMissingOverlay)
         }
         
         Static InitPlugin(PluginInstance) {
@@ -330,6 +343,13 @@ Class KontaktKompleteKontrol {
             }
         }
         
+        Static CheckPluginContentMissing(*) {
+            Critical
+            If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing"
+            Return True
+            Return False
+        }
+        
         Static ClosePluginBrowser() {
             Colors := ["0x999993", "0x9A9A93"]
             For Color In Colors
@@ -340,6 +360,16 @@ Class KontaktKompleteKontrol {
                 AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
                 Else
                 AccessibilityOverlay.Speak("Library Browser closed.")
+            }
+        }
+        
+        Static ClosePluginContentMissingDialog(*) {
+            Critical
+            If ReaHotkey.FoundPlugin Is Plugin And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria)
+            If ReaHotkey.FoundPlugin.Name = "Kontakt Content Missing Dialog" And WinGetTitle("A") = "content Missing" {
+                ReaHotkey.FoundPlugin.Overlay.Reset()
+                WinClose("A")
+                Sleep 500
             }
         }
         
@@ -516,37 +546,64 @@ Class KontaktKompleteKontrol {
             
             Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True), 500)
             
+            Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False)
+            Plugin.SetHotkey("Komplete Kontrol Preference Dialog", "!F4", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ClosePluginPreferenceDialog"))
+            Plugin.SetHotkey("Komplete Kontrol Preference Dialog", "Escape", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ClosePluginPreferenceDialog"))
+            
+            PluginPreferenceOverlay := AccessibilityOverlay()
+            PluginPreferenceTabControl := PluginPreferenceOverlay.AddTabControl()
+            PluginPreferenceMIDITab := HotspotTab("MIDI", 56, 69)
+            PluginPreferenceMIDITab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ClosePluginPreferenceDialog"))
+            PluginPreferenceGeneralTab := HotspotTab("General", 56, 114)
+            PluginPreferenceGeneralTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ClosePluginPreferenceDialog"))
+            PluginPreferenceLibraryTab := HotspotTab("Library", 56, 155)
+            PluginPreferenceLibraryTabTabControl := PluginPreferenceLibraryTab.AddTabControl()
+            PluginPreferenceLibraryFactoryTab := HotspotTab("Factory", 156, 76)
+            PluginPreferenceLibraryFactoryTab.AddHotspotButton("Rescan", 546, 417)
+            PluginPreferenceLibraryUserTab := HotspotTab("User", 240, 76)
+            PluginPreferenceLibraryUserTab.AddHotspotButton("Add Directory", 170, 420)
+            PluginPreferenceLibraryUserTab.AddHotspotCheckbox("Scan user content for changes at start-up", 419, 394, "0xC5C5C5", "0x5F5F5F")
+            PluginPreferenceLibraryUserTab.AddHotspotButton("Rescan", 546, 417)
+            PluginPreferenceLibraryTabTabControl.AddTabs(PluginPreferenceLibraryFactoryTab, PluginPreferenceLibraryUserTab)
+            PluginPreferenceLibraryTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ClosePluginPreferenceDialog"))
+            PluginPreferencePluginTab := HotspotTab("Plug-ins", 56, 196)
+            PluginPreferencePluginTab.AddHotspotCheckbox("Always Use Latest Version Of NI Plug-ins", 419, 394, "0xC5C5C5", "0x5F5F5F")
+            PluginPreferencePluginTab.AddHotspotButton("Rescan", 546, 417)
+            PluginPreferencePluginTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ClosePluginPreferenceDialog"))
+            PluginPreferenceTabControl.AddTabs(PluginPreferenceMIDITab, PluginPreferenceGeneralTab, PluginPreferenceLibraryTab, PluginPreferencePluginTab)
+            Plugin.RegisterOverlay("Komplete Kontrol Preference Dialog", PluginPreferenceOverlay)
+            
             Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe")
             Standalone.RegisterOverlay("Komplete Kontrol", StandaloneHeader)
             Standalone.SetTimer("Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandaloneBrowser"), 500)
             
-            Standalone.Register("Komplete Kontrol Preferences", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "FocusStandalonePreferenceTab"))
-            Standalone.SetHotkey("Komplete Kontrol Preferences", "^,", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ManageStandalonePreferenceWindow"))
+            Standalone.Register("Komplete Kontrol Preference Dialog", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "FocusStandalonePreferenceTab"))
+            Standalone.SetHotkey("Komplete Kontrol Preference Dialog", "^,", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ManageStandalonePreferenceWindow"))
             
-            KKPreferenceOverlay := AccessibilityOverlay()
-            KKPreferenceTabControl := KKPreferenceOverlay.AddTabControl()
-            KKPreferenceAudioTab := HotspotTab("Audio", 56, 69)
-            KKPreferenceAudioTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
-            KKPreferenceMIDITab := HotspotTab("MIDI", 56, 114)
-            KKPreferenceMIDITab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
-            KKPreferenceGeneralTab := HotspotTab("General", 56, 155)
-            KKPreferenceGeneralTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
-            KKPreferenceLibraryTab := HotspotTab("Library", 56, 196)
-            KKPreferenceLibraryTabTabControl := KKPreferenceLibraryTab.AddTabControl()
-            KKPreferenceLibraryFactoryTab := HotspotTab("Factory", 156, 76)
-            KKPreferenceLibraryFactoryTab.AddHotspotButton("Rescan", 546, 417)
-            KKPreferenceLibraryUserTab := HotspotTab("User", 240, 76)
-            KKPreferenceLibraryUserTab.AddHotspotButton("Add Directory", 170, 420)
-            KKPreferenceLibraryUserTab.AddHotspotCheckbox("Scan user content for changes at start-up", 419, 394, "0xC5C5C5", "0x5F5F5F")
-            KKPreferenceLibraryUserTab.AddHotspotButton("Rescan", 546, 417)
-            KKPreferenceLibraryTabTabControl.AddTabs(KKPreferenceLibraryFactoryTab, KKPreferenceLibraryUserTab)
-            KKPreferenceLibraryTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
-            KKPreferencePluginTab := HotspotTab("Plug-ins", 56, 237)
-            KKPreferencePluginTab.AddHotspotCheckbox("Always Use Latest Version Of NI Plug-ins", 419, 394, "0xC5C5C5", "0x5F5F5F")
-            KKPreferencePluginTab.AddHotspotButton("Rescan", 546, 417)
-            KKPreferencePluginTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
-            KKPreferenceTabControl.AddTabs(KKPreferenceAudioTab, KKPreferenceMIDITab, KKPreferenceGeneralTab, KKPreferenceLibraryTab, KKPreferencePluginTab)
-            Standalone.RegisterOverlay("Komplete Kontrol Preferences", KKPreferenceOverlay)
+            StandalonePreferenceOverlay := AccessibilityOverlay()
+            StandalonePreferenceTabControl := StandalonePreferenceOverlay.AddTabControl()
+            StandalonePreferenceAudioTab := HotspotTab("Audio", 56, 69)
+            StandalonePreferenceAudioTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
+            StandalonePreferenceMIDITab := HotspotTab("MIDI", 56, 114)
+            StandalonePreferenceMIDITab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
+            StandalonePreferenceGeneralTab := HotspotTab("General", 56, 155)
+            StandalonePreferenceGeneralTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
+            StandalonePreferenceLibraryTab := HotspotTab("Library", 56, 196)
+            StandalonePreferenceLibraryTabTabControl := StandalonePreferenceLibraryTab.AddTabControl()
+            StandalonePreferenceLibraryFactoryTab := HotspotTab("Factory", 156, 76)
+            StandalonePreferenceLibraryFactoryTab.AddHotspotButton("Rescan", 546, 417)
+            StandalonePreferenceLibraryUserTab := HotspotTab("User", 240, 76)
+            StandalonePreferenceLibraryUserTab.AddHotspotButton("Add Directory", 170, 420)
+            StandalonePreferenceLibraryUserTab.AddHotspotCheckbox("Scan user content for changes at start-up", 419, 394, "0xC5C5C5", "0x5F5F5F")
+            StandalonePreferenceLibraryUserTab.AddHotspotButton("Rescan", 546, 417)
+            StandalonePreferenceLibraryTabTabControl.AddTabs(StandalonePreferenceLibraryFactoryTab, StandalonePreferenceLibraryUserTab)
+            StandalonePreferenceLibraryTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
+            StandalonePreferencePluginTab := HotspotTab("Plug-ins", 56, 237)
+            StandalonePreferencePluginTab.AddHotspotCheckbox("Always Use Latest Version Of NI Plug-ins", 419, 394, "0xC5C5C5", "0x5F5F5F")
+            StandalonePreferencePluginTab.AddHotspotButton("Rescan", 546, 417)
+            StandalonePreferencePluginTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandalonePreferences"))
+            StandalonePreferenceTabControl.AddTabs(StandalonePreferenceAudioTab, StandalonePreferenceMIDITab, StandalonePreferenceGeneralTab, StandalonePreferenceLibraryTab, StandalonePreferencePluginTab)
+            Standalone.RegisterOverlay("Komplete Kontrol Preference Dialog", StandalonePreferenceOverlay)
         }
         
         Static InitPlugin(PluginInstance) {
@@ -559,6 +616,13 @@ Class KontaktKompleteKontrol {
             }
         }
         
+        Static CheckPluginPreferences(*) {
+            Critical
+            If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Preferences"
+            Return True
+            Return False
+        }
+        
         Static ClosePluginBrowser() {
             Colors := ["0x6E8192", "0x6F8193", "0x97999A"]
             For Color In Colors
@@ -569,6 +633,16 @@ Class KontaktKompleteKontrol {
                 AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
                 Else
                 AccessibilityOverlay.Speak("Library Browser closed.")
+            }
+        }
+        
+        Static ClosePluginPreferenceDialog(*) {
+            Critical
+            If ReaHotkey.FoundPlugin Is Plugin And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria)
+            If ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Preference Dialog" And WinGetTitle("A") = "Preferences" {
+                ReaHotkey.FoundPlugin.Overlay.Reset()
+                WinClose("A")
+                Sleep 500
             }
         }
         
@@ -606,76 +680,6 @@ Class KontaktKompleteKontrol {
             Else {
                 If WinExist("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe") And Not WinActive("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
                 WinActivate("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
-            }
-        }
-        
-    }
-    
-    Class PluginDialogs {
-        
-        Static Init() {
-            Plugin.Register("Kontakt/Komplete Kontrol Dialogs", "^NIChildWindow[0-9A-F]{17}$",, False, False)
-            Plugin.SetHotkey("Kontakt/Komplete Kontrol Dialogs", "!F4", ObjBindMethod(KontaktKompleteKontrol.PluginDialogs, "CloseDialog"))
-            Plugin.SetHotkey("Kontakt/Komplete Kontrol Dialogs", "Escape", ObjBindMethod(KontaktKompleteKontrol.PluginDialogs, "CloseDialog"))
-            
-            KKPreferenceOverlay := AccessibilityOverlay()
-            KKPreferenceTabControl := KKPreferenceOverlay.AddTabControl()
-            KKPreferenceMIDITab := HotspotTab("MIDI", 56, 69)
-            KKPreferenceMIDITab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.PluginDialogs, "CloseDialog"))
-            KKPreferenceGeneralTab := HotspotTab("General", 56, 114)
-            KKPreferenceGeneralTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.PluginDialogs, "CloseDialog"))
-            KKPreferenceLibraryTab := HotspotTab("Library", 56, 155)
-            KKPreferenceLibraryTabTabControl := KKPreferenceLibraryTab.AddTabControl()
-            KKPreferenceLibraryFactoryTab := HotspotTab("Factory", 156, 76)
-            KKPreferenceLibraryFactoryTab.AddHotspotButton("Rescan", 546, 417)
-            KKPreferenceLibraryUserTab := HotspotTab("User", 240, 76)
-            KKPreferenceLibraryUserTab.AddHotspotButton("Add Directory", 170, 420)
-            KKPreferenceLibraryUserTab.AddHotspotCheckbox("Scan user content for changes at start-up", 419, 394, "0xC5C5C5", "0x5F5F5F")
-            KKPreferenceLibraryUserTab.AddHotspotButton("Rescan", 546, 417)
-            KKPreferenceLibraryTabTabControl.AddTabs(KKPreferenceLibraryFactoryTab, KKPreferenceLibraryUserTab)
-            KKPreferenceLibraryTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.PluginDialogs, "CloseDialog"))
-            KKPreferencePluginTab := HotspotTab("Plug-ins", 56, 196)
-            KKPreferencePluginTab.AddHotspotCheckbox("Always Use Latest Version Of NI Plug-ins", 419, 394, "0xC5C5C5", "0x5F5F5F")
-            KKPreferencePluginTab.AddHotspotButton("Rescan", 546, 417)
-            KKPreferencePluginTab.AddCustomButton("Close",, ObjBindMethod(KontaktKompleteKontrol.PluginDialogs, "CloseDialog"))
-            KKPreferenceTabControl.AddTabs(KKPreferenceMIDITab, KKPreferenceGeneralTab, KKPreferenceLibraryTab, KKPreferencePluginTab)
-            Plugin.RegisterOverlay("Kontakt/Komplete Kontrol Dialogs", KKPreferenceOverlay)
-            
-            KontaktPluginContentMissingOverlay := AccessibilityOverlay("Content Missing")
-            KontaktPluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372)
-            Plugin.RegisterOverlay("Kontakt/Komplete Kontrol Dialogs", KontaktPluginContentMissingOverlay)
-            
-            Plugin.SetTimer("Kontakt/Komplete Kontrol Dialogs", ObjBindMethod(KontaktKompleteKontrol.PluginDialogs, "DetectDialog"), 250)
-        }
-        
-        Static CloseDialog(*) {
-            Critical
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt/Komplete Kontrol Dialogs" And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria)
-            If WinGetTitle("A") = "Preferences" Or WinGetTitle("A") = "content Missing" {
-                ReaHotkey.FoundPlugin.Overlay.Reset()
-                ReaHotkey.TurnPluginTimersOff("Kontakt/Komplete Kontrol Dialogs")
-                ReaHotkey.TurnPluginHotkeysOff("Kontakt/Komplete Kontrol Dialogs")
-                ReaHotkey.FoundPlugin := False
-                WinClose("A")
-                Sleep 500
-            }
-        }
-        
-        Static DetectDialog() {
-            Critical
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt/Komplete Kontrol Dialogs" And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Preferences" {
-                ReaHotkey.FoundPlugin.Overlay := ReaHotkey.FoundPlugin.Overlays[1]
-                ReaHotkey.FoundPlugin.NoHotkeys := False
-            }
-            Else If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt/Komplete Kontrol Dialogs" And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing" {
-                ReaHotkey.FoundPlugin.Overlay := ReaHotkey.FoundPlugin.Overlays[2]
-                ReaHotkey.FoundPlugin.NoHotkeys := False
-            }
-            Else {
-                If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt/Komplete Kontrol Dialogs" And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") != "Preferences" And ReaHotkey.FoundPlugin.NoHotkeys = False
-                ReaHotkey.FoundPlugin.NoHotkeys := True
-                If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt/Komplete Kontrol Dialogs" And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") != "content Missing" And ReaHotkey.FoundPlugin.NoHotkeys = False
-                ReaHotkey.FoundPlugin.NoHotkeys := True
             }
         }
         

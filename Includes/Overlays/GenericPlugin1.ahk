@@ -1,6 +1,6 @@
 #Requires AutoHotkey v2.0
 
-Class GenericPlugin1 Extends PluginLoader {
+Class GenericPlugin1 {
     
     Static __New() {
         Plugin.Register("Generic Plug-in 1", "^Plugin[0-9A-F]{17}$",, True, False, True)

@@ -2,9 +2,16 @@
 
 Class PluginLoader {
     
+    Static FunctionChecks := Map()
     Static ImageChecks := Map()
     Static LastPlugin := False
     Static LastInstanceNumber := False
+    
+    Static AddFunctionCheck(LoaderName, PluginName, Function) {
+        If !PluginLoader.FunctionChecks.Has(LoaderName)
+        PluginLoader.FunctionChecks.Set(LoaderName, Array())
+        PluginLoader.FunctionChecks[LoaderName].Push(Map("PluginName", PluginName, "Function", Function))
+    }
     
     Static AddImageCheck(LoaderName, PluginName, ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
         If !PluginLoader.ImageChecks.Has(LoaderName)
@@ -39,6 +46,17 @@ Class PluginLoader {
     
     Static DetectPlugin(LoaderName) {
         Critical
+        If PluginLoader.FunctionChecks.Has(LoaderName)
+        For FunctionCheck In PluginLoader.FunctionChecks[LoaderName]
+        If FunctionCheck["Function"].Call(FunctionCheck["PluginName"]) = True {
+            If ReaHotkey.FoundPlugin Is Plugin {
+                If ReaHotkey.FoundPlugin.Name != FunctionCheck["PluginName"]
+                ReaHotkey.FoundPlugin := PluginLoader.Load(LoaderName, ReaHotkey.FoundPlugin.InstanceNumber, FunctionCheck["PluginName"], ReaHotkey.FoundPlugin.ControlClass)
+                Else
+                PluginLoader.Update(ReaHotkey.FoundPlugin.InstanceNumber)
+            }
+            Return True
+        }
         If PluginLoader.ImageChecks.Has(LoaderName)
         For ImageCheck In PluginLoader.ImageChecks[LoaderName] {
             X2Coordinate := 0

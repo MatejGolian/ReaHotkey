@@ -1,6 +1,6 @@
 #Requires AutoHotkey v2.0
 
-Class GenericPlugin2 Extends PluginLoader {
+Class GenericPlugin2 {
     
     Static __New() {
         Plugin.Register("Generic Plug-in 2", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$",, True, False, True)
