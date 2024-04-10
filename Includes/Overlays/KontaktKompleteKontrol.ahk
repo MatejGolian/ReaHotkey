@@ -296,9 +296,9 @@ Class KontaktKompleteKontrol {
             
             Standalone.Register("Kontakt Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
             
-            KontaktStandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
-            KontaktStandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372)
-            Standalone.RegisterOverlay("Kontakt Content Missing Dialog", KontaktStandaloneContentMissingOverlay)
+            StandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
+            StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372)
+            Standalone.RegisterOverlay("Kontakt Content Missing Dialog", StandaloneContentMissingOverlay)
         }
         
         Static InitPlugin(PluginInstance) {
