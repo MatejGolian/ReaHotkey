@@ -69,6 +69,13 @@ Class KontaktKompleteKontrol {
         TalosOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         KontaktKompleteKontrol.PluginOverlays.Push(TalosOverlay)
         
+        Plugin.Register("Kontakt/Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$",, True, False, True)
+        Plugin.RegisterOverlay("Kontakt/Komplete Kontrol", AccessibilityOverlay())
+        PluginLoader.AddImageCheck("Kontakt/Komplete Kontrol", "Kontakt", "Images/KontaktKompleteKontrol/KontaktFull.png", 0, 0, 300, 300)
+        PluginLoader.AddImageCheck("Kontakt/Komplete Kontrol", "Kontakt", "Images/KontaktKompleteKontrol/KontaktPlayer.png", 0, 0, 300, 300)
+        PluginLoader.AddImageCheck("Kontakt/Komplete Kontrol", "Komplete Kontrol", "Images/KontaktKompleteKontrol/KompleteKontrol.png", 0, 0, 300, 300)
+        Plugin.SetTimer("Kontakt/Komplete Kontrol", ObjBindMethod(PluginLoader, "DetectPlugin", "Kontakt/Komplete Kontrol"), 200)
+        
         Plugin.Register("Kontakt/Komplete Kontrol Dialogs", "^NIChildWindow[0-9A-F]{17}$",, True, False, True)
         Plugin.RegisterOverlay("Kontakt/Komplete Kontrol Dialogs", AccessibilityOverlay())
         PluginLoader.AddFunctionCheck("Kontakt/Komplete Kontrol Dialogs", "Kontakt Content Missing Dialog", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "CheckPluginContentMissing"))
