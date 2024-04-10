@@ -4,7 +4,7 @@ Class Engine2 {
     
     Static __New() {
         
-        Plugin.Register("Engine 2", "^Plugin[0-9A-F]{17}$",, True)
+        Plugin.Register("Engine 2", "^Plugin[0-9A-F]{17}$",, True, True, False, ObjBindMethod(Engine2, "CheckPlugin"))
         Standalone.Register("Engine 2", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe")
         
         Engine2PluginOverlay := AccessibilityOverlay("Engine 2")
@@ -45,6 +45,12 @@ Class Engine2 {
         Engine2StandalonePreferencesTab.AddTabControl(, Engine2StandaloneEngineTab, Engine2StandaloneLibrariesTab, Engine2StandaloneUserFolderTab, Engine2StandaloneOutputSurrTab, Engine2StandaloneMiscTab)
         Standalone.RegisterOverlay("Engine 2", Engine2StandaloneOverlay)
         
+    }
+    
+    Static CheckPlugin(*) {
+        If FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate() + 500, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100) Is Object
+        Return True
+        Return False
     }
     
     Static ActivatePluginAddLibraryButton(Engine2AddLibraryButton) {

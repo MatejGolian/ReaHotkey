@@ -203,7 +203,6 @@ Class Plugin {
                 Return PluginInstance
             }
             Else {
-                SingleInstance := False
                 For PluginInstance In Plugin.Instances
                 If PluginInstance.PluginNumber = PluginNumber And PluginInstance.ControlClass = ControlClass
                 Return PluginInstance

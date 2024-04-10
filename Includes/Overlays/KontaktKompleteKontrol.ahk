@@ -68,16 +68,19 @@ Class KontaktKompleteKontrol {
         TalosOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
         TalosOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         KontaktKompleteKontrol.PluginOverlays.Push(TalosOverlay)
+        
+        KontaktKompleteKontrol.Kontakt.Init()
+        KontaktKompleteKontrol.KompleteKontrol.Init()
     }
     
     Static GetPluginName() {
         Critical
-        If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 400) Is Object
+        If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
         Return "Kontakt"
-        Else If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 400) Is Object
+        Else If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
         Return "Kontakt"
         Else
-        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate()) Is Object
+        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 100) Is Object
         Return "Komplete Kontrol"
         Return False
     }
@@ -250,7 +253,7 @@ Class KontaktKompleteKontrol {
         Static PluginHeader := Object()
         Static StandaloneHeader := Object()
         
-        Static __New() {
+        Static Init() {
             PluginHeader := AccessibilityOverlay("Kontakt Full")
             PluginHeader.AddStaticText("Kontakt")
             PluginHeader.AddCustomButton("FILE menu", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusPluginMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivatePluginMenu"))
@@ -325,11 +328,10 @@ Class KontaktKompleteKontrol {
         }
         
         Static CheckPlugin(*) {
-            Critical
-            If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 400) Is Object
+            If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
             Return True
             Else
-            If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 400) Is Object
+            If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
             Return True
             Return False
         }
@@ -526,7 +528,7 @@ Class KontaktKompleteKontrol {
         Static PluginHeader := Object()
         Static StandaloneHeader := Object()
         
-        Static __New() {
+        Static Init() {
             PluginHeader := AccessibilityOverlay("Komplete Kontrol")
             PluginHeader.AddStaticText("Komplete Kontrol")
             PluginHeader.AddHotspotButton("Menu", 305, 68, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
@@ -608,8 +610,7 @@ Class KontaktKompleteKontrol {
         }
         
         Static CheckPlugin(*) {
-            Critical
-            If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 400) Is Object
+            If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 100) Is Object
             Return True
             Return False
         }
