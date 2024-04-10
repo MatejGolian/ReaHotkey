@@ -274,6 +274,9 @@ Class KontaktKompleteKontrol {
             For PluginOverlay In KontaktKompleteKontrol.PluginOverlays
             Plugin.RegisterOverlay("Kontakt", PluginOverlay)
             
+            ;Plugin.SetTimer("Kontakt", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ClosePluginBrowser"), 500)
+            Plugin.SetTimer("Kontakt", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt", True, True), 500)
+            
             Plugin.Register("Kontakt Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KontaktKompleteKontrol.Kontakt, "CheckPluginContentMissing"))
             Plugin.SetHotkey("Kontakt Content Missing Dialog", "!F4", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ClosePluginContentMissingDialog"))
             Plugin.SetHotkey("Kontakt Content Missing Dialog", "Escape", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ClosePluginContentMissingDialog"))
@@ -282,11 +285,9 @@ Class KontaktKompleteKontrol {
             PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372)
             Plugin.RegisterOverlay("Kontakt Content Missing Dialog", PluginContentMissingOverlay)
             
-            Plugin.SetTimer("Kontakt", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt", True, True), 500)
-            
             Standalone.Register("Kontakt", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
             Standalone.RegisterOverlay("Kontakt", StandaloneHeader)
-            ; Standalone.SetTimer("Kontakt", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "CloseStandaloneBrowser"), 500)
+            ;Standalone.SetTimer("Kontakt", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "CloseStandaloneBrowser"), 500)
             
             Standalone.Register("Kontakt Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
             
@@ -547,6 +548,7 @@ Class KontaktKompleteKontrol {
             For PluginOverlay In KontaktKompleteKontrol.PluginOverlays
             Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
             
+            Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ClosePluginBrowser"), 500)
             Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True), 500)
             
             Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CheckPluginPreferences"))
@@ -578,7 +580,7 @@ Class KontaktKompleteKontrol {
             
             Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe")
             Standalone.RegisterOverlay("Komplete Kontrol", StandaloneHeader)
-            Standalone.SetTimer("Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandaloneBrowser"), 500)
+            ;Standalone.SetTimer("Komplete Kontrol", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CloseStandaloneBrowser"), 500)
             
             Standalone.Register("Komplete Kontrol Preference Dialog", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "FocusStandalonePreferenceTab"))
             Standalone.SetHotkey("Komplete Kontrol Preference Dialog", "^,", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "ManageStandalonePreferenceDialog"))
