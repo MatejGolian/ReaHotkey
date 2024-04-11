@@ -467,11 +467,16 @@ MoveMouseDown() {
         DialogOpen := 1
         WinGetPos ,,, &YSize, "A"
         MouseGetPos &MouseXCoordinate, &MouseYCoordinate
+        If MouseYCoordinate < 0
+        TargetCoordinate := 0
+        Else If MouseYCoordinate > YSize
+        TargetCoordinate := YSize
+        Else
         TargetCoordinate := MouseYCoordinate + 1
-        If TargetCoordinate <= YSize {
-            MouseYCoordinate := TargetCoordinate
-            MouseMove MouseXCoordinate, MouseYCoordinate
-        }
+        If TargetCoordinate > YSize
+        TargetCoordinate := YSize
+        MouseYCoordinate := TargetCoordinate
+        MouseMove MouseXCoordinate, MouseYCoordinate
         Speak(MouseYCoordinate)
         DialogOpen := 0
     }
@@ -481,12 +486,18 @@ MoveMouseLeft() {
     Global DialogOpen
     If DialogOpen = 0 {
         DialogOpen := 1
+        WinGetPos ,, &XSize,, "A"
         MouseGetPos &MouseXCoordinate, &MouseYCoordinate
+        If MouseXCoordinate < 0
+        TargetCoordinate := 0
+        Else If MouseXCoordinate > XSize
+        TargetCoordinate := XSize
+        Else
         TargetCoordinate := MouseXCoordinate - 1
-        If TargetCoordinate >= 0 {
-            MouseXCoordinate := TargetCoordinate
-            MouseMove MouseXCoordinate, MouseYCoordinate
-        }
+        If TargetCoordinate < 0
+        TargetCoordinate := 0
+        MouseXCoordinate := TargetCoordinate
+        MouseMove MouseXCoordinate, MouseYCoordinate
         Speak(MouseXCoordinate)
         DialogOpen := 0
     }
@@ -498,11 +509,16 @@ MoveMouseRight() {
         DialogOpen := 1
         WinGetPos ,, &XSize,, "A"
         MouseGetPos &MouseXCoordinate, &MouseYCoordinate
+        If MouseXCoordinate < 0
+        TargetCoordinate := 0
+        Else If MouseXCoordinate > XSize
+        TargetCoordinate := XSize
+        Else
         TargetCoordinate := MouseXCoordinate + 1
-        If TargetCoordinate <= XSize {
-            MouseXCoordinate := TargetCoordinate
-            MouseMove MouseXCoordinate, MouseYCoordinate
-        }
+        If TargetCoordinate > XSize
+        TargetCoordinate := XSize
+        MouseXCoordinate := TargetCoordinate
+        MouseMove MouseXCoordinate, MouseYCoordinate
         Speak(MouseXCoordinate)
         DialogOpen := 0
     }
@@ -512,12 +528,18 @@ MoveMouseUp() {
     Global DialogOpen
     If DialogOpen = 0 {
         DialogOpen := 1
+        WinGetPos ,,, &YSize, "A"
         MouseGetPos &MouseXCoordinate, &MouseYCoordinate
+        If MouseYCoordinate < 0
+        TargetCoordinate := 0
+        Else If MouseYCoordinate > YSize
+        TargetCoordinate := YSize
+        Else
         TargetCoordinate := MouseYCoordinate - 1
-        If TargetCoordinate >= 0 {
-            MouseYCoordinate := TargetCoordinate
-            MouseMove MouseXCoordinate, MouseYCoordinate
-        }
+        If TargetCoordinate < 0
+        TargetCoordinate := 0
+        MouseYCoordinate := TargetCoordinate
+        MouseMove MouseXCoordinate, MouseYCoordinate
         Speak(MouseYCoordinate)
         DialogOpen := 0
     }
@@ -641,7 +663,7 @@ ReportMousePosition() {
     If DialogOpen = 0 {
         MouseGetPos &MouseXCoordinate, &MouseYCoordinate
         Speak("X " . MouseXCoordinate . " Y " . MouseYCoordinate)
-        }
+    }
 }
 
 SearchForImage() {
