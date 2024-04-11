@@ -338,7 +338,6 @@ Class KontaktKompleteKontrol {
         }
         
         Static CheckPluginContentMissing(*) {
-            Critical
             If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing"
             Return True
             Return False
@@ -618,7 +617,6 @@ Class KontaktKompleteKontrol {
         }
         
         Static CheckPluginPreferences(*) {
-            Critical
             If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Preferences"
             Return True
             Return False
