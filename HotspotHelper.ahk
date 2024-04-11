@@ -41,21 +41,28 @@ Enter::ClickHotspot()
 #^+C::CopyControlClassToClipboard()
 #^+M::CopyControlPositionToClipboard()
 #^+H::CopyHotspotsToClipboard()
+#^+U::CopyPixelColourToClipboard()
 #^+P::CopyProcessNameToClipboard()
 #^+W::CopyWindowClassToClipboard()
 #^+I::CopyWindowIDToClipboard()
 #^+T::CopyWindowTitleToClipboard()
-#^+X::CopyPixelColourToClipboard()
 #^+Del::DeleteHotspot()
-#^+F::ChooseControl()
+#^+F::FocusControlFromList()
+#^+Down::MoveMouseDown()
+#^+Left::MoveMouseLeft()
+#^+Right::MoveMouseRight()
+#^+Up::MoveMouseUp()
 #^+O::PerformOCR()
 #^+Q::Quit()
 #^+F2::RenameHotspot()
 #^+S::SearchForImage()
 Tab::SelectNextHotspot()
 +Tab::SelectPreviousHotspot()
+#^+X::SetMouseXPosition()
+#^+Y::SetMouseYPosition()
 Ctrl::StopSpeech()
 #^+K::ToggleKeyboardMode()
+#^+V::ViewClipboard()
 
 SetTimer ManageHotkeys, 100
 About()
@@ -66,7 +73,7 @@ About(*) {
     If DialogOpen = 0 {
         DialogOpen := 1
         AboutBox := Gui(, "About " . AppName)
-        AboutBox.Add("Edit", "ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+L - Focus control`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+S - Search for image`nCtrl+Win+Shift+X - Copy the pixel colour under the mouse to clipboard`nCtrl - Stop speech`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot")
+        AboutBox.Add("Edit", "ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+L - Focus control`nWin+Ctrl+Shift+C - Copy the class of the currently focused control to clipboard`nWin+Ctrl+Shift+M - Copy the position of the currently focused control to clipboard`nCtrl+Win+Shift+U - Copy the pixel colour under the mouse to clipboard`nCtrl+Win+Shift+S - Search for image`nCtrl - Stop speech`nCtrl+Win+Shift+V - Open Clipboard Viewer`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`n`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nWin+Ctrl+Shift+Del - Delete current hotspot`nWin+Ctrl+Shift+F2 - Rename current hotspot`n`nMouse Movement:`nWin+Ctrl+Shift+X - Set mouse X position`nWin+Ctrl+Shift+Y - Set mouse Y position`nWin+Ctrl+Shift+Left - Move mouse leftf`nWin+Ctrl+Shift+Right - Move mouse right`nWin+Ctrl+Shift+Up - Move mouse up`nWin+Ctrl+Shift+Down - Move mouse down")
         AboutBox.Add("Button", "Default", "OK").OnEvent("Click", CloseAboutBox)
         AboutBox.OnEvent("Close", CloseAboutBox)
         AboutBox.OnEvent("Escape", CloseAboutBox)
@@ -121,35 +128,6 @@ ClickHotspot() {
     Else {
         Sleep 25
         Speak("No hotspot selected")
-    }
-}
-
-ChooseControl() {
-    Global AppName, DialogOpen
-    If DialogOpen = 0 {
-        DialogOpen := 1
-        Try {
-            WinWaitActive("A")
-            Sleep 1000
-            Controls := WinGetControls("A")
-        }
-        Catch {
-            Controls := Array()
-        }
-        If Controls.Length = 0 {
-            Speak("No controls found")
-        }
-        Else {
-            ControlMenu := Menu()
-            For Control In controls {
-                ControlMenu.Add(Control, FocusControl)
-                Try
-                If ControlGetClassNN(ControlGetFocus("A")) = Control
-                ControlMenu.Check(control)
-            }
-            ControlMenu.Show()
-        }
-        DialogOpen := 0
     }
 }
 
@@ -362,6 +340,35 @@ FocusControl(ControlName, ControlNumber, ControlMenu) {
     }
 }
 
+FocusControlFromList() {
+    Global AppName, DialogOpen
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        Try {
+            WinWaitActive("A")
+            Sleep 1000
+            Controls := WinGetControls("A")
+        }
+        Catch {
+            Controls := Array()
+        }
+        If Controls.Length = 0 {
+            Speak("No controls found")
+        }
+        Else {
+            ControlMenu := Menu()
+            For Control In controls {
+                ControlMenu.Add(Control, FocusControl)
+                Try
+                If ControlGetClassNN(ControlGetFocus("A")) = Control
+                ControlMenu.Check(control)
+            }
+            ControlMenu.Show()
+        }
+        DialogOpen := 0
+    }
+}
+
 ManageHotkeys() {
     Global DialogOpen, KeyboardMode
     If DialogOpen = 1 Or WinActive("ahk_exe Explorer.Exe ahk_class Progman") Or WinActive("ahk_class Shell_TrayWnd" Or WinExist("ahk_class #32768") ) {
@@ -371,13 +378,17 @@ ManageHotkeys() {
         Hotkey "#^+C", "On"
         Hotkey "#^+M", "On"
         Hotkey "#^+H", "On"
+        Hotkey "#^+U", "On"
         Hotkey "#^+P", "On"
         Hotkey "#^+W", "On"
         Hotkey "#^+I", "On"
         Hotkey "#^+T", "On"
-        Hotkey "#^+X", "On"
         Hotkey "#^+Del", "Off"
         Hotkey "#^+F", "On"
+        Hotkey "#^+Down", "On"
+        Hotkey "#^+Left", "On"
+        Hotkey "#^+Right", "On"
+        Hotkey "#^+Up", "On"
         Hotkey "#^+O", "On"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "Off"
@@ -386,6 +397,7 @@ ManageHotkeys() {
         Hotkey "+Tab", "Off"
         Hotkey "Ctrl", "Off"
         Hotkey "#^+K", "Off"
+        Hotkey "#^+V", "On"
     }
     Else If KeyboardMode = 1 {
         Hotkey "#^+A", "On"
@@ -394,13 +406,17 @@ ManageHotkeys() {
         Hotkey "#^+C", "On"
         Hotkey "#^+M", "On"
         Hotkey "#^+H", "On"
+        Hotkey "#^+U", "On"
         Hotkey "#^+P", "On"
         Hotkey "#^+W", "On"
         Hotkey "#^+I", "On"
         Hotkey "#^+T", "On"
-        Hotkey "#^+X", "On"
         Hotkey "#^+Del", "On"
         Hotkey "#^+F", "On"
+        Hotkey "#^+Down", "On"
+        Hotkey "#^+Left", "On"
+        Hotkey "#^+Right", "On"
+        Hotkey "#^+Up", "On"
         Hotkey "#^+O", "On"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "On"
@@ -409,6 +425,7 @@ ManageHotkeys() {
         Hotkey "+Tab", "On"
         Hotkey "Ctrl", "On"
         Hotkey "#^+K", "On"
+        Hotkey "#^+V", "On"
     }
     Else {
         Hotkey "#^+A", "On"
@@ -417,13 +434,17 @@ ManageHotkeys() {
         Hotkey "#^+C", "On"
         Hotkey "#^+M", "On"
         Hotkey "#^+H", "On"
+        Hotkey "#^+U", "On"
         Hotkey "#^+P", "On"
         Hotkey "#^+W", "On"
         Hotkey "#^+I", "On"
         Hotkey "#^+T", "On"
-        Hotkey "#^+X", "On"
         Hotkey "#^+Del", "Off"
         Hotkey "#^+F", "On"
+        Hotkey "#^+Down", "On"
+        Hotkey "#^+Left", "On"
+        Hotkey "#^+Right", "On"
+        Hotkey "#^+Up", "On"
         Hotkey "#^+O", "On"
         Hotkey "#^+Q", "On"
         Hotkey "#^+F2", "Off"
@@ -432,6 +453,69 @@ ManageHotkeys() {
         Hotkey "+Tab", "Off"
         Hotkey "Ctrl", "On"
         Hotkey "#^+K", "On"
+        Hotkey "#^+V", "On"
+    }
+}
+
+MoveMouseDown() {
+    Global DialogOpen
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        WinGetPos ,,, &YSize, "A"
+        MouseGetPos &MouseXCoordinate, &MouseYCoordinate
+        TargetCoordinate := MouseYCoordinate + 1
+        If TargetCoordinate <= YSize {
+            MouseYCoordinate := TargetCoordinate
+            MouseMove MouseXCoordinate, MouseYCoordinate
+        }
+        Speak(MouseYCoordinate)
+        DialogOpen := 0
+    }
+}
+
+MoveMouseLeft() {
+    Global DialogOpen
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        MouseGetPos &MouseXCoordinate, &MouseYCoordinate
+        TargetCoordinate := MouseXCoordinate - 1
+        If TargetCoordinate >= 0 {
+            MouseXCoordinate := TargetCoordinate
+            MouseMove MouseXCoordinate, MouseYCoordinate
+        }
+        Speak(MouseXCoordinate)
+        DialogOpen := 0
+    }
+}
+
+MoveMouseRight() {
+    Global DialogOpen
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        WinGetPos ,, &XSize,, "A"
+        MouseGetPos &MouseXCoordinate, &MouseYCoordinate
+        TargetCoordinate := MouseXCoordinate + 1
+        If TargetCoordinate <= XSize {
+            MouseXCoordinate := TargetCoordinate
+            MouseMove MouseXCoordinate, MouseYCoordinate
+        }
+        Speak(MouseXCoordinate)
+        DialogOpen := 0
+    }
+}
+
+MoveMouseUp() {
+    Global DialogOpen
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        MouseGetPos &MouseXCoordinate, &MouseYCoordinate
+        TargetCoordinate := MouseYCoordinate - 1
+        If TargetCoordinate >= 0 {
+            MouseYCoordinate := TargetCoordinate
+            MouseMove MouseXCoordinate, MouseYCoordinate
+        }
+        Speak(MouseYCoordinate)
+        DialogOpen := 0
     }
 }
 
@@ -530,7 +614,7 @@ Quit(*) {
 }
 
 RenameHotspot() {
-    Global CurrentHotspot, DialogOpen, Hotspots
+    Global AppName, CurrentHotspot, DialogOpen, Hotspots
     If DialogOpen = 0
     If Hotspots.Length > 0 And CurrentHotspot > 0 And CurrentHotspot <= Hotspots.Length {
         DialogOpen := 1
@@ -644,6 +728,40 @@ SelectPreviousHotspot() {
     }
 }
 
+SetMouseXPosition() {
+    Global AppName, DialogOpen
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        WinGetPos ,, &XSize,, "A"
+        MouseGetPos &MouseXCoordinate, &MouseYCoordinate
+        If MouseXCoordinate < 0
+        MouseXCoordinate := 0
+        If MouseXCoordinate > XSize
+        MouseXCoordinate := XSize
+        PositionDialog := InputBox("Set Mouse X Position`nEnter a number between 0 and " . XSize . ".", AppName, "", MouseXCoordinate)
+        If PositionDialog.Result == "OK" And Integer(PositionDialog.Value) >= 0 And Integer(PositionDialog.Value) <= XSize
+        MouseMove Integer(PositionDialog.Value), MouseYCoordinate
+        DialogOpen := 0
+    }
+}
+
+SetMouseYPosition() {
+    Global AppName, DialogOpen
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        WinGetPos ,,, &YSize, "A"
+        MouseGetPos &MouseXCoordinate, &MouseYCoordinate
+        If MouseYCoordinate < 0
+        MouseYCoordinate := 0
+        If MouseYCoordinate > YSize
+        MouseYCoordinate := YSize
+        PositionDialog := InputBox("Set Mouse Y Position`nEnter a number between 0 and " . YSize . ".", AppName, "", MouseYCoordinate)
+        If PositionDialog.Result == "OK" And Integer(PositionDialog.Value) >= 0 And Integer(PositionDialog.Value) <= YSize
+        MouseMove MouseXCoordinate, Integer(PositionDialog.Value)
+        DialogOpen := 0
+    }
+}
+
 Speak(Message) {
     Global JAWS, SAPI
     If (JAWS != False And ProcessExist("jfw.exe")) Or (FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")) {
@@ -681,6 +799,23 @@ ToggleKeyboardMode() {
         KeyboardMode := 0
         Sleep 25
         Speak("Keyboard mode off")
+    }
+}
+
+ViewClipBoard(*) {
+    Global AppName, DialogOpen
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        ViewerBox := Gui(, AppName . " Clipboard Viewer")
+        ViewerBox.Add("Edit", "ReadOnly", A_Clipboard)
+        ViewerBox.Add("Button", "Default", "OK").OnEvent("Click", CloseViewerBox)
+        ViewerBox.OnEvent("Close", CloseViewerBox)
+        ViewerBox.OnEvent("Escape", CloseViewerBox)
+        ViewerBox.Show()
+        CloseViewerBox(*) {
+            ViewerBox.Destroy()
+            DialogOpen := 0
+        }
     }
 }
 
