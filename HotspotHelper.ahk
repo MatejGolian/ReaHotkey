@@ -140,18 +140,21 @@ CopyControlClassAndPositionToClipboard() {
         DialogOpen := 1
         Try {
             WinWaitActive("A")
-            If ControlGetFocus("A") = 0 {
-                Speak("Focused control not found")
-            }
-            Else {
-                FocusedControlClass := ControlGetClassNN(ControlGetFocus("A"))
-                ControlGetPos &ControlX, &ControlY,,, FocusedControlClass, "A"
-                ConfirmationDialog := MsgBox("Copy the class and position of the currently focused control to clipboard?", AppName, 4)
-                If ConfirmationDialog == "Yes" {
-                    Sleep 1000
-                    A_Clipboard := "`"" . FocusedControlClass . "`", " . ControlX . ", " . ControlY
-                    Speak("Control class and position copied to clipboard")
-                }
+            FocusedControlClass := ControlGetClassNN(ControlGetFocus("A"))
+        }
+        Catch {
+            FocusedControlClass := False
+        }
+        If FocusedControlClass = False {
+            Speak("Focused control not found")
+        }
+        Else {
+            ControlGetPos &ControlX, &ControlY,,, FocusedControlClass, "A"
+            ConfirmationDialog := MsgBox("Copy the class and position of the currently focused control to clipboard?", AppName, 4)
+            If ConfirmationDialog == "Yes" {
+                Sleep 1000
+                A_Clipboard := "`"" . FocusedControlClass . "`", " . ControlX . ", " . ControlY
+                Speak("Control class and position copied to clipboard")
             }
         }
         DialogOpen := 0
@@ -524,8 +527,14 @@ ManageHotkeys() {
 MoveMouseDown() {
     Global DialogOpen
     If DialogOpen = 0 {
+        Try {
+            WinGetPos ,,, &YSize, "A"
+        }
+        Catch {
+            Speak("Could not identify window size")
+            Return
+        }
         DialogOpen := 1
-        WinGetPos ,,, &YSize, "A"
         MouseGetPos &MouseXCoordinate, &MouseYCoordinate
         If MouseYCoordinate < 0
         TargetCoordinate := 0
@@ -545,8 +554,14 @@ MoveMouseDown() {
 MoveMouseLeft() {
     Global DialogOpen
     If DialogOpen = 0 {
+        Try {
+            WinGetPos ,, &XSize,, "A"
+        }
+        Catch {
+            Speak("Could not identify window size")
+            Return
+        }
         DialogOpen := 1
-        WinGetPos ,, &XSize,, "A"
         MouseGetPos &MouseXCoordinate, &MouseYCoordinate
         If MouseXCoordinate < 0
         TargetCoordinate := 0
@@ -566,8 +581,14 @@ MoveMouseLeft() {
 MoveMouseRight() {
     Global DialogOpen
     If DialogOpen = 0 {
+        Try {
+            WinGetPos ,, &XSize,, "A"
+        }
+        Catch {
+            Speak("Could not identify window size")
+            Return
+        }
         DialogOpen := 1
-        WinGetPos ,, &XSize,, "A"
         MouseGetPos &MouseXCoordinate, &MouseYCoordinate
         If MouseXCoordinate < 0
         TargetCoordinate := 0
@@ -587,8 +608,14 @@ MoveMouseRight() {
 MoveMouseUp() {
     Global DialogOpen
     If DialogOpen = 0 {
+        Try {
+            WinGetPos ,,, &YSize, "A"
+        }
+        Catch {
+            Speak("Could not identify window size")
+            Return
+        }
         DialogOpen := 1
-        WinGetPos ,,, &YSize, "A"
         MouseGetPos &MouseXCoordinate, &MouseYCoordinate
         If MouseYCoordinate < 0
         TargetCoordinate := 0
@@ -738,15 +765,19 @@ RouteMouseToFocusedControl() {
         DialogOpen := 1
         Try {
             WinWaitActive("A")
-            If ControlGetFocus("A") = 0 {
-                Speak("Focused control not found")
-            }
-            Else {
-                WinWaitActive("A")
-                ControlGetPos &ControlX, &ControlY,,, ControlGetClassNN(ControlGetFocus("A")), "A"
-                MouseMove ControlX, ControlY
-                Speak("Mouse routed to X " . ControlX . " Y " . ControlY)
-            }
+            FocusedControlClass := ControlGetClassNN(ControlGetFocus("A"))
+        }
+        Catch {
+            FocusedControlClass := False
+        }
+        If FocusedControlClass = False {
+            Speak("Focused control not found")
+        }
+        Else {
+            WinWaitActive("A")
+            ControlGetPos &ControlX, &ControlY,,, FocusedControlClass, "A"
+            MouseMove ControlX, ControlY
+            Speak("Mouse routed to X " . ControlX . " Y " . ControlY)
         }
         DialogOpen := 0
     }
@@ -861,8 +892,14 @@ SelectPreviousHotspot() {
 SetMouseXPosition() {
     Global AppName, DialogOpen
     If DialogOpen = 0 {
+        Try {
+            WinGetPos ,, &XSize,, "A"
+        }
+        Catch {
+            Speak("Could not identify window size")
+            Return
+        }
         DialogOpen := 1
-        WinGetPos ,, &XSize,, "A"
         MouseGetPos &MouseXCoordinate, &MouseYCoordinate
         If MouseXCoordinate < 0
         MouseXCoordinate := 0
@@ -878,8 +915,14 @@ SetMouseXPosition() {
 SetMouseYPosition() {
     Global AppName, DialogOpen
     If DialogOpen = 0 {
+        Try {
+            WinGetPos ,,, &YSize, "A"
+        }
+        Catch {
+            Speak("Could not identify window size")
+            Return
+        }
         DialogOpen := 1
-        WinGetPos ,,, &YSize, "A"
         MouseGetPos &MouseXCoordinate, &MouseYCoordinate
         If MouseYCoordinate < 0
         MouseYCoordinate := 0
