@@ -285,9 +285,16 @@ CopyProcessNameToClipboard() {
             Sleep 1000
             Try {
                 WinWaitActive("A")
-                A_Clipboard := WinGetProcessName("A")
-                Speak("Process name copied to clipboard")
+                ProcessName := WinGetProcessName("A")
+                A_Clipboard := ProcessName
             }
+            Catch {
+                ProcessName := False
+            }
+            If ProcessName = False
+            Speak("Process not found")
+            Else
+            Speak("Process name copied to clipboard")
         }
         DialogOpen := 0
     }
@@ -302,9 +309,16 @@ CopyWindowClassToClipboard() {
             Sleep 1000
             Try {
                 WinWaitActive("A")
-                A_Clipboard := WinGetClass("A")
-                Speak("Window class copied to clipboard")
+                WindowClass := WinGetClass("A")
+                A_Clipboard := WindowClass
             }
+            Catch {
+                WindowClass := False
+            }
+            If WindowClass = False
+            Speak("Window class not found")
+            Else
+            Speak("Window class copied to clipboard")
         }
         DialogOpen := 0
     }
@@ -319,9 +333,16 @@ CopyWindowIDToClipboard() {
             Sleep 1000
             Try {
                 WinWaitActive("A")
-                A_Clipboard := WinGetID("A")
-                Speak("Window ID copied to clipboard")
+                WindowID := WinGetID("A")
+                A_Clipboard := WindowID
             }
+            Catch {
+                WindowID := False
+            }
+            If WindowID = False
+            Speak("Window ID not found")
+            Else
+            Speak("Window ID copied to clipboard")
         }
         DialogOpen := 0
     }
@@ -336,9 +357,16 @@ CopyWindowTitleToClipboard() {
             Sleep 1000
             Try {
                 WinWaitActive("A")
-                A_Clipboard := WinGetTitle("A")
-                Speak("Window title copied to clipboard")
+                WindowTitle := WinGetTitle("A")
+                A_Clipboard := WindowTitle
             }
+            Catch {
+                WindowTitle := False
+            }
+            If WindowTitle = False
+            Speak("Window title not found")
+            Else
+            Speak("Window title copied to clipboard")
         }
         DialogOpen := 0
     }
