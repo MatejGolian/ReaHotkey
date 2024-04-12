@@ -46,6 +46,7 @@ Enter::ClickHotspot()
 #^+W::CopyWindowClassToClipboard()
 #^+I::CopyWindowIDToClipboard()
 #^+T::CopyWindowTitleToClipboard()
+#^+Del::DeleteAllHotspots()
 Del::DeleteHotspot()
 #^+F::FocusControlFromList()
 #^+Down::MoveMouseDown()
@@ -75,7 +76,7 @@ About(*) {
     If DialogOpen = 0 {
         DialogOpen := 1
         AboutBox := Gui(, "About " . AppName)
-        AboutBox.Add("Edit", "ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added hotspots.`n`nKeyboard Shortcuts`n`nGeneral Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+F - Focus control`nWin+Ctrl+Shift+C - Copy the class and position of the currently focused control to clipboard`nWin+Ctrl+Shift+L - Copy control list to clipboard`nCtrl+Win+Shift+M - Copy the pixel colour under the mouse to clipboard`nCtrl+Win+Shift+S - Search for image`nCtrl+Win+Shift+V - Open Clipboard Viewer`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nCtrl - Stop speech`n`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nDel - Delete current hotspot`nF2 - Rename current hotspot`n`nMouse Commands:`nWin+Ctrl+Shift+X - Set mouse X position`nWin+Ctrl+Shift+Y - Set mouse Y position`nWin+Ctrl+Shift+Z - Report mouse position`nWin+Ctrl+Shift+R - Route the mouse to the position of the currently focused control`nWin+Ctrl+Shift+Left - Move mouse leftf`nWin+Ctrl+Shift+Right - Move mouse right`nWin+Ctrl+Shift+Up - Move mouse up`nWin+Ctrl+Shift+Down - Move mouse down")
+        AboutBox.Add("Edit", "ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added individual hotspots.`n`nKeyboard Shortcuts`n`nHotspot Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+Del - Delete all hotspots`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nDel - Delete current hotspot`nF2 - Rename current hotspot`n`nWindow & Control Shortcuts:`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class and position of the currently focused control to clipboard`nWin+Ctrl+Shift+L - Copy control list to clipboard`nWin+Ctrl+Shift+F - Focus control`n`nMouse Shortcuts:`nCtrl+Win+Shift+M - Copy the pixel colour under the mouse to clipboard`nWin+Ctrl+Shift+R - Route the mouse to the position of the currently focused control`nWin+Ctrl+Shift+X - Set mouse X position`nWin+Ctrl+Shift+Y - Set mouse Y position`nWin+Ctrl+Shift+Z - Report mouse position`nWin+Ctrl+Shift+Left - Move mouse leftf`nWin+Ctrl+Shift+Right - Move mouse right`nWin+Ctrl+Shift+Up - Move mouse up`nWin+Ctrl+Shift+Down - Move mouse down`n`nMiscellaneous Shortcuts:`nWin+Ctrl+Shift+O - OCR the active window`nCtrl+Win+Shift+S - Search for image`nCtrl+Win+Shift+V - Open Clipboard Viewer`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nCtrl - Stop speech")
         AboutBox.Add("Button", "Default", "OK").OnEvent("Click", CloseAboutBox)
         AboutBox.OnEvent("Close", CloseAboutBox)
         AboutBox.OnEvent("Escape", CloseAboutBox)
@@ -340,6 +341,30 @@ CopyWindowTitleToClipboard() {
     }
 }
 
+DeleteAllHotspots() {
+    Global AppName, CurrentHotspot, DialogOpen, Hotspots
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        If Hotspots.Length = 0 {
+            Speak("No hotspots defined")
+        }
+        Else {
+            ConfirmationDialog := MsgBox("Delete all hotspots?", AppName, 4)
+            If ConfirmationDialog == "Yes" {
+                Sleep 1000
+                HotspotCount := Hotspots.Length
+                CurrentHotspot := 0
+                Hotspots := Array()
+                If HotspotCount = 1
+                Speak("1 hotspot deleted")
+                Else
+                Speak(HotspotCount . " hotspots deleted")
+            }
+        }
+        DialogOpen := 0
+    }
+}
+
 DeleteHotspot() {
     Global CurrentHotspot, DialogOpen, Hotspots
     Global DialogOpen
@@ -401,7 +426,7 @@ FocusControlFromList() {
 
 ManageHotkeys() {
     Global DialogOpen, KeyboardMode
-    If DialogOpen = 1 Or WinActive("ahk_exe Explorer.Exe ahk_class Progman") Or WinActive("ahk_class Shell_TrayWnd" Or WinExist("ahk_class #32768") ) {
+    If DialogOpen = 1 Or WinActive("ahk_exe Explorer.Exe") Or WinActive("ahk_class Shell_TrayWnd" Or WinExist("ahk_class #32768") ) {
         Hotkey "#^+A", "On"
         Hotkey "#^+Enter", "Off"
         Hotkey "Enter", "Off"
@@ -413,6 +438,7 @@ ManageHotkeys() {
         Hotkey "#^+W", "On"
         Hotkey "#^+I", "On"
         Hotkey "#^+T", "On"
+        Hotkey "#^+Del", "Off"
         Hotkey "Del", "Off"
         Hotkey "#^+F", "On"
         Hotkey "#^+Down", "On"
@@ -443,6 +469,7 @@ ManageHotkeys() {
         Hotkey "#^+W", "On"
         Hotkey "#^+I", "On"
         Hotkey "#^+T", "On"
+        Hotkey "#^+Del", "On"
         Hotkey "Del", "On"
         Hotkey "#^+F", "On"
         Hotkey "#^+Down", "On"
@@ -473,6 +500,7 @@ ManageHotkeys() {
         Hotkey "#^+W", "On"
         Hotkey "#^+I", "On"
         Hotkey "#^+T", "On"
+        Hotkey "#^+Del", "On"
         Hotkey "Del", "Off"
         Hotkey "#^+F", "On"
         Hotkey "#^+Down", "On"
