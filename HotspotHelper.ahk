@@ -143,12 +143,10 @@ CopyControlClassAndPositionToClipboard() {
                 Speak("Focused control not found")
             }
             Else {
+                FocusedControlClass := ControlGetClassNN(ControlGetFocus("A"))
+                ControlGetPos &ControlX, &ControlY,,, FocusedControlClass, "A"
                 ConfirmationDialog := MsgBox("Copy the class and position of the currently focused control to clipboard?", AppName, 4)
                 If ConfirmationDialog == "Yes" {
-                    WinWaitActive("A")
-                    Sleep 1000
-                    FocusedControlClass := ControlGetClassNN(ControlGetFocus("A"))
-                    ControlGetPos &ControlX, &ControlY,,, FocusedControlClass, "A"
                     A_Clipboard := "`"" . FocusedControlClass . "`", " . ControlX . ", " . ControlY
                     Speak("Control class and position copied to clipboard")
                 }
