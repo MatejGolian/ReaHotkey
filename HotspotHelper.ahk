@@ -160,19 +160,30 @@ CopyHotspotsToClipboard() {
     Global AppName, DialogOpen, Hotspots
     If DialogOpen = 0 {
         DialogOpen := 1
-        ConfirmationDialog := MsgBox("Copy hotspots to clipboard?", AppName, 4)
-        If ConfirmationDialog == "Yes" {
-            ClipboardData := ""
-            ConfirmationDialog := MsgBox("Compensate for the position of the currently focused control?", AppName, 4)
+        WinWaitActive("A")
+        Try {
+            FocusedControlClass := ControlGetClassNN(ControlGetFocus("A"))
+            ControlGetPos &ControlX, &ControlY,,, FocusedControlClass, "A"
+        }
+        Catch {
+            FocusedControlClass := False
+            ControlX := 0
+            ControlY := 0
+        }
+        If Hotspots.Length = 0 {
+            Speak("No hotspots defined")
+        }
+        Else {
+            ConfirmationDialog := MsgBox("Copy hotspots to clipboard?", AppName, 4)
             If ConfirmationDialog == "Yes" {
-                Try {
-                    WinWaitActive("A")
+                ClipboardData := ""
+                ConfirmationDialog := MsgBox("Compensate for the position of the currently focused control?", AppName, 4)
+                If ConfirmationDialog == "Yes" {
                     Sleep 1000
-                    If ControlGetFocus("A") = 0 {
+                    If FocusedControlClass = False {
                         Speak("Focused control not found")
                     }
                     Else {
-                        ControlGetPos &ControlX, &ControlY,,, ControlGetClassNN(ControlGetFocus("A")), "A"
                         ClipboardData .= "Compensating for X " . ControlX . ", Y " . ControlY . "`r`n"
                         For Value In Hotspots {
                             Label := Value["Label"]
@@ -182,21 +193,22 @@ CopyHotspotsToClipboard() {
                         }
                     }
                 }
-            }
-            Else {
-                For Value In Hotspots {
-                    Label := Value["Label"]
-                    MouseXCoordinate := Value["XCoordinate"]
-                    MouseYCoordinate := Value["YCoordinate"]
-                    ClipboardData .= "`"" . Label . "`", " . MouseXCoordinate . ", " . MouseYCoordinate . "`r`n"
+                Else {
+                    Sleep 1000
+                    For Value In Hotspots {
+                        Label := Value["Label"]
+                        MouseXCoordinate := Value["XCoordinate"]
+                        MouseYCoordinate := Value["YCoordinate"]
+                        ClipboardData .= "`"" . Label . "`", " . MouseXCoordinate . ", " . MouseYCoordinate . "`r`n"
+                    }
                 }
+                ClipboardData := RTrim(ClipboardData, "`r`n")
+                A_Clipboard := ClipboardData
+                If Hotspots.Length = 1
+                Speak("1 hotspot copied to clipboard")
+                Else
+                Speak(Hotspots.Length . " hotspots copied to clipboard")
             }
-            ClipboardData := RTrim(ClipboardData, "`r`n")
-            A_Clipboard := ClipboardData
-            If Hotspots.Length = 1
-            Speak("1 hotspot copied to clipboard")
-            Else
-            Speak(Hotspots.Length . " hotspots copied to clipboard")
         }
         DialogOpen := 0
     }
@@ -524,6 +536,16 @@ PerformOCR() {
     Global AppName, DialogOpen
     If DialogOpen = 0 {
         DialogOpen := 1
+        WinWaitActive("A")
+        Try {
+            FocusedControlClass := ControlGetClassNN(ControlGetFocus("A"))
+            ControlGetPos &ControlX, &ControlY,,, FocusedControlClass, "A"
+        }
+        Catch {
+            FocusedControlClass := False
+            ControlX := 0
+            ControlY := 0
+        }
         ConfirmationDialog := MsgBox("OCR the active Window and copy the results to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
             AvailableLanguages := OCR.GetAvailableLanguages()
@@ -559,23 +581,19 @@ PerformOCR() {
                 ClipboardData := ""
                 ConfirmationDialog := MsgBox("Compensate for the position of the currently focused control?", AppName, 4)
                 If ConfirmationDialog == "Yes" {
-                    Try {
-                        WinWaitActive("A")
-                        Sleep 1000
-                        If ControlGetFocus("A") = 0 {
-                            Speak("Focused control not found")
-                        }
-                        Else {
-                            ControlGetPos &ControlX, &ControlY,,, ControlGetClassNN(ControlGetFocus("A")), "A"
-                            ClipboardData .= "Compensating for X " . ControlX . ", Y " . ControlY . "`r`n"
-                            For Value In OCRLines {
-                                Text := Value["Text"]
-                                X1Coordinate := Value["X1"] - ControlX
-                                Y1Coordinate := Value["Y1"] - ControlY
-                                X2Coordinate := Value["X2"] - ControlX
-                                Y2Coordinate := Value["Y2"] - ControlY
-                                ClipboardData .= "`"" . Text . "`"`r`nBeginning at X " . X1Coordinate . ", Y " . Y1Coordinate . "`r`nEnding at X " . X2Coordinate . ", Y " . Y2Coordinate . "`r`n`r`n"
-                            }
+                    Sleep 1000
+                    If FocusedControlClass = False {
+                        Speak("Focused control not found")
+                    }
+                    Else {
+                        ClipboardData .= "Compensating for X " . ControlX . ", Y " . ControlY . "`r`n"
+                        For Value In OCRLines {
+                            Text := Value["Text"]
+                            X1Coordinate := Value["X1"] - ControlX
+                            Y1Coordinate := Value["Y1"] - ControlY
+                            X2Coordinate := Value["X2"] - ControlX
+                            Y2Coordinate := Value["Y2"] - ControlY
+                            ClipboardData .= "`"" . Text . "`"`r`nBeginning at X " . X1Coordinate . ", Y " . Y1Coordinate . "`r`nEnding at X " . X2Coordinate . ", Y " . Y2Coordinate . "`r`n`r`n"
                         }
                     }
                 }
@@ -665,6 +683,16 @@ SearchForImage() {
     Global AppName, DialogOpen
     If DialogOpen = 0 {
         DialogOpen := 1
+        WinWaitActive("A")
+        Try {
+            FocusedControlClass := ControlGetClassNN(ControlGetFocus("A"))
+            ControlGetPos &ControlX, &ControlY,,, FocusedControlClass, "A"
+        }
+        Catch {
+            FocusedControlClass := False
+            ControlX := 0
+            ControlY := 0
+        }
         ImageFile := FileSelect(3,, "Choose Image", "Supported Images (*.ANI; *.BMP; *.CUR; *.EMF; *.Exif; *.GIF; *.ICO; *.JPG; *.PNG; *.TIF; *.WMF)")
         If ImageFile != "" {
             FoundX := ""
@@ -687,12 +715,11 @@ SearchForImage() {
                         ClipboardData := ""
                         ConfirmationDialog := MsgBox("Compensate for the position of the currently focused control?", AppName, 4)
                         If ConfirmationDialog == "Yes" {
-                            WinWaitActive("A")
-                            If ControlGetFocus("A") = 0 {
+                            Sleep 1000
+                            If FocusedControlClass = False {
                                 Speak("Focused control not found")
                             }
                             Else {
-                                ControlGetPos &ControlX, &ControlY,,, ControlGetClassNN(ControlGetFocus("A")), "A"
                                 ClipboardData .= "Compensating for X " . ControlX . ", Y " . ControlY . "`r`n"
                                 If FoundX Is Number
                                 ImageXCoordinate := FoundX - ControlX
@@ -706,6 +733,7 @@ SearchForImage() {
                             }
                         }
                         Else {
+                            Sleep 1000
                             ImageXCoordinate := FoundX
                             ImageYCoordinate := FoundY
                             ClipboardData .= "`"" . ImageFile . "`", " . ImageXCoordinate . ", " . ImageYCoordinate

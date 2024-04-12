@@ -9,12 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add screen resolution check on startup
-- Add version info to HotspotHelper executables
-
-### Changed
-
-- Use new about box in HotspotHelper
+- Add screen resolution check on ReaHotkey startup
+- Add new functionality and version info to HotspotHelper
 
 ## [0.4.2] - 2024-03-17
 
