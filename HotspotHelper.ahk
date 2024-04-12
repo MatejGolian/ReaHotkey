@@ -937,6 +937,7 @@ ViewClipBoard(*) {
     If DialogOpen = 0 {
         DialogOpen := 1
         ViewerBox := Gui(, AppName . " Clipboard Viewer")
+        ViewerBox.Add("Text",, "Clipboard contents:")
         ViewerBox.Add("Edit", "ReadOnly", A_Clipboard)
         ViewerBox.Add("Button", "Default", "OK").OnEvent("Click", CloseViewerBox)
         ViewerBox.OnEvent("Close", CloseViewerBox)
