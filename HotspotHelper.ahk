@@ -9,6 +9,7 @@ SetWorkingDir A_InitialWorkingDir
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
 
+#Include <ScreenArea2File>
 #Include <OCR>
 
 AppName := "HotspotHelper"
@@ -49,6 +50,7 @@ Enter::ClickHotspot()
 #^+T::CopyWindowTitleToClipboard()
 #^+Del::DeleteAllHotspots()
 Del::DeleteHotspot()
+#^+PrintScreen::ExtractImage()
 #^+F::FocusControl()
 #^+Down::MoveMouseDown()
 #^+Left::MoveMouseLeft()
@@ -78,7 +80,7 @@ About(*) {
     If DialogOpen = 0 {
         DialogOpen := 1
         AboutBox := Gui(, "About " . AppName)
-        AboutBox.Add("Edit", "ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added individual hotspots.`n`nKeyboard Shortcuts`n`nHotspot Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+Del - Delete all hotspots`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nDel - Delete current hotspot`nF2 - Rename current hotspot`n`nWindow & Control Shortcuts:`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class and position of the currently focused control to clipboard`nWin+Ctrl+Shift+L - Copy control list to clipboard`nWin+Ctrl+Shift+F - Focus control`n`nMouse Shortcuts:`nWin+Ctrl+Shift+M - Route the mouse to the position of the currently focused control`nWin+Ctrl+Shift+U - Copy the pixel colour under the mouse to clipboard`nWin+Ctrl+Shift+X - Set mouse X position`nWin+Ctrl+Shift+Y - Set mouse Y position`nWin+Ctrl+Shift+Z - Report mouse position`nWin+Ctrl+Shift+Left - Move mouse leftf`nWin+Ctrl+Shift+Right - Move mouse right`nWin+Ctrl+Shift+Up - Move mouse up`nWin+Ctrl+Shift+Down - Move mouse down`n`nMiscellaneous Shortcuts:`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+S - Search for image`nWin+Ctrl+Shift+R - Repeat search using last image`nWin+Ctrl+Shift+V - Open Clipboard Viewer`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nCtrl - Stop speech")
+        AboutBox.Add("Edit", "ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added individual hotspots.`n`nKeyboard Shortcuts`n`nHotspot Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+Del - Delete all hotspots`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nDel - Delete current hotspot`nF2 - Rename current hotspot`n`nWindow & Control Shortcuts:`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class and position of the currently focused control to clipboard`nWin+Ctrl+Shift+L - Copy control list to clipboard`nWin+Ctrl+Shift+F - Focus control`n`nMouse Shortcuts:`nWin+Ctrl+Shift+M - Route the mouse to the position of the currently focused control`nWin+Ctrl+Shift+U - Copy the pixel colour under the mouse to clipboard`nWin+Ctrl+Shift+X - Set mouse X position`nWin+Ctrl+Shift+Y - Set mouse Y position`nWin+Ctrl+Shift+Z - Report mouse position`nWin+Ctrl+Shift+Left - Move mouse leftf`nWin+Ctrl+Shift+Right - Move mouse right`nWin+Ctrl+Shift+Up - Move mouse up`nWin+Ctrl+Shift+Down - Move mouse down`n`nMiscellaneous Shortcuts:`nWin+Ctrl+Shift+Print Screen - Extract a region of the active window as an image`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+S - Search for image`nWin+Ctrl+Shift+R - Repeat search using last image`nWin+Ctrl+Shift+V - Open Clipboard Viewer`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nCtrl - Stop speech")
         AboutBox.Add("Button", "Default", "OK").OnEvent("Click", CloseAboutBox)
         AboutBox.OnEvent("Close", CloseAboutBox)
         AboutBox.OnEvent("Escape", CloseAboutBox)
@@ -415,6 +417,109 @@ DeleteHotspot() {
     }
 }
 
+ExtractImage(*) {
+    Global AppName, DialogOpen
+    Try {
+        WindowID := WinGetID("A")
+        WinGetPos ,, &XSize, &YSize, "A"
+    }
+    Catch {
+        Speak("Could not obtain required information")
+        Return
+    }
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        CoordinateBox := Gui(, AppName . " Image Extractor")
+        CoordinateBox.Add("Text",, "X1 coordinate (between 0 and " . XSize . "):")
+        CoordinateBox.Add("Edit", "vX1Coord Number").OnEvent("Change", ProcessInput)
+        CoordinateBox.Add("Text",, "Y1 coordinate (between 0 and " . YSize . "):")
+        CoordinateBox.Add("Edit", "vY1Coord Number").OnEvent("Change", ProcessInput)
+        CoordinateBox.Add("Text",, "X2 coordinate (between 0 and " . XSize . "):")
+        CoordinateBox.Add("Edit", "vX2Coord Number").OnEvent("Change", ProcessInput)
+        CoordinateBox.Add("Text",, "Y2 coordinate (between 0 and " . YSize . "):")
+        CoordinateBox.Add("Edit", "vY2Coord Number").OnEvent("Change", ProcessInput)
+        CoordinateBox.Add("Button", "+Disabled", "OK").OnEvent("Click", SaveImage)
+        CoordinateBox.Add("Button", "Default", "Cancel").OnEvent("Click", CloseCoordinateBox)
+        CoordinateBox.OnEvent("Close", CloseCoordinateBox)
+        CoordinateBox.OnEvent("Escape", CloseCoordinateBox)
+        CoordinateBox.Show()
+        CloseCoordinateBox(*) {
+            CoordinateBox.Destroy()
+            DialogOpen := 0
+        }
+        ProcessInput(*) {
+            ControlValues := CoordinateBox.Submit(False)
+            X1 := ControlValues.X1Coord
+            Y1 := ControlValues.Y1Coord
+            X2 := ControlValues.X2Coord
+            Y2 := ControlValues.Y2Coord
+            If X1 = ""
+            X1 := 0
+            If Y1 = ""
+            Y1 := 0
+            If X2 = ""
+            X2 := 0
+            If Y2 = ""
+            Y2 := 0
+            If X1 >= 0 And X1 < X2 And X2 <= XSize And Y1 >= 0 And Y1 < Y2 And Y2 <= YSize {
+                CoordinateBox["OK"].Opt("+Default -Disabled")
+                CoordinateBox["Cancel"].Opt("-Default")
+            }
+            Else {
+                CoordinateBox["OK"].Opt("-Default +Disabled")
+                CoordinateBox["Cancel"].Opt("+Default")
+            }
+        }
+        SaveImage(*) {
+            ControlValues := CoordinateBox.Submit(True)
+            ControlValues := CoordinateBox.Submit(False)
+            X1 := ControlValues.X1Coord
+            Y1 := ControlValues.Y1Coord
+            X2 := ControlValues.X2Coord
+            Y2 := ControlValues.Y2Coord
+            If Not WinExist("ahk_id" . WindowID) {
+                MsgBox "Target window not found.", AppName
+                CloseCoordinateBox()
+            }
+            Else {
+                WinActivate("ahk_id" . WindowID)
+                WinWaitActive("ahk_id" . WindowID)
+                Coord := WinCoordToScreenCoord(X1, Y1)
+                X1 := Coord.X
+                Y1 := Coord.Y
+                Coord := WinCoordToScreenCoord(X2, Y2)
+                X2 := Coord.X
+                Y2 := Coord.Y
+                If X1 Is Number And Y1 Is Number And X2 Is Number And Y2 Is Number {
+                    W := X2 - X1
+                    H := Y2 - Y1
+                    ImageFile := FileSelect("S18", "Image", "Save Image", "PNG Files (*.png)")
+                    If ImageFile {
+                        SplitPath ImageFile, &FileName, &Directory, &Extension
+                        If Extension = "" {
+                            FileName := FileName . ".png"
+                            ImageFile .= ".png"
+                        }
+                        ScreenArea2File(Directory, FileName, {X: X1, Y: Y1, W: W, H: H})
+                        If Not FileExist(ImageFile) Or InStr(FileExist(ImageFile), "D") {
+                            MsgBox "An error occurred while saving file.`nPlease try again.", AppName
+                            CoordinateBox.Show()
+                        }
+                        Else {
+                            MsgBox "File saved successfully.", AppName
+                            CloseCoordinateBox()
+                        }
+                    }
+                }
+                Else {
+                    MsgBox "An error occurred.`nPlease try again.", AppName
+                    CoordinateBox.Show()
+                }
+            }
+        }
+    }
+}
+
 FocusControl() {
     Global AppName, DialogOpen
     If DialogOpen = 0 {
@@ -472,6 +577,7 @@ ManageHotkeys() {
         Hotkey "#^+T", "On"
         Hotkey "#^+Del", "Off"
         Hotkey "Del", "Off"
+        Hotkey "#^+PrintScreen", "On"
         Hotkey "#^+F", "On"
         Hotkey "#^+Down", "On"
         Hotkey "#^+Left", "On"
@@ -504,6 +610,7 @@ ManageHotkeys() {
         Hotkey "#^+T", "On"
         Hotkey "#^+Del", "On"
         Hotkey "Del", "On"
+        Hotkey "#^+PrintScreen", "On"
         Hotkey "#^+F", "On"
         Hotkey "#^+Down", "On"
         Hotkey "#^+Left", "On"
@@ -536,6 +643,7 @@ ManageHotkeys() {
         Hotkey "#^+T", "On"
         Hotkey "#^+Del", "On"
         Hotkey "Del", "Off"
+        Hotkey "#^+PrintScreen", "On"
         Hotkey "#^+F", "On"
         Hotkey "#^+Down", "On"
         Hotkey "#^+Left", "On"
@@ -1027,7 +1135,7 @@ ViewClipBoard(*) {
     }
 }
 
-WinCoordToScreen(X, Y) {
+WinCoordToScreenCoord(X, Y) {
     CoordMode "Mouse", "Window"
     Try {
         WinWaitActive("A")
@@ -1045,9 +1153,9 @@ WinCoordToScreen(X, Y) {
 
 Version := "0.2.0"
 ;@Ahk2Exe-Let U_version = %A_PriorLine~U)^(.+"){1}(.+)".*$~$2%
-    ;@Ahk2Exe-Let U_OrigFilename = %A_ScriptName~\.[^\.]+$~.exe%
+    ;@Ahk2Exe-Let U_OrigFileName = %A_ScriptName~\.[^\.]+$~.exe%
     ;@Ahk2Exe-SetDescription HotspotHelper
     ;@Ahk2Exe-SetFileVersion %U_Version%
     ;@Ahk2Exe-SetProductName HotspotHelper
     ;@Ahk2Exe-SetProductVersion %U_Version%
-;@Ahk2Exe-SetOrigFilename %U_OrigFilename%
+;@Ahk2Exe-SetOrigFileName %U_OrigFileName%
