@@ -129,6 +129,9 @@ Class GraphicalControl Extends AccessibilityControl {
     }
     
     SetState() {
+        If HasProp(This, "OnFocusFunction")
+        For OnFocusFunction In This.OnFocusFunction
+        OnFocusFunction.Call(This)
         FoundXCoordinate := 0
         FoundYCoordinate := 0
         Try {
@@ -304,6 +307,9 @@ Class ToggleableGraphic Extends ActivatableGraphic {
     }
     
     SetState() {
+        If HasProp(This, "OnFocusFunction")
+        For OnFocusFunction In This.OnFocusFunction
+        OnFocusFunction.Call(This)
         FoundXCoordinate := 0
         FoundYCoordinate := 0
         Try {
@@ -328,6 +334,7 @@ Class ToggleableGraphic Extends ActivatableGraphic {
                 This.State := 0
             }
             Else {
+                AccessibilityOverlay.Speak(This.OffImage)
                 This.FoundXCoordinate := 0
                 This.FoundYCoordinate := 0
                 This.State := -1
@@ -1785,7 +1792,7 @@ Class GraphicalButton Extends ToggleableGraphic {
     UnlabelledString := "unlabelled"
     
     __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", OffImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage, OffImage, OffHoverImage, OnFocusFunction, OnActivateFunction)
+        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage, OffImage, OffHoverImage, MouseXOffset, MouseYOffset, OnFocusFunction, OnActivateFunction)
         This.Label := Label
         If This.OnImage != "" And This.OffImage != "" And This.OnImage != This.OffImage
         This.IsToggle := 1
@@ -2056,6 +2063,9 @@ Class GraphicalTab Extends AccessibilityOverlay {
     }
     
     SetState() {
+        If HasProp(This, "OnFocusFunction")
+        For OnFocusFunction In This.OnFocusFunction
+        OnFocusFunction.Call(This)
         FoundXCoordinate := 0
         FoundYCoordinate := 0
         Try {
