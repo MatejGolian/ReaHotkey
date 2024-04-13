@@ -1027,6 +1027,22 @@ ViewClipBoard(*) {
     }
 }
 
+WinCoordToScreen(X, Y) {
+    CoordMode "Mouse", "Window"
+    Try {
+        WinWaitActive("A")
+        MouseMove X, Y
+        CoordMode "Mouse", "Screen"
+        MouseGetPos &mouseXPosition, &mouseYPosition
+    }
+    Catch {
+        MouseXPosition := False
+        MouseYPosition := False
+    }
+    CoordMode "Mouse", "Window"
+    Return {X: MouseXPosition, Y: MouseYPosition}
+}
+
 Version := "0.2.0"
 ;@Ahk2Exe-Let U_version = %A_PriorLine~U)^(.+"){1}(.+)".*$~$2%
     ;@Ahk2Exe-Let U_OrigFilename = %A_ScriptName~\.[^\.]+$~.exe%
