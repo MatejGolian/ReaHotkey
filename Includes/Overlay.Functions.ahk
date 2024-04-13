@@ -403,6 +403,15 @@ GetCurrentWindowID() {
     Return WindowID
 }
 
+GetImgSize(Img) {
+    SplitPath Img, &Filename, &Dir
+    (Dir = '' && Dir := A_WorkingDir)
+    ObjShell := ComObject("Shell.Application")
+    ObjFolder := ObjShell.NameSpace(Dir), ObjFolderItem := ObjFolder.ParseName(Filename)
+    Scale := StrSplit(RegExReplace(ObjFolder.GetDetailsOf(ObjFolderItem, 31), ".(.+).", "$1"), " X ")
+    Return {W: Scale[1], H: Scale[2]}
+}
+
 GetPluginXCoordinate() {
     Try {
         ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
