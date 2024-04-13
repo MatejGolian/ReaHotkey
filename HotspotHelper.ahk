@@ -419,8 +419,10 @@ DeleteHotspot() {
 
 ExtractImage(*) {
     Global AppName, DialogOpen
+    Static X1Coord := "", Y1Coord := "", X2Coord := "", Y2Coord := ""
     Try {
         WindowID := WinGetID("A")
+        WindowTitle := WinGetTitle("A")
         WinGetPos ,, &XSize, &YSize, "A"
     }
     Catch {
@@ -429,20 +431,21 @@ ExtractImage(*) {
     }
     If DialogOpen = 0 {
         DialogOpen := 1
-        CoordinateBox := Gui(, AppName . " Image Extractor")
+        CoordinateBox := Gui(, AppName . " Image Extractor {`"" . WindowTitle . "`"}")
         CoordinateBox.Add("Text",, "X1 coordinate (between 0 and " . XSize . "):")
-        CoordinateBox.Add("Edit", "vX1Coord Number").OnEvent("Change", ProcessInput)
+        CoordinateBox.Add("Edit", "vX1Coord Number", X1Coord).OnEvent("Change", ProcessInput)
         CoordinateBox.Add("Text",, "Y1 coordinate (between 0 and " . YSize . "):")
-        CoordinateBox.Add("Edit", "vY1Coord Number").OnEvent("Change", ProcessInput)
+        CoordinateBox.Add("Edit", "vY1Coord Number", Y1Coord).OnEvent("Change", ProcessInput)
         CoordinateBox.Add("Text",, "X2 coordinate (between 0 and " . XSize . "):")
-        CoordinateBox.Add("Edit", "vX2Coord Number").OnEvent("Change", ProcessInput)
+        CoordinateBox.Add("Edit", "vX2Coord Number", X2Coord).OnEvent("Change", ProcessInput)
         CoordinateBox.Add("Text",, "Y2 coordinate (between 0 and " . YSize . "):")
-        CoordinateBox.Add("Edit", "vY2Coord Number").OnEvent("Change", ProcessInput)
+        CoordinateBox.Add("Edit", "vY2Coord Number", Y2Coord).OnEvent("Change", ProcessInput)
         CoordinateBox.Add("Button", "+Disabled", "OK").OnEvent("Click", SaveImage)
         CoordinateBox.Add("Button", "Default", "Cancel").OnEvent("Click", CloseCoordinateBox)
         CoordinateBox.OnEvent("Close", CloseCoordinateBox)
         CoordinateBox.OnEvent("Escape", CloseCoordinateBox)
         CoordinateBox.Show()
+        ProcessInput()
         CloseCoordinateBox(*) {
             CoordinateBox.Destroy()
             DialogOpen := 0
@@ -473,6 +476,10 @@ ExtractImage(*) {
         SaveImage(*) {
             ControlValues := CoordinateBox.Submit(True)
             ControlValues := CoordinateBox.Submit(False)
+            X1Coord := ControlValues.X1Coord
+            Y1Coord := ControlValues.Y1Coord
+            X2Coord := ControlValues.X2Coord
+            Y2Coord := ControlValues.Y2Coord
             X1 := ControlValues.X1Coord
             Y1 := ControlValues.Y1Coord
             X2 := ControlValues.X2Coord
@@ -509,6 +516,9 @@ ExtractImage(*) {
                             MsgBox "File saved successfully.", AppName
                             CloseCoordinateBox()
                         }
+                    }
+                    Else {
+                        CloseCoordinateBox()
                     }
                 }
                 Else {
