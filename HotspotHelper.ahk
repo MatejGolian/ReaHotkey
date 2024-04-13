@@ -1033,14 +1033,14 @@ WinCoordToScreen(X, Y) {
         WinWaitActive("A")
         MouseMove X, Y
         CoordMode "Mouse", "Screen"
-        MouseGetPos &mouseXPosition, &mouseYPosition
+        MouseGetPos &mouseXPos, &mouseYPos
     }
     Catch {
-        MouseXPosition := False
-        MouseYPosition := False
+        MouseXPos := False
+        MouseYPos := False
     }
     CoordMode "Mouse", "Window"
-    Return {X: MouseXPosition, Y: MouseYPosition}
+    Return {X: MouseXPos, Y: MouseYPos}
 }
 
 Version := "0.2.0"
