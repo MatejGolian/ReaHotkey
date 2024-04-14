@@ -1,4 +1,5 @@
 ﻿#Requires AutoHotkey v2.0
+#Requires AutoHotkey v2.0
 
 Class AccessibilityControl {
     
@@ -129,6 +130,9 @@ Class GraphicalControl Extends AccessibilityControl {
     }
     
     SetState() {
+        If HasProp(This, "OnFocusFunction")
+        For OnFocusFunction In This.OnFocusFunction
+        OnFocusFunction.Call(This)
         FoundXCoordinate := 0
         FoundYCoordinate := 0
         Try {
@@ -161,14 +165,10 @@ Class FocusableGraphic Extends GraphicalControl {
     
     HotkeyCommand := ""
     HotkeyFunction := Array()
-    MouseXOffset := 0
-    MouseYOffset := 0
     OnFocusFunction := Array()
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "") {
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "",  OnFocusFunction := "") {
         Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage,)
-        This.MouseXOffset := MouseXOffset
-        This.MouseYOffset := MouseYOffset
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -182,7 +182,7 @@ Class FocusableGraphic Extends GraphicalControl {
         If This.State = 1 And CurrentControlID != This.ControlID {
             For OnFocusFunction In This.OnFocusFunction
             OnFocusFunction.Call(This)
-            Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
+            Click This.FoundXCoordinate, This.FoundYCoordinate
         }
     }
     
@@ -202,15 +202,11 @@ Class ActivatableGraphic Extends GraphicalControl {
     
     HotkeyCommand := ""
     HotkeyFunction := Array()
-    MouseXOffset := 0
-    MouseYOffset := 0
     OnActivateFunction := Array()
     OnFocusFunction := Array()
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "",  OnFocusFunction := "", OnActivateFunction := "") {
         Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage,)
-        This.MouseXOffset := MouseXOffset
-        This.MouseYOffset := MouseYOffset
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -230,7 +226,7 @@ Class ActivatableGraphic Extends GraphicalControl {
         If This.State = 1 {
             If HasMethod(This, "Focus")
             This.Focus(CurrentControlID)
-            Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
+            Click This.FoundXCoordinate, This.FoundYCoordinate
         }
     }
     
@@ -239,7 +235,7 @@ Class ActivatableGraphic Extends GraphicalControl {
         If This.State = 1 And CurrentControlID != This.ControlID {
             For OnFocusFunction In This.OnFocusFunction
             OnFocusFunction.Call(This)
-            MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
+            MouseMove This.FoundXCoordinate, This.FoundYCoordinate
         }
     }
     
@@ -259,37 +255,41 @@ Class ToggleableGraphic Extends ActivatableGraphic {
     
     HotkeyCommand := ""
     HotkeyFunction := Array()
+    IsToggle := 0
     OffImage := ""
     OffHoverImage := ""
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage := "", OnHoverImage := "", OffImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage, MouseXOffset, MouseYOffset, OnFocusFunction, OnActivateFunction)
-        This.MouseXOffset := MouseXOffset
-        This.MouseYOffset := MouseYOffset
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage := "", OnHoverImage := "", OffImage := "", OffHoverImage := "",  OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage,  OnFocusFunction, OnActivateFunction)
         If OffImage = "" Or !FileExist(OffImage)
         OffImage := ""
         If OffHoverImage = "" Or !FileExist(OffHoverImage)
         OffHoverImage := ""
         This.OffImage := OffImage
         This.OffHoverImage := OffHoverImage
+        If This.OnImage != "" And This.OffImage != "" And This.OnImage != This.OffImage
+        This.IsToggle := 1
     }
     
     Activate(CurrentControlID := 0) {
         This.SetState()
-        If This.State = 1 {
+        If This.State != -1 {
+            If CurrentControlID != This.ControlID
             If HasMethod(This, "Focus")
             This.Focus(CurrentControlID)
-            Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
+            Click This.FoundXCoordinate, This.FoundYCoordinate
+            Sleep 250
         }
         This.SetState()
     }
     
     Focus(CurrentControlID := 0) {
         This.SetState()
-        If This.State = 1 And CurrentControlID != This.ControlID {
+        If This.State != -1 {
+            If CurrentControlID != This.ControlID
             For OnFocusFunction In This.OnFocusFunction
             OnFocusFunction.Call(This)
-            MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
+            MouseMove This.FoundXCoordinate, This.FoundYCoordinate
         }
     }
     
@@ -304,6 +304,9 @@ Class ToggleableGraphic Extends ActivatableGraphic {
     }
     
     SetState() {
+        If HasProp(This, "OnFocusFunction")
+        For OnFocusFunction In This.OnFocusFunction
+        OnFocusFunction.Call(This)
         FoundXCoordinate := 0
         FoundYCoordinate := 0
         Try {
@@ -1778,17 +1781,14 @@ Class GraphicalButton Extends ToggleableGraphic {
     ControlTypeLabel := "button"
     HotkeyLabel := ""
     Label := ""
-    IsToggle := 0
     NotFoundString := "not found"
     OffString := "off"
     OnString := "on"
     UnlabelledString := "unlabelled"
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", OffImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage, OffImage, OffHoverImage, OnFocusFunction, OnActivateFunction)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", OffImage := "", OffHoverImage := "",  OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage, OffImage, OffHoverImage,  OnFocusFunction, OnActivateFunction)
         This.Label := Label
-        If This.OnImage != "" And This.OffImage != "" And This.OnImage != This.OffImage
-        This.IsToggle := 1
     }
     
     Activate(CurrentControlID := 0) {
@@ -1824,12 +1824,10 @@ Class GraphicalButton Extends ToggleableGraphic {
             }
         }
         Else {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-            }
+            If This.Label = ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
         }
     }
     
@@ -1888,7 +1886,7 @@ Class GraphicalCheckbox Extends ToggleableGraphic {
     NotFoundString := "not found"
     UnlabelledString := "unlabelled"
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", OffImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", OffImage := "", OffHoverImage := "",  OnFocusFunction := "", OnActivateFunction := "") {
         Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage, OffImage, OffHoverImage, OnFocusFunction, OnActivateFunction)
         This.Label := Label
     }
@@ -1919,12 +1917,10 @@ Class GraphicalCheckbox Extends ToggleableGraphic {
             }
         }
         Else {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-            }
+            If This.Label = ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
         }
     }
     
@@ -1974,8 +1970,6 @@ Class GraphicalTab Extends AccessibilityOverlay {
     HotkeyFunction := Array()
     HotkeyLabel := ""
     IsToggle := 0
-    MouseXOffset := 0
-    MouseYOffset := 0
     OnFocusFunction := Array()
     OnImage := ""
     OffImage := ""
@@ -1988,14 +1982,12 @@ Class GraphicalTab Extends AccessibilityOverlay {
     State := 0
     UnlabelledString := "unlabelled"
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", OffImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "") {
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", OffImage := "", OffHoverImage := "",  OnFocusFunction := "") {
         Super.__New(Label)
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
         This.Y2Coordinate := Y2Coordinate
-        This.MouseXOffset := MouseXOffset
-        This.MouseYOffset := MouseYOffset
         If OnImage = "" Or !FileExist(OnImage)
         OnImage := ""
         If OnHoverImage = "" Or !FileExist(OnHoverImage)
@@ -2020,16 +2012,15 @@ Class GraphicalTab Extends AccessibilityOverlay {
     
     Focus(CurrentControlID := 0) {
         This.SetState()
-        If This.State != -1
-        For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction.Call(This)
         If This.State != -1 {
+            Click This.FoundXCoordinate, This.FoundYCoordinate
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
                 AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
                 Else
                 AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             }
+            Sleep 250
         }
         Else {
             If This.ControlID != CurrentControlID {
@@ -2056,6 +2047,9 @@ Class GraphicalTab Extends AccessibilityOverlay {
     }
     
     SetState() {
+        If HasProp(This, "OnFocusFunction")
+        For OnFocusFunction In This.OnFocusFunction
+        OnFocusFunction.Call(This)
         FoundXCoordinate := 0
         FoundYCoordinate := 0
         Try {

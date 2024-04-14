@@ -6,11 +6,6 @@ Class KontaktKompleteKontrol {
     Static StandaloneOverlays := Array()
     
     Static __New() {
-        NoProductOverlay := AccessibilityOverlay("None")
-        NoProductOverlay.Metadata := Map("Product", "None")
-        NoProductOverlay.AddAccessibilityOverlay()
-        KontaktKompleteKontrol.PluginOverlays.Push(NoProductOverlay)
-        
         AreiaOverlay := AccessibilityOverlay("Areia")
         AreiaOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Areia", "Image", Map("File", "Images/KontaktKompleteKontrol/Areia.png"))
         AreiaOverlay.AddAccessibilityOverlay()
@@ -44,14 +39,6 @@ Class KontaktKompleteKontrol {
         JaegerOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
         JaegerOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
         KontaktKompleteKontrol.PluginOverlays.Push(JaegerOverlay)
-        
-        NucleusOverlay := AccessibilityOverlay("Nucleus")
-        NucleusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Nucleus", "Image", Map("File", "Images/KontaktKompleteKontrol/Nucleus.png"))
-        NucleusOverlay.AddAccessibilityOverlay()
-        NucleusOverlay.AddStaticText("Nucleus")
-        NucleusOverlay.AddCustomButton("Classic Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginClassicMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginClassicMix"))
-        NucleusOverlay.AddCustomButton("Modern Mix", ObjBindMethod(KontaktKompleteKontrol, "FocusAIPluginModernMix"), ObjBindMethod(KontaktKompleteKontrol, "ActivateAIPluginModernMix"))
-        KontaktKompleteKontrol.PluginOverlays.Push(NucleusOverlay)
         
         SoloOverlay := AccessibilityOverlay("Solo")
         SoloOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Solo", "Image", Map("File", "Images/KontaktKompleteKontrol/Solo.png"))
@@ -127,8 +114,6 @@ Class KontaktKompleteKontrol {
                 %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
                 Case "Jaeger":
                 %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
-                Case "Nucleus":
-                %MoveOrClick%(CompensatePluginXCoordinate(226), CompensatePluginYCoordinate(416))
                 Case "Solo":
                 %MoveOrClick%(CompensatePluginXCoordinate(200), CompensatePluginYCoordinate(461))
                 Case "Talos":
@@ -142,8 +127,6 @@ Class KontaktKompleteKontrol {
                 %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
                 Case "Jaeger":
                 %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
-                Case "Nucleus":
-                %MoveOrClick%(CompensatePluginXCoordinate(126), CompensatePluginYCoordinate(316))
                 Case "Solo":
                 %MoveOrClick%(CompensatePluginXCoordinate(100), CompensatePluginYCoordinate(361))
                 Case "Talos":
@@ -162,8 +145,6 @@ Class KontaktKompleteKontrol {
                 %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
                 Case "Jaeger":
                 %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
-                Case "Nucleus":
-                %MoveOrClick%(CompensatePluginXCoordinate(264), CompensatePluginYCoordinate(446))
                 Case "Solo":
                 %MoveOrClick%(CompensatePluginXCoordinate(283), CompensatePluginYCoordinate(461))
                 Case "Talos":
@@ -177,8 +158,6 @@ Class KontaktKompleteKontrol {
                 %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
                 Case "Jaeger":
                 %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
-                Case "Nucleus":
-                %MoveOrClick%(CompensatePluginXCoordinate(164), CompensatePluginYCoordinate(346))
                 Case "Solo":
                 %MoveOrClick%(CompensatePluginXCoordinate(183), CompensatePluginYCoordinate(361))
                 Case "Talos":
@@ -252,6 +231,8 @@ Class KontaktKompleteKontrol {
         
         Static PluginHeader := Object()
         Static StandaloneHeader := Object()
+        Static PluginOverlays := Array()
+        Static StandaloneOverlays := Array()
         
         Static Init() {
             PluginHeader := AccessibilityOverlay("Kontakt Full")
@@ -269,8 +250,23 @@ Class KontaktKompleteKontrol {
             StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "FocusStandaloneMenu"), ObjBindMethod(KontaktKompleteKontrol.Kontakt, "ActivateStandaloneMenu"))
             KontaktKompleteKontrol.Kontakt.StandaloneHeader := StandaloneHeader
             
+            NoProductOverlay := AccessibilityOverlay("None")
+            NoProductOverlay.Metadata := Map("Product", "None")
+            NoProductOverlay.AddAccessibilityOverlay()
+            KontaktKompleteKontrol.Kontakt.PluginOverlays.Push(NoProductOverlay)
+            
+            NucleusOverlay := AccessibilityOverlay("Nucleus")
+            NucleusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Nucleus", "Image", Map("File", "Images/KontaktKompleteKontrol/Nucleus/Product.png"))
+            NucleusOverlay.AddAccessibilityOverlay()
+            NucleusOverlay.AddStaticText("Nucleus")
+            NucleusOverlay.AddGraphicalButton("Classic Mix", 110, 300, 190, 360, "Images/KontaktKompleteKontrol/Nucleus/ClassicMixOn.png",, "Images/KontaktKompleteKontrol/Nucleus/ClassicMixOff.png",, CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
+            NucleusOverlay.AddGraphicalButton("Modern Mix", 110, 330, 190, 360, "Images/KontaktKompleteKontrol/Nucleus/ModernMixOn.png",, "Images/KontaktKompleteKontrol/Nucleus/ModernMixOff.png",, CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
+            KontaktKompleteKontrol.Kontakt.PluginOverlays.Push(NucleusOverlay)
+            
             Plugin.Register("Kontakt", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(KontaktKompleteKontrol.Kontakt, "InitPlugin"), True, True, False, ObjBindMethod(KontaktKompleteKontrol.Kontakt, "CheckPlugin"))
             
+            For PluginOverlay In KontaktKompleteKontrol.Kontakt.PluginOverlays
+            Plugin.RegisterOverlay("Kontakt", PluginOverlay)
             For PluginOverlay In KontaktKompleteKontrol.PluginOverlays
             Plugin.RegisterOverlay("Kontakt", PluginOverlay)
             
@@ -527,6 +523,8 @@ Class KontaktKompleteKontrol {
         
         Static PluginHeader := Object()
         Static StandaloneHeader := Object()
+        Static PluginOverlays := Array()
+        Static StandaloneOverlays := Array()
         
         Static Init() {
             PluginHeader := AccessibilityOverlay("Komplete Kontrol")
@@ -542,8 +540,26 @@ Class KontaktKompleteKontrol {
             StandaloneHeader.AddHotspotButton("Help menu", 202, 41)
             KontaktKompleteKontrol.KompleteKontrol.StandaloneHeader := StandaloneHeader
             
+            XOffset := 100
+            YOffset := 100
+            
+            NoProductOverlay := AccessibilityOverlay("None")
+            NoProductOverlay.Metadata := Map("Product", "None")
+            NoProductOverlay.AddAccessibilityOverlay()
+            KontaktKompleteKontrol.KompleteKontrol.PluginOverlays.Push(NoProductOverlay)
+            
+            NucleusOverlay := AccessibilityOverlay("Nucleus")
+            NucleusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Nucleus", "Image", Map("File", "Images/KontaktKompleteKontrol/Nucleus/Product.png"))
+            NucleusOverlay.AddAccessibilityOverlay()
+            NucleusOverlay.AddStaticText("Nucleus")
+            NucleusOverlay.AddGraphicalButton("Classic Mix", XOffset + 110, YOffset + 300, XOffset + 190, YOffset + 360, "Images/KontaktKompleteKontrol/Nucleus/ClassicMixOn.png",, "Images/KontaktKompleteKontrol/Nucleus/ClassicMixOff.png",, CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
+            NucleusOverlay.AddGraphicalButton("Modern Mix", XOffset + 110, YOffset + 330, XOffset + 190, YOffset + 360, "Images/KontaktKompleteKontrol/Nucleus/ModernMixOn.png",, "Images/KontaktKompleteKontrol/Nucleus/ModernMixOff.png",, CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
+            KontaktKompleteKontrol.KompleteKontrol.PluginOverlays.Push(NucleusOverlay)
+            
             Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "InitPlugin"), True, True, False, ObjBindMethod(KontaktKompleteKontrol.KompleteKontrol, "CheckPlugin"))
             
+            For PluginOverlay In KontaktKompleteKontrol.KompleteKontrol.PluginOverlays
+            Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
             For PluginOverlay In KontaktKompleteKontrol.PluginOverlays
             Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
             
