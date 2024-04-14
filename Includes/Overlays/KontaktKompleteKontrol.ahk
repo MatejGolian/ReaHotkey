@@ -49,8 +49,8 @@ Class KontaktKompleteKontrol {
         NucleusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Nucleus", "Image", Map("File", "Images/KontaktKompleteKontrol/Nucleus/Product.png"))
         NucleusOverlay.AddAccessibilityOverlay()
         NucleusOverlay.AddStaticText("Nucleus")
-        NucleusOverlay.AddGraphicalButton("Classic Mix", 210, 400, 290, 460, "Images/KontaktKompleteKontrol/Nucleus/ClassicMixOn.png",, "Images/KontaktKompleteKontrol/Nucleus/ClassicMixOff.png",,,, CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
-        NucleusOverlay.AddGraphicalButton("Modern Mix", 210, 430, 290, 460, "Images/KontaktKompleteKontrol/Nucleus/ModernMixOn.png",, "Images/KontaktKompleteKontrol/Nucleus/ModernMixOff.png",,,, CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
+        NucleusOverlay.AddGraphicalButton("Classic Mix", 210, 400, 290, 460, "Images/KontaktKompleteKontrol/Nucleus/ClassicMixOn.png",, "Images/KontaktKompleteKontrol/Nucleus/ClassicMixOff.png",, CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
+        NucleusOverlay.AddGraphicalButton("Modern Mix", 210, 430, 290, 460, "Images/KontaktKompleteKontrol/Nucleus/ModernMixOn.png",, "Images/KontaktKompleteKontrol/Nucleus/ModernMixOff.png",, CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
         KontaktKompleteKontrol.PluginOverlays.Push(NucleusOverlay)
         
         SoloOverlay := AccessibilityOverlay("Solo")
