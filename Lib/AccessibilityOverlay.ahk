@@ -1824,12 +1824,10 @@ Class GraphicalButton Extends ToggleableGraphic {
             }
         }
         Else {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-            }
+            If This.Label = ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
         }
     }
     
@@ -1919,12 +1917,10 @@ Class GraphicalCheckbox Extends ToggleableGraphic {
             }
         }
         Else {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-            }
+            If This.Label = ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
         }
     }
     
@@ -2017,12 +2013,14 @@ Class GraphicalTab Extends AccessibilityOverlay {
     Focus(CurrentControlID := 0) {
         This.SetState()
         If This.State != -1 {
+            Click This.FoundXCoordinate, This.FoundYCoordinate
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
                 AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
                 Else
                 AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
             }
+            Sleep 250
         }
         Else {
             If This.ControlID != CurrentControlID {
