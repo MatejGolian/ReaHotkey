@@ -442,6 +442,7 @@ ExtractImage(*) {
         CoordinateBox.Add("Edit", "vY2Coord Number", Y2Coord).OnEvent("Change", ProcessInput)
         CoordinateBox.Add("Button", "+Disabled", "OK").OnEvent("Click", SaveImage)
         CoordinateBox.Add("Button", "Default", "Cancel").OnEvent("Click", CloseCoordinateBox)
+        CoordinateStatus := CoordinateBox.Add("StatusBar")
         CoordinateBox.OnEvent("Close", CloseCoordinateBox)
         CoordinateBox.OnEvent("Escape", CloseCoordinateBox)
         CoordinateBox.Show()
@@ -467,10 +468,12 @@ ExtractImage(*) {
             If X1 >= 0 And X1 < X2 And X2 <= XSize And Y1 >= 0 And Y1 < Y2 And Y2 <= YSize {
                 CoordinateBox["OK"].Opt("+Default -Disabled")
                 CoordinateBox["Cancel"].Opt("-Default")
+                CoordinateStatus.SetText("`tImage dimensions " . X2 - X1 . " × " . Y2 - Y1)
             }
             Else {
                 CoordinateBox["OK"].Opt("-Default +Disabled")
                 CoordinateBox["Cancel"].Opt("+Default")
+                CoordinateStatus.SetText("`tImage dimensions unknown")
             }
         }
         SaveImage(*) {
