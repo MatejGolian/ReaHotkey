@@ -1,4 +1,5 @@
 ﻿#Requires AutoHotkey v2.0
+#Requires AutoHotkey v2.0
 
 Class AccessibilityControl {
     
@@ -262,6 +263,7 @@ Class ToggleableGraphic Extends ActivatableGraphic {
     
     HotkeyCommand := ""
     HotkeyFunction := Array()
+        IsToggle := 0
     OffImage := ""
     OffHoverImage := ""
     
@@ -275,21 +277,26 @@ Class ToggleableGraphic Extends ActivatableGraphic {
         OffHoverImage := ""
         This.OffImage := OffImage
         This.OffHoverImage := OffHoverImage
+                If This.OnImage != "" And This.OffImage != "" And This.OnImage != This.OffImage
+        This.IsToggle := 1
     }
     
     Activate(CurrentControlID := 0) {
         This.SetState()
-        If This.State = 1 {
+        If This.State != -1 {
+         If CurrentControlID != This.ControlID 
             If HasMethod(This, "Focus")
-            This.Focus(CurrentControlID)
+        This.Focus(CurrentControlID)
             Click This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
+            Sleep 250
         }
         This.SetState()
     }
     
     Focus(CurrentControlID := 0) {
         This.SetState()
-        If This.State = 1 And CurrentControlID != This.ControlID {
+        If This.State != -1 {
+         If CurrentControlID != This.ControlID
             For OnFocusFunction In This.OnFocusFunction
             OnFocusFunction.Call(This)
             MouseMove This.FoundXCoordinate + This.MouseXOffset, This.FoundYCoordinate + This.MouseYOffset
@@ -334,7 +341,6 @@ Class ToggleableGraphic Extends ActivatableGraphic {
                 This.State := 0
             }
             Else {
-                AccessibilityOverlay.Speak(This.OffImage)
                 This.FoundXCoordinate := 0
                 This.FoundYCoordinate := 0
                 This.State := -1
@@ -1785,7 +1791,6 @@ Class GraphicalButton Extends ToggleableGraphic {
     ControlTypeLabel := "button"
     HotkeyLabel := ""
     Label := ""
-    IsToggle := 0
     NotFoundString := "not found"
     OffString := "off"
     OnString := "on"
@@ -1794,8 +1799,6 @@ Class GraphicalButton Extends ToggleableGraphic {
     __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", OffImage := "", OffHoverImage := "", MouseXOffset := 0, MouseYOffset := 0, OnFocusFunction := "", OnActivateFunction := "") {
         Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage, OffImage, OffHoverImage, MouseXOffset, MouseYOffset, OnFocusFunction, OnActivateFunction)
         This.Label := Label
-        If This.OnImage != "" And This.OffImage != "" And This.OnImage != This.OffImage
-        This.IsToggle := 1
     }
     
     Activate(CurrentControlID := 0) {
@@ -2027,9 +2030,6 @@ Class GraphicalTab Extends AccessibilityOverlay {
     
     Focus(CurrentControlID := 0) {
         This.SetState()
-        If This.State != -1
-        For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction.Call(This)
         If This.State != -1 {
             If This.ControlID != CurrentControlID {
                 If This.Label = ""
