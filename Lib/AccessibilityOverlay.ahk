@@ -130,9 +130,6 @@ Class GraphicalControl Extends AccessibilityControl {
     }
     
     SetState() {
-        If HasProp(This, "OnFocusFunction")
-        For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction.Call(This)
         FoundXCoordinate := 0
         FoundYCoordinate := 0
         Try {
@@ -180,61 +177,6 @@ Class FocusableGraphic Extends GraphicalControl {
     Focus(CurrentControlID := 0) {
         This.SetState()
         If This.State = 1 And CurrentControlID != This.ControlID {
-            For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction.Call(This)
-            Click This.FoundXCoordinate, This.FoundYCoordinate
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
-        }
-    }
-    
-}
-
-Class ActivatableGraphic Extends GraphicalControl {
-    
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
-    OnActivateFunction := Array()
-    OnFocusFunction := Array()
-    
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "",  OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage,)
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
-        If OnActivateFunction != "" {
-            If OnActivateFunction Is Array
-            This.OnActivateFunction := OnActivateFunction
-            Else
-            This.OnActivateFunction := Array(OnActivateFunction)
-        }
-    }
-    
-    Activate(CurrentControlID := 0) {
-        This.SetState()
-        If This.State = 1 {
-            If HasMethod(This, "Focus")
-            This.Focus(CurrentControlID)
-            Click This.FoundXCoordinate, This.FoundYCoordinate
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        This.SetState()
-        If This.State = 1 And CurrentControlID != This.ControlID {
-            For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction.Call(This)
             MouseMove This.FoundXCoordinate, This.FoundYCoordinate
         }
     }
@@ -249,12 +191,43 @@ Class ActivatableGraphic Extends GraphicalControl {
         }
     }
     
+    SetState() {
+        If HasProp(This, "OnFocusFunction")
+        For OnFocusFunction In This.OnFocusFunction
+        OnFocusFunction.Call(This)
+        Super.SetState()
+    }
+    
+}
+
+Class ActivatableGraphic Extends FocusableGraphic {
+    
+    OnActivateFunction := Array()
+    
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "",  OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage, OnFocusFunction)
+        If OnActivateFunction != "" {
+            If OnActivateFunction Is Array
+            This.OnActivateFunction := OnActivateFunction
+            Else
+            This.OnActivateFunction := Array(OnActivateFunction)
+        }
+    }
+    
+    Activate(CurrentControlID := 0) {
+        This.SetState()
+        If This.State = 1 {
+            If HasMethod(This, "Focus")
+            This.Focus(CurrentControlID)
+            Click This.FoundXCoordinate, This.FoundYCoordinate
+            Sleep 250
+        }
+    }
+    
 }
 
 Class ToggleableGraphic Extends ActivatableGraphic {
     
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
     IsToggle := 0
     OffImage := ""
     OffHoverImage := ""
@@ -287,19 +260,7 @@ Class ToggleableGraphic Extends ActivatableGraphic {
         This.SetState()
         If This.State != -1 {
             If CurrentControlID != This.ControlID
-            For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction.Call(This)
             MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
         }
     }
     
