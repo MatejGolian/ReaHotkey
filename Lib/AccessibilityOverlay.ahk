@@ -245,7 +245,7 @@ Class ToggleableGraphic Extends ActivatableGraphic {
         If OffImage = ""
         OffImage := Array()
         If Not OffImage Is Array
-        OffImage := Array(OnImage)
+        OffImage := Array(OffImage)
         If OffHoverImage = ""
         OffHoverImage := Array()
         If Not OffHoverImage Is Array
@@ -2084,7 +2084,7 @@ Class GraphicalTab Extends AccessibilityOverlay {
         If OffImage = ""
         OffImage := Array()
         If Not OffImage Is Array
-        OffImage := Array(OnImage)
+        OffImage := Array(OffImage)
         If OffHoverImage = ""
         OffHoverImage := Array()
         If Not OffHoverImage Is Array
