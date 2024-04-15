@@ -1186,6 +1186,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "CustomTab", Map(
         "ControlTypeLabel", "tab",
         "UnlabelledString", "unlabelled"),
+        "CustomToggleButton", Map(
+        "ControlTypeLabel", "button",
+        "OffString", "off",
+        "OnString", "on",
+        "UnknownStateString", "unknown state",
+        "UnlabelledString", "unlabelled"),
         "GraphicalButton", Map(
         "ControlTypeLabel", "button",
         "NotFoundString", "not found",
@@ -1219,6 +1225,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "UnlabelledString", "unlabelled"),
         "HotspotTab", Map(
         "ControlTypeLabel", "tab",
+        "UnlabelledString", "unlabelled"),
+        "HotspotToggleButton", Map(
+        "ControlTypeLabel", "button",
+        "OffString", "off",
+        "OnString", "on",
+        "UnknownStateString", "unknown state",
         "UnlabelledString", "unlabelled"),
         "NativeControl", Map(
         "NotFoundString", "not found"),
@@ -1266,6 +1278,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "CustomTab", Map(
         "ControlTypeLabel", "záložka",
         "UnlabelledString", "bez názvu"),
+        "CustomToggleButton", Map(
+        "ControlTypeLabel", "button",
+        "OffString", "vypnuté",
+        "OnString", "zapnuté",
+        "UnknownStateString", "neznámy stav",
+        "UnlabelledString", "unlabelled"),
         "GraphicalButton", Map(
         "ControlTypeLabel", "tlačidlo",
         "NotFoundString", "nenájdené",
@@ -1300,6 +1318,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "HotspotTab", Map(
         "ControlTypeLabel", "záložka",
         "UnlabelledString", "bez názvu"),
+        "HotspotToggleButton", Map(
+        "ControlTypeLabel", "button",
+        "OffString", "vypnuté",
+        "OnString", "zapnuté",
+        "UnknownStateString", "neznámy stav",
+        "UnlabelledString", "unlabelled"),
         "NativeControl", Map(
         "NotFoundString", "nenájdené"),
         "OCRButton", Map(
@@ -1346,6 +1370,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "CustomTab", Map(
         "ControlTypeLabel", "flik",
         "UnlabelledString", "namnlös"),
+        "CustomToggleButton", Map(
+        "ControlTypeLabel", "button",
+        "OffString", "av",
+        "OnString", "på",
+        "UnknownStateString", "okänt läge",
+        "UnlabelledString", "unlabelled"),
         "GraphicalButton", Map(
         "ControlTypeLabel", "knapp",
         "NotFoundString", "hittades ej",
@@ -1380,6 +1410,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "HotspotTab", Map(
         "ControlTypeLabel", "flik",
         "UnlabelledString", "namnlös"),
+        "HotspotToggleButton", Map(
+        "ControlTypeLabel", "button",
+        "OffString", "av",
+        "OnString", "på",
+        "UnknownStateString", "okänt läge",
+        "UnlabelledString", "unlabelled"),
         "NativeControl", Map(
         "NotFoundString", "hittades ej"),
         "OCRButton", Map(
@@ -1477,7 +1513,7 @@ Class CustomButton Extends ActivatableCustom {
     
 }
 
-Class customCheckbox Extends ActivatableCustom {
+Class CustomCheckbox Extends ActivatableCustom {
     
     Checked := 0
     ControlType := "Checkbox"
@@ -1732,6 +1768,74 @@ Class CustomTab Extends AccessibilityOverlay {
             Else
             This.HotkeyFunction := Array(HotkeyFunction)
         }
+    }
+    
+}
+
+Class CustomToggleButton Extends ActivatableCustom {
+    
+    ControlType := "Button"
+    ControlTypeLabel := "button"
+    HotkeyLabel := ""
+    Label := ""
+    CheckStateFunction := ""
+    State := 0
+    OnString := "on"
+    OffString := "off"
+    UnknownStateString := "unknown state"
+    UnlabelledString := "unlabelled"
+    
+    __New(Label, CheckStateFunction, OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New(OnFocusFunction, OnActivateFunction)
+        This.Label := Label
+        This.CheckStateFunction := CheckStateFunction
+    }
+    
+    CheckState() {
+        If This.CheckStateFunction Is Func
+        This.State := This.CheckStateFunction.Call(This)
+    }
+    
+    Activate(CurrentControlID := 0) {
+        Super.Activate(CurrentControlID)
+        This.CheckState()
+        If This.State = 1
+        StateString := This.OnString
+        Else If This.State = 0
+        StateString := This.OffString
+        Else
+        StateString := This.UnknownStateString
+        If This.ControlID != CurrentControlID {
+            If This.Label = ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
+        }
+        Else {
+            AccessibilityOverlay.Speak(StateString)
+        }
+    }
+    
+    Focus(CurrentControlID := 0) {
+        Super.Focus(CurrentControlID)
+        This.CheckState()
+        If This.ControlID != CurrentControlID {
+            If This.State = 1
+            StateString := This.OnString
+            Else If This.State = 0
+            StateString := This.OffString
+            Else
+            StateString := This.UnknownStateString
+            If This.Label = ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
+        }
+    }
+    
+    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
+        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
+        This.HotkeyLabel := HotkeyLabel
     }
     
 }
@@ -2355,6 +2459,92 @@ Class HotspotTab Extends AccessibilityOverlay {
             Else
             This.HotkeyFunction := Array(HotkeyFunction)
         }
+    }
+    
+}
+
+Class HotspotToggleButton Extends ActivatableHotspot {
+    
+    ControlType := "button"
+    ControlTypeLabel := "button"
+    HotkeyLabel := ""
+    Label := ""
+    OnColor := Array()
+    OffColor := Array()
+    State := 0
+    OnString := "on"
+    OffString := "off"
+    UnknownStateString := "unknown state"
+    UnlabelledString := "unlabelled"
+    
+    __New(Label, XCoordinate, YCoordinate, OnColor, OffColor, OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New(XCoordinate, YCoordinate, OnFocusFunction, OnActivateFunction)
+        This.Label := Label
+        If Not OnColor Is Array
+        OnColor := Array(OnColor)
+        This.OnColor := OnColor
+        If Not OffColor Is Array
+        OffColor := Array(OffColor)
+        This.OffColor := OffColor
+    }
+    
+    CheckState() {
+        Sleep 100
+        CurrentColor := PixelGetColor(This.XCoordinate, This.YCoordinate)
+        For Color In This.OnColor
+        If CurrentColor = Color {
+            This.State := 1
+            Return 1
+        }
+        For Color In This.OffColor
+        If CurrentColor = Color {
+            This.State := 0
+            Return 0
+        }
+        This.State := -1
+        Return -1
+    }
+    
+    Activate(CurrentControlID := 0) {
+        Super.Activate(CurrentControlID)
+        This.CheckState()
+        If This.State = 1
+        StateString := This.OnString
+        Else If This.State = 0
+        StateString := This.OffString
+        Else
+        StateString := This.UnknownStateString
+        If This.ControlID != CurrentControlID {
+            If This.Label = ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
+        }
+        Else {
+            AccessibilityOverlay.Speak(StateString)
+        }
+    }
+    
+    Focus(CurrentControlID := 0) {
+        Super.Focus(CurrentControlID)
+        This.CheckState()
+        If This.ControlID != CurrentControlID {
+            If This.State = 1
+            StateString := This.OnString
+            Else If This.State = 0
+            StateString := This.OffString
+            Else
+            StateString := This.UnknownStateString
+            If This.Label = ""
+            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
+            Else
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
+        }
+    }
+    
+    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
+        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
+        This.HotkeyLabel := HotkeyLabel
     }
     
 }
