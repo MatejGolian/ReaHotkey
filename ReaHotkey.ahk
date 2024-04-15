@@ -17,7 +17,6 @@ SetWorkingDir A_InitialWorkingDir
 #Include <JXON>
 #Include <OCR>
 #Include <Plugin>
-#Include <PluginLoader>
 #Include <ReaHotkey>
 #Include <Standalone>
 #Include <UIA>
