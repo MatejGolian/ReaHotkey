@@ -107,8 +107,8 @@ Class GraphicalControl Extends AccessibilityControl {
     ControlType := "Graphic"
     FoundXCoordinate := 0
     FoundYCoordinate := 0
-    OnImage := ""
-    OnHoverImage := ""
+    OnImage := Array()
+    OnHoverImage := Array()
     X1Coordinate := 0
     Y1Coordinate := 0
     X2Coordinate := 0
@@ -121,10 +121,14 @@ Class GraphicalControl Extends AccessibilityControl {
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
         This.Y2Coordinate := Y2Coordinate
-        If OnImage = "" Or !FileExist(OnImage)
-        OnImage := ""
-        If OnHoverImage = "" Or !FileExist(OnHoverImage)
-        OnHoverImage := ""
+        If OnImage = ""
+        OnImage := Array()
+        If Not OnImage Is Array
+        OnImage := Array(OnImage)
+        If OnHoverImage = ""
+        OnHoverImage := Array()
+        If Not OnHoverImage Is Array
+        OnHoverImage := Array(OnHoverImage)
         This.OnImage := OnImage
         This.OnHoverImage := OnHoverImage
     }
@@ -133,26 +137,30 @@ Class GraphicalControl Extends AccessibilityControl {
         FoundXCoordinate := 0
         FoundYCoordinate := 0
         Try {
-            If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OnImage) {
+            For OnImage In This.OnImage
+            If OnImage != "" And FileExist(OnImage) And Not InStr(FileExist(OnImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 1
+                Return True
             }
-            Else If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OnHoverImage) {
+            For OnHoverImage In This.OnHoverImage
+            If OnHoverImage != "" And FileExist(OnHoverImage) And Not InStr(FileExist(OnHoverImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnHoverImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 1
+                Return True
             }
-            Else {
-                This.FoundXCoordinate := 0
-                This.FoundYCoordinate := 0
-                This.State := 0
-            }
+            This.FoundXCoordinate := 0
+            This.FoundYCoordinate := 0
+            This.State := 0
+            Return False
         }
         Catch {
             This.FoundXCoordinate := 0
             This.FoundYCoordinate := 0
             This.State := 0
+            Return False
         }
     }
     
@@ -229,18 +237,22 @@ Class ActivatableGraphic Extends FocusableGraphic {
 Class ToggleableGraphic Extends ActivatableGraphic {
     
     IsToggle := 0
-    OffImage := ""
-    OffHoverImage := ""
+    OffImage := Array()
+    OffHoverImage := Array()
     
     __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage := "", OnHoverImage := "", OffImage := "", OffHoverImage := "",  OnFocusFunction := "", OnActivateFunction := "") {
         Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage,  OnFocusFunction, OnActivateFunction)
-        If OffImage = "" Or !FileExist(OffImage)
-        OffImage := ""
-        If OffHoverImage = "" Or !FileExist(OffHoverImage)
-        OffHoverImage := ""
+        If OffImage = ""
+        OffImage := Array()
+        If Not OffImage Is Array
+        OffImage := Array(OnImage)
+        If OffHoverImage = ""
+        OffHoverImage := Array()
+        If Not OffHoverImage Is Array
+        OffHoverImage := Array(OffHoverImage)
         This.OffImage := OffImage
         This.OffHoverImage := OffHoverImage
-        If This.OnImage != "" And This.OffImage != "" And This.OnImage != This.OffImage
+        If This.OnImage != Array() And This.OffImage != Array() And This.OnImage != This.OffImage
         This.IsToggle := 1
     }
     
@@ -271,36 +283,44 @@ Class ToggleableGraphic Extends ActivatableGraphic {
         FoundXCoordinate := 0
         FoundYCoordinate := 0
         Try {
-            If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OnImage) {
+            For OnImage In This.OnImage
+            If OnImage != "" And FileExist(OnImage) And Not InStr(FileExist(OnImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 1
+                Return True
             }
-            Else If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OnHoverImage) {
+            For OnHoverImage In This.OnHoverImage
+            If OnHoverImage != "" And FileExist(OnHoverImage) And Not InStr(FileExist(OnHoverImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnHoverImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 1
+                Return True
             }
-            Else If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OffImage) {
+            For OffImage In This.OffImage
+            If OffImage != "" And FileExist(OffImage) And Not InStr(FileExist(OffImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OffImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 0
+                Return True
             }
-            Else If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OffHoverImage) {
+            For OffHoverImage In This.OffHoverImage
+            If OffHoverImage != "" And FileExist(OffHoverImage) And Not InStr(FileExist(OffHoverImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OffHoverImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 0
+                Return True
             }
-            Else {
-                This.FoundXCoordinate := 0
-                This.FoundYCoordinate := 0
-                This.State := -1
-            }
+            This.FoundXCoordinate := 0
+            This.FoundYCoordinate := 0
+            This.State := -1
+            Return False
         }
         Catch {
             This.FoundXCoordinate := 0
             This.FoundYCoordinate := 0
             This.State := -1
+            Return False
         }
     }
     
@@ -2036,10 +2056,10 @@ Class GraphicalTab Extends AccessibilityOverlay {
     HotkeyLabel := ""
     IsToggle := 0
     OnFocusFunction := Array()
-    OnImage := ""
-    OffImage := ""
-    OnHoverImage := ""
-    OffHoverImage := ""
+    OnImage := Array()
+    OffImage := Array()
+    OnHoverImage := Array()
+    OffHoverImage := Array()
     X1Coordinate := 0
     Y1Coordinate := 0
     X2Coordinate := 0
@@ -2053,15 +2073,23 @@ Class GraphicalTab Extends AccessibilityOverlay {
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
         This.Y2Coordinate := Y2Coordinate
-        If OnImage = "" Or !FileExist(OnImage)
-        OnImage := ""
-        If OnHoverImage = "" Or !FileExist(OnHoverImage)
-        OnHoverImage := ""
-        If OffImage = "" Or !FileExist(OffImage)
-        OffImage := ""
-        If OffHoverImage = "" Or !FileExist(OffHoverImage)
-        OffHoverImage := ""
-        If OnImage != "" And OffImage != "" And OnImage != OffImage
+        If OnImage = ""
+        OnImage := Array()
+        If Not OnImage Is Array
+        OnImage := Array(OnImage)
+        If OnHoverImage = ""
+        OnHoverImage := Array()
+        If Not OnHoverImage Is Array
+        OnHoverImage := Array(OnHoverImage)
+        If OffImage = ""
+        OffImage := Array()
+        If Not OffImage Is Array
+        OffImage := Array(OnImage)
+        If OffHoverImage = ""
+        OffHoverImage := Array()
+        If Not OffHoverImage Is Array
+        OffHoverImage := Array(OffHoverImage)
+        If OnImage != Array() And OffImage != Array() And OnImage != OffImage
         This.IsToggle := 1
         This.OnImage := OnImage
         This.OffImage := OffImage
@@ -2118,36 +2146,44 @@ Class GraphicalTab Extends AccessibilityOverlay {
         FoundXCoordinate := 0
         FoundYCoordinate := 0
         Try {
-            If This.OnImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OnImage) {
+            For OnImage In This.OnImage
+            If OnImage != "" And FileExist(OnImage) And Not InStr(FileExist(OnImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 1
+                Return True
             }
-            Else If This.OnHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OnHoverImage) {
+            For OnHoverImage In This.OnHoverImage
+            If OnHoverImage != "" And FileExist(OnHoverImage) And Not InStr(FileExist(OnHoverImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnHoverImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 1
+                Return True
             }
-            Else If This.OffImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OffImage) {
+            For OffImage In This.OffImage
+            If OffImage != "" And FileExist(OffImage) And Not InStr(FileExist(OffImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OffImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 0
+                Return True
             }
-            Else If This.OffHoverImage != "" And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OffHoverImage) {
+            For OffHoverImage In This.OffHoverImage
+            If OffHoverImage != "" And FileExist(OffHoverImage) And Not InStr(FileExist(OffHoverImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OffHoverImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 0
+                Return True
             }
-            Else {
-                This.FoundXCoordinate := 0
-                This.FoundYCoordinate := 0
-                This.State := -1
-            }
+            This.FoundXCoordinate := 0
+            This.FoundYCoordinate := 0
+            This.State := -1
+            Return False
         }
         Catch {
             This.FoundXCoordinate := 0
             This.FoundYCoordinate := 0
             This.State := -1
+            Return False
         }
     }
     
