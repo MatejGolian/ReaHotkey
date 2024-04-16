@@ -108,14 +108,13 @@ Class GraphicalControl Extends AccessibilityControl {
     FoundXCoordinate := 0
     FoundYCoordinate := 0
     OnImage := Array()
-    OnHoverImage := Array()
     X1Coordinate := 0
     Y1Coordinate := 0
     X2Coordinate := 0
     Y2Coordinate := 0
     State := 0
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "") {
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage) {
         Super.__New()
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
@@ -125,13 +124,8 @@ Class GraphicalControl Extends AccessibilityControl {
         OnImage := Array()
         If Not OnImage Is Array
         OnImage := Array(OnImage)
-        If OnHoverImage = ""
-        OnHoverImage := Array()
-        If Not OnHoverImage Is Array
-        OnHoverImage := Array(OnHoverImage)
         This.OnImage := OnImage
-        This.OnHoverImage := OnHoverImage
-    }
+        }
     
     SetState() {
         FoundXCoordinate := 0
@@ -139,13 +133,6 @@ Class GraphicalControl Extends AccessibilityControl {
         Try {
             For OnImage In This.OnImage
             If OnImage != "" And FileExist(OnImage) And Not InStr(FileExist(OnImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnImage) {
-                This.FoundXCoordinate := FoundXCoordinate
-                This.FoundYCoordinate := FoundYCoordinate
-                This.State := 1
-                Return True
-            }
-            For OnHoverImage In This.OnHoverImage
-            If OnHoverImage != "" And FileExist(OnHoverImage) And Not InStr(FileExist(OnHoverImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnHoverImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 1
@@ -172,8 +159,8 @@ Class FocusableGraphic Extends GraphicalControl {
     HotkeyFunction := Array()
     OnFocusFunction := Array()
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "",  OnFocusFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage)
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnFocusFunction := "") {
+        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage)
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -212,8 +199,8 @@ Class ActivatableGraphic Extends FocusableGraphic {
     
     OnActivateFunction := Array()
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "",  OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage, OnFocusFunction)
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnFocusFunction)
         If OnActivateFunction != "" {
             If OnActivateFunction Is Array
             This.OnActivateFunction := OnActivateFunction
@@ -238,20 +225,14 @@ Class ToggleableGraphic Extends ActivatableGraphic {
     
     IsToggle := 0
     OffImage := Array()
-    OffHoverImage := Array()
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage := "", OnHoverImage := "", OffImage := "", OffHoverImage := "",  OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage,  OnFocusFunction, OnActivateFunction)
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage := "", OffImage := "", OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnFocusFunction, OnActivateFunction)
         If OffImage = ""
         OffImage := Array()
         If Not OffImage Is Array
         OffImage := Array(OffImage)
-        If OffHoverImage = ""
-        OffHoverImage := Array()
-        If Not OffHoverImage Is Array
-        OffHoverImage := Array(OffHoverImage)
         This.OffImage := OffImage
-        This.OffHoverImage := OffHoverImage
         If This.OnImage != Array() And This.OffImage != Array() And This.OnImage != This.OffImage
         This.IsToggle := 1
     }
@@ -290,22 +271,8 @@ Class ToggleableGraphic Extends ActivatableGraphic {
                 This.State := 1
                 Return True
             }
-            For OnHoverImage In This.OnHoverImage
-            If OnHoverImage != "" And FileExist(OnHoverImage) And Not InStr(FileExist(OnHoverImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnHoverImage) {
-                This.FoundXCoordinate := FoundXCoordinate
-                This.FoundYCoordinate := FoundYCoordinate
-                This.State := 1
-                Return True
-            }
             For OffImage In This.OffImage
             If OffImage != "" And FileExist(OffImage) And Not InStr(FileExist(OffImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OffImage) {
-                This.FoundXCoordinate := FoundXCoordinate
-                This.FoundYCoordinate := FoundYCoordinate
-                This.State := 0
-                Return True
-            }
-            For OffHoverImage In This.OffHoverImage
-            If OffHoverImage != "" And FileExist(OffHoverImage) And Not InStr(FileExist(OffHoverImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OffHoverImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 0
@@ -1871,8 +1838,8 @@ Class GraphicalButton Extends ToggleableGraphic {
     OnString := "on"
     UnlabelledString := "unlabelled"
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", OffImage := "", OffHoverImage := "",  OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage, OffImage, OffHoverImage,  OnFocusFunction, OnActivateFunction)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OffImage := "", OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OffImage, OnFocusFunction, OnActivateFunction)
         This.Label := Label
     }
     
@@ -1971,8 +1938,8 @@ Class GraphicalCheckbox Extends ToggleableGraphic {
     NotFoundString := "not found"
     UnlabelledString := "unlabelled"
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", OffImage := "", OffHoverImage := "",  OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage, OffImage, OffHoverImage, OnFocusFunction, OnActivateFunction)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OffImage := "", OnFocusFunction := "", OnActivateFunction := "") {
+        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OffImage, OnFocusFunction, OnActivateFunction)
         This.Label := Label
     }
     
@@ -2058,8 +2025,6 @@ Class GraphicalTab Extends AccessibilityOverlay {
     OnFocusFunction := Array()
     OnImage := Array()
     OffImage := Array()
-    OnHoverImage := Array()
-    OffHoverImage := Array()
     X1Coordinate := 0
     Y1Coordinate := 0
     X2Coordinate := 0
@@ -2067,7 +2032,7 @@ Class GraphicalTab Extends AccessibilityOverlay {
     State := 0
     UnlabelledString := "unlabelled"
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnHoverImage := "", OffImage := "", OffHoverImage := "",  OnFocusFunction := "") {
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OffImage := "", OnFocusFunction := "") {
         Super.__New(Label)
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
@@ -2077,24 +2042,14 @@ Class GraphicalTab Extends AccessibilityOverlay {
         OnImage := Array()
         If Not OnImage Is Array
         OnImage := Array(OnImage)
-        If OnHoverImage = ""
-        OnHoverImage := Array()
-        If Not OnHoverImage Is Array
-        OnHoverImage := Array(OnHoverImage)
         If OffImage = ""
         OffImage := Array()
         If Not OffImage Is Array
         OffImage := Array(OffImage)
-        If OffHoverImage = ""
-        OffHoverImage := Array()
-        If Not OffHoverImage Is Array
-        OffHoverImage := Array(OffHoverImage)
         If OnImage != Array() And OffImage != Array() And OnImage != OffImage
         This.IsToggle := 1
         This.OnImage := OnImage
         This.OffImage := OffImage
-        This.OnHoverImage := OnHoverImage
-        This.OffHoverImage := OffHoverImage
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -2153,22 +2108,8 @@ Class GraphicalTab Extends AccessibilityOverlay {
                 This.State := 1
                 Return True
             }
-            For OnHoverImage In This.OnHoverImage
-            If OnHoverImage != "" And FileExist(OnHoverImage) And Not InStr(FileExist(OnHoverImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnHoverImage) {
-                This.FoundXCoordinate := FoundXCoordinate
-                This.FoundYCoordinate := FoundYCoordinate
-                This.State := 1
-                Return True
-            }
             For OffImage In This.OffImage
             If OffImage != "" And FileExist(OffImage) And Not InStr(FileExist(OffImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OffImage) {
-                This.FoundXCoordinate := FoundXCoordinate
-                This.FoundYCoordinate := FoundYCoordinate
-                This.State := 0
-                Return True
-            }
-            For OffHoverImage In This.OffHoverImage
-            If OffHoverImage != "" And FileExist(OffHoverImage) And Not InStr(FileExist(OffHoverImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OffHoverImage) {
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 0
