@@ -10,7 +10,8 @@ Class KompleteKontrol {
     Static YOffset := 100
     
     Static __New() {
-        #Include KompleteKontrol/OverlayDefinitions.ahk
+        ClassName := "KompleteKontrol"
+        #IncludeAgain KontaktKompleteKontrol/Overlay.Definitions.ahk
         
         PluginHeader := AccessibilityOverlay("Komplete Kontrol")
         PluginHeader.AddStaticText("Komplete Kontrol")

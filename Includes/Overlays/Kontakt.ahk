@@ -6,9 +6,12 @@ Class Kontakt {
     Static StandaloneHeader := Object()
     Static PluginOverlays := Array()
     Static StandaloneOverlays := Array()
+    Static XOffset := 0
+    Static YOffset := 0
     
     Static __New() {
-        #Include Kontakt/OverlayDefinitions.ahk
+        ClassName := "Kontakt"
+        #IncludeAgain KontaktKompleteKontrol/Overlay.Definitions.ahk
         
         PluginHeader := AccessibilityOverlay("Kontakt Full")
         PluginHeader.AddStaticText("Kontakt")
