@@ -8,6 +8,8 @@ Class Sforzando {
     }
     
     Static CheckPlugin(*) {
+        If Plugin.GetInstance(GetCurrentControlClass()) Is Plugin
+        Return True
         If FindImage("Images/Sforzando/Sforzando.png", GetPluginXCoordinate() + 500, GetPluginYCoordinate(), GetPluginXCoordinate() + 800, GetPluginYCoordinate() + 200) Is Object
         Return True
         Return False

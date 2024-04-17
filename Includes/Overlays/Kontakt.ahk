@@ -85,6 +85,8 @@ Class Kontakt {
     }
     
     Static CheckPlugin(*) {
+        If Plugin.GetInstance(GetCurrentControlClass()) Is Plugin
+        Return True
         If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
         Return True
         Else
@@ -94,6 +96,8 @@ Class Kontakt {
     }
     
     Static CheckPluginContentMissing(*) {
+        If Plugin.GetInstance(GetCurrentControlClass()) Is Plugin
+        Return True
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing"
         Return True
         Return False

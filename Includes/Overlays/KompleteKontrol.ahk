@@ -94,12 +94,16 @@ Class KompleteKontrol {
     }
     
     Static CheckPlugin(*) {
+        If Plugin.GetInstance(GetCurrentControlClass()) Is Plugin
+        Return True
         If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 100) Is Object
         Return True
         Return False
     }
     
     Static CheckPluginPreferences(*) {
+        If Plugin.GetInstance(GetCurrentControlClass()) Is Plugin
+        Return True
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Preferences"
         Return True
         Return False
