@@ -143,10 +143,6 @@ Class Plugin {
         If PluginNumbers.Length > 0 {
             FirstValidNumber := 0
             For PluginNumber In PluginNumbers {
-                If FirstValidNumber = 0
-                For ItemNumber In PluginNumbers
-                If Plugin.List[ItemNumber]["CheckerFunction"].Call(Plugin.List[ItemNumber]) = True
-                FirstValidNumber := ItemNumber
                 PluginName := Plugin.List[PluginNumber]["Name"]
                 SingleInstance := Plugin.List[PluginNumber]["SingleInstance"]
                 If SingleInstance = True {
@@ -162,6 +158,10 @@ Class Plugin {
                         Return PluginInstance
                     }
                 }
+                If FirstValidNumber = 0
+                For ItemNumber In PluginNumbers
+                If Plugin.List[ItemNumber]["CheckerFunction"].Call(Plugin.List[ItemNumber]) = True
+                FirstValidNumber := ItemNumber
             }
             If FirstValidNumber > 0 {
                 PluginInstance := Plugin(Plugin.List[FirstValidNumber]["Name"], ControlClass)
