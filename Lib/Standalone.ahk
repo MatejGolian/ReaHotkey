@@ -141,6 +141,13 @@ Class Standalone {
         Return Array()
     }
     
+    Static GetInstance(WinID) {
+        For ProgramInstance In Standalone.Instances
+        If ProgramInstance.WindowID = WinID
+        Return ProgramInstance
+        Return False
+    }
+    
     Static GetList() {
         Return Standalone.List
     }

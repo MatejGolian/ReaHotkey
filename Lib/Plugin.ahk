@@ -178,6 +178,13 @@ Class Plugin {
         Return Array()
     }
     
+    Static GetInstance(ControlClass) {
+        For PluginInstance In Plugin.Instances
+        If PluginInstance.ControlClass = ControlClass
+        Return PluginInstance
+        Return False
+    }
+    
     Static GetList() {
         Return Plugin.List
     }
