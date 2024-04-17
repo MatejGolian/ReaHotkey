@@ -31,9 +31,9 @@ Class Plugin {
         If PluginNumber > 0 {
             PluginEntry := Plugin.List[PluginNumber]
             This.InitFunction := PluginEntry["InitFunction"]
-            This.SingleInstance := PluginEntry["SingleInstance"]
             This.Chooser := PluginEntry["Chooser"]
             This.NoHotkeys := PluginEntry["NoHotkeys"]
+            This.SingleInstance := PluginEntry["SingleInstance"]
             This.CheckerFunction := PluginEntry["CheckerFunction"]
             For OverlayNumber, Overlay In PluginEntry["Overlays"]
             This.Overlays.Push(Overlay.Clone())
@@ -223,16 +223,16 @@ Class Plugin {
         Return False
     }
     
-    Static Register(PluginName, ControlClasses, InitFunction := "", SingleInstance := False, Chooser := True, NoHotkeys := False, CheckerFunction := "") {
+    Static Register(PluginName, ControlClasses, InitFunction := "", Chooser := True, NoHotkeys := False, SingleInstance := True, CheckerFunction := "") {
         If Plugin.FindName(PluginName) = False {
             If PluginName = ""
             PluginName := Plugin.UnnamedPluginName
-            If SingleInstance != True And SingleInstance != False
-            SingleInstance := False
             If Chooser != True And Chooser != False
             Chooser := False
             If NoHotkeys != True And NoHotkeys != False
             NoHotkeys := False
+            If SingleInstance != True And SingleInstance != False
+            SingleInstance := True
             If Not CheckerFunction Is Func
             CheckerFunction := ObjBindMethod(Plugin, "DefaultChecker")
             PluginEntry := Map()
@@ -242,9 +242,9 @@ Class Plugin {
             Else
             PluginEntry["ControlClasses"] := Array(ControlClasses)
             PluginEntry["InitFunction"] := InitFunction
-            PluginEntry["SingleInstance"] := SingleInstance
             PluginEntry["Chooser"] := Chooser
             PluginEntry["NoHotkeys"] := NoHotkeys
+            PluginEntry["SingleInstance"] := SingleInstance
             PluginEntry["CheckerFunction"] := CheckerFunction
             PluginEntry["Hotkeys"] := Array()
             PluginEntry["Overlays"] := Array()

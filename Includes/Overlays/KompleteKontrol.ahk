@@ -25,7 +25,7 @@ Class KompleteKontrol {
         StandaloneHeader.AddHotspotButton("Help menu", 202, 41)
         KompleteKontrol.StandaloneHeader := StandaloneHeader
         
-        Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(KompleteKontrol, "InitPlugin"), True, True, False, ObjBindMethod(KompleteKontrol, "CheckPlugin"))
+        Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(KompleteKontrol, "InitPlugin"), True, False, True, ObjBindMethod(KompleteKontrol, "CheckPlugin"))
         
         For PluginOverlay In KompleteKontrol.PluginOverlays
         Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
