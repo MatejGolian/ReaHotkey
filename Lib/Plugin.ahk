@@ -141,7 +141,6 @@ Class Plugin {
     Static GetByClass(ControlClass) {
         PluginNumbers := Plugin.FindClass(ControlClass)
         If PluginNumbers.Length > 0 {
-            FirstValidNumber := 0
             For PluginNumber In PluginNumbers {
                 PluginName := Plugin.List[PluginNumber]["Name"]
                 SingleInstance := Plugin.List[PluginNumber]["SingleInstance"]
@@ -158,10 +157,12 @@ Class Plugin {
                         Return PluginInstance
                     }
                 }
-                If FirstValidNumber = 0
-                For ItemNumber In PluginNumbers
-                If Plugin.List[ItemNumber]["CheckerFunction"].Call(Plugin.List[ItemNumber]) = True
-                FirstValidNumber := ItemNumber
+            }
+            FirstValidNumber := 0
+            For PluginNumber In PluginNumbers
+            If Plugin.List[PluginNumber]["CheckerFunction"].Call(Plugin.List[PluginNumber]) = True {
+                FirstValidNumber := PluginNumber
+                Break
             }
             If FirstValidNumber > 0 {
                 PluginInstance := Plugin(Plugin.List[FirstValidNumber]["Name"], ControlClass)
