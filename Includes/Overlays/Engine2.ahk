@@ -48,7 +48,8 @@ Class Engine2 {
     }
     
     Static CheckPlugin(*) {
-        If Plugin.GetInstance(GetCurrentControlClass()) Is Plugin
+        PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
+        If PluginInstance Is Plugin And PluginInstance.Name = "Engine 2"
         Return True
         If FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate() + 500, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100) Is Object
         Return True
