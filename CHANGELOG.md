@@ -7,14 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.3] - 2024-04-17
+
 ### Added
 
-- Add screen resolution check on ReaHotkey startup
-- Add new functionality and version info to HotspotHelper
+-   Add screen resolution check on ReaHotkey startup
+-   Add new functionality and version info to HotspotHelper
 
 ### Changed
 
-- All Audio Imperia libraries except Cerberus now use graphical toggle buttons instead of simple hotspots.
+-   All Audio Imperia libraries except Cerberus now use graphical toggle buttons instead of simple hotspots.
 
 ## [0.4.2] - 2024-03-17
 
@@ -82,7 +84,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.2...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.3...HEAD
+
+[0.4.3]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.2...0.4.3
 
 [0.4.2]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.1...0.4.2
 
