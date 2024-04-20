@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Update Kontakt header buttons to use UIA
 - Updated HotspotHelper window layouts
 
 ## [0.4.3] - 2024-04-17

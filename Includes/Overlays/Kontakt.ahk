@@ -14,18 +14,18 @@ Class Kontakt {
         #IncludeAgain KontaktKompleteKontrol/Overlay.Definitions.ahk
         
         PluginHeader := AccessibilityOverlay("Kontakt Full")
-        PluginHeader.AddStaticText("Kontakt")
-        PluginHeader.AddCustomButton("FILE menu", ObjBindMethod(Kontakt, "FocusPluginMenu"), ObjBindMethod(Kontakt, "ActivatePluginMenu"))
-        PluginHeader.AddCustomButton("LIBRARY Browser On/Off", ObjBindMethod(Kontakt, "FocusPluginMenu"), ObjBindMethod(Kontakt, "ActivatePluginMenu"))
-        PluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(Kontakt, "FocusPluginMenu"), ObjBindMethod(Kontakt, "ActivatePluginMenu"))
-        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(Kontakt, "FocusPluginMenu"), ObjBindMethod(Kontakt, "ActivatePluginMenu"))
+        PluginHeader.AddStaticText("Kontakt 7")
+        PluginHeader.AddUIAControl("15,1,2", "FILE menu button",, Kontakt.OpenPluginMenu)
+        PluginHeader.AddUIAControl("15,1,3", "LIBRARY On/Off button")
+        PluginHeader.AddUIAControl("15,1,4", "VIEW menu button",, Kontakt.OpenPluginMenu)
+        PluginHeader.AddUIAControl("15,1,7", "SHOP (Opens in default web browser) button")
         Kontakt.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Kontakt")
-        StandaloneHeader.AddCustomButton("FILE menu", ObjBindMethod(Kontakt, "FocusStandaloneMenu"), ObjBindMethod(Kontakt, "ActivateStandaloneMenu"))
-        StandaloneHeader.AddCustomButton("LIBRARY Browser On/Off", ObjBindMethod(Kontakt, "FocusStandaloneMenu"), ObjBindMethod(Kontakt, "ActivateStandaloneMenu"))
-        StandaloneHeader.AddCustomButton("VIEW menu", ObjBindMethod(Kontakt, "FocusStandaloneMenu"), ObjBindMethod(Kontakt, "ActivateStandaloneMenu"))
-        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(Kontakt, "FocusStandaloneMenu"), ObjBindMethod(Kontakt, "ActivateStandaloneMenu"))
+        StandaloneHeader.AddUIAControl("1,2", "FILE menu button",, Kontakt.OpenStandaloneMenu)
+        StandaloneHeader.AddUIAControl("1,3", "LIBRARY On/Off button")
+        StandaloneHeader.AddUIAControl("1,4", "VIEW menu button",, Kontakt.OpenStandaloneMenu)
+        StandaloneHeader.AddUIAControl("1,5", "SHOP (Opens in default web browser) button")
         Kontakt.StandaloneHeader := StandaloneHeader
         
         Plugin.Register("Kontakt", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(Kontakt, "InitPlugin"), True, False, True, ObjBindMethod(Kontakt, "CheckPlugin"))
@@ -51,38 +51,6 @@ Class Kontakt {
         StandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
         StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372)
         Standalone.RegisterOverlay("Kontakt Content Missing Dialog", StandaloneContentMissingOverlay)
-    }
-    
-    Static ActivatePluginMenu(MenuButton) {
-        MenuLabel := StrSplit(MenuButton.Label, A_Space)
-        MenuLabel := MenuLabel[1]
-        Result := Kontakt.MoveToOrClickMenu("Plugin", MenuLabel, "Click")
-        If Result = 1 {
-            If MenuLabel = "FILE" Or MenuLabel = "VIEW"
-            Kontakt.OpenPluginMenu()
-        }
-        Else If Result = 0 {
-            AccessibilityOverlay.Speak("Item not found")
-        }
-        Else {
-            AccessibilityOverlay.Speak("OCR not available")
-        }
-    }
-    
-    Static ActivateStandaloneMenu(MenuButton) {
-        MenuLabel := StrSplit(MenuButton.Label, A_Space)
-        MenuLabel := MenuLabel[1]
-        Result := Kontakt.MoveToOrClickMenu("Standalone", MenuLabel, "Click")
-        If Result = 1 {
-            If MenuLabel = "FILE" Or MenuLabel = "VIEW"
-            Kontakt.OpenStandaloneMenu()
-        }
-        Else If Result = 0 {
-            AccessibilityOverlay.Speak("Item not found")
-        }
-        Else {
-            AccessibilityOverlay.Speak("OCR not available")
-        }
     }
     
     Static CheckPlugin(*) {
@@ -157,18 +125,6 @@ Class Kontakt {
         }
     }
     
-    Static FocusPluginMenu(MenuButton) {
-        MenuLabel := StrSplit(MenuButton.Label, A_Space)
-        MenuLabel := MenuLabel[1]
-        Kontakt.MoveToOrClickMenu("Plugin", MenuLabel, "MouseMove")
-    }
-    
-    Static FocusStandaloneMenu(MenuButton) {
-        MenuLabel := StrSplit(MenuButton.Label, A_Space)
-        MenuLabel := MenuLabel[1]
-        Kontakt.MoveToOrClickMenu("Standalone", MenuLabel, "MouseMove")
-    }
-    
     Static InitPlugin(PluginInstance) {
         If PluginInstance.Overlay.ChildControls.Length = 0
         PluginInstance.Overlay.AddAccessibilityOverlay()
@@ -177,80 +133,6 @@ Class Kontakt {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
             PluginInstance.Overlay.OverlayNumber := 1
         }
-    }
-    
-    Static MoveToOrClickMenu(Type, MenuLabel, MoveOrClick) {
-        If Type = "Plugin" {
-            CropX1 := GetPluginXCoordinate() + 80
-            CropY1 := GetPluginYCoordinate()
-            CropX2 := GetPluginXCoordinate() + 1200
-            CropY2 := GetPluginYCoordinate() + 120
-        }
-        Else {
-            CropX1 := 80
-            CropY1 := 0
-            CropX2 := 1200
-            CropY2 := 120
-        }
-        AvailableLanguages := OCR.GetAvailableLanguages()
-        FirstAvailableLanguage := False
-        FirstOCRLanguage := False
-        PreferredLanguage := False
-        PreferredOCRLanguage := ""
-        Loop Parse, AvailableLanguages, "`n" {
-            If A_Index = 1 And A_LoopField != "" {
-                FirstAvailableLanguage := True
-                FirstOCRLanguage := A_LoopField
-            }
-            If SubStr(A_LoopField, 1, 3) = "en-" {
-                PreferredLanguage := True
-                PreferredOCRLanguage := A_LoopField
-                Break
-            }
-        }
-        If FirstAvailableLanguage = False And PreferredLanguage = False
-        OCRLanguage := False
-        Else If PreferredLanguage = False
-        OCRLanguage := FirstOCRLanguage
-        Else
-        OCRLanguage := PreferredOCRLanguage
-        If OCRLanguage != False {
-            OCRResult := OCR.FromWindow("A", OCRLanguage)
-            OCRResult := OCRResult.Crop(CropX1, CropY1, CropX2, CropY2)
-            For OCRLine In OCRResult.Lines
-            If RegExMatch(OCRLine.Text, "^.*" . MenuLabel . ".*") {
-                DesiredMenu := False
-                For OCRWord In OCRLine.Words
-                If RegExMatch(OCRWord.Text, "^" . MenuLabel . ".*") {
-                    DesiredMenu := OCRWord.Text
-                    Break
-                }
-                If DesiredMenu != False {
-                    Try
-                    DesiredMenu := OCRResult.FindString(DesiredMenu)
-                    Catch
-                    DesiredMenu := False
-                }
-                If DesiredMenu != False {
-                    %MoveOrClick%(floor(OCR.WordsBoundingRect(DesiredMenu.Words*).X + (OCR.WordsBoundingRect(DesiredMenu.Words*).W / 2)), Floor(OCR.WordsBoundingRect(DesiredMenu.Words*).Y + (OCR.WordsBoundingRect(DesiredMenu.Words*).H / 2)))
-                    Return 1
-                }
-                Break
-            }
-        }
-        MouseCoordinates := Map(
-        "FILE", {X: 184, Y: 70},
-        "LIBRARY", {X: 240, Y: 70},
-        "VIEW", {X: 298, Y: 70},
-        "SHOP", {X: 789, Y: 70})
-        If MouseCoordinates.Has(MenuLabel) {
-            If type = "Plugin"
-            %MoveOrClick%(CompensatePluginXCoordinate(MouseCoordinates[MenuLabel].X), CompensatePluginYCoordinate(MouseCoordinates[MenuLabel].Y))
-            Else
-            %MoveOrClick%(MouseCoordinates[MenuLabel].X, MouseCoordinates[MenuLabel].Y)
-            Return 1
-        }
-        Return 0
     }
     
     Static OpenMenu(Type) {
@@ -291,12 +173,16 @@ Class Kontakt {
         }
     }
     
-    Static OpenPluginMenu() {
-        Kontakt.OpenMenu("Plugin")
+    Class OpenPluginMenu {
+        Static Call(*) {
+            Kontakt.OpenMenu("Plugin")
+        }
     }
     
-    Static OpenStandaloneMenu() {
-        Kontakt.OpenMenu("Standalone")
+    Class OpenStandaloneMenu {
+        Static Call(*) {
+            Kontakt.OpenMenu("Standalone")
+        }
     }
     
 }

@@ -125,7 +125,7 @@ Class GraphicalControl Extends AccessibilityControl {
         If Not OnImage Is Array
         OnImage := Array(OnImage)
         This.OnImage := OnImage
-        }
+    }
     
     SetState() {
         FoundXCoordinate := 0
@@ -2960,14 +2960,14 @@ Class UIAControl Extends AccessibilityControl {
     Label := ""
     HotkeyCommand := ""
     HotkeyFunction := Array()
-    UIAControlID := ""
+    UIAPath := ""
     OnActivateFunction := Array()
     OnFocusFunction := Array()
     NotFoundString := "not found"
     
-    __New(UIAControlID, Label := "", OnFocusFunction := "", OnActivateFunction := "") {
+    __New(UIAPath, Label := "", OnFocusFunction := "", OnActivateFunction := "") {
         Super.__New()
-        This.UIAControlID := UIAControlID
+        This.UIAPath := UIAPath
         This.Label := Label
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
@@ -2984,15 +2984,18 @@ Class UIAControl Extends AccessibilityControl {
     }
     
     Activate(CurrentControlID := 0) {
-        If This.GetControl() == False {
+        ControlElement := This.GetControl()
+        If ControlElement == False {
             If This.Label != ""
             AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
             Else
             AccessibilityOverlay.Speak(This.NotFoundString)
         }
         else {
+            If This.ControlID != CurrentControlID
             If HasMethod(This, "Focus")
             This.Focus(CurrentControlID)
+            ControlElement.Click()
             For OnActivateFunction In This.OnActivateFunction
             OnActivateFunction.Call(This)
             If This.ControlID != CurrentControlID {
@@ -3003,14 +3006,15 @@ Class UIAControl Extends AccessibilityControl {
     }
     
     Focus(CurrentControlID := 0) {
-        If This.GetControl() == False {
+        ControlElement := This.GetControl()
+        If ControlElement == False {
             If This.Label != ""
             AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
             Else
             AccessibilityOverlay.Speak(This.NotFoundString)
         }
         else {
-            This.GetControl().Highlight()
+            ControlElement.SetFocus()
             If CurrentControlID != This.ControlID {
                 For OnFocusFunction In This.OnFocusFunction
                 OnFocusFunction.Call(This)
@@ -3025,7 +3029,7 @@ Class UIAControl Extends AccessibilityControl {
         Return False
         Try {
             element := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-            element := element.FindElement({AutomationId:This.UIAControlID})
+            element := element.ElementFromPath(This.UIAPath)
         }
         Catch {
             Return False
