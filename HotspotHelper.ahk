@@ -80,8 +80,8 @@ About(*) {
     If DialogOpen = 0 {
         DialogOpen := 1
         AboutBox := Gui(, "About " . AppName)
-        AboutBox.Add("Edit", "ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added individual hotspots.`n`nKeyboard Shortcuts`n`nHotspot Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+Del - Delete all hotspots`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nDel - Delete current hotspot`nF2 - Rename current hotspot`n`nWindow & Control Shortcuts:`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class and position of the currently focused control to clipboard`nWin+Ctrl+Shift+L - Copy control list to clipboard`nWin+Ctrl+Shift+F - Focus control`n`nMouse Shortcuts:`nWin+Ctrl+Shift+M - Route the mouse to the position of the currently focused control`nWin+Ctrl+Shift+U - Copy the pixel colour under the mouse to clipboard`nWin+Ctrl+Shift+X - Set mouse X position`nWin+Ctrl+Shift+Y - Set mouse Y position`nWin+Ctrl+Shift+Z - Report mouse position`nWin+Ctrl+Shift+Left - Move mouse leftf`nWin+Ctrl+Shift+Right - Move mouse right`nWin+Ctrl+Shift+Up - Move mouse up`nWin+Ctrl+Shift+Down - Move mouse down`n`nMiscellaneous Shortcuts:`nWin+Ctrl+Shift+Print Screen - Extract a region of the active window as an image`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+S - Search for image`nWin+Ctrl+Shift+R - Repeat search using last image`nWin+Ctrl+Shift+V - Open Clipboard Viewer`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nCtrl - Stop speech")
-        AboutBox.Add("Button", "Default", "OK").OnEvent("Click", CloseAboutBox)
+        AboutBox.AddEdit("ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added individual hotspots.`n`nKeyboard Shortcuts`n`nHotspot Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+Del - Delete all hotspots`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nDel - Delete current hotspot`nF2 - Rename current hotspot`n`nWindow & Control Shortcuts:`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class and position of the currently focused control to clipboard`nWin+Ctrl+Shift+L - Copy control list to clipboard`nWin+Ctrl+Shift+F - Focus control`n`nMouse Shortcuts:`nWin+Ctrl+Shift+M - Route the mouse to the position of the currently focused control`nWin+Ctrl+Shift+U - Copy the pixel colour under the mouse to clipboard`nWin+Ctrl+Shift+X - Set mouse X position`nWin+Ctrl+Shift+Y - Set mouse Y position`nWin+Ctrl+Shift+Z - Report mouse position`nWin+Ctrl+Shift+Left - Move mouse leftf`nWin+Ctrl+Shift+Right - Move mouse right`nWin+Ctrl+Shift+Up - Move mouse up`nWin+Ctrl+Shift+Down - Move mouse down`n`nMiscellaneous Shortcuts:`nWin+Ctrl+Shift+Print Screen - Extract a region of the active window as an image`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+S - Search for image`nWin+Ctrl+Shift+R - Repeat search using last image`nWin+Ctrl+Shift+V - Open Clipboard Viewer`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nCtrl - Stop speech")
+        AboutBox.AddButton("Default", "OK").OnEvent("Click", CloseAboutBox)
         AboutBox.OnEvent("Close", CloseAboutBox)
         AboutBox.OnEvent("Escape", CloseAboutBox)
         AboutBox.Show()
@@ -432,16 +432,16 @@ ExtractImage(*) {
     If DialogOpen = 0 {
         DialogOpen := 1
         CoordinateBox := Gui(, AppName . " Image Extractor {`"" . WindowTitle . "`"}")
-        CoordinateBox.Add("Text",, "X1 coordinate (between 0 and " . XSize . "):")
-        CoordinateBox.Add("Edit", "vX1Coord Number", X1Coord).OnEvent("Change", ProcessInput)
-        CoordinateBox.Add("Text",, "Y1 coordinate (between 0 and " . YSize . "):")
-        CoordinateBox.Add("Edit", "vY1Coord Number", Y1Coord).OnEvent("Change", ProcessInput)
-        CoordinateBox.Add("Text",, "X2 coordinate (between 0 and " . XSize . "):")
-        CoordinateBox.Add("Edit", "vX2Coord Number", X2Coord).OnEvent("Change", ProcessInput)
-        CoordinateBox.Add("Text",, "Y2 coordinate (between 0 and " . YSize . "):")
-        CoordinateBox.Add("Edit", "vY2Coord Number", Y2Coord).OnEvent("Change", ProcessInput)
-        CoordinateBox.Add("Button", "+Disabled", "OK").OnEvent("Click", SaveImage)
-        CoordinateBox.Add("Button", "Default", "Cancel").OnEvent("Click", CloseCoordinateBox)
+        CoordinateBox.AddText(, "X1 coordinate (between 0 and " . XSize . "):")
+        CoordinateBox.AddEdit("vX1Coord Number YS", X1Coord).OnEvent("Change", ProcessInput)
+        CoordinateBox.AddText("Section XS", "Y1 coordinate (between 0 and " . YSize . "):")
+        CoordinateBox.AddEdit("vY1Coord Number YS", Y1Coord).OnEvent("Change", ProcessInput)
+        CoordinateBox.AddText("Section XS", "X2 coordinate (between 0 and " . XSize . "):")
+        CoordinateBox.AddEdit("vX2Coord Number YS", X2Coord).OnEvent("Change", ProcessInput)
+        CoordinateBox.AddText("Section XS", "Y2 coordinate (between 0 and " . YSize . "):")
+        CoordinateBox.AddEdit("vY2Coord Number YS", Y2Coord).OnEvent("Change", ProcessInput)
+        CoordinateBox.AddButton("Disabled Section XS", "OK").OnEvent("Click", SaveImage)
+        CoordinateBox.AddButton("Default YS", "Cancel").OnEvent("Click", CloseCoordinateBox)
         CoordinateStatus := CoordinateBox.Add("StatusBar")
         CoordinateBox.OnEvent("Close", CloseCoordinateBox)
         CoordinateBox.OnEvent("Escape", CloseCoordinateBox)
@@ -1164,7 +1164,7 @@ WinCoordToScreenCoord(X, Y) {
     Return {X: MouseXPos, Y: MouseYPos}
 }
 
-Version := "0.2.0"
+Version := "0.2.1"
 ;@Ahk2Exe-Let U_version = %A_PriorLine~U)^(.+"){1}(.+)".*$~$2%
     ;@Ahk2Exe-Let U_OrigFileName = %A_ScriptName~\.[^\.]+$~.exe%
     ;@Ahk2Exe-SetDescription HotspotHelper
