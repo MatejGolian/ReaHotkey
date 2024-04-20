@@ -63,7 +63,6 @@ Class KompleteKontrol {
         
         Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe")
         Standalone.RegisterOverlay("Komplete Kontrol", StandaloneHeader)
-        ;Standalone.SetTimer("Komplete Kontrol", ObjBindMethod(KompleteKontrol, "CloseStandaloneBrowser"), 500)
         
         Standalone.Register("Komplete Kontrol Preference Dialog", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(KompleteKontrol, "FocusStandalonePreferenceTab"))
         Standalone.SetHotkey("Komplete Kontrol Preference Dialog", "^,", ObjBindMethod(KompleteKontrol, "ManageStandalonePreferenceDialog"))
@@ -131,14 +130,9 @@ Class KompleteKontrol {
     }
     
     Static ClosePluginBrowser() {
-        Colors := ["0x6E8192", "0x6F8193", "0x97999A"]
-        For Color In Colors
-        If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = Color {
-            Click CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)
-            Sleep 500
-            If PixelGetColor(CompensatePluginXCoordinate(1002), CompensatePluginYCoordinate(284)) = Color
-            AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
-            Else
+        UIAElement := GetUIAControl("15,1,3")
+        If UIAElement != False And UIAElement.Type = "50000" And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+            UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
         }
@@ -155,14 +149,9 @@ Class KompleteKontrol {
     }
     
     Static CloseStandaloneBrowser() {
-        Colors := ["0x6E8192", "0x6F8193", "0x97999A"]
-        For Color In Colors
-        If PixelGetColor(1002, 284) = Color {
-            Click 1002, 284
-            Sleep 500
-            If PixelGetColor(1002, 284) = Color
-            AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
-            Else
+        UIAElement := GetUIAControl("1,3")
+        If UIAElement != False And UIAElement.Type = "50000" And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+            UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
         }

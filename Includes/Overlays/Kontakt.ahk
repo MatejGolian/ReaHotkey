@@ -88,14 +88,9 @@ Class Kontakt {
     }
     
     Static ClosePluginBrowser() {
-        Colors := ["0x999993", "0x9A9A93"]
-        For Color In Colors
-        If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = Color {
-            Click CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)
-            Sleep 500
-            If PixelGetColor(CompensatePluginXCoordinate(997), CompensatePluginYCoordinate(125)) = Color
-            AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
-            Else
+        UIAElement := GetUIAControl("15,1,16,3")
+        If UIAElement != False And UIAElement.Type = "50000" And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+            UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
         }
@@ -112,14 +107,9 @@ Class Kontakt {
     }
     
     Static CloseStandaloneBrowser() {
-        Colors := ["0x999993", "0x9A9A93"]
-        For Color In Colors
-        If PixelGetColor(997, 125) = Color {
-            Click 997, 125
-            Sleep 500
-            If PixelGetColor(997, 125) = Color
-            AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
-            Else
+        UIAElement := GetUIAControl("1,14,3")
+        If UIAElement != False And UIAElement.Type = "50000" And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+            UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
         }

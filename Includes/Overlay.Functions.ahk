@@ -434,6 +434,19 @@ GetPluginYCoordinate() {
     Return PluginControlYCoordinate
 }
 
+GetUIAControl(UIAPath) {
+    If !IsSet(UIA)
+    Return False
+    Try {
+        element := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+        element := element.ElementFromPath(UIAPath)
+    }
+    Catch {
+        Return False
+    }
+    Return Element
+}
+
 KeyWaitCombo() {
     IH := InputHook()
     IH.VisibleNonText := True
