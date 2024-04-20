@@ -33,7 +33,6 @@ Class Kontakt {
         For PluginOverlay In Kontakt.PluginOverlays
         Plugin.RegisterOverlay("Kontakt", PluginOverlay)
         
-        ;Plugin.SetTimer("Kontakt", ObjBindMethod(Kontakt, "ClosePluginBrowser"), 500)
         Plugin.SetTimer("Kontakt", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt", True, True), 500)
         
         Plugin.Register("Kontakt Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(Kontakt, "CheckPluginContentMissing"))
@@ -46,7 +45,6 @@ Class Kontakt {
         
         Standalone.Register("Kontakt", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
         Standalone.RegisterOverlay("Kontakt", StandaloneHeader)
-        ;Standalone.SetTimer("Kontakt", ObjBindMethod(Kontakt, "CloseStandaloneBrowser"), 500)
         
         Standalone.Register("Kontakt Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
         
@@ -88,14 +86,27 @@ Class Kontakt {
     }
     
     Static CheckPlugin(*) {
+        ReaperPluginNames := ["VST3i: Kontakt 7 (Native Instruments) (64 out)"]
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt"
         Return True
-        If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
-        Return True
-        Else
-        If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
-        Return True
+        If IniRead("ReaHotkey.ini", "Config", "UseImageSearchForPluginDetection", 1) = 1 {
+            If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
+            Return True
+            Else
+            If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
+            Return True
+        }
+        Else {
+            Try
+            ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
+            Catch
+            ReaperListItem := ""
+            If ReaperListItem != ""
+            For ReaperPluginName In ReaperPluginNames
+            If ReaperListItem = ReaperPluginName
+            Return True
+        }
         Return False
     }
     
@@ -118,6 +129,7 @@ Class Kontakt {
             AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
             Else
             AccessibilityOverlay.Speak("Library Browser closed.")
+            Sleep 1000
         }
     }
     
@@ -141,6 +153,7 @@ Class Kontakt {
             AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
             Else
             AccessibilityOverlay.Speak("Library Browser closed.")
+            Sleep 1000
         }
     }
     

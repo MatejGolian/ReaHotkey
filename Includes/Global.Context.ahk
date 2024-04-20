@@ -6,6 +6,10 @@
     ReaHotkey.ShowAboutBox()
 }
 
+^+#C:: {
+    ReaHotkey.ShowConfigBox()
+}
+
 ^+#P:: {
     ReaHotkey.TogglePause()
     If A_IsSuspended = 1

@@ -48,11 +48,24 @@ Class Engine2 {
     }
     
     Static CheckPlugin(*) {
+        ReaperPluginNames := ["VSTi: ENGINE (Best Service) (24 out)"]
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Engine 2"
         Return True
-        If FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate() + 500, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100) Is Object
-        Return True
+        If IniRead("ReaHotkey.ini", "Config", "UseImageSearchForPluginDetection", 1) = 1 {
+            If FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate() + 500, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100) Is Object
+            Return True
+        }
+        Else {
+            Try
+            ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
+            Catch
+            ReaperListItem := ""
+            If ReaperListItem != ""
+            For ReaperPluginName In ReaperPluginNames
+            If ReaperListItem = ReaperPluginName
+            Return True
+        }
         Return False
     }
     

@@ -23,13 +23,13 @@ SetWorkingDir A_InitialWorkingDir
 
 A_IconTip := "ReaHotkey"
 A_TrayMenu.Delete
+A_TrayMenu.Add("&Configuration...", ReaHotkey.ShowConfigBox)
 A_TrayMenu.Add("&Pause", ReaHotkey.TogglePause)
 A_TrayMenu.Add("View &Readme", ReaHotkey.ViewReadme)
 A_TrayMenu.Add("&About...", ReaHotkey.ShowAboutBox)
 A_TrayMenu.Add("&Quit", ReaHotkey.Quit)
-A_TrayMenu.Default := "&Pause"
+A_TrayMenu.Default := "&Configuration..."
 
-ReaHotkey.CheckResolution()
 AccessibilityOverlay.Speak("ReaHotkey ready")
 SetTimer ReaHotkey.ManageState, 100
 

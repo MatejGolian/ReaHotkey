@@ -38,6 +38,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 ## Keyboard Shortcuts
 
 * ctrl+shift+windows+a - about
+* ctrl+shift+windows+c - configuration
 * ctrl+shift+windows+p - pause
 * ctrl+shift+windows+q - quit
 * ctrl+shift+windows+r - view readme

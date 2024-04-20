@@ -31,7 +31,7 @@ Class KompleteKontrol {
         For PluginOverlay In KompleteKontrol.PluginOverlays
         Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
         
-        Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(KompleteKontrol, "ClosePluginBrowser"), 500)
+        Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(KompleteKontrol, "CheckPluginConfig"), -1)
         Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True), 500)
         
         Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KompleteKontrol, "CheckPluginPreferences"))
@@ -95,12 +95,30 @@ Class KompleteKontrol {
     }
     
     Static CheckPlugin(*) {
+        ReaperPluginNames := ["VST3i: Komplete Kontrol (Native Instruments) (32 out)"]
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol"
         Return True
-        If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 100) Is Object
-        Return True
+        If IniRead("ReaHotkey.ini", "Config", "UseImageSearchForPluginDetection", 1) = 1 {
+            If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 100) Is Object
+            Return True
+        }
+        Else {
+            Try
+            ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
+            Catch
+            ReaperListItem := ""
+            If ReaperListItem != ""
+            For ReaperPluginName In ReaperPluginNames
+            If ReaperListItem = ReaperPluginName
+            Return True
+        }
         Return False
+    }
+    
+    Static CheckPluginConfig() {
+        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseKKPluginBrowser", 1) = 1
+        KompleteKontrol.ClosePluginBrowser()
     }
     
     Static CheckPluginPreferences(*) {
@@ -122,6 +140,7 @@ Class KompleteKontrol {
             AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
             Else
             AccessibilityOverlay.Speak("Library Browser closed.")
+            Sleep 1000
         }
     }
     
@@ -145,6 +164,7 @@ Class KompleteKontrol {
             AccessibilityOverlay.Speak("The Library Browser could not be closed. Some functions may not work correctly.")
             Else
             AccessibilityOverlay.Speak("Library Browser closed.")
+            Sleep 1000
         }
     }
     
