@@ -130,8 +130,8 @@ Class KompleteKontrol {
     }
     
     Static ClosePluginBrowser() {
-        UIAElement := GetUIAControl("15,1,3")
-        If UIAElement != False And UIAElement.Type = "50000" And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        UIAElement := GetUIAControl("15,1,Button3")
+        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
@@ -149,8 +149,8 @@ Class KompleteKontrol {
     }
     
     Static CloseStandaloneBrowser() {
-        UIAElement := GetUIAControl("1,3")
-        If UIAElement != False And UIAElement.Type = "50000" And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        UIAElement := GetUIAControl("1,Button3")
+        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000

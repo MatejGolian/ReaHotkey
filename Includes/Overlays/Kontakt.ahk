@@ -88,8 +88,8 @@ Class Kontakt {
     }
     
     Static ClosePluginBrowser() {
-        UIAElement := GetUIAControl("15,1,16,3")
-        If UIAElement != False And UIAElement.Type = "50000" And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        UIAElement := GetUIAControl("15,1,16,Button3")
+        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
@@ -107,8 +107,8 @@ Class Kontakt {
     }
     
     Static CloseStandaloneBrowser() {
-        UIAElement := GetUIAControl("1,14,3")
-        If UIAElement != False And UIAElement.Type = "50000" And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        UIAElement := GetUIAControl("1,14,Button3")
+        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
