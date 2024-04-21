@@ -33,9 +33,10 @@ A_TrayMenu.Default := "&Configuration..."
 AccessibilityOverlay.Speak("ReaHotkey ready")
 SetTimer ReaHotkey.ManageState, 100
 
-#Include Includes/Global.Context.ahk
 #Include Includes/Plugin.Context.ahk
+#IncludeAgain Includes/Global.Context.ahk
 #Include Includes/Standalone.Context.ahk
+#IncludeAgain Includes/Global.Context.ahk
 #Include Includes/Overlay.Definitions.ahk
 #Include Includes/Overlay.Functions.ahk
 #Include Includes/Version.ahk
