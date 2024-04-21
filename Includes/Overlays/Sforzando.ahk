@@ -8,24 +8,13 @@ Class Sforzando {
     }
     
     Static CheckPlugin(*) {
-        ReaperPluginNames := ["VSTi: sforzando (Plogue Art et Technologie, Inc)", "VST3i: sforzando (Plogue Art et Technologie, Inc)"]
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "sforzando"
         Return True
-        If IniRead("ReaHotkey.ini", "Config", "UseImageSearchForPluginDetection", 1) = 1 {
-            If FindImage("Images/Sforzando/Sforzando.png", GetPluginXCoordinate() + 500, GetPluginYCoordinate(), GetPluginXCoordinate() + 800, GetPluginYCoordinate() + 200) Is Object
-            Return True
-        }
-        Else {
-            Try
-            ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
-            Catch
-            ReaperListItem := ""
-            If ReaperListItem != ""
-            For ReaperPluginName In ReaperPluginNames
-            If ReaperListItem = ReaperPluginName
-            Return True
-        }
+        UIAElement := GetUIAElement("15,Pane1")
+        Try
+        If UIAElement != False And UIAElement.Name = "PlogueXMLGUI"
+        Return True
         Return False
     }
     

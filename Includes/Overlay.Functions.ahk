@@ -434,7 +434,7 @@ GetPluginYCoordinate() {
     Return PluginControlYCoordinate
 }
 
-GetUIAControl(UIAPath) {
+GetUIAElement(UIAPath) {
     If !IsSet(UIA)
     Return False
     Try {

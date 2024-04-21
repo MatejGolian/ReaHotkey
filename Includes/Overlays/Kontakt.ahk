@@ -54,27 +54,13 @@ Class Kontakt {
     }
     
     Static CheckPlugin(*) {
-        ReaperPluginNames := ["VST3i: Kontakt 7 (Native Instruments) (64 out)"]
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt"
         Return True
-        If IniRead("ReaHotkey.ini", "Config", "UseImageSearchForPluginDetection", 1) = 1 {
-            If FindImage("Images/KontaktKompleteKontrol/KontaktFull.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
-            Return True
-            Else
-            If FindImage("Images/KontaktKompleteKontrol/KontaktPlayer.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 150) Is Object
-            Return True
-        }
-        Else {
-            Try
-            ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
-            Catch
-            ReaperListItem := ""
-            If ReaperListItem != ""
-            For ReaperPluginName In ReaperPluginNames
-            If ReaperListItem = ReaperPluginName
-            Return True
-        }
+        UIAElement := GetUIAElement("15,Window1")
+        Try
+        If UIAElement != False And UIAElement.Name = "Kontakt 7" And UIAElement.ClassName = "ni::qt::QuickWindow"
+        Return True
         Return False
     }
     
@@ -88,8 +74,8 @@ Class Kontakt {
     }
     
     Static ClosePluginBrowser() {
-        UIAElement := GetUIAControl("15,1,16,3")
-        If UIAElement != False And UIAElement.Type = "50000" And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        UIAElement := GetUIAElement("15,1,16,Button1")
+        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
@@ -107,8 +93,8 @@ Class Kontakt {
     }
     
     Static CloseStandaloneBrowser() {
-        UIAElement := GetUIAControl("1,14,3")
-        If UIAElement != False And UIAElement.Type = "50000" And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        UIAElement := GetUIAElement("1,14,Button1")
+        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000

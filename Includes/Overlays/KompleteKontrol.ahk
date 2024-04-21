@@ -94,24 +94,13 @@ Class KompleteKontrol {
     }
     
     Static CheckPlugin(*) {
-        ReaperPluginNames := ["VST3i: Komplete Kontrol (Native Instruments) (32 out)"]
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol"
         Return True
-        If IniRead("ReaHotkey.ini", "Config", "UseImageSearchForPluginDetection", 1) = 1 {
-            If FindImage("Images/KontaktKompleteKontrol/KompleteKontrol.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 400, GetPluginYCoordinate() + 100) Is Object
-            Return True
-        }
-        Else {
-            Try
-            ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
-            Catch
-            ReaperListItem := ""
-            If ReaperListItem != ""
-            For ReaperPluginName In ReaperPluginNames
-            If ReaperListItem = ReaperPluginName
-            Return True
-        }
+        UIAElement := GetUIAElement("15,Window1")
+        Try
+        If UIAElement != False And UIAElement.Name = "Komplete Kontrol" And UIAElement.ClassName = "ni::qt::QuickWindow"
+        Return True
         Return False
     }
     
@@ -130,8 +119,8 @@ Class KompleteKontrol {
     }
     
     Static ClosePluginBrowser() {
-        UIAElement := GetUIAControl("15,1,3")
-        If UIAElement != False And UIAElement.Type = "50000" And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        UIAElement := GetUIAElement("15,1,Button1")
+        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
@@ -149,8 +138,8 @@ Class KompleteKontrol {
     }
     
     Static CloseStandaloneBrowser() {
-        UIAElement := GetUIAControl("1,3")
-        If UIAElement != False And UIAElement.Type = "50000" And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        UIAElement := GetUIAElement("1,Button1")
+        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
