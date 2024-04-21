@@ -7,18 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.4] - 2024-04-21
+
 ### Added
 
-- Added configuration dialog
-- Added option to disable screen resolution check on startup
-- Added option to disable Engine 2 plug-in detection based on image search
-- Added option to disable automatic browser closing in the KK plug-in
+-   Added configuration dialog
+-   Added option to disable screen resolution check on startup
+-   Added option to disable Engine 2 plug-in detection based on image search
+-   Added option to disable automatic browser closing in the KK plug-in
 
 ### Changed
 
-- Use UIA for plug-in detection whenever possible
-- Update Kontakt header buttons to use UIA
-- Updated HotspotHelper window layouts
+-   Use UIA for plug-in detection whenever possible
+-   Update Kontakt header buttons to use UIA
+-   Updated HotspotHelper window layouts
 
 ## [0.4.3] - 2024-04-17
 
@@ -97,7 +99,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.3...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.4...HEAD
+
+[0.4.4]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.3...0.4.4
 
 [0.4.3]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.2...0.4.3
 
