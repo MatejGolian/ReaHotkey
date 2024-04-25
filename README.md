@@ -21,7 +21,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - Works both inside REAPER and in the standalone version of Komplete Kontrol, although due to how REAPER FX windows behave with screen readers, using the standalone version for performing these tasks provides a more stable and reliable user experience and is therefore preferred.
   - Komplete Kontrol version 3 is highly recommended, although most of the above functionality may work with older versions of the application as well. That being said, ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
 * Makes it possible to interact with Kontakt menus.
-  - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.10 or higher is required. Windows 10 or newer with OCR installed is recommended, although not mandatory.
+  - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.10 or higher is required.
 * Provides support for the 'Browse' button in the Kontakt Content Missing dialog.
   - Works both inside REAPER and in the standalone version of Kontakt. This feature may not work with Komplete Kontrol.
 * Makes it possible to switch Between various mixes in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
