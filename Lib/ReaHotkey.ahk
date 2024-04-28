@@ -22,28 +22,9 @@ Class ReaHotkey {
     
     Static CheckResolution() {
         If A_ScreenWidth != ReaHotkey.RequiredScreenWidth And A_ScreenHeight != ReaHotkey.RequiredScreenHeight {
-            ConfirmationDialog := MsgBox("ReaHotkey requires a resolution of " . ReaHotkey.RequiredScreenWidth . " × " . ReaHotkey.RequiredScreenHeight . " in order to run properly.`nTry to change the resolution automatically?", "ReaHotkey", 4)
-            If ConfirmationDialog == "Yes" {
-                ReaHotkey.ChangeResolution(ReaHotkey.RequiredScreenWidth, ReaHotkey.RequiredScreenHeight, 32)
-                If A_ScreenWidth != ReaHotkey.RequiredScreenWidth And A_ScreenHeight != ReaHotkey.RequiredScreenHeight {
-                    MsgBox "Your resolution could not be set to " . ReaHotkey.RequiredScreenWidth . " × " . ReaHotkey.RequiredScreenHeight . ".`nReaHotkey may not operate properly.", "ReaHotkey"
-                    Sleep 500
-                    Return False
-                }
-                Else {
-                    MsgBox "Your resolution has been changed successfully.", "ReaHotkey"
-                    Sleep 500
-                    Return True
-                }
-            }
+            MsgBox "Your resolution is not set to " . ReaHotkey.RequiredScreenWidth . " × " . ReaHotkey.RequiredScreenHeight . ".`nReaHotkey may not operate properly.", "ReaHotkey"
+            Sleep 500
         }
-        Else {
-            Return True
-        }
-        If A_ScreenWidth != ReaHotkey.RequiredScreenWidth And A_ScreenHeight != ReaHotkey.RequiredScreenHeight
-        MsgBox "Your resolution is not set to " . ReaHotkey.RequiredScreenWidth . " × " . ReaHotkey.RequiredScreenHeight . ".`nReaHotkey may not operate properly.", "ReaHotkey"
-        Sleep 500
-        Return False
     }
     
     Static FocusNextTab(Overlay) {
@@ -337,19 +318,6 @@ Class ReaHotkey {
                 Timer["Enabled"] := True
                 SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
             }
-        }
-    }
-    
-    Class ChangeResolution {
-        Static Call(ScreenWidth := 1920, ScreenHeight := 1080, ColorDepth := 32) {
-            DeviceMode := Buffer(156, 0)
-            NumPut("UShort", 156, DeviceMode, 36)
-            DllCall("EnumDisplaySettingsA", "UInt",0, "UInt",-1, "Ptr",DeviceMode)
-            NumPut("UInt", 0x5c0000, DeviceMode, 40)
-            NumPut("UInt", ColorDepth, DeviceMode, 104)
-            NumPut("UInt", ScreenWidth, DeviceMode, 108)
-            NumPut("UInt", ScreenHeight, DeviceMode, 112)
-            Return DllCall( "ChangeDisplaySettingsA", "Ptr",DeviceMode, "UInt",0 )
         }
     }
     
