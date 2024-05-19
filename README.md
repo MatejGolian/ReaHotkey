@@ -15,6 +15,8 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - not all features are supported, nor do we know if they ever will be (see [below](#dubler2))
 * Makes it possible to load instruments and add libraries in Best Service Engine 2.
   - Works both inside REAPER and in the standalone version of Engine 2.
+* Allows to click the presets button in various FabFilter plugins
+  - The keyboard bindings only work with the unified interfaces of e.g. C-2, Q-3 etc, but not with the newer R-2 yet
 * Makes it possible to interact with Komplete Kontrol menus.
   - Works both inside REAPER and in the standalone version of Komplete Kontrol. Note that Komplete Kontrol version 3 is absolutely required in case of the plug-in.
   * Makes it possible to add new user library folders and perform library and plug-in rescans in Komplete Kontrol. It's also possible to toggle the setting for user content scanning on start-up on/off, as well as the setting for always using the latest versions of Native Instruments plug-ins.
