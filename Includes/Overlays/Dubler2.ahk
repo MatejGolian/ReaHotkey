@@ -459,6 +459,51 @@ Class Dubler2 {
 
 }
 
-;Plugin.Register("Dubler 2", "JUCE_[0-9a-f]{12}", , False)
+Class Dubler2MIDICapturePlugin {
+
+    Static NoClipRecordedImg := LoadPicture(A_ScriptDir . "\Images\Dubler2\NoClipRecorded.png")
+
+    Static DragFirstClip(*) {
+        MouseClickDrag("Left", CompensatePluginXCoordinate(299), CompensatePluginYCoordinate(573), CompensatePluginXCoordinate(812), CompensatePluginYCoordinate(627))
+    }
+
+    Static SetOverlay() {
+        If Not ReaHotkey.FoundPlugin Is Plugin
+            Return
+
+        Label := ReaHotkey.FoundPlugin.Overlay.Label
+
+        Local Ol := ""
+        Local X, Y
+        
+        If ImageSearch(&X, &Y, CompensatePluginXCoordinate(50), CompensatePluginYCoordinate(550), CompensatePluginXCoordinate(350), CompensatePluginYCoordinate(750), "*20 HBITMAP:*" . Dubler2MIDICapturePlugin.NoClipRecordedImg) {
+            If Label != "Dubler 2 MIDI Capture Plugin No Clip Recorded" {
+                Ol := AccessibilityOverlay("Dubler 2 MIDI Capture Plugin No Clip Recorded")
+                Ol.AddStaticText("No clip was recorded, please press play and have Dubler pick up some notes to show up here.")
+            }
+        } Else If Label != "Dubler 2 MIDI Capture Plugin" {
+            Ol := AccessibilityOverlay("Dubler 2 MIDI Capture Plugin")
+            Ol.AddControl(CustomButton("Copy clip into REAPER", , ObjBindMethod(Dubler2MIDICapturePlugin, "DragFirstClip")))
+            Ol.AddHotspotButton("Select key of exported clip", 112, 554, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        }
+
+        If Ol Is AccessibilityOverlay {
+
+            Ol.Focus()
+            ReaHotkey.FoundPlugin.Overlay := Ol
+        }
+    }
+
+    Static Init(Instance) {
+        Instance.SetTimer(ObjBindMethod(Dubler2MIDICapturePlugin, "SetOverlay"), 300)
+
+        Ol := AccessibilityOverlay("Dubler 2 MIDI Capture Plugin Loading")
+        Ol.AddStaticText("Loading, please wait...")
+
+        Instance.RegisterOverlay(Ol)
+    }
+}
+
+Plugin.Register("Dubler 2 MIDI Capture", "JUCE_[0-9a-f]{12}", ObjBindMethod(Dubler2MIDICapturePlugin, "Init"), False)
 Standalone.Register("Dubler 2", "Vochlea\sDubler\s2\.2 ahk_class Qt5155QWindowOwnDCIcon", ObjBindMethod(Dubler2, "Init"), True)
 Standalone.RegisterOverlay("Dubler 2", Dubler2.CreateLoadingOverlay(AccessibilityOverlay()))

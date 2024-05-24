@@ -11,7 +11,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 ## Features
 
 * Enables accessibility for Dubler 2.2 by Vochlea
-  - only standalone support for now
+  - standalone and MIDI capture plugin support
   - not all features are supported, nor do we know if they ever will be (see [below](#dubler2))
 * Makes it possible to load instruments and add libraries in Best Service Engine 2.
   - Works both inside REAPER and in the standalone version of Engine 2.
@@ -74,7 +74,6 @@ This is a rather incomplete list of features we already support.
 The following list also is a rather incomplete list of features that aren't currently supported, but we're aware of and might happen in the future.
 
 * Extended chords support, like building custom chords presets
-* Dubler Companion Plug-in is currently not accessible
 * User account settings aren't accessible
 * Some random pop-ups might not be accessible and disturb the workflow. Please let us know if you encounter one and tell us how to make them appear so that we can add support for them.
 
@@ -82,6 +81,13 @@ The following list also is a rather incomplete list of features that aren't curr
 
 ReaHotkey allows you to create as many profiles as you want. It however only allows you to load one of the first 5 profiles in the list of all profiles, which therefore get suffixed with a tag that indicates if its an active profile which can be loaded, or a passive one which needs to be moved to an active slot first.
 This is not how Dubler 2 behaves in general, but its a limitation we have to put onto the script because of how the GUI is designed. Thus, in order to make a profile loadable which isn't currently amongst the 5 active profiles, you'll have to push its button and use the move menu to switch it with a currently active profile. This process will restart Dubler for the changes to take effect. Just wait a few seconds until Dubler opens up again and you will be able to load the profile just fine.
+
+### <a href="dubler2-midi-capture-plugin"></a>Dubler 2 MIDI Capture Plugin
+
+ReaHotkey provides basic support for the Dubler 2 MIDI Capture Plugin. Please note the following:
+
+* the copy clip to REAPER action will drag and drop a clip from the plugin UI into REAPER. That is currently the only way export clips from the plugin into REAPER and comes with the drawback that we cannot explicitly tell REAPER where to insert the clip within the project. If you've got too many tracks in a project (something about 8 tracks), the clip will start to show up at random places throughout the project. We therefore recommend you to use the plugin in projects that are as clean and small as possible. Maybe just have a project tab open which is only responsible for capturing ideas, you'll be able to copy clips around between REAPER instances as soon as they got copied into REAPER.
+* the Select key of clip action will focus the semi-accessible dropdown box with the two possible options, which are the key suggestion by Dubler and the Dubler 2 standalone setting you've chosen. To select either of those options, make sure to pull the mouse to the corresponding position and simulate a left mouse click to select it. We'll try to further improve the process in a future version.
 
 ## About HotspotHelper
 
