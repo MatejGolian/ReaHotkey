@@ -2,6 +2,7 @@
 
 Class KompleteKontrol {
     
+    Static PluginAutoChangeFunction := Object()
     Static PluginHeader := Object()
     Static StandaloneHeader := Object()
     Static PluginOverlays := Array()
@@ -10,6 +11,8 @@ Class KompleteKontrol {
     Static YOffset := 100
     
     Static __New() {
+        KompleteKontrol.PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True)
+        
         ClassName := "KompleteKontrol"
         #IncludeAgain KontaktKompleteKontrol/Overlay.Definitions.ahk
         
@@ -32,7 +35,6 @@ Class KompleteKontrol {
         Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
         
         Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(KompleteKontrol, "CheckPluginConfig"), -1)
-        Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True), 500)
         
         Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KompleteKontrol, "CheckPluginPreferences"))
         Plugin.SetHotkey("Komplete Kontrol Preference Dialog", "!F4", ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
@@ -107,6 +109,13 @@ Class KompleteKontrol {
     Static CheckPluginConfig() {
         If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseKKPluginBrowser", 1) = 1
         KompleteKontrol.ClosePluginBrowser()
+        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugin", 1) = 1 {
+            Plugin.SetTimer("Komplete Kontrol", KompleteKontrol.PluginAutoChangeFunction, 500)
+            KompleteKontrol.PluginAutoChangeFunction.Call()
+        }
+        Else {
+            Plugin.SetTimer("Komplete Kontrol", KompleteKontrol.PluginAutoChangeFunction, 0)
+        }
     }
     
     Static CheckPluginPreferences(*) {

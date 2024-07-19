@@ -2,6 +2,7 @@
 
 Class Kontakt {
     
+    Static PluginAutoChangeFunction := Object()
     Static PluginHeader := Object()
     Static StandaloneHeader := Object()
     Static PluginOverlays := Array()
@@ -10,6 +11,8 @@ Class Kontakt {
     Static YOffset := 0
     
     Static __New() {
+        Kontakt.PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt", True, True)
+        
         ClassName := "Kontakt"
         #IncludeAgain KontaktKompleteKontrol/Overlay.Definitions.ahk
         
@@ -33,7 +36,7 @@ Class Kontakt {
         For PluginOverlay In Kontakt.PluginOverlays
         Plugin.RegisterOverlay("Kontakt", PluginOverlay)
         
-        Plugin.SetTimer("Kontakt", ObjBindMethod(AutoChangePluginOverlay,, "Kontakt", True, True), 500)
+        Plugin.SetTimer("Kontakt", ObjBindMethod(KompleteKontrol, "CheckPluginConfig"), -1)
         
         Plugin.Register("Kontakt Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(Kontakt, "CheckPluginContentMissing"))
         Plugin.SetHotkey("Kontakt Content Missing Dialog", "!F4", ObjBindMethod(Kontakt, "ClosePluginContentMissingDialog"))
@@ -62,6 +65,16 @@ Class Kontakt {
         If UIAElement != False And UIAElement.Name = "Kontakt 7" And UIAElement.ClassName = "ni::qt::QuickWindow"
         Return True
         Return False
+    }
+    
+    Static CheckPluginConfig() {
+        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugin", 1) = 1 {
+            Plugin.SetTimer("Kontakt", Kontakt.PluginAutoChangeFunction, 500)
+            Kontakt.PluginAutoChangeFunction.Call()
+        }
+        Else {
+            Plugin.SetTimer("Kontakt", Kontakt.PluginAutoChangeFunction, 0)
+        }
     }
     
     Static CheckPluginContentMissing(*) {
