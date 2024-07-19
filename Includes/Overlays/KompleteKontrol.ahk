@@ -111,10 +111,11 @@ Class KompleteKontrol {
         KompleteKontrol.ClosePluginBrowser()
         If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugin", 1) = 1 {
             Plugin.SetTimer("Komplete Kontrol", KompleteKontrol.PluginAutoChangeFunction, 500)
-            KompleteKontrol.PluginAutoChangeFunction.Call()
+            SetTimer KompleteKontrol.PluginAutoChangeFunction, 500
         }
         Else {
             Plugin.SetTimer("Komplete Kontrol", KompleteKontrol.PluginAutoChangeFunction, 0)
+            SetTimer KompleteKontrol.PluginAutoChangeFunction, 0
         }
     }
     

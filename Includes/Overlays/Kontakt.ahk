@@ -70,10 +70,11 @@ Class Kontakt {
     Static CheckPluginConfig() {
         If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugin", 1) = 1 {
             Plugin.SetTimer("Kontakt", Kontakt.PluginAutoChangeFunction, 500)
-            Kontakt.PluginAutoChangeFunction.Call()
+            SetTimer Kontakt.PluginAutoChangeFunction, 500
         }
         Else {
             Plugin.SetTimer("Kontakt", Kontakt.PluginAutoChangeFunction, 0)
+            SetTimer Kontakt.PluginAutoChangeFunction, 0
         }
     }
     
