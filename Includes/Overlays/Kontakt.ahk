@@ -66,7 +66,7 @@ Class Kontakt {
     
     Static CheckPluginConfig() {
         Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt", True, True)
-        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugins", 1) = 1
+        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1) = 1
         Plugin.SetTimer("Kontakt", PluginAutoChangeFunction, 500)
         Else
         Plugin.SetTimer("Kontakt", PluginAutoChangeFunction, 0)
