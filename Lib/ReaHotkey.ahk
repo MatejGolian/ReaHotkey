@@ -140,8 +140,8 @@ Class ReaHotkey {
         IniWrite(Value, "ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection")
         Value := IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseKKPluginBrowser", 1)
         IniWrite(Value, "ReaHotkey.ini", "Config", "AutomaticallyCloseKKPluginBrowser")
-        Value := IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugin", 1)
-        IniWrite(Value, "ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugin")
+        Value := IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugins", 1)
+        IniWrite(Value, "ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugins")
     }
     
     Static InPluginControl(ControlToCheck) {
@@ -492,10 +492,10 @@ Class ReaHotkey {
                 KKPluginBrowserBox := ConfigBox.AddCheckBox("XS Checked", "Automatically close Komplete Kontrol plug-in browser")
                 Else
                 KKPluginBrowserBox := ConfigBox.AddCheckBox("XS", "Automatically close Komplete Kontrol plug-in browser")
-                If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugin", 1) = 1
-                KontaktKKPluginLibraryDetectionBox := ConfigBox.AddCheckBox("XS Checked", "Automatically detect library loaded in Kontakt and Komplete Kontrol plug-ins")
+                If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugins", 1) = 1
+                KontaktKKPluginLibraryDetectionBox := ConfigBox.AddCheckBox("XS Checked", "Automatically detect libraries in Kontakt and Komplete Kontrol plug-ins")
                 Else
-                KontaktKKPluginLibraryDetectionBox := ConfigBox.AddCheckBox("XS", "Automatically detect library loaded in Kontakt and Komplete Kontrol plug-ins")
+                KontaktKKPluginLibraryDetectionBox := ConfigBox.AddCheckBox("XS", "Automatically detect libraries in Kontakt and Komplete Kontrol plug-ins")
                 ConfigBox.AddButton("Section Default", "OK").OnEvent("Click", SaveConfig)
                 ConfigBox.AddButton("YS", "Cancel").OnEvent("Click", CloseConfigBox)
                 ConfigBox.OnEvent("Close", CloseConfigBox)
@@ -515,7 +515,7 @@ Class ReaHotkey {
                 IniWrite(ScreenResolutionBox.Value, "ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup")
                 IniWrite(Engine2PluginImageSearchBox.Value, "ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection")
                 IniWrite(KKPluginBrowserBox.Value, "ReaHotkey.ini", "Config", "AutomaticallyCloseKKPluginBrowser")
-                IniWrite(KontaktKKPluginLibraryDetectionBox.Value, "ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugin")
+                IniWrite(KontaktKKPluginLibraryDetectionBox.Value, "ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugins")
                 CloseConfigBox()
             }
         }
