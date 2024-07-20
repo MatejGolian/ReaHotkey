@@ -2,6 +2,38 @@
 
 #HotIf WinActive("ahk_exe reaper.exe ahk_class #32770")
 
+F6:: {
+    Thread "NoTimers"
+    Try
+    ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
+    Catch
+    ReaHotkey.FoundPlugin := False
+    Controls := WinGetControls(ReaHotkey.PluginWinCriteria)
+    ContainerIndex := 0
+    Try
+    For Index, Control In Controls
+    If Control = "reaperPluginHostWrapProc1" And Index < Controls.Length {
+        ContainerIndex := Index + 1
+        Break
+    }
+    CurrentIndex := 0
+    Try
+    For Index, Control In Controls
+    If Control = ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)) {
+        CurrentIndex := Index
+        Break
+    }
+    Try
+    If ReaHotkey.FoundPlugin Is Plugin And CurrentIndex > 0 And CurrentIndex <= 6 And ContainerIndex > 0 And ControlGetFocus(ReaHotkey.PluginWinCriteria) And !ReaHotkey.InPluginControl(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) {
+    ControlFocus ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+}
+Else {
+    Hotkey A_ThisHotkey, "Off"
+    Send "{" . A_ThisHotkey . "}"
+    Hotkey A_ThisHotkey, "On"
+}
+}
+
 Tab:: {
     Thread "NoTimers"
     Try
