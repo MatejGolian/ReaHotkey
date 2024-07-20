@@ -2,7 +2,6 @@
 
 Class Kontakt {
     
-    Static PluginAutoChangeFunction := Object()
     Static PluginHeader := Object()
     Static StandaloneHeader := Object()
     Static PluginOverlays := Array()
@@ -11,8 +10,6 @@ Class Kontakt {
     Static YOffset := 0
     
     Static __New() {
-        Kontakt.PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt", True, True)
-        
         ClassName := "Kontakt"
         #IncludeAgain KontaktKompleteKontrol/Overlay.Definitions.ahk
         
@@ -68,14 +65,11 @@ Class Kontakt {
     }
     
     Static CheckPluginConfig() {
-        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugin", 1) = 1 {
-            Plugin.SetTimer("Kontakt", Kontakt.PluginAutoChangeFunction, 500)
-            SetTimer Kontakt.PluginAutoChangeFunction, 500
-        }
-        Else {
-            Plugin.SetTimer("Kontakt", Kontakt.PluginAutoChangeFunction, 0)
-            SetTimer Kontakt.PluginAutoChangeFunction, 0
-        }
+        Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt", True, True)
+        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibraryInKontaktKKPlugin", 1) = 1
+        Plugin.SetTimer("Kontakt", PluginAutoChangeFunction, 500)
+        Else
+        Plugin.SetTimer("Kontakt", PluginAutoChangeFunction, 0)
     }
     
     Static CheckPluginContentMissing(*) {

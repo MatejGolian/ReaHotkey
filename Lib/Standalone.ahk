@@ -341,6 +341,7 @@ Class Standalone {
             If Priority = ""
             Priority := 0
             Standalone.List[ProgramNumber]["Timers"].Push(Map("Function", Function, "Period", Period, "Priority", Priority, "Enabled", False))
+            TimerNumber := Standalone.List[ProgramNumber]["Timers"].Length
         }
         Else {
             If TimerNumber > 0 {
@@ -351,6 +352,10 @@ Class Standalone {
                 Standalone.List[ProgramNumber]["Timers"][TimerNumber]["Period"] := Period
                 Standalone.List[ProgramNumber]["Timers"][TimerNumber]["Priority"] := Priority
             }
+        }
+        If A_IsSuspended = 0 And TimerNumber > 0 And ReaHotkey.FoundStandalone Is Standalone And ReaHotkey.FoundStandalone.Name = ProgramName {
+            Standalone.List[ProgramNumber]["Timers"][TimerNumber]["Enabled"] := True
+            SetTimer Function, Period, Priority
         }
     }
     

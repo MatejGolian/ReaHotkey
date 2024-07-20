@@ -405,6 +405,7 @@ Class Plugin {
             If Priority = ""
             Priority := 0
             Plugin.List[PluginNumber]["Timers"].Push(Map("Function", Function, "Period", Period, "Priority", Priority, "Enabled", False))
+            TimerNumber := Plugin.List[PluginNumber]["Timers"].Length
         }
         Else {
             If TimerNumber > 0 {
@@ -415,6 +416,10 @@ Class Plugin {
                 Plugin.List[PluginNumber]["Timers"][TimerNumber]["Period"] := Period
                 Plugin.List[PluginNumber]["Timers"][TimerNumber]["Priority"] := Priority
             }
+        }
+        If A_IsSuspended = 0 And TimerNumber > 0 And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = PluginName {
+            Plugin.List[PluginNumber]["Timers"][TimerNumber]["Enabled"] := True
+            SetTimer Function, Period, Priority
         }
     }
     
