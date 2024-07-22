@@ -480,22 +480,22 @@ Class ReaHotkey {
             Static ConfigBox := False, ConfigBoxWinID := ""
             If ConfigBox = False {
                 ConfigBox := Gui(, "ReaHotkey Configuration")
+                Checked := ""
                 If IniRead("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1) = 1
-                ScreenResolutionBox := ConfigBox.AddCheckBox("Checked", "Check screen resolution on startup")
-                Else
-                ScreenResolutionBox := ConfigBox.AddCheckBox("", "Check screen resolution on startup")
+                Checked := "Checked"
+                ScreenResolutionBox := ConfigBox.AddCheckBox(Checked, "Check screen resolution on startup")
+                Checked := ""
                 If IniRead("ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection", 1) = 1
-                Engine2PluginImageSearchBox := ConfigBox.AddCheckBox("XS Checked", "Use image search for Engine 2 plug-in detection")
-                Else
-                Engine2PluginImageSearchBox := ConfigBox.AddCheckBox("XS", "Use image search for Engine 2 plug-in detection")
+                Checked := "Checked"
+                Engine2PluginImageSearchBox := ConfigBox.AddCheckBox("XS " . Checked, "Use image search for Engine 2 plug-in detection")
+                Checked := ""
                 If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseKKPluginBrowser", 1) = 1
-                KKPluginBrowserBox := ConfigBox.AddCheckBox("XS Checked", "Automatically close Komplete Kontrol plug-in browser")
-                Else
-                KKPluginBrowserBox := ConfigBox.AddCheckBox("XS", "Automatically close Komplete Kontrol plug-in browser")
+                Checked := "Checked"
+                KKPluginBrowserBox := ConfigBox.AddCheckBox("XS " . Checked, "Automatically close Komplete Kontrol plug-in browser")
+                Checked := ""
                 If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1) = 1
-                KontaktKKPluginLibraryDetectionBox := ConfigBox.AddCheckBox("XS Checked", "Automatically detect libraries in Kontakt and Komplete Kontrol plug-ins")
-                Else
-                KontaktKKPluginLibraryDetectionBox := ConfigBox.AddCheckBox("XS", "Automatically detect libraries in Kontakt and Komplete Kontrol plug-ins")
+                Checked := "Checked"
+                KontaktKKPluginLibraryDetectionBox := ConfigBox.AddCheckBox("XS " . Checked, "Automatically detect libraries in Kontakt and Komplete Kontrol plug-ins")
                 ConfigBox.AddButton("Section Default", "OK").OnEvent("Click", SaveConfig)
                 ConfigBox.AddButton("YS", "Cancel").OnEvent("Click", CloseConfigBox)
                 ConfigBox.OnEvent("Close", CloseConfigBox)
