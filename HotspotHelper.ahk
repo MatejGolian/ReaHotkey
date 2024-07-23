@@ -635,10 +635,7 @@ GenerateHotspotsFromOCR() {
                         Hotspots.Push(Map("Label", "`"" . OCRLine.Text . "`" start", "XCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).X, "YCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).Y))
                         Hotspots.Push(Map("Label", "`"" . OCRLine.Text . "`" end", "XCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).X + OCR.WordsBoundingRect(OCRLine.Words*).W, "YCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).Y + OCR.WordsBoundingRect(OCRLine.Words*).H))
                     }
-                    If OCRResult.Lines.Length = 1
-                    Speak("1 hotspot generated")
-                    Else
-                    Speak(OCRResult.Lines.Length . " hotspots generated")
+                    Speak(OCRResult.Lines.Length * 2 . " hotspots generated")
                 }
             }
         }
