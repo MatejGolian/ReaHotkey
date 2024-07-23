@@ -52,6 +52,7 @@ Enter::ClickHotspot()
 Del::DeleteHotspot()
 #^+PrintScreen::ExtractImage()
 #^+F::FocusControl()
+#^+G::GenerateHotspotsFromOCR()
 #^+Down::MoveMouseDown()
 #^+Left::MoveMouseLeft()
 #^+Right::MoveMouseRight()
@@ -80,7 +81,7 @@ About(*) {
     If DialogOpen = 0 {
         DialogOpen := 1
         AboutBox := Gui(, "About " . AppName)
-        AboutBox.AddEdit("ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added individual hotspots.`n`nKeyboard Shortcuts`n`nHotspot Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+Del - Delete all hotspots`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nDel - Delete current hotspot`nF2 - Rename current hotspot`n`nWindow & Control Shortcuts:`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class and position of the currently focused control to clipboard`nWin+Ctrl+Shift+L - Copy control list to clipboard`nWin+Ctrl+Shift+F - Focus control`n`nMouse Shortcuts:`nWin+Ctrl+Shift+M - Route the mouse to the position of the currently focused control`nWin+Ctrl+Shift+U - Copy the pixel colour under the mouse to clipboard`nWin+Ctrl+Shift+X - Set mouse X position`nWin+Ctrl+Shift+Y - Set mouse Y position`nWin+Ctrl+Shift+Z - Report mouse position`nWin+Ctrl+Shift+Left - Move mouse leftf`nWin+Ctrl+Shift+Right - Move mouse right`nWin+Ctrl+Shift+Up - Move mouse up`nWin+Ctrl+Shift+Down - Move mouse down`n`nMiscellaneous Shortcuts:`nWin+Ctrl+Shift+Print Screen - Extract a region of the active window as an image`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+S - Search for image`nWin+Ctrl+Shift+R - Repeat search using last image`nWin+Ctrl+Shift+V - Open Clipboard Viewer`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nCtrl - Stop speech")
+        AboutBox.AddEdit("ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added individual hotspots.`n`nKeyboard Shortcuts`n`nHotspot Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+Del - Delete all hotspots`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nDel - Delete current hotspot`nF2 - Rename current hotspot`n`nWindow & Control Shortcuts:`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class and position of the currently focused control to clipboard`nWin+Ctrl+Shift+L - Copy control list to clipboard`nWin+Ctrl+Shift+F - Focus control`n`nMouse Shortcuts:`nWin+Ctrl+Shift+M - Route the mouse to the position of the currently focused control`nWin+Ctrl+Shift+U - Copy the pixel colour under the mouse to clipboard`nWin+Ctrl+Shift+X - Set mouse X position`nWin+Ctrl+Shift+Y - Set mouse Y position`nWin+Ctrl+Shift+Z - Report mouse position`nWin+Ctrl+Shift+Left - Move mouse leftf`nWin+Ctrl+Shift+Right - Move mouse right`nWin+Ctrl+Shift+Up - Move mouse up`nWin+Ctrl+Shift+Down - Move mouse down`n`nMiscellaneous Shortcuts:`nWin+Ctrl+Shift+Print Screen - Extract a region of the active window as an image`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+G - Generate hotspots from OCR`n`nWin+Ctrl+Shift+S - Search for image`nWin+Ctrl+Shift+R - Repeat search using last image`nWin+Ctrl+Shift+V - Open Clipboard Viewer`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nCtrl - Stop speech")
         AboutBox.AddButton("Default", "OK").OnEvent("Click", CloseAboutBox)
         AboutBox.OnEvent("Close", CloseAboutBox)
         AboutBox.OnEvent("Escape", CloseAboutBox)
@@ -574,6 +575,58 @@ FocusControl() {
     }
 }
 
+GenerateHotspotsFromOCR() {
+    Global AppName, DialogOpen, Hotspots
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        Try {
+            WinWaitActive("A")
+            ConfirmationDialog := MsgBox("Generate hotspots from OCR?", AppName, 4)
+            If ConfirmationDialog == "Yes" {
+                AvailableLanguages := OCR.GetAvailableLanguages()
+                FirstAvailableLanguage := False
+                FirstOCRLanguage := False
+                PreferredLanguage := False
+                PreferredOCRLanguage := ""
+                Loop Parse, AvailableLanguages, "`n" {
+                    If A_Index = 1 And A_LoopField != "" {
+                        FirstAvailableLanguage := True
+                        FirstOCRLanguage := A_LoopField
+                    }
+                    If SubStr(A_LoopField, 1, 3) = "en-" {
+                        PreferredLanguage := True
+                        PreferredOCRLanguage := A_LoopField
+                        Break
+                    }
+                }
+                If FirstAvailableLanguage = False And PreferredLanguage = False {
+                    Sleep 25
+                    Speak("No OCR languages installed!")
+                }
+                Else {
+                    If PreferredLanguage = False
+                    OCRLanguage := FirstOCRLanguage
+                    Else
+                    OCRLanguage := PreferredOCRLanguage
+                    NewHotspots := Array()
+                    OCRResult := OCR.FromWindow("A", OCRLanguage)
+                    For OCRLine In OCRResult.Lines {
+                        Hotspots.Push(Map("Label", "`"" . OCRLine.Text . "`" start", "XCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).X, "YCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).Y))
+                        Hotspots.Push(Map("Label", "`"" . OCRLine.Text . "`" end", "XCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).X + OCR.WordsBoundingRect(OCRLine.Words*).W, "YCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).Y + OCR.WordsBoundingRect(OCRLine.Words*).H))
+                        NewHotspots.Push(Map("Label", "`"" . OCRLine.Text . "`" start", "XCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).X, "YCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).Y))
+                        NewHotspots.Push(Map("Label", "`"" . OCRLine.Text . "`" end", "XCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).X + OCR.WordsBoundingRect(OCRLine.Words*).W, "YCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).Y + OCR.WordsBoundingRect(OCRLine.Words*).H))
+                    }
+                    If OCRResult.Lines.Length = 1
+                    Speak("1 hotspot generated")
+                    Else
+                    Speak(NewHotspots.Length . " hotspots generated")
+                }
+            }
+        }
+        DialogOpen := 0
+    }
+}
+
 ManageHotkeys() {
     Global DialogOpen, KeyboardMode
     If DialogOpen = 1 Or WinActive("ahk_exe Explorer.Exe") Or WinActive("ahk_class Shell_TrayWnd" Or WinExist("ahk_class #32768") ) {
@@ -592,6 +645,7 @@ ManageHotkeys() {
         Hotkey "Del", "Off"
         Hotkey "#^+PrintScreen", "On"
         Hotkey "#^+F", "On"
+        Hotkey "#^+G", "Off"
         Hotkey "#^+Down", "On"
         Hotkey "#^+Left", "On"
         Hotkey "#^+Right", "On"
@@ -625,6 +679,7 @@ ManageHotkeys() {
         Hotkey "Del", "On"
         Hotkey "#^+PrintScreen", "On"
         Hotkey "#^+F", "On"
+        Hotkey "#^+G", "On"
         Hotkey "#^+Down", "On"
         Hotkey "#^+Left", "On"
         Hotkey "#^+Right", "On"
@@ -658,6 +713,7 @@ ManageHotkeys() {
         Hotkey "Del", "Off"
         Hotkey "#^+PrintScreen", "On"
         Hotkey "#^+F", "On"
+        Hotkey "#^+G", "On"
         Hotkey "#^+Down", "On"
         Hotkey "#^+Left", "On"
         Hotkey "#^+Right", "On"
