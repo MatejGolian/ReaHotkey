@@ -435,18 +435,26 @@ ExtractImage(*) {
         CoordinateBox := Gui(, AppName . " Image Extractor {`"" . WindowTitle . "`"}")
         CoordinateBox.AddText(, "X1 coordinate (between 0 and " . XSize . "):")
         CoordinateBox.AddEdit("vX1Coord Number YS", X1Coord).OnEvent("Change", ProcessInput)
-        CoordinateBox.AddText("Section XS", "Y1 coordinate (between 0 and " . YSize . "):")
+        CoordinateBox.AddText("YS", "Y1 coordinate (between 0 and " . YSize . "):")
         CoordinateBox.AddEdit("vY1Coord Number YS", Y1Coord).OnEvent("Change", ProcessInput)
+        CoordinateBox.AddButton("YS", "Use hotspot").OnEvent("Click", ShowHotspotMenu1)
         CoordinateBox.AddText("Section XS", "X2 coordinate (between 0 and " . XSize . "):")
         CoordinateBox.AddEdit("vX2Coord Number YS", X2Coord).OnEvent("Change", ProcessInput)
-        CoordinateBox.AddText("Section XS", "Y2 coordinate (between 0 and " . YSize . "):")
+        CoordinateBox.AddText("YS", "Y2 coordinate (between 0 and " . YSize . "):")
         CoordinateBox.AddEdit("vY2Coord Number YS", Y2Coord).OnEvent("Change", ProcessInput)
+        CoordinateBox.AddButton("YS", "Use hotspot").OnEvent("Click", ShowHotspotMenu2)
         CoordinateBox.AddButton("Disabled Section XS", "OK").OnEvent("Click", SaveImage)
         CoordinateBox.AddButton("Default YS", "Cancel").OnEvent("Click", CloseCoordinateBox)
         CoordinateStatus := CoordinateBox.Add("StatusBar")
         CoordinateBox.OnEvent("Close", CloseCoordinateBox)
         CoordinateBox.OnEvent("Escape", CloseCoordinateBox)
         CoordinateBox.Show()
+        HotspotMenuHandler(MenuItemLabel, MenuItemNumber, HotspotMenu) {
+            Global Hotspots
+            CoordinateBox["X" . HotspotMenu.Number . "Coord"].Value := Hotspots[MenuItemNumber - 1]["XCoordinate"]
+            CoordinateBox["Y" . HotspotMenu.Number . "Coord"].Value := Hotspots[MenuItemNumber - 1]["YCoordinate"]
+            ProcessInput()
+        }
         ProcessInput()
         CloseCoordinateBox(*) {
             CoordinateBox.Destroy()
@@ -458,15 +466,7 @@ ExtractImage(*) {
             Y1 := ControlValues.Y1Coord
             X2 := ControlValues.X2Coord
             Y2 := ControlValues.Y2Coord
-            If X1 = ""
-            X1 := 0
-            If Y1 = ""
-            Y1 := 0
-            If X2 = ""
-            X2 := 0
-            If Y2 = ""
-            Y2 := 0
-            If X1 >= 0 And X1 < X2 And X2 <= XSize And Y1 >= 0 And Y1 < Y2 And Y2 <= YSize {
+            If X1 != "" And Y1 != "" And X2 != "" And Y2 != "" And X1 >= 0 And X1 < X2 And X2 <= XSize And Y1 >= 0 And Y1 < Y2 And Y2 <= YSize {
                 CoordinateBox["OK"].Opt("+Default -Disabled")
                 CoordinateBox["Cancel"].Opt("-Default")
                 CoordinateStatus.SetText("`tImage dimensions " . X2 - X1 . " × " . Y2 - Y1)
@@ -531,6 +531,28 @@ ExtractImage(*) {
                 }
             }
         }
+    }
+    ShowHotspotMenu(MenuNumber) {
+        Global hotspots
+        HotspotMenu := Menu()
+        HotspotMenu.Number := MenuNumber
+        If Hotspots.Length = 0 {
+            HotspotMenu.Add("No hotspots", HotspotMenuHandler)
+            HotspotMenu.Disable("No hotspots")
+        }
+        Else {
+            HotspotMenu.Add("Select hotspot", HotspotMenuHandler)
+            HotspotMenu.Disable("Select hotspot")
+            For HotspotNumber, Hotspot In Hotspots
+            HotspotMenu.Add(HotspotNumber . ". " . Hotspot["Label"], HotspotMenuHandler)
+        }
+        HotspotMenu.Show()
+    }
+    ShowHotspotMenu1(*) {
+        ShowHotspotMenu(1)
+    }
+    ShowHotspotMenu2(*) {
+        ShowHotspotMenu(2)
     }
 }
 
