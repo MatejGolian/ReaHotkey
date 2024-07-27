@@ -33,7 +33,7 @@ Class Kontakt {
         For PluginOverlay In Kontakt.PluginOverlays
         Plugin.RegisterOverlay("Kontakt", PluginOverlay)
         
-        Plugin.SetTimer("Kontakt", ObjBindMethod(KompleteKontrol, "CheckPluginConfig"), -1)
+        Plugin.SetTimer("Kontakt", ObjBindMethod(Kontakt, "CheckPluginConfig"), -1)
         
         Plugin.Register("Kontakt Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(Kontakt, "CheckPluginContentMissing"))
         Plugin.SetHotkey("Kontakt Content Missing Dialog", "!F4", ObjBindMethod(Kontakt, "ClosePluginContentMissingDialog"))
