@@ -6,8 +6,6 @@ Class Kontakt {
     Static StandaloneHeader := Object()
     Static PluginOverlays := Array()
     Static StandaloneOverlays := Array()
-    Static XOffset := 0
-    Static YOffset := 0
     
     Static __New() {
         ClassName := "Kontakt"

@@ -6,8 +6,6 @@ Class KompleteKontrol {
     Static StandaloneHeader := Object()
     Static PluginOverlays := Array()
     Static StandaloneOverlays := Array()
-    Static XOffset := 100
-    Static YOffset := 100
     
     Static __New() {
         ClassName := "KompleteKontrol"
