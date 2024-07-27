@@ -1072,6 +1072,8 @@ SearchForImage(ImageFile := "") {
                         A_Clipboard := ClipboardData
                         Speak("Image coordinates copied to clipboard")
                     }
+                    Sleep 500
+                    MouseMove FoundX, FoundY
                 }
                 Else {
                     MsgBox "The image you selected has not been found on the screen.", AppName
