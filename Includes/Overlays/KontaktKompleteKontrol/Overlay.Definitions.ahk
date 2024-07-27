@@ -118,3 +118,19 @@ TalosOverlay.AddStaticText("Talos")
 TalosOverlay.AddGraphicalButton("Classic Mix", %ClassName%XOffset + 70, %ClassName%YOffset + 350, %ClassName%XOffset + 140, %ClassName%YOffset + 370, "Images/KontaktKompleteKontrol/Talos/ClassicMixOn.png", ["Images/KontaktKompleteKontrol/Talos/ClassicMixOff1.png", "Images/KontaktKompleteKontrol/Talos/ClassicMixOff2.png"], CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
 TalosOverlay.AddGraphicalButton("Modern Mix", %ClassName%XOffset + 140, %ClassName%YOffset + 350, %ClassName%XOffset + 240, %ClassName%YOffset + 370, "Images/KontaktKompleteKontrol/Talos/ModernMixOn.png", ["Images/KontaktKompleteKontrol/Talos/ModernMixOff1.png", "Images/KontaktKompleteKontrol/Talos/ModernMixOff2.png"], CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
 %ClassName%.PluginOverlays.Push(TalosOverlay)
+
+; Cinematic Studio Series
+
+KompleteKontrolXOffset := 190
+KompleteKontrolYOffset := 99
+
+CinematicStudioStringsOverlay := AccessibilityOverlay("Cinematic Studio Strings")
+CinematicStudioStringsOverlay.Metadata := Map("Vendor", "Cinematic Studio Series", "Product", "Cinematic Studio Strings", "Image", Map("File", "Images/KontaktKompleteKontrol/CinematicStudioStrings/Product.png"))
+CinematicStudioStringsOverlay.AddAccessibilityOverlay()
+CinematicStudioStringsOverlay.AddStaticText("Cinematic Studio Strings")
+CinematicStudioStringsOverlay.AddHotspotButton("Spot 1", %ClassName%XOffset + 40, %ClassName%YOffset + 532, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+CinematicStudioStringsOverlay.AddHotspotButton("Spot 2", %ClassName%XOffset + 80, %ClassName%YOffset + 532, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+CinematicStudioStringsOverlay.AddHotspotButton("Main", %ClassName%XOffset + 120, %ClassName%YOffset + 532, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+CinematicStudioStringsOverlay.AddHotspotButton("Room", %ClassName%XOffset + 160, %ClassName%YOffset + 532, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+CinematicStudioStringsOverlay.AddGraphicalButton("Mix", %ClassName%XOffset + 196, %ClassName%YOffset + 524, %ClassName%XOffset + 228, %ClassName%YOffset + 540, "Images/KontaktKompleteKontrol/CinematicStudioStrings/MixOn.png", "Images/KontaktKompleteKontrol/CinematicStudioStrings/MixOff.png", CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
+%ClassName%.PluginOverlays.Push(CinematicStudioStringsOverlay)
