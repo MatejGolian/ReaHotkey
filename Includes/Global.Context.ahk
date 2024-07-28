@@ -2,6 +2,10 @@
 
 #SuspendExempt
 
+^+#F5:: {
+    ReaHotkey.Reload()
+}
+
 ^+#A:: {
     ReaHotkey.ShowAboutBox()
 }

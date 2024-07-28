@@ -59,13 +59,11 @@ Class KompleteKontrol {
         Plugin.RegisterOverlay("Komplete Kontrol Preference Dialog", PluginPreferenceOverlay)
         
         Plugin.Register("Komplete Kontrol Save As Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KompleteKontrol, "CheckPluginSaveAsDialog"))
-        Plugin.SetHotkey("Komplete Kontrol Save As Dialog", "!F4", ObjBindMethod(KompleteKontrol, "ClosePluginSaveAsDialog"))
-        Plugin.SetHotkey("Komplete Kontrol Save As Dialog", "Escape", ObjBindMethod(KompleteKontrol, "ClosePluginSaveAsDialog"))
         
         PluginSaveAsOverlay := AccessibilityOverlay()
         PluginSaveAsOverlay.AddOCREdit("Save Preset, Name:", 28, 76, 500, 88)
-        PluginSaveAsOverlay.AddHotspotButton("Save", 219, 135)
-        PluginSaveAsOverlay.AddCustomButton("Cancel",, ObjBindMethod(KompleteKontrol, "ClosePluginSaveAsDialog"))
+        PluginSaveAsOverlay.AddCustomButton("Save",, ObjBindMethod(KompleteKontrol, "SaveOrClosePluginSaveAsDialog"))
+        PluginSaveAsOverlay.AddCustomButton("Cancel",, ObjBindMethod(KompleteKontrol, "SaveOrClosePluginSaveAsDialog"))
         Plugin.RegisterOverlay("Komplete Kontrol Save As Dialog", PluginSaveAsOverlay)
         
         Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe")
@@ -175,16 +173,6 @@ Class KompleteKontrol {
         }
     }
     
-    Static ClosePluginSaveAsDialog(*) {
-        Critical
-        If ReaHotkey.FoundPlugin Is Plugin And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria)
-        If ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Save As Dialog" And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
-            ReaHotkey.FoundPlugin.Overlay.Reset()
-            WinClose("A")
-            Sleep 500
-        }
-    }
-    
     Static CloseStandaloneBrowser() {
         UIAElement := GetUIAElement("1,Button1")
         If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
@@ -234,6 +222,20 @@ Class KompleteKontrol {
         Else {
             If WinExist("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe") And Not WinActive("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
             WinActivate("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
+        }
+    }
+    
+    Static SaveOrClosePluginSaveAsDialog(UiButton) {
+        Critical
+        If ReaHotkey.FoundPlugin Is Plugin And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria)
+        If ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Save As Dialog" And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
+            ReaHotkey.FoundPlugin.Overlay.Reset()
+            If UiButton.Label = "Save"
+            Click 219, 135
+            Else
+            Click 301, 135
+            Sleep 500
+            ReaHotkey.Reload(True)
         }
     }
     

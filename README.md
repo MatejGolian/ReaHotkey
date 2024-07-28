@@ -48,6 +48,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 * ctrl+shift+windows+p - pause
 * ctrl+shift+windows+q - quit
 * ctrl+shift+windows+r - view readme
+* ctrl+shift+windows+f5 - reload
 
 ## Known Issues
 
