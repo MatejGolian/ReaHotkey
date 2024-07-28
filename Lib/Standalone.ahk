@@ -2,6 +2,7 @@
 
 Class Standalone {
     
+    CheckerFunction := ""
     Chooser := True
     InitFunction := ""
     Name := ""
@@ -31,6 +32,7 @@ Class Standalone {
             This.InitFunction := ProgramEntry["InitFunction"]
             This.Chooser := ProgramEntry["Chooser"]
             This.NoHotkeys := ProgramEntry["NoHotkeys"]
+            This.CheckerFunction := ProgramEntry["CheckerFunction"]
             For OverlayNumber, Overlay In ProgramEntry["Overlays"]
             This.Overlays.Push(Overlay.Clone())
             If This.Overlays.Length = 1 {
@@ -53,6 +55,12 @@ Class Standalone {
             Standalone.Instances.Push(This)
             This.Init()
         }
+    }
+    
+    Check() {
+        If This.CheckerFunction Is Func
+        Return This.CheckerFunction.Call(This)
+        Return True
     }
     
     GetHotkeys() {
@@ -86,6 +94,10 @@ Class Standalone {
     
     SetTimer(Function, Period := "", Priority := "") {
         Standalone.SetTimer(This.Name, Function, Period, Priority)
+    }
+    
+    Static DefaultChecker(*) {
+        Return True
     }
     
     Static FindByActiveWindow() {
@@ -124,10 +136,10 @@ Class Standalone {
     
     Static GetByWindowID(WinID) {
         For ProgramInstance In Standalone.Instances
-        If ProgramInstance.WindowID = WinID
+        If ProgramInstance.WindowID = WinID And ProgramInstance.Check() = True
         Return ProgramInstance
         ProgramNumber := Standalone.FindByActiveWindow()
-        If ProgramNumber != False {
+        If ProgramNumber != False And Standalone.List[ProgramNumber]["CheckerFunction"].Call(Standalone.List[ProgramNumber]) = True {
             ProgramInstance := Standalone(Standalone.List[ProgramNumber]["Name"], WinGetID("A"))
             Return ProgramInstance
         }
@@ -166,7 +178,7 @@ Class Standalone {
         Return Array()
     }
     
-    Static Register(ProgramName, WinCriteria, InitFunction := "", Chooser := True, NoHotkeys := False) {
+    Static Register(ProgramName, WinCriteria, InitFunction := "", Chooser := True, NoHotkeys := False, CheckerFunction := "") {
         If Standalone.FindName(ProgramName) = False {
             If ProgramName = ""
             ProgramName := Standalone.UnnamedProgramName
@@ -174,6 +186,8 @@ Class Standalone {
             Chooser := True
             If NoHotkeys != True And NoHotkeys != False
             NoHotkeys := False
+            If Not CheckerFunction Is Func
+            CheckerFunction := ObjBindMethod(Standalone, "DefaultChecker")
             ProgramEntry := Map()
             ProgramEntry["Name"] := ProgramName
             If WinCriteria Is Array
@@ -183,6 +197,7 @@ Class Standalone {
             ProgramEntry["InitFunction"] := InitFunction
             ProgramEntry["Chooser"] := Chooser
             ProgramEntry["NoHotkeys"] := NoHotkeys
+            ProgramEntry["CheckerFunction"] := CheckerFunction
             ProgramEntry["Hotkeys"] := Array()
             ProgramEntry["Overlays"] := Array()
             ProgramEntry["Timers"] := Array()

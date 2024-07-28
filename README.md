@@ -19,9 +19,11 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - The keyboard bindings only work with the unified interfaces of e.g. C-2, Q-3 etc, but not with the newer R-2 yet
 * Makes it possible to interact with Komplete Kontrol menus.
   - Works both inside REAPER and in the standalone version of Komplete Kontrol. Note that Komplete Kontrol version 3 is absolutely required in case of the plug-in.
-  * Makes it possible to add new user library folders and perform library and plug-in rescans in Komplete Kontrol. It's also possible to toggle the setting for user content scanning on start-up on/off, as well as the setting for always using the latest versions of Native Instruments plug-ins.
+* Makes it possible to add new user library folders and perform library and plug-in rescans in Komplete Kontrol. It's also possible to toggle the setting for user content scanning on start-up on/off, as well as the setting for always using the latest versions of Native Instruments plug-ins.
   - Works both inside REAPER and in the standalone version of Komplete Kontrol, although due to how REAPER FX windows behave with screen readers, using the standalone version for performing these tasks provides a more stable and reliable user experience and is therefore preferred.
   - Komplete Kontrol version 3 is highly recommended, although most of the above functionality may work with older versions of the application as well. That being said, ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
+  * Makes it possible to Save new presets in Komplete Kontrol.
+  - Works both inside REAPER and in the standalone version of Komplete Kontrol.
 * Makes it possible to interact with Kontakt menus.
   - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.10 or higher is required.
 * Provides support for the 'Browse' button in the Kontakt Content Missing dialog.
@@ -52,7 +54,8 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 * The ReaHotkey script can crash while In Dubler 2 audio calibration view. In that case just start the script again.
 * If you find that your keyboard or ReaHotkey itself is not responding as expected after interacting with Kontakt menus, press the Escape key.
 * Using any other zoom value in Kontakt than 100% may result in ReaHotkey not working correctly and the Kontakt plugin not being detected.
-* When the Kontakt content Missing dialog appears, the 'Browse' button does not get focused automatically. To focus it, press the tab key a couple of times.
+* When the Kontakt Content Missing or Komplete Kontrol Save Preset dialogs appear, the first available controls may not get focused automatically. To focus them, press the tab key a couple of times.
+* The Komplete Kontrol Save Preset dialog may display incorrect preset names at times.
 
 ## <a name="dubler2"></a>Dubler 2 Accessibility
 

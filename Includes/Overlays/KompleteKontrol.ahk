@@ -31,7 +31,7 @@ Class KompleteKontrol {
         
         Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(KompleteKontrol, "CheckPluginConfig"), -1)
         
-        Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KompleteKontrol, "CheckPluginPreferences"))
+        Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KompleteKontrol, "CheckPluginPreferenceDialog"))
         Plugin.SetHotkey("Komplete Kontrol Preference Dialog", "!F4", ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
         Plugin.SetHotkey("Komplete Kontrol Preference Dialog", "Escape", ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
         
@@ -57,6 +57,16 @@ Class KompleteKontrol {
         PluginPreferencePluginTab.AddCustomButton("Close",, ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
         PluginPreferenceTabControl.AddTabs(PluginPreferenceMIDITab, PluginPreferenceGeneralTab, PluginPreferenceLibraryTab, PluginPreferencePluginTab)
         Plugin.RegisterOverlay("Komplete Kontrol Preference Dialog", PluginPreferenceOverlay)
+        
+        Plugin.Register("Komplete Kontrol Save As Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KompleteKontrol, "CheckPluginSaveAsDialog"))
+        Plugin.SetHotkey("Komplete Kontrol Save As Dialog", "!F4", ObjBindMethod(KompleteKontrol, "ClosePluginSaveAsDialog"))
+        Plugin.SetHotkey("Komplete Kontrol Save As Dialog", "Escape", ObjBindMethod(KompleteKontrol, "ClosePluginSaveAsDialog"))
+        
+        PluginSaveAsOverlay := AccessibilityOverlay()
+        PluginSaveAsOverlay.AddOCREdit("Save Preset, Name:", 28, 76, 500, 88)
+        PluginSaveAsOverlay.AddHotspotButton("Save", 219, 135)
+        PluginSaveAsOverlay.AddCustomButton("Cancel",, ObjBindMethod(KompleteKontrol, "ClosePluginSaveAsDialog"))
+        Plugin.RegisterOverlay("Komplete Kontrol Save As Dialog", PluginSaveAsOverlay)
         
         Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe")
         Standalone.RegisterOverlay("Komplete Kontrol", StandaloneHeader)
@@ -88,6 +98,14 @@ Class KompleteKontrol {
         StandalonePreferencePluginTab.AddCustomButton("Close",, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
         StandalonePreferenceTabControl.AddTabs(StandalonePreferenceAudioTab, StandalonePreferenceMIDITab, StandalonePreferenceGeneralTab, StandalonePreferenceLibraryTab, StandalonePreferencePluginTab)
         Standalone.RegisterOverlay("Komplete Kontrol Preference Dialog", StandalonePreferenceOverlay)
+        
+        Standalone.Register("Komplete Kontrol Save As Dialog", "ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(KompleteKontrol, "FocusStandaloneSaveAsDialog"), False, False, ObjBindMethod(KompleteKontrol, "CheckStandaloneSaveAsDialog"))
+        
+        StandaloneSaveAsOverlay := AccessibilityOverlay()
+        StandaloneSaveAsOverlay.AddOCREdit("Save Preset, Name:", 28, 76, 500, 88)
+        StandaloneSaveAsOverlay.AddHotspotButton("Save", 219, 135)
+        StandaloneSaveAsOverlay.AddCustomButton("Cancel",, ObjBindMethod(KompleteKontrol, "CloseStandaloneSaveAsDialog"))
+        Standalone.RegisterOverlay("Komplete Kontrol Save As Dialog", StandaloneSaveAsOverlay)
     }
     
     Static CheckPlugin(*) {
@@ -111,11 +129,29 @@ Class KompleteKontrol {
         Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 0)
     }
     
-    Static CheckPluginPreferences(*) {
+    Static CheckPluginPreferenceDialog(*) {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol Preference Dialog"
         Return True
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Preferences"
+        Return True
+        Return False
+    }
+    
+    Static CheckPluginSaveAsDialog(*) {
+        PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
+        If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol Save As Dialog"
+        Return True
+        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png")
+        Return True
+        Return False
+    }
+    
+    Static CheckStandaloneSaveAsDialog(*) {
+        StandaloneInstance := Standalone.GetInstance(GetCurrentWindowID())
+        If StandaloneInstance Is Standalone And StandaloneInstance.Name = "Komplete Kontrol Save As Dialog"
+        Return True
+        If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png")
         Return True
         Return False
     }
@@ -139,6 +175,16 @@ Class KompleteKontrol {
         }
     }
     
+    Static ClosePluginSaveAsDialog(*) {
+        Critical
+        If ReaHotkey.FoundPlugin Is Plugin And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria)
+        If ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Save As Dialog" And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
+            ReaHotkey.FoundPlugin.Overlay.Reset()
+            WinClose("A")
+            Sleep 500
+        }
+    }
+    
     Static CloseStandaloneBrowser() {
         UIAElement := GetUIAElement("1,Button1")
         If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
@@ -152,10 +198,19 @@ Class KompleteKontrol {
         WinClose("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
     }
     
+    Static CloseStandaloneSaveAsDialog(*) {
+        WinClose("ahk_class #32770 ahk_exe Komplete Kontrol.exe")
+    }
+    
     Static FocusStandalonePreferenceTab(KKInstance) {
         Sleep 1000
         If KKInstance.Overlay.CurrentControlID = 0
         KKInstance.Overlay.Focus()
+    }
+    
+    Static FocusStandaloneSaveAsDialog(KKInstance) {
+        If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And Not WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe")
+        WinActivate("ahk_class #32770 ahk_exe Komplete Kontrol.exe")
     }
     
     Static InitPlugin(PluginInstance) {

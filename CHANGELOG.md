@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Added basic support for the Dubler 2 MIDI Capture Plugin
 -   Added support for clicking the presets button in FabFilter plugins
+-   Added ability to save new presets in Komplete Kontrol
 -   Added basic support for microphone positions in Cinematic Studio Strings
 -   Added option to disable automatic library detection in Kontakt and Komplete Kontrol plug-ins
 -   HotspotHelper: Added functionality to generate hotspots from OCR results
