@@ -18,10 +18,6 @@ Class ReaHotkey {
         ReaHotkey.InitConfig()
         If IniRead("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1) = 1
         ReaHotkey.CheckResolution()
-        If IniRead("ReaHotkey.ini", "Config", "SilentReload", 0) = 0
-        AccessibilityOverlay.Speak("ReaHotkey ready")
-        IniDelete("ReaHotkey.ini", "Config", "SilentReload")
-        SetTimer ReaHotkey.ManageState, 100
     }
     
     Static CheckResolution() {
@@ -175,12 +171,6 @@ Class ReaHotkey {
             }
         }
         Return False
-    }
-    
-    Static Reload(Silent := False) {
-        If Silent = True
-        IniWrite(1, "ReaHotkey.ini", "Config", "SilentReload")
-        Reload()
     }
     
     Static TurnHotkeysOff(Type, Name := "") {
@@ -463,6 +453,12 @@ Class ReaHotkey {
         }
     }
     
+    Class Reload {
+        Static Call(*) {
+            Reload()
+        }
+    }
+    
     Class ShowAboutBox {
         Static Call(*) {
             Static AboutBox := False
@@ -546,12 +542,6 @@ Class ReaHotkey {
             Else {
                 SetTimer ReaHotkey.ManageState, 100
             }
-        }
-    }
-    
-    Class TriggerReload {
-        Static Call(*) {
-            ReaHotkey.Reload()
         }
     }
     

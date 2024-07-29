@@ -55,7 +55,7 @@ Class Kontakt {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt"
         Return True
-        UIAElement := GetUIAElement("15,Window1")
+        UIAElement := GetUIAElement("15,1")
         Try
         If UIAElement != False And UIAElement.Name = "Kontakt 7" And UIAElement.ClassName = "ni::qt::QuickWindow"
         Return True
@@ -80,7 +80,7 @@ Class Kontakt {
     }
     
     Static ClosePluginBrowser() {
-        UIAElement := GetUIAElement("15,1,16,Button1")
+        UIAElement := GetUIAElement("15,1,16,3")
         If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")

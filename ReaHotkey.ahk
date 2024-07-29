@@ -25,11 +25,14 @@ A_IconTip := "ReaHotkey"
 A_TrayMenu.Delete
 A_TrayMenu.Add("&Configuration...", ReaHotkey.ShowConfigBox)
 A_TrayMenu.Add("&Pause", ReaHotkey.TogglePause)
-A_TrayMenu.Add("&Reload", ReaHotkey.TriggerReload)
+A_TrayMenu.Add("&Reload", ReaHotkey.Reload)
 A_TrayMenu.Add("&View Readme", ReaHotkey.ViewReadme)
 A_TrayMenu.Add("&About...", ReaHotkey.ShowAboutBox)
 A_TrayMenu.Add("&Quit", ReaHotkey.Quit)
 A_TrayMenu.Default := "&Configuration..."
+
+AccessibilityOverlay.Speak("ReaHotkey ready")
+SetTimer ReaHotkey.ManageState, 100
 
 #Include Includes/Plugin.Context.ahk
 #IncludeAgain Includes/Global.Context.ahk

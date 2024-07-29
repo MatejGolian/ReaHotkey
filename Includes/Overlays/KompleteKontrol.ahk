@@ -110,10 +110,11 @@ Class KompleteKontrol {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol"
         Return True
-        UIAElement := GetUIAElement("15,Window1")
         Try
+        UIAElement := GetUIAElement("15,1")
         If UIAElement != False And UIAElement.Name = "Komplete Kontrol" And UIAElement.ClassName = "ni::qt::QuickWindow"
         Return True
+        Sleep 500
         Return False
     }
     
@@ -155,7 +156,7 @@ Class KompleteKontrol {
     }
     
     Static ClosePluginBrowser() {
-        UIAElement := GetUIAElement("15,1,Button1")
+        UIAElement := GetUIAElement("15,1,3")
         If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
@@ -235,7 +236,6 @@ Class KompleteKontrol {
             Else
             Click 301, 135
             Sleep 500
-            ReaHotkey.Reload(True)
         }
     }
     

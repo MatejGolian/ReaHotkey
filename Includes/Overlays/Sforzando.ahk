@@ -11,7 +11,7 @@ Class Sforzando {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "sforzando"
         Return True
-        UIAElement := GetUIAElement("15,Pane1")
+        UIAElement := GetUIAElement("15,1")
         Try
         If UIAElement != False And UIAElement.Name = "PlogueXMLGUI"
         Return True

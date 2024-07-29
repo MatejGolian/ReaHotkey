@@ -4,10 +4,6 @@
 
 F6:: {
     Thread "NoTimers"
-    Try
-    ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
-    Catch
-    ReaHotkey.FoundPlugin := False
     Controls := WinGetControls(ReaHotkey.PluginWinCriteria)
     ContainerIndex := 0
     Try
@@ -23,15 +19,15 @@ F6:: {
         CurrentIndex := Index
         Break
     }
-    Try
-    If ReaHotkey.FoundPlugin Is Plugin And CurrentIndex > 0 And CurrentIndex <= 6 And ContainerIndex > 0 And ControlGetFocus(ReaHotkey.PluginWinCriteria) And !ReaHotkey.InPluginControl(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) {
-    ControlFocus ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-}
-Else {
-    Hotkey A_ThisHotkey, "Off"
-    Send "{" . A_ThisHotkey . "}"
-    Hotkey A_ThisHotkey, "On"
-}
+    If CurrentIndex > 0 And ContainerIndex > 0 And CurrentIndex <= 6 And CurrentIndex != ContainerIndex {
+        Try
+        ControlFocus Controls[ContainerIndex], ReaHotkey.PluginWinCriteria
+        }
+    Else {
+        Hotkey A_ThisHotkey, "Off"
+        Send "{" . A_ThisHotkey . "}"
+        Hotkey A_ThisHotkey, "On"
+    }
 }
 
 Tab:: {
