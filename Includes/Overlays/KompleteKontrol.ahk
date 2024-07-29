@@ -120,7 +120,7 @@ Class KompleteKontrol {
     
     Static CheckPluginConfig() {
         Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True)
-        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseKKPluginBrowser", 1) = 1
+        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1) = 1
         KompleteKontrol.ClosePluginBrowser()
         If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1) = 1
         Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 500)
@@ -175,7 +175,7 @@ Class KompleteKontrol {
     }
     
     Static CloseStandaloneBrowser() {
-        UIAElement := GetUIAElement("1,Button1")
+        UIAElement := GetUIAElement("1,3")
         If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")

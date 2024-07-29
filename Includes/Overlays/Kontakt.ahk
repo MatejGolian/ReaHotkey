@@ -64,6 +64,8 @@ Class Kontakt {
     
     Static CheckPluginConfig() {
         Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt", True, True)
+        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1) = 1
+        Kontakt.ClosePluginBrowser()
         If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1) = 1
         Plugin.SetTimer("Kontakt", PluginAutoChangeFunction, 500)
         Else
@@ -99,7 +101,7 @@ Class Kontakt {
     }
     
     Static CloseStandaloneBrowser() {
-        UIAElement := GetUIAElement("1,14,Button1")
+        UIAElement := GetUIAElement("1,14,3")
         If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")

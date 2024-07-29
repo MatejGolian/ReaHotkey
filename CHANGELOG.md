@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   HotspotHelper: Added functionality to generate hotspots from OCR results
 -   HotspotHelper: Added functionality to use previously defined hotspots in Image Extractor
 
+### Changed
+
+-   Also close Kontakt library browser if option is enabled
+
 ## [0.4.5] - 2024-04-28
 
 ### Changed
