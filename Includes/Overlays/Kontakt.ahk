@@ -42,6 +42,7 @@ Class Kontakt {
         Plugin.RegisterOverlay("Kontakt Content Missing Dialog", PluginContentMissingOverlay)
         
         Standalone.Register("Kontakt", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
+        Standalone.SetTimer("Kontakt", ObjBindMethod(Kontakt, "CheckStandaloneConfig"), -1)
         Standalone.RegisterOverlay("Kontakt", StandaloneHeader)
         
         Standalone.Register("Kontakt Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
@@ -79,6 +80,11 @@ Class Kontakt {
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing"
         Return True
         Return False
+    }
+    
+    Static CheckStandaloneConfig() {
+        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1) = 1
+        Kontakt.CloseStandaloneBrowser()
     }
     
     Static ClosePluginBrowser() {

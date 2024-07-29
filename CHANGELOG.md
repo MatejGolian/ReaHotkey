@@ -13,14 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added support for clicking the presets button in FabFilter plugins
 -   Added ability to save new presets in Komplete Kontrol
 -   Added basic support for microphone positions in Cinematic Studio Strings
--   Added hotkey for reloading the script
+-   Added function/hotkey for reloading the script
+-   Added option to automatically close the library browsers in the standalone versions of Kontakt and Komplete Kontrol
 -   Added option to disable automatic library detection in Kontakt and Komplete Kontrol plug-ins
 -   HotspotHelper: Added functionality to generate hotspots from OCR results
 -   HotspotHelper: Added functionality to use previously defined hotspots in Image Extractor
 
 ### Changed
 
--   Also close Kontakt library browser if option is enabled
+-   Renamed option for automatically closing the library browser in the KK plug-in (also close Kontakt library browser if option is enabled)
 
 ## [0.4.5] - 2024-04-28
 

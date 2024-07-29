@@ -140,6 +140,8 @@ Class ReaHotkey {
         IniWrite(Value, "ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection")
         Value := IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1)
         IniWrite(Value, "ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins")
+        Value := IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1)
+        IniWrite(Value, "ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones")
         Value := IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1)
         IniWrite(Value, "ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins")
     }
@@ -497,7 +499,11 @@ Class ReaHotkey {
                 Checked := ""
                 If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1) = 1
                 Checked := "Checked"
-                KKPluginBrowserBox := ConfigBox.AddCheckBox("XS " . Checked, "Automatically close library browsers in Kontakt and Komplete Kontrol plug-ins")
+                KontaktKKPluginBrowserBox := ConfigBox.AddCheckBox("XS " . Checked, "Automatically close library browsers in Kontakt and Komplete Kontrol plug-ins")
+                Checked := ""
+                If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1) = 1
+                Checked := "Checked"
+                KontaktKKStandaloneBrowserBox := ConfigBox.AddCheckBox("XS " . Checked, "Automatically close library browsers in Kontakt and Komplete Kontrol standalone applications")
                 Checked := ""
                 If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1) = 1
                 Checked := "Checked"
@@ -520,7 +526,8 @@ Class ReaHotkey {
             SaveConfig(*) {
                 IniWrite(ScreenResolutionBox.Value, "ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup")
                 IniWrite(Engine2PluginImageSearchBox.Value, "ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection")
-                IniWrite(KKPluginBrowserBox.Value, "ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins")
+                IniWrite(KontaktKKPluginBrowserBox.Value, "ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins")
+                IniWrite(KontaktKKStandaloneBrowserBox.Value, "ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones")
                 IniWrite(KontaktKKPluginLibraryDetectionBox.Value, "ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins")
                 CloseConfigBox()
             }

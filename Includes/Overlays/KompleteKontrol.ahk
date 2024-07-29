@@ -67,6 +67,7 @@ Class KompleteKontrol {
         Plugin.RegisterOverlay("Komplete Kontrol Save As Dialog", PluginSaveAsOverlay)
         
         Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe")
+        Standalone.SetTimer("Komplete Kontrol", ObjBindMethod(KompleteKontrol, "CheckStandaloneConfig"), -1)
         Standalone.RegisterOverlay("Komplete Kontrol", StandaloneHeader)
         
         Standalone.Register("Komplete Kontrol Preference Dialog", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(KompleteKontrol, "FocusStandalonePreferenceTab"))
@@ -145,6 +146,11 @@ Class KompleteKontrol {
         Return True
         Return False
     }
+    
+    Static CheckStandaloneConfig() {
+        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1) = 1
+        KompleteKontrol.CloseStandaloneBrowser()
+        }
     
     Static CheckStandaloneSaveAsDialog(*) {
         StandaloneInstance := Standalone.GetInstance(GetCurrentWindowID())
