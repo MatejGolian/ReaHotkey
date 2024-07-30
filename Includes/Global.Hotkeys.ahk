@@ -2,6 +2,11 @@
 
 #SuspendExempt
 
+Ctrl:: {
+    Thread "NoTimers"
+    AccessibilityOverlay.StopSpeech()
+}
+
 ^+#F5:: {
     ReaHotkey.Reload()
 }

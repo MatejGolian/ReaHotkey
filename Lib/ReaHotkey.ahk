@@ -4,6 +4,7 @@ Class ReaHotkey {
     
     Static AutoFocusPluginOverlay := True
     Static AutoFocusStandaloneOverlay := True
+    Static Context := ""
     Static FoundPlugin := False
     Static FoundStandalone := False
     Static PluginWinCriteria := "ahk_exe reaper.exe ahk_class #32770"
@@ -382,6 +383,7 @@ Class ReaHotkey {
             }
             Critical "Off"
             If WinActive(ReaHotkey.PluginWinCriteria) {
+            ReaHotkey.Context := "Plugin"
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 If Not ReaHotkey.FoundPlugin Is Plugin Or WinExist("ahk_class #32768") {
@@ -410,6 +412,7 @@ Class ReaHotkey {
                 }
             }
             Else If ReaHotkey.StandaloneWinCriteria != False And WinActive(ReaHotkey.StandaloneWinCriteria) {
+            ReaHotkey.Context := "Standalone"
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
                 If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
@@ -438,6 +441,7 @@ Class ReaHotkey {
                 }
             }
             Else {
+            ReaHotkey.Context := ""
                 PreviousPluginName := False
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
