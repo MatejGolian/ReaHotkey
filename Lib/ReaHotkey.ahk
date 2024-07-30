@@ -4,7 +4,7 @@ Class ReaHotkey {
     
     Static AutoFocusPluginOverlay := True
     Static AutoFocusStandaloneOverlay := True
-    Static Context := ""
+    Static Context := False
     Static FoundPlugin := False
     Static FoundStandalone := False
     Static PluginWinCriteria := "ahk_exe reaper.exe ahk_class #32770"
@@ -441,7 +441,7 @@ Class ReaHotkey {
                 }
             }
             Else {
-            ReaHotkey.Context := ""
+            ReaHotkey.Context := False
                 PreviousPluginName := False
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
