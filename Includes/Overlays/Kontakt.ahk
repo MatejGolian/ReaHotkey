@@ -11,7 +11,7 @@ Class Kontakt {
         ClassName := "Kontakt"
         #IncludeAgain KontaktKompleteKontrol/Overlay.Definitions.ahk
         
-        PluginHeader := AccessibilityOverlay("Kontakt Full")
+        PluginHeader := AccessibilityOverlay("Kontakt")
         PluginHeader.AddStaticText("Kontakt 7")
         PluginHeader.AddUIAControl("15,1,2", "FILE menu button",, Kontakt.OpenPluginMenu)
         PluginHeader.AddUIAControl("15,1,3", "LIBRARY On/Off button")
