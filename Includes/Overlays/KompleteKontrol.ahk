@@ -61,7 +61,7 @@ Class KompleteKontrol {
         Plugin.Register("Komplete Kontrol Save As Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KompleteKontrol, "CheckPluginSaveAsDialog"))
         
         PluginSaveAsOverlay := AccessibilityOverlay()
-        PluginSaveAsOverlay.AddOCREdit("Save Preset, Name:", 28, 76, 500, 88)
+        PluginSaveAsOverlay.AddOCREdit("Save Preset, Name:", 24, 72, 500, 88)
         PluginSaveAsOverlay.AddCustomButton("Save",, ObjBindMethod(KompleteKontrol, "SaveOrClosePluginSaveAsDialog"))
         PluginSaveAsOverlay.AddCustomButton("Cancel",, ObjBindMethod(KompleteKontrol, "SaveOrClosePluginSaveAsDialog"))
         Plugin.RegisterOverlay("Komplete Kontrol Save As Dialog", PluginSaveAsOverlay)
@@ -101,7 +101,7 @@ Class KompleteKontrol {
         Standalone.Register("Komplete Kontrol Save As Dialog", "ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(KompleteKontrol, "FocusStandaloneSaveAsDialog"), False, False, ObjBindMethod(KompleteKontrol, "CheckStandaloneSaveAsDialog"))
         
         StandaloneSaveAsOverlay := AccessibilityOverlay()
-        StandaloneSaveAsOverlay.AddOCREdit("Save Preset, Name:", 28, 76, 500, 88)
+        StandaloneSaveAsOverlay.AddOCREdit("Save Preset, Name:", 24, 72, 500, 88)
         StandaloneSaveAsOverlay.AddHotspotButton("Save", 219, 135)
         StandaloneSaveAsOverlay.AddCustomButton("Cancel",, ObjBindMethod(KompleteKontrol, "CloseStandaloneSaveAsDialog"))
         Standalone.RegisterOverlay("Komplete Kontrol Save As Dialog", StandaloneSaveAsOverlay)
