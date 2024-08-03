@@ -17,8 +17,8 @@ Class Kontakt {
         PluginHeader.AddUIAControl("15,1,3", "LIBRARY On/Off button")
         PluginHeader.AddUIAControl("15,1,4", "VIEW menu button",, Kontakt.OpenPluginMenu)
         PluginHeader.AddUIAControl("15,1,7", "SHOP (Opens in default web browser) button")
-        PluginHeader.AddCustomButton("Previous snapshot", ObjBindMethod(Kontakt, "MoveToPluginSnapshotButton"), ObjBindMethod(Kontakt, "SelectPluginSnapshot"))
-        PluginHeader.AddCustomButton("Next snapshot", ObjBindMethod(Kontakt, "MoveToPluginSnapshotButton"), ObjBindMethod(Kontakt, "SelectPluginSnapshot"))
+        PluginHeader.AddHotspotButton("Previous snapshot", 958, 169, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        PluginHeader.AddHotspotButton("Next snapshot", 976, 169, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Kontakt.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Kontakt")
@@ -127,13 +127,6 @@ Class Kontakt {
         }
     }
     
-    Static MoveToPluginSnapshotButton(SnapshotButton) {
-        If SnapshotButton.Label = "Previous snapshot"
-        MouseMove CompensatePluginXCoordinate(958), CompensatePluginYCoordinate(169)
-        Else
-        MouseMove CompensatePluginXCoordinate(976), CompensatePluginYCoordinate(169)
-    }
-    
     Static OpenMenu(Type) {
         Loop {
             If (Type = "Plugin" And WinActive(ReaHotkey.PluginWinCriteria)) Or (type = "Standalone" And WinActive("Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")) {
@@ -182,15 +175,6 @@ Class Kontakt {
         Static Call(*) {
             Kontakt.OpenMenu("Standalone")
         }
-    }
-    
-    Static SelectPluginSnapshot(SnapshotButton) {
-        Kontakt.MoveToPluginSnapshotButton(SnapshotButton)
-        MouseGetPos &mouseXPosition, &mouseYPosition
-        If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") != "0x424142" And PixelGetColor(MouseXPosition, MouseYPosition, "Slow") != "0x545454"
-        AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that you're in rack view and that the side pane is hidden.")
-        Else
-        Click mouseXPosition, mouseYPosition
     }
     
 }
