@@ -17,6 +17,8 @@ Class Kontakt {
         PluginHeader.AddUIAControl("15,1,3", "LIBRARY On/Off button")
         PluginHeader.AddUIAControl("15,1,4", "VIEW menu button",, Kontakt.OpenPluginMenu)
         PluginHeader.AddUIAControl("15,1,7", "SHOP (Opens in default web browser) button")
+        PluginHeader.AddHotspotButton("Previous snapshot", 962, 170, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        PluginHeader.AddHotspotButton("Next snapshot", 972, 170, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Kontakt.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Kontakt")
