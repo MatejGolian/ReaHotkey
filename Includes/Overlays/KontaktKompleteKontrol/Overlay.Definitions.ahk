@@ -10,13 +10,14 @@ KontaktYOffset := 0
 
 ; Audio Imperia
 
-KompleteKontrolXOffset := 106
-KompleteKontrolYOffset := 99
+KompleteKontrolXOffset := 107
+KompleteKontrolYOffset := 111
 
 AreiaOverlay := AccessibilityOverlay("Areia")
 AreiaOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Areia", "Image", Map("File", "Images/KontaktKompleteKontrol/Areia/Product.png"))
 AreiaOverlay.AddAccessibilityOverlay()
 AreiaOverlay.AddStaticText("Areia")
+AreiaOverlay.AddGraphicalHorizontalSlider("Close/Mid/Far", %ClassName%XOffset + 64, %ClassName%YOffset + 290, %ClassName%XOffset + 224, %ClassName%YOffset + 298, ["Images/KontaktKompleteKontrol/Areia/EZMixerOff.png", "Images/KontaktKompleteKontrol/Areia/EZMixerOn.png"], %ClassName%XOffset + 72, %ClassName%XOffset + 216, [CompensatePluginRegionCoordinates, CompensateGraphicalHorizontalPluginSlider])
 AreiaOverlay.AddGraphicalButton("Classic Mix", %ClassName%XOffset + 70, %ClassName%YOffset + 350, %ClassName%XOffset + 140, %ClassName%YOffset + 370, "Images/KontaktKompleteKontrol/Areia/ClassicMixOn.png", ["Images/KontaktKompleteKontrol/Areia/ClassicMixOff1.png", "Images/KontaktKompleteKontrol/Areia/ClassicMixOff2.png"], CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
 AreiaOverlay.AddGraphicalButton("Modern Mix", %ClassName%XOffset + 140, %ClassName%YOffset + 350, %ClassName%XOffset + 240, %ClassName%YOffset + 370, "Images/KontaktKompleteKontrol/Areia/ModernMixOn.png", ["Images/KontaktKompleteKontrol/Areia/ModernMixOff1.png", "Images/KontaktKompleteKontrol/Areia/ModernMixOff2.png"], CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
 %ClassName%.PluginOverlays.Push(AreiaOverlay)
@@ -91,6 +92,7 @@ JaegerOverlay := AccessibilityOverlay("Jaeger")
 JaegerOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Jaeger", "Image", Map("File", "Images/KontaktKompleteKontrol/Jaeger/Product.png"))
 JaegerOverlay.AddAccessibilityOverlay()
 JaegerOverlay.AddStaticText("Jaeger")
+JaegerOverlay.AddGraphicalHorizontalSlider("Close/Mid/Far", %ClassName%XOffset + 64, %ClassName%YOffset + 290, %ClassName%XOffset + 224, %ClassName%YOffset + 298, ["Images/KontaktKompleteKontrol/Jaeger/EZMixerOff.png", "Images/KontaktKompleteKontrol/Jaeger/EZMixerOn.png"], %ClassName%XOffset + 72, %ClassName%XOffset + 216, [CompensatePluginRegionCoordinates, CompensateGraphicalHorizontalPluginSlider])
 JaegerOverlay.AddGraphicalButton("Classic Mix", %ClassName%XOffset + 70, %ClassName%YOffset + 350, %ClassName%XOffset + 140, %ClassName%YOffset + 370, "Images/KontaktKompleteKontrol/Jaeger/ClassicMixOn.png", ["Images/KontaktKompleteKontrol/Jaeger/ClassicMixOff1.png", "Images/KontaktKompleteKontrol/Jaeger/ClassicMixOff2.png"], CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
 JaegerOverlay.AddGraphicalButton("Modern Mix", %ClassName%XOffset + 140, %ClassName%YOffset + 350, %ClassName%XOffset + 240, %ClassName%YOffset + 370, "Images/KontaktKompleteKontrol/Jaeger/ModernMixOn.png", ["Images/KontaktKompleteKontrol/Jaeger/ModernMixOff1.png", "Images/KontaktKompleteKontrol/Jaeger/ModernMixOff2.png"], CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
 %ClassName%.PluginOverlays.Push(JaegerOverlay)
@@ -115,6 +117,7 @@ TalosOverlay := AccessibilityOverlay("Talos")
 TalosOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Talos", "Image", Map("File", "Images/KontaktKompleteKontrol/Talos/Product.png"))
 TalosOverlay.AddAccessibilityOverlay()
 TalosOverlay.AddStaticText("Talos")
+TalosOverlay.AddGraphicalHorizontalSlider("Close/Mid/Far", %ClassName%XOffset + 64, %ClassName%YOffset + 290, %ClassName%XOffset + 224, %ClassName%YOffset + 298, ["Images/KontaktKompleteKontrol/Talos/EZMixerOff.png", "Images/KontaktKompleteKontrol/Talos/EZMixerOn.png"], %ClassName%XOffset + 72, %ClassName%XOffset + 216, [CompensatePluginRegionCoordinates, CompensateGraphicalHorizontalPluginSlider])
 TalosOverlay.AddGraphicalButton("Classic Mix", %ClassName%XOffset + 70, %ClassName%YOffset + 350, %ClassName%XOffset + 140, %ClassName%YOffset + 370, "Images/KontaktKompleteKontrol/Talos/ClassicMixOn.png", ["Images/KontaktKompleteKontrol/Talos/ClassicMixOff1.png", "Images/KontaktKompleteKontrol/Talos/ClassicMixOff2.png"], CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
 TalosOverlay.AddGraphicalButton("Modern Mix", %ClassName%XOffset + 140, %ClassName%YOffset + 350, %ClassName%XOffset + 240, %ClassName%YOffset + 370, "Images/KontaktKompleteKontrol/Talos/ModernMixOn.png", ["Images/KontaktKompleteKontrol/Talos/ModernMixOff1.png", "Images/KontaktKompleteKontrol/Talos/ModernMixOff2.png"], CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates)
 %ClassName%.PluginOverlays.Push(TalosOverlay)
@@ -122,7 +125,7 @@ TalosOverlay.AddGraphicalButton("Modern Mix", %ClassName%XOffset + 140, %ClassNa
 ; Cinematic Studio Series
 
 KompleteKontrolXOffset := 190
-KompleteKontrolYOffset := 99
+KompleteKontrolYOffset := 111
 
 CinematicStudioStringsOverlay := AccessibilityOverlay("Cinematic Studio Strings")
 CinematicStudioStringsOverlay.Metadata := Map("Vendor", "Cinematic Studio Series", "Product", "Cinematic Studio Strings", "Image", Map("File", "Images/KontaktKompleteKontrol/CinematicStudioStrings/Product.png"))

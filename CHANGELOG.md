@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added basic support for the Dubler 2 MIDI Capture Plugin
 -   Added support for clicking the presets button in FabFilter plugins
 -   Added ability to save new presets in Komplete Kontrol
+-   Added experimental support for the microphone mixer feature in several Audio Imperia libraries
 -   Added basic support for microphone positions in Cinematic Studio Strings
 -   Added function/hotkey for reloading the script
 -   Added option to automatically close the library browsers in the standalone versions of Kontakt and Komplete Kontrol

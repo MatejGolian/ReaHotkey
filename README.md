@@ -28,7 +28,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.10 or higher is required.
 * Provides support for the 'Browse' button in the Kontakt Content Missing dialog.
   - Works both inside REAPER and in the standalone version of Kontakt. This feature may not work with Komplete Kontrol.
-* Makes it possible to switch Between various mixes in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
+* Makes it possible to switch Between various microphone positions in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
   - Only works inside REAPER.
 * Makes it possible to toggle Microphone positions in Cinematic Studio Strings.
   - Only works inside REAPER.

@@ -183,6 +183,40 @@ CompensateFocusedControlYCoordinate(ControlYCoordinate) {
     Return ControlYCoordinate
 }
 
+CompensateGraphicalHorizontalPluginSlider(PluginControl) {
+    If !HasProp(PluginControl, "OriginalStart")
+    PluginControl.OriginalStart := PluginControl.Start
+    If !HasProp(PluginControl, "OriginalEnd")
+    PluginControl.OriginalEnd := PluginControl.End
+    Try {
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    }
+    Catch {
+        PluginControlXCoordinate := 210
+        PluginControlYCoordinate := 53
+    }
+    PluginControl.Start := PluginControlXCoordinate + PluginControl.OriginalStart
+    PluginControl.End := PluginControlXCoordinate + PluginControl.OriginalEnd
+    Return PluginControl
+}
+
+CompensateGraphicalVerticalPluginSlider(PluginControl) {
+    If !HasProp(PluginControl, "OriginalStart")
+    PluginControl.OriginalStart := PluginControl.Start
+    If !HasProp(PluginControl, "OriginalEnd")
+    PluginControl.OriginalEnd := PluginControl.End
+    Try {
+        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    }
+    Catch {
+        PluginControlXCoordinate := 210
+        PluginControlYCoordinate := 53
+    }
+    PluginControl.Start := PluginControlYCoordinate + PluginControl.OriginalStart
+    PluginControl.End := PluginControlYCoordinate + PluginControl.OriginalEnd
+    Return PluginControl
+}
+
 CompensatePluginPointCoordinates(PluginControl) {
     If !HasProp(PluginControl, "OriginalXCoordinate")
     PluginControl.OriginalXCoordinate := PluginControl.XCoordinate

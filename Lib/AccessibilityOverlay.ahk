@@ -105,8 +105,9 @@ Class ActivatableCustom Extends AccessibilityControl {
 Class GraphicalControl Extends AccessibilityControl {
     
     ControlType := "Graphic"
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
+    FoundOnImage := False
+    FoundXCoordinate := False
+    FoundYCoordinate := False
     OnImage := Array()
     X1Coordinate := 0
     Y1Coordinate := 0
@@ -128,24 +129,27 @@ Class GraphicalControl Extends AccessibilityControl {
     }
     
     SetState() {
-        FoundXCoordinate := 0
-        FoundYCoordinate := 0
+        FoundXCoordinate := False
+        FoundYCoordinate := False
         Try {
             For OnImage In This.OnImage
             If OnImage != "" And FileExist(OnImage) And Not InStr(FileExist(OnImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnImage) {
+                This.FoundOnImage := OnImage
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 1
                 Return True
             }
-            This.FoundXCoordinate := 0
-            This.FoundYCoordinate := 0
+            This.FoundOnImage := False
+            This.FoundXCoordinate := False
+            This.FoundYCoordinate := False
             This.State := 0
             Return False
         }
         Catch {
-            This.FoundXCoordinate := 0
-            This.FoundYCoordinate := 0
+            This.FoundOnImage := False
+            This.FoundXCoordinate := False
+            This.FoundYCoordinate := False
             This.State := 0
             Return False
         }
@@ -224,6 +228,7 @@ Class ActivatableGraphic Extends FocusableGraphic {
 Class ToggleableGraphic Extends ActivatableGraphic {
     
     IsToggle := 0
+    FoundOffImage := False
     OffImage := Array()
     
     __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage := "", OffImage := "", OnFocusFunction := "", OnActivateFunction := "") {
@@ -261,11 +266,12 @@ Class ToggleableGraphic Extends ActivatableGraphic {
         If HasProp(This, "OnFocusFunction")
         For OnFocusFunction In This.OnFocusFunction
         OnFocusFunction.Call(This)
-        FoundXCoordinate := 0
-        FoundYCoordinate := 0
+        FoundXCoordinate := False
+        FoundYCoordinate := False
         Try {
             For OnImage In This.OnImage
             If OnImage != "" And FileExist(OnImage) And Not InStr(FileExist(OnImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnImage) {
+                This.FoundOnImage := OnImage
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 1
@@ -273,19 +279,24 @@ Class ToggleableGraphic Extends ActivatableGraphic {
             }
             For OffImage In This.OffImage
             If OffImage != "" And FileExist(OffImage) And Not InStr(FileExist(OffImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OffImage) {
+                This.FoundOffImage := OffImage
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 0
                 Return True
             }
-            This.FoundXCoordinate := 0
-            This.FoundYCoordinate := 0
+            This.FoundOnImage := False
+            This.FoundOffImage := False
+            This.FoundXCoordinate := False
+            This.FoundYCoordinate := False
             This.State := -1
             Return False
         }
         Catch {
-            This.FoundXCoordinate := 0
-            This.FoundYCoordinate := 0
+            This.FoundOnImage := False
+            This.FoundOffImage := False
+            This.FoundXCoordinate := False
+            This.FoundYCoordinate := False
             This.State := -1
             Return False
         }
@@ -622,6 +633,21 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return Clone
     }
     
+    DecreaseSlider() {
+        If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
+            This.FocusableControlIDs := This.GetFocusableControlIDs()
+            Found := This.FindFocusableControlID(This.CurrentControlID)
+            If Found > 0 {
+                CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
+                If CurrentControl Is GraphicalSlider {
+                    CurrentControl.Decrease()
+                    Return 1
+                }
+            }
+        }
+        Return 0
+    }
+    
     FindFocusableControlID(ControlID) {
         FocusableControlIDs := This.GetFocusableControlIDs()
         If FocusableControlIDs.Length > 0
@@ -866,6 +892,21 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             ReachableControls.Push(Value)
         }
         Return ReachableControls
+    }
+    
+    IncreaseSlider() {
+        If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
+            This.FocusableControlIDs := This.GetFocusableControlIDs()
+            Found := This.FindFocusableControlID(This.CurrentControlID)
+            If Found > 0 {
+                CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
+                If CurrentControl Is GraphicalSlider {
+                    CurrentControl.Increase()
+                    Return 1
+                }
+            }
+        }
+        Return 0
     }
     
     RemoveControl() {
@@ -1191,6 +1232,18 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "UncheckedString", "not checked",
         "NotFoundString", "not found",
         "UnlabelledString", "unlabelled"),
+        "GraphicalSlider", Map(
+        "ControlTypeLabel", "slider",
+        "NotFoundString", "not found",
+        "UnlabelledString", "unlabelled"),
+        "GraphicalHorizontalSlider", Map(
+        "ControlTypeLabel", "slider",
+        "NotFoundString", "not found",
+        "UnlabelledString", "unlabelled"),
+        "GraphicalVerticalSlider", Map(
+        "ControlTypeLabel", "slider",
+        "NotFoundString", "not found",
+        "UnlabelledString", "unlabelled"),
         "GraphicalTab", Map(
         "ControlTypeLabel", "tab",
         "UnlabelledString", "unlabelled"),
@@ -1283,6 +1336,19 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "UncheckedString", "nezačiarknuté",
         "NotFoundString", "nenájdené",
         "UnlabelledString", "bez názvu"),
+        "GraphicalSlider", Map(
+        "ControlTypeLabel", "posuvník",
+        "NotFoundString", "nenájdené",
+        "UnlabelledString", "bez názvu"),
+        
+        "GraphicalHorizontalSlider", Map(
+        "ControlTypeLabel", "posuvník",
+        "NotFoundString", "nenájdené",
+        "UnlabelledString", "bez názvu"),
+        "GraphicalVerticalSlider", Map(
+        "ControlTypeLabel", "posuvník",
+        "NotFoundString", "nenájdené",
+        "UnlabelledString", "bez názvu"),
         "GraphicalTab", Map(
         "ControlTypeLabel", "záložka",
         "UnlabelledString", "bez názvu"),
@@ -1373,6 +1439,19 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         "ControlTypeLabel", "kryssruta",
         "CheckedString", "kryssad",
         "UncheckedString", "inte kryssad",
+        "NotFoundString", "hittades ej",
+        "UnlabelledString", "namnlös"),
+        "GraphicalSlider", Map(
+        "ControlTypeLabel", "skjutreglage",
+        "NotFoundString", "hittades ej",
+        "UnlabelledString", "namnlös"),
+        
+        "GraphicalHorizontalSlider", Map(
+        "ControlTypeLabel", "skjutreglage",
+        "NotFoundString", "hittades ej",
+        "UnlabelledString", "namnlös"),
+        "GraphicalVerticalSliderSlider", Map(
+        "ControlTypeLabel", "skjutreglage",
         "NotFoundString", "hittades ej",
         "UnlabelledString", "namnlös"),
         "GraphicalTab", Map(
@@ -2012,19 +2091,160 @@ Class GraphicalCheckbox Extends ToggleableGraphic {
     
 }
 
+Class GraphicalSlider Extends FocusableGraphic {
+    
+    ControlType := "Slider"
+    ControlTypeLabel := "slider"
+    End := 0
+    HotkeyLabel := ""
+    Label := ""
+    NotFoundString := "not found"
+    Size := 0
+    Start := 0
+    Type := False
+    UnlabelledString := "unlabelled"
+    
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, Start := "", End := "", OnFocusFunction := "") {
+        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnFocusFunction)
+        This.Label := Label
+        If Start = "" {
+            If This.Type = "Horizontal"
+            Start := X1Coordinate
+            Else If This.Type = "Vertical"
+            Start := Y1Coordinate
+            Else
+            Start := 0
+        }
+        This.Start := Start
+        If End = "" {
+            If This.Type = "Horizontal"
+            End := X2Coordinate
+            Else If This.Type = "Vertical"
+            End := Y2Coordinate
+            Else
+            End := 0
+        }
+        This.End := End
+        This.Size := End - Start
+    }
+    
+    Focus(CurrentControlID := 0) {
+        Super.Focus(CurrentControlID)
+        If This.State = 1 {
+            If This.ControlID != CurrentControlID {
+                If This.Label = ""
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.GetPosition() . " " . This.HotkeyLabel)
+                Else
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.GetPosition() . " " . This.HotkeyLabel)
+            }
+        }
+        Else {
+            If This.ControlID != CurrentControlID {
+                If This.Label = ""
+                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
+                Else
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
+            }
+        }
+    }
+    
+    GetPosition() {
+        If This.Type = "Horizontal" {
+            If This.FoundXCoordinate <= This.Start
+            Return "0 %"
+            Else If This.FoundXCoordinate >= This.End
+            Return "100 %"
+            Else
+            Return Round((This.FoundXCoordinate - This.Start) / (This.Size / 100), 0) . " %"
+        }
+        Else If This.Type = "Vertical" {
+            If This.FoundYCoordinate <= This.Y1Coordinate
+            Return "100 %"
+            Else If This.FoundYCoordinate >= This.Y2Coordinate
+            Return "0 %"
+            Else
+            Return Round((This.End - This.FoundYCoordinate) / (This.Size / 100), 0) . " %"
+        }
+        Else {
+            Return ""
+        }
+    }
+    
+    Decrease() {
+        This.Move(-1)
+    }
+    
+    Increase() {
+        This.Move(+1)
+    }
+    
+    Move(Value) {
+        If This.Type = "Horizontal" Or This.Type = "Vertical" {
+            TargetXCoordinate := 0
+            TargetYCoordinate := 0
+            If This.Type = "Horizontal"
+            Coordinate := "X"
+            Else
+            Coordinate := "Y"
+            This.SetState()
+            If This.State = 1 {
+                FoundCoordinate := This.Found%Coordinate%Coordinate
+                OnePercent := Ceil(This.Size / 100)
+                If OnePercent < 1
+                OnePercent := 1
+                If Value = -1 {
+                    Target%Coordinate%Coordinate := This.Found%Coordinate%Coordinate - OnePercent
+                }
+                Else {
+                    Target%Coordinate%Coordinate := This.Found%Coordinate%Coordinate + OnePercent
+                }
+                If Target%Coordinate%Coordinate != This.Found%Coordinate%Coordinate
+                While This.Found%Coordinate%Coordinate = FoundCoordinate
+                Drag()
+            }
+            If This.State = 1
+            AccessibilityOverlay.Speak(This.GetPosition())
+        }
+        Drag() {
+            If Coordinate = "X"
+            MouseClickDrag "Left", This.FoundXCoordinate, This.FoundYCoordinate, TargetXCoordinate, This.FoundYCoordinate, 0
+            Else
+            MouseClickDrag "Left", This.FoundXCoordinate, This.FoundYCoordinate, This.FoundYCoordinate, TargetYCoordinate, 0
+            This.SetState()
+        }
+    }
+    
+    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
+        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
+        This.HotkeyLabel := HotkeyLabel
+    }
+    
+}
+
+Class GraphicalHorizontalSlider Extends GraphicalSlider {
+    
+    Type := "Horizontal"
+    
+}
+
+Class GraphicalVerticalSlider Extends GraphicalSlider {
+    
+    Type := "Vertical"
+    
+}
+
 Class GraphicalTab Extends AccessibilityOverlay {
     
     ControlType := "Tab"
     ControlTypeLabel := "tab"
+    FoundOnImage := False
     FoundXCoordinate := 0
     FoundYCoordinate := 0
     HotkeyCommand := ""
     HotkeyFunction := Array()
     HotkeyLabel := ""
-    IsToggle := 0
     OnFocusFunction := Array()
     OnImage := Array()
-    OffImage := Array()
     X1Coordinate := 0
     Y1Coordinate := 0
     X2Coordinate := 0
@@ -2032,7 +2252,7 @@ Class GraphicalTab Extends AccessibilityOverlay {
     State := 0
     UnlabelledString := "unlabelled"
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OffImage := "", OnFocusFunction := "") {
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnFocusFunction := "") {
         Super.__New(Label)
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
@@ -2042,14 +2262,7 @@ Class GraphicalTab Extends AccessibilityOverlay {
         OnImage := Array()
         If Not OnImage Is Array
         OnImage := Array(OnImage)
-        If OffImage = ""
-        OffImage := Array()
-        If Not OffImage Is Array
-        OffImage := Array(OffImage)
-        If OnImage != Array() And OffImage != Array() And OnImage != OffImage
-        This.IsToggle := 1
         This.OnImage := OnImage
-        This.OffImage := OffImage
         If OnFocusFunction != "" {
             If OnFocusFunction Is Array
             This.OnFocusFunction := OnFocusFunction
@@ -2098,31 +2311,27 @@ Class GraphicalTab Extends AccessibilityOverlay {
         If HasProp(This, "OnFocusFunction")
         For OnFocusFunction In This.OnFocusFunction
         OnFocusFunction.Call(This)
-        FoundXCoordinate := 0
-        FoundYCoordinate := 0
+        FoundXCoordinate := False
+        FoundYCoordinate := False
         Try {
             For OnImage In This.OnImage
             If OnImage != "" And FileExist(OnImage) And Not InStr(FileExist(OnImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnImage) {
+                This.FoundOnImage := OnImage
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.State := 1
                 Return True
             }
-            For OffImage In This.OffImage
-            If OffImage != "" And FileExist(OffImage) And Not InStr(FileExist(OffImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OffImage) {
-                This.FoundXCoordinate := FoundXCoordinate
-                This.FoundYCoordinate := FoundYCoordinate
-                This.State := 0
-                Return True
-            }
-            This.FoundXCoordinate := 0
-            This.FoundYCoordinate := 0
+            This.FoundOnImage := False
+            This.FoundXCoordinate := False
+            This.FoundYCoordinate := False
             This.State := -1
             Return False
         }
         Catch {
-            This.FoundXCoordinate := 0
-            This.FoundYCoordinate := 0
+            This.FoundOnImage := False
+            This.FoundXCoordinate := False
+            This.FoundYCoordinate := False
             This.State := -1
             Return False
         }

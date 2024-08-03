@@ -73,6 +73,14 @@ Left:: {
     ReaHotkey.Found%ReaHotkey.Context% := False
     If ReaHotkey.Context != False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
         Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
+            Case "Slider":
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            If A_ThisHotkey = "Left"
+            ReaHotkey.Found%ReaHotkey.Context%.Overlay.DecreaseSlider()
+            Else
+            ReaHotkey.Found%ReaHotkey.Context%.Overlay.IncreaseSlider()
+            Hotkey A_ThisHotkey, "On"
             Case "TabControl":
             Hotkey A_ThisHotkey, "Off"
             Send "{" . A_ThisHotkey . "}"
@@ -109,6 +117,14 @@ Down:: {
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.SelectPreviousOption()
             Else
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.SelectNextOption()
+            Hotkey A_ThisHotkey, "On"
+            Case "Slider":
+            Hotkey A_ThisHotkey, "Off"
+            Send "{" . A_ThisHotkey . "}"
+            If A_ThisHotkey = "Down"
+            ReaHotkey.Found%ReaHotkey.Context%.Overlay.DecreaseSlider()
+            Else
+            ReaHotkey.Found%ReaHotkey.Context%.Overlay.IncreaseSlider()
             Hotkey A_ThisHotkey, "On"
             Default:
             Hotkey A_ThisHotkey, "Off"
