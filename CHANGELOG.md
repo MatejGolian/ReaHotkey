@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added ability to cycle through snapshots in the plug-in version of Kontakt
+
 ## [0.4.6] - 2024-08-03
 
 ### Added
