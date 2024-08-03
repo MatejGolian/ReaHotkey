@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.6] - 2024-08-03
+
 ### Added
 
 -   Added basic support for the Dubler 2 MIDI Capture Plugin
@@ -122,7 +124,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.5...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.6...HEAD
+
+[0.4.6]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.5...0.4.6
 
 [0.4.5]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.4...0.4.5
 
