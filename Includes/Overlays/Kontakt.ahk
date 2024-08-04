@@ -128,10 +128,14 @@ Class Kontakt {
     }
     
     Static MoveToPluginSnapshotButton(SnapshotButton) {
+        Try
+        ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+        Catch
+        Return
         If SnapshotButton.Label = "Previous snapshot"
-        MouseMove CompensatePluginXCoordinate(958), CompensatePluginYCoordinate(169)
+        MouseMove ControlX + ControlWidth - 397, CompensatePluginYCoordinate(169)
         Else
-        MouseMove CompensatePluginXCoordinate(976), CompensatePluginYCoordinate(169)
+        MouseMove ControlX + ControlWidth - 381, CompensatePluginYCoordinate(169)
     }
     
     Static OpenMenu(Type) {
@@ -185,12 +189,17 @@ Class Kontakt {
     }
     
     Static SelectPluginSnapshot(SnapshotButton) {
+        Try
+        ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+        Catch
+        Return
+        Click ControlX + ControlWidth - 296, CompensatePluginYCoordinate(141)
         Kontakt.MoveToPluginSnapshotButton(SnapshotButton)
         MouseGetPos &mouseXPosition, &mouseYPosition
         If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") != "0x424142" And PixelGetColor(MouseXPosition, MouseYPosition, "Slow") != "0x545454"
         AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that you're in rack view and that the side pane is hidden.")
         Else
-        Click mouseXPosition, mouseYPosition
+        Click
     }
     
 }
