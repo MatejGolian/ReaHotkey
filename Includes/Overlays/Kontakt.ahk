@@ -13,19 +13,19 @@ Class Kontakt {
         
         PluginHeader := AccessibilityOverlay("Kontakt")
         PluginHeader.AddStaticText("Kontakt 7")
-        PluginHeader.AddUIAControl("15,1,2", "FILE menu button",, Kontakt.OpenPluginMenu)
-        PluginHeader.AddUIAControl("15,1,3", "LIBRARY On/Off button")
-        PluginHeader.AddUIAControl("15,1,4", "VIEW menu button",, Kontakt.OpenPluginMenu)
-        PluginHeader.AddUIAControl("15,1,7", "SHOP (Opens in default web browser) button")
-        PluginHeader.AddCustomButton("Previous snapshot", ObjBindMethod(Kontakt, "MoveToPluginSnapshotButton"), ObjBindMethod(Kontakt, "SelectPluginSnapshot"))
-        PluginHeader.AddCustomButton("Next snapshot", ObjBindMethod(Kontakt, "MoveToPluginSnapshotButton"), ObjBindMethod(Kontakt, "SelectPluginSnapshot"))
+        PluginHeader.AddCustomButton("FILE menu",, Kontakt.ActivatePluginHeaderItem)
+        PluginHeader.AddCustomButton("LIBRARY On/Off",, Kontakt.ActivatePluginHeaderItem)
+        PluginHeader.AddCustomButton("VIEW menu",, Kontakt.ActivatePluginHeaderItem)
+        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",, Kontakt.ActivatePluginHeaderItem)
+        PluginHeader.AddCustomButton("Previous snapshot", Kontakt.MoveToPluginSnapshotButton, Kontakt.SelectPluginSnapshot)
+        PluginHeader.AddCustomButton("Next snapshot", Kontakt.MoveToPluginSnapshotButton, Kontakt.SelectPluginSnapshot)
         Kontakt.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Kontakt")
-        StandaloneHeader.AddUIAControl("1,2", "FILE menu button",, Kontakt.OpenStandaloneMenu)
-        StandaloneHeader.AddUIAControl("1,3", "LIBRARY On/Off button")
-        StandaloneHeader.AddUIAControl("1,4", "VIEW menu button",, Kontakt.OpenStandaloneMenu)
-        StandaloneHeader.AddUIAControl("1,5", "SHOP (Opens in default web browser) button")
+        StandaloneHeader.AddCustomButton("FILE menu",, Kontakt.ActivateStandaloneHeaderItem)
+        StandaloneHeader.AddCustomButton("LIBRARY On/Off",, Kontakt.ActivateStandaloneHeaderItem)
+        StandaloneHeader.AddCustomButton("VIEW menu",, Kontakt.ActivateStandaloneHeaderItem)
+        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",, Kontakt.ActivateStandaloneHeaderItem)
         Kontakt.StandaloneHeader := StandaloneHeader
         
         Plugin.Register("Kontakt", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(Kontakt, "InitPlugin"), True, False, True, ObjBindMethod(Kontakt, "CheckPlugin"))
@@ -90,6 +90,12 @@ Class Kontakt {
     }
     
     Static ClosePluginBrowser() {
+        UIAElement := GetUIAElement("15,1,14,3")
+        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+            UIAElement.Click()
+            AccessibilityOverlay.Speak("Library Browser closed.")
+            Sleep 1000
+        }
         UIAElement := GetUIAElement("15,1,16,3")
         If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
@@ -115,6 +121,12 @@ Class Kontakt {
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
         }
+        UIAElement := GetUIAElement("1,16,3")
+        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+            UIAElement.Click()
+            AccessibilityOverlay.Speak("Library Browser closed.")
+            Sleep 1000
+        }
     }
     
     Static InitPlugin(PluginInstance) {
@@ -125,17 +137,6 @@ Class Kontakt {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
             PluginInstance.Overlay.OverlayNumber := 1
         }
-    }
-    
-    Static MoveToPluginSnapshotButton(SnapshotButton) {
-        Try
-        ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-        Catch
-        Return
-        If SnapshotButton.Label = "Previous snapshot"
-        MouseMove ControlX + ControlWidth - 397, ControlY + 169
-        Else
-        MouseMove ControlX + ControlWidth - 381, ControlY + 169
     }
     
     Static OpenMenu(Type) {
@@ -176,30 +177,99 @@ Class Kontakt {
         }
     }
     
-    Class OpenPluginMenu {
-        Static Call(*) {
-            Kontakt.OpenMenu("Plugin")
+    Class  ActivatePluginHeaderItem {
+        Static Call(MenuButton) {
+            UIAElement := False
+            Switch MenuButton.Label {
+                Case "FILE menu":
+                UIAElement := GetUIAElement("15,1,2")
+                Case "LIBRARY On/Off":
+                UIAElement := GetUIAElement("15,1,3")
+                Case "VIEW menu":
+                UIAElement := GetUIAElement("15,1,4")
+                Case "SHOP (Opens in default web browser)":
+                UIAElement := GetUIAElement("15,1,5")
+                If UIAElement = False Or UIAElement.Name != "SHOP"
+                UIAElement := GetUIAElement("15,1,7")
+            }
+            If UIAElement != False
+            Switch MenuButton.Label {
+                Case "FILE menu":
+                UIAElement.Click("Left")
+                Kontakt.OpenMenu("Plugin")
+                Case "LIBRARY On/Off":
+                UIAElement.Click("Left")
+                Case "VIEW menu":
+                UIAElement.Click("Left")
+                Kontakt.OpenMenu("Plugin")
+                Case "SHOP (Opens in default web browser)":
+                UIAElement.Click("Left")
+            }
+            Else
+            AccessibilityOverlay.Speak(MenuButton.Label . " button not found")
         }
     }
     
-    Class OpenStandaloneMenu {
-        Static Call(*) {
-            Kontakt.OpenMenu("Standalone")
+    Class  ActivateStandaloneHeaderItem {
+        Static Call(MenuButton) {
+            UIAElement := False
+            Switch MenuButton.Label {
+                Case "FILE menu":
+                UIAElement := GetUIAElement("1,2")
+                Case "LIBRARY On/Off":
+                UIAElement := GetUIAElement("1,3")
+                Case "VIEW menu":
+                UIAElement := GetUIAElement("1,4")
+                Case "SHOP (Opens in default web browser)":
+                UIAElement := GetUIAElement("1,5")
+                If UIAElement = False Or UIAElement.Name != "SHOP"
+                UIAElement := GetUIAElement("1,7")
+            }
+            If UIAElement != False
+            Switch MenuButton.Label {
+                Case "FILE menu":
+                UIAElement.Click("Left")
+                Kontakt.OpenMenu("Standalone")
+                Case "LIBRARY On/Off":
+                UIAElement.Click("Left")
+                Case "VIEW menu":
+                UIAElement.Click("Left")
+                Kontakt.OpenMenu("Standalone")
+                Case "SHOP (Opens in default web browser)":
+                UIAElement.Click("Left")
+            }
+            Else
+            AccessibilityOverlay.Speak(MenuButton.Label . " button not found")
         }
     }
     
-    Static SelectPluginSnapshot(SnapshotButton) {
-        Try
-        ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-        Catch
-        Return
-        Click ControlX + ControlWidth - 296, ControlY + 141
-        Kontakt.MoveToPluginSnapshotButton(SnapshotButton)
-        MouseGetPos &mouseXPosition, &mouseYPosition
-        If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") != "0x424142" And PixelGetColor(MouseXPosition, MouseYPosition, "Slow") != "0x545454"
-        AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that you're in rack view.")
-        Else
-        Click
+    Class MoveToPluginSnapshotButton {
+        Static Call(SnapshotButton) {
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            If SnapshotButton.Label = "Previous snapshot"
+            MouseMove ControlX + ControlWidth - 397, ControlY + 169
+            Else
+            MouseMove ControlX + ControlWidth - 381, ControlY + 169
+        }
+    }
+    
+    Class SelectPluginSnapshot {
+        Static Call(SnapshotButton) {
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            Click ControlX + ControlWidth - 296, ControlY + 141
+            Kontakt.MoveToPluginSnapshotButton(SnapshotButton)
+            MouseGetPos &mouseXPosition, &mouseYPosition
+            If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") != "0x424142" And PixelGetColor(MouseXPosition, MouseYPosition, "Slow") != "0x545454"
+            AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that you're in rack view.")
+            Else
+            Click
+        }
     }
     
 }
