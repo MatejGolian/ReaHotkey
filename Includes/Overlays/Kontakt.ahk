@@ -10,6 +10,7 @@ Class Kontakt {
     Static __New() {
         ClassName := "Kontakt"
         #IncludeAgain KontaktKompleteKontrol/Overlay.Definitions.ahk
+        %ClassName%.Fairview.InitClass(ClassName)
         
         PluginHeader := AccessibilityOverlay("Kontakt")
         PluginHeader.AddStaticText("Kontakt 7")
@@ -271,5 +272,19 @@ Class Kontakt {
             MouseMove ControlX + ControlWidth - 381, ControlY + 169
         }
     }
+    
+    Class OpenPluginMenu {
+        Static Call(*) {
+            Kontakt.OpenMenu("Plugin")
+        }
+    }
+    
+    Class OpenStandaloneMenu {
+        Static Call(*) {
+            Kontakt.OpenMenu("Standalone")
+        }
+    }
+    
+    #IncludeAgain KontaktKompleteKontrol/Fairview.Overlay.ahk
     
 }
