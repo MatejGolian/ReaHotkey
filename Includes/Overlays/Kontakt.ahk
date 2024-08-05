@@ -212,17 +212,21 @@ Class Kontakt {
     
     Class ActivatePluginSnapshotButton {
         Static Call(SnapshotButton) {
-            Try
-            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-            Catch
-            Return
-            Click ControlX + ControlWidth - 296, ControlY + 141
-            Kontakt.MoveToPluginSnapshotButton(SnapshotButton)
-            MouseGetPos &mouseXPosition, &mouseYPosition
-            If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") != "0x424142" And PixelGetColor(MouseXPosition, MouseYPosition, "Slow") != "0x545454"
-            AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that you're in rack view.")
-            Else
-            Click
+            UIAElement := GetUIAElement("15,1,5")
+            If UIAElement != False And UIAElement.Name = "SHOP" {
+                Try
+                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+                Catch
+                Return
+                Click ControlX + ControlWidth - 296, ControlY + 141
+                Kontakt.MoveToPluginSnapshotButton(SnapshotButton)
+                MouseGetPos &mouseXPosition, &mouseYPosition
+                If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x424142" Or PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x545454" {
+                    Click
+                    Return
+                }
+            }
+            AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in rack view.")
         }
     }
     
@@ -261,14 +265,17 @@ Class Kontakt {
     
     Class MoveToPluginSnapshotButton {
         Static Call(SnapshotButton) {
-            Try
-            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-            Catch
-            Return
-            If SnapshotButton.Label = "Previous snapshot"
-            MouseMove ControlX + ControlWidth - 397, ControlY + 169
-            Else
-            MouseMove ControlX + ControlWidth - 381, ControlY + 169
+            UIAElement := GetUIAElement("15,1,5")
+            If UIAElement != False And UIAElement.Name = "SHOP" {
+                Try
+                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+                Catch
+                Return
+                If SnapshotButton.Label = "Previous snapshot"
+                MouseMove ControlX + ControlWidth - 397, ControlY + 169
+                Else
+                MouseMove ControlX + ControlWidth - 381, ControlY + 169
+            }
         }
     }
     
