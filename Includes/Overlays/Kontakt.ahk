@@ -272,4 +272,16 @@ Class Kontakt {
         }
     }
     
+    Class OpenPluginMenu {
+        Static Call(*) {
+            Kontakt.OpenMenu("Plugin")
+        }
+    }
+    
+    Class OpenStandaloneMenu {
+        Static Call(*) {
+            Kontakt.OpenMenu("Standalone")
+        }
+    }
+    
 }
