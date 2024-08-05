@@ -10,8 +10,8 @@ Class Fairview {
     }
     
     Class ActivateControl {
-    ClassName := OverlayControl.ClassName
         Static Call(OverlayControl) {
+            ClassName := OverlayControl.ClassName
             Switch OverlayControl.Label {
                 Case "Snare selector":
                 %ClassName%.Fairview.MoveToControl(OverlayControl)
@@ -23,9 +23,16 @@ Class Fairview {
     
     Class MoveToControl {
         Static Call(OverlayControl) {
+            ClassName := OverlayControl.ClassName
+            XOffset := 0
+            YOffset := 0
+            If ClassName = "KompleteKontrol" {
+                XOffset := 0
+                YOffset := 0
+            }
             Switch OverlayControl.Label {
                 Case "Snare selector":
-                MouseMove CompensatePluginXCoordinate(476), CompensatePluginYCoordinate(454)
+                MouseMove CompensatePluginXCoordinate(XOffset + 476), CompensatePluginYCoordinate(YOffset + 454)
             }
         }
     }
