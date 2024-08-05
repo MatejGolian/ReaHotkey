@@ -10,6 +10,7 @@ Class KompleteKontrol {
     Static __New() {
         ClassName := "KompleteKontrol"
         #IncludeAgain KontaktKompleteKontrol/Overlay.Definitions.ahk
+        %ClassName%.Fairview.InitClass(ClassName)
         
         PluginHeader := AccessibilityOverlay("Komplete Kontrol")
         PluginHeader.AddStaticText("Komplete Kontrol")
@@ -150,7 +151,7 @@ Class KompleteKontrol {
     Static CheckStandaloneConfig() {
         If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1) = 1
         KompleteKontrol.CloseStandaloneBrowser()
-        }
+    }
     
     Static CheckStandaloneSaveAsDialog(*) {
         StandaloneInstance := Standalone.GetInstance(GetCurrentWindowID())
@@ -244,5 +245,7 @@ Class KompleteKontrol {
             Sleep 500
         }
     }
+    
+    #IncludeAgain KontaktKompleteKontrol/Fairview.Overlay.ahk
     
 }
