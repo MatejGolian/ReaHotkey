@@ -49,7 +49,8 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 * ctrl+shift+windows+c - configuration
 * ctrl+shift+windows+p - pause
 * ctrl+shift+windows+q - quit
-* ctrl+shift+windows+r - view readme
+* ctrl+shift+windows+r - open ReaHotkey menu
+* ctrl+shift+windows+f1 - view readme
 * ctrl+shift+windows+f5 - reload
 
 ## Known Issues

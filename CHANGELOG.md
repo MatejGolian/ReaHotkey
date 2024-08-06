@@ -10,13 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added ability to cycle through snapshots in the plug-in version of Kontakt
+-   Added shortcut for opening the tray menu with ctrl+shift+windows+r
 
 ### Changed
 
--   Changed how Kontakt header buttons are activated
+-   Changed shortcut for viewing readme to ctrl+shift+windows+f1
 
 ### Fixed
 
+-   Fixed Kontakt header buttons not activating
 -   Fixed Kontakt library browser not always closing
 
 ## [0.4.6] - 2024-08-03
