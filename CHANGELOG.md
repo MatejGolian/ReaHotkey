@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added support for the snapshot menu in the plug-in version of Kontakt
+
 ## [0.4.7] - 2024-08-06
 
 ### Added
