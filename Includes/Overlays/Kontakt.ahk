@@ -297,6 +297,6 @@ Class Kontakt {
     #IncludeAgain KontaktKompleteKontrol/NoProduct.ahk
     #IncludeAgain KontaktKompleteKontrol/AudioImperia.ahk
     #IncludeAgain KontaktKompleteKontrol/CinematicStudioSeries.ahk
-    #IncludeAgain KontaktKompleteKontrol/Fairview.Overlay.ahk
+    #IncludeAgain KontaktKompleteKontrol/Fairview.ahk
     
 }
