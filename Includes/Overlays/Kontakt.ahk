@@ -9,7 +9,9 @@ Class Kontakt {
     
     Static __New() {
         ClassName := "Kontakt"
-        #IncludeAgain KontaktKompleteKontrol/Overlay.Definitions.ahk
+        %ClassName%.NoProduct.InitClass(ClassName)
+        %ClassName%.AudioImperia.InitClass(ClassName)
+        %ClassName%.CinematicStudioSeries.InitClass(ClassName)
         
         PluginHeader := AccessibilityOverlay("Kontakt")
         PluginHeader.AddStaticText("Kontakt 7")
@@ -290,5 +292,9 @@ Class Kontakt {
             Kontakt.OpenMenu("Standalone")
         }
     }
+    
+    #IncludeAgain KontaktKompleteKontrol/NoProduct.ahk
+    #IncludeAgain KontaktKompleteKontrol/AudioImperia.ahk
+    #IncludeAgain KontaktKompleteKontrol/CinematicStudioSeries.ahk
     
 }

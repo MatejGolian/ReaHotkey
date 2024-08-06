@@ -9,7 +9,9 @@ Class KompleteKontrol {
     
     Static __New() {
         ClassName := "KompleteKontrol"
-        #IncludeAgain KontaktKompleteKontrol/Overlay.Definitions.ahk
+        %ClassName%.NoProduct.InitClass(ClassName)
+        %ClassName%.AudioImperia.InitClass(ClassName)
+        %ClassName%.CinematicStudioSeries.InitClass(ClassName)
         
         PluginHeader := AccessibilityOverlay("Komplete Kontrol")
         PluginHeader.AddStaticText("Komplete Kontrol")
@@ -150,7 +152,7 @@ Class KompleteKontrol {
     Static CheckStandaloneConfig() {
         If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1) = 1
         KompleteKontrol.CloseStandaloneBrowser()
-        }
+    }
     
     Static CheckStandaloneSaveAsDialog(*) {
         StandaloneInstance := Standalone.GetInstance(GetCurrentWindowID())
@@ -244,5 +246,9 @@ Class KompleteKontrol {
             Sleep 500
         }
     }
+    
+    #IncludeAgain KontaktKompleteKontrol/NoProduct.ahk
+    #IncludeAgain KontaktKompleteKontrol/AudioImperia.ahk
+    #IncludeAgain KontaktKompleteKontrol/CinematicStudioSeries.ahk
     
 }
