@@ -222,7 +222,7 @@ Class Kontakt {
                 Catch
                 Return
                 Click ControlX + ControlWidth - 296, ControlY + 141
-                Sleep 100
+                Sleep 10
                 Kontakt.MoveToPluginSnapshotButton("Previous snapshot")
                 If CheckColor()
                 If InStr(SnapshotButton.Label, "Snapshot", True) {
