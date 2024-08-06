@@ -19,6 +19,7 @@ Class Kontakt {
         PluginHeader.AddCustomButton("LIBRARY On/Off",, Kontakt.ActivatePluginHeaderButton)
         PluginHeader.AddCustomButton("VIEW menu",, Kontakt.ActivatePluginHeaderButton)
         PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",, Kontakt.ActivatePluginHeaderButton)
+        PluginHeader.AddCustomButton("Snapshot menu", Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton)
         PluginHeader.AddCustomButton("Previous snapshot", Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton)
         PluginHeader.AddCustomButton("Next snapshot", Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton)
         Kontakt.PluginHeader := PluginHeader
@@ -221,14 +222,28 @@ Class Kontakt {
                 Catch
                 Return
                 Click ControlX + ControlWidth - 296, ControlY + 141
-                Kontakt.MoveToPluginSnapshotButton(SnapshotButton)
-                MouseGetPos &mouseXPosition, &mouseYPosition
-                If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x424142" Or PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x545454" {
+                Sleep 100
+                Kontakt.MoveToPluginSnapshotButton("Previous snapshot")
+                If CheckColor()
+                If InStr(SnapshotButton.Label, "Snapshot", True) {
+                    Kontakt.MoveToPluginSnapshotButton(SnapshotButton)
+                    Click
+                    Kontakt.OpenPluginMenu()
+                    Return
+                }
+                Else {
+                    Kontakt.MoveToPluginSnapshotButton(SnapshotButton)
                     Click
                     Return
                 }
             }
             AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in rack view.")
+            CheckColor() {
+                MouseGetPos &mouseXPosition, &mouseYPosition
+                If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x424142" Or PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x545454"
+                Return True
+                Return False
+            }
         }
     }
     
@@ -267,13 +282,25 @@ Class Kontakt {
     
     Class MoveToPluginSnapshotButton {
         Static Call(SnapshotButton) {
+            If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True)
+            SnapshotButton.Label := "Snapshot menu"
+            Label := SnapshotButton
+            If SnapshotButton Is Object
+            Label := SnapshotButton.Label
             UIAElement := GetUIAElement("15,1,5")
             If UIAElement != False And UIAElement.Name = "SHOP" {
                 Try
                 ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
                 Catch
                 Return
-                If SnapshotButton.Label = "Previous snapshot"
+                If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
+                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - 580, ControlY + 160, ControlX + ControlWidth - 580 + 200, ControlY + 180)
+                    If OCRResult != ""
+                    SnapshotButton.Label := "Snapshot " . OcrResult
+                }
+                If InStr(Label, "Snapshot", True)
+                MouseMove ControlX + ControlWidth - 580, ControlY + 169
+                Else If InStr(Label, "Previous snapshot", True)
                 MouseMove ControlX + ControlWidth - 397, ControlY + 169
                 Else
                 MouseMove ControlX + ControlWidth - 381, ControlY + 169
