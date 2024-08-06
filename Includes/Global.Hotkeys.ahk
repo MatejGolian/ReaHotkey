@@ -7,6 +7,15 @@ Ctrl:: {
     AccessibilityOverlay.StopSpeech()
 }
 
+^+#R:: {
+    A_TrayMenu.Show()
+}
+
+^+#Q:: {
+    AccessibilityOverlay.Speak("Quitting ReaHotkey")
+    ReaHotkey.Quit()
+}
+
 ^+#F5:: {
     ReaHotkey.Reload()
 }
@@ -27,12 +36,7 @@ Ctrl:: {
     AccessibilityOverlay.Speak("ReaHotkey ready")
 }
 
-^+#Q:: {
-    AccessibilityOverlay.Speak("Quitting ReaHotkey")
-    ReaHotkey.Quit()
-}
-
-^+#R:: {
+^+#F1:: {
     ReaHotkey.ViewReadme()
 }
 
