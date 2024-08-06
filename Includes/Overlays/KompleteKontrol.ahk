@@ -9,7 +9,9 @@ Class KompleteKontrol {
     
     Static __New() {
         ClassName := "KompleteKontrol"
-        #IncludeAgain KontaktKompleteKontrol/Overlay.Definitions.ahk
+        %ClassName%.NoProduct.InitClass(ClassName)
+        %ClassName%.AudioImperia.InitClass(ClassName)
+        %ClassName%.CinematicStudioSeries.InitClass(ClassName)
         %ClassName%.Fairview.InitClass(ClassName)
         
         PluginHeader := AccessibilityOverlay("Komplete Kontrol")
@@ -246,6 +248,9 @@ Class KompleteKontrol {
         }
     }
     
+    #IncludeAgain KontaktKompleteKontrol/NoProduct.ahk
+    #IncludeAgain KontaktKompleteKontrol/AudioImperia.ahk
+    #IncludeAgain KontaktKompleteKontrol/CinematicStudioSeries.ahk
     #IncludeAgain KontaktKompleteKontrol/Fairview.Overlay.ahk
     
 }
