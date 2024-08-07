@@ -1240,11 +1240,7 @@ CoordMode "Mouse", "Window"
 Return {X: MouseXPos, Y: MouseYPos}
 }
 
+#Include Includes/Version.ahk
 #Include *i Includes/CIVersion.ahk
-;@Ahk2Exe-Let U_version = %A_PriorLine~U)^(.+"){1}(.+)".*$~$2%
-;@Ahk2Exe-Let U_OrigFileName = %A_ScriptName~\.[^\.]+$~.exe%
 ;@Ahk2Exe-SetDescription HotspotHelper
-;@Ahk2Exe-SetFileVersion %U_Version%
 ;@Ahk2Exe-SetProductName HotspotHelper
-;@Ahk2Exe-SetProductVersion %U_Version%
-;@Ahk2Exe-SetOrigFileName %U_OrigFileName%
