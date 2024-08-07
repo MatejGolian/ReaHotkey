@@ -5,7 +5,9 @@ Class Fairview {
         FairviewOverlay.Metadata := Map("Vendor", "RS Drums", "Product", "Fairview", "Image", Map("File", "Images/KontaktKompleteKontrol/Fairview/Product.png"))
         FairviewOverlay.AddAccessibilityOverlay()
         FairviewOverlay.AddStaticText("Fairview")
-        FairviewOverlay.AddCustomButton("Snare selector", %ClassName%.Fairview.MoveToControl, %ClassName%.Fairview.ActivateControl).ClassName := ClassName
+        FairviewOverlay.AddCustomButton("Snare selector", %ClassName%.Fairview.MoveToControl, %ClassName%.Fairview.ActivateControl)
+        For OverlayControl In FairviewOverlay.GetAllControls()
+        OverlayControl.ClassName := ClassName
         %ClassName%.PluginOverlays.Push(FairviewOverlay)
     }
     
