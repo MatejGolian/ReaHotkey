@@ -350,7 +350,7 @@ Class Standalone {
     Static SetTimer(ProgramName, Function, Period := "", Priority := "") {
         ProgramNumber := Standalone.FindName(ProgramName)
         TimerNumber := Standalone.FindTimer(ProgramName, Function)
-        If ProgramNumber > 0 And TimerNumber = 0 {
+        If ProgramNumber > 0 And TimerNumber = 0 And Period != 0 {
             If Period = ""
             Period := 250
             If Priority = ""
@@ -372,6 +372,8 @@ Class Standalone {
             Standalone.List[ProgramNumber]["Timers"][TimerNumber]["Enabled"] := True
             SetTimer Function, Period, Priority
         }
+        If TimerNumber > 0 And Period = 0
+        Standalone.List[ProgramNumber]["Timers"].RemoveAt(TimerNumber)
     }
     
     Class TriggerOverlayHotkey {

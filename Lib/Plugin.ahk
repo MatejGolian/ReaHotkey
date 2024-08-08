@@ -399,7 +399,7 @@ Class Plugin {
     Static SetTimer(PluginName, Function, Period := "", Priority := "") {
         PluginNumber := Plugin.FindName(PluginName)
         TimerNumber := Plugin.FindTimer(PluginName, Function)
-        If PluginNumber > 0 And TimerNumber = 0 {
+        If PluginNumber > 0 And TimerNumber = 0 And Period != 0 {
             If Period = ""
             Period := 250
             If Priority = ""
@@ -421,6 +421,8 @@ Class Plugin {
             Plugin.List[PluginNumber]["Timers"][TimerNumber]["Enabled"] := True
             SetTimer Function, Period, Priority
         }
+        If TimerNumber > 0 And Period = 0
+        Plugin.List[PluginNumber]["Timers"].RemoveAt(TimerNumber)
     }
     
     Class TriggerOverlayHotkey {
