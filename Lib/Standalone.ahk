@@ -92,6 +92,10 @@ Class Standalone {
         Standalone.SetHotkey(This.Name, KeyName, Action, Options)
     }
     
+    SetNoHotkeys(Value) {
+        Standalone.SetNoHotkeys(This.Name, Value)
+    }
+    
     SetTimer(Function, Period := "", Priority := "") {
         Standalone.SetTimer(This.Name, Function, Period, Priority)
     }
@@ -344,6 +348,16 @@ Class Standalone {
                 Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
                 Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options
             }
+        }
+    }
+    
+    Static SetNoHotkeys(ProgramName, Value) {
+        ProgramNumber := Standalone.FindName(ProgramName)
+        If ProgramNumber > 0 {
+            For ProgramInstance In Standalone.Instances
+            If ProgramInstance.ProgramNumber = ProgramNumber
+            ProgramInstance.NoHotkeys := Value
+            Standalone.List[ProgramNumber]["NoHotkeys"] := Value
         }
     }
     

@@ -94,6 +94,10 @@ Class Plugin {
         Plugin.SetHotkey(This.Name, KeyName, Action, Options)
     }
     
+    SetNoHotkeys(Value) {
+        Plugin.SetNoHotkeys(This.Name, Value)
+    }
+    
     SetTimer(Function, Period := "", Priority := "") {
         Plugin.SetTimer(This.Name, Function, Period, Priority)
     }
@@ -393,6 +397,16 @@ Class Plugin {
                 Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
                 Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options
             }
+        }
+    }
+    
+    Static SetNoHotkeys(PluginName, Value) {
+        PluginNumber := Plugin.FindName(PluginName)
+        If PluginNumber > 0 {
+            For PluginInstance In Plugin.Instances
+            If PluginInstance.PluginNumber = PluginNumber
+            PluginInstance.NoHotkeys := Value
+            Plugin.List[PluginNumber]["NoHotkeys"] := Value
         }
     }
     
