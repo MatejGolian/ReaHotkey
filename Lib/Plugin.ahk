@@ -339,6 +339,10 @@ Class Plugin {
             If PluginInstance.PluginNumber = PluginNumber
             PluginInstance.NoHotkeys := Value
             Plugin.List[PluginNumber]["NoHotkeys"] := Value
+            If Value = False
+            ReaHotkey.TurnPluginHotkeysOn(PluginName)
+            If Value = True
+            ReaHotkey.TurnPluginHotkeysOff(PluginName)
         }
     }
     

@@ -142,44 +142,6 @@ Class Kontakt {
         }
     }
     
-    Static OpenMenu(Type) {
-        Loop {
-            If (Type = "Plugin" And WinActive(ReaHotkey.PluginWinCriteria)) Or (type = "Standalone" And WinActive("Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")) {
-                ReaHotkey.Turn%type%HotkeysOff()
-                KeyCombo := KeyWaitCombo()
-                If KeyCombo = "+Tab" {
-                    SendInput "+{Tab}"
-                }
-                Else If KeyCombo = "!F4" {
-                    SendInput "{Escape}"
-                    SendInput "!{F4}"
-                    Break
-                }
-                Else {
-                    SingleKey := KeyWaitSingle()
-                    If GetKeyState("Shift") And SingleKey = "Tab" {
-                        SendInput "+{Tab}"
-                    }
-                    Else If GetKeyState("Alt") And SingleKey = "F4" {
-                        SendInput "!{F4}"
-                        Break
-                    }
-                    Else {
-                        If SingleKey != "Left" And SingleKey != "Right" And SingleKey != "Up" And SingleKey != "Down" {
-                            SendInput "{" . SingleKey . "}"
-                        }
-                    }
-                    If SingleKey = "Escape"
-                    Break
-                }
-            }
-            If type = "Plugin" And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Content Missing"
-            Break
-            If Type = "Standalone" And WinExist("Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe") And WinActive("Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
-            Break
-        }
-    }
-    
     Class  ActivatePluginHeaderButton {
         Static Call(HeaderButton) {
             UIAElement := False
@@ -280,6 +242,57 @@ Class Kontakt {
         }
     }
     
+    Class CloseMenu {
+        Static Call(Type, ThisHotkey) {
+            SendCommand := ""
+            If ThisHotkey = "Escape"
+            SendCommand := "{Escape}"
+            If ThisHotkey = "!F4"
+            SendCommand := "!{F4}"
+            If Type = "Plugin"
+            HotIfWinActive(ReaHotkey.PluginWinCriteria)
+            If Type = "Standalone"
+            HotIf
+            If (Type = "Plugin" And WinActive(ReaHotkey.PluginWinCriteria) And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt") Or (Type = "Standalone" And WinActive("Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")) {
+                %Type%.SetNoHotkeys("Kontakt", False)
+                ReaHotkey.Override%Type%Hotkey("Escape", "Off")
+                ReaHotkey.Override%Type%Hotkey("!F4", "Off")
+                If SendCommand != ""
+                Send SendCommand
+            }
+            Else If type = "Plugin" And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Content Missing" {
+                %Type%.SetNoHotkeys("Kontakt", False)
+                ReaHotkey.Override%Type%Hotkey("Escape", "Off")
+                ReaHotkey.Override%Type%Hotkey("!F4", "Off")
+            }
+            Else If Type = "Standalone" And WinExist("Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe") And WinActive("Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe") {
+                %Type%.SetNoHotkeys("Kontakt", False)
+                ReaHotkey.Override%Type%Hotkey("Escape", "Off")
+                ReaHotkey.Override%Type%Hotkey("!F4", "Off")
+            }
+            Else {
+                ReaHotkey.Override%Type%Hotkey("Escape", "Off")
+                ReaHotkey.Override%Type%Hotkey("!F4", "Off")
+                If SendCommand != ""
+                Send SendCommand
+                ReaHotkey.Override%Type%Hotkey("Escape", "On")
+                ReaHotkey.Override%Type%Hotkey("!F4", "On")
+            }
+        }
+    }
+    
+    Class ClosePluginMenu {
+        Static Call(ThisHotkey) {
+            Kontakt.CloseMenu("Plugin", ThisHotkey)
+        }
+    }
+    
+    Class CloseStandaloneMenu {
+        Static Call(ThisHotkey) {
+            Kontakt.CloseMenu("Standalone", ThisHotkey)
+        }
+    }
+    
     Class MoveToPluginSnapshotButton {
         Static Call(SnapshotButton) {
             If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True)
@@ -305,6 +318,19 @@ Class Kontakt {
                 Else
                 MouseMove ControlX + ControlWidth - 381, ControlY + 169
             }
+        }
+    }
+    
+    Class OpenMenu {
+        Static Call(Type) {
+            If ReaHotkey.Found%Type% Is %Type%
+            ReaHotkey.Found%Type%.SetNoHotkeys(True)
+            If Type = "Plugin"
+            HotIfWinActive(ReaHotkey.PluginWinCriteria)
+            If Type = "Standalone"
+            HotIf
+            ReaHotkey.Override%Type%Hotkey("Escape", Kontakt.Close%Type%Menu, "On")
+            ReaHotkey.Override%Type%Hotkey("!F4", Kontakt.Close%Type%Menu, "On")
         }
     }
     

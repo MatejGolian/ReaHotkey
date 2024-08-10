@@ -291,6 +291,10 @@ Class Standalone {
             If ProgramInstance.ProgramNumber = ProgramNumber
             ProgramInstance.NoHotkeys := Value
             Standalone.List[ProgramNumber]["NoHotkeys"] := Value
+            If Value = False
+            ReaHotkey.TurnStandaloneHotkeysOn(ProgramName)
+            If Value = True
+            ReaHotkey.TurnStandaloneHotkeysOff(ProgramName)
         }
     }
     
