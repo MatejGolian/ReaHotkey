@@ -288,21 +288,27 @@ Class Plugin {
             Action := Plugin.TriggerOverlayHotkey
             Plugin.List[PluginNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options.String, "State", Options.OnOff))
         }
-        Else {
-            If HotkeyNumber > 0 {
-                CurrentAction := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
-                CurrentOptions := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"]
-                If Not Action Is Object
-                Options := Action . " " . Options
-                Options := Options . " " . CurrentOptions
-                GetOptions()
-                If Not Action Is Object
-                Action := CurrentAction
-                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
-                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options.String
-                Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["State"] := Options.OnOff
-            }
+        Else If HotkeyNumber > 0 {
+            CurrentAction := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"]
+            CurrentOptions := Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"]
+            If Not Action Is Object
+            Options := Action . " " . Options
+            Options := Options . " " . CurrentOptions
+            GetOptions()
+            If Not Action Is Object
+            Action := CurrentAction
+            Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
+            Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options.String
+            Plugin.List[PluginNumber]["Hotkeys"][HotkeyNumber]["State"] := Options.OnOff
         }
+        Else {
+            Return
+        }
+        HotIfWinActive(ReaHotkey.PluginWinCriteria)
+        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = PluginName
+        Hotkey KeyName, Action, Options.String
+        If Not WinActive(ReaHotkey.PluginWinCriteria)
+        HotIf
         GetOptions() {
             OnOff := ""
             B := ""

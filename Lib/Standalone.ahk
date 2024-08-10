@@ -239,22 +239,28 @@ Class Standalone {
             Action := Standalone.TriggerOverlayHotkey
             Standalone.List[ProgramNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options.String, "State", Options.OnOff))
         }
-        Else {
-            If HotkeyNumber > 0 {
-                CurrentAction := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
-                CurrentOptions := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"]
-                If Not Action Is Object
-                Options := Action . " " . Options
-                Options := Options . " " . CurrentOptions
-                GetOptions()
-                If ProgramName = "Komplete Kontrol" And KeyName = "!F"
-                If Not Action Is Object
-                Action := CurrentAction
-                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
-                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options.String
-                Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["State"] := Options.OnOff
-            }
+        Else If HotkeyNumber > 0 {
+            CurrentAction := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
+            CurrentOptions := Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"]
+            If Not Action Is Object
+            Options := Action . " " . Options
+            Options := Options . " " . CurrentOptions
+            GetOptions()
+            If ProgramName = "Komplete Kontrol" And KeyName = "!F"
+            If Not Action Is Object
+            Action := CurrentAction
+            Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
+            Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options.String
+            Standalone.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["State"] := Options.OnOff
         }
+        Else {
+            Return
+        }
+        HotIf
+        If ReaHotkey.FoundStandalone Is Standalone And ReaHotkey.FoundStandalone.Name = ProgramName
+        Hotkey KeyName, Action, Options.String
+        If WinActive(ReaHotkey.PluginWinCriteria)
+        HotIfWinActive(ReaHotkey.PluginWinCriteria)
         GetOptions() {
             OnOff := ""
             B := ""
