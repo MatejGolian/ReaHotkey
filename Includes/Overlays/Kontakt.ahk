@@ -15,26 +15,27 @@ Class Kontakt {
         
         PluginHeader := AccessibilityOverlay("Kontakt")
         PluginHeader.AddStaticText("Kontakt 7")
-        PluginHeader.AddCustomButton("FILE menu",, Kontakt.ActivatePluginHeaderButton)
-        PluginHeader.AddCustomButton("LIBRARY On/Off",, Kontakt.ActivatePluginHeaderButton)
-        PluginHeader.AddCustomButton("VIEW menu",, Kontakt.ActivatePluginHeaderButton)
-        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",, Kontakt.ActivatePluginHeaderButton)
-        PluginHeader.AddCustomButton("Snapshot menu", Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton)
-        PluginHeader.AddCustomButton("Previous snapshot", Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton)
-        PluginHeader.AddCustomButton("Next snapshot", Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton)
+        PluginHeader.AddCustomButton("FILE menu",, Kontakt.ActivatePluginHeaderButton).SetHotkey("!F", "Alt+F")
+        PluginHeader.AddCustomButton("LIBRARY On/Off",, Kontakt.ActivatePluginHeaderButton).SetHotkey("!L", "Alt+L")
+        PluginHeader.AddCustomButton("VIEW menu",, Kontakt.ActivatePluginHeaderButton).SetHotkey("!V", "Alt+V")
+        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",, Kontakt.ActivatePluginHeaderButton).SetHotkey("!S", "Alt+S")
+        PluginHeader.AddCustomButton("Snapshot menu", Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton).SetHotkey("!M", "Alt+M")
+        PluginHeader.AddCustomButton("Previous snapshot", Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton).SetHotkey("!P", "Alt+P")
+        PluginHeader.AddCustomButton("Next snapshot", Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton).SetHotkey("!N", "Alt+N")
         Kontakt.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Kontakt")
-        StandaloneHeader.AddCustomButton("FILE menu",, Kontakt.ActivateStandaloneHeaderButton)
-        StandaloneHeader.AddCustomButton("LIBRARY On/Off",, Kontakt.ActivateStandaloneHeaderButton)
-        StandaloneHeader.AddCustomButton("VIEW menu",, Kontakt.ActivateStandaloneHeaderButton)
-        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",, Kontakt.ActivateStandaloneHeaderButton)
+        StandaloneHeader.AddCustomButton("FILE menu",, Kontakt.ActivateStandaloneHeaderButton).SetHotkey("!F", "Alt+F")
+        StandaloneHeader.AddCustomButton("LIBRARY On/Off",, Kontakt.ActivateStandaloneHeaderButton).SetHotkey("!L", "Alt+L")
+        StandaloneHeader.AddCustomButton("VIEW menu",, Kontakt.ActivateStandaloneHeaderButton).SetHotkey("!V", "Alt+V")
+        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",, Kontakt.ActivateStandaloneHeaderButton).SetHotkey("!S", "Alt+S")
         Kontakt.StandaloneHeader := StandaloneHeader
         
         Plugin.Register("Kontakt", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(Kontakt, "InitPlugin"), True, False, True, ObjBindMethod(Kontakt, "CheckPlugin"))
         
         For PluginOverlay In Kontakt.PluginOverlays
         Plugin.RegisterOverlay("Kontakt", PluginOverlay)
+        Plugin.RegisterOverlayHotkeys("Kontakt", PluginHeader)
         
         Plugin.SetTimer("Kontakt", ObjBindMethod(Kontakt, "CheckPluginConfig"), -1)
         
@@ -43,7 +44,7 @@ Class Kontakt {
         Plugin.SetHotkey("Kontakt Content Missing Dialog", "Escape", ObjBindMethod(Kontakt, "ClosePluginContentMissingDialog"))
         
         PluginContentMissingOverlay := AccessibilityOverlay("Content Missing")
-        PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372)
+        PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372).SetHotkey("!B", "Alt+B")
         Plugin.RegisterOverlay("Kontakt Content Missing Dialog", PluginContentMissingOverlay)
         
         Standalone.Register("Kontakt", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
@@ -53,7 +54,7 @@ Class Kontakt {
         Standalone.Register("Kontakt Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
         
         StandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
-        StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372)
+        StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372).SetHotkey("!B", "Alt+B")
         Standalone.RegisterOverlay("Kontakt Content Missing Dialog", StandaloneContentMissingOverlay)
     }
     
@@ -140,6 +141,7 @@ Class Kontakt {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
             PluginInstance.Overlay.OverlayNumber := 1
         }
+        Plugin.RegisterOverlayHotkeys("Kontakt", PluginInstance.Overlay)
     }
     
     Class  ActivatePluginHeaderButton {

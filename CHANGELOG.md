@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Added menu button  shortcuts in the standalone version of Komplete Kontrol
+-   Added shortcuts for accessing various overlay buttons
 
 ## [0.4.8] - 2024-08-06
 
