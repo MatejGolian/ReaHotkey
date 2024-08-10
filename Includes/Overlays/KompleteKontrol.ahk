@@ -19,11 +19,11 @@ Class KompleteKontrol {
         KompleteKontrol.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Komplete Kontrol")
-        StandaloneHeader.AddHotspotButton("File menu", 24, 41)
-        StandaloneHeader.AddHotspotButton("Edit menu", 60, 41)
-        StandaloneHeader.AddHotspotButton("View menu", 91, 41)
-        StandaloneHeader.AddHotspotButton("Controller menu", 146, 41)
-        StandaloneHeader.AddHotspotButton("Help menu", 202, 41)
+        StandaloneHeader.AddHotspotButton("File menu", 24, 41).SetHotkey("!f", "Alt+f")
+        StandaloneHeader.AddHotspotButton("Edit menu", 60, 41).SetHotkey("!e", "Alt+e")
+        StandaloneHeader.AddHotspotButton("View menu", 91, 41).SetHotkey("!v", "Alt+v")
+        StandaloneHeader.AddHotspotButton("Controller menu", 146, 41).SetHotkey("!c", "Alt+c")
+        StandaloneHeader.AddHotspotButton("Help menu", 202, 41).SetHotkey("!h", "Alt+h")
         KompleteKontrol.StandaloneHeader := StandaloneHeader
         
         Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(KompleteKontrol, "InitPlugin"), True, False, True, ObjBindMethod(KompleteKontrol, "CheckPlugin"))

@@ -196,17 +196,13 @@ Class ReaHotkey {
             If Name = "" {
                 For HotkeyEntry In %Type%.GetList()
                 For DefinedHotkey In HotkeyEntry["Hotkeys"]
-                If DefinedHotkey["Action"] != "Off" {
-                    Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-                    Hotkey DefinedHotkey["KeyName"], "Off"
-                }
+                If DefinedHotkey["State"] != "Off"
+                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], "Off"
             }
             Else {
                 For DefinedHotkey In %Type%.GetHotkeys(Name)
-                If DefinedHotkey["Action"] != "Off" {
-                    Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-                    Hotkey DefinedHotkey["KeyName"], "Off"
-                }
+                If DefinedHotkey["State"] != "Off"
+                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], "Off"
             }
             If WinActive(ReaHotkey.PluginWinCriteria)
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
@@ -236,18 +232,14 @@ Class ReaHotkey {
             If Name = "" {
                 If ReaHotkey.Found%Type% Is %Type% {
                     For DefinedHotkey In ReaHotkey.Found%Type%.GetHotkeys()
-                    If DefinedHotkey["Action"] != "Off" {
-                        Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-                        Hotkey DefinedHotkey["KeyName"], "On"
-                    }
+                    If DefinedHotkey["State"] != "Off"
+                    Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
                 }
             }
             Else {
                 For DefinedHotkey In %Type%.GetHotkeys(Name)
-                If DefinedHotkey["Action"] != "Off" {
-                    Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-                    Hotkey DefinedHotkey["KeyName"], "On"
-                }
+                If DefinedHotkey["State"] != "Off"
+                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
             }
             If WinActive(ReaHotkey.PluginWinCriteria)
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
@@ -383,7 +375,7 @@ Class ReaHotkey {
             }
             Critical "Off"
             If WinActive(ReaHotkey.PluginWinCriteria) {
-            ReaHotkey.Context := "Plugin"
+                ReaHotkey.Context := "Plugin"
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 If Not ReaHotkey.FoundPlugin Is Plugin Or WinExist("ahk_class #32768") {
@@ -412,7 +404,7 @@ Class ReaHotkey {
                 }
             }
             Else If ReaHotkey.StandaloneWinCriteria != False And WinActive(ReaHotkey.StandaloneWinCriteria) {
-            ReaHotkey.Context := "Standalone"
+                ReaHotkey.Context := "Standalone"
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
                 If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
@@ -441,7 +433,7 @@ Class ReaHotkey {
                 }
             }
             Else {
-            ReaHotkey.Context := False
+                ReaHotkey.Context := False
                 PreviousPluginName := False
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
