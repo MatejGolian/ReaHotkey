@@ -257,28 +257,32 @@ Class Kontakt {
             HotIf
             If (Type = "Plugin" And WinActive(ReaHotkey.PluginWinCriteria) And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt") Or (Type = "Standalone" And WinActive("Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")) {
                 %Type%.SetNoHotkeys("Kontakt", False)
-                ReaHotkey.Override%Type%Hotkey("Escape", "Off")
-                ReaHotkey.Override%Type%Hotkey("!F4", "Off")
+                ReaHotkey.Override%Type%Hotkey("", "Escape", "Off")
+                ReaHotkey.Override%Type%Hotkey("", "!F4", "Off")
                 If SendCommand != ""
                 Send SendCommand
             }
             Else If type = "Plugin" And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Content Missing" {
                 %Type%.SetNoHotkeys("Kontakt", False)
-                ReaHotkey.Override%Type%Hotkey("Escape", "Off")
-                ReaHotkey.Override%Type%Hotkey("!F4", "Off")
+                ReaHotkey.Override%Type%Hotkey("", "Escape", "Off")
+                ReaHotkey.Override%Type%Hotkey("", "!F4", "Off")
+                If SendCommand != ""
+                Send SendCommand
             }
             Else If Type = "Standalone" And WinExist("Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe") And WinActive("Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe") {
                 %Type%.SetNoHotkeys("Kontakt", False)
-                ReaHotkey.Override%Type%Hotkey("Escape", "Off")
-                ReaHotkey.Override%Type%Hotkey("!F4", "Off")
-            }
-            Else {
-                ReaHotkey.Override%Type%Hotkey("Escape", "Off")
-                ReaHotkey.Override%Type%Hotkey("!F4", "Off")
+                ReaHotkey.Override%Type%Hotkey("", "Escape", "Off")
+                ReaHotkey.Override%Type%Hotkey("", "!F4", "Off")
                 If SendCommand != ""
                 Send SendCommand
-                ReaHotkey.Override%Type%Hotkey("Escape", "On")
-                ReaHotkey.Override%Type%Hotkey("!F4", "On")
+            }
+            Else {
+                ReaHotkey.Override%Type%Hotkey("", "Escape", "Off")
+                ReaHotkey.Override%Type%Hotkey("", "!F4", "Off")
+                If SendCommand != ""
+                Send SendCommand
+                ReaHotkey.Override%Type%Hotkey("", "Escape", "On")
+                ReaHotkey.Override%Type%Hotkey("", "!F4", "On")
             }
         }
     }
@@ -331,8 +335,8 @@ Class Kontakt {
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If Type = "Standalone"
             HotIf
-            ReaHotkey.Override%Type%Hotkey("Escape", Kontakt.Close%Type%Menu, "On")
-            ReaHotkey.Override%Type%Hotkey("!F4", Kontakt.Close%Type%Menu, "On")
+            ReaHotkey.Override%Type%Hotkey("", "Escape", Kontakt.Close%Type%Menu, "On")
+            ReaHotkey.Override%Type%Hotkey("", "!F4", Kontakt.Close%Type%Menu, "On")
         }
     }
     
