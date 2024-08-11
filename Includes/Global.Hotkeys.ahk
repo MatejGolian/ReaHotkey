@@ -2,42 +2,13 @@
 
 #SuspendExempt
 
-Ctrl:: {
-    Thread "NoTimers"
-    AccessibilityOverlay.StopSpeech()
-}
-
-^+#R:: {
-    A_TrayMenu.Show()
-}
-
-^+#Q:: {
-    AccessibilityOverlay.Speak("Quitting ReaHotkey")
-    ReaHotkey.Quit()
-}
-
-^+#F5:: {
-    ReaHotkey.Reload()
-}
-
-^+#A:: {
-    ReaHotkey.ShowAboutBox()
-}
-
-^+#C:: {
-    ReaHotkey.ShowConfigBox()
-}
-
-^+#P:: {
-    ReaHotkey.TogglePause()
-    If A_IsSuspended = 1
-    AccessibilityOverlay.Speak("Paused ReaHotkey")
-    Else
-    AccessibilityOverlay.Speak("ReaHotkey ready")
-}
-
-^+#F1:: {
-    ReaHotkey.ViewReadme()
-}
+Ctrl:: ControlHK(ThisHotkey)
+^+#R:: MenuHK(ThisHotkey)
+^+#Q:: QuitHK(ThisHotkey)
+^+#F5:: ReloadHK(ThisHotkey)
+^+#A:: AboutHK(ThisHotkey)
+^+#C:: ConfigHK(ThisHotkey)
+^+#P:: PauseHK(ThisHotkey)
+^+#F1:: ReadmeHK(ThisHotkey)
 
 #SuspendExempt False
