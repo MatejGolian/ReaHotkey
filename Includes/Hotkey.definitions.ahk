@@ -1,13 +1,23 @@
 #Requires AutoHotkey v2.0
 
-#HotIf WinActive("ahk_exe reaper.exe ahk_class #32770")
+Tab:: TabHK(ThisHotkey)
++Tab:: ShiftTabHK(ThisHotkey)
+^Tab:: ControlTabHK(ThisHotkey)
+^+Tab:: ControlShiftTabHK(ThisHotkey)
+Left:: LeftRightHK(ThisHotkey)
+Right:: LeftRightHK(ThisHotkey)
+Up:: UpDownHK(ThisHotkey)
+Down:: UpDownHK(ThisHotkey)
+Enter:: EnterSpaceHK(ThisHotkey)
+Space:: EnterSpaceHK(ThisHotkey)
 
-F6:: F6HK(ThisHotkey)
-
-#Include Contextual.Hotkeys.ahk
-#Include Global.Hotkeys.ahk
-
-#HotIf
-
-#IncludeAgain Contextual.Hotkeys.ahk
-#IncludeAgain Global.Hotkeys.ahk
+#SuspendExempt
+Ctrl:: ControlHK(ThisHotkey)
+^+#R:: MenuHK(ThisHotkey)
+^+#Q:: QuitHK(ThisHotkey)
+^+#F5:: ReloadHK(ThisHotkey)
+^+#A:: AboutHK(ThisHotkey)
+^+#C:: ConfigHK(ThisHotkey)
+^+#P:: PauseHK(ThisHotkey)
+^+#F1:: ReadmeHK(ThisHotkey)
+#SuspendExempt False

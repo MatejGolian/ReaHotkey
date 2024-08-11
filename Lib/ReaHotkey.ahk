@@ -484,7 +484,7 @@ Class ReaHotkey {
                 CurrentWinID := WinGetID("A")
                 AllWinIDs := WinGetList(,, "Program Manager")
                 For WinNumber, WinID In AllWinIDs
-                If WinID = CurrentWinID And WinNumber != 2 And Not WinExist("ahk_class #32768") {
+                If WinID = CurrentWinID And WinNumber > 2 And Not WinExist("ahk_class #32768") {
                     ReportError()
                     Break
                 }

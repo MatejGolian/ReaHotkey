@@ -35,7 +35,7 @@ AccessibilityOverlay.Speak("ReaHotkey ready")
 SetTimer ReaHotkey.ManageState, 100
 SetTimer ReaHotkey.CheckOpenWindows, 10000
 
-#Include Includes/Hotkey.Definitions.ahk
+#Include Includes/Hotkey.Contexts.ahk
 #Include Includes/Hotkey.Functions.ahk
 #Include Includes/Overlay.Definitions.ahk
 #Include Includes/Overlay.Functions.ahk
