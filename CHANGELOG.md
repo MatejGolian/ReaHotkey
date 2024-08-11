@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added shortcuts for accessing various overlay buttons
--   Report error when the interface may be covered by other windows
+-   Report an error message periodically when the interface may be covered by other windows
 
 ## [0.4.8] - 2024-08-06
 

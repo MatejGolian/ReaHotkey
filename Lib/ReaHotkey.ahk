@@ -30,7 +30,7 @@ Class ReaHotkey {
         }
     }
     
-    Static FindHotkey(Type, PluginOrProgramName := "", KeyName := "") {
+    Static FindOverrideHotkey(Type, PluginOrProgramName := "", KeyName := "") {
         NameParam := ""
         If Type = "Plugin"
         NameParam := "PluginName"
@@ -204,8 +204,8 @@ Class ReaHotkey {
             NameParam := "PluginName"
             If Type = "Standalone"
             NameParam := "ProgramName"
-            HotkeyNumber := ReaHotkey.FindHotkey(Type, PluginOrProgramName, KeyName)
-            If HotkeyNumber = 0 {
+            HotkeyNumber := ReaHotkey.FindOverrideHotkey(Type, PluginOrProgramName, KeyName)
+            If KeyName != "" And HotkeyNumber = 0 {
                 If Not Action Is Object
                 Options := Action . " " . Options
                 GetOptions()
@@ -216,20 +216,21 @@ Class ReaHotkey {
                 Else
                 ReaHotkey.%Type%HotkeyOverrides.Push(Map(NameParam, PluginOrProgramName, "KeyName", KeyName, "Action", Action, "Options", Options.String, "State", Options.OnOff))
             }
+            Else If HotkeyNumber > 0 {
+                CurrentAction := ReaHotkey.%Type%HotkeyOverrides[HotkeyNumber]["Action"]
+                CurrentOptions := ReaHotkey.%Type%HotkeyOverrides[HotkeyNumber]["Options"]
+                If Not Action Is Object
+                Options := Action . " " . Options
+                Options := Options . " " . CurrentOptions
+                GetOptions()
+                If Not Action Is Object
+                Action := CurrentAction
+                ReaHotkey.%Type%HotkeyOverrides[HotkeyNumber]["Action"] := Action
+                ReaHotkey.%Type%HotkeyOverrides[HotkeyNumber]["Options"] := Options.String
+                ReaHotkey.%Type%HotkeyOverrides[HotkeyNumber]["State"] := Options.OnOff
+            }
             Else {
-                If HotkeyNumber > 0 {
-                    CurrentAction := ReaHotkey.%Type%HotkeyOverrides[HotkeyNumber]["Action"]
-                    CurrentOptions := ReaHotkey.%Type%HotkeyOverrides[HotkeyNumber]["Options"]
-                    If Not Action Is Object
-                    Options := Action . " " . Options
-                    Options := Options . " " . CurrentOptions
-                    GetOptions()
-                    If Not Action Is Object
-                    Action := CurrentAction
-                    ReaHotkey.%Type%HotkeyOverrides[HotkeyNumber]["Action"] := Action
-                    ReaHotkey.%Type%HotkeyOverrides[HotkeyNumber]["Options"] := Options.String
-                    ReaHotkey.%Type%HotkeyOverrides[HotkeyNumber]["State"] := Options.OnOff
-                }
+                Return
             }
             If Type = "Plugin"
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
@@ -274,11 +275,11 @@ Class ReaHotkey {
         }
     }
     
-    Static OverridePluginHotkey(PluginName, KeyName, Action := "", Options := "") {
+    Static OverridePluginHotkey(PluginName := "", KeyName := "", Action := "", Options := "") {
         ReaHotkey.OverrideHotkey("Plugin", PluginName, KeyName, Action, Options)
     }
     
-    Static OverrideStandaloneHotkey(ProgramName, KeyName, Action := "", Options := "") {
+    Static OverrideStandaloneHotkey(ProgramName := "", KeyName := "", Action := "", Options := "") {
         ReaHotkey.OverrideHotkey("Standalone", ProgramName, KeyName, Action, Options)
     }
     
