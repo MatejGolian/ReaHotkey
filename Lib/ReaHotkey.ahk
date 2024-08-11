@@ -215,7 +215,7 @@ Class ReaHotkey {
                 ReaHotkey.%Type%HotkeyOverrides.Push(Map("KeyName", KeyName, "Action", Action, "Options", Options.String, "State", Options.OnOff))
                 Else
                 ReaHotkey.%Type%HotkeyOverrides.Push(Map(NameParam, PluginOrProgramName, "KeyName", KeyName, "Action", Action, "Options", Options.String, "State", Options.OnOff))
-                }
+            }
             Else {
                 If HotkeyNumber > 0 {
                     CurrentAction := ReaHotkey.%Type%HotkeyOverrides[HotkeyNumber]["Action"]
@@ -472,6 +472,32 @@ Class ReaHotkey {
         }
     }
     
+    Class CheckOpenWindows {
+        Static Call() {
+            Thread "NoTimers"
+            Try
+            If WinActive(ReaHotkey.PluginWinCriteria) And ReaHotkey.FoundPlugin Is Plugin {
+                If WinExist("Error opening devices ahk_exe reaper.exe")
+                ReportError()
+            }
+            Else If ReaHotkey.StandaloneWinCriteria != False And WinActive(ReaHotkey.StandaloneWinCriteria) And ReaHotkey.FoundStandalone Is standalone {
+                CurrentWinID := WinGetID("A")
+                AllWinIDs := WinGetList(,, "Program Manager")
+                For WinNumber, WinID In AllWinIDs
+                If WinID = CurrentWinID And WinNumber != 2 And Not WinExist("ahk_class #32768") {
+                    ReportError()
+                    Break
+                }
+            }
+            Else {
+                Return
+            }
+            ReportError() {
+                AccessibilityOverlay.Speak("Warning: Another window may be covering the interface. ReaHotkey may not work correctly.")
+            }
+        }
+    }
+    
     Class HandleError {
         Static Call(Exception, Mode) {
             ReaHotkey.TurnPluginHotkeysOff()
@@ -690,6 +716,7 @@ Class ReaHotkey {
             Suspend -1
             If A_IsSuspended = 1 {
                 SetTimer ReaHotkey.ManageState, 0
+                SetTimer ReaHotkey.CheckOpenWindows, 0
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
                 ReaHotkey.TurnStandaloneTimersOff()
@@ -698,6 +725,7 @@ Class ReaHotkey {
             }
             Else {
                 SetTimer ReaHotkey.ManageState, 100
+                SetTimer ReaHotkey.CheckOpenWindows, 10000
             }
         }
     }
