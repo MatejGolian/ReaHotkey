@@ -29,7 +29,7 @@ Class Plugin {
         Else
         This.Name := Name
         This.ControlClass := ControlClass
-        This.WinTitle := WinGetTitle("A")
+        This.WinTitle := WinTitle
         If PluginNumber > 0 {
             PluginEntry := Plugin.List[PluginNumber]
             This.InitFunction := PluginEntry["InitFunction"]
@@ -232,7 +232,7 @@ Class Plugin {
                 If PluginInstance.PluginNumber = PluginNumber And PluginInstance.ControlClass = ControlClass
                 Return PluginInstance
             }
-            PluginInstance := Plugin(PluginName, ControlClass)
+            PluginInstance := Plugin(PluginName, ControlClass, WinGetTitle("A"))
             Return PluginInstance
         }
         Return False
