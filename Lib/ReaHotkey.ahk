@@ -530,7 +530,7 @@ Class ReaHotkey {
                         ReaHotkey.FoundPlugin := False
                     }
                     Else {
-                        ReaHotkey.FoundPlugin := Plugin.GetByClass(ReaHotkey.GetPluginControl())
+                        ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(ReaHotkey.GetPluginControl(), WinGetTitle("A"))
                     }
                 }
                 Else {

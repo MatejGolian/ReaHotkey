@@ -58,7 +58,7 @@ Class Standalone {
     }
     
     Check() {
-        If This.CheckerFunction Is Func
+        If This.CheckerFunction Is Object And This.CheckerFunction.HasMethod("Call")
         Return This.CheckerFunction.Call(This)
         Return True
     }
@@ -76,7 +76,7 @@ Class Standalone {
     }
     
     Init() {
-        If This.InitFunction Is Func
+        If This.InitFunction Is Object And This.InitFunction.HasMethod("Call")
         This.InitFunction.Call(This)
     }
     
@@ -98,10 +98,6 @@ Class Standalone {
     
     SetTimer(Function, Period := "", Priority := "") {
         Standalone.SetTimer(This.Name, Function, Period, Priority)
-    }
-    
-    Static DefaultChecker(*) {
-        Return True
     }
     
     Static FindByActiveWindow() {
@@ -190,8 +186,8 @@ Class Standalone {
             Chooser := True
             If NoHotkeys != True And NoHotkeys != False
             NoHotkeys := False
-            If Not CheckerFunction Is Func
-            CheckerFunction := ObjBindMethod(Standalone, "DefaultChecker")
+            If Not CheckerFunction Is Object Or Not CheckerFunction.HasMethod("Call")
+            CheckerFunction := Standalone.DefaultChecker
             ProgramEntry := Map()
             ProgramEntry["Name"] := ProgramName
             If WinCriteria Is Array
@@ -334,6 +330,12 @@ Class Standalone {
         }
         If TimerNumber > 0 And Period = 0
         Standalone.List[ProgramNumber]["Timers"].RemoveAt(TimerNumber)
+    }
+    
+    Class DefaultChecker {
+        Static Call(*) {
+            Return True
+        }
     }
     
     Class TriggerOverlayHotkey {

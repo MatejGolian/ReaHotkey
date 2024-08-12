@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Added shortcuts for accessing various overlay buttons
+-   Recall plug-in instances per track
 -   Report an error message periodically when the interface may be covered by other windows
+-   Added shortcuts for accessing various overlay buttons
 
 ## [0.4.8] - 2024-08-06
 

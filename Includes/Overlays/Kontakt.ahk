@@ -31,7 +31,7 @@ Class Kontakt {
         StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",, Kontakt.ActivateStandaloneHeaderButton).SetHotkey("!S", "Alt+S")
         Kontakt.StandaloneHeader := StandaloneHeader
         
-        Plugin.Register("Kontakt", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(Kontakt, "InitPlugin"), True, False, True, ObjBindMethod(Kontakt, "CheckPlugin"))
+        Plugin.Register("Kontakt", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(Kontakt, "InitPlugin"), True, False, False, ObjBindMethod(Kontakt, "CheckPlugin"))
         
         For PluginOverlay In Kontakt.PluginOverlays
         Plugin.RegisterOverlay("Kontakt", PluginOverlay)

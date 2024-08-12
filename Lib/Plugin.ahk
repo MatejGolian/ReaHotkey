@@ -13,13 +13,14 @@ Class Plugin {
     Overlay := AccessibilityOverlay()
     Overlays := Array()
     SingleInstance := False
+    WinTitle := ""
     Static ChooserOverlay := AccessibilityOverlay()
     Static DefaultOverlay := AccessibilityOverlay()
     Static Instances := Array()
     Static List := Array()
     Static UnnamedPluginName := "Unnamed Plugin"
     
-    __New(Name, ControlClass) {
+    __New(Name, ControlClass, WinTitle) {
         PluginNumber := Plugin.FindName(Name)
         This.InstanceNumber := Plugin.Instances.Length + 1
         This.PluginNumber := PluginNumber
@@ -28,6 +29,7 @@ Class Plugin {
         Else
         This.Name := Name
         This.ControlClass := ControlClass
+        This.WinTitle := WinGetTitle("A")
         If PluginNumber > 0 {
             PluginEntry := Plugin.List[PluginNumber]
             This.InitFunction := PluginEntry["InitFunction"]
@@ -60,7 +62,7 @@ Class Plugin {
     }
     
     Check() {
-        If This.CheckerFunction Is Func
+        If This.CheckerFunction Is Object And This.CheckerFunction.HasMethod("Call")
         Return This.CheckerFunction.Call(This)
         Return True
     }
@@ -78,7 +80,7 @@ Class Plugin {
     }
     
     Init() {
-        If This.InitFunction Is Func
+        If This.InitFunction Is Object And This.InitFunction.HasMethod("Call")
         This.InitFunction.Call(This)
     }
     
@@ -100,10 +102,6 @@ Class Plugin {
     
     SetTimer(Function, Period := "", Priority := "") {
         Plugin.SetTimer(This.Name, Function, Period, Priority)
-    }
-    
-    Static DefaultChecker(*) {
-        Return True
     }
     
     Static FindClass(ClassName) {
@@ -142,7 +140,11 @@ Class Plugin {
         Return 0
     }
     
-    Static GetByClass(ControlClass) {
+    Static GetByClass(ControlClass, Value) {
+        Return Plugin.GetByCriteria(ControlClass, "ControlClass", Value)
+    }
+    
+    Static GetByCriteria(ControlClass, PropertyName, PropertyValue) {
         PluginNumbers := Plugin.FindClass(ControlClass)
         If PluginNumbers.Length > 0 {
             For PluginNumber In PluginNumbers {
@@ -152,12 +154,13 @@ Class Plugin {
                     For PluginInstance In Plugin.Instances
                     If PluginInstance.PluginNumber = PluginNumber And PluginInstance.Check() = True {
                         PluginInstance.ControlClass := ControlClass
+                        PluginInstance.WinTitle := WinGetTitle("A")
                         Return PluginInstance
                     }
                 }
                 Else {
                     For PluginInstance In Plugin.Instances
-                    If PluginInstance.PluginNumber = PluginNumber And PluginInstance.ControlClass = ControlClass And PluginInstance.Check() = True {
+                    If PluginInstance.PluginNumber = PluginNumber And PluginInstance.%PropertyName% = PropertyValue And PluginInstance.Check() = True {
                         Return PluginInstance
                     }
                 }
@@ -169,11 +172,18 @@ Class Plugin {
                 Break
             }
             If FirstValidNumber > 0 {
-                PluginInstance := Plugin(Plugin.List[FirstValidNumber]["Name"], ControlClass)
+                PluginInstance := Plugin(Plugin.List[FirstValidNumber]["Name"], ControlClass, WinGetTitle("A"))
                 Return PluginInstance
             }
         }
         Return False
+    }
+    
+    Static GetByWinTitle(ControlClass, Value) {
+        PluginInstance := Plugin.GetByCriteria(ControlClass, "WinTitle", Value)
+        If PluginInstance Is Plugin
+        PluginInstance.ControlClass := ControlClass
+        Return PluginInstance
     }
     
     Static GetHotkeys(PluginName) {
@@ -228,7 +238,7 @@ Class Plugin {
         Return False
     }
     
-    Static Register(PluginName, ControlClasses, InitFunction := "", Chooser := True, NoHotkeys := False, SingleInstance := True, CheckerFunction := "") {
+    Static Register(PluginName, ControlClasses, InitFunction := "", Chooser := True, NoHotkeys := False, SingleInstance := False, CheckerFunction := "") {
         If Plugin.FindName(PluginName) = False {
             If PluginName = ""
             PluginName := Plugin.UnnamedPluginName
@@ -238,8 +248,8 @@ Class Plugin {
             NoHotkeys := False
             If SingleInstance != True And SingleInstance != False
             SingleInstance := True
-            If Not CheckerFunction Is Func
-            CheckerFunction := ObjBindMethod(Plugin, "DefaultChecker")
+            If Not CheckerFunction Is Object Or Not CheckerFunction.HasMethod("Call")
+            CheckerFunction := Plugin.DefaultChecker
             PluginEntry := Map()
             PluginEntry["Name"] := PluginName
             If ControlClasses Is Array
@@ -382,6 +392,12 @@ Class Plugin {
         }
         If TimerNumber > 0 And Period = 0
         Plugin.List[PluginNumber]["Timers"].RemoveAt(TimerNumber)
+    }
+    
+    Class DefaultChecker {
+        Static Call(*) {
+            Return True
+        }
     }
     
     Class TriggerOverlayHotkey {
