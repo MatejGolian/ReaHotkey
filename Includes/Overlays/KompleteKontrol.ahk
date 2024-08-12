@@ -160,9 +160,15 @@ Class KompleteKontrol {
     }
     
     Static CheckStandaloneSaveAsDialog(*) {
-        StandaloneInstance := Standalone.GetInstance(GetCurrentWindowID())
-        If StandaloneInstance Is Standalone And StandaloneInstance.Name = "Komplete Kontrol Save As Dialog"
-        Return True
+        Static PreviousWinID := ""
+        CurrentWinID := WinGetID("A")
+        StandaloneInstance := Standalone.GetInstance(CurrentWinID)
+        If StandaloneInstance Is Standalone And StandaloneInstance.Name = "Komplete Kontrol Save As Dialog" {
+            If PreviousWinID != CurrentWinID
+            Send "{Tab}"
+            PreviousWinID := CurrentWinID
+            Return True
+        }
         If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png")
         Return True
         Return False
