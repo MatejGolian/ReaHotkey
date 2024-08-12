@@ -147,6 +147,7 @@ Class Plugin {
     Static GetByCriteria(ControlClass, PropertyName, PropertyValue) {
         PluginNumbers := Plugin.FindClass(ControlClass)
         If PluginNumbers.Length > 0 {
+            WinTitle := WinGetTitle("A")
             For PluginNumber In PluginNumbers {
                 PluginName := Plugin.List[PluginNumber]["Name"]
                 SingleInstance := Plugin.List[PluginNumber]["SingleInstance"]
@@ -154,7 +155,8 @@ Class Plugin {
                     For PluginInstance In Plugin.Instances
                     If PluginInstance.PluginNumber = PluginNumber And PluginInstance.Check() = True {
                         PluginInstance.ControlClass := ControlClass
-                        PluginInstance.WinTitle := WinGetTitle("A")
+                        PluginInstance.WinTitle := WinTitle
+                        PluginInstance.%PropertyName% := PropertyValue
                         Return PluginInstance
                     }
                 }
@@ -172,7 +174,8 @@ Class Plugin {
                 Break
             }
             If FirstValidNumber > 0 {
-                PluginInstance := Plugin(Plugin.List[FirstValidNumber]["Name"], ControlClass, WinGetTitle("A"))
+                PluginInstance := Plugin(Plugin.List[FirstValidNumber]["Name"], ControlClass, WinTitle)
+                PluginInstance.%PropertyName% := PropertyValue
                 Return PluginInstance
             }
         }
@@ -218,7 +221,7 @@ Class Plugin {
         Return Array()
     }
     
-    Static Instantiate(PluginName, ControlClass) {
+    Static Instantiate(PluginName, ControlClass, WinTitle) {
         PluginNumber := Plugin.FindName(PluginName)
         If PluginNumber > 0 {
             SingleInstance := Plugin.List[PluginNumber]["SingleInstance"]
@@ -229,11 +232,10 @@ Class Plugin {
             }
             Else {
                 For PluginInstance In Plugin.Instances
-                If PluginInstance.PluginNumber = PluginNumber And PluginInstance.ControlClass = ControlClass
+                If PluginInstance.PluginNumber = PluginNumber And PluginInstance.ControlClass = ControlClass And PluginInstance.WinTitle = WinTitle
                 Return PluginInstance
             }
-            PluginInstance := Plugin(PluginName, ControlClass, WinGetTitle("A"))
-            Return PluginInstance
+            Return Plugin(PluginName, ControlClass, WinTitle)
         }
         Return False
     }
