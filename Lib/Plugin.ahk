@@ -140,8 +140,8 @@ Class Plugin {
         Return 0
     }
     
-    Static GetByClass(ControlClass, Value) {
-        Return Plugin.GetByCriteria(ControlClass, "ControlClass", Value)
+    Static GetByClass(Value) {
+        Return Plugin.GetByCriteria(Value, "ControlClass", Value)
     }
     
     Static GetByCriteria(ControlClass, PropertyName, PropertyValue) {
@@ -182,7 +182,8 @@ Class Plugin {
         Return False
     }
     
-    Static GetByWinTitle(ControlClass, Value) {
+    Static GetByWinTitle(Value) {
+        ControlClass := ReaHotkey.GetPluginControl()
         PluginInstance := Plugin.GetByCriteria(ControlClass, "WinTitle", Value)
         If PluginInstance Is Plugin
         PluginInstance.ControlClass := ControlClass

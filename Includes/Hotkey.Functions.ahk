@@ -33,7 +33,7 @@ TabHK(ThisHotkey) {
     If ReaHotkey.Context != False
     Try
     If ReaHotkey.Context = "Plugin"
-    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(ReaHotkey.GetPluginControl(), WinGetTitle("A"))
+    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
     Else
     ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     Catch
@@ -48,7 +48,7 @@ ShiftTabHK(ThisHotkey) {
     If ReaHotkey.Context != False
     Try
     If ReaHotkey.Context = "Plugin"
-    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(ReaHotkey.GetPluginControl(), WinGetTitle("A"))
+    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
     Else
     ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     Catch
@@ -63,7 +63,7 @@ ControlTabHK(ThisHotkey) {
     If ReaHotkey.Context != False
     Try
     If ReaHotkey.Context = "Plugin"
-    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(ReaHotkey.GetPluginControl(), WinGetTitle("A"))
+    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
     Else
     ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     Catch
@@ -78,7 +78,7 @@ ControlShiftTabHK(ThisHotkey) {
     If ReaHotkey.Context != False
     Try
     If ReaHotkey.Context = "Plugin"
-    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(ReaHotkey.GetPluginControl(), WinGetTitle("A"))
+    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
     Else
     ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     Catch
@@ -93,7 +93,7 @@ LeftRightHK(ThisHotkey) {
     If ReaHotkey.Context != False
     Try
     If ReaHotkey.Context = "Plugin"
-    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(ReaHotkey.GetPluginControl(), WinGetTitle("A"))
+    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
     Else
     ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     Catch
@@ -129,7 +129,7 @@ UpDownHK(ThisHotkey) {
     If ReaHotkey.Context != False
     Try
     If ReaHotkey.Context = "Plugin"
-    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(ReaHotkey.GetPluginControl(), WinGetTitle("A"))
+    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
     Else
     ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     Catch
@@ -165,7 +165,7 @@ EnterSpaceHK(ThisHotkey) {
     If ReaHotkey.Context != False
     Try
     If ReaHotkey.Context = "Plugin"
-    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(ReaHotkey.GetPluginControl(), WinGetTitle("A"))
+    ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
     Else
     ReaHotkey.FoundStandalone := Standalone.GetByWindowID(WinGetID("A"))
     Catch
