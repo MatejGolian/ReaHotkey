@@ -12,12 +12,12 @@ Enter::EnterSpaceHK(ThisHotkey)
 Space::EnterSpaceHK(ThisHotkey)
 
 #SuspendExempt
-Ctrl::ControlHK(ThisHotkey)
-^+#R::MenuHK(ThisHotkey)
-^+#Q::QuitHK(ThisHotkey)
+^+#F1::ReadmeHK(ThisHotkey)
 ^+#F5::ReloadHK(ThisHotkey)
+Ctrl::ControlHK(ThisHotkey)
 ^+#A::AboutHK(ThisHotkey)
 ^+#C::ConfigHK(ThisHotkey)
 ^+#P::PauseHK(ThisHotkey)
-^+#F1::ReadmeHK(ThisHotkey)
+^+#Q::QuitHK(ThisHotkey)
+^+#R::ReaHotkeyMenuHK(ThisHotkey)
 #SuspendExempt False

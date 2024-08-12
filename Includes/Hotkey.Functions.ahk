@@ -192,6 +192,14 @@ EnterSpaceHK(ThisHotkey) {
     }
 }
 
+ReadmeHK(ThisHotkey) {
+    ReaHotkey.ViewReadme()
+}
+
+ReloadHK(ThisHotkey) {
+    ReaHotkey.Reload()
+}
+
 ControlHK(ThisHotkey) {
     Thread "NoTimers"
     AccessibilityOverlay.StopSpeech()
@@ -203,10 +211,6 @@ AboutHK(ThisHotkey) {
 
 ConfigHK(ThisHotkey) {
     ReaHotkey.ShowConfigBox()
-}
-
-MenuHK(ThisHotkey) {
-    A_TrayMenu.Show()
 }
 
 PauseHK(ThisHotkey) {
@@ -222,10 +226,6 @@ QuitHK(ThisHotkey) {
     ReaHotkey.Quit()
 }
 
-ReadmeHK(ThisHotkey) {
-    ReaHotkey.ViewReadme()
-}
-
-ReloadHK(ThisHotkey) {
-    ReaHotkey.Reload()
+ReaHotkeyMenuHK(ThisHotkey) {
+    A_TrayMenu.Show()
 }

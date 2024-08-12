@@ -7,6 +7,7 @@ Class ReaHotkey {
     Static Context := False
     Static FoundPlugin := False
     Static FoundStandalone := False
+    Static NonRemappableHotkeys := Array("^+#F1", "^+#F5", "Control", "Ctrl", "LCtrl", "RCtrl", "^+#A", "^+#C", "^+#P", "^+#Q", "^+#R")
     Static PluginHotkeyOverrides := Array()
     Static PluginWinCriteria := "ahk_exe reaper.exe ahk_class #32770"
     Static RequiredScreenWidth := 1920
@@ -199,6 +200,9 @@ Class ReaHotkey {
     
     Static OverrideHotkey(Type, PluginOrProgramName := "", KeyName := "", Action := "", Options := "") {
         If Type = "Plugin" Or Type = "Standalone" {
+            For NonRemappableHotkey In ReaHotkey.NonRemappableHotkeys
+            If KeyName = NonRemappableHotkey
+            Return
             NameParam := ""
             If Type = "Plugin"
             NameParam := "PluginName"

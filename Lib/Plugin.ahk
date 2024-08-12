@@ -278,6 +278,9 @@ Class Plugin {
     }
     
     Static SetHotkey(PluginName, KeyName, Action := "", Options := "") {
+        For NonRemappableHotkey In ReaHotkey.NonRemappableHotkeys
+        If KeyName = NonRemappableHotkey
+        Return
         PluginNumber := Plugin.FindName(PluginName)
         HotkeyNumber := Plugin.FindHotkey(PluginName, KeyName)
         If PluginNumber > 0 And HotkeyNumber = 0 {

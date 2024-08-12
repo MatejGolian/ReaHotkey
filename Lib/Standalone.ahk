@@ -229,6 +229,9 @@ Class Standalone {
     }
     
     Static SetHotkey(ProgramName, KeyName, Action := "", Options := "") {
+        For NonRemappableHotkey In ReaHotkey.NonRemappableHotkeys
+        If KeyName = NonRemappableHotkey
+        Return
         ProgramNumber := Standalone.FindName(ProgramName)
         HotkeyNumber := Standalone.FindHotkey(ProgramName, KeyName)
         If ProgramNumber > 0 And HotkeyNumber = 0 {

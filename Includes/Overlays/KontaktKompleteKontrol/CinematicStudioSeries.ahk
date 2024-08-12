@@ -1,3 +1,5 @@
+#Requires AutoHotkey v2.0
+
 Class CinematicStudioSeries {
     
     Static InitClass(ClassName) {
