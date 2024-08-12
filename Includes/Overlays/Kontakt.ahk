@@ -59,6 +59,7 @@ Class Kontakt {
     }
     
     Static CheckPlugin(*) {
+    Thread "NoTimers"
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt"
         Return True
@@ -80,6 +81,7 @@ Class Kontakt {
     }
     
     Static CheckPluginContentMissing(*) {
+    Thread "NoTimers"
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt Content Missing Dialog"
         Return True

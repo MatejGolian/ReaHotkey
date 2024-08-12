@@ -8,6 +8,7 @@ Class Sforzando {
     }
     
     Static CheckPlugin(*) {
+    Thread "NoTimers"
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "sforzando"
         Return True

@@ -35,7 +35,6 @@ Class KompleteKontrol {
         Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(KompleteKontrol, "CheckPluginConfig"), -1)
         
         Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KompleteKontrol, "CheckPluginPreferenceDialog"))
-        Plugin.SetTimer("Komplete Kontrol Preference Dialog", ObjBindMethod(KompleteKontrol, "ResetPluginPreferenceDialog"), -1)
         
         PluginPreferenceOverlay := AccessibilityOverlay()
         PluginPreferenceTabControl := PluginPreferenceOverlay.AddTabControl()
@@ -61,7 +60,6 @@ Class KompleteKontrol {
         Plugin.RegisterOverlay("Komplete Kontrol Preference Dialog", PluginPreferenceOverlay)
         
         Plugin.Register("Komplete Kontrol Save As Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KompleteKontrol, "CheckPluginSaveAsDialog"))
-        Plugin.SetTimer("Komplete Kontrol Save As Dialog", ObjBindMethod(KompleteKontrol, "ResetPluginSaveAsDialog"), -1)
         
         PluginSaveAsOverlay := AccessibilityOverlay()
         PluginSaveAsOverlay.AddOCREdit("Save Preset, Name:", 24, 72, 500, 88)
@@ -111,6 +109,7 @@ Class KompleteKontrol {
     }
     
     Static CheckPlugin(*) {
+    Thread "NoTimers"
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol"
         Return True
@@ -133,23 +132,37 @@ Class KompleteKontrol {
     }
     
     Static CheckPluginPreferenceDialog(PluginData) {
+    Thread "NoTimers"
+        Static PreviousWinID := ""
+        CurrentWinID := WinGetID("A")
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Preferences" {
             If PluginData Is Map And PluginData["Name"] = "Komplete Kontrol Preference Dialog"
             Return True
             Else
-            If PluginData Is Plugin And PluginData.Name = "Komplete Kontrol Preference Dialog"
-            Return True
+            If PluginData Is Plugin And PluginData.Name = "Komplete Kontrol Preference Dialog" {
+                If PreviousWinID != CurrentWinID And PreviousWinID != ""
+                PluginData.Overlay.Reset()
+                PreviousWinID := CurrentWinID
+                Return True
+            }
         }
         Return False
     }
     
     Static CheckPluginSaveAsDialog(PluginData) {
+    Thread "NoTimers"
+        Static PreviousWinID := ""
+        CurrentWinID := WinGetID("A")
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
             If PluginData Is Map And PluginData["Name"] = "Komplete Kontrol Save As Dialog"
             Return True
             Else
-            If PluginData Is Plugin And PluginData.Name = "Komplete Kontrol Save As Dialog"
-            Return True
+            If PluginData Is Plugin And PluginData.Name = "Komplete Kontrol Save As Dialog" {
+                If PreviousWinID != CurrentWinID And PreviousWinID != ""
+                PluginData.Overlay.Reset()
+                PreviousWinID := CurrentWinID
+                Return True
+            }
         }
         Return False
     }
@@ -160,6 +173,7 @@ Class KompleteKontrol {
     }
     
     Static CheckStandaloneSaveAsDialog(*) {
+    Thread "NoTimers"
         Static PreviousWinID := ""
         CurrentWinID := WinGetID("A")
         StandaloneInstance := Standalone.GetInstance(CurrentWinID)
@@ -184,7 +198,7 @@ Class KompleteKontrol {
     }
     
     Static ClosePluginPreferenceDialog(*) {
-        Critical
+        Thread "NoTimers"
         If ReaHotkey.FoundPlugin Is Plugin And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria)
         If ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Preference Dialog" And WinGetTitle("A") = "Preferences" {
             WinClose("A")
@@ -240,28 +254,8 @@ Class KompleteKontrol {
         }
     }
     
-    Static ResetPluginPreferenceDialog() {
-        Static PreviousWinID := ""
-        CurrentWinID := WinGetID("A")
-        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Preference Dialog" {
-            If PreviousWinID != CurrentWinID And PreviousWinID != ""
-            ReaHotkey.FoundPlugin.Overlay.Reset()
-            PreviousWinID := CurrentWinID
-        }
-    }
-    
-    Static ResetPluginSaveAsDialog() {
-        Static PreviousWinID := ""
-        CurrentWinID := WinGetID("A")
-        If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Save As Dialog" {
-            If PreviousWinID != CurrentWinID And PreviousWinID != ""
-            ReaHotkey.FoundPlugin.Overlay.Reset()
-            PreviousWinID := CurrentWinID
-        }
-    }
-    
     Static SaveOrCancelPluginSaveAsDialog(UiButton) {
-        Critical
+        Thread "NoTimers"
         If ReaHotkey.FoundPlugin Is Plugin And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria)
         If ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Save As Dialog" And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
             ReaHotkey.FoundPlugin.Overlay.Reset()

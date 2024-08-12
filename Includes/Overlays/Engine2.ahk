@@ -48,6 +48,7 @@ Class Engine2 {
     }
     
     Static CheckPlugin(*) {
+    Thread "NoTimers"
         ReaperPluginNames := ["VSTi: ENGINE (Best Service) (24 out)"]
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Engine 2"
