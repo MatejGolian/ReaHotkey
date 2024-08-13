@@ -4,7 +4,7 @@ Class Engine2 {
     
     Static __New() {
         
-        Plugin.Register("Engine 2", "^Plugin[0-9A-F]{17}$",, True, False, True, ObjBindMethod(Engine2, "CheckPlugin"))
+        Plugin.Register("Engine 2", "^Plugin[0-9A-F]{17}$",, False, False, False, ObjBindMethod(Engine2, "CheckPlugin"))
         Standalone.Register("Engine 2", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe")
         
         Engine2PluginOverlay := AccessibilityOverlay("Engine 2")

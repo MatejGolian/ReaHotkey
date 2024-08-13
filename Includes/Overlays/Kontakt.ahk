@@ -39,7 +39,7 @@ Class Kontakt {
         
         Plugin.SetTimer("Kontakt", ObjBindMethod(Kontakt, "CheckPluginConfig"), -1)
         
-        Plugin.Register("Kontakt Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(Kontakt, "CheckPluginContentMissing"))
+        Plugin.Register("Kontakt Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(Kontakt, "CheckPluginContentMissing"))
         Plugin.SetHotkey("Kontakt Content Missing Dialog", "!F4", ObjBindMethod(Kontakt, "ClosePluginContentMissingDialog"))
         Plugin.SetHotkey("Kontakt Content Missing Dialog", "Escape", ObjBindMethod(Kontakt, "ClosePluginContentMissingDialog"))
         

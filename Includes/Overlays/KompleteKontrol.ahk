@@ -34,7 +34,7 @@ Class KompleteKontrol {
         
         Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(KompleteKontrol, "CheckPluginConfig"), -1)
         
-        Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KompleteKontrol, "CheckPluginPreferenceDialog"))
+        Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(KompleteKontrol, "CheckPluginPreferenceDialog"))
         
         PluginPreferenceOverlay := AccessibilityOverlay()
         PluginPreferenceTabControl := PluginPreferenceOverlay.AddTabControl()
@@ -59,7 +59,7 @@ Class KompleteKontrol {
         PluginPreferenceTabControl.AddTabs(PluginPreferenceMIDITab, PluginPreferenceGeneralTab, PluginPreferenceLibraryTab, PluginPreferencePluginTab)
         Plugin.RegisterOverlay("Komplete Kontrol Preference Dialog", PluginPreferenceOverlay)
         
-        Plugin.Register("Komplete Kontrol Save As Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, False, ObjBindMethod(KompleteKontrol, "CheckPluginSaveAsDialog"))
+        Plugin.Register("Komplete Kontrol Save As Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(KompleteKontrol, "CheckPluginSaveAsDialog"))
         
         PluginSaveAsOverlay := AccessibilityOverlay()
         PluginSaveAsOverlay.AddOCREdit("Save Preset, Name:", 24, 72, 500, 88)
