@@ -63,8 +63,8 @@ Class KompleteKontrol {
         
         PluginSaveAsOverlay := AccessibilityOverlay()
         PluginSaveAsOverlay.AddOCREdit("Save Preset, Name:", 24, 72, 500, 88)
-        PluginSaveAsOverlay.AddCustomButton("Save",, ObjBindMethod(KompleteKontrol, "SaveOrCancelPluginSaveAsDialog"))
-        PluginSaveAsOverlay.AddCustomButton("Cancel",, ObjBindMethod(KompleteKontrol, "SaveOrCancelPluginSaveAsDialog"))
+        PluginSaveAsOverlay.AddHotspotButton("Save", 219, 135, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        PluginSaveAsOverlay.AddHotspotButton("Cancel", 301, 135, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
         Plugin.RegisterOverlay("Komplete Kontrol Save As Dialog", PluginSaveAsOverlay)
         
         Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe",, False, False)
@@ -104,12 +104,12 @@ Class KompleteKontrol {
         StandaloneSaveAsOverlay := AccessibilityOverlay()
         StandaloneSaveAsOverlay.AddOCREdit("Save Preset, Name:", 24, 72, 500, 88)
         StandaloneSaveAsOverlay.AddHotspotButton("Save", 219, 135)
-        StandaloneSaveAsOverlay.AddCustomButton("Cancel",, ObjBindMethod(KompleteKontrol, "CloseStandaloneSaveAsDialog"))
+        StandaloneSaveAsOverlay.AddHotspotButton("Cancel", 301, 135)
         Standalone.RegisterOverlay("Komplete Kontrol Save As Dialog", StandaloneSaveAsOverlay)
     }
     
     Static CheckPlugin(*) {
-    Thread "NoTimers"
+        Thread "NoTimers"
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol"
         Return True
@@ -132,7 +132,7 @@ Class KompleteKontrol {
     }
     
     Static CheckPluginPreferenceDialog(PluginData) {
-    Thread "NoTimers"
+        Thread "NoTimers"
         Static PreviousWinID := ""
         CurrentWinID := WinGetID("A")
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Preferences" {
@@ -150,7 +150,7 @@ Class KompleteKontrol {
     }
     
     Static CheckPluginSaveAsDialog(PluginData) {
-    Thread "NoTimers"
+        Thread "NoTimers"
         Static PreviousWinID := ""
         CurrentWinID := WinGetID("A")
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
@@ -173,7 +173,7 @@ Class KompleteKontrol {
     }
     
     Static CheckStandaloneSaveAsDialog(*) {
-    Thread "NoTimers"
+        Thread "NoTimers"
         Static PreviousWinID := ""
         CurrentWinID := WinGetID("A")
         StandaloneInstance := Standalone.GetInstance(CurrentWinID)
@@ -219,10 +219,6 @@ Class KompleteKontrol {
         WinClose("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
     }
     
-    Static CloseStandaloneSaveAsDialog(*) {
-        WinClose("ahk_class #32770 ahk_exe Komplete Kontrol.exe")
-    }
-    
     Static FocusStandalonePreferenceTab(KKInstance) {
         Sleep 1000
         If KKInstance.Overlay.CurrentControlID = 0
@@ -251,19 +247,6 @@ Class KompleteKontrol {
         Else {
             If WinExist("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe") And Not WinActive("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
             WinActivate("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
-        }
-    }
-    
-    Static SaveOrCancelPluginSaveAsDialog(UiButton) {
-        Thread "NoTimers"
-        If ReaHotkey.FoundPlugin Is Plugin And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria)
-        If ReaHotkey.FoundPlugin.Name = "Komplete Kontrol Save As Dialog" And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
-            ReaHotkey.FoundPlugin.Overlay.Reset()
-            If UiButton.Label = "Save"
-            Click 219, 135
-            Else
-            Click 301, 135
-            Sleep 500
         }
     }
     
