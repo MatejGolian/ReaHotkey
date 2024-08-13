@@ -8,11 +8,6 @@ Class Kontakt {
     Static StandaloneOverlays := Array()
     
     Static __New() {
-        ClassName := "Kontakt"
-        %ClassName%.NoProduct.InitClass(ClassName)
-        %ClassName%.AudioImperia.InitClass(ClassName)
-        %ClassName%.CinematicStudioSeries.InitClass(ClassName)
-        
         PluginHeader := AccessibilityOverlay("Kontakt")
         PluginHeader.AddStaticText("Kontakt 7")
         PluginHeader.AddCustomButton("FILE menu",, Kontakt.ActivatePluginHeaderButton).SetHotkey("!F", "Alt+F")

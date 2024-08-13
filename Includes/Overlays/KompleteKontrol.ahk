@@ -8,11 +8,6 @@ Class KompleteKontrol {
     Static StandaloneOverlays := Array()
     
     Static __New() {
-        ClassName := "KompleteKontrol"
-        %ClassName%.NoProduct.InitClass(ClassName)
-        %ClassName%.AudioImperia.InitClass(ClassName)
-        %ClassName%.CinematicStudioSeries.InitClass(ClassName)
-        
         PluginHeader := AccessibilityOverlay("Komplete Kontrol")
         PluginHeader.AddStaticText("Komplete Kontrol")
         PluginHeader.AddHotspotButton("Menu", 305, 68, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates).SetHotkey("!M", "Alt+M")

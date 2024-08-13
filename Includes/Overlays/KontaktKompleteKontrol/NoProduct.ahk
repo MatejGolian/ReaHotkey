@@ -2,11 +2,23 @@
 
 Class NoProduct {
     
-    Static InitClass(ClassName) {
+    Static PluginClass := ""
+    
+    __New() {
+        ClassNames := StrSplit(This.__Class, ".")
+        PluginClass := ClassNames[1]
+        VendorClass := ClassNames[2]
+        %PluginClass%.%VendorClass%.PluginClass := PluginClass
+    }
+    
+    Static __New() {
+        This()
+        PluginClass := This.PluginClass
+        
         NoProductOverlay := AccessibilityOverlay("None")
         NoProductOverlay.Metadata := Map("Product", "None")
         NoProductOverlay.AddAccessibilityOverlay()
-        %ClassName%.PluginOverlays.Push(NoProductOverlay)
+        %PluginClass%.PluginOverlays.Push(NoProductOverlay)
     }
     
 }
