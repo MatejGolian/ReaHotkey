@@ -47,11 +47,11 @@ Class Kontakt {
         PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372).SetHotkey("!B", "Alt+B")
         Plugin.RegisterOverlay("Kontakt Content Missing Dialog", PluginContentMissingOverlay)
         
-        Standalone.Register("Kontakt", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
+        Standalone.Register("Kontakt", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe", False, False)
         Standalone.SetTimer("Kontakt", ObjBindMethod(Kontakt, "CheckStandaloneConfig"), -1)
         Standalone.RegisterOverlay("Kontakt", StandaloneHeader)
         
-        Standalone.Register("Kontakt Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
+        Standalone.Register("Kontakt Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe", False, False)
         
         StandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
         StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372).SetHotkey("!B", "Alt+B")
