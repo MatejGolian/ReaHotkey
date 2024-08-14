@@ -21,9 +21,14 @@ Class Plugin Extends Program {
     Static UnnamedPluginName := "Unnamed Plugin"
     
     __New(Name, ControlClass, WinTitle) {
-        This.ControlClass := ControlClass
-        This.WinTitle := WinTitle
         Super.__New(Name)
+        This.ControlClass := ControlClass
+        PluginNumber := Plugin.FindName(Name)
+        If PluginNumber > 0 {
+            PluginEntry := %This.__Class%.List[PluginNumber]
+            This.SingleInstance := PluginEntry["SingleInstance"]
+        }
+        This.WinTitle := WinTitle
     }
     
     Static FindClass(ClassName) {
@@ -115,7 +120,7 @@ Class Plugin Extends Program {
     
     Static Register(PluginName, ControlClasses, InitFunction := "", Chooser := True, NoHotkeys := False, SingleInstance := False, CheckerFunction := "") {
         If Super.Register(PluginName, InitFunction, Chooser, NoHotkeys, CheckerFunction) = True {
-            PluginEntry := %This.Prototype.__Class%.List[%This.Prototype.__Class%.List.Length]
+            PluginEntry := This.List[This.List.Length]
             If SingleInstance != True And SingleInstance != False
             SingleInstance := True
             If ControlClasses Is Array
@@ -143,9 +148,9 @@ Class Plugin Extends Program {
     }
     
     Class TriggerOverlayHotkey {
-        Static Call(HotkeyCommand) {
+        Static Call(ThisHotkey) {
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay Is AccessibilityOverlay
-            ReaHotkey.FoundPlugin.Overlay.TriggerHotkey(HotkeyCommand)
+            ReaHotkey.FoundPlugin.Overlay.TriggerHotkey(ThisHotkey)
         }
     }
     

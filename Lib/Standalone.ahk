@@ -19,8 +19,8 @@ Class Standalone Extends Program {
     Static UnnamedStandaloneName := "Unnamed Program"
     
     __New(Name, WinID) {
-        This.WinID := WinID
         Super.__New(Name)
+        This.WinID := WinID
     }
     
     Static FindByActiveWindow() {
@@ -37,7 +37,7 @@ Class Standalone Extends Program {
         If StandaloneInstance.WinID = WinID And StandaloneInstance.Check() = True
         Return StandaloneInstance
         StandaloneNumber := This.FindByActiveWindow()
-        If StandaloneNumber != False And This.List[StandaloneNumber]["CheckerFunction"].Call(This.List[StandaloneNumber]) = True {
+        If StandaloneNumber != 0 And This.List[StandaloneNumber]["CheckerFunction"].Call(This.List[StandaloneNumber]) = True {
             StandaloneInstance := Standalone(This.List[StandaloneNumber]["Name"], WinGetID("A"))
             Return StandaloneInstance
         }
@@ -53,7 +53,7 @@ Class Standalone Extends Program {
     
     Static Register(StandaloneName, WinCriteria, InitFunction := "", Chooser := True, NoHotkeys := False, CheckerFunction := "") {
         If Super.Register(StandaloneName, InitFunction, Chooser, NoHotkeys, CheckerFunction) = True {
-            StandaloneEntry := %This.Prototype.__Class%.List[%This.Prototype.__Class%.List.Length]
+            StandaloneEntry := This.List[This.List.Length]
             If WinCriteria Is Array
             StandaloneEntry["WinCriteria"] := WinCriteria
             Else
@@ -78,9 +78,9 @@ Class Standalone Extends Program {
     }
     
     Class TriggerOverlayHotkey {
-        Static Call(HotkeyCommand) {
+        Static Call(ThisHotkey) {
             If ReaHotkey.FoundStandalone Is Standalone And ReaHotkey.FoundStandalone.Overlay Is AccessibilityOverlay
-            ReaHotkey.FoundStandalone.Overlay.TriggerHotkey(HotkeyCommand)
+            ReaHotkey.FoundStandalone.Overlay.TriggerHotkey(ThisHotkey)
         }
     }
     

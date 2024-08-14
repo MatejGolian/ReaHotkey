@@ -303,7 +303,7 @@ Class Program {
     }
     
     Class TriggerOverlayHotkey {
-        Static Call(HotkeyCommand) {
+        Static Call(ThisHotkey) {
             Match := RegExMatch(ThisHotkey, "[a-zA-Z]")
             If Match > 0 {
                 Modifiers := SubStr(ThisHotkey, 1, Match - 1)
