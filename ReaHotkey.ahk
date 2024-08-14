@@ -16,6 +16,7 @@ SetWorkingDir A_InitialWorkingDir
 #Include <AccessibleStandaloneMenu>
 #Include <JXON>
 #Include <OCR>
+#Include <Program>
 #Include <Plugin>
 #Include <ReaHotkey>
 #Include <Standalone>
