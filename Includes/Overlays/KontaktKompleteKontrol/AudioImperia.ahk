@@ -6,18 +6,9 @@ Class AudioImperia {
     Static KontaktYOffset := 0
     Static KompleteKontrolXOffset := 107
     Static KompleteKontrolYOffset := 111
-    Static PluginClass := ""
-    
-    __New() {
-        ClassNames := StrSplit(This.__Class, ".")
-        PluginClass := ClassNames[1]
-        ProductClass := ClassNames[2]
-        %PluginClass%.%ProductClass%.PluginClass := PluginClass
-    }
     
     Static __New() {
-        This()
-        PluginClass := This.PluginClass
+        PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
         
         AreiaOverlay := AccessibilityOverlay("Areia")
         AreiaOverlay.Metadata := Map("Product", "Audio Imperia", "Product", "Areia", "Image", Map("File", "Images/KontaktKompleteKontrol/Areia/Product.png"))
@@ -103,7 +94,7 @@ Class AudioImperia {
     
     Static SelectCerberusPatchType(TypeCombo) {
         ParentOverlay := TypeCombo.GetSuperordinateControl()
-        PluginClass := This.PluginClass
+        PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
         If TypeCombo.GetValue() = "Normal" {
             ChildOverlay := AccessibilityOverlay()
             ChildOverlay.AddHotspotButton("C", This.%PluginClass%XOffset + 216, This.%PluginClass%YOffset + 364, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)

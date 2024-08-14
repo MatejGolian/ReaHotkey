@@ -2,19 +2,8 @@
 
 Class CinematicStudioSeries {
     
-    Static PluginClass := ""
-    
-    __New() {
-        ClassNames := StrSplit(This.__Class, ".")
-        PluginClass := ClassNames[1]
-        ProductClass := ClassNames[2]
-        %PluginClass%.%ProductClass%.PluginClass := PluginClass
-    }
-    
     Static __New() {
-        This()
-        PluginClass := This.PluginClass
-        
+        PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
         KontaktXOffset := 0
         KontaktYOffset := 0
         KompleteKontrolXOffset := 190
