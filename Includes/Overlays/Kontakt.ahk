@@ -54,7 +54,7 @@ Class Kontakt {
     }
     
     Static CheckPlugin(*) {
-    Thread "NoTimers"
+        Thread "NoTimers"
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt"
         Return True
@@ -76,7 +76,7 @@ Class Kontakt {
     }
     
     Static CheckPluginContentMissing(*) {
-    Thread "NoTimers"
+        Thread "NoTimers"
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt Content Missing Dialog"
         Return True
@@ -252,34 +252,47 @@ Class Kontakt {
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If Type = "Standalone"
             HotIf
-            If (Type = "Plugin" And WinActive(ReaHotkey.PluginWinCriteria) And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt") Or (Type = "Standalone" And WinActive("Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")) {
+            If Type = "Plugin" And WinActive(ReaHotkey.PluginWinCriteria) And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt" {
                 %Type%.SetNoHotkeys("Kontakt", False)
-                ReaHotkey.Override%Type%Hotkey("", "Escape", "Off")
-                ReaHotkey.Override%Type%Hotkey("", "!F4", "Off")
+                TurnHotkeysOff()
                 If SendCommand != ""
                 Send SendCommand
             }
-            Else If type = "Plugin" And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Content Missing" {
+            Else If Type = "Plugin" And WinActive(ReaHotkey.PluginWinCriteria) And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt Content Missing Dialog" {
                 %Type%.SetNoHotkeys("Kontakt", False)
-                ReaHotkey.Override%Type%Hotkey("", "Escape", "Off")
-                ReaHotkey.Override%Type%Hotkey("", "!F4", "Off")
+                TurnHotkeysOff()
+                If SendCommand != ""
+                Send SendCommand
+            }
+            Else If Type = "Standalone" And WinActive("Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe") {
+                %Type%.SetNoHotkeys("Kontakt", False)
+                TurnHotkeysOff()
                 If SendCommand != ""
                 Send SendCommand
             }
             Else If Type = "Standalone" And WinExist("Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe") And WinActive("Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe") {
                 %Type%.SetNoHotkeys("Kontakt", False)
-                ReaHotkey.Override%Type%Hotkey("", "Escape", "Off")
-                ReaHotkey.Override%Type%Hotkey("", "!F4", "Off")
+                TurnHotkeysOff()
                 If SendCommand != ""
                 Send SendCommand
             }
             Else {
-                ReaHotkey.Override%Type%Hotkey("", "Escape", "Off")
-                ReaHotkey.Override%Type%Hotkey("", "!F4", "Off")
+                TurnHotkeysOff()
                 If SendCommand != ""
                 Send SendCommand
-                ReaHotkey.Override%Type%Hotkey("", "Escape", "On")
-                ReaHotkey.Override%Type%Hotkey("", "!F4", "On")
+                TurnHotkeysOn()
+            }
+            TurnHotkeysOff() {
+                ReaHotkey.Override%Type%Hotkey("Kontakt", "Escape", "Off")
+                ReaHotkey.Override%Type%Hotkey("Kontakt", "!F4", "Off")
+                ReaHotkey.Override%Type%Hotkey("Kontakt Content Missing Dialog", "Escape", "Off")
+                ReaHotkey.Override%Type%Hotkey("Kontakt Content Missing Dialog", "!F4", "Off")
+            }
+            TurnHotkeysOn() {
+                ReaHotkey.Override%Type%Hotkey("Kontakt", "Escape", "On")
+                ReaHotkey.Override%Type%Hotkey("Kontakt", "!F4", "On")
+                ReaHotkey.Override%Type%Hotkey("Kontakt Content Missing Dialog", "Escape", "On")
+                ReaHotkey.Override%Type%Hotkey("Kontakt Content Missing Dialog", "!F4", "On")
             }
         }
     }
@@ -332,8 +345,10 @@ Class Kontakt {
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If Type = "Standalone"
             HotIf
-            ReaHotkey.Override%Type%Hotkey("", "Escape", Kontakt.Close%Type%Menu, "On")
-            ReaHotkey.Override%Type%Hotkey("", "!F4", Kontakt.Close%Type%Menu, "On")
+            ReaHotkey.Override%Type%Hotkey("Kontakt", "Escape", Kontakt.Close%Type%Menu, "On")
+            ReaHotkey.Override%Type%Hotkey("Kontakt", "!F4", Kontakt.Close%Type%Menu, "On")
+            ReaHotkey.Override%Type%Hotkey("Kontakt Content Missing Dialog", "Escape", Kontakt.Close%Type%Menu, "On")
+            ReaHotkey.Override%Type%Hotkey("Kontakt Content Missing Dialog", "!F4", Kontakt.Close%Type%Menu, "On")
         }
     }
     
