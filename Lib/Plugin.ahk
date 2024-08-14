@@ -25,7 +25,7 @@ Class Plugin Extends Program {
         This.ControlClass := ControlClass
         PluginNumber := Plugin.FindName(Name)
         If PluginNumber > 0 {
-            PluginEntry := %This.__Class%.List[PluginNumber]
+            PluginEntry := Plugin.List[PluginNumber]
             This.SingleInstance := PluginEntry["SingleInstance"]
         }
         This.WinTitle := WinTitle
