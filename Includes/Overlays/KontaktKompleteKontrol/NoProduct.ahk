@@ -7,8 +7,8 @@ Class NoProduct {
     __New() {
         ClassNames := StrSplit(This.__Class, ".")
         PluginClass := ClassNames[1]
-        VendorClass := ClassNames[2]
-        %PluginClass%.%VendorClass%.PluginClass := PluginClass
+        ProductClass := ClassNames[2]
+        %PluginClass%.%ProductClass%.PluginClass := PluginClass
     }
     
     Static __New() {
