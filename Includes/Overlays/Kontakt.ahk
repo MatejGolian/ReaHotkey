@@ -243,6 +243,7 @@ Class Kontakt {
     
     Class CloseMenu {
         Static Call(Type, ThisHotkey) {
+        Thread "NoTimers"
             SendCommand := ""
             If ThisHotkey = "Escape"
             SendCommand := "{Escape}"
@@ -252,26 +253,26 @@ Class Kontakt {
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If Type = "Standalone"
             HotIf
-            If Type = "Plugin" And WinActive(ReaHotkey.PluginWinCriteria) And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt" {
-                %Type%.SetNoHotkeys("Kontakt", False)
+            If Type = "Plugin" And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt" And ReaHotkey.FoundPlugin.NoHotkeys = True {
+                ReaHotkey.FoundPlugin.SetNoHotkeys(False)
                 TurnHotkeysOff()
                 If SendCommand != ""
                 Send SendCommand
             }
-            Else If Type = "Plugin" And WinActive(ReaHotkey.PluginWinCriteria) And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt Content Missing Dialog" {
-                %Type%.SetNoHotkeys("Kontakt", False)
+            Else If Type = "Plugin" And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt Content Missing Dialog" {
+                Plugin.SetNoHotkeys("Kontakt", False)
                 TurnHotkeysOff()
                 If SendCommand != ""
                 Send SendCommand
             }
-            Else If Type = "Standalone" And WinActive("Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe") {
-                %Type%.SetNoHotkeys("Kontakt", False)
+            Else If Type = "Standalone" And ReaHotkey.foundStandalone Is Standalone And ReaHotkey.foundStandalone.Name = "Kontakt" And ReaHotkey.FoundStandalone.NoHotkeys = True {
+                ReaHotkey.foundStandalone.SetNoHotkeys(False)
                 TurnHotkeysOff()
                 If SendCommand != ""
                 Send SendCommand
             }
-            Else If Type = "Standalone" And WinExist("Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe") And WinActive("Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe") {
-                %Type%.SetNoHotkeys("Kontakt", False)
+            Else If Type = "Standalone" And ReaHotkey.foundStandalone Is Standalone And ReaHotkey.foundStandalone.Name = "Kontakt Content Missing Dialog" {
+                Standalone.SetNoHotkeys("Kontakt", False)
                 TurnHotkeysOff()
                 If SendCommand != ""
                 Send SendCommand

@@ -91,7 +91,11 @@ Class Program {
     }
     
     SetNoHotkeys(Value) {
-        %This.__Class%.SetNoHotkeys(This.Name, Value)
+        This.NoHotkeys := Value
+        If Value = False
+        ReaHotkey.Turn%This.__Class%HotkeysOn(This.Name)
+        If Value = True
+        ReaHotkey.Turn%This.__Class%HotkeysOff(This.Name)
     }
     
     SetTimer(Function, Period := "", Priority := "") {
