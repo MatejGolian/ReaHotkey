@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.9] - 2024-08-16
+
 ### Added
 
 -   Recall plug-in instances per track
@@ -152,7 +154,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.8...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.9...HEAD
+
+[0.4.9]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.8...0.4.9
 
 [0.4.8]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.7...0.4.8
 
