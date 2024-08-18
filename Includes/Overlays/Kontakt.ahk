@@ -14,9 +14,9 @@ Class Kontakt {
         PluginHeader.AddCustomButton("LIBRARY On/Off",, Kontakt.ActivatePluginHeaderButton).SetHotkey("!L", "Alt+L")
         PluginHeader.AddCustomButton("VIEW menu",, Kontakt.ActivatePluginHeaderButton).SetHotkey("!V", "Alt+V")
         PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",, Kontakt.ActivatePluginHeaderButton).SetHotkey("!S", "Alt+S")
-        PluginHeader.AddCustomButton("Snapshot menu", Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton).SetHotkey("!M", "Alt+M")
-        PluginHeader.AddCustomButton("Previous snapshot", Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton).SetHotkey("!P", "Alt+P")
-        PluginHeader.AddCustomButton("Next snapshot", Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton).SetHotkey("!N", "Alt+N")
+        PluginHeader.AddCustomButton("Snapshot menu",,, Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton).SetHotkey("!M", "Alt+M")
+        PluginHeader.AddCustomButton("Previous snapshot",,, Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton).SetHotkey("!P", "Alt+P")
+        PluginHeader.AddCustomButton("Next snapshot",,, Kontakt.MoveToPluginSnapshotButton, Kontakt.ActivatePluginSnapshotButton).SetHotkey("!N", "Alt+N")
         Kontakt.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Kontakt")
