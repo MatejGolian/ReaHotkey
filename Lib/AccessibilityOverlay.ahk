@@ -729,6 +729,8 @@ Class FocusableControl Extends AccessibilityControl {
             This.SpeakOnFocus(Speak)
             If This.HasMethod("ExecuteOnFocusPostSpeech")
             This.ExecuteOnFocusPostSpeech()
+            For FocusFunction In This.PostSpeechFocusFunctions
+            FocusFunction.Call(This)
         }
     }
     
@@ -901,6 +903,8 @@ Class ActivatableControl Extends FocusableControl {
                 This.SpeakOnActivation(Speak)
                 If This.HasMethod("ExecuteOnActivationPostSpeech")
                 This.ExecuteOnActivationPostSpeech()
+                For ActivationFunction In This.PostSpeechActivationFunctions
+                ActivationFunction.Call(This)
             }
         }
     }
@@ -968,6 +972,8 @@ Class ActivatableGraphic Extends FocusableGraphic {
                 This.SpeakOnActivation(Speak)
                 If This.HasMethod("ExecuteOnActivationPostSpeech")
                 This.ExecuteOnActivationPostSpeech()
+                For ActivationFunction In This.PostSpeechActivationFunctions
+                ActivationFunction.Call(This)
             }
         }
     }
@@ -1153,6 +1159,8 @@ Class Tab Extends AccessibilityOverlay {
             This.SpeakOnFocus(Speak)
             If This.HasMethod("ExecuteOnFocusPostSpeech")
             This.ExecuteOnFocusPostSpeech()
+            For FocusFunction In This.PostSpeechFocusFunctions
+            FocusFunction.Call(This)
         }
     }
     
@@ -1285,7 +1293,7 @@ Class CustomControl Extends ActivatableControl {
     ControlType := "Custom"
     
     __New(FocusFunctions := "", ActivationFunctions := "") {
-        Super.__New("", FocusFunctions, ActivationFunctions)
+        Super.__New("",, FocusFunctions,, ActivationFunctions)
     }
     
 }
