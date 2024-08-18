@@ -54,7 +54,7 @@ Class Sforzando {
         
         SpeakOnActivation(Speak := True) {
             Message := ""
-            CheckResult := This.GetControlState()
+            CheckResult := This.GetState()
             LabelString := This.Label
             If LabelString = ""
             LabelString := This.DefaultLabel
@@ -75,7 +75,7 @@ Class Sforzando {
         
         SpeakOnFocus(Speak := True) {
             Message := ""
-            CheckResult := This.GetControlState()
+            CheckResult := This.GetState()
             LabelString := This.Label
             If LabelString = ""
             LabelString := This.DefaultLabel
