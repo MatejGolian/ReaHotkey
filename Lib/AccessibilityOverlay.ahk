@@ -707,10 +707,6 @@ Class FocusableControl Extends AccessibilityControl {
             If FocusFunction Is Object And FocusFunction.HasMethod("Call")
             This.PostSpeechFocusFunctions.Push(FocusFunction)
         }
-        
-        AccessibilityOverlay.TotalNumberOfControls++
-        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
-        AccessibilityOverlay.AllControls.Push(This)
     }
     
     CheckFocus() {
@@ -1282,6 +1278,16 @@ Class CustomCheckbox Extends Checkbox {
 }
 
 Class CustomComboBox Extends ComboBox {
+}
+
+Class CustomControl Extends ActivatableControl {
+    
+    ControlType := "Custom"
+    
+    __New(FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New("", FocusFunctions, ActivationFunctions)
+    }
+    
 }
 
 Class CustomEdit Extends Edit {

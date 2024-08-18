@@ -23,7 +23,7 @@ Class AudioImperia {
         CerberusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Cerberus", "Image", Map("File", "Images/KontaktKompleteKontrol/Cerberus/Product.png"))
         CerberusOverlay.AddAccessibilityOverlay()
         CerberusOverlay.AddStaticText("Cerberus")
-        CerberusComboBox := CerberusOverlay.AddCustomComboBox("Patch type:", ObjBindMethod(This, "SelectCerberusPatchType"), ObjBindMethod(This, "SelectCerberusPatchType"))
+        CerberusComboBox := CerberusOverlay.AddCustomComboBox("Patch type:", ObjBindMethod(This, "SelectCerberusPatchType"),, ObjBindMethod(This, "SelectCerberusPatchType"))
         CerberusComboBox.SetOptions(["Normal", "Epic Mix"])
         CerberusOverlay.AddAccessibilityOverlay()
         CerberusOverlay.AddCustomControl(ObjBindMethod(This, "RedirectCerberusKeyPress"))
