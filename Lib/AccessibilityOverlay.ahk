@@ -1051,6 +1051,12 @@ Class ComboBox Extends FocusableControl {
         }
     }
     
+    GetValue() {
+        If This.CurrentOption > 0 And This.CurrentOption <= This.Options.Length
+        This.Value := This.Options[This.CurrentOption]
+        Return This.Value
+    }
+    
     SelectNextOption() {
         If This.Options.Length > 0
         If This.CurrentOption < This.Options.Length {
