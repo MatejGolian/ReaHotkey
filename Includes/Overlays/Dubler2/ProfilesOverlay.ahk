@@ -188,10 +188,10 @@ Static CreateProfilesOverlay(Overlay) {
         Else
             Suffix := "(Passive)"
 
-        Button := Dubler2.ProfileButton(Profiles[A_LoopField]["profileName"] . " " . Suffix, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateProfileButton"))
-        Button.Index := A_Index
-        Button.ProfileFile := A_LoopField
-        Overlay.AddControl(Button)
+        ButtonObject := Dubler2.ProfileButton(Profiles[A_LoopField]["profileName"] . " " . Suffix, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateProfileButton"))
+        ButtonObject.Index := A_Index
+        ButtonObject.ProfileFile := A_LoopField
+        Overlay.AddControl(ButtonObject)
     }
 
     Overlay.AddCustomButton("Create new profile", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CreateNewProfileButton"))

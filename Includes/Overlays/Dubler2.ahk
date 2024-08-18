@@ -221,8 +221,8 @@ Class Dubler2 {
                 }
             }
         } Else If Control.ControlType == "TabControl" {
-            Tab := Control.Tabs[Control.CurrentTab]
-            Success := Dubler2.FindControlByLabel(&Tab, Label, &OutVar)
+            TabObject := Control.Tabs[Control.CurrentTab]
+            Success := Dubler2.FindControlByLabel(&TabObject, Label, &OutVar)
 
             If Success {
                 Return True
@@ -249,8 +249,8 @@ Class Dubler2 {
                     }
                 }
             } Else If Control.ControlType == "TabControl" {
-                Tab := Control.Tabs[Control.CurrentTab]
-                Position := GetPosition(&Tab, ID)
+                TabObject := Control.Tabs[Control.CurrentTab]
+                Position := GetPosition(&TabObject, ID)
 
                 If Position.Length > 0 {
                     Return Array(Control.CurrentTab, Position*)

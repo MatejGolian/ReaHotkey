@@ -8,7 +8,7 @@ Class Sforzando {
     }
     
     Static CheckPlugin(*) {
-    Thread "NoTimers"
+        Thread "NoTimers"
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "sforzando"
         Return True
@@ -41,51 +41,54 @@ Class Sforzando {
         StandaloneInstance.Overlay.ChildControls[1] := StandaloneHeader
     }
     
-    Class OCRButton Extends ActivatableOCR {
+    Class OCRButton Extends OCRButton {
         
-        ControlType := "Button"
-        ControlTypeLabel := "button"
-        DefaultLabelOCR := ""
-        HotkeyLabel := ""
-        LabelOCR := ""
-        LabelStatic := ""
-        UnlabelledString := ""
+        DefaultLabel := ""
+        DefaultOCRString := ""
         
-        __New(LabelStatic, DefaultLabelOCR, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "", OnActivateFunction := "") {
-            Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, OnFocusFunction, OnActivateFunction)
-            This.DefaultLabelOCR := DefaultLabelOCR
-            This.LabelStatic := LabelStatic
+        __New(Label, DefaultOCRString, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, FocusFunctions := "", ActivationFunctions := "") {
+            Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, FocusFunctions, ActivationFunctions)
+            This.Label := Label
+            This.DefaultOCRString := DefaultOCRString
         }
         
-        Activate(CurrentControlID := 0) {
-            Super.Activate(CurrentControlID)
-            This.LabelOCR := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
-            If This.LabelOCR = ""
-            This.LabelOCR := This.DefaultLabelOCR
-            If This.ControlID != CurrentControlID {
-                If This.LabelStatic = "" And This.LabelOCR = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.LabelStatic . " " . This.LabelOCR . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            }
+        SpeakOnActivation(Speak := True) {
+            Message := ""
+            CheckResult := This.GetControlState()
+            LabelString := This.Label
+            If LabelString = ""
+            LabelString := This.DefaultLabel
+            OCRString := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+            If OCRString = ""
+            OCRString := This.DefaultOCRString
+            StateString := ""
+            If This.States.Has(CheckResult)
+            StateString := This.States[CheckResult]
+            If This.ControlID != AccessibilityOverlay.PreviousControlID
+            Message := LabelString . " " . OCRString . " " . This.ControlTypeLabel . " " . StateString
+            Else
+            If This.States.Count > 1
+            Message := StateString
+            If Speak
+            AccessibilityOverlay.Speak(Message)
         }
         
-        Focus(CurrentControlID := 0) {
-            Super.Focus(CurrentControlID)
-            This.LabelOCR := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
-            If This.LabelOCR = ""
-            This.LabelOCR := This.DefaultLabelOCR
-            If This.ControlID != CurrentControlID {
-                If This.LabelStatic = "" And This.LabelOCR := ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.LabelStatic . " " . This.LabelOCR . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            }
-        }
-        
-        SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-            Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-            This.HotkeyLabel := HotkeyLabel
+        SpeakOnFocus(Speak := True) {
+            Message := ""
+            CheckResult := This.GetControlState()
+            LabelString := This.Label
+            If LabelString = ""
+            LabelString := This.DefaultLabel
+            OCRString := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+            If OCRString = ""
+            OCRString := This.DefaultOCRString
+            StateString := ""
+            If This.States.Has(CheckResult)
+            StateString := This.States[CheckResult]
+            If This.ControlID != AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+            Message := LabelString . " " . OCRString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel
+            If Speak
+            AccessibilityOverlay.Speak(Message)
         }
         
     }

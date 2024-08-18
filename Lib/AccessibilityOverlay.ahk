@@ -3,7 +3,7 @@
 Class AccessibilityControl {
     
     ControlID := 0
-    ControlType := "AccessibilityControl"
+    ControlType := "Control"
     SuperordinateControlID := 0
     
     __New() {
@@ -12,527 +12,39 @@ Class AccessibilityControl {
         AccessibilityOverlay.AllControls.Push(This)
     }
     
+    GetMasterControl() {
+        CurrentControl := This
+        Loop AccessibilityOverlay.TotalNumberOfControls {
+            If CurrentControl.SuperordinateControlID = 0
+            Return CurrentControl
+            CurrentControl := CurrentControl.GetSuperordinateControl()
+        }
+        Return 0
+    }
+    
     GetSuperordinateControl() {
         Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
     }
     
 }
 
-Class FocusableCustom Extends AccessibilityControl {
-    
-    ControlType := "Custom"
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
-    OnFocusFunction := Array()
-    
-    __New(OnFocusFunction := "") {
-        Super.__New()
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction.Call(This)
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
-        }
-    }
-    
-}
-
-Class ActivatableCustom Extends AccessibilityControl {
-    
-    ControlType := "Custom"
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
-    OnActivateFunction := Array()
-    OnFocusFunction := Array()
-    
-    __New(OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New()
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
-        If OnActivateFunction != "" {
-            If OnActivateFunction Is Array
-            This.OnActivateFunction := OnActivateFunction
-            Else
-            This.OnActivateFunction := Array(OnActivateFunction)
-        }
-    }
-    
-    Activate(CurrentControlID := 0) {
-        If HasMethod(This, "Focus")
-        This.Focus(CurrentControlID)
-        For OnActivateFunction In This.OnActivateFunction
-        OnActivateFunction.Call(This)
-    }
-    
-    Focus(CurrentControlID := 0) {
-        If CurrentControlID != This.ControlID
-        For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction.Call(This)
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
-        }
-    }
-    
-}
-
-Class GraphicalControl Extends AccessibilityControl {
-    
-    ControlType := "Graphic"
-    FoundOnImage := False
-    FoundXCoordinate := False
-    FoundYCoordinate := False
-    OnImage := Array()
-    X1Coordinate := 0
-    Y1Coordinate := 0
-    X2Coordinate := 0
-    Y2Coordinate := 0
-    State := 0
-    
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage) {
-        Super.__New()
-        This.X1Coordinate := X1Coordinate
-        This.Y1Coordinate := Y1Coordinate
-        This.X2Coordinate := X2Coordinate
-        This.Y2Coordinate := Y2Coordinate
-        If OnImage = ""
-        OnImage := Array()
-        If Not OnImage Is Array
-        OnImage := Array(OnImage)
-        This.OnImage := OnImage
-    }
-    
-    SetState() {
-        FoundXCoordinate := False
-        FoundYCoordinate := False
-        Try {
-            For OnImage In This.OnImage
-            If OnImage != "" And FileExist(OnImage) And Not InStr(FileExist(OnImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnImage) {
-                This.FoundOnImage := OnImage
-                This.FoundXCoordinate := FoundXCoordinate
-                This.FoundYCoordinate := FoundYCoordinate
-                This.State := 1
-                Return True
-            }
-            This.FoundOnImage := False
-            This.FoundXCoordinate := False
-            This.FoundYCoordinate := False
-            This.State := 0
-            Return False
-        }
-        Catch {
-            This.FoundOnImage := False
-            This.FoundXCoordinate := False
-            This.FoundYCoordinate := False
-            This.State := 0
-            Return False
-        }
-    }
-    
-}
-
-Class FocusableGraphic Extends GraphicalControl {
-    
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
-    OnFocusFunction := Array()
-    
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnFocusFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage)
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        This.SetState()
-        If This.State = 1 And CurrentControlID != This.ControlID {
-            MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
-        }
-    }
-    
-    SetState() {
-        If HasProp(This, "OnFocusFunction")
-        For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction.Call(This)
-        Super.SetState()
-    }
-    
-}
-
-Class ActivatableGraphic Extends FocusableGraphic {
-    
-    OnActivateFunction := Array()
-    
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnFocusFunction)
-        If OnActivateFunction != "" {
-            If OnActivateFunction Is Array
-            This.OnActivateFunction := OnActivateFunction
-            Else
-            This.OnActivateFunction := Array(OnActivateFunction)
-        }
-    }
-    
-    Activate(CurrentControlID := 0) {
-        This.SetState()
-        If This.State = 1 {
-            If HasMethod(This, "Focus")
-            This.Focus(CurrentControlID)
-            Click This.FoundXCoordinate, This.FoundYCoordinate
-            Sleep 250
-        }
-    }
-    
-}
-
-Class ToggleableGraphic Extends ActivatableGraphic {
-    
-    IsToggle := 0
-    FoundOffImage := False
-    OffImage := Array()
-    
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage := "", OffImage := "", OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnFocusFunction, OnActivateFunction)
-        If OffImage = ""
-        OffImage := Array()
-        If Not OffImage Is Array
-        OffImage := Array(OffImage)
-        This.OffImage := OffImage
-        If This.OnImage != Array() And This.OffImage != Array() And This.OnImage != This.OffImage
-        This.IsToggle := 1
-    }
-    
-    Activate(CurrentControlID := 0) {
-        This.SetState()
-        If This.State != -1 {
-            If CurrentControlID != This.ControlID
-            If HasMethod(This, "Focus")
-            This.Focus(CurrentControlID)
-            Click This.FoundXCoordinate, This.FoundYCoordinate
-            Sleep 250
-        }
-        This.SetState()
-    }
-    
-    Focus(CurrentControlID := 0) {
-        This.SetState()
-        If This.State != -1 {
-            If CurrentControlID != This.ControlID
-            MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-        }
-    }
-    
-    SetState() {
-        If HasProp(This, "OnFocusFunction")
-        For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction.Call(This)
-        FoundXCoordinate := False
-        FoundYCoordinate := False
-        Try {
-            For OnImage In This.OnImage
-            If OnImage != "" And FileExist(OnImage) And Not InStr(FileExist(OnImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnImage) {
-                This.FoundOnImage := OnImage
-                This.FoundXCoordinate := FoundXCoordinate
-                This.FoundYCoordinate := FoundYCoordinate
-                This.State := 1
-                Return True
-            }
-            For OffImage In This.OffImage
-            If OffImage != "" And FileExist(OffImage) And Not InStr(FileExist(OffImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OffImage) {
-                This.FoundOffImage := OffImage
-                This.FoundXCoordinate := FoundXCoordinate
-                This.FoundYCoordinate := FoundYCoordinate
-                This.State := 0
-                Return True
-            }
-            This.FoundOnImage := False
-            This.FoundOffImage := False
-            This.FoundXCoordinate := False
-            This.FoundYCoordinate := False
-            This.State := -1
-            Return False
-        }
-        Catch {
-            This.FoundOnImage := False
-            This.FoundOffImage := False
-            This.FoundXCoordinate := False
-            This.FoundYCoordinate := False
-            This.State := -1
-            Return False
-        }
-    }
-    
-}
-
-Class HotspotControl Extends AccessibilityControl {
-    
-    ControlType := "Hotspot"
-    XCoordinate := 0
-    YCoordinate := 0
-    
-    __New(XCoordinate, YCoordinate) {
-        Super.__New()
-        This.XCoordinate := XCoordinate
-        This.YCoordinate := YCoordinate
-    }
-    
-}
-
-Class FocusableHotspot Extends HotspotControl {
-    
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
-    OnFocusFunction := Array()
-    
-    __New(XCoordinate, YCoordinate, OnFocusFunction := "") {
-        Super.__New(XCoordinate, YCoordinate)
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        If CurrentControlID != This.ControlID {
-            For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction.Call(This)
-            Click This.XCoordinate, This.YCoordinate
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
-        }
-    }
-    
-}
-
-Class ActivatableHotspot Extends HotspotControl {
-    
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
-    OnActivateFunction := Array()
-    OnFocusFunction := Array()
-    
-    __New(XCoordinate, YCoordinate, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(XCoordinate, YCoordinate)
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
-        If OnActivateFunction != "" {
-            If OnActivateFunction Is Array
-            This.OnActivateFunction := OnActivateFunction
-            Else
-            This.OnActivateFunction := Array(OnActivateFunction)
-        }
-    }
-    
-    Activate(CurrentControlID := 0) {
-        If HasMethod(This, "Focus")
-        This.Focus(CurrentControlID)
-        For OnActivateFunction In This.OnActivateFunction
-        OnActivateFunction.Call(This)
-        Click This.XCoordinate, This.YCoordinate
-    }
-    
-    Focus(CurrentControlID := 0) {
-        If CurrentControlID != This.ControlID {
-            For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction.Call(This)
-            MouseMove This.XCoordinate, This.YCoordinate
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
-        }
-    }
-    
-}
-
-Class OCRControl Extends AccessibilityControl {
-    
-    ControlType := "OCR"
-    OCRLanguage := ""
-    OCRScale := 1
-    X1Coordinate := 0
-    Y1Coordinate := 0
-    X2Coordinate := 0
-    Y2Coordinate := 0
-    
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1) {
-        Super.__New()
-        This.X1Coordinate := X1Coordinate
-        This.Y1Coordinate := Y1Coordinate
-        This.X2Coordinate := X2Coordinate
-        This.Y2Coordinate := Y2Coordinate
-        This.OCRLanguage := OCRLanguage
-        This.OCRScale := OCRScale
-    }
-    
-}
-
-Class FocusableOCR Extends OCRControl {
-    
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
-    OnFocusFunction := Array()
-    
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale)
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        If CurrentControlID != This.ControlID {
-            For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction.Call(This)
-            XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
-            YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
-            Click XCoordinate, YCoordinate
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
-        }
-    }
-    
-}
-
-Class ActivatableOCR Extends OCRControl {
-    
-    OnActivateFunction := Array()
-    OnFocusFunction := Array()
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
-    
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale)
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
-        If OnActivateFunction != "" {
-            If OnActivateFunction Is Array
-            This.OnActivateFunction := OnActivateFunction
-            Else
-            This.OnActivateFunction := Array(OnActivateFunction)
-        }
-    }
-    
-    Activate(CurrentControlID := 0) {
-        If HasMethod(This, "Focus")
-        This.Focus(CurrentControlID)
-        For OnActivateFunction In This.OnActivateFunction
-        OnActivateFunction.Call(This)
-        XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
-        YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
-        Click XCoordinate, YCoordinate
-    }
-    
-    Focus(CurrentControlID := 0) {
-        If CurrentControlID != This.ControlID {
-            For OnFocusFunction In This.OnFocusFunction
-            OnFocusFunction.Call(This)
-            XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
-            YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
-            MouseMove XCoordinate, YCoordinate
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
-        }
-    }
-    
-}
-
 Class AccessibilityOverlay Extends AccessibilityControl {
     
-    ControlType := "Overlay"
-    ControlTypeLabel := "overlay"
-    Label := ""
-    FocusableControlIDs := Array()
     ChildControls := Array()
+    ControlType := "AccessibilityOverlay"
+    ControlTypeLabel := "overlay"
     CurrentControlID := 0
-    UnlabelledString := ""
+    DefaultLabel := ""
+    FocusableControlIDs := Array()
+    Label := ""
+    PreviousControlID := 0
     Static AllControls := Array()
+    Static CurrentControlID := 0
+    Static JAWS := False
+    Static LastMessage := ""
+    Static PreviousControlID := 0
+    Static SAPI := False
     Static TotalNumberOfControls := 0
-    Static JAWS := AccessibilityOverlay.SetupJAWS()
-    Static SAPI := AccessibilityOverlay.SetupSAPI()
-    Static Translations := AccessibilityOverlay.SetupTranslations()
     
     __New(Label := "") {
         Super.__New()
@@ -553,18 +65,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(ControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(ControlID)
-                If HasMethod(CurrentControl, "Focus") And ControlID != This.CurrentControlID {
-                    CurrentControl.Focus()
-                    This.SetCurrentControlID(ControlID)
-                }
-                If HasMethod(CurrentControl, "Activate") {
-                    CurrentControl.Activate(ControlID)
-                    This.SetCurrentControlID(ControlID)
-                    Return 1
-                }
+                This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
+                If CurrentControl.HasMethod("Activate")
+                CurrentControl.Activate()
+                This.SetCurrentControlID(ControlID)
             }
         }
-        Return 0
     }
     
     ActivateCurrentControl() {
@@ -573,12 +79,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
-                If HasMethod(CurrentControl, "Activate")
-                CurrentControl.Activate(CurrentControl.ControlID)
-                Return 1
+                This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
+                If CurrentControl.HasMethod("Activate")
+                CurrentControl.Activate()
+                This.SetCurrentControlID(CurrentControl.ControlID)
             }
         }
-        Return 0
     }
     
     AddControl(Control) {
@@ -603,7 +109,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Clone.ChildControls := Array()
         Clone.CurrentControlID := 0
         For PropertyName, PropertyValue In This.OwnProps()
-        If PropertyName != "ChildControls" And PropertyName != "ControlID" And PropertyName != "CurrentControlID" And PropertyName != "SuperordinateControlID"
+        If Not PropertyName = "ChildControls" And Not PropertyName = "ControlID" And Not PropertyName = "CurrentControlID" And Not PropertyName = "SuperordinateControlID"
         Clone.%PropertyName% := PropertyValue
         For CurrentControl In This.ChildControls
         Switch(CurrentControl.__Class) {
@@ -614,18 +120,18 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             For CurrentTab In CurrentControl.Tabs
             ClonedControl.AddTabs(CurrentTab.Clone())
             For PropertyName, PropertyValue In CurrentControl.OwnProps()
-            If !HasProp(ClonedControl, PropertyName)
+            If Not ClonedControl.HasProp(PropertyName)
             ClonedControl.%PropertyName% := PropertyValue
             Else
-            If PropertyName != "ControlID"And PropertyName != "CurrentTab" And PropertyName != "SuperordinateControlID" And PropertyName != "Tabs"
-            If ClonedControl.%PropertyName% != PropertyValue
+            If Not PropertyName = "ControlID"And Not PropertyName = "CurrentTab" And Not PropertyName = "SuperordinateControlID" And Not PropertyName = "Tabs"
+            If Not ClonedControl.%PropertyName% = PropertyValue
             ClonedControl.%PropertyName% := PropertyValue
             Clone.AddControl(ClonedControl)
             Default:
             ClonedControl := AccessibilityControl()
             ClonedControl.Base := CurrentControl.Base
             For PropertyName, PropertyValue In CurrentControl.OwnProps()
-            If PropertyName != "ControlID" And PropertyName != "SuperordinateControlID"
+            If Not PropertyName = "ControlID" And Not PropertyName = "SuperordinateControlID"
             ClonedControl.%PropertyName% := PropertyValue
             Clone.AddControl(ClonedControl)
         }
@@ -638,13 +144,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
-                If CurrentControl Is GraphicalSlider {
-                    CurrentControl.Decrease()
-                    Return 1
-                }
+                If CurrentControl Is GraphicalSlider
+                CurrentControl.Decrease()
             }
         }
-        Return 0
     }
     
     FindFocusableControlID(ControlID) {
@@ -656,23 +159,18 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return 0
     }
     
-    Focus(ControlID := 0) {
+    Focus(Speak := True) {
         If This.ChildControls.Length > 0 {
             This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found = 0
             This.CurrentControlID := This.FocusableControlIDs[1]
-            This.SetCurrentControlID(This.CurrentControlID)
             CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
-            If HasMethod(CurrentControl, "Focus") {
-                If This.ControlID != ControlID
-                CurrentControl.Focus()
-                Else
-                CurrentControl.Focus(CurrentControl.ControlID)
-                Return 1
-            }
+            This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
+            If CurrentControl.HasMethod("Focus")
+            CurrentControl.Focus(Speak)
+            This.SetCurrentControlID(This.CurrentControlID)
         }
-        Return 0
     }
     
     FocusControl(ControlID) {
@@ -681,18 +179,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(ControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(ControlID)
-                If HasMethod(CurrentControl, "Focus")
-                If ControlID != This.CurrentControlID {
-                    CurrentControl.Focus()
-                    This.SetCurrentControlID(ControlID)
-                }
-                Else {
-                    CurrentControl.Focus(ControlID)
-                }
-                Return 1
+                This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
+                If CurrentControl.HasMethod("Focus")
+                CurrentControl.Focus()
+                This.SetCurrentControlID(ControlID)
             }
         }
-        Return 0
     }
     
     FocusCurrentControl() {
@@ -701,12 +193,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
-                If HasMethod(CurrentControl, "Focus")
+                This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
+                If CurrentControl.HasMethod("Focus")
                 CurrentControl.Focus()
-                Return 1
+                This.SetCurrentControlID(CurrentControl.controlID)
             }
         }
-        Return 0
     }
     
     FocusNextControl() {
@@ -717,14 +209,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             This.CurrentControlID := This.FocusableControlIDs[1]
             Else
             This.CurrentControlID := This.FocusableControlIDs[Found + 1]
-            This.SetCurrentControlID(This.CurrentControlID)
             CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
-            If HasMethod(CurrentControl, "Focus") {
-                CurrentControl.Focus()
-                Return 1
-            }
+            This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
+            If CurrentControl.HasMethod("Focus")
+            CurrentControl.Focus()
+            This.SetCurrentControlID(This.CurrentControlID)
         }
-        Return 0
     }
     
     FocusPreviousControl() {
@@ -735,14 +225,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             This.CurrentControlID := This.FocusableControlIDs[This.FocusableControlIDs.Length]
             Else
             This.CurrentControlID := This.FocusableControlIDs[Found - 1]
-            This.SetCurrentControlID(This.CurrentControlID)
             CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
-            If HasMethod(CurrentControl, "Focus") {
-                CurrentControl.Focus()
-                Return 1
-            }
+            This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
+            If CurrentControl.HasMethod("Focus")
+            CurrentControl.Focus()
+            This.SetCurrentControlID(This.CurrentControlID)
         }
-        Return 0
     }
     
     FocusNextTab() {
@@ -752,17 +240,17 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
                 If CurrentControl Is TabControl {
+                    This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
                     If CurrentControl.CurrentTab < CurrentControl.Tabs.Length
-                    Tab := CurrentControl.CurrentTab + 1
+                    TabNumber := CurrentControl.CurrentTab + 1
                     Else
-                    Tab := 1
-                    CurrentControl.CurrentTab := Tab
-                    CurrentControl.Focus(CurrentControl.ControlID)
-                    Return 1
+                    TabNumber := 1
+                    CurrentControl.CurrentTab := TabNumber
+                    CurrentControl.Focus()
+                    This.SetCurrentControlID(CurrentControl.ControlID)
                 }
             }
         }
-        Return 0
     }
     
     FocusPreviousTab() {
@@ -772,17 +260,17 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
                 If CurrentControl Is TabControl {
+                    This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
                     If CurrentControl.CurrentTab <= 1
-                    Tab := CurrentControl.Tabs.Length
+                    TabNumber := CurrentControl.Tabs.Length
                     Else
-                    Tab := CurrentControl.CurrentTab - 1
-                    CurrentControl.CurrentTab := Tab
-                    CurrentControl.Focus(CurrentControl.ControlID)
-                    Return 1
+                    TabNumber := CurrentControl.CurrentTab - 1
+                    CurrentControl.CurrentTab := TabNumber
+                    CurrentControl.Focus()
+                    This.SetCurrentControlID(CurrentControl.controlID)
                 }
             }
         }
-        Return 0
     }
     
     GetAllControls() {
@@ -873,19 +361,23 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         OverlayHotkeys := Array()
         TempList := Map()
         For OverlayControl In This.GetAllControls()
-        If OverlayControl.HasOwnProp("HotkeyCommand") And OverlayControl.HotkeyCommand != ""
+        If OverlayControl.HasOwnProp("HotkeyCommand") And Not OverlayControl.HotkeyCommand = ""
         TempList.Set(OverlayControl.HotkeyCommand, OverlayControl.HotkeyCommand)
         For OverlayHotkey In TempList
         OverlayHotkeys.Push(OverlayHotkey)
         Return OverlayHotkeys
     }
     
+    GetPreviousControl() {
+        Return AccessibilityOverlay.GetControl(This.PreviousControlID)
+    }
+    
     GetReachableControls() {
         ReachableControls := Array()
         For Value In This.GetFocusableControls()
         If Value Is TabControl {
-            For Tab In Value.Tabs
-            ReachableControls.Push(Tab)
+            For TabObject In Value.Tabs
+            ReachableControls.Push(TabObject)
         }
         Else {
             ReachableControls.Push(Value)
@@ -899,13 +391,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
-                If CurrentControl Is GraphicalSlider {
-                    CurrentControl.Increase()
-                    Return 1
-                }
+                If CurrentControl Is GraphicalSlider
+                CurrentControl.Increase()
             }
         }
-        Return 0
     }
     
     RemoveControl() {
@@ -915,7 +404,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             This.FocusableControlIDs := This.GetFocusableControlIDs()
             NewList := This.FocusableControlIDs
             Found := This.FindFocusableControlID(This.CurrentControlID)
-            If Found = 0 Or OldList[Found] != NewList[Found]
+            If Found = 0 Or Not OldList[Found] = NewList[Found]
             If NewList.Length = 0 {
                 This.CurrentControlID := 0
             }
@@ -933,9 +422,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
             }
             This.SetCurrentControlID(This.CurrentControlID)
-            Return 1
         }
-        Return 0
     }
     
     RemoveControlAt(Index) {
@@ -945,7 +432,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             This.FocusableControlIDs := This.GetFocusableControlIDs()
             NewList := This.FocusableControlIDs
             Found := This.FindFocusableControlID(This.CurrentControlID)
-            If Found = 0 Or OldList[Found] != NewList[Found]
+            If Found = 0 Or Not OldList[Found] = NewList[Found]
             If NewList.Length = 0 {
                 This.CurrentControlID := 0
             }
@@ -963,9 +450,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
             }
             This.SetCurrentControlID(This.CurrentControlID)
-            Return 1
         }
-        Return 0
     }
     
     Reset() {
@@ -1000,13 +485,11 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If CurrentControl.ControlType = "ComboBox" {
                     CurrentOption := CurrentControl.CurrentOption
                     CurrentControl.SelectNextOption()
-                    If CurrentOption != CurrentControl.CurrentOption
+                    If Not CurrentOption = CurrentControl.CurrentOption
                     CurrentControl.ReportValue()
-                    Return 1
                 }
             }
         }
-        Return 0
     }
     
     SelectPreviousOption() {
@@ -1018,30 +501,30 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If CurrentControl.ControlType = "ComboBox" {
                     CurrentOption := CurrentControl.CurrentOption
                     CurrentControl.SelectPreviousOption()
-                    If CurrentOption != CurrentControl.CurrentOption
+                    If Not CurrentOption = CurrentControl.CurrentOption
                     CurrentControl.ReportValue()
-                    Return 1
                 }
             }
         }
-        Return 0
     }
     
-    SetCurrentControlID(ControlID) {
+    SetControlID(Type, ControlID) {
+        If Type = "Current" Or Type = "Previous"
         If This.ChildControls.Length > 0 {
-            This.CurrentControlID := ControlID
+            AccessibilityOverlay.%Type%ControlID := ControlID
+            This.%Type%ControlID := ControlID
             For CurrentControl In This.ChildControls {
                 Switch(CurrentControl.__Class) {
                     Case "AccessibilityOverlay":
                     If CurrentControl.ChildControls.Length > 0 {
                         Found := CurrentControl.FindFocusableControlID(ControlID)
                         If Found > 0
-                        CurrentControl.SetCurrentControlID(ControlID)
+                        CurrentControl.SetControlID(Type, ControlID)
                         Else
-                        CurrentControl.CurrentControlID := 0
+                        CurrentControl.%Type%ControlID := 0
                     }
                     Else {
-                        CurrentControl.CurrentControlID := 0
+                        CurrentControl.%Type%ControlID := 0
                     }
                     Case "TabControl":
                     If CurrentControl.Tabs.Length > 0 {
@@ -1049,53 +532,28 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                         If CurrentTab.ChildControls.Length > 0 {
                             Found := CurrentTab.FindFocusableControlID(ControlID)
                             If Found > 0
-                            CurrentTab.SetCurrentControlID(ControlID)
+                            CurrentTab.SetControlID(Type, ControlID)
                             Else
-                            CurrentTab.CurrentControlID := 0
+                            CurrentTab.%Type%ControlID := 0
                         }
                         Else {
-                            CurrentTab.CurrentControlID := 0
+                            CurrentTab.%Type%ControlID := 0
                         }
                     }
                 }
             }
         }
         Else {
-            This.CurrentControlID := 0
+            This.%Type%ControlID := 0
         }
     }
     
-    Translate(Translation := "") {
-        If Translation != "" {
-            If !(Translation Is Map)
-            Translation := AccessibilityOverlay.Translations[Translation]
-            If Translation Is Map {
-                If Translation[This.__Class] Is Map
-                For Key, Value In Translation[This.__Class]
-                This.%Key% := Value
-                If This.ChildControls.Length > 0
-                For CurrentControl In This.ChildControls {
-                    If Translation[CurrentControl.__Class] Is Map
-                    For Key, Value In Translation[CurrentControl.__Class]
-                    CurrentControl.%Key% := Value
-                    Switch(CurrentControl.__Class) {
-                        Case "AccessibilityOverlay":
-                        If CurrentControl.ChildControls.Length > 0 {
-                            CurrentControl.Translate(Translation)
-                        }
-                        Case "TabControl":
-                        If CurrentControl.Tabs.Length > 0
-                        For CurrentTab In CurrentControl.Tabs {
-                            If Translation[CurrentTab.__Class] Is Map
-                            For Key, Value In Translation[CurrentTab.__Class]
-                            CurrentTab.%Key% := Value
-                            If CurrentTab.ChildControls.Length > 0
-                            CurrentTab.Translate(Translation)
-                        }
-                    }
-                }
-            }
-        }
+    SetCurrentControlID(ControlID) {
+        This.SetControlID("Current", controlID)
+    }
+    
+    SetPreviousControlID(ControlID) {
+        This.SetControlID("Previous", controlID)
     }
     
     TriggerHotkey(HotkeyCommand) {
@@ -1107,30 +565,43 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             For Index, Value In ParentTabControl.Tabs
             If Value = ReachableControl {
                 ParentTabControl.CurrentTab := Index
-                If ReachableControl.ControlID != SiblingTab.ControlID {
+                If Not ReachableControl.ControlID = SiblingTab.ControlID {
                     This.FocusControl(ParentTabControl.ControlID)
                 }
                 Else {
-                    If This.GetCurrentControlID() != ParentTabControl.ControlID
+                    If Not This.GetCurrentControlID() = ParentTabControl.ControlID
                     This.FocusControl(ParentTabControl.ControlID)
                     Else
                     ReachableControl.Focus(ReachableControl.controlID)
                     This.SetCurrentControlID(ParentTabControl.ControlID)
                 }
-                For HotkeyFunction In ReachableControl.HotkeyFunction
+                For HotkeyFunction In ReachableControl.HotkeyFunctions
                 HotkeyFunction.Call(ReachableControl)
                 Break 2
             }
         }
         Else {
-            If HasMethod(ReachableControl, "Activate")
+            If ReachableControl.HasMethod("Activate")
             This.ActivateControl(ReachableControl.ControlID)
             Else
             This.FocusControl(ReachableControl.ControlID)
-            For HotkeyFunction In ReachableControl.HotkeyFunction
+            For HotkeyFunction In ReachableControl.HotkeyFunctions
             HotkeyFunction.Call(ReachableControl)
             Break
         }
+    }
+    
+    Static __New() {
+        Try
+        JAWS := ComObject("FreedomSci.JawsApi")
+        Catch
+        JAWS := False
+        AccessibilityOverlay.JAWS := JAWS
+        Try
+        SAPI := ComObject("SAPI.SpVoice")
+        Catch
+        SAPI := False
+        AccessibilityOverlay.SAPI := SAPI
     }
     
     Static GetAllControls() {
@@ -1149,14 +620,14 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             FirstAvailableLanguage := False
             PreferredLanguage := False
             Loop Parse, AvailableLanguages, "`n" {
-                If A_Index = 1 And A_LoopField != ""
+                If A_Index = 1 And Not A_LoopField = ""
                 FirstAvailableLanguage := A_LoopField
-                If A_LoopField = OCRLanguage And OCRLanguage != "" {
+                If A_LoopField = OCRLanguage And Not OCRLanguage = "" {
                     PreferredLanguage := OCRLanguage
                     Break
                 }
             }
-            If PreferredLanguage = False And FirstAvailableLanguage != False {
+            If PreferredLanguage = False And Not FirstAvailableLanguage = False {
                 OCRResult := OCR.FromWindow("A", FirstAvailableLanguage, OCRScale)
                 OCRResult := OCRResult.Crop(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate)
                 Return OCRResult.Text
@@ -1173,543 +644,394 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return ""
     }
     
-    Static SetupJAWS() {
-        Try
-        JAWS := ComObject("FreedomSci.JawsApi")
-        Catch
-        JAWS := False
-        Return JAWS
-    }
-    
-    Static SetupSAPI() {
-        Try
-        SAPI := ComObject("SAPI.SpVoice")
-        Catch
-        SAPI := False
-        Return SAPI
-    }
-    
-    Static SetupTranslations() {
-        English := Map(
-        "AccessibilityOverlay", Map(
-        "ControlTypeLabel", "overlay",
-        "UnlabelledString", ""),
-        "CustomButton", Map(
-        "ControlTypeLabel", "button",
-        "UnlabelledString", "unlabelled"),
-        "CustomCheckbox", Map(
-        "ControlTypeLabel", "checkbox",
-        "CheckedString", "checked",
-        "UncheckedString", "not checked",
-        "UnknownStateString", "unknown state",
-        "UnlabelledString", "unlabelled"),
-        "CustomComboBox", Map(
-        "ControlTypeLabel", "combo box",
-        "UnlabelledString", "unlabelled"),
-        "CustomEdit", Map(
-        "ControlTypeLabel", "edit",
-        "BlankString", "blank",
-        "UnlabelledString", "unlabelled"),
-        "CustomTab", Map(
-        "ControlTypeLabel", "tab",
-        "UnlabelledString", "unlabelled"),
-        "CustomToggleButton", Map(
-        "ControlTypeLabel", "button",
-        "OffString", "off",
-        "OnString", "on",
-        "UnknownStateString", "unknown state",
-        "UnlabelledString", "unlabelled"),
-        "GraphicalButton", Map(
-        "ControlTypeLabel", "button",
-        "NotFoundString", "not found",
-        "OffString", "off",
-        "OnString", "on",
-        "UnlabelledString", "unlabelled"),
-        "GraphicalCheckbox", Map(
-        "ControlTypeLabel", "checkbox",
-        "CheckedString", "checked",
-        "UncheckedString", "not checked",
-        "NotFoundString", "not found",
-        "UnlabelledString", "unlabelled"),
-        "GraphicalSlider", Map(
-        "ControlTypeLabel", "slider",
-        "NotFoundString", "not found",
-        "UnlabelledString", "unlabelled"),
-        "GraphicalHorizontalSlider", Map(
-        "ControlTypeLabel", "slider",
-        "NotFoundString", "not found",
-        "UnlabelledString", "unlabelled"),
-        "GraphicalVerticalSlider", Map(
-        "ControlTypeLabel", "slider",
-        "NotFoundString", "not found",
-        "UnlabelledString", "unlabelled"),
-        "GraphicalTab", Map(
-        "ControlTypeLabel", "tab",
-        "UnlabelledString", "unlabelled"),
-        "HotspotButton", Map(
-        "ControlTypeLabel", "button",
-        "UnlabelledString", "unlabelled"),
-        "HotspotCheckbox", Map(
-        "ControlTypeLabel", "checkbox",
-        "CheckedString", "checked",
-        "UncheckedString", "not checked",
-        "UnknownStateString", "unknown state",
-        "UnlabelledString", "unlabelled"),
-        "HotspotComboBox", Map(
-        "ControlTypeLabel", "combo box",
-        "UnlabelledString", "unlabelled"),
-        "HotspotEdit", Map(
-        "ControlTypeLabel", "edit",
-        "BlankString", "blank",
-        "UnlabelledString", "unlabelled"),
-        "HotspotTab", Map(
-        "ControlTypeLabel", "tab",
-        "UnlabelledString", "unlabelled"),
-        "HotspotToggleButton", Map(
-        "ControlTypeLabel", "button",
-        "OffString", "off",
-        "OnString", "on",
-        "UnknownStateString", "unknown state",
-        "UnlabelledString", "unlabelled"),
-        "NativeControl", Map(
-        "NotFoundString", "not found"),
-        "OCRButton", Map(
-        "ControlTypeLabel", "button",
-        "UnlabelledString", ""),
-        "OCRComboBox", Map(
-        "ControlTypeLabel", "combo box",
-        "UnlabelledString", "unlabelled"),
-        "OCREdit", Map(
-        "ControlTypeLabel", "edit",
-        "BlankString", "blank",
-        "UnlabelledString", "unlabelled"),
-        "OCRTab", Map(
-        "ControlTypeLabel", "tab",
-        "UnlabelledString", ""),
-        "TabControl", Map(
-        "ControlTypeLabel", "tab control",
-        "SelectedString", "selected",
-        "NotFoundString", "not found",
-        "UnlabelledString", ""),
-        "UIAControl", Map(
-        "NotFoundString", "not found"))
-        English.Default := ""
-        Slovak := Map(
-        "AccessibilityOverlay", Map(
-        "ControlTypeLabel", "prekrytie",
-        "UnlabelledString", ""),
-        "CustomButton", Map(
-        "ControlTypeLabel", "tlačidlo",
-        "UnlabelledString", "bez názvu"),
-        "CustomCheckbox", Map(
-        "ControlTypeLabel", "začiarkavacie políčko",
-        "CheckedString", "začiarknuté",
-        "UncheckedString", "nezačiarknuté",
-        "UnknownStateString", "neznámy stav",
-        "UnlabelledString", "bez názvu"),
-        "CustomComboBox", Map(
-        "ControlTypeLabel", "kombinovaný rámik",
-        "UnlabelledString", "bez názvu"),
-        "CustomEdit", Map(
-        "ControlTypeLabel", "editačné",
-        "BlankString", "prázdny",
-        "UnlabelledString", "bez názvu"),
-        "CustomTab", Map(
-        "ControlTypeLabel", "záložka",
-        "UnlabelledString", "bez názvu"),
-        "CustomToggleButton", Map(
-        "ControlTypeLabel", "button",
-        "OffString", "vypnuté",
-        "OnString", "zapnuté",
-        "UnknownStateString", "neznámy stav",
-        "UnlabelledString", "unlabelled"),
-        "GraphicalButton", Map(
-        "ControlTypeLabel", "tlačidlo",
-        "NotFoundString", "nenájdené",
-        "OffString", "vypnuté",
-        "OnString", "zapnuté",
-        "UnlabelledString", "bez názvu"),
-        "GraphicalCheckbox", Map(
-        "ControlTypeLabel", "začiarkavacie políčko",
-        "CheckedString", "začiarknuté",
-        "UncheckedString", "nezačiarknuté",
-        "NotFoundString", "nenájdené",
-        "UnlabelledString", "bez názvu"),
-        "GraphicalSlider", Map(
-        "ControlTypeLabel", "posuvník",
-        "NotFoundString", "nenájdené",
-        "UnlabelledString", "bez názvu"),
-        
-        "GraphicalHorizontalSlider", Map(
-        "ControlTypeLabel", "posuvník",
-        "NotFoundString", "nenájdené",
-        "UnlabelledString", "bez názvu"),
-        "GraphicalVerticalSlider", Map(
-        "ControlTypeLabel", "posuvník",
-        "NotFoundString", "nenájdené",
-        "UnlabelledString", "bez názvu"),
-        "GraphicalTab", Map(
-        "ControlTypeLabel", "záložka",
-        "UnlabelledString", "bez názvu"),
-        "HotspotButton", Map(
-        "ControlTypeLabel", "tlačidlo",
-        "UnlabelledString", "bez názvu"),
-        "HotspotCheckbox", Map(
-        "ControlTypeLabel", "začiarkavacie políčko",
-        "CheckedString", "začiarknuté",
-        "UncheckedString", "nezačiarknuté",
-        "UnknownStateString", "neznámy stav",
-        "UnlabelledString", "bez názvu"),
-        "HotspotComboBox", Map(
-        "ControlTypeLabel", "kombinovaný rámik",
-        "UnlabelledString", "bez názvu"),
-        "HotspotEdit", Map(
-        "ControlTypeLabel", "editačné",
-        "BlankString", "prázdny",
-        "UnlabelledString", "bez názvu"),
-        "HotspotTab", Map(
-        "ControlTypeLabel", "záložka",
-        "UnlabelledString", "bez názvu"),
-        "HotspotToggleButton", Map(
-        "ControlTypeLabel", "button",
-        "OffString", "vypnuté",
-        "OnString", "zapnuté",
-        "UnknownStateString", "neznámy stav",
-        "UnlabelledString", "unlabelled"),
-        "NativeControl", Map(
-        "NotFoundString", "nenájdené"),
-        "OCRButton", Map(
-        "ControlTypeLabel", "tlačidlo",
-        "UnlabelledString", ""),
-        "OCRComboBox", Map(
-        "ControlTypeLabel", "kombinovaný rámik",
-        "UnlabelledString", "bez názvu"),
-        "OCREdit", Map(
-        "ControlTypeLabel", "editačné",
-        "BlankString", "prázdny",
-        "UnlabelledString", "bez názvu"),
-        "OCRTab", Map(
-        "ControlTypeLabel", "záložka",
-        "UnlabelledString", ""),
-        "TabControl", Map(
-        "ControlTypeLabel", "zoznam záložiek",
-        "SelectedString", "vybraté",
-        "NotFoundString", "nenájdené",
-        "UnlabelledString", ""),
-        "UIAControl", Map(
-        "NotFoundString", "nenájdené"))
-        Slovak.Default := ""
-        Swedish := Map(
-        "AccessibilityOverlay", Map(
-        "ControlTypeLabel", "täcke",
-        "UnlabelledString", ""),
-        "CustomButton", Map(
-        "ControlTypeLabel", "knapp",
-        "UnlabelledString", "namnlös"),
-        "CustomCheckbox", Map(
-        "ControlTypeLabel", "kryssruta",
-        "CheckedString", "kryssad",
-        "UncheckedString", "inte kryssad",
-        "UnknownStateString", "okänt läge",
-        "UnlabelledString", "namnlös"),
-        "CustomComboBox", Map(
-        "ControlTypeLabel", "kombinationsruta",
-        "UnlabelledString", "namnlös"),
-        "CustomEdit", Map(
-        "ControlTypeLabel", "redigera",
-        "BlankString", "tom",
-        "UnlabelledString", "namnlös"),
-        "CustomTab", Map(
-        "ControlTypeLabel", "flik",
-        "UnlabelledString", "namnlös"),
-        "CustomToggleButton", Map(
-        "ControlTypeLabel", "button",
-        "OffString", "av",
-        "OnString", "på",
-        "UnknownStateString", "okänt läge",
-        "UnlabelledString", "unlabelled"),
-        "GraphicalButton", Map(
-        "ControlTypeLabel", "knapp",
-        "NotFoundString", "hittades ej",
-        "OffString", "av",
-        "OnString", "på",
-        "UnlabelledString", "namnlös"),
-        "GraphicalCheckbox", Map(
-        "ControlTypeLabel", "kryssruta",
-        "CheckedString", "kryssad",
-        "UncheckedString", "inte kryssad",
-        "NotFoundString", "hittades ej",
-        "UnlabelledString", "namnlös"),
-        "GraphicalSlider", Map(
-        "ControlTypeLabel", "skjutreglage",
-        "NotFoundString", "hittades ej",
-        "UnlabelledString", "namnlös"),
-        
-        "GraphicalHorizontalSlider", Map(
-        "ControlTypeLabel", "skjutreglage",
-        "NotFoundString", "hittades ej",
-        "UnlabelledString", "namnlös"),
-        "GraphicalVerticalSliderSlider", Map(
-        "ControlTypeLabel", "skjutreglage",
-        "NotFoundString", "hittades ej",
-        "UnlabelledString", "namnlös"),
-        "GraphicalTab", Map(
-        "ControlTypeLabel", "flik",
-        "UnlabelledString", "namnlös"),
-        "HotspotButton", Map(
-        "ControlTypeLabel", "knapp",
-        "UnlabelledString", "namnlös"),
-        "HotspotCheckbox", Map(
-        "ControlTypeLabel", "kryssruta",
-        "CheckedString", "kryssad",
-        "UncheckedString", "inte kryssad",
-        "UnknownStateString", "okänt läge",
-        "UnlabelledString", "namnlös"),
-        "HotspotComboBox", Map(
-        "ControlTypeLabel", "kombinationsruta",
-        "UnlabelledString", "namnlös"),
-        "HotspotEdit", Map(
-        "ControlTypeLabel", "redigera",
-        "BlankString", "tom",
-        "UnlabelledString", "namnlös"),
-        "HotspotTab", Map(
-        "ControlTypeLabel", "flik",
-        "UnlabelledString", "namnlös"),
-        "HotspotToggleButton", Map(
-        "ControlTypeLabel", "button",
-        "OffString", "av",
-        "OnString", "på",
-        "UnknownStateString", "okänt läge",
-        "UnlabelledString", "unlabelled"),
-        "NativeControl", Map(
-        "NotFoundString", "hittades ej"),
-        "OCRButton", Map(
-        "ControlTypeLabel", "knapp",
-        "UnlabelledString", ""),
-        "OCRComboBox", Map(
-        "ControlTypeLabel", "kombinationsruta",
-        "UnlabelledString", "namnlös"),
-        "OCREdit", Map(
-        "ControlTypeLabel", "redigera",
-        "BlankString", "tom",
-        "UnlabelledString", "namnlös"),
-        "OCRTab", Map(
-        "ControlTypeLabel", "flik",
-        "UnlabelledString", ""),
-        "TabControl", Map(
-        "ControlTypeLabel", "flikar",
-        "SelectedString", "markerad",
-        "NotFoundString", "hittades ej",
-        "UnlabelledString", ""),
-        "UIAControl", Map(
-        "NotFoundString", "hittades ej"))
-        Swedish.Default := ""
-        Translations := Map()
-        Translations["English"] := English
-        Translations["Slovak"] := Slovak
-        Translations["Swedish"] := Swedish
-        Translations.Default := ""
-        Return Translations
-    }
-    
     Static Speak(Message) {
-        If (AccessibilityOverlay.JAWS != False And ProcessExist("jfw.exe")) Or (FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")) {
-            If AccessibilityOverlay.JAWS != False And ProcessExist("jfw.exe") {
-                AccessibilityOverlay.JAWS.SayString(Message)
+        If Not Message = "" {
+            AccessibilityOverlay.LastMessage := Message
+            If (Not AccessibilityOverlay.JAWS = False And ProcessExist("jfw.exe")) Or (FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And Not DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")) {
+                If Not AccessibilityOverlay.JAWS = False And ProcessExist("jfw.exe") {
+                    AccessibilityOverlay.JAWS.SayString(Message)
+                }
+                If FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And Not DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
+                    DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_cancelSpeech")
+                    DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_speakText", "Wstr", Message)
+                }
             }
-            If FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
-                DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_cancelSpeech")
-                DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_speakText", "Wstr", Message)
-            }
-        }
-        Else {
-            If AccessibilityOverlay.SAPI != False {
-                AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
-                AccessibilityOverlay.SAPI.Speak(Message, 0x1)
+            Else {
+                If Not AccessibilityOverlay.SAPI = False {
+                    AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
+                    AccessibilityOverlay.SAPI.Speak(Message, 0x1)
+                }
             }
         }
     }
     
     Static StopSpeech() {
-        If (AccessibilityOverlay.JAWS != False Or !ProcessExist("jfw.exe")) And (!FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning"))
-        If AccessibilityOverlay.SAPI != False
+        If (Not AccessibilityOverlay.JAWS = False Or Not ProcessExist("jfw.exe")) And (Not FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning"))
+        If Not AccessibilityOverlay.SAPI = False
         AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
     }
     
 }
 
-Class CustomButton Extends ActivatableCustom {
+Class FocusableControl Extends AccessibilityControl {
     
-    ControlType := "Button"
-    ControlTypeLabel := "button"
+    ControlType := "Focusable"
+    ControlTypeLabel := ""
+    DefaultLabel := ""
+    DefaultValue := ""
+    Focused := 1
+    FocusFunctions := Array()
+    HotkeyCommand := ""
+    HotkeyFunctions := Array()
     HotkeyLabel := ""
     Label := ""
-    UnlabelledString := "unlabelled"
+    State := 1
+    States := Map()
+    Value := ""
     
-    __New(Label, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(OnFocusFunction, OnActivateFunction)
+    __New(Label := "", FocusFunctions := "") {
+        Super.__New()
         This.Label := Label
-    }
-    
-    Activate(CurrentControlID := 0) {
-        Super.Activate(CurrentControlID)
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
+        If Not FocusFunctions = "" {
+            If Not FocusFunctions Is Array
+            FocusFunctions := Array(FocusFunctions)
+            For FocusFunction In FocusFunctions
+            If FocusFunction Is Object And FocusFunction.HasMethod("Call")
+            This.FocusFunctions.Push(FocusFunction)
         }
+        AccessibilityOverlay.TotalNumberOfControls++
+        This.ControlID := AccessibilityOverlay.TotalNumberOfControls
+        AccessibilityOverlay.AllControls.Push(This)
     }
     
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
-    }
-    
-}
-
-Class CustomCheckbox Extends ActivatableCustom {
-    
-    Checked := 0
-    ControlType := "Checkbox"
-    ControlTypeLabel := "checkbox"
-    HotkeyLabel := ""
-    Label := ""
-    CheckStateFunction := ""
-    CheckedString := "checked"
-    UncheckedString := "not checked"
-    UnknownStateString := "unknown state"
-    UnlabelledString := "unlabelled"
-    
-    __New(Label, CheckStateFunction, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(OnFocusFunction, OnActivateFunction)
-        This.Label := Label
-        This.CheckStateFunction := CheckStateFunction
+    CheckFocus() {
+        Return True
     }
     
     CheckState() {
-        If This.CheckStateFunction Is Func
-        This.Checked := This.CheckStateFunction.Call(This)
+        Return True
     }
     
-    Activate(CurrentControlID := 0) {
-        Super.Activate(CurrentControlID)
-        This.CheckState()
-        If This.Checked = 1
-        StateString := This.CheckedString
-        Else If This.Checked = 0
-        StateString := This.UncheckedString
-        Else
-        StateString := This.UnknownStateString
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-        }
-        Else {
-            AccessibilityOverlay.Speak(StateString)
+    Focus(Speak := True) {
+        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
+        For FocusFunction In This.FocusFunctions
+        FocusFunction.Call(This)
+        This.CheckFocus()
+        If This.HasFocus() {
+            If This.HasMethod("ExecuteOnFocusPreSpeech")
+            This.ExecuteOnFocusPreSpeech()
+            This.CheckState()
+            This.SpeakOnFocus(Speak)
+            If This.HasMethod("ExecuteOnFocusPostSpeech")
+            This.ExecuteOnFocusPostSpeech()
         }
     }
     
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        This.CheckState()
-        If This.ControlID != CurrentControlID {
-            If This.Checked = 1
-            StateString := This.CheckedString
-            Else If This.Checked = 0
-            StateString := This.UncheckedString
-            Else
-            StateString := This.UnknownStateString
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
-    }
-    
-}
-
-Class CustomComboBox Extends FocusableCustom {
-    
-    ControlType := "ComboBox"
-    ControlTypeLabel := "combo box"
-    CurrentOption := 1
-    HotkeyLabel := ""
-    Label := ""
-    OnChangeFunction := Array()
-    Options := Array()
-    UnlabelledString := "unlabelled"
-    
-    __New(Label, OnFocusFunction := "", OnChangeFunction := "") {
-        Super.__New(OnFocusFunction)
-        This.Label := Label
-        If OnChangeFunction != "" {
-            If OnChangeFunction Is Array
-            This.OnChangeFunction := OnChangeFunction
-            Else
-            This.OnChangeFunction := Array(OnChangeFunction)
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.GetValue() . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.GetValue() . " " . This.HotkeyLabel)
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
+    GetState() {
+        Return This.State
     }
     
     GetValue() {
-        If This.Options.Length > 0 And This.CurrentOption Is Integer And This.CurrentOption > 0 And This.CurrentOption <= This.Options.Length
-        Return This.Options[This.CurrentOption]
-        Else
-        Return ""
+        Return This.Value
+    }
+    
+    HasFocus() {
+        Return This.Focused
     }
     
     ReportValue() {
         AccessibilityOverlay.Speak(This.GetValue())
     }
     
-    SelectNextOption() {
-        If This.Options.Length > 0 {
-            If This.CurrentOption < This.Options.Length
-            This.CurrentOption++
+    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunctions := "") {
+        This.HotkeyCommand := HotkeyCommand
+        This.HotkeyLabel := HotkeyLabel
+        If Not HotkeyFunctions = "" {
+            If Not HotkeyFunctions Is Array
+            HotkeyFunctions := Array(HotkeyFunctions)
+            For HotkeyFunction In HotkeyFunctions
+            If HotkeyFunction Is Object And HotkeyFunction.HasMethod("Call")
+            This.HotkeyFunctions.Push(HotkeyFunction)
         }
-        For OnChangeFunction In This.OnChangeFunction
-        OnChangeFunction.Call(This)
     }
     
-    SelectPreviousOption() {
-        If This.Options.Length > 0 {
-            If This.CurrentOption > 1
-            This.CurrentOption--
+    SetValue(Value) {
+        This.Value := Value
+    }
+    
+    SpeakOnFocus(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := This.Label
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        ValueString := This.GetValue()
+        If ValueString = ""
+        ValueString := This.DefaultValue
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
+        If Speak
+        AccessibilityOverlay.Speak(Message)
+    }
+    
+}
+
+Class FocusableGraphic Extends FocusableControl {
+    
+    FoundXCoordinate := False
+    FoundYCoordinate := False
+    States := Map(0, "", 1, "")
+    X1Coordinate := 0
+    Y1Coordinate := 0
+    X2Coordinate := 0
+    Y2Coordinate := 0
+    
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, FocusFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map()) {
+        Super.__New(Label, FocusFunctions)
+        If Not StateParam = "State" {
+            This.DeleteProp("State")
+            This.%StateParam% := 1
         }
-        For OnChangeFunction In This.OnChangeFunction
-        OnChangeFunction.Call(This)
+        If Groups Is Map
+        For GroupName, GroupImages In Groups {
+            If SubStr(GroupName, 1, 1) Is Number
+            GroupName := ""
+            This.%GroupName%Images := Array()
+            This.Found%GroupName%Image := False
+            If Not GroupImages Is Array
+            GroupImages := Array(GroupImages)
+            For GroupImage In GroupImages
+            If GroupImage And Not GroupImage Is Object
+            This.%GroupName%Images.Push(GroupImage)
+        }
+        This.X1Coordinate := X1Coordinate
+        This.Y1Coordinate := Y1Coordinate
+        This.X2Coordinate := X2Coordinate
+        This.Y2Coordinate := Y2Coordinate
+    }
+    
+    CheckFocus(StateParam := "State", ErrorState := 0, Groups := Map()) {
+        If Not This.CheckState(StateParam, ErrorState, Groups) {
+            This.Focused := 0
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.States[ErrorState])
+            Return False
+        }
+        This.Focused := 1
+        Return True
+    }
+    
+    CheckState(StateParam := "state", ErrorState := 0, Groups := Map()) {
+        FoundXCoordinate := False
+        FoundYCoordinate := False
+        If Groups.Count = 0
+        Groups := Map(1, 1)
+        For GroupName, ReturnState In Groups {
+            If SubStr(GroupName, 1, 1) Is Number
+            GroupName := ""
+            Try
+            For Image In This.%GroupName%Images
+            If Not Image = "" And FileExist(Image) And Not InStr(FileExist(Image), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, Image) {
+                This.Found%GroupName%Image := Image
+                This.FoundXCoordinate := FoundXCoordinate
+                This.FoundYCoordinate := FoundYCoordinate
+                This.%StateParam% := ReturnState
+                Return True
+            }
+            Catch
+            SetFalse()
+        }
+        SetFalse()
+        Return False
+        SetFalse() {
+            If Not IsSet(GroupName)
+            GroupName := ""
+            This.Found%GroupName%Image := False
+            This.FoundXCoordinate := False
+            This.FoundYCoordinate := False
+            This.%StateParam% := ErrorState
+        }
+    }
+    
+}
+
+Class ActivatableControl Extends FocusableControl {
+    
+    ActivationFunctions := Array()
+    ControlType := "Activatable"
+    
+    __New(Label := "", FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, FocusFunctions)
+        If Not ActivationFunctions = "" {
+            If Not ActivationFunctions Is Array
+            ActivationFunctions := Array(ActivationFunctions)
+            For ActivationFunction In ActivationFunctions
+            If ActivationFunction Is Object And ActivationFunction.HasMethod("Call")
+            This.ActivationFunctions.Push(ActivationFunction)
+        }
+    }
+    
+    Activate(Speak := True) {
+        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
+        This.Focus(False)
+        This.CheckFocus()
+        If This.HasFocus() {
+            For ActivationFunction In This.ActivationFunctions
+            ActivationFunction.Call(This)
+            This.CheckFocus()
+            If This.HasFocus() {
+                If This.HasMethod("ExecuteOnActivationPreSpeech")
+                This.ExecuteOnActivationPreSpeech()
+                This.CheckState()
+                This.SpeakOnActivation(Speak)
+                If This.HasMethod("ExecuteOnActivationPostSpeech")
+                This.ExecuteOnActivationPostSpeech()
+            }
+        }
+    }
+    
+    SpeakOnActivation(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := This.Label
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        ValueString := This.GetValue()
+        If ValueString = ""
+        ValueString := This.DefaultValue
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID
+        Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString
+        Else
+        If This.States.Count > 1
+        Message := StateString
+        If Speak
+        AccessibilityOverlay.Speak(Message)
+    }
+    
+}
+
+Class ActivatableGraphic Extends FocusableGraphic {
+    
+    ActivationFunctions := Array()
+    ControlType := "Activatable"
+    States := Map(-1, "", 0, "", 1, "")
+    
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, FocusFunctions := "", ActivationFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map()) {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, FocusFunctions, StateParam, ErrorState, Groups)
+        If Not ActivationFunctions = "" {
+            If Not ActivationFunctions Is Array
+            ActivationFunctions := Array(ActivationFunctions)
+            For ActivationFunction In ActivationFunctions
+            If ActivationFunction Is Object And ActivationFunction.HasMethod("Call")
+            This.ActivationFunctions.Push(ActivationFunction)
+        }
+    }
+    
+    Activate(Speak := True) {
+        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
+        This.Focus(False)
+        This.CheckFocus()
+        If This.HasFocus() {
+            For ActivationFunction In This.ActivationFunctions
+            ActivationFunction.Call(This)
+            This.CheckFocus()
+            If This.HasFocus() {
+                If This.HasMethod("ExecuteOnActivationPreSpeech")
+                This.ExecuteOnActivationPreSpeech()
+                This.CheckState()
+                This.SpeakOnActivation(Speak)
+                If This.HasMethod("ExecuteOnActivationPostSpeech")
+                This.ExecuteOnActivationPostSpeech()
+            }
+        }
+    }
+    
+    SpeakOnActivation(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := This.Label
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        ValueString := This.GetValue()
+        If ValueString = ""
+        ValueString := This.DefaultValue
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID
+        Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString
+        Else
+        If This.States.Count > 1
+        Message := StateString
+        If Speak
+        AccessibilityOverlay.Speak(Message)
+    }
+    
+}
+
+Class Button Extends ActivatableControl {
+    
+    ControlType := "Button"
+    ControlTypeLabel := "button"
+    DefaultLabel := "unlabelled"
+    
+    __New(Label, FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, FocusFunctions, ActivationFunctions)
+    }
+    
+}
+
+Class Checkbox Extends ActivatableControl {
+    
+    Checked := 1
+    ControlType := "Checkbox"
+    ControlTypeLabel := "checkbox"
+    DefaultLabel := "unlabelled"
+    States := Map(-1, "unknown state", 0, "not checked", 1, "checked")
+    
+    __New(Label, FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, FocusFunctions, ActivationFunctions)
+        This.DeleteProp("State")
+    }
+    
+    GetState() {
+        Return This.Checked
+    }
+    
+}
+
+Class ComboBox Extends FocusableControl {
+    
+    ChangeFunctions := Array()
+    ControlType := "ComboBox"
+    ControlTypeLabel := "combo box"
+    CurrentOption := 1
+    Options := Array()
+    
+    __New(Label, FocusFunctions := "", ChangeFunctions := "") {
+        Super.__New(Label, FocusFunctions)
+        If Not ChangeFunctions = "" {
+            If Not ChangeFunctions Is Array
+            ChangeFunctions := Array(ChangeFunctions)
+            For ChangeFunction In ChangeFunctions
+            If ChangeFunction Is Object And ChangeFunction.HasMethod("Call")
+            This.ChangeFunctions.Push(ChangeFunction)
+        }
+    }
+    
+    SelectNextOption() {
+        If This.Options.Length > 0
+        If This.CurrentOption < This.Options.Length {
+            This.CurrentOption++
+            This.Value := This.Options[This.CurrentOption]
+        }
+        For ChangeFunction In This.ChangeFunctions
+        ChangeFunction.Call(This)
     }
     
     SelectOption(Option) {
@@ -1717,13 +1039,26 @@ Class CustomComboBox Extends FocusableCustom {
         This.CurrentOption := 1
         Else
         This.CurrentOption := Option
+        If This.Options.Has(Option)
+        This.Value := This.Options[Option]
+    }
+    
+    SelectPreviousOption() {
+        If This.Options.Length > 0
+        If This.CurrentOption > 1 {
+            This.CurrentOption--
+            This.Value := This.Options[This.CurrentOption]
+        }
+        For ChangeFunction In This.ChangeFunctions
+        ChangeFunction.Call(This)
     }
     
     SetOptions(Options, DefaultOption := 1) {
-        If Options Is Array
-        This.Options := Options
-        Else
-        This.Options := Array(Options)
+        If Not Options Is Array
+        Options := Array(Options)
+        For Option In Options
+        If Option And Not Option Is Object
+        This.Options.Push(Option)
         If Not DefaultOption Is Integer Or DefaultOption < 1 Or DefaultOption > This.Options.Length
         This.CurrentOption := 1
         Else
@@ -1732,360 +1067,308 @@ Class CustomComboBox Extends FocusableCustom {
     
 }
 
-Class CustomControl Extends ActivatableCustom {
-    
-    ControlTypeLabel := "custom"
-    HotkeyLabel := ""
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
-    }
-    
-}
-
-Class CustomEdit Extends FocusableCustom {
+Class Edit Extends FocusableControl {
     
     ControlType := "Edit"
     ControlTypeLabel := "edit"
-    HotkeyLabel := ""
-    Label := ""
-    Value := ""
-    BlankString := "blank"
-    UnlabelledString := "unlabelled"
+    DefaultLabel := "unlabelled"
+    DefaultValue := "blank"
     
-    __New(Label, OnFocusFunction := "") {
-        Super.__New(OnFocusFunction)
-        This.Label := Label
-    }
-    
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        If This.Value = ""
-        Value := This.BlankString
-        Else
-        Value := This.Value
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel . " " . Value)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel . " " . Value)
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
-    }
-    
-    GetValue() {
-        Return This.Value
-    }
-    
-    ReportValue() {
-        AccessibilityOverlay.Speak(This.Value)
-    }
-    
-    SetValue(Value) {
-        This.Value := Value
+    __New(Label, FocusFunctions := "") {
+        Super.__New(Label, FocusFunctions)
     }
     
 }
 
-Class CustomTab Extends AccessibilityOverlay {
+Class Tab Extends AccessibilityOverlay {
     
     ControlType := "Tab"
     ControlTypeLabel := "tab"
+    DefaultLabel := "Unlabelled"
+    Focused := 1
+    FocusFunctions := Array()
     HotkeyCommand := ""
-    HotkeyFunction := Array()
+    HotkeyFunctions := Array()
     HotkeyLabel := ""
-    OnFocusFunction := Array()
-    UnlabelledString := "unlabelled"
+    State := 1
+    States := Map(0, "not found", 1, "selected")
     
-    __New(Label, OnFocusFunction := "") {
+    __New(Label, FocusFunctions := "") {
         Super.__New(Label)
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
+        If Not FocusFunctions = "" {
+            If Not FocusFunctions Is Array
+            FocusFunctions := Array(FocusFunctions)
+            For FocusFunction In FocusFunctions
+            If FocusFunction Is Object And FocusFunction.HasMethod("Call")
+            This.FocusFunctions.Push(FocusFunction)
         }
     }
     
-    Focus(ControlID := 0) {
-        For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction.Call(This)
-        If This.ControlID != ControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-        }
-        Return 1
+    CheckFocus() {
+        Return True
     }
     
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
+    CheckState() {
+        Return True
+    }
+    
+    Focus(Speak := True) {
+        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
+        For FocusFunction In This.FocusFunctions
+        FocusFunction.Call(This)
+        This.CheckFocus()
+        If This.HasFocus() {
+            If This.HasMethod("ExecuteOnFocusPreSpeech")
+            This.ExecuteOnFocusPreSpeech()
+            This.CheckState()
+            This.SpeakOnFocus(Speak)
+            If This.HasMethod("ExecuteOnFocusPostSpeech")
+            This.ExecuteOnFocusPostSpeech()
+        }
+    }
+    
+    GetState() {
+        Return This.State
+    }
+    
+    HasFocus() {
+        Return This.Focused
+    }
+    
+    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunctions := "") {
         This.HotkeyCommand := HotkeyCommand
         This.HotkeyLabel := HotkeyLabel
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
+        If Not HotkeyFunctions = "" {
+            If Not HotkeyFunctions Is Array
+            HotkeyFunctions := Array(HotkeyFunctions)
+            For HotkeyFunction In HotkeyFunctions
+            If HotkeyFunction Is Object And HotkeyFunction.HasMethod("Call")
+            This.HotkeyFunctions.Push(HotkeyFunction)
         }
+    }
+    
+    SpeakOnFocus(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := This.Label
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        Message := LabelString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel
+        AccessibilityOverlay.LastMessage := Message
+        If Speak
+        AccessibilityOverlay.Speak(Message)
     }
     
 }
 
-Class CustomToggleButton Extends ActivatableCustom {
+Class TabControl Extends FocusableControl {
     
-    ControlType := "Button"
-    ControlTypeLabel := "button"
-    HotkeyLabel := ""
-    Label := ""
+    ControlType := "TabControl"
+    ControlTypeLabel := "tab control"
+    CurrentTab := 1
+    Tabs := Array()
+    
+    __New(Label := "", Tabs*) {
+        Super.__New(Label)
+        If Tabs.Length > 0
+        For TabObject In Tabs
+        This.AddTabs(TabObject)
+    }
+    
+    AddTabs(Tabs*) {
+        If Tabs.Length > 0
+        For TabObject In Tabs {
+            TabObject.SuperordinateControlID := This.ControlID
+            This.Tabs.Push(TabObject)
+        }
+    }
+    
+    GetCurrentTab() {
+        Return This.Tabs.Get(This.CurrentTab, 0)
+    }
+    
+    GetTab(TabNumber) {
+        Return This.Tabs.Get(TabNumber, 0)
+    }
+    
+    GetValue() {
+        Value := ""
+        CurrentTab := This.GetCurrentTab()
+        If CurrentTab Is Object And CurrentTab.ControlType = "Tab" {
+            CurrentTab.Focus(False)
+            Value := AccessibilityOverlay.LastMessage
+        }
+        This.Value := Value
+        Return This.Value
+    }
+    
+    SpeakOnFocus(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := This.Label
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        ValueString := This.GetValue()
+        If ValueString = ""
+        ValueString := This.DefaultValue
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        If Not This.controlID = AccessibilityOverlay.PreviousControlID
+        Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
+        Else
+        Message := ValueString
+        If Speak
+        AccessibilityOverlay.Speak(Message)
+    }
+    
+}
+
+Class CustomButton Extends Button {
+}
+
+Class CustomCheckbox Extends Checkbox {
+    
     CheckStateFunction := ""
-    State := 0
-    OnString := "on"
-    OffString := "off"
-    UnknownStateString := "unknown state"
-    UnlabelledString := "unlabelled"
     
-    __New(Label, CheckStateFunction, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(OnFocusFunction, OnActivateFunction)
-        This.Label := Label
+    __New(Label, CheckStateFunction := "", FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, FocusFunctions, ActivationFunctions)
+        If CheckStateFunction Is Object And CheckStateFunction.HasMethod("Call")
         This.CheckStateFunction := CheckStateFunction
     }
     
     CheckState() {
-        If This.CheckStateFunction Is Func
-        This.State := This.CheckStateFunction.Call(This)
-    }
-    
-    Activate(CurrentControlID := 0) {
-        Super.Activate(CurrentControlID)
-        This.CheckState()
-        If This.State = 1
-        StateString := This.OnString
-        Else If This.State = 0
-        StateString := This.OffString
-        Else
-        StateString := This.UnknownStateString
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-        }
-        Else {
-            AccessibilityOverlay.Speak(StateString)
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        This.CheckState()
-        If This.ControlID != CurrentControlID {
-            If This.State = 1
-            StateString := This.OnString
-            Else If This.State = 0
-            StateString := This.OffString
-            Else
-            StateString := This.UnknownStateString
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
+        If This.CheckStateFunction Is Object And This.CheckStateFunction.HasMethod("Call")
+        This.Checked := This.CheckStateFunction.Call(This)
+        Return True
     }
     
 }
 
-Class GraphicalButton Extends ToggleableGraphic {
+Class CustomComboBox Extends ComboBox {
+}
+
+Class CustomControl Extends ActivatableControl {
+    
+    ControlType := "Custom"
+    
+    __New(FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New("", FocusFunctions, ActivationFunctions)
+    }
+    
+}
+
+Class CustomEdit Extends Edit {
+}
+
+Class CustomTab Extends Tab {
+}
+
+Class CustomToggleButton Extends ToggleButton {
+    
+    CheckStateFunction := ""
+    
+    __New(Label, CheckStateFunction := "", FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, FocusFunctions, ActivationFunctions)
+        If CheckStateFunction Is Object And CheckStateFunction.HasMethod("Call")
+        This.CheckStateFunction := CheckStateFunction
+    }
+    
+    CheckState() {
+        If This.CheckStateFunction Is Object And This.CheckStateFunction.HasMethod("Call")
+        Return This.CheckStateFunction.Call(This)
+    }
+    
+}
+
+Class GraphicalButton Extends  ActivatableGraphic {
     
     ControlType := "Button"
     ControlTypeLabel := "button"
-    HotkeyLabel := ""
-    Label := ""
-    NotFoundString := "not found"
-    OffString := "off"
-    OnString := "on"
-    UnlabelledString := "unlabelled"
+    DefaultLabel := "unlabelled"
+    States := Map(-1, "not found", 0, "off", 1, "on")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OffImage := "", OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OffImage, OnFocusFunction, OnActivateFunction)
-        This.Label := Label
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImages, OffImages := "", FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, FocusFunctions, ActivationFunctions, "State", -1, Map("On", OnImages, "Off", OffImages))
     }
     
-    Activate(CurrentControlID := 0) {
-        Super.Activate(CurrentControlID)
-        If This.IsToggle = 1 And This.State = 1 {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OnString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OnString . " " . This.HotkeyLabel)
-            }
-            Else {
-                AccessibilityOverlay.Speak(This.OnString)
-            }
-        }
-        Else If This.IsToggle = 1 And This.State = 0 {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OffString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.OffString . " " . This.HotkeyLabel)
-            }
-            Else {
-                AccessibilityOverlay.Speak(This.OffString)
-            }
-        }
-        Else If This.IsToggle = 0 And This.State = 1 {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            }
-        }
-        Else {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-        }
+    CheckFocus(*) {
+        Return Super.CheckFocus("State", -1, Map("On", 1, "Off", 0))
     }
     
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        If This.IsToggle = 1 And This.State = 1 {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OnString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OnString . " " . This.HotkeyLabel)
-            }
-        }
-        Else If This.IsToggle = 1 And This.State = 0 {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.OffString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.OffString . " " . This.HotkeyLabel)
-            }
-        }
-        Else If This.IsToggle = 0 And This.State = 1 {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            }
-        }
-        Else {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-            }
-        }
+    CheckState(*) {
+        Return Super.CheckState("State", -1, Map("On", 1, "Off", 0))
     }
     
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
+    ExecuteOnActivationPreSpeech() {
+        Click This.FoundXCoordinate, This.FoundYCoordinate
+        Sleep 100
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+    }
+    
+    SpeakOnFocus(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := This.Label
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        ValueString := This.GetValue()
+        If ValueString = ""
+        ValueString := This.DefaultValue
+        If Not This.States.Has(CheckResult)
+        StateString := ""
+        Else If CheckResult = -1
+        StateString := This.States[CheckResult]
+        Else If This.OnImages = This.OffImages
+        StateString := ""
+        Else If This.OnImages.Length = 0 Or This.OffImages.Length = 0
+        StateString := ""
+        Else
+        StateString := This.States[CheckResult]
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
+        If Speak
+        AccessibilityOverlay.Speak(Message)
     }
     
 }
 
-Class GraphicalCheckbox Extends ToggleableGraphic {
+Class GraphicalCheckbox Extends ActivatableGraphic {
     
-    Checked := 0
     ControlType := "Checkbox"
     ControlTypeLabel := "checkbox"
-    HotkeyLabel := ""
-    Label := ""
-    CheckedString := "checked"
-    UncheckedString := "not checked"
-    NotFoundString := "not found"
-    UnlabelledString := "unlabelled"
+    DefaultLabel := "unlabelled"
+    States := Map(-1, "not found", 0, "Not checked", 1, "checked")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OffImage := "", OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OffImage, OnFocusFunction, OnActivateFunction)
-        This.Label := Label
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, CheckedImages, UncheckedImages, FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, FocusFunctions, ActivationFunctions, "Checked", -1, Map("Checked", CheckedImages, "Unchecked", UncheckedImages))
     }
     
-    Activate(CurrentControlID := 0) {
-        Super.Activate(CurrentControlID)
-        This.Checked := This.State
-        If This.State = 1 {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.CheckedString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.CheckedString . " " . This.HotkeyLabel)
-            }
-            Else {
-                AccessibilityOverlay.Speak(This.CheckedString)
-            }
-        }
-        Else If This.State = 0 {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.UncheckedString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.UncheckedString . " " . This.HotkeyLabel)
-            }
-            Else {
-                AccessibilityOverlay.Speak(This.UncheckedString)
-            }
-        }
-        Else {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-        }
+    CheckFocus(*) {
+        Return Super.CheckFocus("Checked", -1, Map("Checked", 1, "Unchecked", 0))
     }
     
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        This.Checked := This.State
-        If This.State = 1 {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.CheckedString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.CheckedString . " " . This.HotkeyLabel)
-            }
-        }
-        Else If This.State = 0 {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.UncheckedString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.UncheckedString . " " . This.HotkeyLabel)
-            }
-        }
-        Else {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-            }
-        }
+    CheckState(*) {
+        Return Super.CheckState("Checked", -1, Map("Checked", 1, "Unchecked", 0))
     }
     
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
+    ExecuteOnActivationPreSpeech() {
+        Click This.FoundXCoordinate, This.FoundYCoordinate
+        Sleep 100
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+    }
+    
+    GetState() {
+        Return This.Checked
     }
     
 }
@@ -2094,17 +1377,15 @@ Class GraphicalSlider Extends FocusableGraphic {
     
     ControlType := "Slider"
     ControlTypeLabel := "slider"
+    DefaultLabel := "unlabelled"
     End := 0
-    HotkeyLabel := ""
-    Label := ""
-    NotFoundString := "not found"
     Size := 0
     Start := 0
+    States := Map(0, "Not Found", 1, "")
     Type := False
-    UnlabelledString := "unlabelled"
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, Start := "", End := "", OnFocusFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnFocusFunction)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, Start := "", End := "", FocusFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, FocusFunctions, "State", 0, Map(1, Images))
         This.Label := Label
         If Start = "" {
             If This.Type = "Horizontal"
@@ -2127,24 +1408,8 @@ Class GraphicalSlider Extends FocusableGraphic {
         This.Size := End - Start
     }
     
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        If This.State = 1 {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.GetPosition() . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.GetPosition() . " " . This.HotkeyLabel)
-            }
-        }
-        Else {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-            }
-        }
+    Decrease() {
+        This.Move(-1)
     }
     
     GetPosition() {
@@ -2169,8 +1434,9 @@ Class GraphicalSlider Extends FocusableGraphic {
         }
     }
     
-    Decrease() {
-        This.Move(-1)
+    GetValue() {
+        This.Value := This.GetPosition()
+        Return This.Value
     }
     
     Increase() {
@@ -2185,7 +1451,7 @@ Class GraphicalSlider Extends FocusableGraphic {
             Coordinate := "X"
             Else
             Coordinate := "Y"
-            This.SetState()
+            This.CheckState()
             If This.State = 1 {
                 FoundCoordinate := This.Found%Coordinate%Coordinate
                 OnePercent := Ceil(This.Size / 100)
@@ -2197,7 +1463,7 @@ Class GraphicalSlider Extends FocusableGraphic {
                 Else {
                     Target%Coordinate%Coordinate := This.Found%Coordinate%Coordinate + OnePercent
                 }
-                If Target%Coordinate%Coordinate != This.Found%Coordinate%Coordinate
+                If Not Target%Coordinate%Coordinate = This.Found%Coordinate%Coordinate
                 While This.Found%Coordinate%Coordinate = FoundCoordinate
                 Drag()
             }
@@ -2209,13 +1475,9 @@ Class GraphicalSlider Extends FocusableGraphic {
             MouseClickDrag "Left", This.FoundXCoordinate, This.FoundYCoordinate, TargetXCoordinate, This.FoundYCoordinate, 0
             Else
             MouseClickDrag "Left", This.FoundXCoordinate, This.FoundYCoordinate, This.FoundYCoordinate, TargetYCoordinate, 0
-            This.SetState()
+            Sleep 100
+            This.CheckState()
         }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
     }
     
 }
@@ -2232,1008 +1494,713 @@ Class GraphicalVerticalSlider Extends GraphicalSlider {
     
 }
 
-Class GraphicalTab Extends AccessibilityOverlay {
+Class GraphicalTab Extends Tab {
     
     ControlType := "Tab"
     ControlTypeLabel := "tab"
-    FoundOnImage := False
-    FoundXCoordinate := 0
-    FoundYCoordinate := 0
+    DefaultLabel := "Unlabelled"
+    Focused := 1
+    FocusFunctions := Array()
+    FoundImage := False
+    FoundXCoordinate := False
+    FoundYCoordinate := False
     HotkeyCommand := ""
-    HotkeyFunction := Array()
+    HotkeyFunctions := Array()
     HotkeyLabel := ""
-    OnFocusFunction := Array()
-    OnImage := Array()
+    Images := Array()
+    State := 1
+    States := Map(0, "not found", 1, "selected")
     X1Coordinate := 0
     Y1Coordinate := 0
     X2Coordinate := 0
     Y2Coordinate := 0
-    State := 0
-    UnlabelledString := "unlabelled"
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImage, OnFocusFunction := "") {
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, FocusFunctions := "") {
         Super.__New(Label)
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
         This.Y2Coordinate := Y2Coordinate
-        If OnImage = ""
-        OnImage := Array()
-        If Not OnImage Is Array
-        OnImage := Array(OnImage)
-        This.OnImage := OnImage
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
+        If Not Images = "" {
+            If Not Images Is Array
+            Images := Array(Images)
+            For Image In Images
+            If Image And Not Image Is Object
+            This.Images.Push(Image)
+        }
+        If Not FocusFunctions = "" {
+            If Not FocusFunctions Is Array
+            FocusFunctions := Array(FocusFunctions)
+            For FocusFunction In FocusFunctions
+            If FocusFunction Is Object And FocusFunction.HasMethod("Call")
+            This.FocusFunctions.Push(FocusFunction)
         }
     }
     
-    Focus(CurrentControlID := 0) {
-        This.SetState()
-        If This.State != -1 {
-            Click This.FoundXCoordinate, This.FoundYCoordinate
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            }
-            Sleep 250
+    CheckFocus() {
+        If Not This.CheckState() {
+            This.Focused := 0
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.States[0])
+            Return False
         }
-        Else {
-            If This.ControlID != CurrentControlID {
-                If This.Label = ""
-                AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-                Else
-                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.NotFoundString . " " . This.HotkeyLabel)
-            }
-        }
-        If This.State = -1
-        Return 0
-        Return 1
+        This.Focused := 1
+        Return True
     }
     
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        This.HotkeyLabel := HotkeyLabel
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
-        }
-    }
-    
-    SetState() {
-        If HasProp(This, "OnFocusFunction")
-        For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction.Call(This)
+    CheckState() {
         FoundXCoordinate := False
         FoundYCoordinate := False
-        Try {
-            For OnImage In This.OnImage
-            If OnImage != "" And FileExist(OnImage) And Not InStr(FileExist(OnImage), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, OnImage) {
-                This.FoundOnImage := OnImage
-                This.FoundXCoordinate := FoundXCoordinate
-                This.FoundYCoordinate := FoundYCoordinate
-                This.State := 1
-                Return True
-            }
-            This.FoundOnImage := False
+        Try
+        For Image In This.Images
+        If Not Image = "" And FileExist(Image) And Not InStr(FileExist(Image), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, Image) {
+            This.FoundImage := Image
+            This.FoundXCoordinate := FoundXCoordinate
+            This.FoundYCoordinate := FoundYCoordinate
+            This.State := 1
+            Return True
+        }
+        Catch
+        SetFalse()
+        SetFalse()
+        Return False
+        SetFalse() {
+            This.FoundImage := False
             This.FoundXCoordinate := False
             This.FoundYCoordinate := False
-            This.State := -1
-            Return False
-        }
-        Catch {
-            This.FoundOnImage := False
-            This.FoundXCoordinate := False
-            This.FoundYCoordinate := False
-            This.State := -1
-            Return False
+            This.State := 0
         }
     }
     
-}
-
-Class HotspotButton Extends ActivatableHotspot {
-    
-    ControlType := "Button"
-    ControlTypeLabel := "button"
-    HotkeyLabel := ""
-    Label := ""
-    UnlabelledString := "unlabelled"
-    
-    __New(Label, XCoordinate, YCoordinate, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(XCoordinate, YCoordinate, OnFocusFunction, OnActivateFunction)
-        This.Label := Label
+    ExecuteOnFocusPreSpeech() {
+        Click This.FoundXCoordinate, This.FoundYCoordinate
     }
     
-    Activate(CurrentControlID := 0) {
-        Super.Activate(CurrentControlID)
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
+    Focus(Speak := True) {
+        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
+        For FocusFunction In This.FocusFunctions
+        FocusFunction.Call(This)
+        This.CheckFocus()
+        If This.HasFocus() {
+            If This.HasMethod("ExecuteOnFocusPreSpeech")
+            This.ExecuteOnFocusPreSpeech()
+            This.CheckState()
+            This.SpeakOnFocus(Speak)
+            If This.HasMethod("ExecuteOnFocusPostSpeech")
+            This.ExecuteOnFocusPostSpeech()
         }
     }
     
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-        }
+    GetState() {
+        Return This.State
     }
     
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
+    HasFocus() {
+        Return This.Focused
     }
     
-}
-
-Class HotspotCheckbox Extends ActivatableHotspot {
-    
-    Checked := 0
-    ControlType := "Checkbox"
-    ControlTypeLabel := "checkbox"
-    HotkeyLabel := ""
-    Label := ""
-    CheckedColor := Array()
-    UncheckedColor := Array()
-    CheckedString := "checked"
-    UncheckedString := "not checked"
-    UnknownStateString := "unknown state"
-    UnlabelledString := "unlabelled"
-    
-    __New(Label, XCoordinate, YCoordinate, CheckedColor, UncheckedColor, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(XCoordinate, YCoordinate, OnFocusFunction, OnActivateFunction)
-        This.Label := Label
-        If Not CheckedColor Is Array
-        CheckedColor := Array(CheckedColor)
-        This.CheckedColor := CheckedColor
-        If Not UncheckedColor Is Array
-        UncheckedColor := Array(UncheckedColor)
-        This.UncheckedColor := UncheckedColor
-    }
-    
-    CheckState() {
-        Sleep 100
-        CurrentColor := PixelGetColor(This.XCoordinate, This.YCoordinate)
-        For Color In This.CheckedColor
-        If CurrentColor = Color {
-            This.Checked := 1
-            Return 1
-        }
-        For Color In This.UncheckedColor
-        If CurrentColor = Color {
-            This.Checked := 0
-            Return 0
-        }
-        This.Checked := -1
-        Return -1
-    }
-    
-    Activate(CurrentControlID := 0) {
-        Super.Activate(CurrentControlID)
-        This.CheckState()
-        If This.Checked = 1
-        StateString := This.CheckedString
-        Else If This.Checked = 0
-        StateString := This.UncheckedString
-        Else
-        StateString := This.UnknownStateString
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-        }
-        Else {
-            AccessibilityOverlay.Speak(StateString)
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        This.CheckState()
-        If This.ControlID != CurrentControlID {
-            If This.Checked = 1
-            StateString := This.CheckedString
-            Else If This.Checked = 0
-            StateString := This.UncheckedString
-            Else
-            StateString := This.UnknownStateString
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
-    }
-    
-}
-
-Class HotspotComboBox Extends FocusableHotspot {
-    
-    ControlType := "ComboBox"
-    ControlTypeLabel := "combo box"
-    CurrentOption := 1
-    HotkeyLabel := ""
-    Label := ""
-    OnChangeFunction := Array()
-    Options := Array()
-    UnlabelledString := "unlabelled"
-    
-    __New(Label, XCoordinate, YCoordinate, OnFocusFunction := "", OnChangeFunction := "") {
-        Super.__New(XCoordinate, YCoordinate, OnFocusFunction)
-        This.Label := Label
-        If OnChangeFunction != "" {
-            If OnChangeFunction Is Array
-            This.OnChangeFunction := OnChangeFunction
-            Else
-            This.OnChangeFunction := Array(OnChangeFunction)
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.GetValue() . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.GetValue() . " " . This.HotkeyLabel)
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
-    }
-    
-    GetValue() {
-        If This.Options.Length > 0 And This.CurrentOption Is Integer And This.CurrentOption > 0 And This.CurrentOption <= This.Options.Length
-        Return This.Options[This.CurrentOption]
-        Else
-        Return ""
-    }
-    
-    ReportValue() {
-        AccessibilityOverlay.Speak(This.GetValue())
-    }
-    
-    SelectNextOption() {
-        If This.Options.Length > 0 {
-            If This.CurrentOption < This.Options.Length
-            This.CurrentOption++
-        }
-        For OnChangeFunction In This.OnChangeFunction
-        OnChangeFunction.Call(This)
-    }
-    
-    SelectPreviousOption() {
-        If This.Options.Length > 0 {
-            If This.CurrentOption > 1
-            This.CurrentOption--
-        }
-        For OnChangeFunction In This.OnChangeFunction
-        OnChangeFunction.Call(This)
-    }
-    
-    SelectOption(Option) {
-        If Not Option Is Integer Or Option < 1 Or Option > This.Options.Length
-        This.CurrentOption := 1
-        Else
-        This.CurrentOption := Option
-    }
-    
-    SetOptions(Options, DefaultOption := 1) {
-        If Options Is Array
-        This.Options := Options
-        Else
-        This.Options := Array(Options)
-        If Not DefaultOption Is Integer Or DefaultOption < 1 Or DefaultOption > This.Options.Length
-        This.CurrentOption := 1
-        Else
-        This.CurrentOption := DefaultOption
-    }
-    
-}
-
-Class HotspotEdit Extends FocusableHotspot {
-    
-    ControlType := "Edit"
-    ControlTypeLabel := "edit"
-    HotkeyLabel := ""
-    Label := ""
-    Value := ""
-    BlankString := "blank"
-    UnlabelledString := "unlabelled"
-    
-    __New(Label, XCoordinate, YCoordinate, OnFocusFunction := "") {
-        Super.__New(XCoordinate, YCoordinate, OnFocusFunction)
-        This.Label := Label
-    }
-    
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        If This.Value = ""
-        Value := This.BlankString
-        Else
-        Value := This.Value
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel . " " . Value)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel . " " . Value)
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
-    }
-    
-    GetValue() {
-        Return This.Value
-    }
-    
-    ReportValue() {
-        AccessibilityOverlay.Speak(This.Value)
-    }
-    
-    SetValue(Value) {
-        This.Value := Value
-    }
-    
-}
-
-Class HotspotTab Extends AccessibilityOverlay {
-    
-    ControlType := "Tab"
-    ControlTypeLabel := "tab"
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
-    HotkeyLabel := ""
-    OnFocusFunction := Array()
-    XCoordinate := 0
-    YCoordinate := 0
-    UnlabelledString := "unlabelled"
-    
-    __New(Label, XCoordinate, YCoordinate, OnFocusFunction := "") {
-        Super.__New(Label)
-        This.XCoordinate := XCoordinate
-        This.YCoordinate := YCoordinate
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
-    }
-    
-    Focus(ControlID := 0) {
-        For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction.Call(This)
-        Click This.XCoordinate, This.YCoordinate
-        If This.ControlID != ControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-        }
-        Return 1
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
+    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunctions := "") {
         This.HotkeyCommand := HotkeyCommand
         This.HotkeyLabel := HotkeyLabel
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
+        If Not HotkeyFunctions = "" {
+            If Not HotkeyFunctions Is Array
+            HotkeyFunctions := Array(HotkeyFunctions)
+            For HotkeyFunction In HotkeyFunctions
+            If HotkeyFunction Is Object And HotkeyFunction.HasMethod("Call")
+            This.HotkeyFunctions.Push(HotkeyFunction)
         }
+    }
+    
+    SpeakOnFocus(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := This.Label
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        Message := LabelString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel
+        AccessibilityOverlay.LastMessage := Message
+        If Speak
+        AccessibilityOverlay.Speak(Message)
     }
     
 }
 
-Class HotspotToggleButton Extends ActivatableHotspot {
+Class HotspotButton Extends Button {
     
-    ControlType := "button"
-    ControlTypeLabel := "button"
-    HotkeyLabel := ""
-    Label := ""
-    OnColor := Array()
-    OffColor := Array()
-    State := 0
-    OnString := "on"
-    OffString := "off"
-    UnknownStateString := "unknown state"
-    UnlabelledString := "unlabelled"
+    XCoordinate := 0
+    YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, OnColor, OffColor, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(XCoordinate, YCoordinate, OnFocusFunction, OnActivateFunction)
-        This.Label := Label
-        If Not OnColor Is Array
-        OnColor := Array(OnColor)
-        This.OnColor := OnColor
-        If Not OffColor Is Array
-        OffColor := Array(OffColor)
-        This.OffColor := OffColor
+    __New(Label, XCoordinate, YCoordinate, FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, FocusFunctions, ActivationFunctions)
+        This.XCoordinate := XCoordinate
+        This.YCoordinate := YCoordinate
+    }
+    
+    ExecuteOnActivationPostSpeech() {
+        Click This.XCoordinate, This.YCoordinate
+    }
+    
+    ExecuteOnFocusPostSpeech() {
+        MouseMove This.XCoordinate, This.YCoordinate
+    }
+    
+}
+
+Class HotspotCheckbox Extends Checkbox {
+    
+    CheckedColors := Array()
+    UncheckedColors := Array()
+    XCoordinate := 0
+    YCoordinate := 0
+    
+    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, FocusFunctions, ActivationFunctions)
+        If Not CheckedColors = "" {
+            If Not CheckedColors Is Array
+            CheckedColors := Array(CheckedColors)
+            For CheckedColor In CheckedColors
+            If Not CheckedColor Is Object
+            This.CheckedColors.Push(CheckedColor)
+        }
+        If Not UncheckedColors = "" {
+            If Not UncheckedColors Is Array
+            UncheckedColors := Array(UncheckedColors)
+            For UncheckedColor In UncheckedColors
+            If Not UncheckedColor Is Object
+            This.UncheckedColors.Push(UncheckedColor)
+        }
+        This.XCoordinate := XCoordinate
+        This.YCoordinate := YCoordinate
     }
     
     CheckState() {
         Sleep 100
         CurrentColor := PixelGetColor(This.XCoordinate, This.YCoordinate)
-        For Color In This.OnColor
-        If CurrentColor = Color {
-            This.State := 1
-            Return 1
+        For CheckedColor In This.CheckedColors
+        If CurrentColor = CheckedColor {
+            This.Checked := 1
+            Return True
         }
-        For Color In This.OffColor
-        If CurrentColor = Color {
-            This.State := 0
-            Return 0
+        For UncheckedColor In This.UncheckedColors
+        If CurrentColor = UncheckedColor {
+            This.Checked := 0
+            Return False
         }
-        This.State := -1
-        Return -1
-    }
-    
-    Activate(CurrentControlID := 0) {
-        Super.Activate(CurrentControlID)
-        This.CheckState()
-        If This.State = 1
-        StateString := This.OnString
-        Else If This.State = 0
-        StateString := This.OffString
-        Else
-        StateString := This.UnknownStateString
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-        }
-        Else {
-            AccessibilityOverlay.Speak(StateString)
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        This.CheckState()
-        If This.ControlID != CurrentControlID {
-            If This.State = 1
-            StateString := This.OnString
-            Else If This.State = 0
-            StateString := This.OffString
-            Else
-            StateString := This.UnknownStateString
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel)
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
-    }
-    
-}
-
-Class NativeControl Extends AccessibilityControl {
-    
-    ControlType := "Native"
-    Label := ""
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
-    NativeControlID := ""
-    OnActivateFunction := Array()
-    OnFocusFunction := Array()
-    NotFoundString := "not found"
-    
-    __New(NativeControlID, Label := "", OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New()
-        This.NativeControlID := NativeControlID
-        This.Label := Label
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
-        If OnActivateFunction != "" {
-            If OnActivateFunction Is Array
-            This.OnActivateFunction := OnActivateFunction
-            Else
-            This.OnActivateFunction := Array(OnActivateFunction)
-        }
-    }
-    
-    Activate(CurrentControlID := 0) {
-        If This.GetControl() == False {
-            If This.Label != ""
-            AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
-            Else
-            AccessibilityOverlay.Speak(This.NotFoundString)
-        }
-        else {
-            If HasMethod(This, "Focus")
-            This.Focus(CurrentControlID)
-            For OnActivateFunction In This.OnActivateFunction
-            OnActivateFunction.Call(This)
-            If This.ControlID != CurrentControlID {
-                If This.Label != ""
-                AccessibilityOverlay.Speak(This.Label)
-            }
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        If This.GetControl() == False {
-            If This.Label != ""
-            AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
-            Else
-            AccessibilityOverlay.Speak(This.NotFoundString)
-        }
-        else {
-            If ControlGetFocus("A") And ControlGetClassNN(ControlGetFocus("A")) != This.NativeControlID
-            ControlFocus This.NativeControlID, "A"
-            If CurrentControlID != This.ControlID {
-                For OnFocusFunction In This.OnFocusFunction
-                OnFocusFunction.Call(This)
-                If This.Label != ""
-                AccessibilityOverlay.Speak(This.Label)
-            }
-        }
-    }
-    
-    GetControl() {
-        Try
-        Return ControlGetHwnd(This.NativeControlID, "A")
-        Catch
+        This.Checked := -1
         Return False
     }
     
-    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
+    ExecuteOnActivationPreSpeech() {
+        Click This.XCoordinate, This.YCoordinate
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        MouseMove This.XCoordinate, This.YCoordinate
+    }
+    
+}
+
+Class HotspotComboBox Extends ComboBox {
+    
+    XCoordinate := 0
+    YCoordinate := 0
+    
+    __New(Label, XCoordinate, YCoordinate, FocusFunctions := "", ChangeFunctions := "") {
+        Super.__New(Label, FocusFunctions, ChangeFunctions)
+        This.XCoordinate := XCoordinate
+        This.YCoordinate := YCoordinate
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        Click This.XCoordinate, This.YCoordinate
+    }
+    
+}
+
+Class HotspotEdit Extends Edit {
+    
+    XCoordinate := 0
+    YCoordinate := 0
+    
+    __New(Label, XCoordinate, YCoordinate, FocusFunctions := "") {
+        Super.__New(Label, FocusFunctions)
+        This.XCoordinate := XCoordinate
+        This.YCoordinate := YCoordinate
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        Click This.XCoordinate, This.YCoordinate
+    }
+    
+}
+
+Class HotspotTab Extends Tab {
+    
+    XCoordinate := 0
+    YCoordinate := 0
+    
+    __New(Label, XCoordinate, YCoordinate, FocusFunctions := "") {
+        Super.__New(Label, FocusFunctions)
+        This.XCoordinate := XCoordinate
+        This.YCoordinate := YCoordinate
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        Click This.XCoordinate, This.YCoordinate
+    }
+    
+}
+
+Class HotspotToggleButton Extends ToggleButton {
+    
+    CheckedColors := Array()
+    UncheckedColors := Array()
+    XCoordinate := 0
+    YCoordinate := 0
+    
+    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, FocusFunctions, ActivationFunctions)
+        If Not CheckedColors = "" {
+            If Not CheckedColors Is Array
+            CheckedColors := Array(CheckedColors)
+            For CheckedColor In CheckedColors
+            If Not CheckedColor Is Object
+            This.CheckedColors.Push(CheckedColor)
+        }
+        If Not UncheckedColors = "" {
+            If Not UncheckedColors Is Array
+            UncheckedColors := Array(UncheckedColors)
+            For UncheckedColor In UncheckedColors
+            If Not UncheckedColor Is Object
+            This.UncheckedColors.Push(UncheckedColor)
+        }
+        This.XCoordinate := XCoordinate
+        This.YCoordinate := YCoordinate
+    }
+    
+    CheckState() {
+        Sleep 100
+        CurrentColor := PixelGetColor(This.XCoordinate, This.YCoordinate)
+        For CheckedColor In This.CheckedColors
+        If CurrentColor = CheckedColor {
+            This.State := 1
+            Return True
+        }
+        For UncheckedColor In This.UncheckedColors
+        If CurrentColor = UncheckedColor {
+            This.State := 0
+            Return False
+        }
+        This.State := -1
+        Return False
+    }
+    
+    ExecuteOnActivationPostSpeech() {
+        Click This.XCoordinate, This.YCoordinate
+    }
+    
+    ExecuteOnFocusPostSpeech() {
+        MouseMove This.XCoordinate, This.YCoordinate
+    }
+    
+}
+
+Class NativeControl Extends ActivatableControl {
+    
+    ControlType := "Native"
+    NativeControlID := ""
+    States := Map(-1, "Can not focus control", 0, "not found", 1, "")
+    
+    __New(NativeControlID, Label := "", FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, FocusFunctions, ActivationFunctions)
+        This.NativeControlID := NativeControlID
+    }
+    
+    CheckFocus() {
+        Try
+        Found := ControlGetHwnd(This.NativeControlID, "A")
+        Catch
+        Found := False
+        If Not Found {
+            This.Focused := 0
+            AccessibilityOverlay.Speak(This.States[0])
+        }
+        Else {
+            Try {
+                This.Focused := 1
+                ControlFocus This.NativeControlID, "A"
+            }
+            Catch {
+                This.Focused := 0
+                This.State := -1
+                AccessibilityOverlay.Speak(This.States[-1])
+            }
+            If This.Focused
+            Return True
+        }
+        Return False
+    }
+    
+    CheckState() {
+        If This.Focused = 0
+        Return False
+        Try
+        Found := ControlGetHwnd(This.NativeControlID, "A")
+        Catch
+        Found := False
+        If Found {
+            This.State := 1
+            Return True
+        }
+        Else {
+            This.State := 0
+            Return False
         }
     }
     
 }
 
-Class OCRButton Extends ActivatableOCR {
+Class OCRButton Extends Button {
     
-    ControlType := "Button"
-    ControlTypeLabel := "button"
-    HotkeyLabel := ""
-    Label := ""
-    UnlabelledString := ""
-    
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, OnFocusFunction, OnActivateFunction)
-    }
-    
-    Activate(CurrentControlID := 0) {
-        Super.Activate(CurrentControlID)
-        This.Label := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        This.Label := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
-    }
-    
-}
-
-Class OCRComboBox Extends FocusableOCR {
-    
-    ControlType := "ComboBox"
-    ControlTypeLabel := "combo box"
-    CurrentOption := 1
-    HotkeyLabel := ""
-    Label := ""
-    OnChangeFunction := Array()
-    UnlabelledString := "unlabelled"
-    
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "", OnChangeFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, OnFocusFunction)
-        This.Label := Label
-        If OnChangeFunction != "" {
-            If OnChangeFunction Is Array
-            This.OnChangeFunction := OnChangeFunction
-            Else
-            This.OnChangeFunction := Array(OnChangeFunction)
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.GetValue() . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.GetValue() . " " . This.HotkeyLabel)
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
-    }
-    
-    GetValue() {
-        Return AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
-    }
-    
-    ReportValue() {
-        AccessibilityOverlay.Speak(This.GetValue())
-    }
-    
-    SelectNextOption() {
-        This.CurrentOption++
-        For OnChangeFunction In This.OnChangeFunction
-        OnChangeFunction.Call(This)
-    }
-    
-    SelectPreviousOption() {
-        This.CurrentOption--
-        For OnChangeFunction In This.OnChangeFunction
-        OnChangeFunction.Call(This)
-    }
-    
-    SelectOption(Option) {
-        If Option Is Integer And Option > 0
-        This.CurrentOption := Option
-    }
-    
-}
-
-Class OCREdit Extends FocusableOCR {
-    
-    ControlType := "Edit"
-    ControlTypeLabel := "edit"
-    HotkeyLabel := ""
-    Label := ""
-    Value := ""
-    BlankString := "blank"
-    UnlabelledString := "unlabelled"
-    
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "") {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, OnFocusFunction)
-        This.Label := Label
-    }
-    
-    Focus(CurrentControlID := 0) {
-        Super.Focus(CurrentControlID)
-        This.Value := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
-        If This.Value = ""
-        Value := This.BlankString
-        Else
-        Value := This.Value
-        If This.ControlID != CurrentControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel . " " . Value)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel . " " . Value)
-        }
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        Super.SetHotkey(HotkeyCommand, HotkeyFunction)
-        This.HotkeyLabel := HotkeyLabel
-    }
-    
-    GetValue() {
-        Return This.Value
-    }
-    
-    ReportValue() {
-        AccessibilityOverlay.Speak(This.Value)
-    }
-    
-    SetValue(Value) {
-        This.Value := Value
-    }
-    
-}
-
-Class OCRTab Extends AccessibilityOverlay {
-    
-    ControlType := "Tab"
-    ControlTypeLabel := "tab"
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
-    HotkeyLabel := ""
-    OnFocusFunction := Array()
+    DefaultLabel := ""
+    OCRLanguage := ""
+    OCRScale := 1
     X1Coordinate := 0
     Y1Coordinate := 0
     X2Coordinate := 0
     Y2Coordinate := 0
-    OCRLanguage := ""
-    OCRScale := 1
-    UnlabelledString := ""
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, OnFocusFunction := "") {
-        Super.__New()
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New("", FocusFunctions, ActivationFunctions)
+        This.OCRLanguage := OCRLanguage
+        This.OCRScale := OCRScale
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
         This.Y2Coordinate := Y2Coordinate
-        This.OCRLanguage := OCRLanguage
-        This.OCRScale := OCRScale
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
     }
     
-    Focus(ControlID := 0) {
-        For OnFocusFunction In This.OnFocusFunction
-        OnFocusFunction.Call(This)
-        This.Label := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+    ExecuteOnActivationPostSpeech() {
         XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
         YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
         Click XCoordinate, YCoordinate
-        If This.ControlID != ControlID {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.HotkeyLabel)
-        }
-        Return 1
     }
     
-    SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        This.HotkeyLabel := HotkeyLabel
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
-        }
+    ExecuteOnFocusPostSpeech() {
+        XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
+        YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
+        MouseMove XCoordinate, YCoordinate
+    }
+    
+    SpeakOnActivation(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+        This.Label := LabelString
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        If Not This.controlID = AccessibilityOverlay.PreviousControlID
+        Message := LabelString . " " . This.ControlTypeLabel . " " . StateString
+        Else
+        If This.States.Count > 1
+        Message := StateString
+        If Speak
+        AccessibilityOverlay.Speak(Message)
+    }
+    
+    SpeakOnFocus(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        Message := LabelString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel
+        If Speak
+        AccessibilityOverlay.Speak(Message)
     }
     
 }
 
-Class OCRText Extends OCRControl {
+Class OCRComboBox Extends ComboBox {
+    
+    OCRLanguage := ""
+    OCRScale := 1
+    X1Coordinate := 0
+    Y1Coordinate := 0
+    X2Coordinate := 0
+    Y2Coordinate := 0
+    
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, FocusFunctions := "", ChangeFunctions := "") {
+        Super.__New(Label, FocusFunctions, ChangeFunctions)
+        This.OCRLanguage := OCRLanguage
+        This.OCRScale := OCRScale
+        This.X1Coordinate := X1Coordinate
+        This.Y1Coordinate := Y1Coordinate
+        This.X2Coordinate := X2Coordinate
+        This.Y2Coordinate := Y2Coordinate
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
+        YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
+        Click XCoordinate, YCoordinate
+    }
+    
+    GetValue() {
+        This.Value := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+        Return This.Value
+    }
+    
+    SpeakOnFocus(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := This.Label
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        ValueString := This.GetValue()
+        If ValueString = ""
+        ValueString := This.DefaultValue
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
+        If Speak
+        AccessibilityOverlay.Speak(Message)
+    }
+    
+}
+
+Class OCREdit Extends Edit {
+    
+    OCRLanguage := ""
+    OCRScale := 1
+    X1Coordinate := 0
+    Y1Coordinate := 0
+    X2Coordinate := 0
+    Y2Coordinate := 0
+    
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, FocusFunctions := "") {
+        Super.__New(Label, FocusFunctions)
+        This.OCRLanguage := OCRLanguage
+        This.OCRScale := OCRScale
+        This.X1Coordinate := X1Coordinate
+        This.Y1Coordinate := Y1Coordinate
+        This.X2Coordinate := X2Coordinate
+        This.Y2Coordinate := Y2Coordinate
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
+        YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
+        Click XCoordinate, YCoordinate
+    }
+    
+    GetValue() {
+        This.Value := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+        Return This.Value
+    }
+    
+    SpeakOnFocus(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := This.Label
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        ValueString := This.GetValue()
+        If ValueString = ""
+        ValueString := This.DefaultValue
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
+        If Speak
+        AccessibilityOverlay.Speak(Message)
+    }
+    
+}
+
+Class OCRTab Extends Tab {
+    
+    DefaultLabel := ""
+    OCRLanguage := ""
+    OCRScale := 1
+    X1Coordinate := 0
+    Y1Coordinate := 0
+    X2Coordinate := 0
+    Y2Coordinate := 0
+    
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, FocusFunctions := "") {
+        Super.__New("", FocusFunctions)
+        This.OCRLanguage := OCRLanguage
+        This.OCRScale := OCRScale
+        This.X1Coordinate := X1Coordinate
+        This.Y1Coordinate := Y1Coordinate
+        This.X2Coordinate := X2Coordinate
+        This.Y2Coordinate := Y2Coordinate
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
+        YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
+        Click XCoordinate, YCoordinate
+    }
+    
+    SpeakOnFocus(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+        This.Label := LabelString
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        Message := LabelString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel
+        If Speak
+        AccessibilityOverlay.Speak(Message)
+    }
+    
+}
+
+Class OCRText Extends FocusableControl {
     
     ControlType := "Text"
-    ControlTypeLabel := "text"
-    Text := ""
+    OCRLanguage := ""
+    OCRScale := 1
+    X1Coordinate := 0
+    Y1Coordinate := 0
+    X2Coordinate := 0
+    Y2Coordinate := 0
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1) {
-        Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale)
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, FocusFunctions := "") {
+        Super.__New("", FocusFunctions)
+        This.OCRLanguage := OCRLanguage
+        This.OCRScale := OCRScale
+        This.X1Coordinate := X1Coordinate
+        This.Y1Coordinate := Y1Coordinate
+        This.X2Coordinate := X2Coordinate
+        This.Y2Coordinate := Y2Coordinate
     }
     
-    Focus(CurrentControlID := 0) {
-        This.Text := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
-        If This.ControlID != CurrentControlID
-        AccessibilityOverlay.Speak(This.Text)
+    SpeakOnFocus(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        ValueString := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+        This.Value := ValueString
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        Message := ValueString . " " . StateString . " " . This.HotkeyLabel
+        If Speak
+        AccessibilityOverlay.Speak(Message)
     }
     
 }
 
-Class StaticText Extends AccessibilityControl {
+Class StaticText Extends FocusableControl {
     
     ControlType := "Text"
-    ControlTypeLabel := "text"
-    Text := ""
     
-    __New(Text := "") {
-        Super.__New()
-        This.Text := Text
+    __New(Value := "", FocusFunctions := "") {
+        Super.__New("", FocusFunctions)
+        This.Value := Value
     }
     
-    Focus(CurrentControlID := 0) {
-        If CurrentControlID != This.ControlID
-        AccessibilityOverlay.Speak(This.Text)
-    }
-    
-}
-
-Class TabControl Extends AccessibilityControl {
-    
-    ControlType := "TabControl"
-    ControlTypeLabel := "tab control"
-    Label := ""
-    CurrentTab := 1
-    Tabs := Array()
-    SelectedString := "selected"
-    NotFoundString := "not found"
-    UnlabelledString := ""
-    
-    __New(Label := "", Tabs*) {
-        Super.__New()
-        This.Label := Label
-        If Tabs.Length > 0
-        For Tab In Tabs
-        This.AddTabs(Tab)
-    }
-    
-    AddTabs(Tabs*) {
-        If Tabs.Length > 0
-        For Tab In Tabs {
-            Tab.SuperordinateControlID := This.ControlID
-            This.Tabs.Push(Tab)
-        }
-    }
-    
-    Focus(CurrentControlID := 0) {
-        If This.Tabs.Length > 0 {
-            If This.Tabs[This.CurrentTab].Focus(This.Tabs[This.CurrentTab].ControlID) = 1 {
-                If This.ControlID = CurrentControlID {
-                    If This.Tabs[This.CurrentTab].Label = ""
-                    AccessibilityOverlay.Speak(This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString . " " . This.Tabs[This.CurrentTab].HotkeyLabel)
-                    Else
-                    AccessibilityOverlay.Speak(This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString . " " . This.Tabs[This.CurrentTab].HotkeyLabel)
-                }
-                Else {
-                    If This.Label = "" {
-                        If This.Tabs[This.CurrentTab].Label = ""
-                        AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString . " " . This.Tabs[This.CurrentTab].HotkeyLabel)
-                        Else
-                        AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString . " " . This.Tabs[This.CurrentTab].HotkeyLabel)
-                    }
-                    Else {
-                        If This.Tabs[This.CurrentTab].Label = ""
-                        AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString . " " . This.Tabs[This.CurrentTab].HotkeyLabel)
-                        Else
-                        AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.SelectedString . " " . This.Tabs[This.CurrentTab].HotkeyLabel)
-                    }
-                }
-            }
-            Else {
-                If This.ControlID = CurrentControlID {
-                    If This.Tabs[This.CurrentTab].Label = ""
-                    AccessibilityOverlay.Speak(This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString . " " . This.Tabs[This.CurrentTab].HotkeyLabel)
-                    Else
-                    AccessibilityOverlay.Speak(This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString . " " . This.Tabs[This.CurrentTab].HotkeyLabel)
-                }
-                Else {
-                    If This.Label = "" {
-                        If This.Tabs[This.CurrentTab].Label = ""
-                        AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString . " " . This.Tabs[This.CurrentTab].HotkeyLabel)
-                        Else
-                        AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString . " " . This.Tabs[This.CurrentTab].HotkeyLabel)
-                    }
-                    Else {
-                        If This.Tabs[This.CurrentTab].Label = ""
-                        AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].UnlabelledString . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString . " " . This.Tabs[This.CurrentTab].HotkeyLabel)
-                        Else
-                        AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.Tabs[This.CurrentTab].Label . " " . This.Tabs[This.CurrentTab].ControlTypeLabel . " " . This.NotFoundString . " " . This.Tabs[This.CurrentTab].HotkeyLabel)
-                    }
-                }
-            }
-        }
-        Else {
-            If This.Label = ""
-            AccessibilityOverlay.Speak(This.UnlabelledString . " " . This.ControlTypeLabel)
-            Else
-            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel)
-        }
-    }
-    
-    GetCurrentTab() {
-        Return This.Tabs.Get(This.CurrentTab, 0)
-    }
-    
-    GetTab(TabNumber) {
-        Return This.Tabs.Get(TabNumber, 0)
+    SpeakOnFocus(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        ValueString := This.Value
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        Message := ValueString . " " . StateString . " " . This.HotkeyLabel
+        If Speak
+        AccessibilityOverlay.Speak(Message)
     }
     
 }
 
-Class UIAControl Extends AccessibilityControl {
+Class Graphic Extends ActivatableControl {
+}
+
+Class ToggleButton Extends Button {
+    
+    States := Map(-1, "unknown state", 0, "off", 1, "on")
+    
+}
+
+Class UIAControl Extends ActivatableControl {
     
     ControlType := "UIA"
-    Label := ""
-    HotkeyCommand := ""
-    HotkeyFunction := Array()
+    States := Map("0", "not found", "1", "")
     UIAPath := ""
-    OnActivateFunction := Array()
-    OnFocusFunction := Array()
-    NotFoundString := "not found"
     
-    __New(UIAPath, Label := "", OnFocusFunction := "", OnActivateFunction := "") {
-        Super.__New()
+    __New(UIAPath, Label := "", FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, FocusFunctions, ActivationFunctions)
         This.UIAPath := UIAPath
-        This.Label := Label
-        If OnFocusFunction != "" {
-            If OnFocusFunction Is Array
-            This.OnFocusFunction := OnFocusFunction
-            Else
-            This.OnFocusFunction := Array(OnFocusFunction)
-        }
-        If OnActivateFunction != "" {
-            If OnActivateFunction Is Array
-            This.OnActivateFunction := OnActivateFunction
-            Else
-            This.OnActivateFunction := Array(OnActivateFunction)
+    }
+    
+    ExecuteOnActivationPostSpeech() {
+        Try {
+            element := This.GetElement()
+            element.Click("Left")
         }
     }
     
-    Activate(CurrentControlID := 0) {
-        ControlElement := This.GetControl()
-        If ControlElement == False {
-            If This.Label != ""
-            AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
-            Else
-            AccessibilityOverlay.Speak(This.NotFoundString)
-        }
-        else {
-            If This.ControlID != CurrentControlID
-            If HasMethod(This, "Focus")
-            This.Focus(CurrentControlID)
-            ControlElement.Click()
-            For OnActivateFunction In This.OnActivateFunction
-            OnActivateFunction.Call(This)
-            If This.ControlID != CurrentControlID {
-                If This.Label != ""
-                AccessibilityOverlay.Speak(This.Label)
-            }
+    ExecuteOnFocusPreSpeech() {
+        Try {
+            element := This.GetElement()
+            element.SetFocus()
         }
     }
     
-    Focus(CurrentControlID := 0) {
-        ControlElement := This.GetControl()
-        If ControlElement == False {
-            If This.Label != ""
-            AccessibilityOverlay.Speak(This.Label . " " . This.NotFoundString)
-            Else
-            AccessibilityOverlay.Speak(This.NotFoundString)
+    CheckFocus() {
+        Try
+        Found := This.GetControl()
+        Catch
+        Found := False
+        If Not Found {
+            This.Focused := 0
+            AccessibilityOverlay.Speak(This.States[0])
         }
-        else {
-            ControlElement.SetFocus()
-            If CurrentControlID != This.ControlID {
-                For OnFocusFunction In This.OnFocusFunction
-                OnFocusFunction.Call(This)
-                If This.Label != ""
-                AccessibilityOverlay.Speak(This.Label)
-            }
+        Else {
+            This.Focused := 1
+            Return True
+        }
+        Return False
+    }
+    
+    CheckState() {
+        Try
+        Found := This.GetElement()
+        Catch
+        Found := False
+        If Found {
+            This.State := 1
+            Return True
+        }
+        Else {
+            This.State := 0
+            Return False
         }
     }
     
-    GetControl() {
-        If !IsSet(UIA)
+    GetElement() {
+        If Not IsSet(UIA)
         Return False
         Try {
             element := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
@@ -3243,16 +2210,6 @@ Class UIAControl Extends AccessibilityControl {
             Return False
         }
         Return Element
-    }
-    
-    SetHotkey(HotkeyCommand, HotkeyFunction := "") {
-        This.HotkeyCommand := HotkeyCommand
-        If HotkeyFunction != "" {
-            If HotkeyFunction Is Array
-            This.HotkeyFunction := HotkeyFunction
-            Else
-            This.HotkeyFunction := Array(HotkeyFunction)
-        }
     }
     
 }
