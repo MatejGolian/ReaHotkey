@@ -684,28 +684,28 @@ Class FocusableControl Extends AccessibilityControl {
     HotkeyFunctions := Array()
     HotkeyLabel := ""
     Label := ""
-    PostSpeechFocusFunctions := Array()
-    PreSpeechFocusFunctions := Array()
+    PostExecFocusFunctions := Array()
+    PreExecFocusFunctions := Array()
     State := 1
     States := Map()
     Value := ""
     
-    __New(Label := "", PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "") {
+    __New(Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
         Super.__New()
         This.Label := Label
-        If Not PreSpeechFocusFunctions = "" {
-            If Not PreSpeechFocusFunctions Is Array
-            PreSpeechFocusFunctions := Array(PreSpeechFocusFunctions)
-            For FocusFunction In PreSpeechFocusFunctions
+        If Not PreExecFocusFunctions = "" {
+            If Not PreExecFocusFunctions Is Array
+            PreExecFocusFunctions := Array(PreExecFocusFunctions)
+            For FocusFunction In PreExecFocusFunctions
             If FocusFunction Is Object And FocusFunction.HasMethod("Call")
-            This.PreSpeechFocusFunctions.Push(FocusFunction)
+            This.PreExecFocusFunctions.Push(FocusFunction)
         }
-        If Not PostSpeechFocusFunctions = "" {
-            If Not PostSpeechFocusFunctions Is Array
-            PostSpeechFocusFunctions := Array(PostSpeechFocusFunctions)
-            For FocusFunction In PostSpeechFocusFunctions
+        If Not PostExecFocusFunctions = "" {
+            If Not PostExecFocusFunctions Is Array
+            PostExecFocusFunctions := Array(PostExecFocusFunctions)
+            For FocusFunction In PostExecFocusFunctions
             If FocusFunction Is Object And FocusFunction.HasMethod("Call")
-            This.PostSpeechFocusFunctions.Push(FocusFunction)
+            This.PostExecFocusFunctions.Push(FocusFunction)
         }
     }
     
@@ -719,7 +719,7 @@ Class FocusableControl Extends AccessibilityControl {
     
     Focus(Speak := True) {
         If Not This.ControlID = AccessibilityOverlay.CurrentControlID
-        For FocusFunction In This.PreSpeechFocusFunctions
+        For FocusFunction In This.PreExecFocusFunctions
         FocusFunction.Call(This)
         This.CheckFocus()
         If This.HasFocus() {
@@ -729,7 +729,7 @@ Class FocusableControl Extends AccessibilityControl {
             This.SpeakOnFocus(Speak)
             If This.HasMethod("ExecuteOnFocusPostSpeech")
             This.ExecuteOnFocusPostSpeech()
-            For FocusFunction In This.PostSpeechFocusFunctions
+            For FocusFunction In This.PostExecFocusFunctions
             FocusFunction.Call(This)
         }
     }
@@ -796,8 +796,8 @@ Class FocusableGraphic Extends FocusableControl {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map()) {
-        Super.__New(Label, PreSpeechFocusFunctions, PostSpeechFocusFunctions)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map()) {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
         If Not StateParam = "State" {
             This.DeleteProp("State")
             This.%StateParam% := 1
@@ -867,24 +867,24 @@ Class FocusableGraphic Extends FocusableControl {
 Class ActivatableControl Extends FocusableControl {
     
     ControlType := "Activatable"
-    PostSpeechActivationFunctions := Array()
-    PreSpeechActivationFunctions := Array()
+    PostExecActivationFunctions := Array()
+    PreExecActivationFunctions := Array()
     
-    __New(Label := "", PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PostSpeechFocusFunctions)
-        If Not PreSpeechActivationFunctions = "" {
-            If Not PreSpeechActivationFunctions Is Array
-            PreSpeechActivationFunctions := Array(PreSpeechActivationFunctions)
-            For ActivationFunction In PreSpeechActivationFunctions
+    __New(Label := "", PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+        If Not PreExecActivationFunctions = "" {
+            If Not PreExecActivationFunctions Is Array
+            PreExecActivationFunctions := Array(PreExecActivationFunctions)
+            For ActivationFunction In PreExecActivationFunctions
             If ActivationFunction Is Object And ActivationFunction.HasMethod("Call")
-            This.PreSpeechActivationFunctions.Push(ActivationFunction)
+            This.PreExecActivationFunctions.Push(ActivationFunction)
         }
-        If Not PostSpeechActivationFunctions = "" {
-            If Not PostSpeechActivationFunctions Is Array
-            PostSpeechActivationFunctions := Array(PostSpeechActivationFunctions)
-            For ActivationFunction In PostSpeechActivationFunctions
+        If Not PostExecActivationFunctions = "" {
+            If Not PostExecActivationFunctions Is Array
+            PostExecActivationFunctions := Array(PostExecActivationFunctions)
+            For ActivationFunction In PostExecActivationFunctions
             If ActivationFunction Is Object And ActivationFunction.HasMethod("Call")
-            This.PostSpeechActivationFunctions.Push(ActivationFunction)
+            This.PostExecActivationFunctions.Push(ActivationFunction)
         }
     }
     
@@ -893,7 +893,7 @@ Class ActivatableControl Extends FocusableControl {
         This.Focus(False)
         This.CheckFocus()
         If This.HasFocus() {
-            For ActivationFunction In This.PreSpeechActivationFunctions
+            For ActivationFunction In This.PreExecActivationFunctions
             ActivationFunction.Call(This)
             This.CheckFocus()
             If This.HasFocus() {
@@ -903,7 +903,7 @@ Class ActivatableControl Extends FocusableControl {
                 This.SpeakOnActivation(Speak)
                 If This.HasMethod("ExecuteOnActivationPostSpeech")
                 This.ExecuteOnActivationPostSpeech()
-                For ActivationFunction In This.PostSpeechActivationFunctions
+                For ActivationFunction In This.PostExecActivationFunctions
                 ActivationFunction.Call(This)
             }
         }
@@ -935,25 +935,25 @@ Class ActivatableControl Extends FocusableControl {
 Class ActivatableGraphic Extends FocusableGraphic {
     
     ControlType := "Activatable"
-    PostSpeechActivationFunctions := Array()
-    PreSpeechActivationFunctions := Array()
+    PostExecActivationFunctions := Array()
+    PreExecActivationFunctions := Array()
     States := Map(-1, "", 0, "", 1, "")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map()) {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreSpeechFocusFunctions, PostSpeechFocusFunctions, StateParam, ErrorState, Groups)
-        If Not PreSpeechActivationFunctions = "" {
-            If Not PreSpeechActivationFunctions Is Array
-            PreSpeechActivationFunctions := Array(PreSpeechActivationFunctions)
-            For ActivationFunction In PreSpeechActivationFunctions
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map()) {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, StateParam, ErrorState, Groups)
+        If Not PreExecActivationFunctions = "" {
+            If Not PreExecActivationFunctions Is Array
+            PreExecActivationFunctions := Array(PreExecActivationFunctions)
+            For ActivationFunction In PreExecActivationFunctions
             If ActivationFunction Is Object And ActivationFunction.HasMethod("Call")
-            This.PreSpeechActivationFunctions.Push(ActivationFunction)
+            This.PreExecActivationFunctions.Push(ActivationFunction)
         }
-        If Not PostSpeechActivationFunctions = "" {
-            If Not PostSpeechActivationFunctions Is Array
-            PostSpeechActivationFunctions := Array(PostSpeechActivationFunctions)
-            For ActivationFunction In PostSpeechActivationFunctions
+        If Not PostExecActivationFunctions = "" {
+            If Not PostExecActivationFunctions Is Array
+            PostExecActivationFunctions := Array(PostExecActivationFunctions)
+            For ActivationFunction In PostExecActivationFunctions
             If ActivationFunction Is Object And ActivationFunction.HasMethod("Call")
-            This.PostSpeechActivationFunctions.Push(ActivationFunction)
+            This.PostExecActivationFunctions.Push(ActivationFunction)
         }
     }
     
@@ -962,7 +962,7 @@ Class ActivatableGraphic Extends FocusableGraphic {
         This.Focus(False)
         This.CheckFocus()
         If This.HasFocus() {
-            For ActivationFunction In This.PreSpeechActivationFunctions
+            For ActivationFunction In This.PreExecActivationFunctions
             ActivationFunction.Call(This)
             This.CheckFocus()
             If This.HasFocus() {
@@ -972,7 +972,7 @@ Class ActivatableGraphic Extends FocusableGraphic {
                 This.SpeakOnActivation(Speak)
                 If This.HasMethod("ExecuteOnActivationPostSpeech")
                 This.ExecuteOnActivationPostSpeech()
-                For ActivationFunction In This.PostSpeechActivationFunctions
+                For ActivationFunction In This.PostExecActivationFunctions
                 ActivationFunction.Call(This)
             }
         }
@@ -1007,8 +1007,8 @@ Class Button Extends ActivatableControl {
     ControlTypeLabel := "button"
     DefaultLabel := "unlabelled"
     
-    __New(Label, PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PreSpeechActivationFunctions, PostSpeechFocusFunctions, PostSpeechActivationFunctions)
+    __New(Label, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
     }
     
 }
@@ -1021,8 +1021,8 @@ Class Checkbox Extends ActivatableControl {
     DefaultLabel := "unlabelled"
     States := Map(-1, "unknown state", 0, "not checked", 1, "checked")
     
-    __New(Label, PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PreSpeechActivationFunctions, PostSpeechFocusFunctions, PostSpeechActivationFunctions)
+    __New(Label, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
         This.DeleteProp("State")
     }
     
@@ -1040,8 +1040,8 @@ Class ComboBox Extends FocusableControl {
     CurrentOption := 1
     Options := Array()
     
-    __New(Label, PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "", ChangeFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PostSpeechFocusFunctions)
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
         If Not ChangeFunctions = "" {
             If Not ChangeFunctions Is Array
             ChangeFunctions := Array(ChangeFunctions)
@@ -1107,8 +1107,8 @@ Class Edit Extends FocusableControl {
     DefaultLabel := "unlabelled"
     DefaultValue := "blank"
     
-    __New(Label, PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PostSpeechFocusFunctions)
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
     }
     
 }
@@ -1122,26 +1122,26 @@ Class Tab Extends AccessibilityOverlay {
     HotkeyCommand := ""
     HotkeyFunctions := Array()
     HotkeyLabel := ""
-    PostSpeechFocusFunctions := Array()
-    PreSpeechFocusFunctions := Array()
+    PostExecFocusFunctions := Array()
+    PreExecFocusFunctions := Array()
     State := 1
     States := Map(0, "not found", 1, "selected")
     
-    __New(Label, PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "") {
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
         Super.__New(Label)
-        If Not PreSpeechFocusFunctions = "" {
-            If Not PreSpeechFocusFunctions Is Array
-            PreSpeechFocusFunctions := Array(PreSpeechFocusFunctions)
-            For FocusFunction In PreSpeechFocusFunctions
+        If Not PreExecFocusFunctions = "" {
+            If Not PreExecFocusFunctions Is Array
+            PreExecFocusFunctions := Array(PreExecFocusFunctions)
+            For FocusFunction In PreExecFocusFunctions
             If FocusFunction Is Object And FocusFunction.HasMethod("Call")
-            This.PreSpeechFocusFunctions.Push(FocusFunction)
+            This.PreExecFocusFunctions.Push(FocusFunction)
         }
-        If Not PostSpeechFocusFunctions = "" {
-            If Not PostSpeechFocusFunctions Is Array
-            PostSpeechFocusFunctions := Array(PostSpeechFocusFunctions)
-            For FocusFunction In PostSpeechFocusFunctions
+        If Not PostExecFocusFunctions = "" {
+            If Not PostExecFocusFunctions Is Array
+            PostExecFocusFunctions := Array(PostExecFocusFunctions)
+            For FocusFunction In PostExecFocusFunctions
             If FocusFunction Is Object And FocusFunction.HasMethod("Call")
-            This.PostSpeechFocusFunctions.Push(FocusFunction)
+            This.PostExecFocusFunctions.Push(FocusFunction)
         }
     }
     
@@ -1155,7 +1155,7 @@ Class Tab Extends AccessibilityOverlay {
     
     Focus(Speak := True) {
         If Not This.ControlID = AccessibilityOverlay.CurrentControlID
-        For FocusFunction In This.PreSpeechFocusFunctions
+        For FocusFunction In This.PreExecFocusFunctions
         FocusFunction.Call(This)
         This.CheckFocus()
         If This.HasFocus() {
@@ -1165,7 +1165,7 @@ Class Tab Extends AccessibilityOverlay {
             This.SpeakOnFocus(Speak)
             If This.HasMethod("ExecuteOnFocusPostSpeech")
             This.ExecuteOnFocusPostSpeech()
-            For FocusFunction In This.PostSpeechFocusFunctions
+            For FocusFunction In This.PostExecFocusFunctions
             FocusFunction.Call(This)
         }
     }
@@ -1277,8 +1277,8 @@ Class CustomCheckbox Extends Checkbox {
     
     CheckStateFunction := ""
     
-    __New(Label, CheckStateFunction := "", PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PreSpeechActivationFunctions, PostSpeechFocusFunctions, PostSpeechActivationFunctions)
+    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
         If CheckStateFunction Is Object And CheckStateFunction.HasMethod("Call")
         This.CheckStateFunction := CheckStateFunction
     }
@@ -1299,7 +1299,19 @@ Class CustomControl Extends ActivatableControl {
     ControlType := "Custom"
     
     __New(FocusFunctions := "", ActivationFunctions := "") {
-        Super.__New("",, FocusFunctions,, ActivationFunctions)
+        Super.__New("", FocusFunctions,, ActivationFunctions)
+    }
+    
+    Activate(Speak := True) {
+        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
+        This.Focus(False)
+        For ActivationFunction In This.PreExecActivationFunctions
+        ActivationFunction.Call(This, Speak)
+    }
+    
+    Focus(Speak := True) {
+        For FocusFunction In This.PreExecFocusFunctions
+        FocusFunction.Call(This, Speak)
     }
     
 }
@@ -1314,8 +1326,8 @@ Class CustomToggleButton Extends ToggleButton {
     
     CheckStateFunction := ""
     
-    __New(Label, CheckStateFunction := "", PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PreSpeechActivationFunctions, PostSpeechFocusFunctions, PostSpeechActivationFunctions)
+    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
         If CheckStateFunction Is Object And CheckStateFunction.HasMethod("Call")
         This.CheckStateFunction := CheckStateFunction
     }
@@ -1334,8 +1346,8 @@ Class GraphicalButton Extends  ActivatableGraphic {
     DefaultLabel := "unlabelled"
     States := Map(-1, "not found", 0, "off", 1, "on")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImages, OffImages := "", PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreSpeechFocusFunctions, PreSpeechActivationFunctions, PostSpeechFocusFunctions, PostSpeechActivationFunctions, "State", -1, Map("On", OnImages, "Off", OffImages))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImages, OffImages := "", PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions, "State", -1, Map("On", OnImages, "Off", OffImages))
     }
     
     CheckFocus(*) {
@@ -1389,8 +1401,8 @@ Class GraphicalCheckbox Extends ActivatableGraphic {
     DefaultLabel := "unlabelled"
     States := Map(-1, "not found", 0, "Not checked", 1, "checked")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, CheckedImages, UncheckedImages, PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreSpeechFocusFunctions, PreSpeechActivationFunctions, PostSpeechFocusFunctions, PostSpeechActivationFunctions, "Checked", -1, Map("Checked", CheckedImages, "Unchecked", UncheckedImages))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, CheckedImages, UncheckedImages, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions, "Checked", -1, Map("Checked", CheckedImages, "Unchecked", UncheckedImages))
     }
     
     CheckFocus(*) {
@@ -1427,8 +1439,8 @@ Class GraphicalSlider Extends FocusableGraphic {
     States := Map(0, "Not Found", 1, "")
     Type := False
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, Start := "", End := "", PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreSpeechFocusFunctions, PostSpeechFocusFunctions, "State", 0, Map(1, Images))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, Start := "", End := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, "State", 0, Map(1, Images))
         This.Label := Label
         If Start = "" {
             If This.Type = "Horizontal"
@@ -1548,7 +1560,7 @@ Class GraphicalTab Extends Tab {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "") {
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
         Super.__New(Label)
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
@@ -1608,8 +1620,8 @@ Class HotspotButton Extends Button {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PreSpeechActivationFunctions, PostSpeechFocusFunctions, PostSpeechActivationFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -1631,8 +1643,8 @@ Class HotspotCheckbox Extends Checkbox {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PreSpeechActivationFunctions, PostSpeechFocusFunctions, PostSpeechActivationFunctions)
+    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
         If Not CheckedColors = "" {
             If Not CheckedColors Is Array
             CheckedColors := Array(CheckedColors)
@@ -1683,8 +1695,8 @@ Class HotspotComboBox Extends ComboBox {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "", ChangeFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PostSpeechFocusFunctions, ChangeFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -1700,8 +1712,8 @@ Class HotspotEdit Extends Edit {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PostSpeechFocusFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -1717,8 +1729,8 @@ Class HotspotTab Extends Tab {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PostSpeechFocusFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -1736,8 +1748,8 @@ Class HotspotToggleButton Extends ToggleButton {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PreSpeechActivationFunctions, PostSpeechFocusFunctions, PostSpeechActivationFunctions)
+    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
         If Not CheckedColors = "" {
             If Not CheckedColors Is Array
             CheckedColors := Array(CheckedColors)
@@ -1789,8 +1801,8 @@ Class NativeControl Extends ActivatableControl {
     NativeControlID := ""
     States := Map(-1, "Can not focus control", 0, "not found", 1, "")
     
-    __New(NativeControlID, Label := "", PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PreSpeechActivationFunctions, PostSpeechFocusFunctions, PostSpeechActivationFunctions)
+    __New(NativeControlID, Label := "", PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
         This.NativeControlID := NativeControlID
     }
     
@@ -1848,8 +1860,8 @@ Class OCRButton Extends Button {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New("", PreSpeechFocusFunctions, PreSpeechActivationFunctions, PostSpeechFocusFunctions, PostSpeechActivationFunctions)
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.X1Coordinate := X1Coordinate
@@ -1915,8 +1927,8 @@ Class OCRComboBox Extends ComboBox {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "", ChangeFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PostSpeechFocusFunctions, ChangeFunctions)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions)
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.X1Coordinate := X1Coordinate
@@ -1965,8 +1977,8 @@ Class OCREdit Extends Edit {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PostSpeechFocusFunctions)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.X1Coordinate := X1Coordinate
@@ -2016,8 +2028,8 @@ Class OCRTab Extends Tab {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "") {
-        Super.__New("", PreSpeechFocusFunctions, PostSpeechFocusFunctions)
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions)
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.X1Coordinate := X1Coordinate
@@ -2060,8 +2072,8 @@ Class OCRText Extends FocusableControl {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "") {
-        Super.__New("", PreSpeechFocusFunctions, PostSpeechFocusFunctions)
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions)
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.X1Coordinate := X1Coordinate
@@ -2090,8 +2102,8 @@ Class StaticText Extends FocusableControl {
     
     ControlType := "Text"
     
-    __New(Value := "", PreSpeechFocusFunctions := "", PostSpeechFocusFunctions := "") {
-        Super.__New("", PreSpeechFocusFunctions, PostSpeechFocusFunctions := "")
+    __New(Value := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions := "")
         This.Value := Value
     }
     
@@ -2122,8 +2134,8 @@ Class UIAControl Extends ActivatableControl {
     States := Map("0", "not found", "1", "")
     UIAPath := ""
     
-    __New(UIAPath, Label := "", PreSpeechFocusFunctions := "", PreSpeechActivationFunctions := "", PostSpeechFocusFunctions := "", PostSpeechActivationFunctions := "") {
-        Super.__New(Label, PreSpeechFocusFunctions, PreSpeechActivationFunctions, PostSpeechFocusFunctions, PostSpeechActivationFunctions)
+    __New(UIAPath, Label := "", PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
         This.UIAPath := UIAPath
     }
     

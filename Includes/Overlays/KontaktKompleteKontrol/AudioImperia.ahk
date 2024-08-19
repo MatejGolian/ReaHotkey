@@ -72,7 +72,7 @@ Class AudioImperia {
         %PluginClass%.PluginOverlays.Push(TalosOverlay)
     }
     
-    Static RedirectCerberusKeyPress(OverlayControl) {
+    Static RedirectCerberusKeyPress(OverlayControl, Speak := True) {
         ParentOverlay := OverlayControl.GetSuperordinateControl()
         MasterOverlay := ParentOverlay.GetSuperordinateControl()
         If A_PriorHotkey = "+Tab" {
@@ -92,7 +92,7 @@ Class AudioImperia {
         }
     }
     
-    Static SelectCerberusPatchType(TypeCombo) {
+    Static SelectCerberusPatchType(TypeCombo, Speak := True) {
         ParentOverlay := TypeCombo.GetSuperordinateControl()
         PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
         If TypeCombo.GetValue() = "Normal" {
