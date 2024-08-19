@@ -26,7 +26,7 @@ Class AudioImperia {
         CerberusComboBox := CerberusOverlay.AddCustomComboBox("Patch type:", ObjBindMethod(This, "SelectCerberusPatchType"),, ObjBindMethod(This, "SelectCerberusPatchType"))
         CerberusComboBox.SetOptions(["Normal", "Epic Mix"])
         CerberusOverlay.AddAccessibilityOverlay()
-        CerberusOverlay.AddCustomControl(ObjBindMethod(This, "RedirectCerberusKeyPress"))
+        CerberusOverlay.AddCustomControl("Cerberus Redirector", ObjBindMethod(This, "RedirectCerberusKeyPress"))
         %PluginClass%.PluginOverlays.Push(CerberusOverlay)
         
         ChorusOverlay := AccessibilityOverlay("Chorus")

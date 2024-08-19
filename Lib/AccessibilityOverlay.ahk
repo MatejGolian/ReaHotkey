@@ -1298,19 +1298,25 @@ Class CustomControl Extends ActivatableControl {
     
     ControlType := "Custom"
     
-    __New(FocusFunctions := "", ActivationFunctions := "") {
-        Super.__New("", FocusFunctions,, ActivationFunctions)
+    __New(Label, FocusFunctions := "", ActivationFunctions := "") {
+        Super.__New(Label, FocusFunctions,, ActivationFunctions)
+        This.FocusFunctions := This.PreExecFocusFunctions
+        This.ActivationFunctions := This.PreExecActivationFunctions
+        This.DeleteProp("PreExecFocusFunctions")
+        This.DeleteProp("PostExecFocusFunctions")
+        This.DeleteProp("PreExecActivationFunctions")
+        This.DeleteProp("PostExecActivationFunctions")
     }
     
     Activate(Speak := True) {
         If Not This.ControlID = AccessibilityOverlay.CurrentControlID
         This.Focus(False)
-        For ActivationFunction In This.PreExecActivationFunctions
+        For ActivationFunction In This.ActivationFunctions
         ActivationFunction.Call(This, Speak)
     }
     
     Focus(Speak := True) {
-        For FocusFunction In This.PreExecFocusFunctions
+        For FocusFunction In This.FocusFunctions
         FocusFunction.Call(This, Speak)
     }
     
