@@ -33,8 +33,6 @@ A_TrayMenu.Add("&Quit", ReaHotkey.Quit)
 A_TrayMenu.Default := "&Configuration..."
 
 AccessibilityOverlay.Speak("ReaHotkey ready")
-SetTimer ReaHotkey.ManageState, 100
-SetTimer ReaHotkey.CheckOpenWindows, 10000
 
 #Include Includes/Hotkey.Contexts.ahk
 #Include Includes/Hotkey.Functions.ahk
