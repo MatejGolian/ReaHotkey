@@ -15,7 +15,7 @@ Class PopulatedComboBox extends CustomComboBox {
                 Change.Push(OnChangeFunction*)
         }
 
-        Super.__New(Label, OnFocusFunction, Change)
+        Super.__New(Label, OnFocusFunction, , Change)
     }
 
     AddItem(Label, Selector := "") {
@@ -25,7 +25,7 @@ Class PopulatedComboBox extends CustomComboBox {
         ))
     }
 
-    Focus(CurrentControlID := 0) {
+    Focus(Speak := true) {
 
         Options := Array()
         
@@ -35,7 +35,7 @@ Class PopulatedComboBox extends CustomComboBox {
 
         This.SetOptions(Options, This.CurrentOption)
 
-        Super.Focus(CurrentControlID)
+        Super.Focus(Speak)
     }
 
     OnChange(*) {
@@ -221,8 +221,8 @@ Class Dubler2 {
                 }
             }
         } Else If Control.ControlType == "TabControl" {
-            TabObject := Control.Tabs[Control.CurrentTab]
-            Success := Dubler2.FindControlByLabel(&TabObject, Label, &OutVar)
+            TabObj := Control.Tabs[Control.CurrentTab]
+            Success := Dubler2.FindControlByLabel(&TabObj, Label, &OutVar)
 
             If Success {
                 Return True
@@ -249,8 +249,8 @@ Class Dubler2 {
                     }
                 }
             } Else If Control.ControlType == "TabControl" {
-                TabObject := Control.Tabs[Control.CurrentTab]
-                Position := GetPosition(&TabObject, ID)
+                TabObj := Control.Tabs[Control.CurrentTab]
+                Position := GetPosition(&TabObj, ID)
 
                 If Position.Length > 0 {
                     Return Array(Control.CurrentTab, Position*)
@@ -483,8 +483,8 @@ Class Dubler2MIDICapturePlugin {
             }
         } Else If Label != "Dubler 2 MIDI Capture Plugin" {
             Ol := AccessibilityOverlay("Dubler 2 MIDI Capture Plugin")
-            Ol.AddControl(CustomButton("Copy clip into REAPER", , ObjBindMethod(Dubler2MIDICapturePlugin, "DragFirstClip")))
-            Ol.AddHotspotButton("Select key of exported clip", 112, 554, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+            Ol.AddControl(CustomButton("Copy clip into REAPER", , , ObjBindMethod(Dubler2MIDICapturePlugin, "DragFirstClip")))
+            Ol.AddHotspotButton("Select key of exported clip", 112, 554, CompensatePluginPointCoordinates, , CompensatePluginPointCoordinates)
         }
 
         If Ol Is AccessibilityOverlay {

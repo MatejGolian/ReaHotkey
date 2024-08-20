@@ -9,7 +9,7 @@ Class HotspotCheckbox extends HotspotButton {
 
     __New(Label, XCoordinate, YCoordinate, Checked := False, OnFocusFunction := "", OnActivateFunction := "") {
 
-        Super.__New(Label, XCoordinate, YCoordinate, OnFocusFunction, OnActivateFunction)
+        Super.__New(Label, XCoordinate, YCoordinate, OnFocusFunction, , OnActivateFunction)
 
         This.SetChecked(Checked)
     }
@@ -26,10 +26,10 @@ Class HotspotCheckbox extends HotspotButton {
         This.UpdateLabel()
     }
 
-    Activate(CurrentControlID := 0) {
+    Activate(Speak := True) {
         This.SetChecked(!This.Checked)
 
-        Super.Activate(CurrentControlID)
+        Super.Activate(Speak)
     }
 }
 
@@ -39,7 +39,7 @@ Class CustomCheckbox extends CustomButton {
 
     __New(Label, Checked := False, OnFocusFunction := "", OnActivateFunction := "") {
 
-        Super.__New(Label, OnFocusFunction, OnActivateFunction)
+        Super.__New(Label, OnFocusFunction, , OnActivateFunction)
 
         This.SetChecked(Checked)
     }
@@ -56,10 +56,10 @@ Class CustomCheckbox extends CustomButton {
         This.UpdateLabel()
     }
 
-    Activate(CurrentControlID := 0) {
+    Activate(Speak := True) {
         This.SetChecked(!This.Checked)
 
-        Super.Activate(CurrentControlID)
+        Super.Activate(Speak)
     }
 }
 
@@ -204,8 +204,8 @@ Static CreateProfileOverlay(Overlay) {
 
     Dubler2.ProfileLoaded.Set("Current", ProfileObj)
 
-    Overlay.AddCustomButton("Revert Changes", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "RevertProfileButton"))
-    Overlay.AddHotspotButton("Unload Profile", 362, 56, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CloseProfileOverlay"))
+    Overlay.AddCustomButton("Revert Changes", ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "RevertProfileButton"))
+    Overlay.AddHotspotButton("Unload Profile", 362, 56, ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "CloseProfileOverlay"))
     ;Overlay.AddHotspotButton("User Settings", 900, 57, FocusButton)
 
     #Include ProfileAssignTab.ahk
