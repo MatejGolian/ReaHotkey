@@ -472,12 +472,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
-                If CurrentControl.ControlType = "ComboBox" {
-                    CurrentOption := CurrentControl.CurrentOption
-                    CurrentControl.SelectNextOption()
-                    If Not CurrentOption = CurrentControl.CurrentOption
-                    CurrentControl.ReportValue()
-                }
+                If CurrentControl.ControlType = "ComboBox"
+                CurrentControl.SelectNextOption()
             }
         }
     }
@@ -488,12 +484,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
-                If CurrentControl.ControlType = "ComboBox" {
-                    CurrentOption := CurrentControl.CurrentOption
-                    CurrentControl.SelectPreviousOption()
-                    If Not CurrentOption = CurrentControl.CurrentOption
-                    CurrentControl.ReportValue()
-                }
+                If CurrentControl.ControlType = "ComboBox"
+                CurrentControl.SelectPreviousOption()
             }
         }
     }
@@ -1041,32 +1033,46 @@ Class ComboBox Extends FocusableControl {
     }
     
     SelectNextOption() {
+        CurrentOption := This.CurrentOption
         If This.Options.Length > 0
         If This.CurrentOption < This.Options.Length {
             This.CurrentOption++
             This.Value := This.Options[This.CurrentOption]
         }
-        For ChangeFunction In This.ChangeFunctions
-        ChangeFunction.Call(This)
+        If Not CurrentOption = This.CurrentOption {
+            For ChangeFunction In This.ChangeFunctions
+            ChangeFunction.Call(This)
+            This.ReportValue()
+        }
     }
     
     SelectOption(Option) {
+        CurrentOption := This.CurrentOption
         If Not Option Is Integer Or Option < 1 Or Option > This.Options.Length
         This.CurrentOption := 1
         Else
         This.CurrentOption := Option
         If This.Options.Has(Option)
         This.Value := This.Options[Option]
+        If Not CurrentOption = This.CurrentOption {
+            For ChangeFunction In This.ChangeFunctions
+            ChangeFunction.Call(This)
+            This.ReportValue()
+        }
     }
     
     SelectPreviousOption() {
+        CurrentOption := This.CurrentOption
         If This.Options.Length > 0
         If This.CurrentOption > 1 {
             This.CurrentOption--
             This.Value := This.Options[This.CurrentOption]
         }
-        For ChangeFunction In This.ChangeFunctions
-        ChangeFunction.Call(This)
+        If Not CurrentOption = This.CurrentOption {
+            For ChangeFunction In This.ChangeFunctions
+            ChangeFunction.Call(This)
+            This.ReportValue()
+        }
     }
     
     SetOptions(Options, DefaultOption := 1) {
