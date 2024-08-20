@@ -9,7 +9,7 @@ Class Engine2 {
         
         Engine2PluginOverlay := AccessibilityOverlay("Engine 2")
         Engine2PluginOverlay.Metadata := Map("Vendor", "Best Service", "Product", "Engine 2")
-        Engine2PluginOverlay.AddHotspotButton("Load instrument", 170, 185, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        Engine2PluginOverlay.AddHotspotButton("Load instrument", 170, 185, CompensatePluginPointCoordinates,, CompensatePluginPointCoordinates)
         Engine2PluginQuickEditTab := HotspotTab("Quick edit", 352, 72, CompensatePluginPointCoordinates)
         Engine2PluginProEditTab := HotspotTab("Pro edit", 424, 72, CompensatePluginPointCoordinates)
         Engine2PluginBrowserTab := HotspotTab("Browser", 488, 72, CompensatePluginPointCoordinates)
@@ -19,7 +19,7 @@ Class Engine2 {
         Engine2PluginOverlay.AddTabControl(, Engine2PluginQuickEditTab, Engine2PluginProEditTab, Engine2PluginBrowserTab, Engine2PluginMixerTab, Engine2PluginPreferencesTab, Engine2PluginHelpTab)
         Engine2PluginEngineTab := HotspotTab("Engine", 396, 112, CompensatePluginPointCoordinates)
         Engine2PluginLibrariesTab := HotspotTab("Libraries", 424, 112, CompensatePluginPointCoordinates)
-        Engine2PluginAddLibraryButton := Engine2PluginLibrariesTab.AddHotspotButton("Add library", 436, 146, CompensatePluginPointCoordinates, [CompensatePluginPointCoordinates, ObjBindMethod(Engine2, "ActivatePluginAddLibraryButton")])
+        Engine2PluginAddLibraryButton := Engine2PluginLibrariesTab.AddHotspotButton("Add library", 436, 146, CompensatePluginPointCoordinates,, [CompensatePluginPointCoordinates, ObjBindMethod(Engine2, "ActivatePluginAddLibraryButton")])
         Engine2PluginUserFolderTab := HotspotTab("User folder", 488, 112, CompensatePluginPointCoordinates)
         Engine2PluginOutputSurrTab := HotspotTab("Output/Surr", 572, 112, CompensatePluginPointCoordinates)
         Engine2PluginMiscTab := HotspotTab("Misc.", 656, 112, CompensatePluginPointCoordinates)
@@ -72,9 +72,9 @@ Class Engine2 {
     Static ActivatePluginAddLibraryButton(Engine2AddLibraryButton) {
         Engine2LibrariesTab := Engine2AddLibraryButton.GetSuperordinateControl()
         Engine2PreferencesTab := Engine2LibrariesTab.GetSuperordinateControl()
-        Engine2PreferencesTab.Focus(Engine2PreferencesTab.ControlID)
-        Engine2LibrariesTab.Focus(Engine2LibrariesTab.ControlID)
-        Engine2AddLibraryButton.Focus(Engine2AddLibraryButton.ControlID)
+        Engine2PreferencesTab.Focus(False)
+        Engine2LibrariesTab.Focus(False)
+        Engine2AddLibraryButton.Focus(False)
         AccessibilityOverlay.Speak("")
     }
     
