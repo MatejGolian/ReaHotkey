@@ -241,12 +241,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
                 If CurrentControl Is TabControl {
                     This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
-                    If CurrentControl.CurrentTab < CurrentControl.Tabs.Length
-                    TabNumber := CurrentControl.CurrentTab + 1
-                    Else
-                    TabNumber := 1
-                    CurrentControl.CurrentTab := TabNumber
-                    CurrentControl.Focus()
+                    CurrentControl.FocusNextTab()
                     This.SetCurrentControlID(CurrentControl.ControlID)
                 }
             }
@@ -261,12 +256,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
                 If CurrentControl Is TabControl {
                     This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
-                    If CurrentControl.CurrentTab <= 1
-                    TabNumber := CurrentControl.Tabs.Length
-                    Else
-                    TabNumber := CurrentControl.CurrentTab - 1
-                    CurrentControl.CurrentTab := TabNumber
-                    CurrentControl.Focus()
+                    CurrentControl.FocusPreviousTab()
                     This.SetCurrentControlID(CurrentControl.controlID)
                 }
             }
@@ -1212,6 +1202,7 @@ Class TabControl Extends FocusableControl {
     ControlType := "TabControl"
     ControlTypeLabel := "tab control"
     CurrentTab := 1
+    PreviousTab := 0
     Tabs := Array()
     
     __New(Label := "", Tabs*) {
@@ -1229,8 +1220,37 @@ Class TabControl Extends FocusableControl {
         }
     }
     
+    Focus(Speak := True) {
+        Super.Focus(Speak)
+        This.PreviousTab := This.CurrentTab
+    }
+    
+    FocusNextTab(Speak := True) {
+        If This.CurrentTab < This.Tabs.Length
+        TabNumber := This.CurrentTab + 1
+        Else
+        TabNumber := 1
+        This.PreviousTab := This.CurrentTab
+        This.CurrentTab := TabNumber
+        Super.Focus(Speak)
+    }
+    
+    FocusPreviousTab(Speak := True) {
+        If This.CurrentTab <= 1
+        TabNumber := This.Tabs.Length
+        Else
+        TabNumber := This.CurrentTab - 1
+        This.PreviousTab := This.CurrentTab
+        This.CurrentTab := TabNumber
+        Super.Focus(Speak)
+    }
+    
     GetCurrentTab() {
         Return This.Tabs.Get(This.CurrentTab, 0)
+    }
+    
+    GetPreviousTab() {
+        Return This.Tabs.Get(This.PreviousTab, 0)
     }
     
     GetTab(TabNumber) {
@@ -1257,6 +1277,9 @@ Class TabControl Extends FocusableControl {
         ValueString := This.GetValue()
         If ValueString = ""
         ValueString := This.DefaultValue
+        If This.controlID = AccessibilityOverlay.PreviousControlID
+        If This.CurrentTab = This.PreviousTab And This.Tabs.Length > 1
+        ValueString := ""
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
