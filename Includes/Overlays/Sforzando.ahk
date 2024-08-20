@@ -21,9 +21,9 @@ Class Sforzando {
     
     Static InitPlugin(PluginInstance) {
         PluginHeader := AccessibilityOverlay()
-        PluginHeader.AddControl(Sforzando.OCRButton("Instrument", "(value not detected)", 100, 76, 340, 87,,, CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates))
-        PluginHeader.AddControl(Sforzando.OCRButton("Polyphony", "(value not detected)", 480, 90, 540, 120,,, CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates))
-        PluginHeader.AddControl(Sforzando.OCRButton("Pitchbend range", "(value not detected)", 580, 90, 610, 110,,, CompensatePluginRegionCoordinates, CompensatePluginRegionCoordinates))
+        PluginHeader.AddControl(Sforzando.OCRButton("Instrument", "(value not detected)", 100, 76, 340, 87,,, CompensatePluginRegionCoordinates,, CompensatePluginRegionCoordinates))
+        PluginHeader.AddControl(Sforzando.OCRButton("Polyphony", "(value not detected)", 480, 90, 540, 120,,, CompensatePluginRegionCoordinates,, CompensatePluginRegionCoordinates))
+        PluginHeader.AddControl(Sforzando.OCRButton("Pitchbend range", "(value not detected)", 580, 90, 610, 110,,, CompensatePluginRegionCoordinates,, CompensatePluginRegionCoordinates))
         PluginInstance.Overlay.Label := "sforzando"
         If PluginInstance.Overlay.ChildControls.Length = 0
         PluginInstance.Overlay.AddAccessibilityOverlay()
