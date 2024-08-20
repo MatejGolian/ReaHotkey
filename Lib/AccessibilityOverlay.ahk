@@ -845,7 +845,7 @@ Class ActivatableControl Extends FocusableControl {
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     
-    __New(Label := "", PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
+    __New(Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
         Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
         If Not PreExecActivationFunctions = "" {
             If Not PreExecActivationFunctions Is Array
@@ -914,7 +914,7 @@ Class ActivatableGraphic Extends FocusableGraphic {
     PreExecActivationFunctions := Array()
     States := Map(-1, "", 0, "", 1, "")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map()) {
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map()) {
         Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, StateParam, ErrorState, Groups)
         If Not PreExecActivationFunctions = "" {
             If Not PreExecActivationFunctions Is Array
@@ -982,8 +982,8 @@ Class Button Extends ActivatableControl {
     ControlTypeLabel := "button"
     DefaultLabel := "unlabelled"
     
-    __New(Label, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
     }
     
 }
@@ -996,8 +996,8 @@ Class Checkbox Extends ActivatableControl {
     DefaultLabel := "unlabelled"
     States := Map(-1, "unknown state", 0, "not checked", 1, "checked")
     
-    __New(Label, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
         This.DeleteProp("State")
     }
     
@@ -1293,8 +1293,8 @@ Class CustomCheckbox Extends Checkbox {
     
     CheckStateFunction := ""
     
-    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
+    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
         If CheckStateFunction Is Object And CheckStateFunction.HasMethod("Call")
         This.CheckStateFunction := CheckStateFunction
     }
@@ -1348,8 +1348,8 @@ Class CustomToggleButton Extends ToggleButton {
     
     CheckStateFunction := ""
     
-    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
+    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
         If CheckStateFunction Is Object And CheckStateFunction.HasMethod("Call")
         This.CheckStateFunction := CheckStateFunction
     }
@@ -1368,8 +1368,8 @@ Class GraphicalButton Extends  ActivatableGraphic {
     DefaultLabel := "unlabelled"
     States := Map(-1, "not found", 0, "off", 1, "on")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImages, OffImages := "", PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions, "State", -1, Map("On", OnImages, "Off", OffImages))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImages, OffImages := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "State", -1, Map("On", OnImages, "Off", OffImages))
     }
     
     CheckFocus(*) {
@@ -1423,8 +1423,8 @@ Class GraphicalCheckbox Extends ActivatableGraphic {
     DefaultLabel := "unlabelled"
     States := Map(-1, "not found", 0, "Not checked", 1, "checked")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, CheckedImages, UncheckedImages, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions, "Checked", -1, Map("Checked", CheckedImages, "Unchecked", UncheckedImages))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, CheckedImages, UncheckedImages, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "Checked", -1, Map("Checked", CheckedImages, "Unchecked", UncheckedImages))
     }
     
     CheckFocus(*) {
@@ -1642,8 +1642,8 @@ Class HotspotButton Extends Button {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -1665,8 +1665,8 @@ Class HotspotCheckbox Extends Checkbox {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
+    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
         If Not CheckedColors = "" {
             If Not CheckedColors Is Array
             CheckedColors := Array(CheckedColors)
@@ -1770,8 +1770,8 @@ Class HotspotToggleButton Extends ToggleButton {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
+    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
         If Not CheckedColors = "" {
             If Not CheckedColors Is Array
             CheckedColors := Array(CheckedColors)
@@ -1823,8 +1823,8 @@ Class NativeControl Extends ActivatableControl {
     NativeControlID := ""
     States := Map(-1, "Can not focus control", 0, "not found", 1, "")
     
-    __New(NativeControlID, Label := "", PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
+    __New(NativeControlID, Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
         This.NativeControlID := NativeControlID
     }
     
@@ -1882,8 +1882,8 @@ Class OCRButton Extends Button {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New("", PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
+    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.X1Coordinate := X1Coordinate
@@ -2156,8 +2156,8 @@ Class UIAControl Extends ActivatableControl {
     States := Map("0", "not found", "1", "")
     UIAPath := ""
     
-    __New(UIAPath, Label := "", PreExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecFocusFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PreExecActivationFunctions, PostExecFocusFunctions, PostExecActivationFunctions)
+    __New(UIAPath, Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
         This.UIAPath := UIAPath
     }
     
