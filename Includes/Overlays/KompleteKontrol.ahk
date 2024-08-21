@@ -110,7 +110,7 @@ Class KompleteKontrol {
         Return True
         Try
         UIAElement := GetUIAElement("15,1")
-        If UIAElement != False And UIAElement.Name = "Komplete Kontrol" And UIAElement.ClassName = "ni::qt::QuickWindow"
+        If Not UIAElement = False And UIAElement.Name = "Komplete Kontrol" And UIAElement.ClassName = "ni::qt::QuickWindow"
         Return True
         Sleep 500
         Return False
@@ -135,7 +135,7 @@ Class KompleteKontrol {
             Return True
             Else
             If PluginData Is Plugin And PluginData.Name = "Komplete Kontrol Preference Dialog" {
-                If PreviousWinID != CurrentWinID And PreviousWinID != ""
+                If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
                 PluginData.Overlay.Reset()
                 PreviousWinID := CurrentWinID
                 Return True
@@ -153,7 +153,7 @@ Class KompleteKontrol {
             Return True
             Else
             If PluginData Is Plugin And PluginData.Name = "Komplete Kontrol Save As Dialog" {
-                If PreviousWinID != CurrentWinID And PreviousWinID != ""
+                If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
                 PluginData.Overlay.Reset()
                 PreviousWinID := CurrentWinID
                 Return True
@@ -173,7 +173,7 @@ Class KompleteKontrol {
         CurrentWinID := WinGetID("A")
         StandaloneInstance := Standalone.GetInstance(CurrentWinID)
         If StandaloneInstance Is Standalone And StandaloneInstance.Name = "Komplete Kontrol Save As Dialog" {
-            If PreviousWinID != CurrentWinID
+            If Not PreviousWinID = CurrentWinID
             Send "{Tab}"
             PreviousWinID := CurrentWinID
             Return True
@@ -185,7 +185,7 @@ Class KompleteKontrol {
     
     Static ClosePluginBrowser() {
         UIAElement := GetUIAElement("15,1,3")
-        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
@@ -203,7 +203,7 @@ Class KompleteKontrol {
     
     Static CloseStandaloneBrowser() {
         UIAElement := GetUIAElement("1,3")
-        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000

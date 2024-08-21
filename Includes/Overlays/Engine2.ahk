@@ -61,7 +61,7 @@ Class Engine2 {
             ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
             Catch
             ReaperListItem := ""
-            If ReaperListItem != ""
+            If Not ReaperListItem = ""
             For ReaperPluginName In ReaperPluginNames
             If ReaperListItem = ReaperPluginName
             Return True

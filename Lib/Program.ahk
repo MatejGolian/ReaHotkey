@@ -156,9 +156,9 @@ Class Program {
         If This.FindName(ProgramName) = False {
             If ProgramName = ""
             ProgramName := %This.Prototype.__Class%.Unnamed%This.Prototype.__Class%Name
-            If Chooser != True And Chooser != False
+            If Not Chooser = True And Not Chooser = False
             Chooser := True
-            If NoHotkeys != True And NoHotkeys != False
+            If Not NoHotkeys = True And Not NoHotkeys = False
             NoHotkeys := False
             If Not CheckerFunction Is Object Or Not CheckerFunction.HasMethod("Call")
             CheckerFunction := %This.Prototype.__Class%.DefaultChecker
@@ -250,7 +250,7 @@ Class Program {
                 If I = "" And RegexMatch(Option, "i)^(I([0-9]|[1-9][0-9]|100))$", &Match)
                 I := Match[0]
             }
-            If OnOff != "On" And OnOff != "Off"
+            If Not OnOff = "On" And Not OnOff = "Off"
             OnOff := "On"
             Options := {OnOff: OnOff, B: B, P: P, S: S, T: T, I: I, String: Trim(OnOff . " " . B . " " . P . " " . S . " " . T . " " . I)}
         }
@@ -273,7 +273,7 @@ Class Program {
     Static SetTimer(ProgramName, Function, Period := "", Priority := "") {
         ProgramNumber := This.FindName(ProgramName)
         TimerNumber := This.FindTimer(ProgramName, Function)
-        If ProgramNumber > 0 And TimerNumber = 0 And Period != 0 {
+        If ProgramNumber > 0 And TimerNumber = 0 And Not Period = 0 {
             If Period = ""
             Period := 250
             If Priority = ""

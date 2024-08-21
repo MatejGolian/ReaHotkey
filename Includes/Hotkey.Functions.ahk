@@ -17,7 +17,7 @@ F6HK(ThisHotkey) {
         CurrentIndex := Index
         Break
     }
-    If CurrentIndex > 0 And ContainerIndex > 0 And CurrentIndex <= 6 And CurrentIndex != ContainerIndex {
+    If CurrentIndex > 0 And ContainerIndex > 0 And CurrentIndex <= 6 And Not CurrentIndex = ContainerIndex {
         Try
         ControlFocus Controls[ContainerIndex], ReaHotkey.PluginWinCriteria
     }
@@ -30,7 +30,7 @@ F6HK(ThisHotkey) {
 
 TabHK(ThisHotkey) {
     Thread "NoTimers"
-    If ReaHotkey.Context != False
+    If Not ReaHotkey.Context = False
     Try
     If ReaHotkey.Context = "Plugin"
     ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
@@ -38,14 +38,14 @@ TabHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If ReaHotkey.Context != False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
         ReaHotkey.Found%ReaHotkey.Context%.Overlay.FocusNextControl()
     }
 }
 
 ShiftTabHK(ThisHotkey) {
     Thread "NoTimers"
-    If ReaHotkey.Context != False
+    If Not ReaHotkey.Context = False
     Try
     If ReaHotkey.Context = "Plugin"
     ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
@@ -53,14 +53,14 @@ ShiftTabHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If ReaHotkey.Context != False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
         ReaHotkey.Found%ReaHotkey.Context%.Overlay.FocusPreviousControl()
     }
 }
 
 ControlTabHK(ThisHotkey) {
     Thread "NoTimers"
-    If ReaHotkey.Context != False
+    If Not ReaHotkey.Context = False
     Try
     If ReaHotkey.Context = "Plugin"
     ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
@@ -68,14 +68,14 @@ ControlTabHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If ReaHotkey.Context != False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
         ReaHotkey.FocusNextTab(ReaHotkey.Found%ReaHotkey.Context%.Overlay)
     }
 }
 
 ControlShiftTabHK(ThisHotkey) {
     Thread "NoTimers"
-    If ReaHotkey.Context != False
+    If Not ReaHotkey.Context = False
     Try
     If ReaHotkey.Context = "Plugin"
     ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
@@ -83,14 +83,14 @@ ControlShiftTabHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If ReaHotkey.Context != False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
         ReaHotkey.FocusPreviousTab(ReaHotkey.Found%ReaHotkey.Context%.Overlay)
     }
 }
 
 LeftRightHK(ThisHotkey) {
     Thread "NoTimers"
-    If ReaHotkey.Context != False
+    If Not ReaHotkey.Context = False
     Try
     If ReaHotkey.Context = "Plugin"
     ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
@@ -98,7 +98,7 @@ LeftRightHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If ReaHotkey.Context != False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
         Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
             Case "Slider":
             Hotkey ThisHotkey, "Off"
@@ -126,7 +126,7 @@ LeftRightHK(ThisHotkey) {
 
 UpDownHK(ThisHotkey) {
     Thread "NoTimers"
-    If ReaHotkey.Context != False
+    If Not ReaHotkey.Context = False
     Try
     If ReaHotkey.Context = "Plugin"
     ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
@@ -134,7 +134,7 @@ UpDownHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If ReaHotkey.Context != False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
         Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
             Case "ComboBox":
             Hotkey ThisHotkey, "Off"
@@ -162,7 +162,7 @@ UpDownHK(ThisHotkey) {
 
 EnterSpaceHK(ThisHotkey) {
     Thread "NoTimers"
-    If ReaHotkey.Context != False
+    If Not ReaHotkey.Context = False
     Try
     If ReaHotkey.Context = "Plugin"
     ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
@@ -170,7 +170,7 @@ EnterSpaceHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If ReaHotkey.Context != False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
         Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
             Case "Edit":
             Hotkey ThisHotkey, "Off"

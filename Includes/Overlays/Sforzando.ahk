@@ -14,7 +14,7 @@ Class Sforzando {
         Return True
         UIAElement := GetUIAElement("15,1")
         Try
-        If UIAElement != False And UIAElement.Name = "PlogueXMLGUI"
+        If not UIAElement = False And UIAElement.Name = "PlogueXMLGUI"
         Return True
         Return False
     }
@@ -64,7 +64,7 @@ Class Sforzando {
             StateString := ""
             If This.States.Has(CheckResult)
             StateString := This.States[CheckResult]
-            If This.ControlID != AccessibilityOverlay.PreviousControlID
+            If not This.ControlID = AccessibilityOverlay.PreviousControlID
             Message := LabelString . " " . OCRString . " " . This.ControlTypeLabel . " " . StateString
             Else
             If This.States.Count > 1
@@ -85,7 +85,7 @@ Class Sforzando {
             StateString := ""
             If This.States.Has(CheckResult)
             StateString := This.States[CheckResult]
-            If This.ControlID != AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+            If not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
             Message := LabelString . " " . OCRString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel
             If Speak
             AccessibilityOverlay.Speak(Message)

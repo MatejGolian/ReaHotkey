@@ -60,7 +60,7 @@ Class Kontakt {
         Return True
         UIAElement := GetUIAElement("15,1")
         Try
-        If UIAElement != False And UIAElement.Name = "Kontakt 7" And UIAElement.ClassName = "ni::qt::QuickWindow"
+        If Not UIAElement = False And UIAElement.Name = "Kontakt 7" And UIAElement.ClassName = "ni::qt::QuickWindow"
         Return True
         Return False
     }
@@ -92,13 +92,13 @@ Class Kontakt {
     
     Static ClosePluginBrowser() {
         UIAElement := GetUIAElement("15,1,14,3")
-        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
         }
         UIAElement := GetUIAElement("15,1,16,3")
-        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
@@ -117,13 +117,13 @@ Class Kontakt {
     
     Static CloseStandaloneBrowser() {
         UIAElement := GetUIAElement("1,14,3")
-        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
         }
         UIAElement := GetUIAElement("1,16,3")
-        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
@@ -153,10 +153,10 @@ Class Kontakt {
                 UIAElement := GetUIAElement("15,1,4")
                 Case "SHOP (Opens in default web browser)":
                 UIAElement := GetUIAElement("15,1,5")
-                If UIAElement = False Or UIAElement.Name != "SHOP"
+                If UIAElement = False Or Not UIAElement.Name = "SHOP"
                 UIAElement := GetUIAElement("15,1,7")
             }
-            If UIAElement != False
+            If Not UIAElement = False
             Switch HeaderButton.Label {
                 Case "FILE menu":
                 UIAElement.Click("Left")
@@ -177,7 +177,7 @@ Class Kontakt {
     Class ActivatePluginSnapshotButton {
         Static Call(SnapshotButton) {
             UIAElement := GetUIAElement("15,1,5")
-            If UIAElement != False And UIAElement.Name = "SHOP" {
+            If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
                 ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
                 Catch
@@ -220,10 +220,10 @@ Class Kontakt {
                 UIAElement := GetUIAElement("1,4")
                 Case "SHOP (Opens in default web browser)":
                 UIAElement := GetUIAElement("1,5")
-                If UIAElement = False Or UIAElement.Name != "SHOP"
+                If UIAElement = False Or Not UIAElement.Name = "SHOP"
                 UIAElement := GetUIAElement("1,7")
             }
-            If UIAElement != False
+            If Not UIAElement = False
             Switch HeaderButton.Label {
                 Case "FILE menu":
                 UIAElement.Click("Left")
@@ -256,30 +256,30 @@ Class Kontakt {
             If Type = "Plugin" And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt" And ReaHotkey.FoundPlugin.NoHotkeys = True {
                 ReaHotkey.FoundPlugin.SetNoHotkeys(False)
                 TurnHotkeysOff()
-                If SendCommand != ""
+                If Not SendCommand = ""
                 Send SendCommand
             }
             Else If Type = "Plugin" And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt Content Missing Dialog" {
                 Plugin.SetNoHotkeys("Kontakt", False)
                 TurnHotkeysOff()
-                If SendCommand != ""
+                If Not SendCommand = ""
                 Send SendCommand
             }
             Else If Type = "Standalone" And ReaHotkey.foundStandalone Is Standalone And ReaHotkey.foundStandalone.Name = "Kontakt" And ReaHotkey.FoundStandalone.NoHotkeys = True {
                 ReaHotkey.foundStandalone.SetNoHotkeys(False)
                 TurnHotkeysOff()
-                If SendCommand != ""
+                If Not SendCommand = ""
                 Send SendCommand
             }
             Else If Type = "Standalone" And ReaHotkey.foundStandalone Is Standalone And ReaHotkey.foundStandalone.Name = "Kontakt Content Missing Dialog" {
                 Standalone.SetNoHotkeys("Kontakt", False)
                 TurnHotkeysOff()
-                If SendCommand != ""
+                If Not SendCommand = ""
                 Send SendCommand
             }
             Else {
                 TurnHotkeysOff()
-                If SendCommand != ""
+                If Not SendCommand = ""
                 Send SendCommand
                 TurnHotkeysOn()
             }
@@ -318,14 +318,14 @@ Class Kontakt {
             If SnapshotButton Is Object
             Label := SnapshotButton.Label
             UIAElement := GetUIAElement("15,1,5")
-            If UIAElement != False And UIAElement.Name = "SHOP" {
+            If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
                 ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
                 Catch
                 Return
                 If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
                     OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - 580, ControlY + 160, ControlX + ControlWidth - 580 + 200, ControlY + 180)
-                    If OCRResult != ""
+                    If Not OCRResult = ""
                     SnapshotButton.Label := "Snapshot " . OcrResult
                 }
                 If InStr(Label, "Snapshot", True)

@@ -121,7 +121,7 @@ Class Plugin Extends Program {
     Static Register(PluginName, ControlClasses, InitFunction := "", Chooser := True, NoHotkeys := False, SingleInstance := False, CheckerFunction := "") {
         If Super.Register(PluginName, InitFunction, Chooser, NoHotkeys, CheckerFunction) = True {
             PluginEntry := This.List[This.List.Length]
-            If SingleInstance != True And SingleInstance != False
+            If Not SingleInstance = True And Not SingleInstance = False
             SingleInstance := True
             If ControlClasses Is Array
             PluginEntry["ControlClasses"] := ControlClasses
