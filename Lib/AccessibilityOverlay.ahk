@@ -1840,7 +1840,7 @@ Class NativeControl Extends ActivatableControl {
         Else {
             Try {
                 This.Focused := 1
-                ControlFocus This.NativeControlID, "A"
+                ControlFocus Found, "A"
             }
             Catch {
                 This.Focused := 0
@@ -1867,6 +1867,13 @@ Class NativeControl Extends ActivatableControl {
         Else {
             This.State := 0
             Return False
+        }
+    }
+    
+    ExecuteOnActivationPostSpeech() {
+        Try {
+            Found := ControlGetHwnd(This.NativeControlID, "A")
+            ControlClick Found, "A", "Left"
         }
     }
     
