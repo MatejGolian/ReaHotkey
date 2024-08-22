@@ -829,9 +829,33 @@ Class ActivatableControl Extends FocusableControl {
     
 }
 
+Class FocusableCustom Extends FocusableControl {
+    
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    }
+    
+    SpeakOnFocus(*) {
+    }
+    
+}
+
+Class ActivatableCustom Extends ActivatableControl {
+    
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    }
+    
+    SpeakOnActivation(*) {
+    }
+    
+    SpeakOnFocus(*) {
+    }
+    
+}
+
 Class FocusableGraphic Extends FocusableControl {
     
-    ControlType := "Focusable"
     FoundXCoordinate := False
     FoundYCoordinate := False
     States := Map(0, "", 1, "")
@@ -979,7 +1003,6 @@ Class ActivatableGraphic Extends FocusableGraphic {
 
 Class FocusableNative Extends FocusableControl {
     
-    ControlType := "Focusable"
     NativeControlID := ""
     States := Map(-1, "Can not focus control", 0, "not found", 1, "")
     
@@ -1109,7 +1132,6 @@ Class ActivatableNative Extends FocusableNative {
 
 Class FocusableUIA Extends FocusableControl {
     
-    ControlType := "Focusable"
     States := Map("0", "not found", "1", "")
     UIAPath := ""
     
@@ -1578,34 +1600,6 @@ Class CustomCheckbox Extends Checkbox {
 }
 
 Class CustomComboBox Extends ComboBox {
-}
-
-Class CustomControl Extends ActivatableControl {
-    
-    ControlType := "Custom"
-    
-    __New(Label, FocusFunctions := "", ActivationFunctions := "") {
-        Super.__New(Label, FocusFunctions,, ActivationFunctions)
-        This.FocusFunctions := This.PreExecFocusFunctions
-        This.ActivationFunctions := This.PreExecActivationFunctions
-        This.DeleteProp("PreExecFocusFunctions")
-        This.DeleteProp("PostExecFocusFunctions")
-        This.DeleteProp("PreExecActivationFunctions")
-        This.DeleteProp("PostExecActivationFunctions")
-    }
-    
-    Activate(Speak := True) {
-        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
-        This.Focus(False)
-        For ActivationFunction In This.ActivationFunctions
-        ActivationFunction.Call(This, Speak)
-    }
-    
-    Focus(Speak := True) {
-        For FocusFunction In This.FocusFunctions
-        FocusFunction.Call(This, Speak)
-    }
-    
 }
 
 Class CustomEdit Extends Edit {
