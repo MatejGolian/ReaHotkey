@@ -176,33 +176,14 @@ EnterSpaceHK(ThisHotkey) {
             Hotkey ThisHotkey, "Off"
             Send "{" . ThisHotkey . "}"
             Hotkey ThisHotkey, "On"
-            Case "Native":
+            Case "Focusable":
             Hotkey ThisHotkey, "Off"
             Send "{" . ThisHotkey . "}"
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.ActivateCurrentControl()
-            Hotkey ThisHotkey, "On"
-            Case "UIA":
-            Hotkey ThisHotkey, "Off"
-            Send "{" . ThisHotkey . "}"
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.ActivateCurrentControl()
             Hotkey ThisHotkey, "On"
             Default:
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.ActivateCurrentControl()
         }
     }
-}
-
-ReadmeHK(ThisHotkey) {
-    ReaHotkey.ViewReadme()
-}
-
-ReloadHK(ThisHotkey) {
-    ReaHotkey.Reload()
-}
-
-ControlHK(ThisHotkey) {
-    Thread "NoTimers"
-    AccessibilityOverlay.StopSpeech()
 }
 
 AboutHK(ThisHotkey) {
@@ -211,6 +192,11 @@ AboutHK(ThisHotkey) {
 
 ConfigHK(ThisHotkey) {
     ReaHotkey.ShowConfigBox()
+}
+
+ControlHK(ThisHotkey) {
+    Thread "NoTimers"
+    AccessibilityOverlay.StopSpeech()
 }
 
 PauseHK(ThisHotkey) {
@@ -226,6 +212,14 @@ QuitHK(ThisHotkey) {
     ReaHotkey.Quit()
 }
 
+ReadmeHK(ThisHotkey) {
+    ReaHotkey.ViewReadme()
+}
+
 ReaHotkeyMenuHK(ThisHotkey) {
     A_TrayMenu.Show()
+}
+
+ReloadHK(ThisHotkey) {
+    ReaHotkey.Reload()
 }

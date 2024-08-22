@@ -651,6 +651,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
 
 Class FocusableControl Extends AccessibilityControl {
     
+    ControlType := "Focusable"
     DefaultLabel := ""
     DefaultValue := ""
     Focused := 1
@@ -762,6 +763,7 @@ Class FocusableControl Extends AccessibilityControl {
 
 Class ActivatableControl Extends FocusableControl {
     
+    ControlType := "Activatable"
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     
@@ -829,7 +831,7 @@ Class ActivatableControl Extends FocusableControl {
 
 Class FocusableGraphic Extends FocusableControl {
     
-    ControlType := "Graphic"
+    ControlType := "Focusable"
     FoundXCoordinate := False
     FoundYCoordinate := False
     States := Map(0, "", 1, "")
@@ -908,6 +910,7 @@ Class FocusableGraphic Extends FocusableControl {
 
 Class ActivatableGraphic Extends FocusableGraphic {
     
+    ControlType := "Activatable"
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     States := Map(-1, "", 0, "", 1, "")
@@ -976,7 +979,7 @@ Class ActivatableGraphic Extends FocusableGraphic {
 
 Class FocusableNative Extends FocusableControl {
     
-    ControlType := "Native"
+    ControlType := "Focusable"
     NativeControlID := ""
     States := Map(-1, "Can not focus control", 0, "not found", 1, "")
     
@@ -1031,6 +1034,7 @@ Class FocusableNative Extends FocusableControl {
 
 Class ActivatableNative Extends FocusableNative {
     
+    ControlType := "Activatable"
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     
@@ -1105,7 +1109,7 @@ Class ActivatableNative Extends FocusableNative {
 
 Class FocusableUIA Extends FocusableControl {
     
-    ControlType := "UIA"
+    ControlType := "Focusable"
     States := Map("0", "not found", "1", "")
     UIAPath := ""
     
@@ -1169,6 +1173,7 @@ Class FocusableUIA Extends FocusableControl {
 
 Class ActivatableUIA Extends FocusableUIA {
     
+    ControlType := "Activatable"
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     
