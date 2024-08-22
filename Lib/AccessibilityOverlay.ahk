@@ -831,20 +831,12 @@ Class ActivatableControl Extends FocusableControl {
 
 Class FocusableCustom Extends FocusableControl {
     
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
-    }
-    
     SpeakOnFocus(*) {
     }
     
 }
 
 Class ActivatableCustom Extends ActivatableControl {
-    
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
-    }
     
     SpeakOnActivation(*) {
     }
