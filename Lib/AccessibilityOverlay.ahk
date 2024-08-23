@@ -1638,7 +1638,7 @@ Class GraphicalButton Extends  ActivatableGraphic {
     
     ExecuteOnActivationPreSpeech() {
         Click This.FoundXCoordinate, This.FoundYCoordinate
-        Sleep 100
+        Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
@@ -1668,7 +1668,7 @@ Class GraphicalToggleButton Extends  ActivatableGraphic {
     
     ExecuteOnActivationPreSpeech() {
         Click This.FoundXCoordinate, This.FoundYCoordinate
-        Sleep 100
+        Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
@@ -1723,7 +1723,7 @@ Class GraphicalCheckbox Extends ActivatableGraphic {
     
     ExecuteOnActivationPreSpeech() {
         Click This.FoundXCoordinate, This.FoundYCoordinate
-        Sleep 100
+        Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
