@@ -1272,6 +1272,12 @@ Class Button Extends ActivatableControl {
     
 }
 
+Class ToggleButton Extends Button {
+    
+    States := Map(-1, "unknown state", 0, "off", 1, "on")
+    
+}
+
 Class Checkbox Extends ActivatableControl {
     
     Checked := 1
@@ -1673,31 +1679,6 @@ Class GraphicalToggleButton Extends  ActivatableGraphic {
     
     ExecuteOnFocusPreSpeech() {
         MouseMove This.FoundXCoordinate, This.FoundYCoordinate
-    }
-    
-    SpeakOnFocus(Speak := True) {
-        Message := ""
-        CheckResult := This.GetState()
-        LabelString := This.Label
-        If LabelString = ""
-        LabelString := This.DefaultLabel
-        ValueString := This.GetValue()
-        If ValueString = ""
-        ValueString := This.DefaultValue
-        If Not This.States.Has(CheckResult)
-        StateString := ""
-        Else If CheckResult = -1
-        StateString := This.States[CheckResult]
-        Else If This.OnImages = This.OffImages
-        StateString := ""
-        Else If This.OnImages.Length = 0 Or This.OffImages.Length = 0
-        StateString := ""
-        Else
-        StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
-        Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
-        If Speak
-        AccessibilityOverlay.Speak(Message)
     }
     
 }
@@ -2372,11 +2353,5 @@ Class StaticText Extends FocusableControl {
         If Speak
         AccessibilityOverlay.Speak(Message)
     }
-    
-}
-
-Class ToggleButton Extends Button {
-    
-    States := Map(-1, "unknown state", 0, "off", 1, "on")
     
 }
