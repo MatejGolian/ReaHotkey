@@ -1579,6 +1579,23 @@ Class TabControl Extends FocusableControl {
 Class CustomButton Extends Button {
 }
 
+Class CustomToggleButton Extends ToggleButton {
+    
+    CheckStateFunction := ""
+    
+    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+        If CheckStateFunction Is Object And CheckStateFunction.HasMethod("Call")
+        This.CheckStateFunction := CheckStateFunction
+    }
+    
+    CheckState() {
+        If This.CheckStateFunction Is Object And This.CheckStateFunction.HasMethod("Call")
+        Return This.CheckStateFunction.Call(This)
+    }
+    
+}
+
 Class CustomCheckbox Extends Checkbox {
     
     CheckStateFunction := ""
@@ -1604,23 +1621,6 @@ Class CustomEdit Extends Edit {
 }
 
 Class CustomTab Extends Tab {
-}
-
-Class CustomToggleButton Extends ToggleButton {
-    
-    CheckStateFunction := ""
-    
-    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
-        If CheckStateFunction Is Object And CheckStateFunction.HasMethod("Call")
-        This.CheckStateFunction := CheckStateFunction
-    }
-    
-    CheckState() {
-        If This.CheckStateFunction Is Object And This.CheckStateFunction.HasMethod("Call")
-        Return This.CheckStateFunction.Call(This)
-    }
-    
 }
 
 Class GraphicalButton Extends  ActivatableGraphic {
