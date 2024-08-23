@@ -2021,26 +2021,26 @@ Class HotspotTab Extends Tab {
 
 Class HotspotToggleButton Extends ToggleButton {
     
-    CheckedColors := Array()
-    UncheckedColors := Array()
+    OffColors := Array()
+    OnColors := Array()
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+    __New(Label, XCoordinate, YCoordinate, OnColors, OffColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
         Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
-        If Not CheckedColors = "" {
-            If Not CheckedColors Is Array
-            CheckedColors := Array(CheckedColors)
-            For CheckedColor In CheckedColors
-            If Not CheckedColor Is Object
-            This.CheckedColors.Push(CheckedColor)
+        If Not OnColors = "" {
+            If Not OnColors Is Array
+            OnColors := Array(OnColors)
+            For OnColor In OnColors
+            If Not OnColor Is Object
+            This.OnColors.Push(OnColor)
         }
-        If Not UncheckedColors = "" {
-            If Not UncheckedColors Is Array
-            UncheckedColors := Array(UncheckedColors)
-            For UncheckedColor In UncheckedColors
-            If Not UncheckedColor Is Object
-            This.UncheckedColors.Push(UncheckedColor)
+        If Not OffColors = "" {
+            If Not OffColors Is Array
+            OffColors := Array(OffColors)
+            For OffColor In OffColors
+            If Not OffColor Is Object
+            This.OffColors.Push(OffColor)
         }
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
@@ -2049,13 +2049,13 @@ Class HotspotToggleButton Extends ToggleButton {
     CheckState() {
         Sleep 100
         CurrentColor := PixelGetColor(This.XCoordinate, This.YCoordinate)
-        For CheckedColor In This.CheckedColors
-        If CurrentColor = CheckedColor {
+        For OnColor In This.OnColors
+        If CurrentColor = OnColor {
             This.State := 1
             Return True
         }
-        For UncheckedColor In This.UncheckedColors
-        If CurrentColor = UncheckedColor {
+        For OffColor In This.OffColors
+        If CurrentColor = OffColor {
             This.State := 0
             Return False
         }
@@ -2063,11 +2063,11 @@ Class HotspotToggleButton Extends ToggleButton {
         Return False
     }
     
-    ExecuteOnActivationPostSpeech() {
+    ExecuteOnActivationPreSpeech() {
         Click This.XCoordinate, This.YCoordinate
     }
     
-    ExecuteOnFocusPostSpeech() {
+    ExecuteOnFocusPreSpeech() {
         MouseMove This.XCoordinate, This.YCoordinate
     }
     
