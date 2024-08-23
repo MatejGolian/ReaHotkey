@@ -1622,6 +1622,36 @@ Class GraphicalButton Extends  ActivatableGraphic {
     ControlType := "Button"
     ControlTypeLabel := "button"
     DefaultLabel := "unlabelled"
+    States := Map(0, "not found", 1, "")
+    
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "State", 0, Map(1, Images))
+    }
+    
+    CheckFocus(*) {
+        Return Super.CheckFocus("State", 0, Map(1, 1))
+    }
+    
+    CheckState(*) {
+        Return Super.CheckState("State", 0, Map(1, 1))
+    }
+    
+    ExecuteOnActivationPreSpeech() {
+        Click This.FoundXCoordinate, This.FoundYCoordinate
+        Sleep 200
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+    }
+    
+}
+
+Class GraphicalToggleButton Extends  ActivatableGraphic {
+    
+    ControlType := "Button"
+    ControlTypeLabel := "button"
+    DefaultLabel := "unlabelled"
     States := Map(-1, "not found", 0, "off", 1, "on")
     
     __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImages, OffImages := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
@@ -1638,7 +1668,7 @@ Class GraphicalButton Extends  ActivatableGraphic {
     
     ExecuteOnActivationPreSpeech() {
         Click This.FoundXCoordinate, This.FoundYCoordinate
-        Sleep 100
+        Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
@@ -1693,7 +1723,7 @@ Class GraphicalCheckbox Extends ActivatableGraphic {
     
     ExecuteOnActivationPreSpeech() {
         Click This.FoundXCoordinate, This.FoundYCoordinate
-        Sleep 100
+        Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
@@ -1914,6 +1944,60 @@ Class HotspotButton Extends Button {
     
 }
 
+Class HotspotToggleButton Extends ToggleButton {
+    
+    OffColors := Array()
+    OnColors := Array()
+    XCoordinate := 0
+    YCoordinate := 0
+    
+    __New(Label, XCoordinate, YCoordinate, OnColors, OffColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+        If Not OnColors = "" {
+            If Not OnColors Is Array
+            OnColors := Array(OnColors)
+            For OnColor In OnColors
+            If Not OnColor Is Object
+            This.OnColors.Push(OnColor)
+        }
+        If Not OffColors = "" {
+            If Not OffColors Is Array
+            OffColors := Array(OffColors)
+            For OffColor In OffColors
+            If Not OffColor Is Object
+            This.OffColors.Push(OffColor)
+        }
+        This.XCoordinate := XCoordinate
+        This.YCoordinate := YCoordinate
+    }
+    
+    CheckState() {
+        Sleep 100
+        CurrentColor := PixelGetColor(This.XCoordinate, This.YCoordinate)
+        For OnColor In This.OnColors
+        If CurrentColor = OnColor {
+            This.State := 1
+            Return True
+        }
+        For OffColor In This.OffColors
+        If CurrentColor = OffColor {
+            This.State := 0
+            Return False
+        }
+        This.State := -1
+        Return False
+    }
+    
+    ExecuteOnActivationPreSpeech() {
+        Click This.XCoordinate, This.YCoordinate
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        MouseMove This.XCoordinate, This.YCoordinate
+    }
+    
+}
+
 Class HotspotCheckbox Extends Checkbox {
     
     CheckedColors := Array()
@@ -2015,60 +2099,6 @@ Class HotspotTab Extends Tab {
     
     ExecuteOnFocusPreSpeech() {
         Click This.XCoordinate, This.YCoordinate
-    }
-    
-}
-
-Class HotspotToggleButton Extends ToggleButton {
-    
-    OffColors := Array()
-    OnColors := Array()
-    XCoordinate := 0
-    YCoordinate := 0
-    
-    __New(Label, XCoordinate, YCoordinate, OnColors, OffColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
-        If Not OnColors = "" {
-            If Not OnColors Is Array
-            OnColors := Array(OnColors)
-            For OnColor In OnColors
-            If Not OnColor Is Object
-            This.OnColors.Push(OnColor)
-        }
-        If Not OffColors = "" {
-            If Not OffColors Is Array
-            OffColors := Array(OffColors)
-            For OffColor In OffColors
-            If Not OffColor Is Object
-            This.OffColors.Push(OffColor)
-        }
-        This.XCoordinate := XCoordinate
-        This.YCoordinate := YCoordinate
-    }
-    
-    CheckState() {
-        Sleep 100
-        CurrentColor := PixelGetColor(This.XCoordinate, This.YCoordinate)
-        For OnColor In This.OnColors
-        If CurrentColor = OnColor {
-            This.State := 1
-            Return True
-        }
-        For OffColor In This.OffColors
-        If CurrentColor = OffColor {
-            This.State := 0
-            Return False
-        }
-        This.State := -1
-        Return False
-    }
-    
-    ExecuteOnActivationPreSpeech() {
-        Click This.XCoordinate, This.YCoordinate
-    }
-    
-    ExecuteOnFocusPreSpeech() {
-        MouseMove This.XCoordinate, This.YCoordinate
     }
     
 }
