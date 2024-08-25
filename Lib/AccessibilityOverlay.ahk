@@ -1092,7 +1092,7 @@ Class ActivatableNative Extends FocusableNative {
         }
     }
     
-    ExecuteOnActivationPostSpeech() {
+    ExecuteOnActivationPreSpeech() {
         Try {
             Found := ControlGetHwnd(This.NativeControlID, "A")
             ControlClick Found, "A", "Left"
@@ -1230,7 +1230,7 @@ Class ActivatableUIA Extends FocusableUIA {
         }
     }
     
-    ExecuteOnActivationPostSpeech() {
+    ExecuteOnActivationPreSpeech() {
         Try {
             element := This.GetElement()
             element.Click("Left")
@@ -1915,11 +1915,11 @@ Class HotspotButton Extends Button {
         This.YCoordinate := YCoordinate
     }
     
-    ExecuteOnActivationPostSpeech() {
+    ExecuteOnActivationPreSpeech() {
         Click This.XCoordinate, This.YCoordinate
     }
     
-    ExecuteOnFocusPostSpeech() {
+    ExecuteOnFocusPreSpeech() {
         MouseMove This.XCoordinate, This.YCoordinate
     }
     
@@ -2104,13 +2104,13 @@ Class OCRButton Extends Button {
         This.Y2Coordinate := Y2Coordinate
     }
     
-    ExecuteOnActivationPostSpeech() {
+    ExecuteOnActivationPreSpeech() {
         XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
         YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
         Click XCoordinate, YCoordinate
     }
     
-    ExecuteOnFocusPostSpeech() {
+    ExecuteOnFocusPreSpeech() {
         XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
         YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
         MouseMove XCoordinate, YCoordinate
