@@ -45,8 +45,8 @@ Static ClickApplySettingsButton(*) {
 Static CreateFixSettingsOverlay(Overlay) {
 
     Overlay.AddStaticText("I detected Dubler settings that can interfere with the accessibility overlay. Should I fix them for you automatically? NOTE: Dubler will restart if you say 'yes'.")
-    Overlay.AddControl(CustomButton("Yes, let's go!", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ClickApplySettingsButton")))
-    Overlay.AddControl(CustomButton("No, I decide not to.", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CloseOverlay")))
+    Overlay.AddControl(CustomButton("Yes, let's go!", ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "ClickApplySettingsButton")))
+    Overlay.AddControl(CustomButton("No, I decide not to.", ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "CloseOverlay")))
 
     Dubler2.FixSettingsOverlayShown := True
 

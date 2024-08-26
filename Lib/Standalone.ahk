@@ -26,7 +26,7 @@ Class Standalone Extends Program {
     Static FindByActiveWindow() {
         For StandaloneNumber, StandaloneEntry In This.List
         For WinCriterion In StandaloneEntry["WinCriteria"]
-        If WinCriterion != ""
+        If Not WinCriterion = ""
         If WinActive(WinCriterion)
         Return StandaloneNumber
         Return 0
@@ -37,7 +37,7 @@ Class Standalone Extends Program {
         If StandaloneInstance.WinID = WinID And StandaloneInstance.Check() = True
         Return StandaloneInstance
         StandaloneNumber := This.FindByActiveWindow()
-        If StandaloneNumber != 0 And This.List[StandaloneNumber]["CheckerFunction"].Call(This.List[StandaloneNumber]) = True {
+        If Not StandaloneNumber = 0 And This.List[StandaloneNumber]["CheckerFunction"].Call(This.List[StandaloneNumber]) = True {
             StandaloneInstance := Standalone(This.List[StandaloneNumber]["Name"], WinGetID("A"))
             Return StandaloneInstance
         }

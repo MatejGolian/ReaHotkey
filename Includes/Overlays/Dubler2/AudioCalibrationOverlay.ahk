@@ -135,7 +135,7 @@ Static ClickAudioCalibrationButton(*) {
 Static SetupAudioCalibrationButton(Overlay) {
     ASettings := Dubler2.ReadAudioSettings()
 
-    Overlay.AddControl(CustomButton("Calibrate audio device: " . (ASettings["audioInputDeviceName"] != "" ? ASettings["audioInputDeviceName"] : "Not calibrated"), ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ClickAudioCalibrationButton")))
+    Overlay.AddControl(CustomButton("Calibrate audio device: " . (ASettings["audioInputDeviceName"] != "" ? ASettings["audioInputDeviceName"] : "Not calibrated"), ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "ClickAudioCalibrationButton")))
 }
 
 Static CloseAudioCalibrationOverlay(*) {
@@ -251,10 +251,10 @@ Static CreateAudioCalibrationOverlay(Overlay) {
         Return Ctrl
     }
 
-    Overlay.AddControl(CustomButton("Back", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CloseAudioCalibrationOverlay")))
+    Overlay.AddControl(CustomButton("Back", ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "CloseAudioCalibrationOverlay")))
 
     AudioInputChannelCtrl := PopulatedComboBox("Input channel", ObjBindMethod(Dubler2, "FocusComboBox"))
-    ReadingGainButton := CustomButton("Read Gain" . (CheckValid ? "" : "not available"), ObjBindMethod(Dubler2, "FocusButton"), StartReadingGain)
+    ReadingGainButton := CustomButton("Read Gain" . (CheckValid ? "" : "not available"), ObjBindMethod(Dubler2, "FocusButton"), , StartReadingGain)
     AudioOutputChannelCtrl := PopulatedComboBox("Output Channel", ObjBindMethod(Dubler2, "FocusComboBox"))
     AudioDeviceCtrl := CreateAudioDeviceControl()
 
@@ -263,7 +263,7 @@ Static CreateAudioCalibrationOverlay(Overlay) {
     Overlay.AddControl(ReadingGainButton)
     Overlay.AddControl(AudioOutputChannelCtrl)
 
-    Overlay.AddControl(CustomButton("Save", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "SaveAudioSettings")))
+    Overlay.AddControl(CustomButton("Save", ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "SaveAudioSettings")))
 
     Return Overlay
 }

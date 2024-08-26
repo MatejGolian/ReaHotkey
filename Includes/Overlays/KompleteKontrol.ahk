@@ -10,7 +10,7 @@ Class KompleteKontrol {
     Static __New() {
         PluginHeader := AccessibilityOverlay("Komplete Kontrol")
         PluginHeader.AddStaticText("Komplete Kontrol")
-        PluginHeader.AddHotspotButton("Menu", 305, 68, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates).SetHotkey("!M", "Alt+M")
+        PluginHeader.AddHotspotButton("Menu", 305, 68, CompensatePluginPointCoordinates,, CompensatePluginPointCoordinates).SetHotkey("!M", "Alt+M")
         KompleteKontrol.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Komplete Kontrol")
@@ -34,9 +34,9 @@ Class KompleteKontrol {
         PluginPreferenceOverlay := AccessibilityOverlay()
         PluginPreferenceTabControl := PluginPreferenceOverlay.AddTabControl()
         PluginPreferenceMIDITab := HotspotTab("MIDI", 56, 69)
-        PluginPreferenceMIDITab.AddCustomButton("Close",, ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
+        PluginPreferenceMIDITab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
         PluginPreferenceGeneralTab := HotspotTab("General", 56, 114)
-        PluginPreferenceGeneralTab.AddCustomButton("Close",, ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
+        PluginPreferenceGeneralTab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
         PluginPreferenceLibraryTab := HotspotTab("Library", 56, 155)
         PluginPreferenceLibraryTabTabControl := PluginPreferenceLibraryTab.AddTabControl()
         PluginPreferenceLibraryFactoryTab := HotspotTab("Factory", 156, 76)
@@ -46,11 +46,11 @@ Class KompleteKontrol {
         PluginPreferenceLibraryUserTab.AddHotspotCheckbox("Scan user content for changes at start-up", 419, 394, ["0xCCCCCC", "0xFFFFFF"], ["0x323232", "0x5F5F5F"])
         PluginPreferenceLibraryUserTab.AddHotspotButton("Rescan", 546, 417)
         PluginPreferenceLibraryTabTabControl.AddTabs(PluginPreferenceLibraryFactoryTab, PluginPreferenceLibraryUserTab)
-        PluginPreferenceLibraryTab.AddCustomButton("Close",, ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
+        PluginPreferenceLibraryTab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
         PluginPreferencePluginTab := HotspotTab("Plug-ins", 56, 196)
         PluginPreferencePluginTab.AddHotspotCheckbox("Always Use Latest Version Of NI Plug-ins", 419, 398, ["0xCCCCCC", "0xFFFFFF"], ["0x323232", "0x5F5F5F"])
         PluginPreferencePluginTab.AddHotspotButton("Rescan", 546, 417)
-        PluginPreferencePluginTab.AddCustomButton("Close",, ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
+        PluginPreferencePluginTab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
         PluginPreferenceTabControl.AddTabs(PluginPreferenceMIDITab, PluginPreferenceGeneralTab, PluginPreferenceLibraryTab, PluginPreferencePluginTab)
         Plugin.RegisterOverlay("Komplete Kontrol Preference Dialog", PluginPreferenceOverlay)
         
@@ -58,8 +58,8 @@ Class KompleteKontrol {
         
         PluginSaveAsOverlay := AccessibilityOverlay()
         PluginSaveAsOverlay.AddOCREdit("Save Preset, Name:", 24, 72, 500, 88)
-        PluginSaveAsOverlay.AddHotspotButton("Save", 219, 135, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
-        PluginSaveAsOverlay.AddHotspotButton("Cancel", 301, 135, CompensatePluginPointCoordinates, CompensatePluginPointCoordinates)
+        PluginSaveAsOverlay.AddHotspotButton("Save", 219, 135)
+        PluginSaveAsOverlay.AddHotspotButton("Cancel", 301, 135)
         Plugin.RegisterOverlay("Komplete Kontrol Save As Dialog", PluginSaveAsOverlay)
         
         Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe",, False, False)
@@ -72,11 +72,11 @@ Class KompleteKontrol {
         StandalonePreferenceOverlay := AccessibilityOverlay()
         StandalonePreferenceTabControl := StandalonePreferenceOverlay.AddTabControl()
         StandalonePreferenceAudioTab := HotspotTab("Audio", 56, 69)
-        StandalonePreferenceAudioTab.AddCustomButton("Close",, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
+        StandalonePreferenceAudioTab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
         StandalonePreferenceMIDITab := HotspotTab("MIDI", 56, 114)
-        StandalonePreferenceMIDITab.AddCustomButton("Close",, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
+        StandalonePreferenceMIDITab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
         StandalonePreferenceGeneralTab := HotspotTab("General", 56, 155)
-        StandalonePreferenceGeneralTab.AddCustomButton("Close",, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
+        StandalonePreferenceGeneralTab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
         StandalonePreferenceLibraryTab := HotspotTab("Library", 56, 196)
         StandalonePreferenceLibraryTabTabControl := StandalonePreferenceLibraryTab.AddTabControl()
         StandalonePreferenceLibraryFactoryTab := HotspotTab("Factory", 156, 76)
@@ -86,11 +86,11 @@ Class KompleteKontrol {
         StandalonePreferenceLibraryUserTab.AddHotspotCheckbox("Scan user content for changes at start-up", 419, 394, ["0xCCCCCC", "0xFFFFFF"], ["0x323232", "0x5F5F5F"])
         StandalonePreferenceLibraryUserTab.AddHotspotButton("Rescan", 546, 417)
         StandalonePreferenceLibraryTabTabControl.AddTabs(StandalonePreferenceLibraryFactoryTab, StandalonePreferenceLibraryUserTab)
-        StandalonePreferenceLibraryTab.AddCustomButton("Close",, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
+        StandalonePreferenceLibraryTab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
         StandalonePreferencePluginTab := HotspotTab("Plug-ins", 56, 237)
         StandalonePreferencePluginTab.AddHotspotCheckbox("Always Use Latest Version Of NI Plug-ins", 419, 398, ["0xCCCCCC", "0xFFFFFF"], ["0x323232", "0x5F5F5F"])
         StandalonePreferencePluginTab.AddHotspotButton("Rescan", 546, 417)
-        StandalonePreferencePluginTab.AddCustomButton("Close",, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
+        StandalonePreferencePluginTab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
         StandalonePreferenceTabControl.AddTabs(StandalonePreferenceAudioTab, StandalonePreferenceMIDITab, StandalonePreferenceGeneralTab, StandalonePreferenceLibraryTab, StandalonePreferencePluginTab)
         Standalone.RegisterOverlay("Komplete Kontrol Preference Dialog", StandalonePreferenceOverlay)
         
@@ -110,7 +110,7 @@ Class KompleteKontrol {
         Return True
         Try
         UIAElement := GetUIAElement("15,1")
-        If UIAElement != False And UIAElement.Name = "Komplete Kontrol" And UIAElement.ClassName = "ni::qt::QuickWindow"
+        If Not UIAElement = False And UIAElement.Name = "Komplete Kontrol" And UIAElement.ClassName = "ni::qt::QuickWindow"
         Return True
         Sleep 500
         Return False
@@ -135,7 +135,7 @@ Class KompleteKontrol {
             Return True
             Else
             If PluginData Is Plugin And PluginData.Name = "Komplete Kontrol Preference Dialog" {
-                If PreviousWinID != CurrentWinID And PreviousWinID != ""
+                If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
                 PluginData.Overlay.Reset()
                 PreviousWinID := CurrentWinID
                 Return True
@@ -153,7 +153,7 @@ Class KompleteKontrol {
             Return True
             Else
             If PluginData Is Plugin And PluginData.Name = "Komplete Kontrol Save As Dialog" {
-                If PreviousWinID != CurrentWinID And PreviousWinID != ""
+                If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
                 PluginData.Overlay.Reset()
                 PreviousWinID := CurrentWinID
                 Return True
@@ -173,7 +173,7 @@ Class KompleteKontrol {
         CurrentWinID := WinGetID("A")
         StandaloneInstance := Standalone.GetInstance(CurrentWinID)
         If StandaloneInstance Is Standalone And StandaloneInstance.Name = "Komplete Kontrol Save As Dialog" {
-            If PreviousWinID != CurrentWinID
+            If Not PreviousWinID = CurrentWinID
             Send "{Tab}"
             PreviousWinID := CurrentWinID
             Return True
@@ -185,7 +185,7 @@ Class KompleteKontrol {
     
     Static ClosePluginBrowser() {
         UIAElement := GetUIAElement("15,1,3")
-        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
@@ -203,7 +203,7 @@ Class KompleteKontrol {
     
     Static CloseStandaloneBrowser() {
         UIAElement := GetUIAElement("1,3")
-        If UIAElement != False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000

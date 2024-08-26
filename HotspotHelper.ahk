@@ -109,7 +109,7 @@ CurrentHotspot := Hotspots.Length + 1
 MouseGetPos &mouseXPosition, &mouseYPosition
 NameDialog := InputBox("Enter A Name For This Hotspot.", AppName)
 If NameDialog.Result == "OK" {
-If NameDialog.Value != ""
+If Not NameDialog.Value = ""
 Label := NameDialog.Value
 Else
 Label := UnlabelledHotspotLabel
@@ -468,7 +468,7 @@ X1 := ControlValues.X1Coord
 Y1 := ControlValues.Y1Coord
 X2 := ControlValues.X2Coord
 Y2 := ControlValues.Y2Coord
-If X1 != "" And Y1 != "" And X2 != "" And Y2 != "" And X1 >= 0 And X1 < X2 And X2 <= XSize And Y1 >= 0 And Y1 < Y2 And Y2 <= YSize {
+If Not X1 = "" And Not Y1 = "" And Not X2 = "" And Not Y2 = "" And X1 >= 0 And X1 < X2 And X2 <= XSize And Y1 >= 0 And Y1 < Y2 And Y2 <= YSize {
 CoordinateBox["OK"].Opt("+Default -Disabled")
 CoordinateBox["Cancel"].Opt("-Default")
 CoordinateStatus.SetText("`tImage dimensions " . X2 - X1 . " × " . Y2 - Y1)
@@ -613,7 +613,7 @@ FirstOCRLanguage := False
 PreferredLanguage := False
 PreferredOCRLanguage := ""
 Loop Parse, AvailableLanguages, "`n" {
-If A_Index = 1 And A_LoopField != "" {
+If A_Index = 1 And Not A_LoopField = "" {
 FirstAvailableLanguage := True
 FirstOCRLanguage := A_LoopField
 }
@@ -881,7 +881,7 @@ FirstOCRLanguage := False
 PreferredLanguage := False
 PreferredOCRLanguage := ""
 Loop Parse, AvailableLanguages, "`n" {
-If A_Index = 1 And A_LoopField != "" {
+If A_Index = 1 And Not A_LoopField = "" {
 FirstAvailableLanguage := True
 FirstOCRLanguage := A_LoopField
 }
@@ -965,7 +965,7 @@ If DialogOpen = 0
 If Hotspots.Length > 0 And CurrentHotspot > 0 And CurrentHotspot <= Hotspots.Length {
 DialogOpen := 1
 RenameDialog := InputBox("Enter a new name for this hotspot.", AppName, "", Hotspots[CurrentHotspot]["Label"])
-If RenameDialog.Result == "OK" And RenameDialog.Value != "" {
+If RenameDialog.Result == "OK" And Not RenameDialog.Value = "" {
 Hotspots[CurrentHotspot]["Label"] := RenameDialog.Value
 Sleep 25
 Speak(Hotspots[CurrentHotspot]["Label"])
@@ -1026,7 +1026,7 @@ ControlY := 0
 }
 If ImageFile = "" Or Not FileExist(ImageFile) Or InStr(FileExist(ImageFile), "D")
 ImageFile := FileSelect(3,, "Choose Image", "Supported Images (*.ANI; *.BMP; *.CUR; *.EMF; *.Exif; *.GIF; *.ICO; *.JPG; *.PNG; *.TIF; *.WMF)")
-If ImageFile != "" {
+If Not ImageFile = "" {
 LastImage := ImageFile
 FoundX := ""
 FoundY := ""
@@ -1168,17 +1168,17 @@ DialogOpen := 0
 
 Speak(Message) {
 Global JAWS, SAPI
-If (JAWS != False And ProcessExist("jfw.exe")) Or (FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")) {
-If JAWS != False And ProcessExist("jfw.exe") {
+If (Not JAWS = False And ProcessExist("jfw.exe")) Or (FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And Not DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")) {
+If Not JAWS = False And ProcessExist("jfw.exe") {
 JAWS.SayString(Message)
 }
-If FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And !DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
+If FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And Not DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
 DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_cancelSpeech")
 DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_speakText", "Wstr", Message)
 }
 }
 Else {
-If SAPI != False {
+If Not SAPI = False {
 SAPI.Speak("", 0x1|0x2)
 SAPI.Speak(Message, 0x1)
 }
@@ -1187,8 +1187,8 @@ SAPI.Speak(Message, 0x1)
 
 StopSpeech() {
 Global JAWS, SAPI
-If (JAWS != False Or !ProcessExist("jfw.exe")) And (!FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning"))
-If SAPI != False
+If (Not JAWS = False Or Not ProcessExist("jfw.exe")) And (Not FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning"))
+If Not SAPI = False
 SAPI.Speak("", 0x1|0x2)
 }
 

@@ -15,7 +15,7 @@ Class AccessibleMenu {
     
     Add(MenuItemName, CallbackOrSubmenu := "", Options := "") {
         MenuItemName := Trim(MenuItemName)
-        If MenuItemName != "" {
+        If Not MenuItemName = "" {
             If This.FindItem(MenuItemName) = 0 {
                 If CallbackOrSubmenu Is AccessibleMenu
                 CallbackOrSubmenu.ParrentMenu := This
@@ -80,7 +80,7 @@ Class AccessibleMenu {
     
     FindItem(MenuItemName) {
         MenuItemName := Trim(MenuItemName)
-        If MenuItemName != "" And This.Items.Length > 0
+        If Not MenuItemName = "" And This.Items.Length > 0
         If MenuItemName Is Integer And MenuItemName <= 0 {
             Return 0
         }
@@ -188,7 +188,7 @@ Class AccessibleMenu {
     
     Insert(ItemToInsertBefore, NewItemName, CallbackOrSubmenu := "", Options := "") {
         NewItemName := Trim(NewItemName)
-        If This.FindItem(ItemToInsertBefore) > 0 And NewItemName != "" {
+        If This.FindItem(ItemToInsertBefore) > 0 And Not NewItemName = "" {
             If CallbackOrSubmenu Is AccessibleMenu
             CallbackOrSubmenu.ParrentMenu := This
             This.Items.InsertAt(This.FindItem(ItemToInsertBefore), Map("Name", NewItemName, "CallbackOrSubmenu", CallbackOrSubmenu, "Checked", 0, "Enabled", 1))
@@ -287,7 +287,7 @@ Class AccessibleMenu {
                     If SingleKey = "Space" Or SingleKey = "Tab"
                     SoundPlay "*48"
                     Else
-                    If StrLen(SingleKey) = 1 And !AccessibleMenu.CurrentMenu.FocusByFirstCharacter(SingleKey)
+                    If StrLen(SingleKey) = 1 And Not AccessibleMenu.CurrentMenu.FocusByFirstCharacter(SingleKey)
                     SoundPlay "*48"
                     Return
                 }
@@ -307,7 +307,7 @@ Class AccessibleMenu {
     
     Rename(MenuItemName, NewName := "") {
         NewName := Trim(NewName)
-        If This.FindItem(MenuItemName) > 0 And NewName != "" {
+        If This.FindItem(MenuItemName) > 0 And Not NewName = "" {
             This.Items[This.FindItem(MenuItemName)]["Name"] := NewName
         }
     }
@@ -376,7 +376,7 @@ Class AccessibleMenu {
     }
     
     Translate(Translation := "") {
-        If Translation != "" {
+        If Not Translation = "" {
             If Not Translation Is Map
             Translation := AccessibleMenu.Translations[Translation]
             If Translation Is Map {

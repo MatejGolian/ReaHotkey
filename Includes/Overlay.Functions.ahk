@@ -20,18 +20,18 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             WinWidth := A_ScreenWidth
             WinHeight := A_ScreenHeight
         }
-        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And OverlayEntry.Metadata["Product"] != "" {
+        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And Not OverlayEntry.Metadata["Product"] = "" {
             Product := OverlayEntry.Metadata["Product"]
         }
-        Else If OverlayEntry.Label != "" {
+        Else If Not OverlayEntry.Label = "" {
             Product := OverlayEntry.Label
         }
         Else {
             Product := "unknown product " . UnknownProductCounter
             UnknownProductCounter++
         }
-        If ReaHotkey.Found%Type% Is %Type% And HasProp(ReaHotkey.Found%Type%.Overlay, "OverlayNumber") And ReaHotkey.Found%Type%.Overlay.OverlayNumber != OverlayEntry.OverlayNumber
-        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Image") And OverlayEntry.Metadata["Image"] != "" {
+        If ReaHotkey.Found%Type% Is %Type% And HasProp(ReaHotkey.Found%Type%.Overlay, "OverlayNumber") And Not ReaHotkey.Found%Type%.Overlay.OverlayNumber = OverlayEntry.OverlayNumber
+        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Image") And Not OverlayEntry.Metadata["Image"] = "" {
             If Not OverlayEntry.Metadata["Image"] Is Map
             OverlayMetadata := Map("File", OverlayEntry.Metadata["Image"])
             Else
@@ -123,7 +123,7 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
     Critical
     OverlayList := %Type%.GetOverlays(ReaHotkey.Found%Type%.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
-    If ReaHotkey.Found%Type%.Overlay.OverlayNumber != OverlayNumber
+    If Not ReaHotkey.Found%Type%.Overlay.OverlayNumber = OverlayNumber
     If ReaHotkey.Found%Type%.Chooser = True {
         OverlayHeader := ReaHotkey.Found%Type%.Overlay.ChildControls[1].Clone()
         ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(ItemName)
@@ -184,9 +184,9 @@ CompensateFocusedControlYCoordinate(ControlYCoordinate) {
 }
 
 CompensateGraphicalHorizontalPluginSlider(PluginControl) {
-    If !HasProp(PluginControl, "OriginalStart")
+    If Not HasProp(PluginControl, "OriginalStart")
     PluginControl.OriginalStart := PluginControl.Start
-    If !HasProp(PluginControl, "OriginalEnd")
+    If Not HasProp(PluginControl, "OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
     Try {
         ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
@@ -201,9 +201,9 @@ CompensateGraphicalHorizontalPluginSlider(PluginControl) {
 }
 
 CompensateGraphicalVerticalPluginSlider(PluginControl) {
-    If !HasProp(PluginControl, "OriginalStart")
+    If Not HasProp(PluginControl, "OriginalStart")
     PluginControl.OriginalStart := PluginControl.Start
-    If !HasProp(PluginControl, "OriginalEnd")
+    If Not HasProp(PluginControl, "OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
     Try {
         ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
@@ -218,9 +218,9 @@ CompensateGraphicalVerticalPluginSlider(PluginControl) {
 }
 
 CompensatePluginPointCoordinates(PluginControl) {
-    If !HasProp(PluginControl, "OriginalXCoordinate")
+    If Not HasProp(PluginControl, "OriginalXCoordinate")
     PluginControl.OriginalXCoordinate := PluginControl.XCoordinate
-    If !HasProp(PluginControl, "OriginalYCoordinate")
+    If Not HasProp(PluginControl, "OriginalYCoordinate")
     PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
     Try {
         ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
@@ -235,13 +235,13 @@ CompensatePluginPointCoordinates(PluginControl) {
 }
 
 CompensatePluginRegionCoordinates(PluginControl) {
-    If !HasProp(PluginControl, "OriginalX1Coordinate")
+    If Not HasProp(PluginControl, "OriginalX1Coordinate")
     PluginControl.OriginalX1Coordinate := PluginControl.X1Coordinate
-    If !HasProp(PluginControl, "OriginalY1Coordinate")
+    If Not HasProp(PluginControl, "OriginalY1Coordinate")
     PluginControl.OriginalY1Coordinate := PluginControl.Y1Coordinate
-    If !HasProp(PluginControl, "OriginalX2Coordinate")
+    If Not HasProp(PluginControl, "OriginalX2Coordinate")
     PluginControl.OriginalX2Coordinate := PluginControl.X2Coordinate
-    If !HasProp(PluginControl, "OriginalY2Coordinate")
+    If Not HasProp(PluginControl, "OriginalY2Coordinate")
     PluginControl.OriginalY2Coordinate := PluginControl.Y2Coordinate
     Try {
         ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
@@ -300,21 +300,21 @@ CreateOverlayMenu(Type) {
     OverlayMenu := Accessible%Type%Menu()
     OverlayMenu.OverlayNumbers := Array()
     UnknownProductCounter := 1
-    If HasProp(CurrentOverlay, "Metadata") And CurrentOverlay.Metadata.Has("Vendor") And CurrentOverlay.Metadata["Vendor"] != ""
+    If HasProp(CurrentOverlay, "Metadata") And CurrentOverlay.Metadata.Has("Vendor") And Not CurrentOverlay.Metadata["Vendor"] = ""
     CurrentVendor := CurrentOverlay.Metadata["Vendor"]
     Else
     CurrentVendor := ""
     For OverlayNumber, OverlayEntry In OverlayEntries {
-        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Vendor") And OverlayEntry.Metadata["Vendor"] != "" {
+        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Vendor") And Not OverlayEntry.Metadata["Vendor"] = "" {
             Vendor := OverlayEntry.Metadata["Vendor"]
         }
         Else {
             Vendor := ""
         }
-        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And OverlayEntry.Metadata["Product"] != "" {
+        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And Not OverlayEntry.Metadata["Product"] = "" {
             Product := OverlayEntry.Metadata["Product"]
         }
-        Else If OverlayEntry.Label != "" {
+        Else If Not OverlayEntry.Label = "" {
             Product := OverlayEntry.Label
         }
         Else {
@@ -469,7 +469,7 @@ GetPluginYCoordinate() {
 }
 
 GetUIAElement(UIAPath) {
-    If !IsSet(UIA)
+    If Not IsSet(UIA)
     Return False
     Try {
         element := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))

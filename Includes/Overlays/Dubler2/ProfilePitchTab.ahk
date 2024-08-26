@@ -41,7 +41,7 @@ ActivatePitchInputGainButton(Button) {
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-ActivatePitchOctaveShiftButton(Button) {
+ActivatePitchOctaveShiftButton(ButtonObj) {
 
     OctaveShiftMenu := AccessibleStandaloneMenu()
 
@@ -53,7 +53,7 @@ ActivatePitchOctaveShiftButton(Button) {
     OctaveShiftMenu.Show()
 }
 
-ActivateNotesButton(Button) {
+ActivateNotesButton(ButtonObj) {
 
     Notes := Dubler2.ProfileLoaded["Current"]["Scale"]["scaleNotes"]["data"]
     Enabled := Dubler2.ProfileLoaded["Current"]["Scale"]["toggleMask"]["data"]
@@ -140,7 +140,7 @@ ClickKey(Key) {
     }
 }
 
-ClickPitchOctaveShiftButton(Button, Octave, *) {
+ClickPitchOctaveShiftButton(ButtonObj, Octave, *) {
 
     Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"] := Octave
 
@@ -240,8 +240,8 @@ For Preset In ["8 Bit Lead", "Bass Pluck", "Boards", "Pad", "Pure", "Trap Bass",
 
 PitchTab.AddControl(SynthPresetCtrl)
 
-PitchTab.AddControl(CustomButton("Input Gain: " . Integer(Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchInputGain"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ActivatePitchInputGainButton))
-PitchTab.AddControl(CustomButton("Octave shift: " . (Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), ActivatePitchOctaveShiftButton))
+PitchTab.AddControl(CustomButton("Input Gain: " . Integer(Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchInputGain"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), , ActivatePitchInputGainButton))
+PitchTab.AddControl(CustomButton("Octave shift: " . (Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), , ActivatePitchOctaveShiftButton))
 
 KeyCtrl := PopulatedComboBox("Key", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
 
@@ -264,5 +264,5 @@ For Scale In ["Major", "Minor", "Harmonic Minor", "Major Pentatonic", "Minor Pen
 }
 
 PitchTab.AddControl(ScaleCtrl)
-PitchTab.AddControl(CustomButton("Toggle active notes", ObjBindMethod(Dubler2, "FocusButton"), ActivateNotesButton))
+PitchTab.AddControl(CustomButton("Toggle active notes", ObjBindMethod(Dubler2, "FocusButton"), , ActivateNotesButton))
 PitchTab.AddControl(Dubler2.CustomCheckbox("Announce detected notes (press Ctrl+N to toggle)", Dubler2.AnnounceNotes, ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "ToggleNotesAnnouncement")))

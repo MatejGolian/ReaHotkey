@@ -1,18 +1,18 @@
 #Requires AutoHotkey v2.0
 
-ActivateChordsOctaveShiftButton(Button) {
+ActivateChordsOctaveShiftButton(ButtonObj) {
 
     OctaveShiftMenu := AccessibleStandaloneMenu()
 
     For Octave In [-3, -2, -1, 0, 1, 2, 3]
-        OctaveShiftMenu.Add((Octave >= 0 ? "+" : "") . Octave, ClickChordsOctaveShiftButton.Bind(Button, Octave))
+        OctaveShiftMenu.Add((Octave >= 0 ? "+" : "") . Octave, ClickChordsOctaveShiftButton.Bind(ButtonObj, Octave))
 
     OctaveShiftMenu.Check((Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"])
 
     OctaveShiftMenu.Show()
 }
 
-ClickChordsOctaveShiftButton(Button, Octave, *) {
+ClickChordsOctaveShiftButton(ButtonObj, Octave, *) {
 
     Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"] := Octave
 
@@ -65,7 +65,7 @@ ChordsTab.SetHotkey("^3", "Ctrl + 3")
 ChordsTab.AddControl(Dubler2.HotspotCheckbox("Chords enabled", 97, 159, Dubler2.ProfileLoaded["Current"]["Chords"]["chordsEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 ChordsTab.AddControl(Dubler2.HotspotCheckbox("Root Note Bassline", 575, 566, Dubler2.ProfileLoaded["Current"]["Chords"]["rootNoteBassline"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 ChordsTab.AddControl(Dubler2.HotspotCheckbox("Follow Octaves", 806, 567, Dubler2.ProfileLoaded["Current"]["Chords"]["octaveFollow"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
-ChordsTab.AddControl(CustomButton("Octave shift: " . (Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), ActivateChordsOctaveShiftButton))
+ChordsTab.AddControl(CustomButton("Octave shift: " . (Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), , ActivateChordsOctaveShiftButton))
 
 VoicingPresetCtrl := PopulatedComboBox("Voicing Preset", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
 

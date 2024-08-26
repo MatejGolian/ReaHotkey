@@ -1,6 +1,6 @@
 #Requires AutoHotkey v2.0
 
-SetupTriggers(Tab) {
+SetupTriggers(TabObj) {
     TriggerSlots := [
         [134, 245],
         [243, 243],
@@ -17,38 +17,38 @@ SetupTriggers(Tab) {
         TB.Index := A_Index
         TB.X := TriggerSlots[A_Index][1]
         TB.Y := TriggerSlots[A_Index][2]
-        Tab.AddControl(TB)
+        TabObj.AddControl(TB)
     }
 
     If Dubler2.ProfileLoaded["Current"]["triggers"]["numTriggers"] < 8 {
-        Tab.AddHotspotButton("Add Trigger", TriggerSlots[Dubler2.ProfileLoaded["Current"]["triggers"]["numTriggers"] + 1][1], TriggerSlots[Dubler2.ProfileLoaded["Current"]["triggers"]["numTriggers"] + 1][2], ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CloseOverlay"))
+        TabObj.AddHotspotButton("Add Trigger", TriggerSlots[Dubler2.ProfileLoaded["Current"]["triggers"]["numTriggers"] + 1][1], TriggerSlots[Dubler2.ProfileLoaded["Current"]["triggers"]["numTriggers"] + 1][2], ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "CloseOverlay"))
     }
 }
 
-ClickTriggerButton(Button) {
+ClickTriggerButton(ButtonObj) {
 
-    Click(Button.X, Button.Y)
+    Click(ButtonObj.X, ButtonObj.Y)
 
     TriggerMenu := AccessibleStandaloneMenu()
 
     TriggerMenu.Add("Start recording takes...", StartRecordingTakes)
-    TriggerMenu.Add("Mute trigger", MuteTrigger.Bind(Button.Index))
-    TriggerMenu.Add("Velocity Response", ToggleTriggerVelocityResponse.Bind(Button.Index))
-    TriggerMenu.Add("MIDI Note: " . Dubler2.NumberToMidiNote(Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["midiNote"]) . " (" . Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["midiNote"] . ")", ChangeTriggerMidiNote.Bind(Button.Index))
-    TriggerMenu.Add("Clear all takes", ClearAllTriggerTakes.Bind(Button.Index))
-    TriggerMenu.Add("Rename trigger...", RenameTrigger.Bind(Button))
-    TriggerMenu.Add("Delete trigger...", DeleteTrigger.Bind(Button.Index))
+    TriggerMenu.Add("Mute trigger", MuteTrigger.Bind(ButtonObj.Index))
+    TriggerMenu.Add("Velocity Response", ToggleTriggerVelocityResponse.Bind(ButtonObj.Index))
+    TriggerMenu.Add("MIDI Note: " . Dubler2.NumberToMidiNote(Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][ButtonObj.Index]["midiNote"]) . " (" . Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][ButtonObj.Index]["midiNote"] . ")", ChangeTriggerMidiNote.Bind(ButtonObj.Index))
+    TriggerMenu.Add("Clear all takes", ClearAllTriggerTakes.Bind(ButtonObj.Index))
+    TriggerMenu.Add("Rename trigger...", RenameTrigger.Bind(ButtonObj))
+    TriggerMenu.Add("Delete trigger...", DeleteTrigger.Bind(ButtonObj.Index))
 
-    If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["numExamples"] == 12
+    If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][ButtonObj.Index]["numExamples"] == 12
         TriggerMenu.Disable("Start recording takes...")
 
-    If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["muted"]
+    If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][ButtonObj.Index]["muted"]
         TriggerMenu.Check("Mute trigger")
 
-    If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["velocityResponse"]
+    If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][ButtonObj.Index]["velocityResponse"]
         TriggerMenu.Check("Velocity Response")
 
-    If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["numExamples"] == 0
+    If Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][ButtonObj.Index]["numExamples"] == 0
         TriggerMenu.Disable("Clear all takes")
 
     TriggerMenu.Show()
@@ -147,12 +147,12 @@ ClearAllTriggerTakes(Index, *) {
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-RenameTrigger(Button, *) {
+RenameTrigger(ButtonObj, *) {
 
     SetTimer ReaHotkey.ManageState, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
-    Name := InputBox("Trigger Name: ", "ReaHotkey", , Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["name"])
+    Name := InputBox("Trigger Name: ", "ReaHotkey", , Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][ButtonObj.Index]["name"])
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
     SetTimer ReaHotkey.ManageState, 100
@@ -162,7 +162,7 @@ RenameTrigger(Button, *) {
     If Name.Result != "OK"
         Return
 
-    Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Button.Index]["name"] := Name.Value
+    Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][ButtonObj.Index]["name"] := Name.Value
 
     Dubler2.CloseOverlay("Dubler 2 Profile")
 
@@ -223,7 +223,7 @@ DeleteTrigger(Index, *) {
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-ActivateTriggerSensitivityButton(Button) {
+ActivateTriggerSensitivityButton(ButtonObj) {
 
     SetTimer ReaHotkey.ManageState, 0
     ReaHotkey.TurnStandaloneTimersOff()
@@ -269,4 +269,4 @@ TriggersTab.SetHotkey("^4", "Ctrl + 4")
 
 TriggersTab.AddControl(Dubler2.HotspotCheckbox("Triggers enabled", 97, 158, Dubler2.ProfileLoaded["Current"]["triggers"]["triggersEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 SetupTriggers(TriggersTab)
-TriggersTab.AddControl(CustomButton("Sensitivity: " . Integer(Dubler2.ProfileLoaded["Current"]["DublerModel"]["triggerSensitivity"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), ActivateTriggerSensitivityButton))
+TriggersTab.AddControl(CustomButton("Sensitivity: " . Integer(Dubler2.ProfileLoaded["Current"]["DublerModel"]["triggerSensitivity"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), , ActivateTriggerSensitivityButton))

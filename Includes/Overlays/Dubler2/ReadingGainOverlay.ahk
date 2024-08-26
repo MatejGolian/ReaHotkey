@@ -75,7 +75,7 @@ Static CreateReadingGainOverlay(Overlay) {
 
     DllCall(Dll . "\BASS_ASIO_Start", "Int", 0, "Int", 0, "Char")
 
-    Overlay.AddControl(CustomButton("Stop Reading Gain", ObjBindMethod(Dubler2, "FocusButton"), StopReadingGain))
+    Overlay.AddControl(CustomButton("Stop Reading Gain", ObjBindMethod(Dubler2, "FocusButton"), , StopReadingGain))
 
     Standalone.SetTimer("Dubler 2", SpeakGain, 1000)
 

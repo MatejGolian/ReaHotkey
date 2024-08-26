@@ -61,7 +61,7 @@ Static CreateRecordingTakesOverlay(Overlay) {
 
     Standalone.SetTimer("Dubler 2", ObjBindMethod(Dubler2, "SpeakRecordedTakes"), 100)
 
-    Overlay.AddHotspotButton("Stop recording", 512, 295, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ClickStopRecordingTakesButton"))
+    Overlay.AddHotspotButton("Stop recording", 512, 295, ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "ClickStopRecordingTakesButton"))
 
     Return Overlay
 }

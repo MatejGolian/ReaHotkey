@@ -7,26 +7,26 @@ Class ProfileButton extends CustomButton {
 
 }
 
-Static ActivateProfileButton(Button) {
+Static ActivateProfileButton(ButtonObj) {
     ActionsMenu := AccessibleStandaloneMenu()
-    If Button.Index <= 5
-        ActionsMenu.Add("Load Profile", ObjBindMethod(Dubler2, "LoadProfile", Button.Index, Button.ProfileFile))
+    If ButtonObj.Index <= 5
+        ActionsMenu.Add("Load Profile", ObjBindMethod(Dubler2, "LoadProfile", ButtonObj.Index, ButtonObj.ProfileFile))
     Else {
-        ActionsMenu.Add("Only active profiles can be loaded", ObjBindMethod(Dubler2, "LoadProfile", Button.Index))
+        ActionsMenu.Add("Only active profiles can be loaded", ObjBindMethod(Dubler2, "LoadProfile", ButtonObj.Index))
         ActionsMenu.Disable("Only active profiles can be loaded")
     }
-    If Button.Index > 5 {
+    If ButtonObj.Index > 5 {
         MoveMenu := AccessibleStandaloneMenu()
-        MoveMenu.Add("Slot 1", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 1))
-        MoveMenu.Add("Slot 2", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 2))
-        MoveMenu.Add("Slot 3", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 3))
-        MoveMenu.Add("Slot 4", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 4))
-        MoveMenu.Add("Slot 5", ObjBindMethod(Dubler2, "MoveProfile", Button.ProfileFile, 5))
+        MoveMenu.Add("Slot 1", ObjBindMethod(Dubler2, "MoveProfile", ButtonObj.ProfileFile, 1))
+        MoveMenu.Add("Slot 2", ObjBindMethod(Dubler2, "MoveProfile", ButtonObj.ProfileFile, 2))
+        MoveMenu.Add("Slot 3", ObjBindMethod(Dubler2, "MoveProfile", ButtonObj.ProfileFile, 3))
+        MoveMenu.Add("Slot 4", ObjBindMethod(Dubler2, "MoveProfile", ButtonObj.ProfileFile, 4))
+        MoveMenu.Add("Slot 5", ObjBindMethod(Dubler2, "MoveProfile", ButtonObj.ProfileFile, 5))
         ActionsMenu.Add("Set Profile Active", MoveMenu)
     }
-    ActionsMenu.Add("Duplicate Profile", ObjBindMethod(Dubler2, "DuplicateProfile", Button.ProfileFile))
-    ActionsMenu.Add("Rename Profile", ObjBindMethod(Dubler2, "RenameProfile", Button.ProfileFile))
-    ActionsMenu.Add("Delete Profile", ObjBindMethod(Dubler2, "DeleteProfile", Button.ProfileFile, Button.Index))
+    ActionsMenu.Add("Duplicate Profile", ObjBindMethod(Dubler2, "DuplicateProfile", ButtonObj.ProfileFile))
+    ActionsMenu.Add("Rename Profile", ObjBindMethod(Dubler2, "RenameProfile", ButtonObj.ProfileFile))
+    ActionsMenu.Add("Delete Profile", ObjBindMethod(Dubler2, "DeleteProfile", ButtonObj.ProfileFile, Button.Index))
 
     ActionsMenu.Show()
 }
@@ -188,13 +188,13 @@ Static CreateProfilesOverlay(Overlay) {
         Else
             Suffix := "(Passive)"
 
-        Button := Dubler2.ProfileButton(Profiles[A_LoopField]["profileName"] . " " . Suffix, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateProfileButton"))
-        Button.Index := A_Index
-        Button.ProfileFile := A_LoopField
-        Overlay.AddControl(Button)
+        ButtonObj := Dubler2.ProfileButton(Profiles[A_LoopField]["profileName"] . " " . Suffix, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateProfileButton"))
+        ButtonObj.Index := A_Index
+        ButtonObj.ProfileFile := A_LoopField
+        Overlay.AddControl(ButtonObj)
     }
 
-    Overlay.AddCustomButton("Create new profile", ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "CreateNewProfileButton"))
+    Overlay.AddCustomButton("Create new profile", ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "CreateNewProfileButton"))
     Dubler2.SetupAudioCalibrationButton(Overlay)
     ;Overlay.AddHotspotButton("User Settings", 900, 57, FocusButton)
 
