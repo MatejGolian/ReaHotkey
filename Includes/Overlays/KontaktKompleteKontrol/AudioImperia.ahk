@@ -2,8 +2,8 @@
 
 Class AudioImperia {
     
-    Static KontaktXOffset := 0
-    Static KontaktYOffset := 0
+    Static Kontakt7XOffset := 0
+    Static Kontakt7YOffset := 0
     Static KompleteKontrolXOffset := 107
     Static KompleteKontrolYOffset := 111
     
