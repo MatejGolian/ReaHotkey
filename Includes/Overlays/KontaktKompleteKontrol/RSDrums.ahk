@@ -4,8 +4,8 @@ Class RSDrums {
     
     Static __New() {
         PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
-        KontaktXOffset := 0
-        KontaktYOffset := 0
+        Kontakt7XOffset := 0
+        Kontakt7YOffset := 0
         KompleteKontrolXOffset := 0
         KompleteKontrolYOffset := 0
         
@@ -21,8 +21,8 @@ Class RSDrums {
         Static Call(ThisHotkey) {
             Thread "NoTimers"
             PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
-            If PluginClass = "Kontakt"
-            Name := "Kontakt"
+            If PluginClass = "Kontakt7"
+            Name := "Kontakt 7"
             Else
             Name := "Komplete Kontrol"
             SendCommand := ""
@@ -58,8 +58,8 @@ Class RSDrums {
         Static Call(*) {
             PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             VendorClass := SubStr(SubStr(This.Prototype.__Class, InStr(This.Prototype.__Class, ".") + 1), 1, InStr(SubStr(This.Prototype.__Class, InStr(This.Prototype.__Class, ".") + 1), ".") - 1)
-            If PluginClass = "Kontakt"
-            Name := "Kontakt"
+            If PluginClass = "Kontakt7"
+            Name := "Kontakt 7"
             Else
             Name := "Komplete Kontrol"
             If ReaHotkey.FoundPlugin Is Plugin
