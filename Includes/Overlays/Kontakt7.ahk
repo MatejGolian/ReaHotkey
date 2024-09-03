@@ -1,6 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 
-Class Kontakt {
+Class Kontakt7 {
     
     Static PluginHeader := Object()
     Static StandaloneHeader := Object()
@@ -8,55 +8,55 @@ Class Kontakt {
     Static StandaloneOverlays := Array()
     
     Static __New() {
-        PluginHeader := AccessibilityOverlay("Kontakt")
+        PluginHeader := AccessibilityOverlay("Kontakt 7")
         PluginHeader.AddStaticText("Kontakt 7")
-        PluginHeader.AddCustomButton("FILE menu",,, Kontakt.ActivatePluginHeaderButton).SetHotkey("!F", "Alt+F")
-        PluginHeader.AddCustomButton("LIBRARY On/Off",,, Kontakt.ActivatePluginHeaderButton).SetHotkey("!L", "Alt+L")
-        PluginHeader.AddCustomButton("VIEW menu",,, Kontakt.ActivatePluginHeaderButton).SetHotkey("!V", "Alt+V")
-        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",,, Kontakt.ActivatePluginHeaderButton).SetHotkey("!S", "Alt+S")
-        PluginHeader.AddCustomButton("Snapshot menu", Kontakt.MoveToPluginSnapshotButton,,, Kontakt.ActivatePluginSnapshotButton).SetHotkey("!M", "Alt+M")
-        PluginHeader.AddCustomButton("Previous snapshot", Kontakt.MoveToPluginSnapshotButton,,, Kontakt.ActivatePluginSnapshotButton).SetHotkey("!P", "Alt+P")
-        PluginHeader.AddCustomButton("Next snapshot", Kontakt.MoveToPluginSnapshotButton,,, Kontakt.ActivatePluginSnapshotButton).SetHotkey("!N", "Alt+N")
-        Kontakt.PluginHeader := PluginHeader
+        PluginHeader.AddCustomButton("FILE menu",,, Kontakt7.ActivatePluginHeaderButton).SetHotkey("!F", "Alt+F")
+        PluginHeader.AddCustomButton("LIBRARY On/Off",,, Kontakt7.ActivatePluginHeaderButton).SetHotkey("!L", "Alt+L")
+        PluginHeader.AddCustomButton("VIEW menu",,, Kontakt7.ActivatePluginHeaderButton).SetHotkey("!V", "Alt+V")
+        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",,, Kontakt7.ActivatePluginHeaderButton).SetHotkey("!S", "Alt+S")
+        PluginHeader.AddCustomButton("Snapshot menu", Kontakt7.MoveToPluginSnapshotButton,,, Kontakt7.ActivatePluginSnapshotButton).SetHotkey("!M", "Alt+M")
+        PluginHeader.AddCustomButton("Previous snapshot", Kontakt7.MoveToPluginSnapshotButton,,, Kontakt7.ActivatePluginSnapshotButton).SetHotkey("!P", "Alt+P")
+        PluginHeader.AddCustomButton("Next snapshot", Kontakt7.MoveToPluginSnapshotButton,,, Kontakt7.ActivatePluginSnapshotButton).SetHotkey("!N", "Alt+N")
+        Kontakt7.PluginHeader := PluginHeader
         
-        StandaloneHeader := AccessibilityOverlay("Kontakt")
-        StandaloneHeader.AddCustomButton("FILE menu",,, Kontakt.ActivateStandaloneHeaderButton).SetHotkey("!F", "Alt+F")
-        StandaloneHeader.AddCustomButton("LIBRARY On/Off",,, Kontakt.ActivateStandaloneHeaderButton).SetHotkey("!L", "Alt+L")
-        StandaloneHeader.AddCustomButton("VIEW menu",,, Kontakt.ActivateStandaloneHeaderButton).SetHotkey("!V", "Alt+V")
-        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",,, Kontakt.ActivateStandaloneHeaderButton).SetHotkey("!S", "Alt+S")
-        Kontakt.StandaloneHeader := StandaloneHeader
+        StandaloneHeader := AccessibilityOverlay("Kontakt 7")
+        StandaloneHeader.AddCustomButton("FILE menu",,, Kontakt7.ActivateStandaloneHeaderButton).SetHotkey("!F", "Alt+F")
+        StandaloneHeader.AddCustomButton("LIBRARY On/Off",,, Kontakt7.ActivateStandaloneHeaderButton).SetHotkey("!L", "Alt+L")
+        StandaloneHeader.AddCustomButton("VIEW menu",,, Kontakt7.ActivateStandaloneHeaderButton).SetHotkey("!V", "Alt+V")
+        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",,, Kontakt7.ActivateStandaloneHeaderButton).SetHotkey("!S", "Alt+S")
+        Kontakt7.StandaloneHeader := StandaloneHeader
         
-        Plugin.Register("Kontakt", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(Kontakt, "InitPlugin"), True, False, False, ObjBindMethod(Kontakt, "CheckPlugin"))
+        Plugin.Register("Kontakt 7", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(Kontakt7, "InitPlugin"), True, False, False, ObjBindMethod(Kontakt7, "CheckPlugin"))
         
-        For PluginOverlay In Kontakt.PluginOverlays
-        Plugin.RegisterOverlay("Kontakt", PluginOverlay)
-        Plugin.RegisterOverlayHotkeys("Kontakt", PluginHeader)
+        For PluginOverlay In Kontakt7.PluginOverlays
+        Plugin.RegisterOverlay("Kontakt 7", PluginOverlay)
+        Plugin.RegisterOverlayHotkeys("Kontakt 7", PluginHeader)
         
-        Plugin.SetTimer("Kontakt", ObjBindMethod(Kontakt, "CheckPluginConfig"), -1)
+        Plugin.SetTimer("Kontakt 7", ObjBindMethod(Kontakt7, "CheckPluginConfig"), -1)
         
-        Plugin.Register("Kontakt Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(Kontakt, "CheckPluginContentMissing"))
-        Plugin.SetHotkey("Kontakt Content Missing Dialog", "!F4", ObjBindMethod(Kontakt, "ClosePluginContentMissingDialog"))
-        Plugin.SetHotkey("Kontakt Content Missing Dialog", "Escape", ObjBindMethod(Kontakt, "ClosePluginContentMissingDialog"))
+        Plugin.Register("Kontakt 7 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(Kontakt7, "CheckPluginContentMissing"))
+        Plugin.SetHotkey("Kontakt 7 Content Missing Dialog", "!F4", ObjBindMethod(Kontakt7, "ClosePluginContentMissingDialog"))
+        Plugin.SetHotkey("Kontakt 7 Content Missing Dialog", "Escape", ObjBindMethod(Kontakt7, "ClosePluginContentMissingDialog"))
         
         PluginContentMissingOverlay := AccessibilityOverlay("Content Missing")
         PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372).SetHotkey("!B", "Alt+B")
-        Plugin.RegisterOverlay("Kontakt Content Missing Dialog", PluginContentMissingOverlay)
+        Plugin.RegisterOverlay("Kontakt 7 Content Missing Dialog", PluginContentMissingOverlay)
         
-        Standalone.Register("Kontakt", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe", False, False)
-        Standalone.SetTimer("Kontakt", ObjBindMethod(Kontakt, "CheckStandaloneConfig"), -1)
-        Standalone.RegisterOverlay("Kontakt", StandaloneHeader)
+        Standalone.Register("Kontakt 7", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe", False, False)
+        Standalone.SetTimer("Kontakt 7", ObjBindMethod(Kontakt7, "CheckStandaloneConfig"), -1)
+        Standalone.RegisterOverlay("Kontakt 7", StandaloneHeader)
         
-        Standalone.Register("Kontakt Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe", False, False)
+        Standalone.Register("Kontakt 7 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe", False, False)
         
         StandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
         StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372).SetHotkey("!B", "Alt+B")
-        Standalone.RegisterOverlay("Kontakt Content Missing Dialog", StandaloneContentMissingOverlay)
+        Standalone.RegisterOverlay("Kontakt 7 Content Missing Dialog", StandaloneContentMissingOverlay)
     }
     
     Static CheckPlugin(*) {
         Thread "NoTimers"
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
-        If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt"
+        If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 7"
         Return True
         UIAElement := GetUIAElement("15,1")
         Try
@@ -66,19 +66,19 @@ Class Kontakt {
     }
     
     Static CheckPluginConfig() {
-        Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt", True, True)
+        Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True)
         If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1) = 1
-        Kontakt.ClosePluginBrowser()
+        Kontakt7.ClosePluginBrowser()
         If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1) = 1
-        Plugin.SetTimer("Kontakt", PluginAutoChangeFunction, 500)
+        Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 500)
         Else
-        Plugin.SetTimer("Kontakt", PluginAutoChangeFunction, 0)
+        Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 0)
     }
     
     Static CheckPluginContentMissing(*) {
         Thread "NoTimers"
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
-        If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt Content Missing Dialog"
+        If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 7 Content Missing Dialog"
         Return True
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing"
         Return True
@@ -87,7 +87,7 @@ Class Kontakt {
     
     Static CheckStandaloneConfig() {
         If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1) = 1
-        Kontakt.CloseStandaloneBrowser()
+        Kontakt7.CloseStandaloneBrowser()
     }
     
     Static ClosePluginBrowser() {
@@ -108,7 +108,7 @@ Class Kontakt {
     Static ClosePluginContentMissingDialog(*) {
         Critical
         If ReaHotkey.FoundPlugin Is Plugin And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria)
-        If ReaHotkey.FoundPlugin.Name = "Kontakt Content Missing Dialog" And WinGetTitle("A") = "content Missing" {
+        If ReaHotkey.FoundPlugin.Name = "Kontakt 7 Content Missing Dialog" And WinGetTitle("A") = "content Missing" {
             ReaHotkey.FoundPlugin.Overlay.Reset()
             WinClose("A")
             Sleep 500
@@ -133,12 +133,12 @@ Class Kontakt {
     Static InitPlugin(PluginInstance) {
         If PluginInstance.Overlay.ChildControls.Length = 0
         PluginInstance.Overlay.AddAccessibilityOverlay()
-        PluginInstance.Overlay.ChildControls[1] := Kontakt.PluginHeader.Clone()
+        PluginInstance.Overlay.ChildControls[1] := Kontakt7.PluginHeader.Clone()
         If Not HasProp(PluginInstance.Overlay, "Metadata") {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
             PluginInstance.Overlay.OverlayNumber := 1
         }
-        Plugin.RegisterOverlayHotkeys("Kontakt", PluginInstance.Overlay)
+        Plugin.RegisterOverlayHotkeys("Kontakt 7", PluginInstance.Overlay)
     }
     
     Class  ActivatePluginHeaderButton {
@@ -160,12 +160,12 @@ Class Kontakt {
             Switch HeaderButton.Label {
                 Case "FILE menu":
                 UIAElement.Click("Left")
-                Kontakt.OpenMenu("Plugin")
+                Kontakt7.OpenMenu("Plugin")
                 Case "LIBRARY On/Off":
                 UIAElement.Click("Left")
                 Case "VIEW menu":
                 UIAElement.Click("Left")
-                Kontakt.OpenMenu("Plugin")
+                Kontakt7.OpenMenu("Plugin")
                 Case "SHOP (Opens in default web browser)":
                 UIAElement.Click("Left")
             }
@@ -184,16 +184,16 @@ Class Kontakt {
                 Return
                 Click ControlX + ControlWidth - 296, ControlY + 141
                 Sleep 10
-                Kontakt.MoveToPluginSnapshotButton("Previous snapshot")
+                Kontakt7.MoveToPluginSnapshotButton("Previous snapshot")
                 If CheckColor()
                 If InStr(SnapshotButton.Label, "Snapshot", True) {
-                    Kontakt.MoveToPluginSnapshotButton(SnapshotButton)
+                    Kontakt7.MoveToPluginSnapshotButton(SnapshotButton)
                     Click
-                    Kontakt.OpenPluginMenu()
+                    Kontakt7.OpenPluginMenu()
                     Return
                 }
                 Else {
-                    Kontakt.MoveToPluginSnapshotButton(SnapshotButton)
+                    Kontakt7.MoveToPluginSnapshotButton(SnapshotButton)
                     Click
                     Return
                 }
@@ -227,12 +227,12 @@ Class Kontakt {
             Switch HeaderButton.Label {
                 Case "FILE menu":
                 UIAElement.Click("Left")
-                Kontakt.OpenMenu("Standalone")
+                Kontakt7.OpenMenu("Standalone")
                 Case "LIBRARY On/Off":
                 UIAElement.Click("Left")
                 Case "VIEW menu":
                 UIAElement.Click("Left")
-                Kontakt.OpenMenu("Standalone")
+                Kontakt7.OpenMenu("Standalone")
                 Case "SHOP (Opens in default web browser)":
                 UIAElement.Click("Left")
             }
@@ -253,26 +253,26 @@ Class Kontakt {
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If Type = "Standalone"
             HotIf
-            If Type = "Plugin" And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt" And ReaHotkey.FoundPlugin.NoHotkeys = True {
+            If Type = "Plugin" And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt 7" And ReaHotkey.FoundPlugin.NoHotkeys = True {
                 ReaHotkey.FoundPlugin.SetNoHotkeys(False)
                 TurnHotkeysOff()
                 If Not SendCommand = ""
                 Send SendCommand
             }
-            Else If Type = "Plugin" And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt Content Missing Dialog" {
-                Plugin.SetNoHotkeys("Kontakt", False)
+            Else If Type = "Plugin" And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt 7 Content Missing Dialog" {
+                Plugin.SetNoHotkeys("Kontakt 7", False)
                 TurnHotkeysOff()
                 If Not SendCommand = ""
                 Send SendCommand
             }
-            Else If Type = "Standalone" And ReaHotkey.foundStandalone Is Standalone And ReaHotkey.foundStandalone.Name = "Kontakt" And ReaHotkey.FoundStandalone.NoHotkeys = True {
+            Else If Type = "Standalone" And ReaHotkey.foundStandalone Is Standalone And ReaHotkey.foundStandalone.Name = "Kontakt 7" And ReaHotkey.FoundStandalone.NoHotkeys = True {
                 ReaHotkey.foundStandalone.SetNoHotkeys(False)
                 TurnHotkeysOff()
                 If Not SendCommand = ""
                 Send SendCommand
             }
-            Else If Type = "Standalone" And ReaHotkey.foundStandalone Is Standalone And ReaHotkey.foundStandalone.Name = "Kontakt Content Missing Dialog" {
-                Standalone.SetNoHotkeys("Kontakt", False)
+            Else If Type = "Standalone" And ReaHotkey.foundStandalone Is Standalone And ReaHotkey.foundStandalone.Name = "Kontakt 7 Content Missing Dialog" {
+                Standalone.SetNoHotkeys("Kontakt 7", False)
                 TurnHotkeysOff()
                 If Not SendCommand = ""
                 Send SendCommand
@@ -284,29 +284,29 @@ Class Kontakt {
                 TurnHotkeysOn()
             }
             TurnHotkeysOff() {
-                ReaHotkey.Override%Type%Hotkey("Kontakt", "Escape", "Off")
-                ReaHotkey.Override%Type%Hotkey("Kontakt", "!F4", "Off")
-                ReaHotkey.Override%Type%Hotkey("Kontakt Content Missing Dialog", "Escape", "Off")
-                ReaHotkey.Override%Type%Hotkey("Kontakt Content Missing Dialog", "!F4", "Off")
+                ReaHotkey.Override%Type%Hotkey("Kontakt 7", "Escape", "Off")
+                ReaHotkey.Override%Type%Hotkey("Kontakt 7", "!F4", "Off")
+                ReaHotkey.Override%Type%Hotkey("Kontakt 7 Content Missing Dialog", "Escape", "Off")
+                ReaHotkey.Override%Type%Hotkey("Kontakt 7 Content Missing Dialog", "!F4", "Off")
             }
             TurnHotkeysOn() {
-                ReaHotkey.Override%Type%Hotkey("Kontakt", "Escape", "On")
-                ReaHotkey.Override%Type%Hotkey("Kontakt", "!F4", "On")
-                ReaHotkey.Override%Type%Hotkey("Kontakt Content Missing Dialog", "Escape", "On")
-                ReaHotkey.Override%Type%Hotkey("Kontakt Content Missing Dialog", "!F4", "On")
+                ReaHotkey.Override%Type%Hotkey("Kontakt 7", "Escape", "On")
+                ReaHotkey.Override%Type%Hotkey("Kontakt 7", "!F4", "On")
+                ReaHotkey.Override%Type%Hotkey("Kontakt 7 Content Missing Dialog", "Escape", "On")
+                ReaHotkey.Override%Type%Hotkey("Kontakt 7 Content Missing Dialog", "!F4", "On")
             }
         }
     }
     
     Class ClosePluginMenu {
         Static Call(ThisHotkey) {
-            Kontakt.CloseMenu("Plugin", ThisHotkey)
+            Kontakt7.CloseMenu("Plugin", ThisHotkey)
         }
     }
     
     Class CloseStandaloneMenu {
         Static Call(ThisHotkey) {
-            Kontakt.CloseMenu("Standalone", ThisHotkey)
+            Kontakt7.CloseMenu("Standalone", ThisHotkey)
         }
     }
     
@@ -346,22 +346,22 @@ Class Kontakt {
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If Type = "Standalone"
             HotIf
-            ReaHotkey.Override%Type%Hotkey("Kontakt", "Escape", Kontakt.Close%Type%Menu, "On")
-            ReaHotkey.Override%Type%Hotkey("Kontakt", "!F4", Kontakt.Close%Type%Menu, "On")
-            ReaHotkey.Override%Type%Hotkey("Kontakt Content Missing Dialog", "Escape", Kontakt.Close%Type%Menu, "On")
-            ReaHotkey.Override%Type%Hotkey("Kontakt Content Missing Dialog", "!F4", Kontakt.Close%Type%Menu, "On")
+            ReaHotkey.Override%Type%Hotkey("Kontakt 7", "Escape", Kontakt7.Close%Type%Menu, "On")
+            ReaHotkey.Override%Type%Hotkey("Kontakt 7", "!F4", Kontakt7.Close%Type%Menu, "On")
+            ReaHotkey.Override%Type%Hotkey("Kontakt 7 Content Missing Dialog", "Escape", Kontakt7.Close%Type%Menu, "On")
+            ReaHotkey.Override%Type%Hotkey("Kontakt 7 Content Missing Dialog", "!F4", Kontakt7.Close%Type%Menu, "On")
         }
     }
     
     Class OpenPluginMenu {
         Static Call(*) {
-            Kontakt.OpenMenu("Plugin")
+            Kontakt7.OpenMenu("Plugin")
         }
     }
     
     Class OpenStandaloneMenu {
         Static Call(*) {
-            Kontakt.OpenMenu("Standalone")
+            Kontakt7.OpenMenu("Standalone")
         }
     }
     

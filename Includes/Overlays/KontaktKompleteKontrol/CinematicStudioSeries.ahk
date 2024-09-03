@@ -4,8 +4,8 @@ Class CinematicStudioSeries {
     
     Static __New() {
         PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
-        KontaktXOffset := 0
-        KontaktYOffset := 0
+        Kontakt7XOffset := 0
+        Kontakt7YOffset := 0
         KompleteKontrolXOffset := 190
         KompleteKontrolYOffset := 111
         
