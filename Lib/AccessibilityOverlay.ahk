@@ -848,6 +848,7 @@ Class ActivatableCustom Extends ActivatableControl {
 
 Class FocusableGraphic Extends FocusableControl {
     
+    FoundImage := False
     FoundXCoordinate := False
     FoundYCoordinate := False
     States := Map(0, "", 1, "")
@@ -891,6 +892,7 @@ Class FocusableGraphic Extends FocusableControl {
     }
     
     CheckState(StateParam := "state", ErrorState := 0, Groups := Map()) {
+        FoundImage := False
         FoundXCoordinate := False
         FoundYCoordinate := False
         If Groups.Count = 0
@@ -901,6 +903,7 @@ Class FocusableGraphic Extends FocusableControl {
             Try
             For Image In This.%GroupName%Images
             If Not Image = "" And FileExist(Image) And Not InStr(FileExist(Image), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, Image) {
+                This.FoundImage := Image
                 This.Found%GroupName%Image := Image
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
@@ -915,11 +918,25 @@ Class FocusableGraphic Extends FocusableControl {
         SetFalse() {
             If Not IsSet(GroupName)
             GroupName := ""
+            This.FoundImage := False
             This.Found%GroupName%Image := False
             This.FoundXCoordinate := False
             This.FoundYCoordinate := False
             This.%StateParam% := ErrorState
         }
+    }
+    
+    GetImgSize(Img) {
+        SplitPath A_ScriptDir . "\" . StrReplace(Img, "/", "\"), &Filename, &Dir
+        (Dir = "" && Dir := A_WorkingDir)
+        ObjShell := ComObject("Shell.Application")
+        ObjFolder := objShell.NameSpace(Dir), ObjFolderItem := ObjFolder.ParseName(Filename)
+        Scale := StrSplit(RegExReplace(ObjFolder.GetDetailsOf(ObjFolderItem, 31), ".(.+).", "$1"), " x ")
+        Try
+        ReturnObject := {W: Scale[1], H: Scale[2]}
+        Catch
+        ReturnObject := {W: 0, H: 0}
+        Return ReturnObject
     }
     
 }
@@ -1643,12 +1660,12 @@ Class GraphicalButton Extends  ActivatableGraphic {
     }
     
     ExecuteOnActivationPreSpeech() {
-        Click This.FoundXCoordinate, This.FoundYCoordinate
+        Click This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
         Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
-        MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+        MouseMove This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
     }
     
 }
@@ -1673,12 +1690,12 @@ Class GraphicalToggleButton Extends  ActivatableGraphic {
     }
     
     ExecuteOnActivationPreSpeech() {
-        Click This.FoundXCoordinate, This.FoundYCoordinate
+        Click This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
         Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
-        MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+        MouseMove This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
     }
     
 }
@@ -1703,12 +1720,12 @@ Class GraphicalCheckbox Extends ActivatableGraphic {
     }
     
     ExecuteOnActivationPreSpeech() {
-        Click This.FoundXCoordinate, This.FoundYCoordinate
+        Click This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
         Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
-        MouseMove This.FoundXCoordinate, This.FoundYCoordinate
+        MouseMove This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
     }
     
     GetState() {
@@ -1899,7 +1916,20 @@ Class GraphicalTab Extends Tab {
     }
     
     ExecuteOnFocusPreSpeech() {
-        Click This.FoundXCoordinate, This.FoundYCoordinate
+        Click This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
+    }
+    
+    GetImgSize(Img) {
+        SplitPath A_ScriptDir . "\" . StrReplace(Img, "/", "\"), &Filename, &Dir
+        (Dir = "" && Dir := A_WorkingDir)
+        ObjShell := ComObject("Shell.Application")
+        ObjFolder := objShell.NameSpace(Dir), ObjFolderItem := ObjFolder.ParseName(Filename)
+        Scale := StrSplit(RegExReplace(ObjFolder.GetDetailsOf(ObjFolderItem, 31), ".(.+).", "$1"), " x ")
+        Try
+        ReturnObject := {W: Scale[1], H: Scale[2]}
+        Catch
+        ReturnObject := {W: 0, H: 0}
+        Return ReturnObject
     }
     
 }
