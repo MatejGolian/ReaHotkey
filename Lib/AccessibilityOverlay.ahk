@@ -927,11 +927,14 @@ Class FocusableGraphic Extends FocusableControl {
     }
     
     GetImgSize(Img) {
+        BaseDir := A_WorkingDir
+        If Not SubStr(BaseDir, 0, 1) = "\"
+        BaseDir .= "\"
         If SubStr(Img, 2, 1) = ":"
         SplitPath StrReplace(Img, "/", "\"), &Filename, &Dir
         Else
-        SplitPath A_ScriptDir . "\" . StrReplace(Img, "/", "\"), &Filename, &Dir
-        (Dir = "" && Dir := A_ScriptDir)
+        SplitPath BaseDir . StrReplace(Img, "/", "\"), &Filename, &Dir
+        (Dir = "" && Dir := BaseDir)
         ObjShell := ComObject("Shell.Application")
         ObjFolder := objShell.NameSpace(Dir), ObjFolderItem := ObjFolder.ParseName(Filename)
         Scale := StrSplit(RegExReplace(ObjFolder.GetDetailsOf(ObjFolderItem, 31), ".(.+).", "$1"), " x ")
@@ -1923,11 +1926,14 @@ Class GraphicalTab Extends Tab {
     }
     
     GetImgSize(Img) {
+        BaseDir := A_WorkingDir
+        If Not SubStr(BaseDir, 0, 1) = "\"
+        BaseDir .= "\"
         If SubStr(Img, 2, 1) = ":"
         SplitPath StrReplace(Img, "/", "\"), &Filename, &Dir
         Else
-        SplitPath A_ScriptDir . "\" . StrReplace(Img, "/", "\"), &Filename, &Dir
-        (Dir = "" && Dir := A_ScriptDir)
+        SplitPath BaseDir . StrReplace(Img, "/", "\"), &Filename, &Dir
+        (Dir = "" && Dir := BaseDir)
         ObjShell := ComObject("Shell.Application")
         ObjFolder := objShell.NameSpace(Dir), ObjFolderItem := ObjFolder.ParseName(Filename)
         Scale := StrSplit(RegExReplace(ObjFolder.GetDetailsOf(ObjFolderItem, 31), ".(.+).", "$1"), " x ")
