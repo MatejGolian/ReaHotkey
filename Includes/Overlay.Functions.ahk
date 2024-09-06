@@ -438,8 +438,14 @@ GetCurrentWindowID() {
 }
 
 GetImgSize(Img) {
-    SplitPath Img, &Filename, &Dir
-    (Dir = "" && Dir := A_ScriptDir)
+    BaseDir := A_WorkingDir
+    If Not SubStr(BaseDir, 0, 1) = "\"
+    BaseDir .= "\"
+    If SubStr(Img, 2, 1) = ":"
+    SplitPath StrReplace(Img, "/", "\"), &Filename, &Dir
+    Else
+    SplitPath BaseDir . StrReplace(Img, "/", "\"), &Filename, &Dir
+    (Dir = "" && Dir := BaseDir)
     ObjShell := ComObject("Shell.Application")
     ObjFolder := objShell.NameSpace(Dir), ObjFolderItem := ObjFolder.ParseName(Filename)
     Scale := StrSplit(RegExReplace(ObjFolder.GetDetailsOf(ObjFolderItem, 31), ".(.+).", "$1"), " x ")
