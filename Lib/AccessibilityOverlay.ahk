@@ -590,6 +590,25 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return 0
     }
     
+    Static GetImgSize(Img) {
+        BaseDir := A_WorkingDir
+        If Not SubStr(BaseDir, 0, 1) = "\"
+        BaseDir .= "\"
+        If SubStr(Img, 2, 1) = ":"
+        SplitPath StrReplace(Img, "/", "\"), &FileName, &Dir
+        Else
+        SplitPath BaseDir . StrReplace(Img, "/", "\"), &FileName, &Dir
+        (Dir = "" && Dir := BaseDir)
+        ObjShell := ComObject("Shell.Application")
+        ObjFolder := objShell.NameSpace(Dir), ObjFolderItem := ObjFolder.ParseName(FileName)
+        Scale := StrSplit(RegExReplace(ObjFolder.GetDetailsOf(ObjFolderItem, 31), ".(.+).", "$1"), " x ")
+        Try
+        ReturnObject := {W: Scale[1], H: Scale[2]}
+        Catch
+        ReturnObject := {W: 0, H: 0}
+        Return ReturnObject
+    }
+    
     Static OCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1) {
         If IsSet(OCR) {
             AvailableLanguages := OCR.GetAvailableLanguages()
@@ -868,7 +887,6 @@ Class FocusableGraphic Extends FocusableControl {
             If SubStr(GroupName, 1, 1) Is Number
             GroupName := ""
             This.%GroupName%Images := Array()
-            This.Found%GroupName%Image := False
             If Not GroupImages Is Array
             GroupImages := Array(GroupImages)
             For GroupImage In GroupImages
@@ -904,7 +922,6 @@ Class FocusableGraphic Extends FocusableControl {
             For Image In This.%GroupName%Images
             If Not Image = "" And FileExist(Image) And Not InStr(FileExist(Image), "D") And ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, Image) {
                 This.FoundImage := Image
-                This.Found%GroupName%Image := Image
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
                 This.%StateParam% := ReturnState
@@ -916,33 +933,11 @@ Class FocusableGraphic Extends FocusableControl {
         SetFalse()
         Return False
         SetFalse() {
-            If Not IsSet(GroupName)
-            GroupName := ""
             This.FoundImage := False
-            This.Found%GroupName%Image := False
             This.FoundXCoordinate := False
             This.FoundYCoordinate := False
             This.%StateParam% := ErrorState
         }
-    }
-    
-    GetImgSize(Img) {
-        BaseDir := A_WorkingDir
-        If Not SubStr(BaseDir, 0, 1) = "\"
-        BaseDir .= "\"
-        If SubStr(Img, 2, 1) = ":"
-        SplitPath StrReplace(Img, "/", "\"), &FileName, &Dir
-        Else
-        SplitPath BaseDir . StrReplace(Img, "/", "\"), &FileName, &Dir
-        (Dir = "" && Dir := BaseDir)
-        ObjShell := ComObject("Shell.Application")
-        ObjFolder := objShell.NameSpace(Dir), ObjFolderItem := ObjFolder.ParseName(FileName)
-        Scale := StrSplit(RegExReplace(ObjFolder.GetDetailsOf(ObjFolderItem, 31), ".(.+).", "$1"), " x ")
-        Try
-        ReturnObject := {W: Scale[1], H: Scale[2]}
-        Catch
-        ReturnObject := {W: 0, H: 0}
-        Return ReturnObject
     }
     
 }
@@ -1666,12 +1661,12 @@ Class GraphicalButton Extends  ActivatableGraphic {
     }
     
     ExecuteOnActivationPreSpeech() {
-        Click This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
+        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
         Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
-        MouseMove This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
+        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
     }
     
 }
@@ -1696,12 +1691,12 @@ Class GraphicalToggleButton Extends  ActivatableGraphic {
     }
     
     ExecuteOnActivationPreSpeech() {
-        Click This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
+        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
         Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
-        MouseMove This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
+        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
     }
     
 }
@@ -1726,12 +1721,12 @@ Class GraphicalCheckbox Extends ActivatableGraphic {
     }
     
     ExecuteOnActivationPreSpeech() {
-        Click This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
+        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
         Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
-        MouseMove This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
+        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
     }
     
     GetState() {
@@ -1922,26 +1917,7 @@ Class GraphicalTab Extends Tab {
     }
     
     ExecuteOnFocusPreSpeech() {
-        Click This.FoundXCoordinate + Floor(This.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(This.GetImgSize(This.FoundImage).H / 2)
-    }
-    
-    GetImgSize(Img) {
-        BaseDir := A_WorkingDir
-        If Not SubStr(BaseDir, 0, 1) = "\"
-        BaseDir .= "\"
-        If SubStr(Img, 2, 1) = ":"
-        SplitPath StrReplace(Img, "/", "\"), &FileName, &Dir
-        Else
-        SplitPath BaseDir . StrReplace(Img, "/", "\"), &FileName, &Dir
-        (Dir = "" && Dir := BaseDir)
-        ObjShell := ComObject("Shell.Application")
-        ObjFolder := objShell.NameSpace(Dir), ObjFolderItem := ObjFolder.ParseName(FileName)
-        Scale := StrSplit(RegExReplace(ObjFolder.GetDetailsOf(ObjFolderItem, 31), ".(.+).", "$1"), " x ")
-        Try
-        ReturnObject := {W: Scale[1], H: Scale[2]}
-        Catch
-        ReturnObject := {W: 0, H: 0}
-        Return ReturnObject
+        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
     }
     
 }
