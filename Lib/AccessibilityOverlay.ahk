@@ -594,10 +594,11 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         BaseDir := A_WorkingDir
         If Not SubStr(BaseDir, 0, 1) = "\"
         BaseDir .= "\"
-        If SubStr(Img, 2, 1) = ":"
-        SplitPath StrReplace(Img, "/", "\"), &FileName, &Dir
+        Img := StrReplace(Img, "/", "\")
+        If SubStr(Img, 2, 1) = ":" Or SubStr(Img, 2, 1) = "\"
+        SplitPath Img, &FileName, &Dir
         Else
-        SplitPath BaseDir . StrReplace(Img, "/", "\"), &FileName, &Dir
+        SplitPath BaseDir . Img, &FileName, &Dir
         (Dir = "" && Dir := BaseDir)
         ObjShell := ComObject("Shell.Application")
         ObjFolder := objShell.NameSpace(Dir), ObjFolderItem := ObjFolder.ParseName(FileName)
