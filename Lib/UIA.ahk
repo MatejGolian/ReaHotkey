@@ -144,7 +144,7 @@ static Pattern := {Invoke: 10000, Selection: 10001, Value: 10002, RangeValue: 10
 ; enum Event Contains event types evoked by changes in the user interface. Listeners to these can be registered with CreateEventHandler.
 static Event := {ToolTipOpened:20000,ToolTipClosed:20001,StructureChanged:20002,MenuOpened:20003,AutomationPropertyChanged:20004,AutomationFocusChanged:20005,AsyncContentLoaded:20006,MenuClosed:20007,LayoutInvalidated:20008,Invoke_Invoked:20009,SelectionItem_ElementAddedToSelection:20010,SelectionItem_ElementRemovedFromSelection:20011,SelectionItem_ElementSelected:20012,Selection_Invalidated:20013,Text_TextSelectionChanged:20014,Text_TextChanged:20015,Window_WindowOpened:20016,Window_WindowClosed:20017,MenuModeStart:20018,MenuModeEnd:20019,InputReachedTarget:20020,InputReachedOtherElement:20021,InputDiscarded:20022,SystemAlert:20023,LiveRegionChanged:20024,HostedFragmentRootsInvalidated:20025,Drag_DragStart:20026,Drag_DragCancel:20027,Drag_DragComplete:20028,DropTarget_DragEnter:20029,DropTarget_DragLeave:20030,DropTarget_Dropped:20031,TextEdit_TextChanged:20032,TextEdit_ConversionTargetChanged:20033,Changes:20034,Notification:20035,ActiveTextPositionChanged:20036, base:this.Enumeration.Prototype}
 ; enum Property Contains property names and ids that expose properties on UI Automation elements
-static Property := {RuntimeId:30000,BoundingRectangle:30001,Location:30001,ProcessId:30002,ControlType:30003,Type:30003,LocalizedControlType:30004, LocalizedType:30004,Name:30005,AcceleratorKey:30006,AccessKey:30007,HasKeyboardFocus:30008,IsKeyboardFocusable:30009,IsEnabled:30010,AutomationId:30011,ClassName:30012,HelpText:30013,ClickablePoint:30014,Culture:30015,IsControlElement:30016,IsContentElement:30017,LabeledBy:30018,IsPassword:30019,NativeWindowHandle:30020,ItemType:30021,IsOffscreen:30022,Orientation:30023,FrameworkId:30024,IsRequiredForForm:30025,ItemStatus:30026,IsDockPatternAvailable:30027,IsExpandCollapsePatternAvailable:30028,IsGridItemPatternAvailable:30029,IsGridPatternAvailable:30030,IsInvokePatternAvailable:30031,IsMultipleViewPatternAvailable:30032,IsRangeValuePatternAvailable:30033,IsScrollPatternAvailable:30034,IsScrollItemPatternAvailable:30035,IsSelectionItemPatternAvailable:30036,IsSelectionPatternAvailable:30037,IsTablePatternAvailable:30038,IsTableItemPatternAvailable:30039,IsTextPatternAvailable:30040,IsTogglePatternAvailable:30041,IsTransformPatternAvailable:30042,IsValuePatternAvailable:30043,IsWindowPatternAvailable:30044,ValueValue:30045,Value:30045,ValueIsReadOnly:30046,RangeValueValue:30047,RangeValueIsReadOnly:30048,RangeValueMinimum:30049,RangeValueMaximum:30050,RangeValueLargeChange:30051,RangeValueSmallChange:30052,ScrollHorizontalScrollPercent:30053,ScrollHorizontalViewSize:30054,ScrollVerticalScrollPercent:30055,ScrollVerticalViewSize:30056,ScrollHorizontallyScrollable:30057,ScrollVerticallyScrollable:30058,SelectionSelection:30059,SelectionCanSelectMultiple:30060,SelectionIsSelectionRequired:30061,GridRowCount:30062,GridColumnCount:30063,GridItemRow:30064,GridItemColumn:30065,GridItemRowSpan:30066,GridItemColumnSpan:30067,GridItemContainingGrid:30068,DockDockPosition:30069,ExpandCollapseExpandCollapseState:30070,MultipleViewCurrentView:30071,MultipleViewSupportedViews:30072,WindowCanMaximize:30073,WindowCanMinimize:30074,WindowWindowVisualState:30075,WindowWindowInteractionState:30076,WindowIsModal:30077,WindowIsTopmost:30078,SelectionItemIsSelected:30079,SelectionItemSelectionContainer:30080,TableRowHeaders:30081,TableColumnHeaders:30082,TableRowOrColumnMajor:30083,TableItemRowHeaderItems:30084,TableItemColumnHeaderItems:30085,ToggleToggleState:30086,TransformCanMove:30087,TransformCanResize:30088,TransformCanRotate:30089,IsLegacyIAccessiblePatternAvailable:30090,LegacyIAccessibleChildId:30091,LegacyIAccessibleName:30092,LegacyIAccessibleValue:30093,LegacyIAccessibleDescription:30094,LegacyIAccessibleRole:30095,LegacyIAccessibleState:30096,LegacyIAccessibleHelp:30097,LegacyIAccessibleKeyboardShortcut:30098,LegacyIAccessibleSelection:30099,LegacyIAccessibleDefaultAction:30100,AriaRole:30101,AriaProperties:30102,IsDataValidForForm:30103,ControllerFor:30104,DescribedBy:30105,FlowsTo:30106,ProviderDescription:30107,IsItemContainerPatternAvailable:30108,IsVirtualizedItemPatternAvailable:30109,IsSynchronizedInputPatternAvailable:30110,OptimizeForVisualContent:30111,IsObjectModelPatternAvailable:30112,AnnotationAnnotationTypeId:30113,AnnotationAnnotationTypeName:30114,AnnotationAuthor:30115,AnnotationDateTime:30116,AnnotationTarget:30117,IsAnnotationPatternAvailable:30118,IsTextPattern2Available:30119,StylesStyleId:30120,StylesStyleName:30121,StylesFillColor:30122,StylesFillPatternStyle:30123,StylesShape:30124,StylesFillPatternColor:30125,StylesExtendedProperties:30126,IsStylesPatternAvailable:30127,IsSpreadsheetPatternAvailable:30128,SpreadsheetItemFormula:30129,SpreadsheetItemAnnotationObjects:30130,SpreadsheetItemAnnotationTypes:30131,IsSpreadsheetItemPatternAvailable:30132,Transform2CanZoom:30133,IsTransformPattern2Available:30134,LiveSetting:30135,IsTextChildPatternAvailable:30136,IsDragPatternAvailable:30137,DragIsGrabbed:30138,DragDropEffect:30139,DragDropEffects:30140,IsDropTargetPatternAvailable:30141,DropTargetDropTargetEffect:30142,DropTargetDropTargetEffects:30143,DragGrabbedItems:30144,Transform2ZoomLevel:30145,Transform2ZoomMinimum:30146,Transform2ZoomMaximum:30147,FlowsFrom:30148,IsTextEditPatternAvailable:30149,IsPeripheral:30150,IsCustomNavigationPatternAvailable:30151,PositionInSet:30152,SizeOfSet:30153,Level:30154,AnnotationTypes:30155,AnnotationObjects:30156,LandmarkType:30157,LocalizedLandmarkType:30158,FullDescription:30159,FillColor:30160,OutlineColor:30161,FillType:30162,VisualEffects:30163,OutlineThickness:30164,CenterPoint:30165,Rotation:30166,Size:30167,IsSelectionPattern2Available:30168,Selection2FirstSelectedItem:30169,Selection2LastSelectedItem:30170,Selection2CurrentSelectedItem:30171,Selection2ItemCount:30173,IsDialog:30174, base:this.Enumeration.Prototype}
+static Property := {RuntimeId:30000,Id:30000,BoundingRectangle:30001,Location:30001,ProcessId:30002,ControlType:30003,Type:30003,LocalizedControlType:30004, LocalizedType:30004,Name:30005,AcceleratorKey:30006,AccessKey:30007,HasKeyboardFocus:30008,IsKeyboardFocusable:30009,IsEnabled:30010,AutomationId:30011,ClassName:30012,HelpText:30013,ClickablePoint:30014,Culture:30015,IsControlElement:30016,IsContentElement:30017,LabeledBy:30018,IsPassword:30019,NativeWindowHandle:30020,ItemType:30021,IsOffscreen:30022,Orientation:30023,FrameworkId:30024,IsRequiredForForm:30025,ItemStatus:30026,IsDockPatternAvailable:30027,IsExpandCollapsePatternAvailable:30028,IsGridItemPatternAvailable:30029,IsGridPatternAvailable:30030,IsInvokePatternAvailable:30031,IsMultipleViewPatternAvailable:30032,IsRangeValuePatternAvailable:30033,IsScrollPatternAvailable:30034,IsScrollItemPatternAvailable:30035,IsSelectionItemPatternAvailable:30036,IsSelectionPatternAvailable:30037,IsTablePatternAvailable:30038,IsTableItemPatternAvailable:30039,IsTextPatternAvailable:30040,IsTogglePatternAvailable:30041,IsTransformPatternAvailable:30042,IsValuePatternAvailable:30043,IsWindowPatternAvailable:30044,ValueValue:30045,Value:30045,ValueIsReadOnly:30046,RangeValueValue:30047,RangeValueIsReadOnly:30048,RangeValueMinimum:30049,RangeValueMaximum:30050,RangeValueLargeChange:30051,RangeValueSmallChange:30052,ScrollHorizontalScrollPercent:30053,ScrollHorizontalViewSize:30054,ScrollVerticalScrollPercent:30055,ScrollVerticalViewSize:30056,ScrollHorizontallyScrollable:30057,ScrollVerticallyScrollable:30058,SelectionSelection:30059,SelectionCanSelectMultiple:30060,SelectionIsSelectionRequired:30061,GridRowCount:30062,GridColumnCount:30063,GridItemRow:30064,GridItemColumn:30065,GridItemRowSpan:30066,GridItemColumnSpan:30067,GridItemContainingGrid:30068,DockDockPosition:30069,ExpandCollapseExpandCollapseState:30070,MultipleViewCurrentView:30071,MultipleViewSupportedViews:30072,WindowCanMaximize:30073,WindowCanMinimize:30074,WindowWindowVisualState:30075,WindowWindowInteractionState:30076,WindowIsModal:30077,WindowIsTopmost:30078,SelectionItemIsSelected:30079,SelectionItemSelectionContainer:30080,TableRowHeaders:30081,TableColumnHeaders:30082,TableRowOrColumnMajor:30083,TableItemRowHeaderItems:30084,TableItemColumnHeaderItems:30085,ToggleToggleState:30086,TransformCanMove:30087,TransformCanResize:30088,TransformCanRotate:30089,IsLegacyIAccessiblePatternAvailable:30090,LegacyIAccessibleChildId:30091,LegacyIAccessibleName:30092,LegacyIAccessibleValue:30093,LegacyIAccessibleDescription:30094,LegacyIAccessibleRole:30095,LegacyIAccessibleState:30096,LegacyIAccessibleHelp:30097,LegacyIAccessibleKeyboardShortcut:30098,LegacyIAccessibleSelection:30099,LegacyIAccessibleDefaultAction:30100,AriaRole:30101,AriaProperties:30102,IsDataValidForForm:30103,ControllerFor:30104,DescribedBy:30105,FlowsTo:30106,ProviderDescription:30107,IsItemContainerPatternAvailable:30108,IsVirtualizedItemPatternAvailable:30109,IsSynchronizedInputPatternAvailable:30110,OptimizeForVisualContent:30111,IsObjectModelPatternAvailable:30112,AnnotationAnnotationTypeId:30113,AnnotationAnnotationTypeName:30114,AnnotationAuthor:30115,AnnotationDateTime:30116,AnnotationTarget:30117,IsAnnotationPatternAvailable:30118,IsTextPattern2Available:30119,StylesStyleId:30120,StylesStyleName:30121,StylesFillColor:30122,StylesFillPatternStyle:30123,StylesShape:30124,StylesFillPatternColor:30125,StylesExtendedProperties:30126,IsStylesPatternAvailable:30127,IsSpreadsheetPatternAvailable:30128,SpreadsheetItemFormula:30129,SpreadsheetItemAnnotationObjects:30130,SpreadsheetItemAnnotationTypes:30131,IsSpreadsheetItemPatternAvailable:30132,Transform2CanZoom:30133,IsTransformPattern2Available:30134,LiveSetting:30135,IsTextChildPatternAvailable:30136,IsDragPatternAvailable:30137,DragIsGrabbed:30138,DragDropEffect:30139,DragDropEffects:30140,IsDropTargetPatternAvailable:30141,DropTargetDropTargetEffect:30142,DropTargetDropTargetEffects:30143,DragGrabbedItems:30144,Transform2ZoomLevel:30145,Transform2ZoomMinimum:30146,Transform2ZoomMaximum:30147,FlowsFrom:30148,IsTextEditPatternAvailable:30149,IsPeripheral:30150,IsCustomNavigationPatternAvailable:30151,PositionInSet:30152,SizeOfSet:30153,Level:30154,AnnotationTypes:30155,AnnotationObjects:30156,LandmarkType:30157,LocalizedLandmarkType:30158,FullDescription:30159,FillColor:30160,OutlineColor:30161,FillType:30162,VisualEffects:30163,OutlineThickness:30164,CenterPoint:30165,Rotation:30166,Size:30167,IsSelectionPattern2Available:30168,Selection2FirstSelectedItem:30169,Selection2LastSelectedItem:30170,Selection2CurrentSelectedItem:30171,Selection2ItemCount:30173,IsDialog:30174, base:this.Enumeration.Prototype}
 ; enum PropertyVariantType Internally used enum, mapping property ids to variant types
 static PropertyVariantType := Map(30000,0x2003,30001,0x2005,30002,3,30003,3,30004,8,30005,8,30006,8,30007,8,30008,0xB,30009,0xB,30010,0xB,30011,8,30012,8,30013,8,30014,0x2005,30015,3,30016,0xB,30017,0xB,30018,0xD,30019,0xB,30020,3,30021,8,30022,0xB,30023,3,30024,8,30025,0xB,30026,8,30027,0xB,30028,0xB,30029,0xB,30030,0xB,30031,0xB,30032,0xB,30033,0xB,30034,0xB,30035,0xB,30036,0xB,30037,0xB,30038,0xB,30039,0xB,30040,0xB,30041,0xB,30042,0xB,30043,0xB,30044,0xB,30045,8,30046,0xB,30047,5,30048,0xB,30049,5,30050,5,30051,5,30052,5,30053,5,30054,5,30055,5,30056,5,30057,0xB,30058,0xB,30059,0x200D,30060,0xB,30061,0xB,30062,3,30063,3,30064,3,30065,3,30066,3,30067,3,30068,0xD,30069,3,30070,3,30071,3,30072,0x2003,30073,0xB,30074,0xB,30075,3,30076,3,30077,0xB,30078,0xB,30079,0xB,30080,0xD,30081,0x200D,30082,0x200D,30083,0x2003,30084,0x200D,30085,0x200D,30086,3,30087,0xB,30088,0xB,30089,0xB,30090,0xB,30091,3,30092,8,30093,8,30094,8,30095,3,30096,3,30097,8,30098,8,30099,0x200D,30100,8,30101,8,30102,8,30103,0xB,30104,0xD,30105,0xD,30106,0xD,30107,8,30108,0xB,30109,0xB,30110,0xB,30111,0xB,30112,0xB,30113,3,30114,8,30115,8,30116,8,30117,0xD,30118,0xB,30119,0xB,30120,3,30121,8,30122,3,30123,8,30124,8,30125,3,30126,8,30127,0xB,30128,0xB,30129,8,30130,0x200D,30131,0x2003,30132,0xB,30133,0xB,30134,0xB,30135,3,30136,0xB,30137,0xB,30138,0xB,30139,8,30140,0x2008,30141,0xB,30142,8,30143,0x2008,30144,0x200D,30145,5,30146,5,30147,5,30148,0x200D,30149,0xB,30150,0xB,30151,0xB,30152,3,30153,3,30154,3,30155,0x2003,30156,0x2003,30157,3,30158,8,30159,8,30160,3,30161,0x2003,30162,3,30163,3,30164,0x2005,30165,0x2005,30166,5,30167,0x2005,30168,0xB)
 static PropertyVariantTypeBSTR := Map(30004,8,30005,8,30006,8,30007,8,30011,8,30012,8,30013,8,30021,8,30024,8,30026,8,30045,8,30092,8,30093,8,30094,8,30097,8,30098,8,30100,8,30101,8,30102,8,30107,8,30114,8,30115,8,30116,8,30121,8,30123,8,30124,8,30126,8,30129,8,30139,8,30142,8,30158,8,30159,8)
@@ -429,7 +429,7 @@ static EncodePath(path) {
             "V" corresponds in Base64IntToChar to 31 which is Type Document, "E" is ScrollBar,
             "0" is Button, "q" is 50 which is the first index number, and positive indices start with 2.
     */
-    local out, i
+    local out, i, module
     static Base64IntToChar := Map(0,'0',1,'1',2,'2',3,'3',4,'4',5,'5',6,'6',7,'7',8,'8',9,'9',10,'A',11,'B',12,'C',13,'D',14,'E',15,'F',16,'G',17,'H',18,'I',19,'J',20,'K',21,'L',22,'M',23,'N',24,'O',25,'Q',26,'R',27,'S',28,'T',29,'U',30,'V',31,'W',32,'X',33,'Y',34,'Z',35,'a',36,'b',37,'c',38,'d',39,'e',40,'f',41,'g',42,'h',43,'i',44,'j',45,'k',46,'l',47,'m',48,'n',49,'o',50,'q',51,'r',52,'s',53,'t',54,'u',55,'v',56,'w',57,'x',58,'y',59,'z',60,'/',61,'?',62,'<',63,'>',64,'=')
     if !(path is Array)
         path := [path]
@@ -603,17 +603,17 @@ static FindElementFromArray(elementArray, condition, index:=1, startingElement:=
     if index = 0
         throw ValueError("Condition index cannot be 0", -1)
     if startingElement
-        startingElement := this.RuntimeIdToString(startingElement.GetRuntimeId())
+        startingElement := startingElement.RuntimeId
     if index > 0 {
         for element in elementArray {
-            if (startingElement ? (startingElement = this.RuntimeIdToString(element.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(element) && --index = 0
+            if (startingElement ? (startingElement = element.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(element) && --index = 0
                 return cacheRequest ? element.BuildUpdatedCache(cacheRequest) : element
         }
     } else {
         index := -index, len := elementArray.Length + 1
         Loop len-1 {
             element := elementArray[len-A_index]
-            if (startingElement ? (startingElement = this.RuntimeIdToString(element.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(element) && --index = 0
+            if (startingElement ? (startingElement = element.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(element) && --index = 0
                 return cacheRequest ? element.BuildUpdatedCache(cacheRequest) : element
         }
     }
@@ -799,6 +799,14 @@ static ElementFromChromium(winTitle:="", activateChromiumAccessibility:=500, cac
     if !IsSet(cHwnd) || !cHwnd
         throw TargetError("Chrome_RenderWidgetHostHWND1 content control was not found", -1)
     return this.ElementFromHandle(cHwnd, cacheRequest?, False)
+}
+/**
+ * Returns whether a window is a Chromium window or not
+ * @param winTitle A window title or other criteria identifying the target window. See AHK WinTitle.
+ */
+static WindowIsChromium(winTitle:="") {
+    try cHwnd := ControlGetHwnd("Chrome_RenderWidgetHostHWND1", winTitle)
+    return cHwnd ?? 0
 }
 /**
  * In some setups Chromium-based renderers don't react to UIA calls by enabling accessibility,
@@ -1142,12 +1150,12 @@ static CreateFalseCondition() {
 }
 
 ; Creates a condition that selects elements that have a property with the specified value.
-static CreatePropertyCondition(propertyId, value) {
+static CreatePropertyCondition(propertyId, value, variant?) {
     local v, newCondition
     if A_PtrSize = 4
-        v := this.ComVar(value, this.PropertyVariantType[propertyId], true), ComCall(23, this, "int", propertyId, "int64", NumGet(v, 'int64'), "int64", NumGet(v, 8, "int64"), "ptr*", &newCondition := 0)
+        v := this.ComVar(value, variant ?? this.PropertyVariantType[propertyId], true), ComCall(23, this, "int", propertyId, "int64", NumGet(v, 'int64'), "int64", NumGet(v, 8, "int64"), "ptr*", &newCondition := 0)
     else
-        ComCall(23, this, "int", propertyId, "ptr", this.ComVar(value, this.PropertyVariantType[propertyId], true), "ptr*", &newCondition := 0)
+        ComCall(23, this, "int", propertyId, "ptr", this.ComVar(value, variant ?? this.PropertyVariantType[propertyId], true), "ptr*", &newCondition := 0)
     if newCondition
         return this.IUIAutomationPropertyCondition(newCondition)
     throw Error("Creating property condition failed", -1)
@@ -1155,12 +1163,12 @@ static CreatePropertyCondition(propertyId, value) {
 
 ; Creates a condition that selects elements that have a property with the specified value, using optional flags.
 ; This is a raw wrapper, instead use CreateCondition and specify flags.
-static CreatePropertyConditionEx(propertyId, value, flags := 0) {
+static CreatePropertyConditionEx(propertyId, value, flags := 0, variant?) {
     local v, newCondition
     if A_PtrSize = 4
-        v := this.ComVar(value, this.PropertyVariantType[propertyId], true), ComCall(24, this, "int", propertyId, "int64", NumGet(v, 'int64'), "int64", NumGet(v, 8, "int64"), "int", flags, "ptr*", &newCondition := 0)
+        v := this.ComVar(value, variant ?? this.PropertyVariantType[propertyId], true), ComCall(24, this, "int", propertyId, "int64", NumGet(v, 'int64'), "int64", NumGet(v, 8, "int64"), "int", flags, "ptr*", &newCondition := 0)
     else
-        ComCall(24, this, "int", propertyId, "ptr", this.ComVar(value, this.PropertyVariantType[propertyId], true), "int", flags, "ptr*", &newCondition := 0)
+        ComCall(24, this, "int", propertyId, "ptr", this.ComVar(value, variant ?? this.PropertyVariantType[propertyId], true), "int", flags, "ptr*", &newCondition := 0)
     if newCondition
         return this.IUIAutomationPropertyCondition(newCondition)
     throw Error("Creating property condition failed", -1)
@@ -2076,7 +2084,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
         get {
             try {
                 local br
-                if br := this.BoundingRectangle && (br.b - br.t + br.r - br.l) == 0
+                if (br := this.BoundingRectangle) && (!(br.b - br.t) || !(br.r - br.l))
                     return 0
                 if this.IsOffscreen
                     return 0
@@ -2427,6 +2435,12 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
             throw Error(relativeTo "is not a valid CoordMode",-1)
     }
 
+    ; Gets the Id in string format (currently the RuntimeId). The exact implementation is subject to
+    ; change in the future, so use of RuntimeId might be preferred. It can't be used for element searches!
+    Id => (this.DefineProp("Id", {value:this.RuntimeId}), this.Id)
+    ; Gets the RuntimeId in string format
+    RuntimeId => (this.DefineProp("RuntimeId", {value:UIA.RuntimeIdToString(this.GetRuntimeId())}), this.RuntimeId)
+
     ; Get the parent window hwnd from the element
     GetWinId() {
         static cacheRequest := UIA.CreateCacheRequest(["NativeWindowHandle"],,1, UIA.AutomationElementMode.None), TW := UIA.CreateTreeWalker(UIA.CreateNotCondition(UIA.CreatePropertyCondition(UIA.Property.NativeWindowHandle, 0)))
@@ -2579,8 +2593,8 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
         static Guis := Map()
         if IsSet(showTime) && showTime = "clearall" {
             for key, prop in Guis {
+                SetTimer(prop.TimerObj, 0)
                 try prop.GuiObj.Destroy()
-                SetTimer(Guis[this.ptr].TimerObj, 0)
             }
             Guis := Map()
             return this
@@ -2599,8 +2613,8 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
         try loc := this.BoundingRectangle
         if !IsSet(loc) || !IsObject(loc)
             try loc := this.CachedBoundingRectangle
-            if !IsSet(loc) || !IsObject(loc)
-                return this
+        if !IsSet(loc) || !IsObject(loc)
+            return this
         
         if !Guis.Has(this.ptr) {
             Guis[this.ptr] := {}
@@ -2737,7 +2751,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
             if callback {
                 local found, child, TW := UIA.CreateTreeWalker(IUIAcondition)
                 if startingElement
-                    startingElement := UIA.RuntimeIdToString(startingElement.GetRuntimeId())
+                    startingElement := startingElement.RuntimeId
                 ; FirstToLast or LastToFirst
                 if order&2
                     nextElementFunc := UIA.IUIAutomationTreeWalker.Prototype.TryGetPreviousSiblingElement.Bind(TW), 
@@ -2833,7 +2847,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
         PreOrderRecursiveFind(el) {
             local found
             while (IsObject(el)) {
-                if (startingElement ? (startingElement = UIA.RuntimeIdToString(el.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(el) && --index = 0
+                if (startingElement ? (startingElement = el.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(el) && --index = 0
                     return el
                 else if scope&4 && (found := PreOrderRecursiveFind(nextChildFunc(el)))
                     return found
@@ -2848,7 +2862,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
                     return found
                 child := nextElementFunc(child)
             }
-            if (startingElement ? (startingElement = UIA.RuntimeIdToString(el.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(el) && --index = 0
+            if (startingElement ? (startingElement = el.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(el) && --index = 0
                 return el
         }
     }
@@ -2901,7 +2915,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
         else if index = 0
             throw ValueError("Condition index cannot be 0", -1)
         if startingElement
-            startingElement := UIA.RuntimeIdToString(startingElement.GetRuntimeId())
+            startingElement := startingElement.RuntimeId
         ; First handle PostOrder
         if order&1 {
             if scope > 1 {
@@ -2911,19 +2925,19 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
                         child := children[len-A_index]
                         if scope&4 && found := PostOrderLastToFirstRecursiveFind(child) ; Handles this child and its descendants
                             return found
-                        else if (startingElement ? (startingElement = UIA.RuntimeIdToString(child.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(child) && --index = 0
+                        else if (startingElement ? (startingElement = child.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(child) && --index = 0
                             return child
                     }
                 } else { ; FirstToLast
                     for child in this.CachedChildren {
                         if scope&4 && found := PostOrderFirstToLastRecursiveFind(child) ; Handles this child and its descendants
                             return found
-                        else if (startingElement ? (startingElement = UIA.RuntimeIdToString(child.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(child) && --index = 0
+                        else if (startingElement ? (startingElement = child.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(child) && --index = 0
                             return child
                     }
                 }
             }
-            if scope&1 && (startingElement ? (startingElement = UIA.RuntimeIdToString(this.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(this) && --index = 0
+            if scope&1 && (startingElement ? (startingElement = this.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(this) && --index = 0
                 return this
             throw TargetError("An element matching the condition was not found", -1)
         }
@@ -2938,7 +2952,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
         PreOrderFirstToLastRecursiveFind(el) {
             local child, found
             for child in el.CachedChildren {
-                if (startingElement ? (startingElement = UIA.RuntimeIdToString(child.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(child) && --index = 0
+                if (startingElement ? (startingElement = child.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(child) && --index = 0
                     return child
                 else if scope&4 && (found := PreOrderFirstToLastRecursiveFind(child))
                     return found
@@ -2948,7 +2962,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
             local children := el.CachedChildren, len := children.Length + 1, found, child
             Loop len-1 {
                 child := children[len-A_index]
-                if (startingElement ? (startingElement = UIA.RuntimeIdToString(child.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(child) && --index = 0
+                if (startingElement ? (startingElement = child.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(child) && --index = 0
                     return child
                 else if scope&4 && found := PreOrderLastToFirstRecursiveFind(child)
                     return found
@@ -2960,7 +2974,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
                 if (found := PostOrderFirstToLastRecursiveFind(child))
                     return found
             }
-            if (startingElement ? (startingElement = UIA.RuntimeIdToString(el.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(el) && --index = 0
+            if (startingElement ? (startingElement = el.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(el) && --index = 0
                 return el
         }
         PostOrderLastToFirstRecursiveFind(el) {
@@ -2969,7 +2983,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
                 if found := PostOrderLastToFirstRecursiveFind(children[len-A_index])
                     return found
             }
-            if (startingElement ? (startingElement = UIA.RuntimeIdToString(el.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(el) && --index = 0
+            if (startingElement ? (startingElement = el.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(el) && --index = 0
                 return el
         }
     }
@@ -2999,7 +3013,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
             if callback {
                 local foundElements := [], child, TW := UIA.CreateTreeWalker(IUIAcondition)
                 if startingElement
-                    startingElement := UIA.RuntimeIdToString(startingElement.GetRuntimeId())
+                    startingElement := startingElement.RuntimeId
                 ; FirstToLast or LastToFirst
                 if order&2
                     nextElementFunc := UIA.IUIAutomationTreeWalker.Prototype.TryGetPreviousSiblingElement.Bind(TW), 
@@ -3062,7 +3076,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
 
         PreOrderRecursiveFind(el) {
             while (IsObject(el)) {
-                if (startingElement ? (startingElement = UIA.RuntimeIdToString(el.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(el)
+                if (startingElement ? (startingElement = el.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(el)
                     foundElements.Push(cacheRequest ? el.BuildUpdatedCache(cacheRequest) : el)
                 if scope&4
                     PreOrderRecursiveFind(nextChildFunc(el))
@@ -3075,7 +3089,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
                 PostOrderRecursiveFind(child)
                 child := nextElementFunc(child)
             }
-            if (startingElement ? (startingElement = UIA.RuntimeIdToString(el.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(el)
+            if (startingElement ? (startingElement = el.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(el)
                 foundElements.Push(cacheRequest ? el.BuildUpdatedCache(cacheRequest) : el)
         }
     }
@@ -3098,7 +3112,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
         condition := UIA.IUIAutomationElement.__ExtractConditionNamedParameters(condition, &scope, &order, &startingElement,,, &callback)
         callback := callback || UIA.IUIAutomationElement.Prototype.ValidateCondition.Bind(unset, condition, true), scope := UIA.TypeValidation.TreeScope(scope), order := UIA.TypeValidation.TreeTraversalOptions(order), startingElement := UIA.TypeValidation.Element(startingElement)
         if startingElement
-            startingElement := UIA.RuntimeIdToString(startingElement.GetRuntimeId())
+            startingElement := startingElement.RuntimeId
         ; First handle PostOrder
         if order&1 {
             if scope > 1 {
@@ -3108,19 +3122,19 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
                         child := children[len-A_index]
                         if scope&4
                             PostOrderLastToFirstRecursiveFind(child) ; Handles this child and its descendants
-                        else if (startingElement ? (startingElement = UIA.RuntimeIdToString(child.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(child)
+                        else if (startingElement ? (startingElement = child.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(child)
                             foundElements.Push(child)
                     }
                 } else { ; FirstToLast
                     for child in this.CachedChildren {
                         if scope&4
                             PostOrderFirstToLastRecursiveFind(child) ; Handles this child and its descendants
-                        else if (startingElement ? (startingElement = UIA.RuntimeIdToString(child.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(child)
+                        else if (startingElement ? (startingElement = child.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(child)
                             foundElements.Push(child)
                     }
                 }
             }
-            if scope&1 && (startingElement ? (startingElement = UIA.RuntimeIdToString(this.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(this)
+            if scope&1 && (startingElement ? (startingElement = this.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(this)
                 foundElements.Push(this)
             return foundElements
         }
@@ -3133,7 +3147,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
         PreOrderFirstToLastRecursiveFind(el) {
             local child
             for child in el.CachedChildren {
-                if (startingElement ? (startingElement = UIA.RuntimeIdToString(child.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(child)
+                if (startingElement ? (startingElement = child.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(child)
                     foundElements.Push(child)
                 if scope&4
                     PreOrderFirstToLastRecursiveFind(child)
@@ -3143,7 +3157,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
             local children := el.CachedChildren, len := children.Length + 1, child
             Loop len-1 {
                 child := children[len-A_index]
-                if (startingElement ? (startingElement = UIA.RuntimeIdToString(child.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(child)
+                if (startingElement ? (startingElement = child.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(child)
                     foundElements.Push(child)
                 if scope&4
                     PreOrderLastToFirstRecursiveFind(child)
@@ -3153,7 +3167,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
             local child
             for child in el.CachedChildren
                 PostOrderFirstToLastRecursiveFind(child)
-            if (startingElement ? (startingElement = UIA.RuntimeIdToString(el.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(el)
+            if (startingElement ? (startingElement = el.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(el)
                 foundElements.Push(el)
         }
         PostOrderLastToFirstRecursiveFind(el) { ; called only if scope>=4
@@ -3161,7 +3175,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
             children := el.CachedChildren, len := children.Length + 1
             Loop len-1
                 PostOrderLastToFirstRecursiveFind(children[len-A_index])
-            if (startingElement ? (startingElement = UIA.RuntimeIdToString(el.GetRuntimeId()) ? !(startingElement := "") : 0) : 1) && callback(el)
+            if (startingElement ? (startingElement = el.RuntimeId ? !(startingElement := "") : 0) : 1) && callback(el)
                 foundElements.Push(el)
         }
     }
@@ -3488,9 +3502,9 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
         return el
         GetIndex(parent) {
             local elId, i, child
-            elId := UIA.RuntimeIdToString(el.GetRuntimeId())
+            elId := el.RuntimeId
             for i, child in parent.CachedChildren {
-                if UIA.RuntimeIdToString(child.GetRuntimeId()) = elId
+                if child.RuntimeId = elId
                     return i
             }
         }
@@ -3591,14 +3605,20 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
                     default:
                         if Type(v) = "Object"
                             v := v.OwnProps(), currentValue := currentValue is Array ? currentValue : currentValue.OwnProps()
-                        if not v is Array
-                            throw ValueError("Invalid PropertyId " k, -1)
-                        result := 1
-                        for i, val in v {
-                            try {
-                                if currentValue[i] == val
-                                    continue
-                            } catch {
+                        if not v is Array {
+                            if k = 30000 {
+                                local v := StrSplit(v, ".")
+                                for t in v
+                                    v[A_Index] := Integer("0x" t)
+                            } else
+                                throw ValueError("Invalid PropertyId " k, -1)
+                        }
+                        if result := currentValue.Length == v.Length {
+                            for i, val in v {
+                                try {
+                                    if currentValue[i] == val
+                                        continue
+                                }
                                 result := 0
                                 break
                             }
@@ -4064,6 +4084,8 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
             return (ComCall(51, this, "ptr*", &retVal := 0), UIA.BSTR(retVal))
         }
     }
+
+    CachedRuntimeId => (this.DefineProp("CachedRuntimeId", {value:this.RuntimeId}), this.CachedRuntimeId)
 
     ; Retrieves the cached ID of the process that hosts the element.
     CachedProcessId {
@@ -5125,24 +5147,23 @@ static CreateEventHandler(funcObj, handlerType:="") {
     if !HasMethod(funcObj, "Call")
         throw TypeError("Invalid function provided", -2)
 
-    buf := Buffer(A_PtrSize * 5)
+    buf := Buffer(A_PtrSize * 6)
     handler := UIA.IUIAutomation%handlerType%EventHandler()
     handler.Buffer := buf, handler.Ptr := buf.ptr
     handlerFunc := handler.Handle%(handlerType ? handlerType : "Automation")%Event
-    NumPut("ptr", buf.Ptr + A_PtrSize, "ptr", cQI:=CallbackCreate(QueryInterface, "F", 3), "ptr", cAF:=CallbackCreate(AddRef, "F", 1), "ptr", cR:=CallbackCreate(Release, "F", 1), "ptr", cF:=CallbackCreate(handlerFunc.Bind(handler), "F", handlerFunc.MaxParams-1), buf)
-    handler.DefineProp("__Delete", { call: (*) => (CallbackFree(cQI), CallbackFree(cAF), CallbackFree(cR), CallbackFree(cF)) })
+    NumPut("ptr", buf.Ptr + 2*A_PtrSize, "ptr", ObjPtr(handler), "ptr", cQI:=CallbackCreate(QueryInterface,, 3), "ptr", cAF:=CallbackCreate(AddRef,, 1), "ptr", cR:=CallbackCreate(Release,, 1), "ptr", cF:=CallbackCreate(handlerFunc.Bind(handler),, handlerFunc.MaxParams-1), buf)
+    ObjRelease(ObjPtr(handler)) ; CallbackCreate binds "handler" to itself, so decrease ref count by 1 to allow it to be released, then inside __Delete add it back before CallbackFree
+    handler.DefineProp("__Delete", { call: (this, *) => (ObjAddRef(ObjPtr(this)), CallbackFree(cQI), CallbackFree(cAF), CallbackFree(cR), CallbackFree(cF)) })
     handler.EventHandler := funcObj
 
     return handler
 
     QueryInterface(pSelf, pRIID, pObj){ ; Credit: https://github.com/neptercn/UIAutomation/blob/master/UIA.ahk
         DllCall("ole32\StringFromIID","ptr",pRIID,"wstr*",&str)
-        return (str="{00000000-0000-0000-C000-000000000046}")||(str="{146c3c17-f12e-4e22-8c27-f894b9b79c69}")||(str="{40cd37d4-c756-4b0c-8c6f-bddfeeb13b50}")||(str="{e81d1b4e-11c5-42f8-9754-e7036c79f054}")||(str="{c270f6b5-5c69-4290-9745-7a7f97169468}")||(str="{92FAA680-E704-4156-931A-E32D5BB38F3F}")||(str="{58EDCA55-2C3E-4980-B1B9-56C17F27A2A0}")||(str="{C7CB2637-E6C2-4D0C-85DE-4948C02175C7}")?NumPut("ptr",pSelf,pObj)*0:0x80004002 ; E_NOINTERFACE
+        return (str="{00000000-0000-0000-C000-000000000046}")||(str="{146c3c17-f12e-4e22-8c27-f894b9b79c69}")||(str="{40cd37d4-c756-4b0c-8c6f-bddfeeb13b50}")||(str="{e81d1b4e-11c5-42f8-9754-e7036c79f054}")||(str="{c270f6b5-5c69-4290-9745-7a7f97169468}")||(str="{92FAA680-E704-4156-931A-E32D5BB38F3F}")||(str="{58EDCA55-2C3E-4980-B1B9-56C17F27A2A0}")||(str="{C7CB2637-E6C2-4D0C-85DE-4948C02175C7}")?(NumPut("ptr",pSelf,pObj), ObjAddRef(pSelf))*0:0x80004002 ; E_NOINTERFACE
     }
-    AddRef(pSelf) {
-    }
-    Release(pSelf) {
-    }
+    AddRef(pSelf) => ObjAddRef(NumGet(pSelf, A_PtrSize, "ptr"))
+    Release(pSelf) => ObjRelease(NumGet(pSelf, A_PtrSize, "ptr"))
 }
 static CreateAutomationEventHandler(funcObj) => UIA.CreateEventHandler(funcObj)
 static CreateFocusChangedEventHandler(funcObj) => UIA.CreateEventHandler(funcObj, "FocusChanged")
@@ -6825,7 +6846,7 @@ class IUIAutomationTextRange extends UIA.IUIAutomationBase {
     ; Causes the text control to scroll until the text range is visible in the viewport.
     ; The method respects both hidden and visible text. If the text range is hidden, the text control will scroll only if the hidden text has an anchor in the viewport.
     ; A Microsoft UI Automation client can check text visibility by calling IUIAutomationTextRange,,GetAttributeValue with the attr parameter set to UIA_IsHiddenAttributeId.
-    ScrollIntoView(alignToTop) => ComCall(19, this, "int", alignToTop)
+    ScrollIntoView(alignToTop:=0) => ComCall(19, this, "int", alignToTop)
 
     ; Retrieves a collection of all embedded objects that fall within the text range.
     GetChildren() {
@@ -7371,17 +7392,18 @@ class Viewer {
     }
     ; Handles adding elements with actions to the macro Edit
     ButMacroAddElement_Click(GuiCtrlObj?, Info?) {
-        local match
+        local match, selectedElPath, winElVariable, winElText, processName
         if !this.Stored.HasOwnProp("CapturedElement")
             return
         processName := WinGetProcessName(this.Stored.mwId)
         winElVariable := RegExMatch(processName, "^[^ .\d]+", &match:="") ? RegExReplace(match[], "[^\p{L}0-9_#@$]") "El" : "winEl" ; Leaves only letters, numbers, and symbols _#@$ (allowed AHK characters)
-        winElText := winElVariable " := UIA.ElementFromHandle(`"" WinGetTitle(this.Stored.mwId) " ahk_exe " processName "`")"
+        winElText := winElVariable " := UIA.ElementFrom" (InStr(this.TextTVUIA.Text, "Chromium") ? "Chromium" : "Handle") "(`"" WinGetTitle(this.Stored.mwId) " ahk_exe " processName "`")"
         if !InStr(this.EditMacroScript.Text, winElText) || RegExMatch(this.EditMacroScript.Text, "\Q" winElText "\E(?=[\w\W]*\QwinEl := UIA.ElementFromHandle(`"ahk_exe\E)")
             this.EditMacroScript.Text := RTrim(this.EditMacroScript.Text, "`r`n`t ") "`r`n`r`n" winElText
         else
             this.EditMacroScript.Text := RTrim(this.EditMacroScript.Text, "`r`n`t ")
-        winElVariable := winElVariable (SubStr(this.SBMain.Text, 9) ? ".ElementFromPath(" SubStr(this.SBMain.Text, 9) ")" : "") (this.DDLMacroAction.Text ? "." this.DDLMacroAction.Text : "")
+        selectedElPath := SubStr(this.SBMain.Text, 9)
+        winElVariable := winElVariable (selectedElPath && StrLen(selectedElPath) > 2 ? ".ElementFromPath(" selectedElPath ")" : "") (this.DDLMacroAction.Text ? "." this.DDLMacroAction.Text : "")
         if InStr(this.DDLMacroAction.Text, "Dump")
             winElVariable := "MsgBox(" winElVariable ")"
         this.EditMacroScript.Text := this.EditMacroScript.Text "`r`n" RegExReplace(winElVariable, "(?<!``)`"", "`"") "`r`n"
@@ -7441,6 +7463,8 @@ class Viewer {
                     LVData[2] := "`"" RTrim(SubStr(LVData[2],8), ")") "`""
                 case "Location":
                     LVData[2] := "{" RegExReplace(LVData[2], "(\w:) (\d+)(?= )", "$1$2,") "}"
+                case "RuntimeId":
+                    LVData[2] := "`"" LVData[2] "`""
             }
             Property := -1
             try Property := UIA.Property.%LVData[1]%
@@ -7644,8 +7668,7 @@ class Viewer {
                     prop := prop ? prop : {l:0,t:0,r:0,b:0}
                     try this.LVProps.Add(, "Location", "x: " prop.l " y: " prop.t " w: " (prop.r - prop.l) " h: " (prop.b - prop.t))
                 case "RuntimeId":
-                    continue ; Don't display this for now, since it might confuse users into using it as a search property.
-                    ; try this.LVProps.Add(, v, UIA.RuntimeIdToString(prop)) ; Uncomment for debugging purposes
+                    try this.LVProps.Add(, v, prop)
                 default:
                     try this.LVProps.Add(, v, prop)
             }
@@ -7702,12 +7725,41 @@ class Viewer {
     }
     ; Permits copying the Dump of UIA element(s) to clipboard
     TVUIA_ContextMenu(GuiCtrlObj, Item, IsRightClick, X, Y) {
+        this.TVUIA.Modify(Item, "Select")
+        this.TVUIA_Click(GuiCtrlObj, Item)
         TVUIA_Menu := Menu()
         try Element := this.EditFilterTVUIA.Value ? this.Stored.FilteredTreeView[Item] : this.Stored.TreeView[Item]
         if IsSet(Element)
             TVUIA_Menu.Add("Copy to Clipboard", (*) => (ToolTip("Copied Dump() output to Clipboard!"), A_Clipboard := Element.CachedDump(), SetTimer((*) => ToolTip(), -3000)))
         TVUIA_Menu.Add("Copy Tree to Clipboard", (*) => (ToolTip("Copied DumpAll() output to Clipboard!"), A_Clipboard := UIA.ElementFromHandle(this.Stored.mwId, this.cacheRequest).DumpAll(), SetTimer((*) => ToolTip(), -3000)))
+        if IsSet(Element) {
+            TVUIA_Menu.Add("")
+            TVUIA_Menu.Add("Expand/Collapse All", this.TVUIA_ExpandCollapseAll.bind(this))
+            TVUIA_Menu.Add("Focus Element", this.TVUIA_FocusElement.bind(this))
+        }
         TVUIA_Menu.Show()
+    }
+    TVUIA_ExpandCollapseAll(GuiCtrlObj, Item, *) {
+        FocusId := this.TVUIA.GetSelection()
+        expandCollapse := this.TVUIA.IsCollapsed ? "Expand" : "-Expand"
+        this.TVUIA.Opt("-Redraw")
+        ItemID := 0
+        while ItemID := this.TVUIA.GetNext(ItemID, "Full")
+            this.TVUIA.Modify(ItemID, expandCollapse)
+        FocusId := this.TVUIA.isCollapsed ? FocusId : this.TVUIA.GetNext()
+        this.TVUIA.Modify(FocusId, "Select Vis")
+        this.TVUIA.Opt("+Redraw")
+        this.TVUIA.IsCollapsed := !this.TVUIA.IsCollapsed
+    }
+    TVUIA_FocusElement(GuiCtrlObj, *) {
+        FocusId := this.TVUIA.GetSelection()
+        ItemId := 0
+        this.TVUIA.Opt("-Redraw")
+        while ItemID := this.TVUIA.GetNext(ItemID, "Full") ; Collapse all elements.
+            this.TVUIA.Modify(ItemID, "-Expand")
+        this.TVUIA.Modify(FocusId, "Select Vis") ; Reselect the item, which also expands the parents
+        this.TVUIA.Opt("+Redraw")
+        this.TVUIA.IsCollapsed := true
     }
     ; Handles filtering the UIA elements inside the TreeView when the text hasn't been changed in 500ms.
     ; Sorts the results by UIA properties.
@@ -7754,6 +7806,7 @@ class Viewer {
     ConstructTreeView() {
         this.TVUIA.Delete()
         this.TVUIA.Add("Constructing Tree, please wait...")
+        this.TVUIA.IsCollapsed := false
         Sleep -1
         this.TVUIA.Opt("-Redraw")
         this.TVUIA.Delete()
