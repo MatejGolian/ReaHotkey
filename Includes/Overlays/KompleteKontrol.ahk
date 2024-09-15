@@ -148,7 +148,7 @@ Class KompleteKontrol {
         Thread "NoTimers"
         Static PreviousWinID := ""
         CurrentWinID := WinGetID("A")
-        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And DPI.ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png",, &ImgDPI) {
+        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And DPI.ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
             If PluginData Is Map And PluginData["Name"] = "Komplete Kontrol Save As Dialog"
             Return True
             Else
@@ -178,7 +178,7 @@ Class KompleteKontrol {
             PreviousWinID := CurrentWinID
             Return True
         }
-        If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And DPI.ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png",, &ImgDPI)
+        If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And DPI.ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png")
         Return True
         Return False
     }

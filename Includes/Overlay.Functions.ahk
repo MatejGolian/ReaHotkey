@@ -61,6 +61,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                 Catch {
                     PluginControlXCoordinate := 210
                     PluginControlYCoordinate := 53
+                    DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
                 }
                 OverlayMetadata["X1Coordinate"] := PluginControlXCoordinate + OverlayMetadata["X1Coordinate"]
                 OverlayMetadata["Y1Coordinate"] := PluginControlYCoordinate + OverlayMetadata["Y1Coordinate"]
@@ -73,7 +74,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             }
             If FileExist(OverlayMetadata["File"]) {
                 Try
-                ImageFound := DPI.ImageSearch(&FoundX, &FoundY, OverlayMetadata["X1Coordinate"], OverlayMetadata["Y1Coordinate"], OverlayMetadata["X2Coordinate"], OverlayMetadata["Y2Coordinate"], OverlayMetadata["File"],, &ImgDPI)
+                ImageFound := DPI.ImageSearch(&FoundX, &FoundY, OverlayMetadata["X1Coordinate"], OverlayMetadata["Y1Coordinate"], OverlayMetadata["X2Coordinate"], OverlayMetadata["Y2Coordinate"], OverlayMetadata["File"])
                 Catch
                 ImageFound := 0
                 If ImageFound = 1
@@ -167,7 +168,7 @@ ChooseStandaloneOverlay(*) {
 
 CompensateFocusedControlXCoordinate(ControlXCoordinate) {
     Try
-    ControlGetPos &FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A"
+    DPI.ControlGetPos(&FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A")
     Catch
     Return False
     ControlXCoordinate := FocusedControlXCoordinate + ControlXCoordinate
@@ -176,7 +177,7 @@ CompensateFocusedControlXCoordinate(ControlXCoordinate) {
 
 CompensateFocusedControlYCoordinate(ControlYCoordinate) {
     Try
-    ControlGetPos &FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A"
+    DPI.ControlGetPos(&FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A")
     Catch
     Return False
     ControlYCoordinate := FocusedControlYCoordinate + ControlYCoordinate
@@ -189,11 +190,12 @@ CompensateGraphicalHorizontalPluginSlider(PluginControl) {
     If Not HasProp(PluginControl, "OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
     Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+        DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
     }
     Catch {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
+        DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
     PluginControl.Start := PluginControlXCoordinate + PluginControl.OriginalStart
     PluginControl.End := PluginControlXCoordinate + PluginControl.OriginalEnd
@@ -206,11 +208,12 @@ CompensateGraphicalVerticalPluginSlider(PluginControl) {
     If Not HasProp(PluginControl, "OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
     Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+        DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
     }
     Catch {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
+        DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
     PluginControl.Start := PluginControlYCoordinate + PluginControl.OriginalStart
     PluginControl.End := PluginControlYCoordinate + PluginControl.OriginalEnd
@@ -228,6 +231,7 @@ CompensatePluginPointCoordinates(PluginControl) {
     Catch {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
+        DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
     PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
     PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
@@ -249,6 +253,7 @@ CompensatePluginRegionCoordinates(PluginControl) {
     Catch {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
+        DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
     PluginControl.X1Coordinate := PluginControlXCoordinate + PluginControl.OriginalX1Coordinate
     PluginControl.Y1Coordinate := PluginControlYCoordinate + PluginControl.OriginalY1Coordinate
@@ -264,6 +269,7 @@ CompensatePluginXCoordinate(PluginXCoordinate) {
     Catch {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
+        DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
     PluginXCoordinate := PluginControlXCoordinate + PluginXCoordinate
     Return PluginXCoordinate
@@ -276,6 +282,7 @@ CompensatePluginYCoordinate(PluginYCoordinate) {
     Catch {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
+        DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
     PluginYCoordinate := PluginControlYCoordinate + PluginYCoordinate
     Return PluginYCoordinate
@@ -409,7 +416,7 @@ FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2
     Y2Coordinate := WinHeight
     If FileExist(ImageFile) {
         Try
-        ImageFound := DPI.ImageSearch(&FoundX, &FoundY, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, ImageFile,, &ImgDPI)
+        ImageFound := DPI.ImageSearch(&FoundX, &FoundY, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, ImageFile)
         Catch
         ImageFound := 0
         If ImageFound = 1

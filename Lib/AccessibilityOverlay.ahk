@@ -921,7 +921,7 @@ Class FocusableGraphic Extends FocusableControl {
             GroupName := ""
             Try
             For Image In This.%GroupName%Images
-            If Not Image = "" And FileExist(Image) And Not InStr(FileExist(Image), "D") And DPI.ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, Image,, &ImgDPI) {
+            If Not Image = "" And FileExist(Image) And Not InStr(FileExist(Image), "D") And DPI.ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, Image) {
                 This.FoundImage := Image
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
@@ -1835,9 +1835,9 @@ Class GraphicalSlider Extends FocusableGraphic {
         }
         Drag() {
             If Coordinate = "X"
-            DPI.MouseClickDrag("Left", This.FoundXCoordinate, This.FoundYCoordinate, TargetXCoordinate, This.FoundYCoordinate, 0)
+            MouseClickDrag("Left", This.FoundXCoordinate, This.FoundYCoordinate, TargetXCoordinate, This.FoundYCoordinate, 0)
             Else
-            DPI.MouseClickDrag("Left", This.FoundXCoordinate, This.FoundYCoordinate, This.FoundYCoordinate, TargetYCoordinate, 0)
+            MouseClickDrag("Left", This.FoundXCoordinate, This.FoundYCoordinate, This.FoundYCoordinate, TargetYCoordinate, 0)
             Sleep 100
             This.CheckState()
         }
