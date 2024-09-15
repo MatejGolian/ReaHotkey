@@ -179,10 +179,10 @@ Class Kontakt7 {
             UIAElement := GetUIAElement("15,1,5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
-                ControlGetPos(&ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A")
+                DPI.ControlGetPos(&ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A")
                 Catch
                 Return
-                Click(ControlX + ControlWidth - 296, ControlY + 141)
+                DPI.Click(ControlX + ControlWidth - 296, ControlY + 141)
                 Sleep 10
                 Kontakt7.MoveToPluginSnapshotButton("Previous snapshot")
                 If CheckColor()
@@ -200,8 +200,8 @@ Class Kontakt7 {
             }
             AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in rack view.")
             CheckColor() {
-                MouseGetPos(&mouseXPosition, &mouseYPosition)
-                If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x424142" Or PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x545454"
+                DPI.MouseGetPos(&mouseXPosition, &mouseYPosition)
+                If DPI.PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x424142" Or DPI.PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x545454"
                 Return True
                 Return False
             }
@@ -320,7 +320,7 @@ Class Kontakt7 {
             UIAElement := GetUIAElement("15,1,5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
-                ControlGetPos(&ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A")
+                DPI.ControlGetPos(&ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A")
                 Catch
                 Return
                 If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
