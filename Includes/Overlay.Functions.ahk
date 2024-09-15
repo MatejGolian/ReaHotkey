@@ -14,7 +14,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
         WinWidth := ""
         WinHeight := ""
         Try {
-            WinGetPos ,, &WinWidth, &WinHeight, "A"
+            DPI.WinGetPos(,, &WinWidth, &WinHeight, "A")
         }
         Catch {
             WinWidth := A_ScreenWidth
@@ -56,7 +56,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             OverlayMetadata["Y2Coordinate"] := WinHeight
             If Type = "Plugin" And CompensatePluginCoordinates = True {
                 Try {
-                    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+                    DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
                 }
                 Catch {
                     PluginControlXCoordinate := 210
@@ -73,7 +73,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             }
             If FileExist(OverlayMetadata["File"]) {
                 Try
-                ImageFound := ImageSearch(&FoundX, &FoundY, OverlayMetadata["X1Coordinate"], OverlayMetadata["Y1Coordinate"], OverlayMetadata["X2Coordinate"], OverlayMetadata["Y2Coordinate"], OverlayMetadata["File"])
+                ImageFound := DPI.ImageSearch(&FoundX, &FoundY, OverlayMetadata["X1Coordinate"], OverlayMetadata["Y1Coordinate"], OverlayMetadata["X2Coordinate"], OverlayMetadata["Y2Coordinate"], OverlayMetadata["File"],, &ImgDPI)
                 Catch
                 ImageFound := 0
                 If ImageFound = 1
@@ -223,7 +223,7 @@ CompensatePluginPointCoordinates(PluginControl) {
     If Not HasProp(PluginControl, "OriginalYCoordinate")
     PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
     Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+        DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
     }
     Catch {
         PluginControlXCoordinate := 210
@@ -244,7 +244,7 @@ CompensatePluginRegionCoordinates(PluginControl) {
     If Not HasProp(PluginControl, "OriginalY2Coordinate")
     PluginControl.OriginalY2Coordinate := PluginControl.Y2Coordinate
     Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+        DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
     }
     Catch {
         PluginControlXCoordinate := 210
@@ -259,7 +259,7 @@ CompensatePluginRegionCoordinates(PluginControl) {
 
 CompensatePluginXCoordinate(PluginXCoordinate) {
     Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+        DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
     }
     Catch {
         PluginControlXCoordinate := 210
@@ -271,7 +271,7 @@ CompensatePluginXCoordinate(PluginXCoordinate) {
 
 CompensatePluginYCoordinate(PluginYCoordinate) {
     Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+        DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
     }
     Catch {
         PluginControlXCoordinate := 210
@@ -393,7 +393,7 @@ FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2
     WinWidth := ""
     WinHeight := ""
     Try {
-        WinGetPos ,, &WinWidth, &WinHeight, "A"
+        DPI.WinGetPos(,, &WinWidth, &WinHeight, "A")
     }
     Catch {
         WinWidth := A_ScreenWidth
@@ -409,7 +409,7 @@ FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2
     Y2Coordinate := WinHeight
     If FileExist(ImageFile) {
         Try
-        ImageFound := ImageSearch(&FoundX, &FoundY, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, ImageFile)
+        ImageFound := DPI.ImageSearch(&FoundX, &FoundY, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, ImageFile,, &ImgDPI)
         Catch
         ImageFound := 0
         If ImageFound = 1
