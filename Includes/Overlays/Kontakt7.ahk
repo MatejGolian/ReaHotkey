@@ -324,7 +324,7 @@ Class Kontakt7 {
                 Catch
                 Return
                 If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
-                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - (580 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (160 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlX + ControlWidth - (780 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (180 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))))
+                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - (580 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (160 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlX + ControlWidth - (580 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))) + (200 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (180 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))))
                     If Not OCRResult = ""
                     SnapshotButton.Label := "Snapshot " . OcrResult
                 }
