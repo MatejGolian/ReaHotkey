@@ -179,10 +179,10 @@ Class Kontakt7 {
             UIAElement := GetUIAElement("15,1,5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
-                DPI.ControlGetPos(&ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A")
+                ControlGetPos(&ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A")
                 Catch
                 Return
-                DPI.Click(ControlX + ControlWidth - 296, ControlY + 141)
+                Click(ControlX + ControlWidth - (296 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (141 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))))
                 Sleep 10
                 Kontakt7.MoveToPluginSnapshotButton("Previous snapshot")
                 If CheckColor()
@@ -200,8 +200,8 @@ Class Kontakt7 {
             }
             AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in rack view.")
             CheckColor() {
-                DPI.MouseGetPos(&mouseXPosition, &mouseYPosition)
-                If DPI.PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x424142" Or DPI.PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x545454"
+                MouseGetPos(&mouseXPosition, &mouseYPosition)
+                If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x424142" Or PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x444344" Or PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x545454"
                 Return True
                 Return False
             }
@@ -243,7 +243,7 @@ Class Kontakt7 {
     
     Class CloseMenu {
         Static Call(Type, ThisHotkey) {
-        Thread "NoTimers"
+            Thread "NoTimers"
             SendCommand := ""
             If ThisHotkey = "Escape"
             SendCommand := "{Escape}"
@@ -320,20 +320,20 @@ Class Kontakt7 {
             UIAElement := GetUIAElement("15,1,5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
-                DPI.ControlGetPos(&ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A")
+                ControlGetPos(&ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A")
                 Catch
                 Return
                 If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
-                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - 580, ControlY + 160, ControlX + ControlWidth - 580 + 200, ControlY + 180)
+                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - (580 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (160 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlX + ControlWidth - (780 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (180 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))))
                     If Not OCRResult = ""
                     SnapshotButton.Label := "Snapshot " . OcrResult
                 }
                 If InStr(Label, "Snapshot", True)
-                DPI.MouseMove(ControlX + ControlWidth - 580, ControlY + 169)
+                MouseMove(ControlX + ControlWidth - (580 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (169 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))))
                 Else If InStr(Label, "Previous snapshot", True)
-                DPI.MouseMove(ControlX + ControlWidth - 397, ControlY + 169)
+                MouseMove(ControlX + ControlWidth - (397 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (169 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))))
                 Else
-                DPI.MouseMove(ControlX + ControlWidth - 381, ControlY + 169)
+                MouseMove(ControlX + ControlWidth - (381 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (169 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))))
             }
         }
     }
