@@ -12,16 +12,17 @@ Class Sforzando {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "sforzando"
         Return True
-        UIAElement := GetUIAElement("15,1")
         Try
+        UIAElement := GetUIAElement("15,1")
         If not UIAElement = False And UIAElement.Name = "PlogueXMLGUI"
         Return True
+        Sleep 500
         Return False
     }
     
     Static InitPlugin(PluginInstance) {
         PluginHeader := AccessibilityOverlay()
-        PluginHeader.AddControl(Sforzando.OCRButton("Instrument", "(value not detected)", 100, 76, 340, 87,,, CompensatePluginRegionCoordinates,, CompensatePluginRegionCoordinates))
+        PluginHeader.AddControl(Sforzando.OCRButton("Instrument", "(value not detected)", 100, 76, 340, 87, , , CompensatePluginRegionCoordinates,, CompensatePluginRegionCoordinates))
         PluginHeader.AddControl(Sforzando.OCRButton("Polyphony", "(value not detected)", 480, 90, 540, 120,,, CompensatePluginRegionCoordinates,, CompensatePluginRegionCoordinates))
         PluginHeader.AddControl(Sforzando.OCRButton("Pitchbend range", "(value not detected)", 580, 90, 610, 110,,, CompensatePluginRegionCoordinates,, CompensatePluginRegionCoordinates))
         PluginInstance.Overlay.Label := "sforzando"
@@ -46,8 +47,8 @@ Class Sforzando {
         DefaultLabel := ""
         DefaultOCRString := ""
         
-        __New(Label, DefaultOCRString, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, FocusFunctions := "", ActivationFunctions := "") {
-            Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, FocusFunctions, ActivationFunctions)
+        __New(Label, DefaultOCRString, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+            Super.__New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
             This.Label := Label
             This.DefaultOCRString := DefaultOCRString
         }

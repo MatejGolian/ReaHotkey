@@ -206,13 +206,15 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If This.ChildControls.Length > 0 {
             This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
-            If Found = 0 Or Found = This.FocusableControlIDs.Length
+            If This.FocusableControlIDs.Length = 0
+            This.CurrentControlID := 0
+            Else If Found = 0 Or Found = This.FocusableControlIDs.Length
             This.CurrentControlID := This.FocusableControlIDs[1]
             Else
             This.CurrentControlID := This.FocusableControlIDs[Found + 1]
             CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
             This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
-            If CurrentControl.HasMethod("Focus")
+            If CurrentControl Is Object And CurrentControl.HasMethod("Focus")
             CurrentControl.Focus()
             This.SetCurrentControlID(This.CurrentControlID)
         }
@@ -222,13 +224,15 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If This.ChildControls.Length > 0 {
             This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
-            If Found <= 1
+            If This.FocusableControlIDs.Length = 0
+            This.CurrentControlID := 0
+            Else If Found <= 1
             This.CurrentControlID := This.FocusableControlIDs[This.FocusableControlIDs.Length]
             Else
             This.CurrentControlID := This.FocusableControlIDs[Found - 1]
             CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
             This.SetPreviousControlID(AccessibilityOverlay.CurrentControlID)
-            If CurrentControl.HasMethod("Focus")
+            If CurrentControl Is Object And CurrentControl.HasMethod("Focus")
             CurrentControl.Focus()
             This.SetCurrentControlID(This.CurrentControlID)
         }
