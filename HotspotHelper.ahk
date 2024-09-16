@@ -43,7 +43,7 @@ Enter::ClickHotspot()
 #^+C::CopyControlClassAndPositionToClipboard()
 #^+L::CopyControlListToClipboard()
 #^+H::CopyHotspotsToClipboard()
-#^+U::CopyPixelColourToClipboard()
+#^+U::CopyPixelColorToClipboard()
 #^+P::CopyProcessNameToClipboard()
 #^+W::CopyWindowClassToClipboard()
 #^+I::CopyWindowIDToClipboard()
@@ -60,6 +60,7 @@ Del::DeleteHotspot()
 #^+O::PerformOCR()
 #^+Q::Quit()
 F2::RenameHotspot()
+#^+E::SearchForColor()
 #^+R::SearchForImage(LastImage)
 #^+Z::ReportMousePosition()
 #^+M::RouteMouseToFocusedControl()
@@ -81,7 +82,7 @@ About(*) {
     If DialogOpen = 0 {
         DialogOpen := 1
         AboutBox := Gui(, "About " . AppName)
-        AboutBox.AddEdit("ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added individual hotspots.`n`nKeyboard Shortcuts`n`nHotspot Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+Del - Delete all hotspots`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nDel - Delete current hotspot`nF2 - Rename current hotspot`n`nWindow & Control Shortcuts:`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class and position of the currently focused control to clipboard`nWin+Ctrl+Shift+L - Copy control list to clipboard`nWin+Ctrl+Shift+F - Focus control`n`nMouse Shortcuts:`nWin+Ctrl+Shift+M - Route the mouse to the position of the currently focused control`nWin+Ctrl+Shift+U - Copy the pixel colour under the mouse to clipboard`nWin+Ctrl+Shift+X - Set mouse X position`nWin+Ctrl+Shift+Y - Set mouse Y position`nWin+Ctrl+Shift+Z - Report mouse position`nWin+Ctrl+Shift+Left - Move mouse leftf`nWin+Ctrl+Shift+Right - Move mouse right`nWin+Ctrl+Shift+Up - Move mouse up`nWin+Ctrl+Shift+Down - Move mouse down`n`nMiscellaneous Shortcuts:`nWin+Ctrl+Shift+Print Screen - Extract a region of the active window as an image`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+G - Generate hotspots from OCR`n`nWin+Ctrl+Shift+S - Search for image`nWin+Ctrl+Shift+R - Repeat search using last image`nWin+Ctrl+Shift+V - Open Clipboard Viewer`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nCtrl - Stop speech")
+        AboutBox.AddEdit("ReadOnly", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added individual hotspots.`n`nKeyboard Shortcuts`n`nHotspot Shortcuts:`nWin+Ctrl+Shift+Enter - Add hotspot`nWin+Ctrl+Shift+Del - Delete all hotspots`nWin+Ctrl+Shift+H - Copy hotspots to clipboard`nKeyboard Mode Shortcuts:`nWin+Ctrl+Shift+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nDel - Delete current hotspot`nF2 - Rename current hotspot`n`nWindow & Control Shortcuts:`nWin+Ctrl+Shift+I - Copy the ID of the active window to clipboard`nWin+Ctrl+Shift+P - Copy the process name of the active window to clipboard`nWin+Ctrl+Shift+T - Copy the title of the active window to clipboard`nWin+Ctrl+Shift+W - Copy the class of the active window to clipboard`nWin+Ctrl+Shift+C - Copy the class and position of the currently focused control to clipboard`nWin+Ctrl+Shift+L - Copy control list to clipboard`nWin+Ctrl+Shift+F - Focus control`n`nMouse Shortcuts:`nWin+Ctrl+Shift+M - Route the mouse to the position of the currently focused control`nWin+Ctrl+Shift+U - Copy the pixel color under the mouse to clipboard`nWin+Ctrl+Shift+X - Set mouse X position`nWin+Ctrl+Shift+Y - Set mouse Y position`nWin+Ctrl+Shift+Z - Report mouse position`nWin+Ctrl+Shift+Left - Move mouse leftf`nWin+Ctrl+Shift+Right - Move mouse right`nWin+Ctrl+Shift+Up - Move mouse up`nWin+Ctrl+Shift+Down - Move mouse down`n`nMiscellaneous Shortcuts:`nWin+Ctrl+Shift+Print Screen - Extract a region of the active window as an image`nWin+Ctrl+Shift+O - OCR the active window`nWin+Ctrl+Shift+G - Generate hotspots from OCR`nWin+Ctrl+Shift+E - Search for color`nWin+Ctrl+Shift+S - Search for image`nWin+Ctrl+Shift+R - Repeat search using last image`nWin+Ctrl+Shift+V - Open Clipboard Viewer`nWin+Ctrl+Shift+A - About the app`nWin+Ctrl+Shift+Q - Quit the app`nCtrl - Stop speech")
         AboutBox.AddButton("Default", "OK").OnEvent("Click", CloseAboutBox)
         AboutBox.OnEvent("Close", CloseAboutBox)
         AboutBox.OnEvent("Escape", CloseAboutBox)
@@ -268,16 +269,16 @@ CopyHotspotsToClipboard() {
     }
 }
 
-CopyPixelColourToClipboard() {
+CopyPixelColorToClipboard() {
     Global AppName, DialogOpen, MouseXPosition, MouseYPosition
     If DialogOpen = 0 {
         DialogOpen := 1
-        ConfirmationDialog := MsgBox("Copy the colour of the pixel currently under the mouse to clipboard?", AppName, 4)
+        ConfirmationDialog := MsgBox("Copy the color of the pixel currently under the mouse to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
             Sleep 1000
             MouseGetPos &mouseXPosition, &mouseYPosition
             A_Clipboard := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
-            Speak("Pixel colour copied to clipboard")
+            Speak("Pixel color copied to clipboard")
         }
         DialogOpen := 0
     }
@@ -671,6 +672,7 @@ ManageHotkeys() {
         Hotkey "#^+O", "On"
         Hotkey "#^+Q", "On"
         Hotkey "F2", "Off"
+        Hotkey "#^+E", "On"
         Hotkey "#^+R", "On"
         Hotkey "#^+Z", "On"
         Hotkey "#^+M", "On"
@@ -705,6 +707,7 @@ ManageHotkeys() {
         Hotkey "#^+O", "On"
         Hotkey "#^+Q", "On"
         Hotkey "F2", "On"
+        Hotkey "#^+E", "On"
         Hotkey "#^+R", "On"
         Hotkey "#^+Z", "On"
         Hotkey "#^+M", "On"
@@ -739,6 +742,7 @@ ManageHotkeys() {
         Hotkey "#^+O", "On"
         Hotkey "#^+Q", "On"
         Hotkey "F2", "Off"
+        Hotkey "#^+E", "On"
         Hotkey "#^+R", "On"
         Hotkey "#^+Z", "On"
         Hotkey "#^+M", "On"
@@ -1007,6 +1011,177 @@ RouteMouseToFocusedControl() {
             Speak("Mouse routed to X " . ControlX . " Y " . ControlY)
         }
         DialogOpen := 0
+    }
+}
+
+SearchForColor(*) {
+    Global AppName, DialogOpen
+    Static ColorValue := "", X1Coord := "", Y1Coord := "", X2Coord := "", Y2Coord := ""
+    Try {
+        WindowID := WinGetID("A")
+        WindowTitle := WinGetTitle("A")
+        WinGetPos ,, &XSize, &YSize, "A"
+    }
+    Catch {
+        Speak("Could not obtain required information")
+        Return
+    }
+    If DialogOpen = 0 {
+        DialogOpen := 1
+        SearchBox := Gui(, AppName . " Color Search {`"" . WindowTitle . "`"}")
+        SearchBox.AddText(, "Color to find:")
+        SearchBox.AddEdit("vColorValue YS", ColorValue).OnEvent("Change", ProcessInput)
+        SearchBox.AddText("Section XS", "X1 coordinate (between 0 and " . XSize . "):")
+        SearchBox.AddEdit("vX1Coord Number YS", X1Coord).OnEvent("Change", ProcessInput)
+        SearchBox.AddText("YS", "Y1 coordinate (between 0 and " . YSize . "):")
+        SearchBox.AddEdit("vY1Coord Number YS", Y1Coord).OnEvent("Change", ProcessInput)
+        SearchBox.AddButton("YS", "Select hotspot...").OnEvent("Click", ShowHotspotMenu1)
+        SearchBox.AddText("Section XS", "X2 coordinate (between 0 and " . XSize . "):")
+        SearchBox.AddEdit("vX2Coord Number YS", X2Coord).OnEvent("Change", ProcessInput)
+        SearchBox.AddText("YS", "Y2 coordinate (between 0 and " . YSize . "):")
+        SearchBox.AddEdit("vY2Coord Number YS", Y2Coord).OnEvent("Change", ProcessInput)
+        SearchBox.AddButton("YS", "Select hotspot...").OnEvent("Click", ShowHotspotMenu2)
+        SearchBox.AddButton("Disabled Section XS", "OK").OnEvent("Click", FindColor)
+        SearchBox.AddButton("Default YS", "Cancel").OnEvent("Click", CloseSearchBox)
+        CoordinateStatus := SearchBox.Add("StatusBar")
+        SearchBox.OnEvent("Close", CloseSearchBox)
+        SearchBox.OnEvent("Escape", CloseSearchBox)
+        SearchBox.Show()
+        FindColor(*) {
+            ControlValues := SearchBox.Submit(True)
+            ColorValue := ControlValues.ColorValue
+            X1Coord := ControlValues.X1Coord
+            Y1Coord := ControlValues.Y1Coord
+            X2Coord := ControlValues.X2Coord
+            Y2Coord := ControlValues.Y2Coord
+            X1 := ControlValues.X1Coord
+            Y1 := ControlValues.Y1Coord
+            X2 := ControlValues.X2Coord
+            Y2 := ControlValues.Y2Coord
+            If Not WinExist("ahk_id" . WindowID) {
+                MsgBox "Target window not found.", AppName
+                CloseSearchBox()
+            }
+            Else {
+                WinActivate("ahk_id" . WindowID)
+                WinWaitActive("ahk_id" . WindowID)
+                If Not ColorValue = "" And Not X1 = "" And Not Y1 = "" And Not X2 = "" And Not Y2 = "" {
+                    CloseSearchBox()
+                    Try {
+                        FocusedControlClass := ControlGetClassNN(ControlGetFocus("A"))
+                        ControlGetPos &ControlX, &ControlY,,, FocusedControlClass, "A"
+                    }
+                    Catch {
+                        FocusedControlClass := False
+                        ControlX := 0
+                        ControlY := 0
+                    }
+                    If Not ColorValue = "" {
+                        FoundX := ""
+                        FoundY := ""
+                        Try {
+                            WinWaitActive("A")
+                            Sleep 1000
+                            If PixelSearch(&FoundX, &FoundY, X1, Y1, X2, Y2, ColorValue) {
+                                ConfirmationDialog := MsgBox("Your color has been found at X " . FoundX . ", Y " . FoundY . ".`nCopy its coordinates to clipboard?", AppName, 4)
+                                If ConfirmationDialog == "Yes" {
+                                    ClipboardData := ""
+                                    ConfirmationDialog := MsgBox("Compensate for the position of the currently focused control?", AppName, 4)
+                                    If ConfirmationDialog == "Yes" {
+                                        Sleep 1000
+                                        If FocusedControlClass = False {
+                                            Speak("Focused control not found")
+                                        }
+                                        Else {
+                                            ClipboardData .= "Compensating for X " . ControlX . ", Y " . ControlY . "`r`n"
+                                            If FoundX Is Number
+                                            ColorXCoordinate := FoundX - ControlX
+                                            Else
+                                            ColorXCoordinate := ""
+                                            If FoundY Is Number
+                                            ColorYCoordinate := FoundY - ControlY
+                                            Else
+                                            ColorYCoordinate := ""
+                                            ClipboardData .= "`"" . ColorValue . "`", " . ColorXCoordinate . ", " . ColorYCoordinate
+                                        }
+                                    }
+                                    Else {
+                                        Sleep 1000
+                                        ColorXCoordinate := FoundX
+                                        ColorYCoordinate := FoundY
+                                        ClipboardData .= "`"" . ColorValue . "`", " . ColorXCoordinate . ", " . ColorYCoordinate
+                                    }
+                                    A_Clipboard := ClipboardData
+                                    Speak("Color coordinates copied to clipboard")
+                                }
+                                Sleep 500
+                                MouseMove FoundX, FoundY
+                            }
+                            Else {
+                                MsgBox "The color you specified has not been found on the screen.", AppName
+                            }
+                        }
+                    }
+                }
+                Else {
+                    MsgBox "An error occurred.`nPlease try again.", AppName
+                    SearchBox.Show()
+                }
+            }
+        }
+    }
+    HotspotMenuHandler(MenuItemLabel, MenuItemNumber, HotspotMenu) {
+        Global Hotspots
+        SearchBox["X" . HotspotMenu.Number . "Coord"].Value := Hotspots[MenuItemNumber - 1]["XCoordinate"]
+        SearchBox["Y" . HotspotMenu.Number . "Coord"].Value := Hotspots[MenuItemNumber - 1]["YCoordinate"]
+        ProcessInput()
+    }
+    ProcessInput()
+    CloseSearchBox(*) {
+        SearchBox.Destroy()
+        DialogOpen := 0
+    }
+    ProcessInput(*) {
+        ControlValues := SearchBox.Submit(False)
+        ColorValue := ControlValues.ColorValue
+        X1 := ControlValues.X1Coord
+        Y1 := ControlValues.Y1Coord
+        X2 := ControlValues.X2Coord
+        Y2 := ControlValues.Y2Coord
+        If Not ColorValue = "" And Not X1 = "" And Not Y1 = "" And Not X2 = "" And Not Y2 = "" And X1 >= 0 And X1 < X2 And X2 <= XSize And Y1 >= 0 And Y1 < Y2 And Y2 <= YSize {
+            SearchBox["OK"].Opt("+Default -Disabled")
+            SearchBox["Cancel"].Opt("-Default")
+        }
+        Else {
+            SearchBox["OK"].Opt("-Default +Disabled")
+            SearchBox["Cancel"].Opt("+Default")
+        }
+        If Not X1 = "" And Not Y1 = "" And Not X2 = "" And Not Y2 = "" And X1 >= 0 And X1 < X2 And X2 <= XSize And Y1 >= 0 And Y1 < Y2 And Y2 <= YSize
+        CoordinateStatus.SetText("`tRegion dimensions " . X2 - X1 . " × " . Y2 - Y1)
+        Else
+        CoordinateStatus.SetText("`tRegion dimensions unknown")
+    }
+    ShowHotspotMenu(MenuNumber) {
+        Global hotspots
+        HotspotMenu := Menu()
+        HotspotMenu.Number := MenuNumber
+        If Hotspots.Length = 0 {
+            HotspotMenu.Add("No hotspots", HotspotMenuHandler)
+            HotspotMenu.Disable("No hotspots")
+        }
+        Else {
+            HotspotMenu.Add("Select hotspot", HotspotMenuHandler)
+            HotspotMenu.Disable("Select hotspot")
+            For HotspotNumber, Hotspot In Hotspots
+            HotspotMenu.Add(HotspotNumber . ". " . Hotspot["Label"], HotspotMenuHandler)
+        }
+        HotspotMenu.Show()
+    }
+    ShowHotspotMenu1(*) {
+        ShowHotspotMenu(1)
+    }
+    ShowHotspotMenu2(*) {
+        ShowHotspotMenu(2)
     }
 }
 
