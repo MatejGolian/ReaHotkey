@@ -1114,7 +1114,7 @@ Class ActivatableNative Extends FocusableNative {
     ExecuteOnActivationPreSpeech() {
         Try {
             Found := ControlGetHwnd(This.NativeControlID, "A")
-            ControlClick Found, "A", "Left"
+            ControlClick Found,, "Left"
         }
     }
     
