@@ -3,6 +3,8 @@
 #MaxThreadsPerHotkey 1
 #SingleInstance Force
 #Warn All
+CoordMode "Caret", "Window"
+CoordMode "Menu", "Window"
 CoordMode "Mouse", "Window"
 CoordMode "Pixel", "Window"
 InstallKeybdHook
