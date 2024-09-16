@@ -171,7 +171,7 @@ CompensateFocusedControlXCoordinate(ControlXCoordinate) {
     DPI.ControlGetPos(&FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A")
     Catch
     Return False
-    ControlXCoordinate := FocusedControlXCoordinate + ControlXCoordinate
+    ControlXCoordinate := FocusedControlXCoordinate + (ControlXCoordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
     Return ControlXCoordinate
 }
 
@@ -180,7 +180,7 @@ CompensateFocusedControlYCoordinate(ControlYCoordinate) {
     DPI.ControlGetPos(&FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A")
     Catch
     Return False
-    ControlYCoordinate := FocusedControlYCoordinate + ControlYCoordinate
+    ControlYCoordinate := FocusedControlYCoordinate + (ControlYCoordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
     Return ControlYCoordinate
 }
 
@@ -197,8 +197,8 @@ CompensateGraphicalHorizontalPluginSlider(PluginControl) {
         PluginControlYCoordinate := 53
         DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
-    PluginControl.Start := PluginControlXCoordinate + PluginControl.OriginalStart
-    PluginControl.End := PluginControlXCoordinate + PluginControl.OriginalEnd
+    PluginControl.Start := PluginControlXCoordinate + (PluginControl.OriginalStart / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    PluginControl.End := PluginControlXCoordinate + (PluginControl.OriginalEnd / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
     Return PluginControl
 }
 
@@ -215,8 +215,8 @@ CompensateGraphicalVerticalPluginSlider(PluginControl) {
         PluginControlYCoordinate := 53
         DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
-    PluginControl.Start := PluginControlYCoordinate + PluginControl.OriginalStart
-    PluginControl.End := PluginControlYCoordinate + PluginControl.OriginalEnd
+    PluginControl.Start := PluginControlYCoordinate + (PluginControl.OriginalStart / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    PluginControl.End := PluginControlYCoordinate + (PluginControl.OriginalEnd / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
     Return PluginControl
 }
 
@@ -233,8 +233,8 @@ CompensatePluginPointCoordinates(PluginControl) {
         PluginControlYCoordinate := 53
         DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
-    PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
-    PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
+    PluginControl.XCoordinate := PluginControlXCoordinate + (PluginControl.OriginalXCoordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    PluginControl.YCoordinate := PluginControlYCoordinate + (PluginControl.OriginalYCoordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
     Return PluginControl
 }
 
@@ -255,10 +255,10 @@ CompensatePluginRegionCoordinates(PluginControl) {
         PluginControlYCoordinate := 53
         DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
-    PluginControl.X1Coordinate := PluginControlXCoordinate + PluginControl.OriginalX1Coordinate
-    PluginControl.Y1Coordinate := PluginControlYCoordinate + PluginControl.OriginalY1Coordinate
-    PluginControl.X2Coordinate := PluginControlXCoordinate + PluginControl.OriginalX2Coordinate
-    PluginControl.Y2Coordinate := PluginControlYCoordinate + PluginControl.OriginalY2Coordinate
+    PluginControl.X1Coordinate := PluginControlXCoordinate + (PluginControl.OriginalX1Coordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    PluginControl.Y1Coordinate := PluginControlYCoordinate + (PluginControl.OriginalY1Coordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    PluginControl.X2Coordinate := PluginControlXCoordinate + (PluginControl.OriginalX2Coordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    PluginControl.Y2Coordinate := PluginControlYCoordinate + (PluginControl.OriginalY2Coordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
     Return PluginControl
 }
 
@@ -271,7 +271,7 @@ CompensatePluginXCoordinate(PluginXCoordinate) {
         PluginControlYCoordinate := 53
         DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
-    PluginXCoordinate := PluginControlXCoordinate + PluginXCoordinate
+    PluginXCoordinate := PluginControlXCoordinate + (PluginXCoordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
     Return PluginXCoordinate
 }
 
@@ -284,7 +284,7 @@ CompensatePluginYCoordinate(PluginYCoordinate) {
         PluginControlYCoordinate := 53
         DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
-    PluginYCoordinate := PluginControlYCoordinate + PluginYCoordinate
+    PluginYCoordinate := PluginControlYCoordinate + (PluginYCoordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
     Return PluginYCoordinate
 }
 
