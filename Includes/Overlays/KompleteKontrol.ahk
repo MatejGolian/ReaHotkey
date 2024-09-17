@@ -148,7 +148,8 @@ Class KompleteKontrol {
         Thread "NoTimers"
         Static PreviousWinID := ""
         CurrentWinID := WinGetID("A")
-        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And DPI.ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
+        ImgDPI := ""
+        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And DPI.ImageSearch(&FoundX, &FoundY, 130 / DPI.Standard * DPI.GetForWindow("A"), 14 / DPI.Standard * DPI.GetForWindow("A"), 230 / DPI.Standard * DPI.GetForWindow("A"), 31 / DPI.Standard * DPI.GetForWindow("A"), "Images/KontaktKompleteKontrol/SaveKKPreset.png",, &ImgDPI) {
             If PluginData Is Map And PluginData["Name"] = "Komplete Kontrol Save As Dialog"
             Return True
             Else
@@ -171,6 +172,7 @@ Class KompleteKontrol {
         Thread "NoTimers"
         Static PreviousWinID := ""
         CurrentWinID := WinGetID("A")
+        ImgDPI := ""
         StandaloneInstance := Standalone.GetInstance(CurrentWinID)
         If StandaloneInstance Is Standalone And StandaloneInstance.Name = "Komplete Kontrol Save As Dialog" {
             If Not PreviousWinID = CurrentWinID
@@ -178,7 +180,7 @@ Class KompleteKontrol {
             PreviousWinID := CurrentWinID
             Return True
         }
-        If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And DPI.ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png")
+        If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And DPI.ImageSearch(&FoundX, &FoundY, 130 / DPI.Standard * DPI.GetForWindow("A"), 14 / DPI.Standard * DPI.GetForWindow("A"), 230 / DPI.Standard * DPI.GetForWindow("A"), 31 / DPI.Standard * DPI.GetForWindow("A"), "Images/KontaktKompleteKontrol/SaveKKPreset.png",, &ImgDPI)
         Return True
         Return False
     }

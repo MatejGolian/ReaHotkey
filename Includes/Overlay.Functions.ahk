@@ -14,7 +14,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
         WinWidth := ""
         WinHeight := ""
         Try {
-            DPI.WinGetPos(,, &WinWidth, &WinHeight, "A")
+            WinGetPos(,, &WinWidth, &WinHeight, "A")
         }
         Catch {
             WinWidth := A_ScreenWidth
@@ -56,7 +56,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             OverlayMetadata["Y2Coordinate"] := WinHeight
             If Type = "Plugin" And CompensatePluginCoordinates = True {
                 Try {
-                    DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
+                    ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
                 }
                 Catch {
                     PluginControlXCoordinate := 210
@@ -168,19 +168,19 @@ ChooseStandaloneOverlay(*) {
 
 CompensateFocusedControlXCoordinate(ControlXCoordinate) {
     Try
-    DPI.ControlGetPos(&FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A")
+    ControlGetPos(&FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A")
     Catch
     Return False
-    ControlXCoordinate := FocusedControlXCoordinate + (ControlXCoordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    ControlXCoordinate := FocusedControlXCoordinate + (ControlXCoordinate / DPI.Standard * DPI.GetForWindow("A"))
     Return ControlXCoordinate
 }
 
 CompensateFocusedControlYCoordinate(ControlYCoordinate) {
     Try
-    DPI.ControlGetPos(&FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A")
+    ControlGetPos(&FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A")
     Catch
     Return False
-    ControlYCoordinate := FocusedControlYCoordinate + (ControlYCoordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    ControlYCoordinate := FocusedControlYCoordinate + (ControlYCoordinate / DPI.Standard * DPI.GetForWindow("A"))
     Return ControlYCoordinate
 }
 
@@ -190,15 +190,15 @@ CompensateGraphicalHorizontalPluginSlider(PluginControl) {
     If Not HasProp(PluginControl, "OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
     Try {
-        DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
+        ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
     }
     Catch {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
         DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
-    PluginControl.Start := PluginControlXCoordinate + (PluginControl.OriginalStart / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
-    PluginControl.End := PluginControlXCoordinate + (PluginControl.OriginalEnd / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    PluginControl.Start := PluginControlXCoordinate + (PluginControl.OriginalStart / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControl.End := PluginControlXCoordinate + (PluginControl.OriginalEnd / DPI.Standard * DPI.GetForWindow("A"))
     Return PluginControl
 }
 
@@ -208,15 +208,15 @@ CompensateGraphicalVerticalPluginSlider(PluginControl) {
     If Not HasProp(PluginControl, "OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
     Try {
-        DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
+        ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
     }
     Catch {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
         DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
-    PluginControl.Start := PluginControlYCoordinate + (PluginControl.OriginalStart / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
-    PluginControl.End := PluginControlYCoordinate + (PluginControl.OriginalEnd / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    PluginControl.Start := PluginControlYCoordinate + (PluginControl.OriginalStart / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControl.End := PluginControlYCoordinate + (PluginControl.OriginalEnd / DPI.Standard * DPI.GetForWindow("A"))
     Return PluginControl
 }
 
@@ -226,15 +226,15 @@ CompensatePluginPointCoordinates(PluginControl) {
     If Not HasProp(PluginControl, "OriginalYCoordinate")
     PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
     Try {
-        DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
+        ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
     }
     Catch {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
         DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
-    PluginControl.XCoordinate := PluginControlXCoordinate + (PluginControl.OriginalXCoordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
-    PluginControl.YCoordinate := PluginControlYCoordinate + (PluginControl.OriginalYCoordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    PluginControl.XCoordinate := PluginControlXCoordinate + (PluginControl.OriginalXCoordinate / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControl.YCoordinate := PluginControlYCoordinate + (PluginControl.OriginalYCoordinate / DPI.Standard * DPI.GetForWindow("A"))
     Return PluginControl
 }
 
@@ -248,43 +248,43 @@ CompensatePluginRegionCoordinates(PluginControl) {
     If Not HasProp(PluginControl, "OriginalY2Coordinate")
     PluginControl.OriginalY2Coordinate := PluginControl.Y2Coordinate
     Try {
-        DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
+        ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
     }
     Catch {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
         DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
-    PluginControl.X1Coordinate := PluginControlXCoordinate + (PluginControl.OriginalX1Coordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
-    PluginControl.Y1Coordinate := PluginControlYCoordinate + (PluginControl.OriginalY1Coordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
-    PluginControl.X2Coordinate := PluginControlXCoordinate + (PluginControl.OriginalX2Coordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
-    PluginControl.Y2Coordinate := PluginControlYCoordinate + (PluginControl.OriginalY2Coordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    PluginControl.X1Coordinate := PluginControlXCoordinate + (PluginControl.OriginalX1Coordinate / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControl.Y1Coordinate := PluginControlYCoordinate + (PluginControl.OriginalY1Coordinate / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControl.X2Coordinate := PluginControlXCoordinate + (PluginControl.OriginalX2Coordinate / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControl.Y2Coordinate := PluginControlYCoordinate + (PluginControl.OriginalY2Coordinate / DPI.Standard * DPI.GetForWindow("A"))
     Return PluginControl
 }
 
 CompensatePluginXCoordinate(PluginXCoordinate) {
     Try {
-        DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
+        ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
     }
     Catch {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
         DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
-    PluginXCoordinate := PluginControlXCoordinate + (PluginXCoordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    PluginXCoordinate := PluginControlXCoordinate + (PluginXCoordinate / DPI.Standard * DPI.GetForWindow("A"))
     Return PluginXCoordinate
 }
 
 CompensatePluginYCoordinate(PluginYCoordinate) {
     Try {
-        DPI.ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
+        ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
     }
     Catch {
         PluginControlXCoordinate := 210
         PluginControlYCoordinate := 53
         DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
     }
-    PluginYCoordinate := PluginControlYCoordinate + (PluginYCoordinate / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A")))
+    PluginYCoordinate := PluginControlYCoordinate + (PluginYCoordinate / DPI.Standard * DPI.GetForWindow("A"))
     Return PluginYCoordinate
 }
 
@@ -396,13 +396,22 @@ InArray(Needle, Haystack) {
 
 FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
     FoundX := ""
+    ImgDPI := ""
     FoundY := ""
     WinWidth := ""
     WinHeight := ""
     Try {
-        DPI.WinGetPos(,, &WinWidth, &WinHeight, "A")
+        X1Coordinate := X1Coordinate / DPI.Standard * DPI.GetForWindow("A")
+        Y1Coordinate := Y1Coordinate / DPI.Standard * DPI.GetForWindow("A")
+        X2Coordinate := X2Coordinate / DPI.Standard * DPI.GetForWindow("A")
+        Y2Coordinate := Y2Coordinate / DPI.Standard * DPI.GetForWindow("A")
+        WinGetPos(,, &WinWidth, &WinHeight, "A")
     }
     Catch {
+        X1Coordinate := -1
+        Y1Coordinate := -1
+        X2Coordinate := -1
+        Y2Coordinate := -1
         WinWidth := A_ScreenWidth
         WinHeight := A_ScreenHeight
     }
@@ -416,7 +425,7 @@ FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2
     Y2Coordinate := WinHeight
     If FileExist(ImageFile) {
         Try
-        ImageFound := DPI.ImageSearch(&FoundX, &FoundY, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, ImageFile)
+        ImageFound := DPI.ImageSearch(&FoundX, &FoundY, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, ImageFile,, &ImgDPI)
         Catch
         ImageFound := 0
         If ImageFound = 1

@@ -918,6 +918,7 @@ Class FocusableGraphic Extends FocusableControl {
         FoundImage := False
         FoundXCoordinate := False
         FoundYCoordinate := False
+        ImgDPI := False
         If Groups.Count = 0
         Groups := Map(1, 1)
         For GroupName, ReturnState In Groups {
@@ -925,7 +926,7 @@ Class FocusableGraphic Extends FocusableControl {
             GroupName := ""
             Try
             For Image In This.%GroupName%Images
-            If Not Image = "" And FileExist(Image) And Not InStr(FileExist(Image), "D") And DPI.ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, Image) {
+            If Not Image = "" And FileExist(Image) And Not InStr(FileExist(Image), "D") And DPI.ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, Image,, &ImgDPI) {
                 This.FoundImage := Image
                 This.FoundXCoordinate := FoundXCoordinate
                 This.FoundYCoordinate := FoundYCoordinate
@@ -1118,7 +1119,7 @@ Class ActivatableNative Extends FocusableNative {
     ExecuteOnActivationPreSpeech() {
         Try {
             Found := ControlGetHwnd(This.NativeControlID, "A")
-            DPI.ControlClick(Found,, "Left")
+            ControlClick Found,, "Left"
         }
     }
     
@@ -1666,12 +1667,12 @@ Class GraphicalButton Extends  ActivatableGraphic {
     }
     
     ExecuteOnActivationPreSpeech() {
-        DPI.Click(This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2))
+        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
         Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
-        DPI.MouseMove(This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2))
+        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
     }
     
 }
@@ -1696,12 +1697,12 @@ Class GraphicalToggleButton Extends  ActivatableGraphic {
     }
     
     ExecuteOnActivationPreSpeech() {
-        DPI.Click(This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2))
+        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
         Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
-        DPI.MouseMove(This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2))
+        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
     }
     
 }
@@ -1726,12 +1727,12 @@ Class GraphicalCheckbox Extends ActivatableGraphic {
     }
     
     ExecuteOnActivationPreSpeech() {
-        DPI.Click(This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2))
+        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
         Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
-        DPI.MouseMove(This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2))
+        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
     }
     
     GetState() {
@@ -1839,9 +1840,9 @@ Class GraphicalSlider Extends FocusableGraphic {
         }
         Drag() {
             If Coordinate = "X"
-            MouseClickDrag("Left", This.FoundXCoordinate, This.FoundYCoordinate, TargetXCoordinate, This.FoundYCoordinate, 0)
+            MouseClickDrag "Left", This.FoundXCoordinate, This.FoundYCoordinate, TargetXCoordinate, This.FoundYCoordinate, 0
             Else
-            MouseClickDrag("Left", This.FoundXCoordinate, This.FoundYCoordinate, This.FoundYCoordinate, TargetYCoordinate, 0)
+            MouseClickDrag "Left", This.FoundXCoordinate, This.FoundYCoordinate, This.FoundYCoordinate, TargetYCoordinate, 0
             Sleep 100
             This.CheckState()
         }
@@ -1900,6 +1901,7 @@ Class GraphicalTab Extends Tab {
     CheckState() {
         FoundXCoordinate := False
         FoundYCoordinate := False
+        ImgDPI := False
         Try
         For Image In This.Images
         If Not Image = "" And FileExist(Image) And Not InStr(FileExist(Image), "D") And DPI.ImageSearch(&FoundXCoordinate, &FoundYCoordinate, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, Image,, &ImgDPI) {
@@ -1922,7 +1924,7 @@ Class GraphicalTab Extends Tab {
     }
     
     ExecuteOnFocusPreSpeech() {
-        DPI.Click(This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2))
+        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
     }
     
 }
@@ -1939,11 +1941,11 @@ Class HotspotButton Extends Button {
     }
     
     ExecuteOnActivationPreSpeech() {
-        DPI.Click(This.XCoordinate, This.YCoordinate)
+        Click This.XCoordinate, This.YCoordinate
     }
     
     ExecuteOnFocusPreSpeech() {
-        DPI.MouseMove(This.XCoordinate, This.YCoordinate)
+        MouseMove This.XCoordinate, This.YCoordinate
     }
     
 }
@@ -1977,7 +1979,7 @@ Class HotspotToggleButton Extends ToggleButton {
     
     CheckState() {
         Sleep 100
-        CurrentColor := DPI.PixelGetColor(This.XCoordinate, This.YCoordinate)
+        CurrentColor := PixelGetColor(This.XCoordinate, This.YCoordinate)
         For OnColor In This.OnColors
         If CurrentColor = OnColor {
             This.State := 1
@@ -1993,11 +1995,11 @@ Class HotspotToggleButton Extends ToggleButton {
     }
     
     ExecuteOnActivationPreSpeech() {
-        DPI.Click(This.XCoordinate, This.YCoordinate)
+        Click This.XCoordinate, This.YCoordinate
     }
     
     ExecuteOnFocusPreSpeech() {
-        DPI.MouseMove(This.XCoordinate, This.YCoordinate)
+        MouseMove This.XCoordinate, This.YCoordinate
     }
     
 }
@@ -2031,7 +2033,7 @@ Class HotspotCheckbox Extends Checkbox {
     
     CheckState() {
         Sleep 100
-        CurrentColor := DPI.PixelGetColor(This.XCoordinate, This.YCoordinate)
+        CurrentColor := PixelGetColor(This.XCoordinate, This.YCoordinate)
         For CheckedColor In This.CheckedColors
         If CurrentColor = CheckedColor {
             This.Checked := 1
@@ -2047,11 +2049,11 @@ Class HotspotCheckbox Extends Checkbox {
     }
     
     ExecuteOnActivationPreSpeech() {
-        DPI.Click(This.XCoordinate, This.YCoordinate)
+        Click This.XCoordinate, This.YCoordinate
     }
     
     ExecuteOnFocusPreSpeech() {
-        DPI.MouseMove(This.XCoordinate, This.YCoordinate)
+        MouseMove This.XCoordinate, This.YCoordinate
     }
     
 }
@@ -2068,7 +2070,7 @@ Class HotspotComboBox Extends ComboBox {
     }
     
     ExecuteOnFocusPreSpeech() {
-        DPI.Click(This.XCoordinate, This.YCoordinate)
+        Click This.XCoordinate, This.YCoordinate
     }
     
 }
@@ -2085,7 +2087,7 @@ Class HotspotEdit Extends Edit {
     }
     
     ExecuteOnFocusPreSpeech() {
-        DPI.Click(This.XCoordinate, This.YCoordinate)
+        Click This.XCoordinate, This.YCoordinate
     }
     
 }
@@ -2102,7 +2104,7 @@ Class HotspotTab Extends Tab {
     }
     
     ExecuteOnFocusPreSpeech() {
-        DPI.Click(This.XCoordinate, This.YCoordinate)
+        Click This.XCoordinate, This.YCoordinate
     }
     
 }
@@ -2130,13 +2132,13 @@ Class OCRButton Extends Button {
     ExecuteOnActivationPreSpeech() {
         XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
         YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
-        DPI.Click(XCoordinate, YCoordinate)
+        Click XCoordinate, YCoordinate
     }
     
     ExecuteOnFocusPreSpeech() {
         XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
         YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
-        DPI.MouseMove(XCoordinate, YCoordinate)
+        MouseMove XCoordinate, YCoordinate
     }
     
     SpeakOnActivation(Speak := True) {
@@ -2197,7 +2199,7 @@ Class OCRComboBox Extends ComboBox {
     ExecuteOnFocusPreSpeech() {
         XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
         YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
-        DPI.Click(XCoordinate, YCoordinate)
+        Click XCoordinate, YCoordinate
     }
     
     GetValue() {
@@ -2247,7 +2249,7 @@ Class OCREdit Extends Edit {
     ExecuteOnFocusPreSpeech() {
         XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
         YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
-        DPI.Click(XCoordinate, YCoordinate)
+        Click XCoordinate, YCoordinate
     }
     
     GetValue() {
@@ -2298,7 +2300,7 @@ Class OCRTab Extends Tab {
     ExecuteOnFocusPreSpeech() {
         XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
         YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
-        DPI.Click(XCoordinate, YCoordinate)
+        Click XCoordinate, YCoordinate
     }
     
     SpeakOnFocus(Speak := True) {

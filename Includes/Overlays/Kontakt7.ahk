@@ -182,7 +182,7 @@ Class Kontakt7 {
                 ControlGetPos(&ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A")
                 Catch
                 Return
-                Click(ControlX + ControlWidth - (296 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (141 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))))
+                Click(ControlX + ControlWidth - (296 / DPI.Standard * DPI.GetForWindow("A")), ControlY + (141 / DPI.Standard * DPI.GetForWindow("A")))
                 Sleep 10
                 Kontakt7.MoveToPluginSnapshotButton("Previous snapshot")
                 If CheckColor()
@@ -324,16 +324,16 @@ Class Kontakt7 {
                 Catch
                 Return
                 If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
-                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - (580 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (160 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlX + ControlWidth - (580 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))) + (200 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (180 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))))
+                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - (580 / DPI.Standard * DPI.GetForWindow("A")), ControlY + (160 / DPI.Standard * DPI.GetForWindow("A")), ControlX + ControlWidth - (580 / DPI.Standard * DPI.GetForWindow("A")) + (200 / DPI.Standard * DPI.GetForWindow("A")), ControlY + (180 / DPI.Standard * DPI.GetForWindow("A")))
                     If Not OCRResult = ""
                     SnapshotButton.Label := "Snapshot " . OcrResult
                 }
                 If InStr(Label, "Snapshot", True)
-                MouseMove(ControlX + ControlWidth - (580 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (169 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))))
+                MouseMove(ControlX + ControlWidth - (580 / DPI.Standard * DPI.GetForWindow("A")), ControlY + (169 / DPI.Standard * DPI.GetForWindow("A")))
                 Else If InStr(Label, "Previous snapshot", True)
-                MouseMove(ControlX + ControlWidth - (397 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (169 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))))
+                MouseMove(ControlX + ControlWidth - (397 / DPI.Standard * DPI.GetForWindow("A")), ControlY + (169 / DPI.Standard * DPI.GetForWindow("A")))
                 Else
-                MouseMove(ControlX + ControlWidth - (381 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))), ControlY + (169 / DPI.Standard * DPI.GetForMonitor(DPI.MonitorFromWindow("A"))))
+                MouseMove(ControlX + ControlWidth - (381 / DPI.Standard * DPI.GetForWindow("A")), ControlY + (169 / DPI.Standard * DPI.GetForWindow("A")))
             }
         }
     }
