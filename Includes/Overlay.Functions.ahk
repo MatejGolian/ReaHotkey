@@ -4,17 +4,16 @@ Global A_IsUnicode := True
 
 AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False) {
     Critical
+    PluginControlPos := GetPluginControlPos()
     OverlayList := %Type%.GetOverlays(Name)
     UnknownProductCounter := 1
     For OverlayNumber, OverlayEntry In OverlayList {
-        PluginControlXCoordinate := ""
-        PluginControlYCoordinate := ""
         FoundX := ""
         FoundY := ""
         WinWidth := ""
         WinHeight := ""
         Try {
-            WinGetPos(,, &WinWidth, &WinHeight, "A")
+            WinGetPos ,, &WinWidth, &WinHeight, "A"
         }
         Catch {
             WinWidth := A_ScreenWidth
@@ -55,18 +54,10 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             If Not OverlayMetadata["Y2Coordinate"] Is Number Or OverlayMetadata["Y2Coordinate"] <= 0
             OverlayMetadata["Y2Coordinate"] := WinHeight
             If Type = "Plugin" And CompensatePluginCoordinates = True {
-                Try {
-                    ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
-                }
-                Catch {
-                    PluginControlXCoordinate := 210
-                    PluginControlYCoordinate := 53
-                    DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
-                }
-                OverlayMetadata["X1Coordinate"] := PluginControlXCoordinate + OverlayMetadata["X1Coordinate"]
-                OverlayMetadata["Y1Coordinate"] := PluginControlYCoordinate + OverlayMetadata["Y1Coordinate"]
-                OverlayMetadata["X2Coordinate"] := PluginControlXCoordinate + OverlayMetadata["X2Coordinate"]
-                OverlayMetadata["Y2Coordinate"] := PluginControlYCoordinate + OverlayMetadata["Y2Coordinate"]
+                OverlayMetadata["X1Coordinate"] := PluginControlPos.X + OverlayMetadata["X1Coordinate"]
+                OverlayMetadata["Y1Coordinate"] := PluginControlPos.Y + OverlayMetadata["Y1Coordinate"]
+                OverlayMetadata["X2Coordinate"] := PluginControlPos.X + OverlayMetadata["X2Coordinate"]
+                OverlayMetadata["Y2Coordinate"] := PluginControlPos.Y + OverlayMetadata["Y2Coordinate"]
                 If OverlayMetadata["X2Coordinate"] > WinWidth
                 OverlayMetadata["X2Coordinate"] := WinWidth
                 If OverlayMetadata["Y2Coordinate"] > WinHeight
@@ -74,7 +65,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             }
             If FileExist(OverlayMetadata["File"]) {
                 Try
-                ImageFound := DPI.ImageSearch(&FoundX, &FoundY, OverlayMetadata["X1Coordinate"], OverlayMetadata["Y1Coordinate"], OverlayMetadata["X2Coordinate"], OverlayMetadata["Y2Coordinate"], OverlayMetadata["File"])
+                ImageFound := ImageSearch(&FoundX, &FoundY, OverlayMetadata["X1Coordinate"], OverlayMetadata["Y1Coordinate"], OverlayMetadata["X2Coordinate"], OverlayMetadata["Y2Coordinate"], OverlayMetadata["File"])
                 Catch
                 ImageFound := 0
                 If ImageFound = 1
@@ -168,19 +159,19 @@ ChooseStandaloneOverlay(*) {
 
 CompensateFocusedControlXCoordinate(ControlXCoordinate) {
     Try
-    ControlGetPos(&FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A")
+    ControlGetPos &FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A"
     Catch
     Return False
-    ControlXCoordinate := FocusedControlXCoordinate + (ControlXCoordinate / DPI.Standard * DPI.GetForWindow("A"))
+    ControlXCoordinate := FocusedControlXCoordinate + ControlXCoordinate
     Return ControlXCoordinate
 }
 
 CompensateFocusedControlYCoordinate(ControlYCoordinate) {
     Try
-    ControlGetPos(&FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A")
+    ControlGetPos &FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A"
     Catch
     Return False
-    ControlYCoordinate := FocusedControlYCoordinate + (ControlYCoordinate / DPI.Standard * DPI.GetForWindow("A"))
+    ControlYCoordinate := FocusedControlYCoordinate + ControlYCoordinate
     Return ControlYCoordinate
 }
 
@@ -189,16 +180,9 @@ CompensateGraphicalHorizontalPluginSlider(PluginControl) {
     PluginControl.OriginalStart := PluginControl.Start
     If Not HasProp(PluginControl, "OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
-    Try {
-        ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-        DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
-    }
-    PluginControl.Start := PluginControlXCoordinate + (PluginControl.OriginalStart / DPI.Standard * DPI.GetForWindow("A"))
-    PluginControl.End := PluginControlXCoordinate + (PluginControl.OriginalEnd / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControlPos := GetPluginControlPos()
+    PluginControl.Start := PluginControlPos.X + PluginControl.OriginalStart
+    PluginControl.End := PluginControlPos.X + PluginControl.OriginalEnd
     Return PluginControl
 }
 
@@ -207,16 +191,9 @@ CompensateGraphicalVerticalPluginSlider(PluginControl) {
     PluginControl.OriginalStart := PluginControl.Start
     If Not HasProp(PluginControl, "OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
-    Try {
-        ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-        DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
-    }
-    PluginControl.Start := PluginControlYCoordinate + (PluginControl.OriginalStart / DPI.Standard * DPI.GetForWindow("A"))
-    PluginControl.End := PluginControlYCoordinate + (PluginControl.OriginalEnd / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControlPos := GetPluginControlPos()
+    PluginControl.Start := PluginControlPos.Y + PluginControl.OriginalStart
+    PluginControl.End := PluginControlPos.Y + PluginControl.OriginalEnd
     Return PluginControl
 }
 
@@ -225,16 +202,9 @@ CompensatePluginPointCoordinates(PluginControl) {
     PluginControl.OriginalXCoordinate := PluginControl.XCoordinate
     If Not HasProp(PluginControl, "OriginalYCoordinate")
     PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
-    Try {
-        ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-        DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
-    }
-    PluginControl.XCoordinate := PluginControlXCoordinate + (PluginControl.OriginalXCoordinate / DPI.Standard * DPI.GetForWindow("A"))
-    PluginControl.YCoordinate := PluginControlYCoordinate + (PluginControl.OriginalYCoordinate / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControlPos := GetPluginControlPos()
+    PluginControl.XCoordinate := PluginControlPos.X + PluginControl.OriginalXCoordinate
+    PluginControl.YCoordinate := PluginControlPos.Y + PluginControl.OriginalYCoordinate
     Return PluginControl
 }
 
@@ -247,44 +217,23 @@ CompensatePluginRegionCoordinates(PluginControl) {
     PluginControl.OriginalX2Coordinate := PluginControl.X2Coordinate
     If Not HasProp(PluginControl, "OriginalY2Coordinate")
     PluginControl.OriginalY2Coordinate := PluginControl.Y2Coordinate
-    Try {
-        ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-        DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
-    }
-    PluginControl.X1Coordinate := PluginControlXCoordinate + (PluginControl.OriginalX1Coordinate / DPI.Standard * DPI.GetForWindow("A"))
-    PluginControl.Y1Coordinate := PluginControlYCoordinate + (PluginControl.OriginalY1Coordinate / DPI.Standard * DPI.GetForWindow("A"))
-    PluginControl.X2Coordinate := PluginControlXCoordinate + (PluginControl.OriginalX2Coordinate / DPI.Standard * DPI.GetForWindow("A"))
-    PluginControl.Y2Coordinate := PluginControlYCoordinate + (PluginControl.OriginalY2Coordinate / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControlPos := GetPluginControlPos()
+    PluginControl.X1Coordinate := PluginControlPos.X + PluginControl.OriginalX1Coordinate
+    PluginControl.Y1Coordinate := PluginControlPos.Y + PluginControl.OriginalY1Coordinate
+    PluginControl.X2Coordinate := PluginControlPos.X + PluginControl.OriginalX2Coordinate
+    PluginControl.Y2Coordinate := PluginControlPos.Y + PluginControl.OriginalY2Coordinate
     Return PluginControl
 }
 
 CompensatePluginXCoordinate(PluginXCoordinate) {
-    Try {
-        ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-        DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
-    }
-    PluginXCoordinate := PluginControlXCoordinate + (PluginXCoordinate / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControlPos := GetPluginControlPos()
+    PluginXCoordinate := PluginControlPos.X + PluginXCoordinate
     Return PluginXCoordinate
 }
 
 CompensatePluginYCoordinate(PluginYCoordinate) {
-    Try {
-        ControlGetPos(&PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria)
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-        DPI.FromStandard(DPI.GetForWindow("A"), &PluginControlXCoordinate, &PluginControlYCoordinate)
-    }
-    PluginYCoordinate := PluginControlYCoordinate + (PluginYCoordinate / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControlPos := GetPluginControlPos()
+    PluginYCoordinate := PluginControlPos.Y + PluginYCoordinate
     Return PluginYCoordinate
 }
 
@@ -387,31 +336,15 @@ CreateOverlayMenu(Type) {
     Return OverlayMenu
 }
 
-InArray(Needle, Haystack) {
-    For FoundIndex, FoundValue In Haystack
-    If FoundValue == Needle
-    Return FoundIndex
-    Return False
-}
-
 FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
     FoundX := ""
-    ImgDPI := ""
     FoundY := ""
     WinWidth := ""
     WinHeight := ""
     Try {
-        X1Coordinate := X1Coordinate / DPI.Standard * DPI.GetForWindow("A")
-        Y1Coordinate := Y1Coordinate / DPI.Standard * DPI.GetForWindow("A")
-        X2Coordinate := X2Coordinate / DPI.Standard * DPI.GetForWindow("A")
-        Y2Coordinate := Y2Coordinate / DPI.Standard * DPI.GetForWindow("A")
-        WinGetPos(,, &WinWidth, &WinHeight, "A")
+        WinGetPos ,, &WinWidth, &WinHeight, "A"
     }
     Catch {
-        X1Coordinate := -1
-        Y1Coordinate := -1
-        X2Coordinate := -1
-        Y2Coordinate := -1
         WinWidth := A_ScreenWidth
         WinHeight := A_ScreenHeight
     }
@@ -425,7 +358,7 @@ FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2
     Y2Coordinate := WinHeight
     If FileExist(ImageFile) {
         Try
-        ImageFound := DPI.ImageSearch(&FoundX, &FoundY, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, ImageFile,, &ImgDPI)
+        ImageFound := ImageSearch(&FoundX, &FoundY, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, ImageFile)
         Catch
         ImageFound := 0
         If ImageFound = 1
@@ -473,39 +406,45 @@ GetImgSize(Img) {
     Return ReturnObject
 }
 
-GetPluginXCoordinate() {
+GetPluginControlPos() {
+    PluginControlX := 0
+    PluginControlY := 0
     Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+        ControlGetPos &PluginControlX, &PluginControlY,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
     }
     Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
+        PluginControlX := 210
+        PluginControlY := 53
     }
-    Return PluginControlXCoordinate
+    Return {X: PluginControlX, Y: PluginControlY}
+}
+
+GetPluginXCoordinate() {
+    Return GetPluginControlPos().X
 }
 
 GetPluginYCoordinate() {
-    Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-    }
-    Return PluginControlYCoordinate
+    Return GetPluginControlPos().Y
 }
 
 GetUIAElement(UIAPath) {
     If Not IsSet(UIA)
     Return False
     Try {
-        element := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-        element := element.ElementFromPath(UIAPath)
+        Element := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+        Element := Element.ElementFromPath(UIAPath)
     }
     Catch {
         Return False
     }
     Return Element
+}
+
+InArray(Needle, Haystack) {
+    For FoundIndex, FoundValue In Haystack
+    If FoundValue == Needle
+    Return FoundIndex
+    Return False
 }
 
 KeyWaitCombo() {
