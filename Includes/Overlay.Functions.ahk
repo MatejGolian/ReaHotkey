@@ -4,11 +4,10 @@ Global A_IsUnicode := True
 
 AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False) {
     Critical
+    PluginControlPos := GetPluginControlPos()
     OverlayList := %Type%.GetOverlays(Name)
     UnknownProductCounter := 1
     For OverlayNumber, OverlayEntry In OverlayList {
-        PluginControlXCoordinate := ""
-        PluginControlYCoordinate := ""
         FoundX := ""
         FoundY := ""
         WinWidth := ""
@@ -55,17 +54,10 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             If Not OverlayMetadata["Y2Coordinate"] Is Number Or OverlayMetadata["Y2Coordinate"] <= 0
             OverlayMetadata["Y2Coordinate"] := WinHeight
             If Type = "Plugin" And CompensatePluginCoordinates = True {
-                Try {
-                    ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-                }
-                Catch {
-                    PluginControlXCoordinate := 210
-                    PluginControlYCoordinate := 53
-                }
-                OverlayMetadata["X1Coordinate"] := PluginControlXCoordinate + OverlayMetadata["X1Coordinate"]
-                OverlayMetadata["Y1Coordinate"] := PluginControlYCoordinate + OverlayMetadata["Y1Coordinate"]
-                OverlayMetadata["X2Coordinate"] := PluginControlXCoordinate + OverlayMetadata["X2Coordinate"]
-                OverlayMetadata["Y2Coordinate"] := PluginControlYCoordinate + OverlayMetadata["Y2Coordinate"]
+                OverlayMetadata["X1Coordinate"] := PluginControlPos.X + OverlayMetadata["X1Coordinate"]
+                OverlayMetadata["Y1Coordinate"] := PluginControlPos.Y + OverlayMetadata["Y1Coordinate"]
+                OverlayMetadata["X2Coordinate"] := PluginControlPos.X + OverlayMetadata["X2Coordinate"]
+                OverlayMetadata["Y2Coordinate"] := PluginControlPos.Y + OverlayMetadata["Y2Coordinate"]
                 If OverlayMetadata["X2Coordinate"] > WinWidth
                 OverlayMetadata["X2Coordinate"] := WinWidth
                 If OverlayMetadata["Y2Coordinate"] > WinHeight
@@ -188,15 +180,9 @@ CompensateGraphicalHorizontalPluginSlider(PluginControl) {
     PluginControl.OriginalStart := PluginControl.Start
     If Not HasProp(PluginControl, "OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
-    Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-    }
-    PluginControl.Start := PluginControlXCoordinate + PluginControl.OriginalStart
-    PluginControl.End := PluginControlXCoordinate + PluginControl.OriginalEnd
+    PluginControlPos := GetPluginControlPos()
+    PluginControl.Start := PluginControlPos.X + PluginControl.OriginalStart
+    PluginControl.End := PluginControlPos.X + PluginControl.OriginalEnd
     Return PluginControl
 }
 
@@ -205,15 +191,9 @@ CompensateGraphicalVerticalPluginSlider(PluginControl) {
     PluginControl.OriginalStart := PluginControl.Start
     If Not HasProp(PluginControl, "OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
-    Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-    }
-    PluginControl.Start := PluginControlYCoordinate + PluginControl.OriginalStart
-    PluginControl.End := PluginControlYCoordinate + PluginControl.OriginalEnd
+    PluginControlPos := GetPluginControlPos()
+    PluginControl.Start := PluginControlPos.Y + PluginControl.OriginalStart
+    PluginControl.End := PluginControlPos.Y + PluginControl.OriginalEnd
     Return PluginControl
 }
 
@@ -222,15 +202,9 @@ CompensatePluginPointCoordinates(PluginControl) {
     PluginControl.OriginalXCoordinate := PluginControl.XCoordinate
     If Not HasProp(PluginControl, "OriginalYCoordinate")
     PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
-    Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-    }
-    PluginControl.XCoordinate := PluginControlXCoordinate + PluginControl.OriginalXCoordinate
-    PluginControl.YCoordinate := PluginControlYCoordinate + PluginControl.OriginalYCoordinate
+    PluginControlPos := GetPluginControlPos()
+    PluginControl.XCoordinate := PluginControlPos.X + PluginControl.OriginalXCoordinate
+    PluginControl.YCoordinate := PluginControlPos.Y + PluginControl.OriginalYCoordinate
     Return PluginControl
 }
 
@@ -243,41 +217,23 @@ CompensatePluginRegionCoordinates(PluginControl) {
     PluginControl.OriginalX2Coordinate := PluginControl.X2Coordinate
     If Not HasProp(PluginControl, "OriginalY2Coordinate")
     PluginControl.OriginalY2Coordinate := PluginControl.Y2Coordinate
-    Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-    }
-    PluginControl.X1Coordinate := PluginControlXCoordinate + PluginControl.OriginalX1Coordinate
-    PluginControl.Y1Coordinate := PluginControlYCoordinate + PluginControl.OriginalY1Coordinate
-    PluginControl.X2Coordinate := PluginControlXCoordinate + PluginControl.OriginalX2Coordinate
-    PluginControl.Y2Coordinate := PluginControlYCoordinate + PluginControl.OriginalY2Coordinate
+    PluginControlPos := GetPluginControlPos()
+    PluginControl.X1Coordinate := PluginControlPos.X + PluginControl.OriginalX1Coordinate
+    PluginControl.Y1Coordinate := PluginControlPos.Y + PluginControl.OriginalY1Coordinate
+    PluginControl.X2Coordinate := PluginControlPos.X + PluginControl.OriginalX2Coordinate
+    PluginControl.Y2Coordinate := PluginControlPos.Y + PluginControl.OriginalY2Coordinate
     Return PluginControl
 }
 
 CompensatePluginXCoordinate(PluginXCoordinate) {
-    Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-    }
-    PluginXCoordinate := PluginControlXCoordinate + PluginXCoordinate
+    PluginControlPos := GetPluginControlPos()
+    PluginXCoordinate := PluginControlPos.X + PluginXCoordinate
     Return PluginXCoordinate
 }
 
 CompensatePluginYCoordinate(PluginYCoordinate) {
-    Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-    }
-    PluginYCoordinate := PluginControlYCoordinate + PluginYCoordinate
+    PluginControlPos := GetPluginControlPos()
+    PluginYCoordinate := PluginControlPos.Y + PluginYCoordinate
     Return PluginYCoordinate
 }
 
@@ -380,13 +336,6 @@ CreateOverlayMenu(Type) {
     Return OverlayMenu
 }
 
-InArray(Needle, Haystack) {
-    For FoundIndex, FoundValue In Haystack
-    If FoundValue == Needle
-    Return FoundIndex
-    Return False
-}
-
 FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
     FoundX := ""
     FoundY := ""
@@ -457,6 +406,19 @@ GetImgSize(Img) {
     Return ReturnObject
 }
 
+GetPluginControlPos() {
+    PluginControlX := 0
+    PluginControlY := 0
+    Try {
+        ControlGetPos &PluginControlX, &PluginControlY,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    }
+    Catch {
+        PluginControlX := 210
+        PluginControlY := 53
+    }
+    Return {X: PluginControlX, Y: PluginControlY}
+}
+
 GetPluginXCoordinate() {
     Try {
         ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
@@ -490,6 +452,13 @@ GetUIAElement(UIAPath) {
         Return False
     }
     Return Element
+}
+
+InArray(Needle, Haystack) {
+    For FoundIndex, FoundValue In Haystack
+    If FoundValue == Needle
+    Return FoundIndex
+    Return False
 }
 
 KeyWaitCombo() {
