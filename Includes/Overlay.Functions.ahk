@@ -420,25 +420,11 @@ GetPluginControlPos() {
 }
 
 GetPluginXCoordinate() {
-    Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-    }
-    Return PluginControlXCoordinate
+    Return GetPluginControlPos().X
 }
 
 GetPluginYCoordinate() {
-    Try {
-        ControlGetPos &PluginControlXCoordinate, &PluginControlYCoordinate,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
-    }
-    Catch {
-        PluginControlXCoordinate := 210
-        PluginControlYCoordinate := 53
-    }
-    Return PluginControlYCoordinate
+    Return GetPluginControlPos().Y
 }
 
 GetUIAElement(UIAPath) {
