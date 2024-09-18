@@ -181,8 +181,8 @@ CompensateGraphicalHorizontalPluginSlider(PluginControl) {
     If Not HasProp(PluginControl, "OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
     PluginControlPos := GetPluginControlPos()
-    PluginControl.Start := PluginControlPos.X + PluginControl.OriginalStart
-    PluginControl.End := PluginControlPos.X + PluginControl.OriginalEnd
+    PluginControl.Start := PluginControlPos.X + (PluginControl.OriginalStart / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControl.End := PluginControlPos.X + (PluginControl.OriginalEnd / DPI.Standard * DPI.GetForWindow("A"))
     Return PluginControl
 }
 
@@ -192,8 +192,8 @@ CompensateGraphicalVerticalPluginSlider(PluginControl) {
     If Not HasProp(PluginControl, "OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
     PluginControlPos := GetPluginControlPos()
-    PluginControl.Start := PluginControlPos.Y + PluginControl.OriginalStart
-    PluginControl.End := PluginControlPos.Y + PluginControl.OriginalEnd
+    PluginControl.Start := PluginControlPos.Y + (PluginControl.OriginalStart / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControl.End := PluginControlPos.Y + (PluginControl.OriginalEnd / DPI.Standard * DPI.GetForWindow("A"))
     Return PluginControl
 }
 
@@ -203,8 +203,8 @@ CompensatePluginPointCoordinates(PluginControl) {
     If Not HasProp(PluginControl, "OriginalYCoordinate")
     PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
     PluginControlPos := GetPluginControlPos()
-    PluginControl.XCoordinate := PluginControlPos.X + PluginControl.OriginalXCoordinate
-    PluginControl.YCoordinate := PluginControlPos.Y + PluginControl.OriginalYCoordinate
+    PluginControl.XCoordinate := PluginControlPos.X + (PluginControl.OriginalXCoordinate / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControl.YCoordinate := PluginControlPos.Y + (PluginControl.OriginalYCoordinate / DPI.Standard * DPI.GetForWindow("A"))
     Return PluginControl
 }
 
@@ -218,22 +218,22 @@ CompensatePluginRegionCoordinates(PluginControl) {
     If Not HasProp(PluginControl, "OriginalY2Coordinate")
     PluginControl.OriginalY2Coordinate := PluginControl.Y2Coordinate
     PluginControlPos := GetPluginControlPos()
-    PluginControl.X1Coordinate := PluginControlPos.X + PluginControl.OriginalX1Coordinate
-    PluginControl.Y1Coordinate := PluginControlPos.Y + PluginControl.OriginalY1Coordinate
-    PluginControl.X2Coordinate := PluginControlPos.X + PluginControl.OriginalX2Coordinate
-    PluginControl.Y2Coordinate := PluginControlPos.Y + PluginControl.OriginalY2Coordinate
+    PluginControl.X1Coordinate := PluginControlPos.X + (PluginControl.OriginalX1Coordinate / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControl.Y1Coordinate := PluginControlPos.Y + (PluginControl.OriginalY1Coordinate / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControl.X2Coordinate := PluginControlPos.X + (PluginControl.OriginalX2Coordinate / DPI.Standard * DPI.GetForWindow("A"))
+    PluginControl.Y2Coordinate := PluginControlPos.Y + (PluginControl.OriginalY2Coordinate / DPI.Standard * DPI.GetForWindow("A"))
     Return PluginControl
 }
 
 CompensatePluginXCoordinate(PluginXCoordinate) {
     PluginControlPos := GetPluginControlPos()
-    PluginXCoordinate := PluginControlPos.X + PluginXCoordinate
+    PluginXCoordinate := PluginControlPos.X + (PluginXCoordinate / DPI.Standard * DPI.GetForWindow("A"))
     Return PluginXCoordinate
 }
 
 CompensatePluginYCoordinate(PluginYCoordinate) {
     PluginControlPos := GetPluginControlPos()
-    PluginYCoordinate := PluginControlPos.Y + PluginYCoordinate
+    PluginYCoordinate := PluginControlPos.Y + (PluginYCoordinate / DPI.Standard * DPI.GetForWindow("A"))
     Return PluginYCoordinate
 }
 
