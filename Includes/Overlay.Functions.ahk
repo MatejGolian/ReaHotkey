@@ -483,8 +483,8 @@ GetUIAElement(UIAPath) {
     If Not IsSet(UIA)
     Return False
     Try {
-        element := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-        element := element.ElementFromPath(UIAPath)
+        Element := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+        Element := Element.ElementFromPath(UIAPath)
     }
     Catch {
         Return False
