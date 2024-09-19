@@ -13,7 +13,7 @@ Class RSDrums {
         FairviewOverlay.Metadata := Map("Vendor", "RS Drums", "Product", "Fairview", "Image", Map("File", "Images/KontaktKompleteKontrol/Fairview/Product.png"))
         FairviewOverlay.AddAccessibilityOverlay()
         FairviewOverlay.AddStaticText("Fairview")
-        FairviewOverlay.AddHotspotButton("Snare selector", %PluginClass%XOffset + 476, %PluginClass%YOffset + 454, CompensatePluginPointCoordinates,, CompensatePluginPointCoordinates, This.OpenMenu)
+        FairviewOverlay.AddHotspotButton("Snare selector", %PluginClass%XOffset + 476, %PluginClass%YOffset + 454, CompensatePluginCoordinates,, CompensatePluginCoordinates, This.OpenMenu)
         %PluginClass%.PluginOverlays.Push(FairviewOverlay)
     }
     
