@@ -484,7 +484,7 @@ Class Dubler2MIDICapturePlugin {
         } Else If Label != "Dubler 2 MIDI Capture Plugin" {
             Ol := AccessibilityOverlay("Dubler 2 MIDI Capture Plugin")
             Ol.AddControl(CustomButton("Copy clip into REAPER", , , ObjBindMethod(Dubler2MIDICapturePlugin, "DragFirstClip")))
-            Ol.AddHotspotButton("Select key of exported clip", 112, 554, CompensatePluginPointCoordinates, , CompensatePluginPointCoordinates)
+            Ol.AddHotspotButton("Select key of exported clip", 112, 554, CompensatePluginCoordinates, , CompensatePluginCoordinates)
         }
 
         If Ol Is AccessibilityOverlay {

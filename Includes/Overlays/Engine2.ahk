@@ -9,20 +9,20 @@ Class Engine2 {
         
         Engine2PluginOverlay := AccessibilityOverlay("Engine 2")
         Engine2PluginOverlay.Metadata := Map("Vendor", "Best Service", "Product", "Engine 2")
-        Engine2PluginOverlay.AddHotspotButton("Load instrument", 170, 185, CompensatePluginPointCoordinates,, CompensatePluginPointCoordinates)
-        Engine2PluginQuickEditTab := HotspotTab("Quick edit", 352, 72, CompensatePluginPointCoordinates)
-        Engine2PluginProEditTab := HotspotTab("Pro edit", 424, 72, CompensatePluginPointCoordinates)
-        Engine2PluginBrowserTab := HotspotTab("Browser", 488, 72, CompensatePluginPointCoordinates)
-        Engine2PluginMixerTab := HotspotTab("Mixer", 528, 72, CompensatePluginPointCoordinates)
-        Engine2PluginPreferencesTab := HotspotTab("Preferences", 580, 72, CompensatePluginPointCoordinates)
-        Engine2PluginHelpTab := HotspotTab("Help", 600, 72, CompensatePluginPointCoordinates)
+        Engine2PluginOverlay.AddHotspotButton("Load instrument", 170, 185, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        Engine2PluginQuickEditTab := HotspotTab("Quick edit", 352, 72, CompensatePluginCoordinates)
+        Engine2PluginProEditTab := HotspotTab("Pro edit", 424, 72, CompensatePluginCoordinates)
+        Engine2PluginBrowserTab := HotspotTab("Browser", 488, 72, CompensatePluginCoordinates)
+        Engine2PluginMixerTab := HotspotTab("Mixer", 528, 72, CompensatePluginCoordinates)
+        Engine2PluginPreferencesTab := HotspotTab("Preferences", 580, 72, CompensatePluginCoordinates)
+        Engine2PluginHelpTab := HotspotTab("Help", 600, 72, CompensatePluginCoordinates)
         Engine2PluginOverlay.AddTabControl(, Engine2PluginQuickEditTab, Engine2PluginProEditTab, Engine2PluginBrowserTab, Engine2PluginMixerTab, Engine2PluginPreferencesTab, Engine2PluginHelpTab)
-        Engine2PluginEngineTab := HotspotTab("Engine", 396, 112, CompensatePluginPointCoordinates)
-        Engine2PluginLibrariesTab := HotspotTab("Libraries", 424, 112, CompensatePluginPointCoordinates)
-        Engine2PluginAddLibraryButton := Engine2PluginLibrariesTab.AddHotspotButton("Add library", 436, 146, CompensatePluginPointCoordinates,, [CompensatePluginPointCoordinates, ObjBindMethod(Engine2, "ActivatePluginAddLibraryButton")])
-        Engine2PluginUserFolderTab := HotspotTab("User folder", 488, 112, CompensatePluginPointCoordinates)
-        Engine2PluginOutputSurrTab := HotspotTab("Output/Surr", 572, 112, CompensatePluginPointCoordinates)
-        Engine2PluginMiscTab := HotspotTab("Misc.", 656, 112, CompensatePluginPointCoordinates)
+        Engine2PluginEngineTab := HotspotTab("Engine", 396, 112, CompensatePluginCoordinates)
+        Engine2PluginLibrariesTab := HotspotTab("Libraries", 424, 112, CompensatePluginCoordinates)
+        Engine2PluginLibrariesTab.AddHotspotButton("Add library", 436, 146, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(Engine2, "ActivatePluginAddLibraryButton")])
+        Engine2PluginUserFolderTab := HotspotTab("User folder", 488, 112, CompensatePluginCoordinates)
+        Engine2PluginOutputSurrTab := HotspotTab("Output/Surr", 572, 112, CompensatePluginCoordinates)
+        Engine2PluginMiscTab := HotspotTab("Misc.", 656, 112, CompensatePluginCoordinates)
         Engine2PluginPreferencesTab.AddTabControl(, Engine2PluginEngineTab, Engine2PluginLibrariesTab, Engine2PluginUserFolderTab, Engine2PluginOutputSurrTab, Engine2PluginMiscTab)
         Plugin.RegisterOverlay("Engine 2", Engine2PluginOverlay)
         
@@ -38,7 +38,7 @@ Class Engine2 {
         Engine2StandaloneOverlay.AddTabControl(, Engine2StandaloneQuickEditTab, Engine2StandaloneProEditTab, Engine2StandaloneBrowserTab, Engine2StandaloneMixerTab, Engine2StandalonePreferencesTab, Engine2StandaloneHelpTab)
         Engine2StandaloneEngineTab := HotspotTab("Engine", 396, 112)
         Engine2StandaloneLibrariesTab := HotspotTab("Libraries", 424, 112)
-        Engine2StandaloneAddLibraryButton := Engine2StandaloneLibrariesTab.AddHotspotButton("Add library", 436, 146)
+        Engine2StandaloneLibrariesTab.AddHotspotButton("Add library", 436, 146)
         Engine2StandaloneUserFolderTab := HotspotTab("User folder", 488, 112)
         Engine2StandaloneOutputSurrTab := HotspotTab("Output/Surr", 572, 112)
         Engine2StandaloneMiscTab := HotspotTab("Misc.", 656, 112)
@@ -48,7 +48,7 @@ Class Engine2 {
     }
     
     Static CheckPlugin(*) {
-    Thread "NoTimers"
+        Thread "NoTimers"
         ReaperPluginNames := ["VSTi: ENGINE (Best Service) (24 out)"]
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Engine 2"

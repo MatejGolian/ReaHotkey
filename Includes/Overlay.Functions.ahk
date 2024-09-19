@@ -19,7 +19,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             WinWidth := A_ScreenWidth
             WinHeight := A_ScreenHeight
         }
-        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And Not OverlayEntry.Metadata["Product"] = "" {
+        If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Product") And Not OverlayEntry.Metadata["Product"] = "" {
             Product := OverlayEntry.Metadata["Product"]
         }
         Else If Not OverlayEntry.Label = "" {
@@ -29,8 +29,8 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             Product := "unknown product " . UnknownProductCounter
             UnknownProductCounter++
         }
-        If ReaHotkey.Found%Type% Is %Type% And HasProp(ReaHotkey.Found%Type%.Overlay, "OverlayNumber") And Not ReaHotkey.Found%Type%.Overlay.OverlayNumber = OverlayEntry.OverlayNumber
-        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Image") And Not OverlayEntry.Metadata["Image"] = "" {
+        If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.Overlay.HasProp("OverlayNumber") And Not ReaHotkey.Found%Type%.Overlay.OverlayNumber = OverlayEntry.OverlayNumber
+        If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Image") And Not OverlayEntry.Metadata["Image"] = "" {
             If Not OverlayEntry.Metadata["Image"] Is Map
             OverlayMetadata := Map("File", OverlayEntry.Metadata["Image"])
             Else
@@ -73,7 +73,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                     OverlayHeader := ReaHotkey.Found%Type%.Overlay.ChildControls[1].Clone()
                     ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(OverlayEntry.Label)
                     ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
-                    If HasProp(OverlayEntry, "Metadata")
+                    If OverlayEntry.HasProp("Metadata")
                     ReaHotkey.Found%Type%.Overlay.Metadata := OverlayEntry.Metadata
                     ReaHotkey.Found%Type%.Overlay.AddControl(OverlayHeader)
                     ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
@@ -120,7 +120,7 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
         OverlayHeader := ReaHotkey.Found%Type%.Overlay.ChildControls[1].Clone()
         ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(ItemName)
         ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
-        If HasProp(OverlayList[OverlayNumber], "Metadata")
+        If OverlayList[OverlayNumber].HasProp("Metadata")
         ReaHotkey.Found%Type%.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
         ReaHotkey.Found%Type%.Overlay.AddControl(OverlayHeader)
         ReaHotkey.Found%Type%.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
@@ -161,7 +161,7 @@ CompensateFocusedControlXCoordinate(ControlXCoordinate) {
     Try
     ControlGetPos &FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A"
     Catch
-    Return False
+    Return ControlXCoordinate
     ControlXCoordinate := FocusedControlXCoordinate + ControlXCoordinate
     Return ControlXCoordinate
 }
@@ -170,57 +170,52 @@ CompensateFocusedControlYCoordinate(ControlYCoordinate) {
     Try
     ControlGetPos &FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A"
     Catch
-    Return False
+    Return ControlYCoordinate
     ControlYCoordinate := FocusedControlYCoordinate + ControlYCoordinate
     Return ControlYCoordinate
 }
 
-CompensateGraphicalHorizontalPluginSlider(PluginControl) {
-    If Not HasProp(PluginControl, "OriginalStart")
-    PluginControl.OriginalStart := PluginControl.Start
-    If Not HasProp(PluginControl, "OriginalEnd")
-    PluginControl.OriginalEnd := PluginControl.End
+CompensatePluginCoordinates(PluginControl) {
     PluginControlPos := GetPluginControlPos()
-    PluginControl.Start := PluginControlPos.X + PluginControl.OriginalStart
-    PluginControl.End := PluginControlPos.X + PluginControl.OriginalEnd
-    Return PluginControl
-}
-
-CompensateGraphicalVerticalPluginSlider(PluginControl) {
-    If Not HasProp(PluginControl, "OriginalStart")
+    If PluginControl.HasProp("Start") And Not PluginControl.HasProp("OriginalStart")
     PluginControl.OriginalStart := PluginControl.Start
-    If Not HasProp(PluginControl, "OriginalEnd")
+    If PluginControl.HasProp("End") And Not PluginControl.HasProp("OriginalEnd")
     PluginControl.OriginalEnd := PluginControl.End
-    PluginControlPos := GetPluginControlPos()
-    PluginControl.Start := PluginControlPos.Y + PluginControl.OriginalStart
-    PluginControl.End := PluginControlPos.Y + PluginControl.OriginalEnd
-    Return PluginControl
-}
-
-CompensatePluginPointCoordinates(PluginControl) {
-    If Not HasProp(PluginControl, "OriginalXCoordinate")
+    If PluginControl.HasProp("XCoordinate") And Not PluginControl.HasProp("OriginalXCoordinate")
     PluginControl.OriginalXCoordinate := PluginControl.XCoordinate
-    If Not HasProp(PluginControl, "OriginalYCoordinate")
+    If PluginControl.HasProp("YCoordinate") And Not PluginControl.HasProp("OriginalYCoordinate")
     PluginControl.OriginalYCoordinate := PluginControl.YCoordinate
-    PluginControlPos := GetPluginControlPos()
-    PluginControl.XCoordinate := PluginControlPos.X + PluginControl.OriginalXCoordinate
-    PluginControl.YCoordinate := PluginControlPos.Y + PluginControl.OriginalYCoordinate
-    Return PluginControl
-}
-
-CompensatePluginRegionCoordinates(PluginControl) {
-    If Not HasProp(PluginControl, "OriginalX1Coordinate")
+    If PluginControl.HasProp("X1Coordinate") And Not PluginControl.HasProp("OriginalX1Coordinate")
     PluginControl.OriginalX1Coordinate := PluginControl.X1Coordinate
-    If Not HasProp(PluginControl, "OriginalY1Coordinate")
+    If PluginControl.HasProp("Y1Coordinate") And Not PluginControl.HasProp("OriginalY1Coordinate")
     PluginControl.OriginalY1Coordinate := PluginControl.Y1Coordinate
-    If Not HasProp(PluginControl, "OriginalX2Coordinate")
+    If PluginControl.HasProp("X2Coordinate") And Not PluginControl.HasProp("OriginalX2Coordinate")
     PluginControl.OriginalX2Coordinate := PluginControl.X2Coordinate
-    If Not HasProp(PluginControl, "OriginalY2Coordinate")
+    If PluginControl.HasProp("Y2Coordinate") And Not PluginControl.HasProp("OriginalY2Coordinate")
     PluginControl.OriginalY2Coordinate := PluginControl.Y2Coordinate
-    PluginControlPos := GetPluginControlPos()
+    If PluginControl Is GraphicalHorizontalSlider {
+        If PluginControl.HasProp("OriginalStart")
+        PluginControl.Start := PluginControlPos.X + PluginControl.OriginalStart
+        If PluginControl.HasProp("OriginalEnd")
+        PluginControl.End := PluginControlPos.X + PluginControl.OriginalEnd
+    }
+    If PluginControl Is GraphicalVerticalSlider {
+        If PluginControl.HasProp("OriginalStart")
+        PluginControl.Start := PluginControlPos.Y + PluginControl.OriginalStart
+        If PluginControl.HasProp("OriginalEnd")
+        PluginControl.End := PluginControlPos.Y + PluginControl.OriginalEnd
+    }
+    If PluginControl.HasProp("OriginalXCoordinate")
+    PluginControl.XCoordinate := PluginControlPos.X + PluginControl.OriginalXCoordinate
+    If PluginControl.HasProp("OriginalYCoordinate")
+    PluginControl.YCoordinate := PluginControlPos.Y + PluginControl.OriginalYCoordinate
+    If PluginControl.HasProp("OriginalX1Coordinate")
     PluginControl.X1Coordinate := PluginControlPos.X + PluginControl.OriginalX1Coordinate
+    If PluginControl.HasProp("OriginalY1Coordinate")
     PluginControl.Y1Coordinate := PluginControlPos.Y + PluginControl.OriginalY1Coordinate
+    If PluginControl.HasProp("OriginalX2Coordinate")
     PluginControl.X2Coordinate := PluginControlPos.X + PluginControl.OriginalX2Coordinate
+    If PluginControl.HasProp("OriginalY2Coordinate")
     PluginControl.Y2Coordinate := PluginControlPos.Y + PluginControl.OriginalY2Coordinate
     Return PluginControl
 }
@@ -256,18 +251,18 @@ CreateOverlayMenu(Type) {
     OverlayMenu := Accessible%Type%Menu()
     OverlayMenu.OverlayNumbers := Array()
     UnknownProductCounter := 1
-    If HasProp(CurrentOverlay, "Metadata") And CurrentOverlay.Metadata.Has("Vendor") And Not CurrentOverlay.Metadata["Vendor"] = ""
+    If CurrentOverlay.HasProp("Metadata") And CurrentOverlay.Metadata.Has("Vendor") And Not CurrentOverlay.Metadata["Vendor"] = ""
     CurrentVendor := CurrentOverlay.Metadata["Vendor"]
     Else
     CurrentVendor := ""
     For OverlayNumber, OverlayEntry In OverlayEntries {
-        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Vendor") And Not OverlayEntry.Metadata["Vendor"] = "" {
+        If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Vendor") And Not OverlayEntry.Metadata["Vendor"] = "" {
             Vendor := OverlayEntry.Metadata["Vendor"]
         }
         Else {
             Vendor := ""
         }
-        If HasProp(OverlayEntry, "Metadata") And OverlayEntry.Metadata.Has("Product") And Not OverlayEntry.Metadata["Product"] = "" {
+        If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Product") And Not OverlayEntry.Metadata["Product"] = "" {
             Product := OverlayEntry.Metadata["Product"]
         }
         Else If Not OverlayEntry.Label = "" {
