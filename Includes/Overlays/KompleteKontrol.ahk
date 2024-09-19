@@ -10,7 +10,7 @@ Class KompleteKontrol {
     Static __New() {
         PluginHeader := AccessibilityOverlay("Komplete Kontrol")
         PluginHeader.AddStaticText("Komplete Kontrol")
-        PluginHeader.AddHotspotButton("Menu", 305, 68, CompensatePluginPointCoordinates,, CompensatePluginPointCoordinates).SetHotkey("!M", "Alt+M")
+        PluginHeader.AddHotspotButton("Menu", 305, 68, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
         KompleteKontrol.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Komplete Kontrol")
