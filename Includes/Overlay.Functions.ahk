@@ -161,8 +161,8 @@ CompensateFocusedControlXCoordinate(ControlXCoordinate) {
     Try
     ControlGetPos &FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A"
     Catch
-    Return False
-    ControlXCoordinate := FocusedControlXCoordinate + (ControlXCoordinate / DPI.Standard * DPI.GetForWindow("A"))
+    Return ControlXCoordinate
+    ControlXCoordinate := FocusedControlXCoordinate + ControlXCoordinate
     Return ControlXCoordinate
 }
 
@@ -170,8 +170,8 @@ CompensateFocusedControlYCoordinate(ControlYCoordinate) {
     Try
     ControlGetPos &FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A"
     Catch
-    Return False
-    ControlYCoordinate := FocusedControlYCoordinate + (ControlYCoordinate / DPI.Standard * DPI.GetForWindow("A"))
+    Return ControlYCoordinate
+    ControlYCoordinate := FocusedControlYCoordinate + ControlYCoordinate
     Return ControlYCoordinate
 }
 
