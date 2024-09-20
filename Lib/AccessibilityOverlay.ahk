@@ -1775,12 +1775,16 @@ Class GraphicalSlider Extends FocusableGraphic {
         This.Size := End - Start
     }
     
+    CenterMouse() {
+        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
+    }
+    
     Decrease() {
         This.Move(-1)
     }
     
     ExecuteOnFocusPreSpeech() {
-        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
+        This.CenterMouse()
     }
     
     GetPosition() {
@@ -1849,6 +1853,7 @@ Class GraphicalSlider Extends FocusableGraphic {
                 If Not Target%Coordinate%Coordinate = This.Found%Coordinate%Coordinate
                 While This.Found%Coordinate%Coordinate = FoundCoordinate
                 Drag()
+                This.CenterMouse()
             }
             If This.State = 1
             AccessibilityOverlay.Speak(This.GetPosition())
