@@ -127,6 +127,35 @@ Class Program {
         Return 0
     }
     
+    Static GetHotkeyOptions(Options) {
+        OnOff := ""
+        B := ""
+        P := ""
+        S := ""
+        T := ""
+        I := ""
+        Options := StrSplit(Options, [A_Space, A_Tab])
+        Match := ""
+        For Option In Options {
+            If OnOff = "" And RegexMatch(Option, "i)^((On)|(Off))$", &Match)
+            OnOff := Match[0]
+            If B = "" And RegexMatch(Option, "i)^(B0?)$", &Match)
+            B := Match[0]
+            If P = "" And RegexMatch(Option, "i)^((P[1-9][0-9]*)|(P0?))$", &Match)
+            P := Match[0]
+            If S = "" And RegexMatch(Option, "i)^(S0?)$", &Match)
+            S := Match[0]
+            If T = "" And RegexMatch(Option, "i)^(T([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))$", &Match)
+            T := Match[0]
+            If I = "" And RegexMatch(Option, "i)^(I([0-9]|[1-9][0-9]|100))$", &Match)
+            I := Match[0]
+        }
+        If Not OnOff = "On" And Not OnOff = "Off"
+        OnOff := "On"
+        Options := {OnOff: OnOff, B: B, P: P, S: S, T: T, I: I, String: Trim(OnOff . " " . B . " " . P . " " . S . " " . T . " " . I)}
+        Return Options
+    }
+    
     Static GetHotkeys(ProgramName) {
         ProgramNumber := This.FindName(ProgramName)
         If ProgramNumber > 0
@@ -205,7 +234,7 @@ Class Program {
         If ProgramNumber > 0 And HotkeyNumber = 0 {
             If Not Action Is Object
             Options := Action . " " . Options
-            GetOptions()
+            Options := This.GetHotkeyOptions(Options)
             If Not Action Is Object
             Action := This.TriggerOverlayHotkey
             This.List[ProgramNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options.String, "State", Options.OnOff))
@@ -216,7 +245,7 @@ Class Program {
             If Not Action Is Object
             Options := Action . " " . Options
             Options := Options . " " . CurrentOptions
-            GetOptions()
+            Options := This.GetHotkeyOptions(Options)
             If Not Action Is Object
             Action := CurrentAction
             This.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
@@ -226,36 +255,7 @@ Class Program {
         Else {
             Return False
         }
-        If Options Is String
-        GetOptions()
         Return True
-        GetOptions() {
-            OnOff := ""
-            B := ""
-            P := ""
-            S := ""
-            T := ""
-            I := ""
-            Options := StrSplit(Options, [A_Space, A_Tab])
-            Match := ""
-            For Option In Options {
-                If OnOff = "" And RegexMatch(Option, "i)^((On)|(Off))$", &Match)
-                OnOff := Match[0]
-                If B = "" And RegexMatch(Option, "i)^(B0?)$", &Match)
-                B := Match[0]
-                If P = "" And RegexMatch(Option, "i)^((P[1-9][0-9]*)|(P0?))$", &Match)
-                P := Match[0]
-                If S = "" And RegexMatch(Option, "i)^(S0?)$", &Match)
-                S := Match[0]
-                If T = "" And RegexMatch(Option, "i)^(T([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))$", &Match)
-                T := Match[0]
-                If I = "" And RegexMatch(Option, "i)^(I([0-9]|[1-9][0-9]|100))$", &Match)
-                I := Match[0]
-            }
-            If Not OnOff = "On" And Not OnOff = "Off"
-            OnOff := "On"
-            Options := {OnOff: OnOff, B: B, P: P, S: S, T: T, I: I, String: Trim(OnOff . " " . B . " " . P . " " . S . " " . T . " " . I)}
-        }
     }
     
     Static SetNoHotkeys(ProgramName, Value) {

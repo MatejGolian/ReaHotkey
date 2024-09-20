@@ -224,8 +224,6 @@ Class ReaHotkey {
             Else {
                 Return False
             }
-            If Options Is String
-            GetOptions()
             If Type = "Plugin"
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If Type = "Standalone"
