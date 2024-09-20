@@ -1861,9 +1861,9 @@ Class GraphicalSlider Extends FocusableGraphic {
         }
         Drag() {
             If Coordinate = "X"
-            MouseClickDrag "Left", This.FoundXCoordinate, This.FoundYCoordinate, TargetXCoordinate, This.FoundYCoordinate, 0
+            MouseClickDrag "Left", This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2), TargetXCoordinate, This.FoundYCoordinate, 0
             Else
-            MouseClickDrag "Left", This.FoundXCoordinate, This.FoundYCoordinate, This.FoundYCoordinate, TargetYCoordinate, 0
+            MouseClickDrag "Left", This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2), This.FoundYCoordinate, TargetYCoordinate, 0
             Sleep 100
             This.CheckState()
         }
