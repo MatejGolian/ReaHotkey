@@ -226,6 +226,8 @@ Class Program {
         Else {
             Return False
         }
+        If Options Is String
+        GetOptions()
         Return True
         GetOptions() {
             OnOff := ""
