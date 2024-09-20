@@ -133,7 +133,6 @@ Class Plugin Extends Program {
     
     Static SetHotkey(PluginName, KeyName, Action := "", Options := "") {
         If Super.SetHotkey(PluginName, KeyName, Action, Options) = True {
-            If Not Options Is Object
             Options := Super.GetHotkeyOptions(Options)
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If ReaHotkey.FoundPlugin Is Plugin
