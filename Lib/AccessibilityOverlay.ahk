@@ -1790,30 +1790,30 @@ Class GraphicalSlider Extends FocusableGraphic {
     GetPosition() {
         If This.Type = "Horizontal" {
             If This.FoundXCoordinate <= This.Start {
-                Return "0 %"
+                Return 0
             }
             Else If This.FoundXCoordinate >= This.End {
-                Return "100 %"
+                Return 100
             }
             Else {
-                Value := Round((This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2) - This.Start) / (This.Size / 100), 0)
-                If Value > 100
-                Value := 100
-                Return Value . " %"
+                Position := Round((This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2) - This.Start) / (This.Size / 100), 0)
+                If Position > 100
+                Position := 100
+                Return Position
             }
         }
         Else If This.Type = "Vertical" {
             If This.FoundYCoordinate <= This.Y1Coordinate {
-                Return "100 %"
+                Return 100
             }
             Else If This.FoundYCoordinate >= This.Y2Coordinate {
-                Return "0 %"
+                Return 0
             }
             Else {
-                Value := Round((This.End - This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)) / (This.Size / 100), 0)
-                If Value > 100
-                Value := 100
-                Return Value . " %"
+                Position := Round((This.End - This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)) / (This.Size / 100), 0)
+                If Position > 100
+                Position := 100
+                Return Position
             }
         }
         Else {
@@ -1822,7 +1822,11 @@ Class GraphicalSlider Extends FocusableGraphic {
     }
     
     GetValue() {
-        This.Value := This.GetPosition()
+        Position := This.GetPosition()
+        If Not Position = ""
+        This.Value := This.GetPosition() . " %"
+        Else
+        This.Value := ""
         Return This.Value
     }
     
@@ -1831,40 +1835,58 @@ Class GraphicalSlider Extends FocusableGraphic {
     }
     
     Move(Value) {
+        Critical
         If This.Type = "Horizontal" Or This.Type = "Vertical" {
-            TargetXCoordinate := 0
-            TargetYCoordinate := 0
+            TargetCoordinate := 0
             If This.Type = "Horizontal"
             Coordinate := "X"
             Else
             Coordinate := "Y"
             This.CheckState()
             If This.State = 1 {
-                FoundCoordinate := This.Found%Coordinate%Coordinate
+                StartCoordinate := This.Found%Coordinate%Coordinate
+                StartPosition := This.GetPosition()
+                CurrentPosition := StartPosition
+                If Coordinate = "X"
+                StartCoordinate := StartCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2)
+                Else
+                StartCoordinate := StartCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
                 OnePercent := Ceil(This.Size / 100)
                 If OnePercent < 1
                 OnePercent := 1
-                If Value = -1 {
-                    Target%Coordinate%Coordinate := This.Found%Coordinate%Coordinate - OnePercent
+                If Value = -1
+                TargetCoordinate := StartCoordinate - OnePercent
+                Else
+                TargetCoordinate := StartCoordinate + OnePercent
+                If Not TargetCoordinate = StartCoordinate
+                While CurrentPosition = StartPosition {
+                    Drag()
+                    CurrentPosition := This.GetPosition()
+                    If CurrentPosition = 0 And TargetCoordinate < StartCoordinate
+                    Break
+                    If CurrentPosition = 100 And TargetCoordinate > StartCoordinate
+                    Break
+                    If CurrentPosition = ""
+                    Break
+                    If  TargetCoordinate < StartCoordinate
+                    TargetCoordinate := TargetCoordinate - 1
+                    Else If  TargetCoordinate > StartCoordinate
+                    TargetCoordinate := TargetCoordinate + 1
+                    Else
+                    Break
                 }
-                Else {
-                    Target%Coordinate%Coordinate := This.Found%Coordinate%Coordinate + OnePercent
-                }
-                If Not Target%Coordinate%Coordinate = This.Found%Coordinate%Coordinate
-                While This.Found%Coordinate%Coordinate = FoundCoordinate
-                Drag()
             }
             If This.State = 1 {
                 This.CenterMouse()
-                AccessibilityOverlay.Speak(This.GetPosition())
+                AccessibilityOverlay.Speak(This.GetValue())
             }
         }
         Drag() {
             If Coordinate = "X"
-            MouseClickDrag "Left", This.FoundXCoordinate, This.FoundYCoordinate, TargetXCoordinate, This.FoundYCoordinate, 0
+            MouseClickDrag "Left", This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2), TargetCoordinate, This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2), 0
             Else
-            MouseClickDrag "Left", This.FoundXCoordinate, This.FoundYCoordinate, This.FoundYCoordinate, TargetYCoordinate, 0
-            Sleep 100
+            MouseClickDrag "Left", This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2), TargetCoordinate, 0
+            Sleep 25
             This.CheckState()
         }
     }

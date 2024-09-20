@@ -63,7 +63,6 @@ Class Standalone Extends Program {
     
     Static SetHotkey(StandaloneName, KeyName, Action := "", Options := "") {
         If Super.SetHotkey(StandaloneName, KeyName, Action, Options) = True {
-            If Not Options Is Object
             Options := Super.GetHotkeyOptions(Options)
             HotIf
             If ReaHotkey.FoundStandalone Is Standalone
