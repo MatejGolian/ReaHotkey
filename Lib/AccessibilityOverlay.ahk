@@ -1779,22 +1779,38 @@ Class GraphicalSlider Extends FocusableGraphic {
         This.Move(-1)
     }
     
+    ExecuteOnFocusPreSpeech() {
+        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
+    }
+    
     GetPosition() {
         If This.Type = "Horizontal" {
-            If This.FoundXCoordinate <= This.Start
-            Return "0 %"
-            Else If This.FoundXCoordinate >= This.End
-            Return "100 %"
-            Else
-            Return Round((This.FoundXCoordinate - This.Start) / (This.Size / 100), 0) . " %"
+            If This.FoundXCoordinate <= This.Start {
+                Return "0 %"
+            }
+            Else If This.FoundXCoordinate >= This.End {
+                Return "100 %"
+            }
+            Else {
+                Value := Round((This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2) - This.Start) / (This.Size / 100), 0)
+                If Value > 100
+                Value := 100
+                Return Value . " %"
+            }
         }
         Else If This.Type = "Vertical" {
-            If This.FoundYCoordinate <= This.Y1Coordinate
-            Return "100 %"
-            Else If This.FoundYCoordinate >= This.Y2Coordinate
-            Return "0 %"
-            Else
-            Return Round((This.End - This.FoundYCoordinate) / (This.Size / 100), 0) . " %"
+            If This.FoundYCoordinate <= This.Y1Coordinate {
+                Return "100 %"
+            }
+            Else If This.FoundYCoordinate >= This.Y2Coordinate {
+                Return "0 %"
+            }
+            Else {
+                Value := Round((This.End - This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)) / (This.Size / 100), 0)
+                If Value > 100
+                Value := 100
+                Return Value . " %"
+            }
         }
         Else {
             Return ""
