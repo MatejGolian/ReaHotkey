@@ -1853,10 +1853,11 @@ Class GraphicalSlider Extends FocusableGraphic {
                 If Not Target%Coordinate%Coordinate = This.Found%Coordinate%Coordinate
                 While This.Found%Coordinate%Coordinate = FoundCoordinate
                 Drag()
-                This.CenterMouse()
             }
-            If This.State = 1
-            AccessibilityOverlay.Speak(This.GetPosition())
+            If This.State = 1 {
+                This.CenterMouse()
+                AccessibilityOverlay.Speak(This.GetPosition())
+            }
         }
         Drag() {
             If Coordinate = "X"
