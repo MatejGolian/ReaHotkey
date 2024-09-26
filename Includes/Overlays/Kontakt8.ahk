@@ -198,7 +198,7 @@ Class Kontakt8 {
                     Return
                 }
             }
-            AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in rack view.")
+            AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in classic view.")
             CheckColor() {
                 MouseGetPos &mouseXPosition, &mouseYPosition
                 If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x424142" Or PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x545454"
