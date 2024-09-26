@@ -7,7 +7,7 @@ Class CinematicStudioSeries {
         Kontakt7XOffset := 0
         Kontakt7YOffset := 0
         Kontakt8XOffset := 0
-        Kontakt8YOffset := 0
+        Kontakt8YOffset := 29
         KompleteKontrolXOffset := 190
         KompleteKontrolYOffset := 111
         
