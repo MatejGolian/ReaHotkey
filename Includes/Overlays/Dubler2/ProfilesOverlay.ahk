@@ -26,7 +26,7 @@ Static ActivateProfileButton(ButtonObj) {
     }
     ActionsMenu.Add("Duplicate Profile", ObjBindMethod(Dubler2, "DuplicateProfile", ButtonObj.ProfileFile))
     ActionsMenu.Add("Rename Profile", ObjBindMethod(Dubler2, "RenameProfile", ButtonObj.ProfileFile))
-    ActionsMenu.Add("Delete Profile", ObjBindMethod(Dubler2, "DeleteProfile", ButtonObj.ProfileFile, Button.Index))
+    ActionsMenu.Add("Delete Profile", ObjBindMethod(Dubler2, "DeleteProfile", ButtonObj.ProfileFile, ButtonObj.Index))
 
     ActionsMenu.Show()
 }
@@ -188,7 +188,7 @@ Static CreateProfilesOverlay(Overlay) {
         Else
             Suffix := "(Passive)"
 
-        ButtonObj := Dubler2.ProfileButton(Profiles[A_LoopField]["profileName"] . " " . Suffix, ObjBindMethod(Dubler2, "FocusButton"), ObjBindMethod(Dubler2, "ActivateProfileButton"))
+        ButtonObj := Dubler2.ProfileButton(Profiles[A_LoopField]["profileName"] . " " . Suffix, ObjBindMethod(Dubler2, "FocusButton"), , , ObjBindMethod(Dubler2, "ActivateProfileButton"))
         ButtonObj.Index := A_Index
         ButtonObj.ProfileFile := A_LoopField
         Overlay.AddControl(ButtonObj)
