@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added option to disable the 'window may be covered' warning
+-   Added Kontakt 8 support
 
 ## [0.4.9] - 2024-08-16
 
