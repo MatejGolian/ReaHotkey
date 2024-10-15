@@ -13,7 +13,7 @@ SetupTriggers(TabObj) {
     ]
 
     Loop Dubler2.ProfileLoaded["Current"]["triggers"]["numTriggers"] {
-        TB := TriggerButton(Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][A_Index]["name"] . " (" . Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][A_Index]["numExamples"] . " takes), Trigger " . A_Index . " Of " . Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"].Length, ObjBindMethod(Dubler2, "FocusButton"), ClickTriggerButton)
+        TB := TriggerButton(Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][A_Index]["name"] . " (" . Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][A_Index]["numExamples"] . " takes), Trigger " . A_Index . " Of " . Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"].Length, ObjBindMethod(Dubler2, "FocusButton"), , , ClickTriggerButton)
         TB.Index := A_Index
         TB.X := TriggerSlots[A_Index][1]
         TB.Y := TriggerSlots[A_Index][2]
