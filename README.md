@@ -56,7 +56,6 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 ## Known Issues
 
 * The ReaHotkey script can crash while In Dubler 2 audio calibration view. In that case just start the script again.
-* If you find that your keyboard or ReaHotkey itself is not responding as expected after interacting with Kontakt menus, press the Escape key.
 * Using any other zoom value in Kontakt than 100% may result in ReaHotkey not operating correctly.
 * Due to OCR limitations the Komplete Kontrol Save Preset dialog may display incorrect preset names at times.
 
