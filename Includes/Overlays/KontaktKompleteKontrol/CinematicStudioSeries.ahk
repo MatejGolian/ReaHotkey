@@ -6,6 +6,8 @@ Class CinematicStudioSeries {
         PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
         Kontakt7XOffset := 0
         Kontakt7YOffset := 0
+        Kontakt8XOffset := 0
+        Kontakt8YOffset := 29
         KompleteKontrolXOffset := 190
         KompleteKontrolYOffset := 111
         

@@ -373,7 +373,7 @@ AssignTab.AddControl(CustomButton("AAA Output Threshold Maximum: " . Dubler2.Pro
 AssignTab.AddControl(CustomButton("AAA CC Value: " . Dubler2.ProfileLoaded["Current"]["AAAccNum"], ObjBindMethod(Dubler2, "FocusButton"), , ActivateCCButton.Bind("AAA")))
 
 AssignTab.AddControl(Dubler2.HotspotCheckbox("EEE enabled", 852, 230, Not Dubler2.ProfileLoaded["Current"]["EEELocked"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
-AssignTab.AddControl(CustomButton("EEE Input Threshold Minimum: " . Dubler2.ProfileLoaded["Current"]["EEEInputThresholds"]["min"], ObjBindMethod(Dubler2, "FocusButton"), ActivateThresholdButton.Bind("EEE", True, "min")))
+AssignTab.AddControl(CustomButton("EEE Input Threshold Minimum: " . Dubler2.ProfileLoaded["Current"]["EEEInputThresholds"]["min"], ObjBindMethod(Dubler2, "FocusButton"), , ActivateThresholdButton.Bind("EEE", True, "min")))
 AssignTab.AddControl(CustomButton("EEE Input Threshold Maximum: " . Dubler2.ProfileLoaded["Current"]["EEEInputThresholds"]["max"], ObjBindMethod(Dubler2, "FocusButton"), , ActivateThresholdButton.Bind("EEE", True, "max")))
 AssignTab.AddControl(CustomButton("EEE Output Threshold Minimum: " . Dubler2.ProfileLoaded["Current"]["EEEOutputThresholds"]["min"], ObjBindMethod(Dubler2, "FocusButton"), , ActivateThresholdButton.Bind("EEE", False, "min")))
 AssignTab.AddControl(CustomButton("EEE Output Threshold Maximum: " . Dubler2.ProfileLoaded["Current"]["EEEOutputThresholds"]["max"], ObjBindMethod(Dubler2, "FocusButton"), , ActivateThresholdButton.Bind("EEE", False, "max")))
