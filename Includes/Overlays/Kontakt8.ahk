@@ -33,6 +33,7 @@ Class Kontakt8 {
         Plugin.RegisterOverlayHotkeys("Kontakt 8", PluginHeader)
         
         Plugin.SetTimer("Kontakt 8", ObjBindMethod(Kontakt8, "CheckPluginConfig"), -1)
+        Plugin.SetTimer("Kontakt 8", ObjBindMethod(Kontakt8, "CheckPluginMenu"), 200)
         
         Plugin.Register("Kontakt 8 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(Kontakt8, "CheckPluginContentMissing"))
         Plugin.SetHotkey("Kontakt 8 Content Missing Dialog", "!F4", ObjBindMethod(Kontakt8, "ClosePluginContentMissingDialog"))
@@ -44,6 +45,7 @@ Class Kontakt8 {
         
         Standalone.Register("Kontakt 8", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 8.exe", False, False)
         Standalone.SetTimer("Kontakt 8", ObjBindMethod(Kontakt8, "CheckStandaloneConfig"), -1)
+        Standalone.SetTimer("Kontakt 8", ObjBindMethod(Kontakt8, "CheckStandaloneMenu"), 200)
         Standalone.RegisterOverlay("Kontakt 8", StandaloneHeader)
         
         Standalone.Register("Kontakt 8 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 8.exe", False, False)
@@ -51,6 +53,27 @@ Class Kontakt8 {
         StandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
         StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372).SetHotkey("!B", "Alt+B")
         Standalone.RegisterOverlay("Kontakt 8 Content Missing Dialog", StandaloneContentMissingOverlay)
+    }
+    
+    Static CheckMenu(Type) {
+        Thread "NoTimers"
+        If Type = "Plugin"
+        UIAPaths := ["15,1,14", "15,1,15", "15,1,16", "15,1,17"]
+        Else
+        UIAPaths := ["1,14", "1,15", "1,16", "1,17"]
+        Found := False
+        Try
+        For UIAPath In UIAPaths {
+            UIAElement := GetUIAElement(UIAPath)
+            If UIAElement Is Object And UIAElement.Type = 50009 {
+                Found := True
+                Break
+            }
+        }
+        If Found = False
+        %Type%.SetNoHotkeys("Kontakt 8", False)
+        Else
+        %Type%.SetNoHotkeys("Kontakt 8", True)
     }
     
     Static CheckPlugin(*) {
@@ -85,9 +108,17 @@ Class Kontakt8 {
         Return False
     }
     
+    Static CheckPluginMenu(*) {
+        Kontakt8.CheckMenu("Plugin")
+    }
+    
     Static CheckStandaloneConfig() {
         If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1) = 1
         Kontakt8.CloseStandaloneBrowser()
+    }
+    
+    Static CheckStandaloneMenu(*) {
+        Kontakt8.CheckMenu("Standalone")
     }
     
     Static ClosePluginBrowser() {
@@ -160,12 +191,10 @@ Class Kontakt8 {
             Switch HeaderButton.Label {
                 Case "FILE menu":
                 UIAElement.Click("Left")
-                Kontakt8.OpenMenu("Plugin")
                 Case "LIBRARY On/Off":
                 UIAElement.Click("Left")
                 Case "VIEW menu":
                 UIAElement.Click("Left")
-                Kontakt8.OpenMenu("Plugin")
                 Case "SHOP (Opens in default web browser)":
                 UIAElement.Click("Left")
             }
@@ -189,7 +218,6 @@ Class Kontakt8 {
                 If InStr(SnapshotButton.Label, "Snapshot", True) {
                     Kontakt8.MoveToPluginSnapshotButton(SnapshotButton)
                     Click
-                    Kontakt8.OpenPluginMenu()
                     Return
                 }
                 Else {
@@ -227,86 +255,15 @@ Class Kontakt8 {
             Switch HeaderButton.Label {
                 Case "FILE menu":
                 UIAElement.Click("Left")
-                Kontakt8.OpenMenu("Standalone")
                 Case "LIBRARY On/Off":
                 UIAElement.Click("Left")
                 Case "VIEW menu":
                 UIAElement.Click("Left")
-                Kontakt8.OpenMenu("Standalone")
                 Case "SHOP (Opens in default web browser)":
                 UIAElement.Click("Left")
             }
             Else
             AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
-        }
-    }
-    
-    Class CloseMenu {
-        Static Call(Type, ThisHotkey) {
-        Thread "NoTimers"
-            SendCommand := ""
-            If ThisHotkey = "Escape"
-            SendCommand := "{Escape}"
-            If ThisHotkey = "!F4"
-            SendCommand := "!{F4}"
-            If Type = "Plugin"
-            HotIfWinActive(ReaHotkey.PluginWinCriteria)
-            If Type = "Standalone"
-            HotIf
-            If Type = "Plugin" And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt 8" And ReaHotkey.FoundPlugin.NoHotkeys = True {
-                ReaHotkey.FoundPlugin.SetNoHotkeys(False)
-                TurnHotkeysOff()
-                If Not SendCommand = ""
-                Send SendCommand
-            }
-            Else If Type = "Plugin" And ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Kontakt 8 Content Missing Dialog" {
-                Plugin.SetNoHotkeys("Kontakt 8", False)
-                TurnHotkeysOff()
-                If Not SendCommand = ""
-                Send SendCommand
-            }
-            Else If Type = "Standalone" And ReaHotkey.foundStandalone Is Standalone And ReaHotkey.foundStandalone.Name = "Kontakt 8" And ReaHotkey.FoundStandalone.NoHotkeys = True {
-                ReaHotkey.foundStandalone.SetNoHotkeys(False)
-                TurnHotkeysOff()
-                If Not SendCommand = ""
-                Send SendCommand
-            }
-            Else If Type = "Standalone" And ReaHotkey.foundStandalone Is Standalone And ReaHotkey.foundStandalone.Name = "Kontakt 8 Content Missing Dialog" {
-                Standalone.SetNoHotkeys("Kontakt 8", False)
-                TurnHotkeysOff()
-                If Not SendCommand = ""
-                Send SendCommand
-            }
-            Else {
-                TurnHotkeysOff()
-                If Not SendCommand = ""
-                Send SendCommand
-                TurnHotkeysOn()
-            }
-            TurnHotkeysOff() {
-                ReaHotkey.Override%Type%Hotkey("Kontakt 8", "Escape", "Off")
-                ReaHotkey.Override%Type%Hotkey("Kontakt 8", "!F4", "Off")
-                ReaHotkey.Override%Type%Hotkey("Kontakt 8 Content Missing Dialog", "Escape", "Off")
-                ReaHotkey.Override%Type%Hotkey("Kontakt 8 Content Missing Dialog", "!F4", "Off")
-            }
-            TurnHotkeysOn() {
-                ReaHotkey.Override%Type%Hotkey("Kontakt 8", "Escape", "On")
-                ReaHotkey.Override%Type%Hotkey("Kontakt 8", "!F4", "On")
-                ReaHotkey.Override%Type%Hotkey("Kontakt 8 Content Missing Dialog", "Escape", "On")
-                ReaHotkey.Override%Type%Hotkey("Kontakt 8 Content Missing Dialog", "!F4", "On")
-            }
-        }
-    }
-    
-    Class ClosePluginMenu {
-        Static Call(ThisHotkey) {
-            Kontakt8.CloseMenu("Plugin", ThisHotkey)
-        }
-    }
-    
-    Class CloseStandaloneMenu {
-        Static Call(ThisHotkey) {
-            Kontakt8.CloseMenu("Standalone", ThisHotkey)
         }
     }
     
@@ -335,33 +292,6 @@ Class Kontakt8 {
                 Else
                 MouseMove ControlX + ControlWidth - 381, ControlY + 169
             }
-        }
-    }
-    
-    Class OpenMenu {
-        Static Call(Type) {
-            If ReaHotkey.Found%Type% Is %Type%
-            ReaHotkey.Found%Type%.SetNoHotkeys(True)
-            If Type = "Plugin"
-            HotIfWinActive(ReaHotkey.PluginWinCriteria)
-            If Type = "Standalone"
-            HotIf
-            ReaHotkey.Override%Type%Hotkey("Kontakt 8", "Escape", Kontakt8.Close%Type%Menu, "On")
-            ReaHotkey.Override%Type%Hotkey("Kontakt 8", "!F4", Kontakt8.Close%Type%Menu, "On")
-            ReaHotkey.Override%Type%Hotkey("Kontakt 8 Content Missing Dialog", "Escape", Kontakt8.Close%Type%Menu, "On")
-            ReaHotkey.Override%Type%Hotkey("Kontakt 8 Content Missing Dialog", "!F4", Kontakt8.Close%Type%Menu, "On")
-        }
-    }
-    
-    Class OpenPluginMenu {
-        Static Call(*) {
-            Kontakt8.OpenMenu("Plugin")
-        }
-    }
-    
-    Class OpenStandaloneMenu {
-        Static Call(*) {
-            Kontakt8.OpenMenu("Standalone")
         }
     }
     
