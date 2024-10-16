@@ -57,16 +57,19 @@ Class Kontakt7 {
     
     Static CheckMenu(Type) {
         Thread "NoTimers"
-        Found := True
-        UIAPath := "15,1"
-        If Type = "Standalone"
-        UIAPath := 1
-        UIAElement := GetUIAElement(UIAPath)
-        If Not UIAElement = False
+        If Type = "Plugin"
+        UIAPaths := ["15,1,14", "15,1,15", "15,1,16", "15,1,17"]
+        Else
+        UIAPaths := ["1,14", "1,15", "1,16", "1,17"]
+        Found := False
         Try
-        UIAElement.FindElement({Type:"Menu"})
-        Catch
-        Found  := False
+        For UIAPath In UIAPaths {
+            UIAElement := GetUIAElement(UIAPath)
+            If Not UIAElement = False And UIAElement.Type = 50009 {
+                Found := True
+                Break
+            }
+        }
         If Found = False
         %Type%.SetNoHotkeys("Kontakt 7", False)
         Else
