@@ -65,15 +65,15 @@ Class Kontakt8 {
         Try
         For UIAPath In UIAPaths {
             UIAElement := GetUIAElement(UIAPath)
-            If Not UIAElement = False And UIAElement.Type = 50009 {
+            If UIAElement Is Object And UIAElement.Type = 50009 {
                 Found := True
                 Break
             }
         }
         If Found = False
-        %Type%.SetNoHotkeys("Kontakt 7", False)
+        %Type%.SetNoHotkeys("Kontakt 8", False)
         Else
-        %Type%.SetNoHotkeys("Kontakt 7", True)
+        %Type%.SetNoHotkeys("Kontakt 8", True)
     }
     
     Static CheckPlugin(*) {

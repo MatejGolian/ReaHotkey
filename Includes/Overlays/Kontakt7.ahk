@@ -65,7 +65,7 @@ Class Kontakt7 {
         Try
         For UIAPath In UIAPaths {
             UIAElement := GetUIAElement(UIAPath)
-            If Not UIAElement = False And UIAElement.Type = 50009 {
+            If UIAElement Is Object And UIAElement.Type = 50009 {
                 Found := True
                 Break
             }
