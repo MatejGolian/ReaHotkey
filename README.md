@@ -26,6 +26,8 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - Works both inside REAPER and in the standalone version of Komplete Kontrol.
 * Makes it possible to interact with Kontakt menus.
   - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.10 or higher is required.
+* Makes it possible to switch Between instruments/NKIs in Kontakt.
+  - Only works inside REAPER.
 * Makes it possible to select and cycle through snapshots in Kontakt.
   - Only works inside REAPER.
 * Provides support for the 'Browse' button in the Kontakt Content Missing dialog.
@@ -105,5 +107,4 @@ HotspotHelper is a special utility to make developing these kind of scripts a li
 
 This is an incomplete list of features we're planning to look into in the future or are currently developing. Noone can guarantee that they will ever become reality, but they might at some point, and you can always open an issue to either offer help or request a new entry on this list. This list doesn't necessarily include bugfixes or additional features for entries above, except if they require special treatment and time to investigate them.
 
-* Switching between instruments in Kontakt
 * Melodyne accessibility
