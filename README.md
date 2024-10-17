@@ -56,7 +56,8 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 ## Known Issues
 
 * The ReaHotkey script can crash while In Dubler 2 audio calibration view. In that case just start the script again.
-* Using any other zoom value in Kontakt than 100% may result in ReaHotkey not operating correctly.
+* Using any other zoom value in Kontakt than 100% may result in ReaHotkey not operating as excepted.
+* At present library-specific overlays may not always behave correctly when used directly in the Kontakt 8 plug-in. In such case try using Kontakt 7 or open the given library from within Komplete Kontrol instead.
 * Due to OCR limitations the Komplete Kontrol Save Preset dialog may display incorrect preset names at times.
 
 ## <a name="dubler2"></a>Dubler 2 Accessibility
