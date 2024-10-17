@@ -36,8 +36,6 @@ Class Kontakt8 {
         Plugin.SetTimer("Kontakt 8", ObjBindMethod(Kontakt8, "CheckPluginMenu"), 200)
         
         Plugin.Register("Kontakt 8 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(Kontakt8, "CheckPluginContentMissing"))
-        Plugin.SetHotkey("Kontakt 8 Content Missing Dialog", "!F4", ObjBindMethod(Kontakt8, "ClosePluginContentMissingDialog"))
-        Plugin.SetHotkey("Kontakt 8 Content Missing Dialog", "Escape", ObjBindMethod(Kontakt8, "ClosePluginContentMissingDialog"))
         
         PluginContentMissingOverlay := AccessibilityOverlay("Content Missing")
         PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372).SetHotkey("!B", "Alt+B")
@@ -136,16 +134,6 @@ Class Kontakt8 {
         }
     }
     
-    Static ClosePluginContentMissingDialog(*) {
-        Critical
-        If ReaHotkey.FoundPlugin Is Plugin And WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria)
-        If ReaHotkey.FoundPlugin.Name = "Kontakt 8 Content Missing Dialog" And WinGetTitle("A") = "content Missing" {
-            ReaHotkey.FoundPlugin.Overlay.Reset()
-            WinClose("A")
-            Sleep 500
-        }
-    }
-    
     Static CloseStandaloneBrowser() {
         UIAElement := GetUIAElement("1,14,3")
         If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
@@ -174,6 +162,7 @@ Class Kontakt8 {
     
     Class  ActivatePluginHeaderButton {
         Static Call(HeaderButton) {
+            Critical
             UIAElement := False
             Switch HeaderButton.Label {
                 Case "FILE menu":
@@ -191,10 +180,12 @@ Class Kontakt8 {
             Switch HeaderButton.Label {
                 Case "FILE menu":
                 UIAElement.Click("Left")
+                Kontakt8.CheckPluginMenu()
                 Case "LIBRARY On/Off":
                 UIAElement.Click("Left")
                 Case "VIEW menu":
                 UIAElement.Click("Left")
+                Kontakt8.CheckPluginMenu()
                 Case "SHOP (Opens in default web browser)":
                 UIAElement.Click("Left")
             }
@@ -205,19 +196,19 @@ Class Kontakt8 {
     
     Class ActivatePluginSnapshotButton {
         Static Call(SnapshotButton) {
+            Critical
             UIAElement := GetUIAElement("15,1,5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
                 ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
                 Catch
                 Return
-                Click ControlX + ControlWidth - 296, ControlY + 141
-                Sleep 10
                 Kontakt8.MoveToPluginSnapshotButton("Previous snapshot")
                 If CheckColor()
                 If InStr(SnapshotButton.Label, "Snapshot", True) {
                     Kontakt8.MoveToPluginSnapshotButton(SnapshotButton)
                     Click
+                    Kontakt8.CheckPluginMenu()
                     Return
                 }
                 Else {
@@ -238,6 +229,7 @@ Class Kontakt8 {
     
     Class  ActivateStandaloneHeaderButton {
         Static Call(HeaderButton) {
+            Critical
             UIAElement := False
             Switch HeaderButton.Label {
                 Case "FILE menu":
@@ -255,10 +247,12 @@ Class Kontakt8 {
             Switch HeaderButton.Label {
                 Case "FILE menu":
                 UIAElement.Click("Left")
+                Kontakt8.CheckStandaloneMenu()
                 Case "LIBRARY On/Off":
                 UIAElement.Click("Left")
                 Case "VIEW menu":
                 UIAElement.Click("Left")
+                Kontakt8.CheckStandaloneMenu()
                 Case "SHOP (Opens in default web browser)":
                 UIAElement.Click("Left")
             }
