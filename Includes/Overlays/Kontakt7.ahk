@@ -210,12 +210,14 @@ Class Kontakt7 {
                     Kontakt7.MoveToPluginInstrumentButton(InstrumentButton)
                     Click
                     Return
-            }
+                }
             }
             AccessibilityOverlay.Speak("Instrument switching unavailable. Make sure that an instrument is loaded and that you're in rack view.")
             CheckColor() {
                 MouseGetPos &mouseXPosition, &mouseYPosition
-                If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x424142" Or PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x545454"
+                Sleep 10
+                FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
+                If FoundColor = "0x545355" Or FoundColor = "0x656465"
                 Return True
                 Return False
             }
@@ -248,7 +250,9 @@ Class Kontakt7 {
             AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in rack view.")
             CheckColor() {
                 MouseGetPos &mouseXPosition, &mouseYPosition
-                If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x424142" Or PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x545454"
+                Sleep 10
+                FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
+                If FoundColor = "0x424142" Or FoundColor = "0x545454"
                 Return True
                 Return False
             }
@@ -301,9 +305,9 @@ Class Kontakt7 {
                 Catch
                 Return
                 If Label = "Previous instrument"
-                MouseMove ControlX + ControlWidth - 352, ControlY + 88
+                MouseMove ControlX + ControlWidth - 344, ControlY + 138
                 Else
-                MouseMove ControlX + ControlWidth - 332, ControlY + 88
+                MouseMove ControlX + ControlWidth - 324, ControlY + 138
             }
         }
     }
