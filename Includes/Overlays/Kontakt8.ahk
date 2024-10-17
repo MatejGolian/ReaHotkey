@@ -16,6 +16,8 @@ Class Kontakt8 {
         PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",,, Kontakt8.ActivatePluginHeaderButton).SetHotkey("!S", "Alt+S")
         PluginHeader.AddCustomButton("Previous instrument", Kontakt8.MoveToPluginInstrumentButton,,, Kontakt8.ActivatePluginInstrumentButton).SetHotkey("^P", "Ctrl+P")
         PluginHeader.AddCustomButton("Next instrument", Kontakt8.MoveToPluginInstrumentButton,,, Kontakt8.ActivatePluginInstrumentButton).SetHotkey("^N", "Ctrl+N")
+        PluginHeader.AddCustomButton("Previous multi", Kontakt8.MoveToPluginMultiButton,,, Kontakt8.ActivatePluginMultiButton).SetHotkey("^+P", "Ctrl+Shift+P")
+        PluginHeader.AddCustomButton("Next multi", Kontakt8.MoveToPluginMultiButton,,, Kontakt8.ActivatePluginMultiButton).SetHotkey("^+N", "Ctrl+Shift+N")
         PluginHeader.AddCustomButton("Snapshot menu", Kontakt8.MoveToPluginSnapshotButton,,, Kontakt8.ActivatePluginSnapshotButton).SetHotkey("!M", "Alt+M")
         PluginHeader.AddCustomButton("Previous snapshot", Kontakt8.MoveToPluginSnapshotButton,,, Kontakt8.ActivatePluginSnapshotButton).SetHotkey("!P", "Alt+P")
         PluginHeader.AddCustomButton("Next snapshot", Kontakt8.MoveToPluginSnapshotButton,,, Kontakt8.ActivatePluginSnapshotButton).SetHotkey("!N", "Alt+N")
@@ -224,6 +226,34 @@ Class Kontakt8 {
         }
     }
     
+    Class ActivatePluginMultiButton {
+        Static Call(MultiButton) {
+            Critical
+            UIAElement := GetUIAElement("15,1,5")
+            If Not UIAElement = False And UIAElement.Name = "SHOP" {
+                Try
+                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+                Catch
+                Return
+                Kontakt8.MoveToPluginMultiButton("Previous multi")
+                If CheckColor() {
+                    Kontakt8.MoveToPluginMultiButton(MultiButton)
+                    Click
+                    Return
+                }
+            }
+            AccessibilityOverlay.Speak("Multi switching unavailable. Make sure that a multi is loaded and that you're in classic view.")
+            CheckColor() {
+                MouseGetPos &mouseXPosition, &mouseYPosition
+                Sleep 10
+                FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
+                If FoundColor = "0x545355" Or FoundColor = "0x656465"
+                Return True
+                Return False
+            }
+        }
+    }
+    
     Class ActivatePluginSnapshotButton {
         Static Call(SnapshotButton) {
             Critical
@@ -308,6 +338,25 @@ Class Kontakt8 {
                 MouseMove ControlX + ControlWidth - 344, ControlY + 138
                 Else
                 MouseMove ControlX + ControlWidth - 324, ControlY + 138
+            }
+        }
+    }
+    
+    Class MoveToPluginMultiButton {
+        Static Call(MultiButton) {
+            Label := MultiButton
+            If MultiButton Is Object
+            Label := MultiButton.Label
+            UIAElement := GetUIAElement("15,1,5")
+            If Not UIAElement = False And UIAElement.Name = "SHOP" {
+                Try
+                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+                Catch
+                Return
+                If Label = "Previous multi"
+                MouseMove ControlX + 380, ControlY + 104
+                Else
+                MouseMove ControlX + 400, ControlY + 104
             }
         }
     }
