@@ -14,6 +14,8 @@ Class Kontakt8 {
         PluginHeader.AddCustomButton("LIBRARY On/Off",,, Kontakt8.ActivatePluginHeaderButton).SetHotkey("!L", "Alt+L")
         PluginHeader.AddCustomButton("VIEW menu",,, Kontakt8.ActivatePluginHeaderButton).SetHotkey("!V", "Alt+V")
         PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",,, Kontakt8.ActivatePluginHeaderButton).SetHotkey("!S", "Alt+S")
+        PluginHeader.AddCustomButton("Previous instrument", Kontakt8.MoveToPluginInstrumentButton,,, Kontakt8.ActivatePluginInstrumentButton).SetHotkey("^P", "Ctrl+P")
+        PluginHeader.AddCustomButton("Next instrument", Kontakt8.MoveToPluginInstrumentButton,,, Kontakt8.ActivatePluginInstrumentButton).SetHotkey("^N", "Ctrl+N")
         PluginHeader.AddCustomButton("Snapshot menu", Kontakt8.MoveToPluginSnapshotButton,,, Kontakt8.ActivatePluginSnapshotButton).SetHotkey("!M", "Alt+M")
         PluginHeader.AddCustomButton("Previous snapshot", Kontakt8.MoveToPluginSnapshotButton,,, Kontakt8.ActivatePluginSnapshotButton).SetHotkey("!P", "Alt+P")
         PluginHeader.AddCustomButton("Next snapshot", Kontakt8.MoveToPluginSnapshotButton,,, Kontakt8.ActivatePluginSnapshotButton).SetHotkey("!N", "Alt+N")
@@ -194,6 +196,34 @@ Class Kontakt8 {
         }
     }
     
+    Class ActivatePluginInstrumentButton {
+        Static Call(InstrumentButton) {
+            Critical
+            UIAElement := GetUIAElement("15,1,5")
+            If Not UIAElement = False And UIAElement.Name = "SHOP" {
+                Try
+                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+                Catch
+                Return
+                Kontakt8.MoveToPluginInstrumentButton("Previous instrument")
+                If CheckColor() {
+                    Kontakt8.MoveToPluginInstrumentButton(InstrumentButton)
+                    Click
+                    Return
+                }
+            }
+            AccessibilityOverlay.Speak("Instrument switching unavailable. Make sure that an instrument is loaded and that you're in classic view.")
+            CheckColor() {
+                MouseGetPos &mouseXPosition, &mouseYPosition
+                Sleep 10
+                FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
+                If FoundColor = "0x545355" Or FoundColor = "0x656465"
+                Return True
+                Return False
+            }
+        }
+    }
+    
     Class ActivatePluginSnapshotButton {
         Static Call(SnapshotButton) {
             Critical
@@ -220,7 +250,9 @@ Class Kontakt8 {
             AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in classic view.")
             CheckColor() {
                 MouseGetPos &mouseXPosition, &mouseYPosition
-                If PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x424142" Or PixelGetColor(MouseXPosition, MouseYPosition, "Slow") = "0x545454"
+                Sleep 10
+                FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
+                If FoundColor = "0x424142" Or FoundColor = "0x545454"
                 Return True
                 Return False
             }
@@ -258,6 +290,25 @@ Class Kontakt8 {
             }
             Else
             AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
+        }
+    }
+    
+    Class MoveToPluginInstrumentButton {
+        Static Call(InstrumentButton) {
+            Label := InstrumentButton
+            If InstrumentButton Is Object
+            Label := InstrumentButton.Label
+            UIAElement := GetUIAElement("15,1,5")
+            If Not UIAElement = False And UIAElement.Name = "SHOP" {
+                Try
+                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+                Catch
+                Return
+                If Label = "Previous instrument"
+                MouseMove ControlX + ControlWidth - 344, ControlY + 138
+                Else
+                MouseMove ControlX + ControlWidth - 324, ControlY + 138
+            }
         }
     }
     
