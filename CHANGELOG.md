@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Added option to disable the 'window may be covered' warning
 -   Added Kontakt 8 support
--   Added Kontakt instrument switching
+-   Added Kontakt instrument and multi switching
 
 ### Changed
 

@@ -26,9 +26,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - Works both inside REAPER and in the standalone version of Komplete Kontrol.
 * Makes it possible to interact with Kontakt menus.
   - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.10 or higher is required.
-* Makes it possible to switch Between instruments/NKIs in Kontakt.
-  - Only works inside REAPER.
-* Makes it possible to select and cycle through snapshots in Kontakt.
+* Makes it possible to switch Between instruments, multis and snapshots in Kontakt.
   - Only works inside REAPER.
 * Provides support for the 'Browse' button in the Kontakt Content Missing dialog.
   - Works both inside REAPER and in the standalone version of Kontakt. This feature may not work with Komplete Kontrol.
