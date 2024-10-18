@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2024-10-18
+
 ### Added
 
 -   Added option to disable the 'window may be covered' warning
@@ -164,7 +166,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.9...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.0...HEAD
+
+[0.5.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.9...0.5.0
 
 [0.4.9]: https://github.com/MatejGolian/ReaHotkey/compare/0.4.8...0.4.9
 

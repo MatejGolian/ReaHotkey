@@ -229,7 +229,7 @@ PitchTab.SetHotkey("^2", "Ctrl + 2")
 PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch enabled", 371, 161, Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch Bend enabled", 354, 501, Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchBendEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 
-SynthPresetCtrl := PopulatedComboBox("Synth Preset", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+SynthPresetCtrl := PopulatedComboBox("Synth Preset", ObjBindMethod(Dubler2, "FocusComboBox"), , ObjBindMethod(Dubler2, "SelectComboBoxItem"))
 
 For Preset In ["8 Bit Lead", "Bass Pluck", "Boards", "Pad", "Pure", "Trap Bass", "Trumpet Lead", "Wobble Bass"] {
     SynthPresetCtrl.AddItem(Preset, ClickSynthPreset.Bind(Preset))
@@ -243,7 +243,7 @@ PitchTab.AddControl(SynthPresetCtrl)
 PitchTab.AddControl(CustomButton("Input Gain: " . Integer(Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchInputGain"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), , ActivatePitchInputGainButton))
 PitchTab.AddControl(CustomButton("Octave shift: " . (Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["DublerModel"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), , ActivatePitchOctaveShiftButton))
 
-KeyCtrl := PopulatedComboBox("Key", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+KeyCtrl := PopulatedComboBox("Key", ObjBindMethod(Dubler2, "FocusComboBox"), , ObjBindMethod(Dubler2, "SelectComboBoxItem"))
 
 For Key In ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] {
     KeyCtrl.AddItem(Key, ClickKey.Bind(Key))
@@ -254,7 +254,7 @@ For Key In ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] {
 
 PitchTab.AddControl(KeyCtrl)
 
-ScaleCtrl := PopulatedComboBox("Scale", ObjBindMethod(Dubler2, "FocusComboBox"), ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+ScaleCtrl := PopulatedComboBox("Scale", ObjBindMethod(Dubler2, "FocusComboBox"), , ObjBindMethod(Dubler2, "SelectComboBoxItem"))
 
 For Scale In ["Major", "Minor", "Harmonic Minor", "Major Pentatonic", "Minor Pentatonic", "Blues", "Locrian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Hungarian (Gypsy) Minor", "Whole Tone", "Aeolian Dominant (Hindu)", "Chromatic"] {
     ScaleCtrl.AddItem(Scale, ClickScale.Bind(Scale))
