@@ -4,18 +4,16 @@ Class PopulatedComboBox extends CustomComboBox {
 
     Values := Array()
     
-    __New(Label, OnFocusFunction := "", OnChangeFunction := "") {
+    __New(Label, PreExecFocusFunction := "", PostExecFocusFunction := "", ChangeFunctions := "") {
 
-        Change := Array(ObjBindMethod(This, "OnChange"))
+        if ChangeFunctions != "" And Not ChangeFunctions Is Array
+            ChangeFunctions := Array(ChangeFunctions)
+        Else If ChangeFunctions == ""
+            ChangeFunctions := Array()
 
-        If OnChangeFunction != "" {
-            If Not OnChangeFunction Is Array
-                Change.Push(OnChangeFunction)
-            Else
-                Change.Push(OnChangeFunction*)
-        }
+        ChangeFunctions.Push(ObjBindMethod(This, "OnChange"))
 
-        Super.__New(Label, OnFocusFunction, , Change)
+        Super.__New(Label, PreExecFocusFunction, PostExecFocusFunction, ChangeFunctions)
     }
 
     AddItem(Label, Selector := "") {
