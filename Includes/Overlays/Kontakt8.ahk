@@ -247,7 +247,7 @@ Class Kontakt8 {
                 MouseGetPos &mouseXPosition, &mouseYPosition
                 Sleep 10
                 FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
-                If FoundColor = "0x545355" Or FoundColor = "0x656465"
+                If FoundColor = "0x323232"
                 Return True
                 Return False
             }
@@ -354,9 +354,9 @@ Class Kontakt8 {
                 Catch
                 Return
                 If Label = "Previous multi"
-                MouseMove ControlX + 380, ControlY + 104
+                MouseMove ControlX + 730, ControlY + 104
                 Else
-                MouseMove ControlX + 400, ControlY + 104
+                MouseMove ControlX + 750, ControlY + 104
             }
         }
     }
