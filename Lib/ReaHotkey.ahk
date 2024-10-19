@@ -514,7 +514,7 @@ Class ReaHotkey {
                 Return
             }
             DisplayDownloadPrompt() {
-                Prompt := MsgBox("A new Version of ReaHotkey is available.`nProceed to download page?", "Update available", 4)
+                Prompt := MsgBox("A newer Version of ReaHotkey is available.`nProceed to download page?", "Update available", 4)
                 If Prompt == "Yes"
                 Run ReleaseBaseURL . LatestVersion
             }
