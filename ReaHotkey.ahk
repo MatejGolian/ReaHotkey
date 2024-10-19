@@ -11,6 +11,8 @@ InstallKeybdHook
 SendMode "Input"
 SetTitleMatchMode "RegEx"
 
+#Include Includes/Version.ahk
+
 #Include <AccessibilityOverlay>
 #Include <AccessibleMenu>
 #Include <AccessiblePluginMenu>
@@ -39,5 +41,4 @@ AccessibilityOverlay.Speak("ReaHotkey ready")
 #Include Includes/Hotkey.Functions.ahk
 #Include Includes/Overlay.Definitions.ahk
 #Include Includes/Overlay.Functions.ahk
-#Include Includes/Version.ahk
 #Include *i Includes/CIVersion.ahk

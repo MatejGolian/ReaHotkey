@@ -22,6 +22,8 @@ Class ReaHotkey {
         ReaHotkey.InitConfig()
         If IniRead("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1) = 1
         ReaHotkey.CheckResolution()
+        If IniRead("ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup", 1) = 1
+        ReaHotkey.CheckForUpdates()
         SetTimer ReaHotkey.ManageState, 100
         If IniRead("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1) = 1
         SetTimer ReaHotkey.CheckIfWinCovered, 10000
@@ -150,6 +152,8 @@ Class ReaHotkey {
     Static InitConfig() {
         Value := IniRead("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1)
         IniWrite(Value, "ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup")
+        Value := IniRead("ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup", 1)
+        IniWrite(Value, "ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup")
         Value := IniRead("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1)
         IniWrite(Value, "ReaHotkey.ini", "Config", "WarnIfWinCovered")
         Value := IniRead("ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection", 1)
@@ -456,6 +460,71 @@ Class ReaHotkey {
         }
     }
     
+    Class CheckForUpdates {
+        Static Call() {
+            ReleaseBaseURL := "https://github.com/matejGolian/reaHotkey/releases/"
+            VersionURL := "https://raw.githubusercontent.com/MatejGolian/ReaHotkey/main/Includes/Version.ahk"
+            CurrentVersion := StrSplit(GetVersion(), "-")
+            If CurrentVersion Is Array
+            CurrentVersion := CurrentVersion[1]
+            VersionInfo := StrSplit(CurrentVersion, ".")
+            CurrentMajorVersion := VersionInfo[1]
+            CurrentMinorVersion := VersionInfo[2]
+            CurrentMaintenanceVersion := VersionInfo[3]
+            Try {
+                WHR := ComObject("WinHttp.WinHttpRequest.5.1")
+                WHR.Open("GET", VersionURL, True)
+                WHR.Send()
+                WHR.WaitForResponse()
+                LatestVersion := WHR.ResponseText
+                LatestVersion := StrSplit(LatestVersion, "`"")
+                LatestVersion := LatestVersion[2]
+            }
+            Catch {
+                DisplayErrorMessage()
+                Return
+            }
+            If Not LatestVersion = CurrentVersion {
+                VersionInfo := StrSplit(LatestVersion, ".")
+                If VersionInfo Is Array And VersionInfo.Length > 2 {
+                    Try
+                    LatestMajorVersion := VersionInfo[1] + 0
+                    Catch
+                    LatestMajorVersion := False
+                    Try
+                    LatestMinorVersion := VersionInfo[2] + 0
+                    Catch
+                    LatestMinorVersion := False
+                    Try
+                    LatestMaintenanceVersion := VersionInfo[3] + 0
+                    Catch
+                    LatestMaintenanceVersion := False
+                    If LatestMajorVersion Is Number And LatestMinorVersion Is Number And LatestMaintenanceVersion Is Number {
+                        If LatestMajorVersion > CurrentMajorVersion
+                        DisplayDownloadPrompt()
+                        Else If LatestMajorVersion >= CurrentMajorVersion And LatestMinorVersion > CurrentMinorVersion
+                        DisplayDownloadPrompt()
+                        Else
+                        If LatestMajorVersion >= CurrentMajorVersion And LatestMinorVersion >= CurrentMinorVersion And LatestMaintenanceVersion > CurrentMaintenanceVersion
+                        DisplayDownloadPrompt()
+                        Return
+                    }
+                }
+                DisplayErrorMessage()
+                Return
+            }
+            DisplayDownloadPrompt() {
+                Prompt := MsgBox("A new Version of ReaHotkey is available.`nProceed to download page?", "Update available", 4)
+                If Prompt == "Yes"
+                Run ReleaseBaseURL . LatestVersion
+            }
+            DisplayErrorMessage() {
+                SoundPlay "*16"
+                MsgBox "Error checking for update.", "Error"
+            }
+        }
+    }
+    
     Class CheckIfWinCovered {
         Static Call() {
             Thread "NoTimers"
@@ -662,9 +731,13 @@ Class ReaHotkey {
                 Checked := "Checked"
                 ScreenResolutionBox := ConfigBox.AddCheckBox(Checked, "Check screen resolution on startup")
                 Checked := ""
+                If IniRead("ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup", 1) = 1
+                Checked := "Checked"
+                UpdateCheckBox := ConfigBox.AddCheckBox("XS " . Checked, "Check for updates on startup")
+                Checked := ""
                 If IniRead("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1) = 1
                 Checked := "Checked"
-                WinCoveredWarningBox := ConfigBox.AddCheckBox(Checked, "Warn if another window may be covering the interface")
+                WinCoveredWarningBox := ConfigBox.AddCheckBox("XS " . Checked, "Warn if another window may be covering the interface")
                 Checked := ""
                 If IniRead("ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection", 1) = 1
                 Checked := "Checked"
@@ -698,6 +771,7 @@ Class ReaHotkey {
             }
             SaveConfig(*) {
                 IniWrite(ScreenResolutionBox.Value, "ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup")
+                IniWrite(UpdateCheckBox.Value, "ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup")
                 IniWrite(WinCoveredWarningBox.Value, "ReaHotkey.ini", "Config", "WarnIfWinCovered")
                 IniWrite(Engine2PluginImageSearchBox.Value, "ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection")
                 IniWrite(KontaktKKPluginBrowserBox.Value, "ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins")
