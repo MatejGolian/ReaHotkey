@@ -11,7 +11,11 @@ Class AccessibleMenu {
     DisabledString := "unavailable"
     LeavingMenuString := "leaving menu"
     SubmenuString := "submenu"
-    Static Translations := AccessibleMenu.SetupTranslations()
+    Static Translations := Map()
+    
+    Static __New() {
+        AccessibleMenu.Translations := AccessibleMenu.SetupTranslations()
+    }
     
     Add(MenuItemName, CallbackOrSubmenu := "", Options := "") {
         MenuItemName := Trim(MenuItemName)
@@ -242,9 +246,11 @@ Class AccessibleMenu {
                 Return
             }
             Else {
+                SingleKey := ""
                 If SubStr(KeyCombo, 1, 1) = "+" And StrLen(SubStr(KeyCombo, 2)) = 1
                 SingleKey := SubStr(KeyCombo, 2)
                 Else
+                If AccessibleMenu.CurrentMenu Is AccessibleMenu
                 SingleKey := AccessibleMenu.CurrentMenu.KeyWaitSingle()
                 If SubStr(SingleKey, 1, 6) = "Numpad"
                 SingleKey := SubStr(SingleKey, 7)
