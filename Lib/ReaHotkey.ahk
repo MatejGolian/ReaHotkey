@@ -20,10 +20,18 @@ Class ReaHotkey {
         ReaHotkey.TurnPluginHotkeysOff()
         ReaHotkey.TurnStandaloneHotkeysOff()
         ReaHotkey.InitConfig()
-        If IniRead("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1) = 1
-        ReaHotkey.CheckResolution()
-        If IniRead("ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup", 1) = 1
-        ReaHotkey.CheckForUpdates()
+        ScriptReloaded := False
+        For Arg In A_Args
+        If Arg = "Reload" {
+            ScriptReloaded := True
+            Break
+        }
+        If Not ScriptReloaded {
+            If IniRead("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1) = 1
+            ReaHotkey.CheckResolution()
+            If IniRead("ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup", 1) = 1
+            ReaHotkey.CheckForUpdates()
+        }
         SetTimer ReaHotkey.ManageState, 100
         If IniRead("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1) = 1
         SetTimer ReaHotkey.CheckIfWinCovered, 10000
@@ -514,7 +522,7 @@ Class ReaHotkey {
                 Return
             }
             DisplayDownloadPrompt() {
-                Prompt := MsgBox("A newer Version of ReaHotkey is available.`nProceed to download page?", "Update available", 4)
+                Prompt := MsgBox("ReaHotkey " . LatestVersion . " is available.`nProceed to download page?", "ReaHotkey Update", 4)
                 If Prompt == "Yes"
                 Run ReleaseBaseURL . LatestVersion
             }
@@ -695,7 +703,10 @@ Class ReaHotkey {
     
     Class Reload {
         Static Call(*) {
-            Reload()
+            If A_IsCompiled = 0
+            Run A_AhkPath . " /restart " . A_ScriptFullPath . " Reload"
+            Else
+            Run A_ScriptFullPath . " /restart Reload"
         }
     }
     

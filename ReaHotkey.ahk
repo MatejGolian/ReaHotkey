@@ -12,7 +12,6 @@ SendMode "Input"
 SetTitleMatchMode "RegEx"
 
 #Include Includes/Version.ahk
-
 #Include <AccessibilityOverlay>
 #Include <AccessibleMenu>
 #Include <AccessiblePluginMenu>
