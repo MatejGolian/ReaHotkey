@@ -213,28 +213,19 @@ QuitHK(ThisHotkey) {
 }
 
 ReadmeHK(ThisHotkey) {
-    Static DialogOpen := False
-    If Not DialogOpen {
-        DialogOpen := True
-        ReaHotkey.ViewReadme()
-        DialogOpen := False
+    ReaHotkey.ViewReadme()
     }
-}
-
-ReaHotkeyMenuHK(ThisHotkey) {
-    A_TrayMenu.Show()
-}
-
-ReloadHK(ThisHotkey) {
-    ReaHotkey.Reload()
-}
-
-UpdateCheckHK(ThisHotkey) {
-    Static DialogOpen := False
-    If Not DialogOpen {
-        DialogOpen := True
+    
+    ReaHotkeyMenuHK(ThisHotkey) {
+        A_TrayMenu.Show()
+    }
+    
+    ReloadHK(ThisHotkey) {
+        ReaHotkey.Reload()
+    }
+    
+    UpdateCheckHK(ThisHotkey) {
         AccessibilityOverlay.Speak("Checking for updates...")
         ReaHotkey.CheckForUpdates(ThisHotkey)
-        DialogOpen := False
     }
-}
+        
