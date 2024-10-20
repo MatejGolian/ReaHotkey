@@ -11,6 +11,7 @@ InstallKeybdHook
 SendMode "Input"
 SetTitleMatchMode "RegEx"
 
+#Include Includes/Version.ahk
 #Include <AccessibilityOverlay>
 #Include <AccessibleMenu>
 #Include <AccessiblePluginMenu>
@@ -29,6 +30,7 @@ A_TrayMenu.Add("&Configuration...", ReaHotkey.ShowConfigBox)
 A_TrayMenu.Add("&Pause", ReaHotkey.TogglePause)
 A_TrayMenu.Add("&Reload", ReaHotkey.Reload)
 A_TrayMenu.Add("&View Readme", ReaHotkey.ViewReadme)
+A_TrayMenu.Add("Check for &updates...", ReaHotkey.CheckForUpdates)
 A_TrayMenu.Add("&About...", ReaHotkey.ShowAboutBox)
 A_TrayMenu.Add("&Quit", ReaHotkey.Quit)
 A_TrayMenu.Default := "&Configuration..."
@@ -39,5 +41,4 @@ AccessibilityOverlay.Speak("ReaHotkey ready")
 #Include Includes/Hotkey.Functions.ahk
 #Include Includes/Overlay.Definitions.ahk
 #Include Includes/Overlay.Functions.ahk
-#Include Includes/Version.ahk
 #Include *i Includes/CIVersion.ahk
