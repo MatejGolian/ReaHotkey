@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Added checking for updates
 
+### Changed
+
+-   startup checks are now being suppressed when reloading the script via the menu or hotkey
+
 ### Fixed
 
 -   Hopefully fixed a rare bug in AccessibleMenu

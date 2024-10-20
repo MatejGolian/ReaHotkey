@@ -469,7 +469,7 @@ Class ReaHotkey {
     }
     
     Class CheckForUpdates {
-        Static Call() {
+        Static Call(Params*) {
             ReleaseBaseURL := "https://github.com/matejGolian/reaHotkey/releases/"
             VersionURL := "https://raw.githubusercontent.com/MatejGolian/ReaHotkey/main/Includes/Version.ahk"
             CurrentVersion := StrSplit(GetVersion(), "-")
@@ -490,6 +490,10 @@ Class ReaHotkey {
             }
             Catch {
                 DisplayErrorMessage()
+                Return
+            }
+            If CurrentVersion = LatestVersion And Params.Length > 0 {
+                DisplayUpToDateMessage()
                 Return
             }
             If Not LatestVersion = CurrentVersion {
@@ -528,7 +532,10 @@ Class ReaHotkey {
             }
             DisplayErrorMessage() {
                 SoundPlay "*16"
-                MsgBox "Error checking for update.", "Error"
+                MsgBox "Error checking for updates.", "Error"
+            }
+            DisplayUpToDateMessage() {
+                MsgBox "ReaHotkey is up to date.", "ReaHotkey"
             }
         }
     }
@@ -835,8 +842,12 @@ Class ReaHotkey {
     
     Class ViewReadme {
         Static Call(*) {
-            If FileExist("README.html") And Not InStr(FileExist("README.html"), "D")
-            Run "README.html"
+            If FileExist("README.html") And Not InStr(FileExist("README.html"), "D") {
+                Run "README.html"
+                Return
+            }
+            SoundPlay "*16"
+            MsgBox "Readme file not Found.", "Error"
         }
     }
     
