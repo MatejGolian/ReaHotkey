@@ -223,3 +223,8 @@ ReaHotkeyMenuHK(ThisHotkey) {
 ReloadHK(ThisHotkey) {
     ReaHotkey.Reload()
 }
+
+UpdateCheckHK(ThisHotkey) {
+    AccessibilityOverlay.Speak("Checking for updates...")
+    ReaHotkey.CheckForUpdates(ThisHotkey)
+}

@@ -20,4 +20,5 @@ Ctrl::ControlHK(ThisHotkey)
 ^+#P::PauseHK(ThisHotkey)
 ^+#Q::QuitHK(ThisHotkey)
 ^+#R::ReaHotkeyMenuHK(ThisHotkey)
+^+#U::UpdateCheckHK(ThisHotkey)
 #SuspendExempt False
