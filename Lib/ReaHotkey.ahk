@@ -470,72 +470,81 @@ Class ReaHotkey {
     
     Class CheckForUpdates {
         Static Call(Params*) {
-            ReleaseBaseURL := "https://github.com/matejGolian/reaHotkey/releases/"
-            VersionURL := "https://raw.githubusercontent.com/MatejGolian/ReaHotkey/main/Includes/Version.ahk"
-            CurrentVersion := StrSplit(GetVersion(), "-")
-            If CurrentVersion Is Array
-            CurrentVersion := CurrentVersion[1]
-            VersionInfo := StrSplit(CurrentVersion, ".")
-            CurrentMajorVersion := VersionInfo[1]
-            CurrentMinorVersion := VersionInfo[2]
-            CurrentMaintenanceVersion := VersionInfo[3]
-            Try {
-                WHR := ComObject("WinHttp.WinHttpRequest.5.1")
-                WHR.Open("GET", VersionURL, True)
-                WHR.Send()
-                WHR.WaitForResponse()
-                LatestVersion := WHR.ResponseText
-                LatestVersion := StrSplit(LatestVersion, "`"")
-                LatestVersion := LatestVersion[2]
-            }
-            Catch {
-                DisplayErrorMessage()
-                Return
-            }
-            If CurrentVersion = LatestVersion And Params.Length > 0 {
-                DisplayUpToDateMessage()
-                Return
-            }
-            If Not LatestVersion = CurrentVersion {
-                VersionInfo := StrSplit(LatestVersion, ".")
-                If VersionInfo Is Array And VersionInfo.Length > 2 {
-                    Try
-                    LatestMajorVersion := VersionInfo[1] + 0
-                    Catch
-                    LatestMajorVersion := False
-                    Try
-                    LatestMinorVersion := VersionInfo[2] + 0
-                    Catch
-                    LatestMinorVersion := False
-                    Try
-                    LatestMaintenanceVersion := VersionInfo[3] + 0
-                    Catch
-                    LatestMaintenanceVersion := False
-                    If LatestMajorVersion Is Number And LatestMinorVersion Is Number And LatestMaintenanceVersion Is Number {
-                        If LatestMajorVersion > CurrentMajorVersion
-                        DisplayDownloadPrompt()
-                        Else If LatestMajorVersion >= CurrentMajorVersion And LatestMinorVersion > CurrentMinorVersion
-                        DisplayDownloadPrompt()
-                        Else
-                        If LatestMajorVersion >= CurrentMajorVersion And LatestMinorVersion >= CurrentMinorVersion And LatestMaintenanceVersion > CurrentMaintenanceVersion
-                        DisplayDownloadPrompt()
-                        Return
-                    }
+            Static DialogOpen := False
+            If Not DialogOpen {
+                ReleaseBaseURL := "https://github.com/matejGolian/reaHotkey/releases/"
+                VersionURL := "https://raw.githubusercontent.com/MatejGolian/ReaHotkey/main/Includes/Version.ahk"
+                CurrentVersion := StrSplit(GetVersion(), "-")
+                If CurrentVersion Is Array
+                CurrentVersion := CurrentVersion[1]
+                VersionInfo := StrSplit(CurrentVersion, ".")
+                CurrentMajorVersion := VersionInfo[1]
+                CurrentMinorVersion := VersionInfo[2]
+                CurrentMaintenanceVersion := VersionInfo[3]
+                Try {
+                    WHR := ComObject("WinHttp.WinHttpRequest.5.1")
+                    WHR.Open("GET", VersionURL, True)
+                    WHR.Send()
+                    WHR.WaitForResponse()
+                    LatestVersion := WHR.ResponseText
+                    LatestVersion := StrSplit(LatestVersion, "`"")
+                    LatestVersion := LatestVersion[2]
                 }
-                DisplayErrorMessage()
-                Return
-            }
-            DisplayDownloadPrompt() {
-                Prompt := MsgBox("ReaHotkey " . LatestVersion . " is available.`nProceed to download page?", "ReaHotkey Update", 4)
-                If Prompt == "Yes"
-                Run ReleaseBaseURL . LatestVersion
-            }
-            DisplayErrorMessage() {
-                SoundPlay "*16"
-                MsgBox "Error checking for updates.", "Error"
-            }
-            DisplayUpToDateMessage() {
-                MsgBox "ReaHotkey is up to date.", "ReaHotkey"
+                Catch {
+                    DisplayErrorMessage()
+                    Return
+                }
+                If CurrentVersion = LatestVersion And Params.Length > 0 {
+                    DisplayUpToDateMessage()
+                    Return
+                }
+                If Not LatestVersion = CurrentVersion {
+                    VersionInfo := StrSplit(LatestVersion, ".")
+                    If VersionInfo Is Array And VersionInfo.Length > 2 {
+                        Try
+                        LatestMajorVersion := VersionInfo[1] + 0
+                        Catch
+                        LatestMajorVersion := False
+                        Try
+                        LatestMinorVersion := VersionInfo[2] + 0
+                        Catch
+                        LatestMinorVersion := False
+                        Try
+                        LatestMaintenanceVersion := VersionInfo[3] + 0
+                        Catch
+                        LatestMaintenanceVersion := False
+                        If LatestMajorVersion Is Number And LatestMinorVersion Is Number And LatestMaintenanceVersion Is Number {
+                            If LatestMajorVersion > CurrentMajorVersion
+                            DisplayUpdatePrompt()
+                            Else If LatestMajorVersion >= CurrentMajorVersion And LatestMinorVersion > CurrentMinorVersion
+                            DisplayUpdatePrompt()
+                            Else
+                            If LatestMajorVersion >= CurrentMajorVersion And LatestMinorVersion >= CurrentMinorVersion And LatestMaintenanceVersion > CurrentMaintenanceVersion
+                            DisplayUpdatePrompt()
+                            Return
+                        }
+                    }
+                    DisplayErrorMessage()
+                    Return
+                }
+                DisplayErrorMessage() {
+                    DialogOpen := True
+                    SoundPlay "*16"
+                    MsgBox "Error checking for updates.", "Error"
+                    DialogOpen := False
+                }
+                DisplayUpdatePrompt() {
+                    DialogOpen := True
+                    Prompt := MsgBox("ReaHotkey " . LatestVersion . " is available.`nProceed to download page?", "ReaHotkey Update", 4)
+                    If Prompt == "Yes"
+                    Run ReleaseBaseURL . LatestVersion
+                    DialogOpen := False
+                }
+                DisplayUpToDateMessage() {
+                    DialogOpen := True
+                    MsgBox "ReaHotkey is up to date.", "ReaHotkey"
+                    DialogOpen := False
+                }
             }
         }
     }
@@ -842,12 +851,17 @@ Class ReaHotkey {
     
     Class ViewReadme {
         Static Call(*) {
+            Static DialogOpen := False
             If FileExist("README.html") And Not InStr(FileExist("README.html"), "D") {
                 Run "README.html"
                 Return
             }
-            SoundPlay "*16"
-            MsgBox "Readme file not Found.", "Error"
+            If Not DialogOpen {
+                DialogOpen := True
+                SoundPlay "*16"
+                MsgBox "Readme file not Found.", "Error"
+                DialogOpen := False
+            }
         }
     }
     
