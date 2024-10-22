@@ -472,61 +472,57 @@ Class ReaHotkey {
         Static Call(Params*) {
             Static DialogOpen := False
             If Not DialogOpen {
-                ReleaseBaseURL := "https://github.com/matejGolian/reaHotkey/releases/"
-                VersionURL := "https://raw.githubusercontent.com/MatejGolian/ReaHotkey/main/Includes/Version.ahk"
-                CurrentVersion := StrSplit(GetVersion(), "-")
-                If CurrentVersion Is Array
-                CurrentVersion := CurrentVersion[1]
-                VersionInfo := StrSplit(CurrentVersion, ".")
-                CurrentMajorVersion := VersionInfo[1]
-                CurrentMinorVersion := VersionInfo[2]
-                CurrentMaintenanceVersion := VersionInfo[3]
+                JsonUrl := "https://api.github.com/repos/MatejGolian/ReaHotkey/releases"
                 Try {
                     WHR := ComObject("WinHttp.WinHttpRequest.5.1")
-                    WHR.Open("GET", VersionURL, True)
+                    WHR.Open("GET", JsonUrl, True)
                     WHR.Send()
                     WHR.WaitForResponse()
-                    LatestVersion := WHR.ResponseText
-                    LatestVersion := StrSplit(LatestVersion, "`"")
-                    LatestVersion := LatestVersion[2]
+                    JsonData := WHR.ResponseText
+                    JsonData := Jxon_Load(&JsonData)
+                    CurrentVersion := StrSplit(GetVersion(), "-")
+                    If CurrentVersion Is Array
+                    CurrentVersion := CurrentVersion[1]
+                    VersionInfo := StrSplit(CurrentVersion, ".")
+                    CurrentMajorVersion := VersionInfo[1]
+                    CurrentMinorVersion := VersionInfo[2]
+                    CurrentMaintenanceVersion := VersionInfo[3]
+                    CurrentVersionNumber := 0
+                    For Key, Value In JsonData
+                    If Value["tag_name"] = CurrentVersion {
+                        CurrentVersionNumber := Key
+                        Break
+                    }
+                    LatestVersion := "0.0.0"
+                    LatestVersionNumber := 1
+                    If JsonData.Length >= LatestVersionNumber {
+                        LatestAssetUrl := JsonData[LatestVersionNumber]["assets"][LatestVersionNumber]["browser_download_url"]
+                        LatestVersionBody := JsonData[LatestVersionNumber]["body"]
+                        LatestVersion := JsonData[LatestVersionNumber]["tag_name"]
+                        LatestVersionUrl := JsonData[LatestVersionNumber]["html_url"]
+                    }
+                    VersionInfo := StrSplit(LatestVersion, ".")
+                    LatestMajorVersion := VersionInfo[1]
+                    LatestMinorVersion := VersionInfo[2]
+                    LatestMaintenanceVersion := VersionInfo[3]
                 }
                 Catch {
                     DisplayErrorMessage()
                     Return
                 }
-                If CurrentVersion = LatestVersion And Params.Length > 0 {
-                    DisplayUpToDateMessage()
-                    Return
-                }
-                If Not LatestVersion = CurrentVersion {
-                    VersionInfo := StrSplit(LatestVersion, ".")
-                    If VersionInfo Is Array And VersionInfo.Length > 2 {
-                        Try
-                        LatestMajorVersion := VersionInfo[1] + 0
-                        Catch
-                        LatestMajorVersion := False
-                        Try
-                        LatestMinorVersion := VersionInfo[2] + 0
-                        Catch
-                        LatestMinorVersion := False
-                        Try
-                        LatestMaintenanceVersion := VersionInfo[3] + 0
-                        Catch
-                        LatestMaintenanceVersion := False
-                        If LatestMajorVersion Is Number And LatestMinorVersion Is Number And LatestMaintenanceVersion Is Number {
-                            If LatestMajorVersion > CurrentMajorVersion
-                            DisplayUpdatePrompt()
-                            Else If LatestMajorVersion >= CurrentMajorVersion And LatestMinorVersion > CurrentMinorVersion
-                            DisplayUpdatePrompt()
-                            Else
-                            If LatestMajorVersion >= CurrentMajorVersion And LatestMinorVersion >= CurrentMinorVersion And LatestMaintenanceVersion > CurrentMaintenanceVersion
-                            DisplayUpdatePrompt()
-                            Return
-                        }
-                    }
-                    DisplayErrorMessage()
-                    Return
-                }
+                If CurrentVersion = LatestVersion And Params.Length > 0
+                DisplayUpToDateMessage()
+                Else If CurrentVersionNumber And CurrentVersionNumber > LatestVersionNumber
+                DisplayUpdatePrompt()
+                Else If LatestMajorVersion > CurrentMajorVersion
+                DisplayUpdatePrompt()
+                Else If LatestMajorVersion >= CurrentMajorVersion And LatestMinorVersion > CurrentMinorVersion
+                DisplayUpdatePrompt()
+                Else If LatestMajorVersion >= CurrentMajorVersion And LatestMinorVersion >= CurrentMinorVersion And LatestMaintenanceVersion > CurrentMaintenanceVersion
+                DisplayUpdatePrompt()
+                Else
+                If Params.Length > 0
+                DisplayUpToDateMessage()
                 DisplayErrorMessage() {
                     DialogOpen := True
                     SoundPlay "*16"
@@ -537,7 +533,7 @@ Class ReaHotkey {
                     DialogOpen := True
                     Prompt := MsgBox("ReaHotkey " . LatestVersion . " is available.`nProceed to download page?", "ReaHotkey Update", 4)
                     If Prompt == "Yes"
-                    Run ReleaseBaseURL . LatestVersion
+                    Run LatestVersionUrl
                     DialogOpen := False
                 }
                 DisplayUpToDateMessage() {
