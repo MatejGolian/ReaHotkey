@@ -23,7 +23,6 @@ SetTitleMatchMode "RegEx"
 #Include <ReaHotkey>
 #Include <Standalone>
 #Include <UIA>
-#Include <Update>
 
 A_IconTip := "ReaHotkey"
 A_TrayMenu.Delete

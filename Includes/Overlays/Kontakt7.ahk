@@ -92,9 +92,9 @@ Class Kontakt7 {
     
     Static CheckPluginConfig() {
         Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True)
-        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1) = 1
+        If ReaHotkey.Config.Get("AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins") = 1
         Kontakt7.ClosePluginBrowser()
-        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1) = 1
+        If ReaHotkey.Config.Get("AutomaticallyDetectLibrariesInKontaktAndKKPlugins") = 1
         Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 500)
         Else
         Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 0)
@@ -115,7 +115,7 @@ Class Kontakt7 {
     }
     
     Static CheckStandaloneConfig() {
-        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1) = 1
+        If ReaHotkey.Config.Get("AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones") = 1
         Kontakt7.CloseStandaloneBrowser()
     }
     

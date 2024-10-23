@@ -53,7 +53,7 @@ Class Engine2 {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Engine 2"
         Return True
-        If IniRead("ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection", 1) = 1 And FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate() + 500, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100) Is Object {
+        If ReaHotkey.Config.Get("UseImageSearchForEngine2PluginDetection") = 1 And FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate() + 500, GetPluginYCoordinate(), GetPluginXCoordinate() + 900, GetPluginYCoordinate() + 100) Is Object {
             Return True
         }
         Else {

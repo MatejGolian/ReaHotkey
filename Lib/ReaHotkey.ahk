@@ -19,7 +19,6 @@ Class ReaHotkey {
         OnError ReaHotkey.HandleError
         ReaHotkey.TurnPluginHotkeysOff()
         ReaHotkey.TurnStandaloneHotkeysOff()
-        ReaHotkey.InitConfig()
         ScriptReloaded := False
         For Arg In A_Args
         If Arg = "Reload" {
@@ -27,13 +26,13 @@ Class ReaHotkey {
             Break
         }
         If Not ScriptReloaded {
-            If IniRead("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1) = 1
+            If ReaHotkey.Config.Get("CheckScreenResolutionOnStartup") = 1
             ReaHotkey.CheckResolution()
-            If IniRead("ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup", 1) = 1
+            If ReaHotkey.Config.Get("CheckForUpdatesOnStartup") = 1
             ReaHotkey.CheckForUpdates()
         }
         SetTimer ReaHotkey.ManageState, 100
-        If IniRead("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1) = 1
+        If ReaHotkey.Config.Get("WarnIfWinCovered") = 1
         SetTimer ReaHotkey.CheckIfWinCovered, 10000
     }
     
@@ -155,23 +154,6 @@ Class ReaHotkey {
             }
         }
         Return False
-    }
-    
-    Static InitConfig() {
-        Value := IniRead("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1)
-        IniWrite(Value, "ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup")
-        Value := IniRead("ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup", 1)
-        IniWrite(Value, "ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup")
-        Value := IniRead("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1)
-        IniWrite(Value, "ReaHotkey.ini", "Config", "WarnIfWinCovered")
-        Value := IniRead("ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection", 1)
-        IniWrite(Value, "ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection")
-        Value := IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1)
-        IniWrite(Value, "ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins")
-        Value := IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1)
-        IniWrite(Value, "ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones")
-        Value := IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1)
-        IniWrite(Value, "ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins")
     }
     
     Static InPluginControl(ControlToCheck) {
@@ -473,9 +455,9 @@ Class ReaHotkey {
             Static DialogOpen := False
             If Not DialogOpen {
                 If Params.Length > 0
-                Update.Check(True)
+                ReaHotkey.Update.Check(True)
                 Else
-                Update.Check(False)
+                ReaHotkey.Update.Check(False)
             }
         }
     }
@@ -684,34 +666,16 @@ Class ReaHotkey {
             Static ConfigBox := False, ConfigBoxWinID := ""
             If ConfigBox = False {
                 ConfigBox := Gui(, "ReaHotkey Configuration")
-                Checked := ""
-                If IniRead("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1) = 1
-                Checked := "Checked"
-                ScreenResolutionBox := ConfigBox.AddCheckBox(Checked, "Check screen resolution on startup")
-                Checked := ""
-                If IniRead("ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup", 1) = 1
-                Checked := "Checked"
-                UpdateCheckBox := ConfigBox.AddCheckBox("XS " . Checked, "Check for updates on startup")
-                Checked := ""
-                If IniRead("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1) = 1
-                Checked := "Checked"
-                WinCoveredWarningBox := ConfigBox.AddCheckBox("XS " . Checked, "Warn if another window may be covering the interface")
-                Checked := ""
-                If IniRead("ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection", 1) = 1
-                Checked := "Checked"
-                Engine2PluginImageSearchBox := ConfigBox.AddCheckBox("XS " . Checked, "Use image search for Engine 2 plug-in detection")
-                Checked := ""
-                If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1) = 1
-                Checked := "Checked"
-                KontaktKKPluginBrowserBox := ConfigBox.AddCheckBox("XS " . Checked, "Automatically close library browsers in Kontakt and Komplete Kontrol plug-ins")
-                Checked := ""
-                If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1) = 1
-                Checked := "Checked"
-                KontaktKKStandaloneBrowserBox := ConfigBox.AddCheckBox("XS " . Checked, "Automatically close library browsers in Kontakt and Komplete Kontrol standalone applications")
-                Checked := ""
-                If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1) = 1
-                Checked := "Checked"
-                KontaktKKPluginLibraryDetectionBox := ConfigBox.AddCheckBox("XS " . Checked, "Automatically detect libraries in Kontakt and Komplete Kontrol plug-ins")
+                SettingBoxes := Map()
+                For Index, Setting In ReaHotkey.Config.Settings {
+                    Checked := ""
+                    If Setting.Value = 1
+                    Checked := "Checked"
+                    If Index = 1
+                    SettingBoxes[Setting.KeyName] := ConfigBox.AddCheckBox(Checked, Setting.Label)
+                    Else
+                    SettingBoxes[Setting.KeyName] := ConfigBox.AddCheckBox("XS " . Checked, Setting.Label)
+                }
                 ConfigBox.AddButton("Section XS Default", "OK").OnEvent("Click", SaveConfig)
                 ConfigBox.AddButton("YS", "Cancel").OnEvent("Click", CloseConfigBox)
                 ConfigBox.OnEvent("Close", CloseConfigBox)
@@ -728,14 +692,9 @@ Class ReaHotkey {
                 ConfigBoxWinID := ""
             }
             SaveConfig(*) {
-                IniWrite(ScreenResolutionBox.Value, "ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup")
-                IniWrite(UpdateCheckBox.Value, "ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup")
-                IniWrite(WinCoveredWarningBox.Value, "ReaHotkey.ini", "Config", "WarnIfWinCovered")
-                IniWrite(Engine2PluginImageSearchBox.Value, "ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection")
-                IniWrite(KontaktKKPluginBrowserBox.Value, "ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins")
-                IniWrite(KontaktKKStandaloneBrowserBox.Value, "ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones")
-                IniWrite(KontaktKKPluginLibraryDetectionBox.Value, "ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins")
-                If WinCoveredWarningBox.Value
+                For KeyName, SettingBox In SettingBoxes
+                ReaHotkey.Config.set(KeyName, SettingBox.Value)
+                If ReaHotkey.Config.Get("WarnIfWinCovered")
                 SetTimer ReaHotkey.CheckIfWinCovered, 10000
                 Else
                 SetTimer ReaHotkey.CheckIfWinCovered, 0
@@ -759,7 +718,7 @@ Class ReaHotkey {
             }
             Else {
                 SetTimer ReaHotkey.ManageState, 100
-                If IniRead("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1) = 1
+                If ReaHotkey.Config.Get("WarnIfWinCovered") = 1
                 SetTimer ReaHotkey.CheckIfWinCovered, 10000
             }
         }
@@ -807,5 +766,8 @@ Class ReaHotkey {
             }
         }
     }
+    
+    #Include <Config>
+    #Include <Update>
     
 }

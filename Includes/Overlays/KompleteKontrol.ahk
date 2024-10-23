@@ -118,9 +118,9 @@ Class KompleteKontrol {
     
     Static CheckPluginConfig() {
         Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True)
-        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1) = 1
+        If ReaHotkey.Config.Get("AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins") = 1
         KompleteKontrol.ClosePluginBrowser()
-        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1) = 1
+        If ReaHotkey.Config.Get("AutomaticallyDetectLibrariesInKontaktAndKKPlugins") = 1
         Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 500)
         Else
         Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 0)
@@ -163,7 +163,7 @@ Class KompleteKontrol {
     }
     
     Static CheckStandaloneConfig() {
-        If IniRead("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1) = 1
+        If ReaHotkey.Config.Get("AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones") = 1
         KompleteKontrol.CloseStandaloneBrowser()
     }
     
