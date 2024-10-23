@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Retrieve release and version information from GitHub API
+-   Use 'REAPER-alike' update dialogs
+
 ## [0.5.1] - 2024-10-20
 
 ### Added

@@ -73,27 +73,46 @@ Class Update {
         }
         DisplayErrorMessage() {
             DialogOpen := True
-            SoundPlay "*16"
-            MsgBox "Error checking for updates.", "Error"
+            ShowNotificationBox("Error checking for new version!", "There was an error checking for the latest version`nis an internet connection present?!", False, True)
             DialogOpen := False
         }
         DisplayUpdatePrompt() {
             DialogOpen := True
-            ShowNotificationBox("New version found!", LatestVersionBody, False)
+            ShowNotificationBox("New version found!", "ReaHotkey " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, False)
             DialogOpen := False
         }
         DisplayUpToDateMessage() {
             DialogOpen := True
-            ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", True)
+            ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, True)
             DialogOpen := False
         }
         ProceedToDownload(*) {
             CloseNotificationBox()
             Run LatestVersionUrl
         }
-        ShowNotificationBox(Title, Text, DisableProceedToDownload := False) {
+        ProcessNotificationText(Text) {
+            Text := Trim(Text)
+            Lines := StrSplit(Text, "`n")
+            If Lines Is Array And Lines.Length > 0 {
+                Text := ""
+                For Line In Lines {
+                    Line := Trim(Line)
+                    Line := RegExReplace(Line, "\s{2,}", " ")
+                    Line := RegExReplace(Line, "^#+.*", "")
+                    Line := RegExReplace(Line, "^-", "  +")
+                    Line := RTrim(Line)
+                    If Not Line = ""
+                    Text .= Line . "`n"
+                }
+                Text := RegExReplace(Text, "\n+$", "")
+            }
+            Return Text
+        }
+        ShowNotificationBox(Title, Text, ProcessText := False, DisableProceedToDownload := False) {
+            If ProcessText
+            Text := ProcessNotificationText(Text)
             NotificationBox := Gui(, Title)
-            NotificationBox.AddEdit("ReadOnly vText", Text)
+            NotificationBox.AddEdit("ReadOnly vText -WantReturn", Text)
             NotificationBox.AddButton("Section XS vProceedToDownload", "Proceed to download page").OnEvent("Click", ProceedToDownload)
             NotificationBox.AddButton("YS vClose", "Close").OnEvent("Click", CloseNotificationBox)
             NotificationBox.OnEvent("Close", CloseNotificationBox)
