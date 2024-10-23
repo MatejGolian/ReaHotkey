@@ -472,75 +472,10 @@ Class ReaHotkey {
         Static Call(Params*) {
             Static DialogOpen := False
             If Not DialogOpen {
-                JsonUrl := "https://api.github.com/repos/MatejGolian/ReaHotkey/releases"
-                Try {
-                    WHR := ComObject("WinHttp.WinHttpRequest.5.1")
-                    WHR.Open("GET", JsonUrl, True)
-                    WHR.Send()
-                    WHR.WaitForResponse()
-                    JsonData := WHR.ResponseText
-                    JsonData := Jxon_Load(&JsonData)
-                    CurrentVersion := StrSplit(GetVersion(), "-")
-                    If CurrentVersion Is Array
-                    CurrentVersion := CurrentVersion[1]
-                    VersionInfo := StrSplit(CurrentVersion, ".")
-                    CurrentMajorVersion := VersionInfo[1]
-                    CurrentMinorVersion := VersionInfo[2]
-                    CurrentMaintenanceVersion := VersionInfo[3]
-                    CurrentVersionNumber := 0
-                    For Key, Value In JsonData
-                    If Value["tag_name"] = CurrentVersion {
-                        CurrentVersionNumber := Key
-                        Break
-                    }
-                    LatestVersion := "0.0.0"
-                    LatestVersionNumber := 1
-                    If JsonData.Length >= LatestVersionNumber {
-                        LatestAssetUrl := JsonData[LatestVersionNumber]["assets"][LatestVersionNumber]["browser_download_url"]
-                        LatestVersionBody := JsonData[LatestVersionNumber]["body"]
-                        LatestVersion := JsonData[LatestVersionNumber]["tag_name"]
-                        LatestVersionUrl := JsonData[LatestVersionNumber]["html_url"]
-                    }
-                    VersionInfo := StrSplit(LatestVersion, ".")
-                    LatestMajorVersion := VersionInfo[1]
-                    LatestMinorVersion := VersionInfo[2]
-                    LatestMaintenanceVersion := VersionInfo[3]
-                }
-                Catch {
-                    DisplayErrorMessage()
-                    Return
-                }
-                If CurrentVersion = LatestVersion And Params.Length > 0
-                DisplayUpToDateMessage()
-                Else If CurrentVersionNumber And CurrentVersionNumber > LatestVersionNumber
-                DisplayUpdatePrompt()
-                Else If LatestMajorVersion > CurrentMajorVersion
-                DisplayUpdatePrompt()
-                Else If LatestMajorVersion >= CurrentMajorVersion And LatestMinorVersion > CurrentMinorVersion
-                DisplayUpdatePrompt()
-                Else If LatestMajorVersion >= CurrentMajorVersion And LatestMinorVersion >= CurrentMinorVersion And LatestMaintenanceVersion > CurrentMaintenanceVersion
-                DisplayUpdatePrompt()
-                Else
                 If Params.Length > 0
-                DisplayUpToDateMessage()
-                DisplayErrorMessage() {
-                    DialogOpen := True
-                    SoundPlay "*16"
-                    MsgBox "Error checking for updates.", "Error"
-                    DialogOpen := False
-                }
-                DisplayUpdatePrompt() {
-                    DialogOpen := True
-                    Prompt := MsgBox("ReaHotkey " . LatestVersion . " is available.`nProceed to download page?", "ReaHotkey Update", 4)
-                    If Prompt == "Yes"
-                    Run LatestVersionUrl
-                    DialogOpen := False
-                }
-                DisplayUpToDateMessage() {
-                    DialogOpen := True
-                    MsgBox "ReaHotkey is up to date.", "ReaHotkey"
-                    DialogOpen := False
-                }
+                Update.Check(True)
+                Else
+                Update.Check(False)
             }
         }
     }
@@ -727,9 +662,9 @@ Class ReaHotkey {
             Static AboutBox := False
             If AboutBox = False {
                 AboutBox := Gui(, "About ReaHotkey")
-                AboutBox.Add("Edit", "ReadOnly", "Version " . GetVersion())
-                AboutBox.Add("Link",, 'ReaHotkey on <a href="https://github.com/MatejGolian/ReaHotkey">GitHub</a>')
-                AboutBox.Add("Button", "Default", "OK").OnEvent("Click", CloseAboutBox)
+                AboutBox.AddEdit("ReadOnly", "Version " . GetVersion())
+                AboutBox.AddLink("XS", 'ReaHotkey on <a href="https://github.com/MatejGolian/ReaHotkey">GitHub</a>')
+                AboutBox.AddButton("Default Section XS", "OK").OnEvent("Click", CloseAboutBox)
                 AboutBox.OnEvent("Close", CloseAboutBox)
                 AboutBox.OnEvent("Escape", CloseAboutBox)
                 AboutBox.Show()
@@ -777,7 +712,7 @@ Class ReaHotkey {
                 If IniRead("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1) = 1
                 Checked := "Checked"
                 KontaktKKPluginLibraryDetectionBox := ConfigBox.AddCheckBox("XS " . Checked, "Automatically detect libraries in Kontakt and Komplete Kontrol plug-ins")
-                ConfigBox.AddButton("Section Default", "OK").OnEvent("Click", SaveConfig)
+                ConfigBox.AddButton("Section XS Default", "OK").OnEvent("Click", SaveConfig)
                 ConfigBox.AddButton("YS", "Cancel").OnEvent("Click", CloseConfigBox)
                 ConfigBox.OnEvent("Close", CloseConfigBox)
                 ConfigBox.OnEvent("Escape", CloseConfigBox)

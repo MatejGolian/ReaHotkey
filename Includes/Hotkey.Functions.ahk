@@ -226,6 +226,6 @@ ReadmeHK(ThisHotkey) {
     
     UpdateCheckHK(ThisHotkey) {
         AccessibilityOverlay.Speak("Checking for updates...")
-        ReaHotkey.CheckForUpdates(ThisHotkey)
+        ReaHotkey.CheckForUpdates(True)
     }
         
