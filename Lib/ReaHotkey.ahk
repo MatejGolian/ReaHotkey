@@ -26,10 +26,14 @@ Class ReaHotkey {
             Break
         }
         If Not ScriptReloaded {
+            AccessibilityOverlay.Speak("ReaHotkey ready")
             If ReaHotkey.Config.Get("CheckScreenResolutionOnStartup") = 1
             ReaHotkey.CheckResolution()
             If ReaHotkey.Config.Get("CheckForUpdatesOnStartup") = 1
             ReaHotkey.CheckForUpdates()
+        }
+        Else {
+            AccessibilityOverlay.Speak("Reloaded ReaHotkey")
         }
         SetTimer ReaHotkey.ManageState, 100
         If ReaHotkey.Config.Get("WarnIfWinCovered") = 1

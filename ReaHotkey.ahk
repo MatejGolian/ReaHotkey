@@ -35,8 +35,6 @@ A_TrayMenu.Add("&About...", ReaHotkey.ShowAboutBox)
 A_TrayMenu.Add("&Quit", ReaHotkey.Quit)
 A_TrayMenu.Default := "&Configuration..."
 
-AccessibilityOverlay.Speak("ReaHotkey ready")
-
 #Include Includes/Hotkey.Contexts.ahk
 #Include Includes/Hotkey.Functions.ahk
 #Include Includes/Overlay.Definitions.ahk
