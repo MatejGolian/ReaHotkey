@@ -7,12 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
+### Added/Changed
 
 -   Changed message spoken on reload
 -   Make it easier to add/manage configuration settings
 -   Retrieve release and version information from GitHub API
 -   Use 'REAPER-alike' update dialogs
+-   HotspotHelper: Add function for retrieving window position and dimensions
+-   HotspotHelper: Change hotkey modifier from Win+ctrl+Shift to ctrl+Shift
 
 ## [0.5.1] - 2024-10-20
 
