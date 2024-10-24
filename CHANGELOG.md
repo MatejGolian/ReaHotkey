@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added/Changed
 
+-   Added support for bridged mode in Reaper
 -   Changed message spoken on reload
 -   Make it easier to add/manage configuration settings
 -   Retrieve release and version information from GitHub API

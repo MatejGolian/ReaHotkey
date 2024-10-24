@@ -15,11 +15,11 @@ Class CinematicStudioSeries {
         CinematicStudioStringsOverlay.Metadata := Map("Vendor", "Cinematic Studio Series", "Product", "Cinematic Studio Strings", "Image", Map("File", "Images/KontaktKompleteKontrol/CinematicStudioStrings/Product.png"))
         CinematicStudioStringsOverlay.AddAccessibilityOverlay()
         CinematicStudioStringsOverlay.AddStaticText("Cinematic Studio Strings")
-        CinematicStudioStringsOverlay.AddHotspotButton("Spot 1", %PluginClass%XOffset + 40, %PluginClass%YOffset + 532, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        CinematicStudioStringsOverlay.AddHotspotButton("Spot 2", %PluginClass%XOffset + 80, %PluginClass%YOffset + 532, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        CinematicStudioStringsOverlay.AddHotspotButton("Main", %PluginClass%XOffset + 120, %PluginClass%YOffset + 532, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        CinematicStudioStringsOverlay.AddHotspotButton("Room", %PluginClass%XOffset + 160, %PluginClass%YOffset + 532, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        CinematicStudioStringsOverlay.AddGraphicalToggleButton("Mix", %PluginClass%XOffset + 196, %PluginClass%YOffset + 524, %PluginClass%XOffset + 228, %PluginClass%YOffset + 540, "Images/KontaktKompleteKontrol/CinematicStudioStrings/MixOn.png", "Images/KontaktKompleteKontrol/CinematicStudioStrings/MixOff.png", CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        CinematicStudioStringsOverlay.AddHotspotButton("Spot 1", %PluginClass%XOffset + 32, %PluginClass%YOffset + 481, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        CinematicStudioStringsOverlay.AddHotspotButton("Spot 2", %PluginClass%XOffset + 72, %PluginClass%YOffset + 481, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        CinematicStudioStringsOverlay.AddHotspotButton("Main", %PluginClass%XOffset + 112, %PluginClass%YOffset + 481, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        CinematicStudioStringsOverlay.AddHotspotButton("Room", %PluginClass%XOffset + 152, %PluginClass%YOffset + 481, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        CinematicStudioStringsOverlay.AddGraphicalToggleButton("Mix", %PluginClass%XOffset + 188, %PluginClass%YOffset + 473, %PluginClass%XOffset + 220, %PluginClass%YOffset + 489, "Images/KontaktKompleteKontrol/CinematicStudioStrings/MixOn.png", "Images/KontaktKompleteKontrol/CinematicStudioStrings/MixOff.png", CompensatePluginCoordinates,, CompensatePluginCoordinates)
         %PluginClass%.PluginOverlays.Push(CinematicStudioStringsOverlay)
     }
     

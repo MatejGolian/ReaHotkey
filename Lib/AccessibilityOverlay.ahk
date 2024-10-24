@@ -628,7 +628,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
             }
             If PreferredLanguage = False And Not FirstAvailableLanguage = False {
-                OCRResult := OCR.FromWindow("A", FirstAvailableLanguage, OCRScale)
+                OCRResult := OCR.FromWindow("A", FirstAvailableLanguage, OCRScale, 1)
                 OCRResult := OCRResult.Crop(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate)
                 Return OCRResult.Text
             }

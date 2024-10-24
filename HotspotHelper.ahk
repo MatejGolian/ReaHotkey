@@ -6,8 +6,11 @@
 SendMode "Input"
 SetTitleMatchMode 2
 SetWorkingDir A_InitialWorkingDir
-CoordMode "Mouse", "Window"
-CoordMode "Pixel", "Window"
+CoordMode "Caret", "Client"
+CoordMode "Menu", "Client"
+CoordMode "Mouse", "Client"
+CoordMode "Pixel", "Client"
+CoordMode "ToolTip", "Client"
 
 #Include <ScreenArea2File>
 #Include <OCR>
@@ -1430,7 +1433,7 @@ ViewClipBoard(*) {
 }
 
 WinCoordToScreenCoord(X, Y) {
-    CoordMode "Mouse", "Window"
+    CoordMode "Mouse", "Client"
     Try {
         WinWaitActive("A")
         MouseMove X, Y
@@ -1441,7 +1444,7 @@ WinCoordToScreenCoord(X, Y) {
         MouseXPos := False
         MouseYPos := False
     }
-    CoordMode "Mouse", "Window"
+    CoordMode "Mouse", "Client"
     Return {X: MouseXPos, Y: MouseYPos}
 }
 
