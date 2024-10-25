@@ -40,42 +40,42 @@ A_TrayMenu.Delete()
 A_TrayMenu.Add("&About...", About)
 A_TrayMenu.Add("&Quit...", Quit)
 
-!^#A::About()
-!^#Enter::AddHotspot()
+#+A::About()
+#+Enter::AddHotspot()
 Enter::ClickHotspot()
-!^#C::CopyControlClassAndPositionToClipboard()
-!^#L::CopyControlListToClipboard()
-!^#H::CopyHotspotsToClipboard()
-!^#U::CopyPixelColorToClipboard()
-!^#P::CopyProcessNameToClipboard()
-!^#W::CopyWindowClassToClipboard()
-!^#I::CopyWindowIDToClipboard()
-!^#T::CopyWindowTitleToClipboard()
-!^#Del::DeleteAllHotspots()
+#+C::CopyControlClassAndPositionToClipboard()
+#+L::CopyControlListToClipboard()
+#+H::CopyHotspotsToClipboard()
+#+U::CopyPixelColorToClipboard()
+#+P::CopyProcessNameToClipboard()
+#+W::CopyWindowClassToClipboard()
+#+I::CopyWindowIDToClipboard()
+#+T::CopyWindowTitleToClipboard()
+#+Del::DeleteAllHotspots()
 Del::DeleteHotspot()
-!^#PrintScreen::ExtractImage()
-!^#F::FocusControl()
-!^#G::GenerateHotspotsFromOCR()
-!^#D::GetWinPosAndDimensions()
-!^#Down::MoveMouseDown()
-!^#Left::MoveMouseLeft()
-!^#Right::MoveMouseRight()
-!^#Up::MoveMouseUp()
-!^#O::PerformOCR()
-!^#Q::Quit()
+#+PrintScreen::ExtractImage()
+#+F::FocusControl()
+#+G::GenerateHotspotsFromOCR()
+#+D::GetWinPosAndDimensions()
+#+Down::MoveMouseDown()
+#+Left::MoveMouseLeft()
+#+Right::MoveMouseRight()
+#+Up::MoveMouseUp()
+#+O::PerformOCR()
+#+Q::Quit()
 F2::RenameHotspot()
-!^#E::SearchForColor()
-!^#R::SearchForImage(LastImage)
-!^#Z::ReportMousePosition()
-!^#M::RouteMouseToFocusedControl()
-!^#S::SearchForImage()
+#+E::SearchForColor()
+#+R::SearchForImage(LastImage)
+#+Z::ReportMousePosition()
+#+M::RouteMouseToFocusedControl()
+#+S::SearchForImage()
 Tab::SelectNextHotspot()
 +Tab::SelectPreviousHotspot()
-!^#X::SetMouseXPosition()
-!^#Y::SetMouseYPosition()
+#+X::SetMouseXPosition()
+#+Y::SetMouseYPosition()
 Ctrl::StopSpeech()
-!^#K::ToggleKeyboardMode()
-!^#V::ViewClipboard()
+#+K::ToggleKeyboardMode()
+#+V::ViewClipboard()
 
 SetTimer ManageHotkeys, 100
 About()
@@ -86,7 +86,7 @@ About(*) {
     If DialogOpen = 0 {
         DialogOpen := 1
         AboutBox := Gui(, "About " . AppName)
-        AboutBox.AddEdit("ReadOnly -WantReturn", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added individual hotspots.`n`nKeyboard Shortcuts`n`nHotspot Shortcuts:`nAlt+Ctrl+Win+Enter - Add hotspot`nAlt+Ctrl+Win+Del - Delete all hotspots`nAlt+Ctrl+Win+H - Copy hotspots to clipboard`nKeyboard Mode Shortcuts:`nAlt+Ctrl+Win+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nDel - Delete current hotspot`nF2 - Rename current hotspot`n`nWindow & Control Shortcuts:`nAlt+Ctrl+Win+D - Get active window dimensions`nAlt+Ctrl+Win+I - Copy the ID of the active window to clipboard`nAlt+Ctrl+Win+P - Copy the process name of the active window to clipboard`nAlt+Ctrl+Win+T - Copy the title of the active window to clipboard`nAlt+Ctrl+Win+W - Copy the class of the active window to clipboard`nAlt+Ctrl+Win+C - Copy the class and position of the currently focused control to clipboard`nAlt+Ctrl+Win+L - Copy control list to clipboard`nAlt+Ctrl+Win+F - Focus control`n`nMouse Shortcuts:`nAlt+Ctrl+Win+M - Route the mouse to the position of the currently focused control`nAlt+Ctrl+Win+U - Copy the pixel color under the mouse to clipboard`nAlt+Ctrl+Win+X - Set mouse X position`nAlt+Ctrl+Win+Y - Set mouse Y position`nAlt+Ctrl+Win+Z - Report mouse position`nAlt+Ctrl+Win+Left - Move mouse leftf`nAlt+Ctrl+Win+Right - Move mouse right`nAlt+Ctrl+Win+Up - Move mouse up`nAlt+Ctrl+Win+Down - Move mouse down`n`nMiscellaneous Shortcuts:`nAlt+Ctrl+Win+Print Screen - Extract a region of the active window as an image`nAlt+Ctrl+Win+O - OCR the active window`nAlt+Ctrl+Win+G - Generate hotspots from OCR`nAlt+Ctrl+Win+E - Search for color`nAlt+Ctrl+Win+S - Search for image`nAlt+Ctrl+Win+R - Repeat search using last image`nAlt+Ctrl+Win+V - Open Clipboard Viewer`nAlt+Ctrl+Win+A - About the app`nAlt+Ctrl+Win+Q - Quit the app`nCtrl - Stop speech")
+        AboutBox.AddEdit("ReadOnly -WantReturn", "Use this tool to determine hotspot mouse coordinates, obtain information about the active window and its controls and copy the retrieved info to clipboard.`nEnable keyboard mode whenever you want to click, delete or rename previously added individual hotspots.`n`nKeyboard Shortcuts`n`nHotspot Shortcuts:`nShift+Win+Enter - Add hotspot`nShift+Win+Del - Delete all hotspots`nShift+Win+H - Copy hotspots to clipboard`nKeyboard Mode Shortcuts:`nShift+Win+K - Toggle keyboard mode on/off`nTab - Select next hotspot`nShift+Tab - Select previous hotspot`nEnter - Click current hotspot`nDel - Delete current hotspot`nF2 - Rename current hotspot`n`nWindow & Control Shortcuts:`nShift+Win+D - Get active window dimensions`nShift+Win+I - Copy the ID of the active window to clipboard`nShift+Win+P - Copy the process name of the active window to clipboard`nShift+Win+T - Copy the title of the active window to clipboard`nShift+Win+W - Copy the class of the active window to clipboard`nShift+Win+C - Copy the class and position of the currently focused control to clipboard`nShift+Win+L - Copy control list to clipboard`nShift+Win+F - Focus control`n`nMouse Shortcuts:`nShift+Win+M - Route the mouse to the position of the currently focused control`nShift+Win+U - Copy the pixel color under the mouse to clipboard`nShift+Win+X - Set mouse X position`nShift+Win+Y - Set mouse Y position`nShift+Win+Z - Report mouse position`nShift+Win+Left - Move mouse leftf`nShift+Win+Right - Move mouse right`nShift+Win+Up - Move mouse up`nShift+Win+Down - Move mouse down`n`nMiscellaneous Shortcuts:`nShift+Win+Print Screen - Extract a region of the active window as an image`nShift+Win+O - OCR the active window`nShift+Win+G - Generate hotspots from OCR`nShift+Win+E - Search for color`nShift+Win+S - Search for image`nShift+Win+R - Repeat search using last image`nShift+Win+V - Open Clipboard Viewer`nShift+Win+A - About the app`nShift+Win+Q - Quit the app`nCtrl - Stop speech")
         AboutBox.AddButton("Default", "OK").OnEvent("Click", CloseAboutBox)
         AboutBox.OnEvent("Close", CloseAboutBox)
         AboutBox.OnEvent("Escape", CloseAboutBox)
@@ -695,112 +695,112 @@ GetWinPosAndDimensions() {
 ManageHotkeys() {
     Global DialogOpen, KeyboardMode
     If DialogOpen = 1 Or WinActive("ahk_exe Explorer.Exe") Or WinActive("ahk_class Shell_TrayWnd" Or WinExist("ahk_class #32768") ) {
-        Hotkey "!^#A", "On"
-        Hotkey "!^#Enter", "Off"
+        Hotkey "#+A", "On"
+        Hotkey "#+Enter", "Off"
         Hotkey "Enter", "Off"
-        Hotkey "!^#C", "On"
-        Hotkey "!^#L", "On"
-        Hotkey "!^#H", "On"
-        Hotkey "!^#U", "On"
-        Hotkey "!^#P", "On"
-        Hotkey "!^#W", "On"
-        Hotkey "!^#I", "On"
-        Hotkey "!^#T", "On"
-        Hotkey "!^#Del", "Off"
+        Hotkey "#+C", "On"
+        Hotkey "#+L", "On"
+        Hotkey "#+H", "On"
+        Hotkey "#+U", "On"
+        Hotkey "#+P", "On"
+        Hotkey "#+W", "On"
+        Hotkey "#+I", "On"
+        Hotkey "#+T", "On"
+        Hotkey "#+Del", "Off"
         Hotkey "Del", "Off"
-        Hotkey "!^#PrintScreen", "On"
-        Hotkey "!^#F", "On"
-        Hotkey "!^#G", "Off"
-        Hotkey "!^#D", "On"
-        Hotkey "!^#Down", "On"
-        Hotkey "!^#Left", "On"
-        Hotkey "!^#Right", "On"
-        Hotkey "!^#Up", "On"
-        Hotkey "!^#O", "On"
-        Hotkey "!^#Q", "On"
+        Hotkey "#+PrintScreen", "On"
+        Hotkey "#+F", "On"
+        Hotkey "#+G", "Off"
+        Hotkey "#+D", "On"
+        Hotkey "#+Down", "On"
+        Hotkey "#+Left", "On"
+        Hotkey "#+Right", "On"
+        Hotkey "#+Up", "On"
+        Hotkey "#+O", "On"
+        Hotkey "#+Q", "On"
         Hotkey "F2", "Off"
-        Hotkey "!^#E", "On"
-        Hotkey "!^#R", "On"
-        Hotkey "!^#Z", "On"
-        Hotkey "!^#M", "On"
-        Hotkey "!^#S", "On"
+        Hotkey "#+E", "On"
+        Hotkey "#+R", "On"
+        Hotkey "#+Z", "On"
+        Hotkey "#+M", "On"
+        Hotkey "#+S", "On"
         Hotkey "Tab", "Off"
         Hotkey "+Tab", "Off"
         Hotkey "Ctrl", "Off"
-        Hotkey "!^#K", "Off"
-        Hotkey "!^#V", "On"
+        Hotkey "#+K", "Off"
+        Hotkey "#+V", "On"
     }
     Else If KeyboardMode = 1 {
-        Hotkey "!^#A", "On"
-        Hotkey "!^#Enter", "On"
+        Hotkey "#+A", "On"
+        Hotkey "#+Enter", "On"
         Hotkey "Enter", "On"
-        Hotkey "!^#C", "On"
-        Hotkey "!^#L", "On"
-        Hotkey "!^#H", "On"
-        Hotkey "!^#U", "On"
-        Hotkey "!^#P", "On"
-        Hotkey "!^#W", "On"
-        Hotkey "!^#I", "On"
-        Hotkey "!^#T", "On"
-        Hotkey "!^#Del", "On"
+        Hotkey "#+C", "On"
+        Hotkey "#+L", "On"
+        Hotkey "#+H", "On"
+        Hotkey "#+U", "On"
+        Hotkey "#+P", "On"
+        Hotkey "#+W", "On"
+        Hotkey "#+I", "On"
+        Hotkey "#+T", "On"
+        Hotkey "#+Del", "On"
         Hotkey "Del", "On"
-        Hotkey "!^#PrintScreen", "On"
-        Hotkey "!^#F", "On"
-        Hotkey "!^#G", "On"
-        Hotkey "!^#D", "On"
-        Hotkey "!^#Down", "On"
-        Hotkey "!^#Left", "On"
-        Hotkey "!^#Right", "On"
-        Hotkey "!^#Up", "On"
-        Hotkey "!^#O", "On"
-        Hotkey "!^#Q", "On"
+        Hotkey "#+PrintScreen", "On"
+        Hotkey "#+F", "On"
+        Hotkey "#+G", "On"
+        Hotkey "#+D", "On"
+        Hotkey "#+Down", "On"
+        Hotkey "#+Left", "On"
+        Hotkey "#+Right", "On"
+        Hotkey "#+Up", "On"
+        Hotkey "#+O", "On"
+        Hotkey "#+Q", "On"
         Hotkey "F2", "On"
-        Hotkey "!^#E", "On"
-        Hotkey "!^#R", "On"
-        Hotkey "!^#Z", "On"
-        Hotkey "!^#M", "On"
-        Hotkey "!^#S", "On"
+        Hotkey "#+E", "On"
+        Hotkey "#+R", "On"
+        Hotkey "#+Z", "On"
+        Hotkey "#+M", "On"
+        Hotkey "#+S", "On"
         Hotkey "Tab", "On"
         Hotkey "+Tab", "On"
         Hotkey "Ctrl", "On"
-        Hotkey "!^#K", "On"
-        Hotkey "!^#V", "On"
+        Hotkey "#+K", "On"
+        Hotkey "#+V", "On"
     }
     Else {
-        Hotkey "!^#A", "On"
-        Hotkey "!^#Enter", "On"
+        Hotkey "#+A", "On"
+        Hotkey "#+Enter", "On"
         Hotkey "Enter", "Off"
-        Hotkey "!^#C", "On"
-        Hotkey "!^#L", "On"
-        Hotkey "!^#H", "On"
-        Hotkey "!^#U", "On"
-        Hotkey "!^#P", "On"
-        Hotkey "!^#W", "On"
-        Hotkey "!^#I", "On"
-        Hotkey "!^#T", "On"
-        Hotkey "!^#Del", "On"
+        Hotkey "#+C", "On"
+        Hotkey "#+L", "On"
+        Hotkey "#+H", "On"
+        Hotkey "#+U", "On"
+        Hotkey "#+P", "On"
+        Hotkey "#+W", "On"
+        Hotkey "#+I", "On"
+        Hotkey "#+T", "On"
+        Hotkey "#+Del", "On"
         Hotkey "Del", "Off"
-        Hotkey "!^#PrintScreen", "On"
-        Hotkey "!^#F", "On"
-        Hotkey "!^#G", "On"
-        Hotkey "!^#D", "On"
-        Hotkey "!^#Down", "On"
-        Hotkey "!^#Left", "On"
-        Hotkey "!^#Right", "On"
-        Hotkey "!^#Up", "On"
-        Hotkey "!^#O", "On"
-        Hotkey "!^#Q", "On"
+        Hotkey "#+PrintScreen", "On"
+        Hotkey "#+F", "On"
+        Hotkey "#+G", "On"
+        Hotkey "#+D", "On"
+        Hotkey "#+Down", "On"
+        Hotkey "#+Left", "On"
+        Hotkey "#+Right", "On"
+        Hotkey "#+Up", "On"
+        Hotkey "#+O", "On"
+        Hotkey "#+Q", "On"
         Hotkey "F2", "Off"
-        Hotkey "!^#E", "On"
-        Hotkey "!^#R", "On"
-        Hotkey "!^#Z", "On"
-        Hotkey "!^#M", "On"
-        Hotkey "!^#S", "On"
+        Hotkey "#+E", "On"
+        Hotkey "#+R", "On"
+        Hotkey "#+Z", "On"
+        Hotkey "#+M", "On"
+        Hotkey "#+S", "On"
         Hotkey "Tab", "Off"
         Hotkey "+Tab", "Off"
         Hotkey "Ctrl", "On"
-        Hotkey "!^#K", "On"
-        Hotkey "!^#V", "On"
+        Hotkey "#+K", "On"
+        Hotkey "#+V", "On"
     }
 }
 
