@@ -7,7 +7,7 @@ Class FabFilter {
 
     Static CreateOverlay(PluginInstance) {
         Ol := AccessibilityOverlay()
-        Ol.AddHotspotButton("Presets", 601, 70, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        Ol.AddHotspotButton("Presets", 593, 19, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         PluginInstance.Overlay.Label := "FabFilter"
         PluginInstance.Overlay.ChildControls := Array(Ol)
     }

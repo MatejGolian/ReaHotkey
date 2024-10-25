@@ -6,8 +6,11 @@
 SendMode "Input"
 SetTitleMatchMode 2
 SetWorkingDir A_InitialWorkingDir
-CoordMode "Mouse", "Window"
-CoordMode "Pixel", "Window"
+CoordMode "Caret", "Client"
+CoordMode "Menu", "Client"
+CoordMode "Mouse", "Client"
+CoordMode "Pixel", "Client"
+CoordMode "ToolTip", "Client"
 
 #Include <ScreenArea2File>
 #Include <OCR>
@@ -139,6 +142,22 @@ ClickHotspot() {
         Sleep 25
         Speak("No hotspot selected")
     }
+}
+
+ClientCoordToScreenCoord(X, Y) {
+    CoordMode "Mouse", "Client"
+    Try {
+        WinWaitActive("A")
+        MouseMove X, Y
+        CoordMode "Mouse", "Screen"
+        MouseGetPos &mouseXPos, &mouseYPos
+    }
+    Catch {
+        MouseXPos := False
+        MouseYPos := False
+    }
+    CoordMode "Mouse", "Client"
+    Return {X: MouseXPos, Y: MouseYPos}
 }
 
 CopyControlClassAndPositionToClipboard() {
@@ -499,10 +518,10 @@ ExtractImage(*) {
             Else {
                 WinActivate("ahk_id" . WindowID)
                 WinWaitActive("ahk_id" . WindowID)
-                Coord := WinCoordToScreenCoord(X1, Y1)
+                Coord := ClientCoordToScreenCoord(X1, Y1)
                 X1 := Coord.X
                 Y1 := Coord.Y
-                Coord := WinCoordToScreenCoord(X2, Y2)
+                Coord := ClientCoordToScreenCoord(X2, Y2)
                 X2 := Coord.X
                 Y2 := Coord.Y
                 If X1 Is Number And Y1 Is Number And X2 Is Number And Y2 Is Number {
@@ -1427,22 +1446,6 @@ ViewClipBoard(*) {
             DialogOpen := 0
         }
     }
-}
-
-WinCoordToScreenCoord(X, Y) {
-    CoordMode "Mouse", "Window"
-    Try {
-        WinWaitActive("A")
-        MouseMove X, Y
-        CoordMode "Mouse", "Screen"
-        MouseGetPos &mouseXPos, &mouseYPos
-    }
-    Catch {
-        MouseXPos := False
-        MouseYPos := False
-    }
-    CoordMode "Mouse", "Window"
-    Return {X: MouseXPos, Y: MouseYPos}
 }
 
 #Include Includes/Version.ahk

@@ -42,7 +42,7 @@ Class Kontakt8 {
         Plugin.Register("Kontakt 8 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(Kontakt8, "CheckPluginContentMissing"))
         
         PluginContentMissingOverlay := AccessibilityOverlay("Content Missing")
-        PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372).SetHotkey("!B", "Alt+B")
+        PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 223, 346).SetHotkey("!B", "Alt+B")
         Plugin.RegisterOverlay("Kontakt 8 Content Missing Dialog", PluginContentMissingOverlay)
         
         Standalone.Register("Kontakt 8", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 8.exe", False, False)
@@ -53,7 +53,7 @@ Class Kontakt8 {
         Standalone.Register("Kontakt 8 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 8.exe", False, False)
         
         StandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
-        StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372).SetHotkey("!B", "Alt+B")
+        StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 223, 346).SetHotkey("!B", "Alt+B")
         Standalone.RegisterOverlay("Kontakt 8 Content Missing Dialog", StandaloneContentMissingOverlay)
     }
     
@@ -335,9 +335,9 @@ Class Kontakt8 {
                 Catch
                 Return
                 If Label = "Previous instrument"
-                MouseMove ControlX + ControlWidth - 344, ControlY + 138
+                MouseMove ControlX + ControlWidth - 352, ControlY + 87
                 Else
-                MouseMove ControlX + ControlWidth - 324, ControlY + 138
+                MouseMove ControlX + ControlWidth - 332, ControlY + 87
             }
         }
     }
@@ -354,9 +354,9 @@ Class Kontakt8 {
                 Catch
                 Return
                 If Label = "Previous multi"
-                MouseMove ControlX + 730, ControlY + 104
+                MouseMove ControlX + 722, ControlY + 53
                 Else
-                MouseMove ControlX + 750, ControlY + 104
+                MouseMove ControlX + 742, ControlY + 53
             }
         }
     }
@@ -375,16 +375,16 @@ Class Kontakt8 {
                 Catch
                 Return
                 If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
-                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - 580, ControlY + 160, ControlX + ControlWidth - 580 + 200, ControlY + 180)
+                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
                     If Not OCRResult = ""
                     SnapshotButton.Label := "Snapshot " . OcrResult
                 }
                 If InStr(Label, "Snapshot", True)
-                MouseMove ControlX + ControlWidth - 580, ControlY + 169
+                MouseMove ControlX + ControlWidth - 588, ControlY + 118
                 Else If InStr(Label, "Previous snapshot", True)
-                MouseMove ControlX + ControlWidth - 397, ControlY + 169
+                MouseMove ControlX + ControlWidth - 405, ControlY + 118
                 Else
-                MouseMove ControlX + ControlWidth - 381, ControlY + 169
+                MouseMove ControlX + ControlWidth - 389, ControlY + 118
             }
         }
     }

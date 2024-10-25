@@ -616,6 +616,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     Static OCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1) {
         If IsSet(OCR) {
+            If A_CoordModeMouse := "Client"
+            ClientOnly := 1
+            Else
+            ClientOnly := 0
             AvailableLanguages := OCR.GetAvailableLanguages()
             FirstAvailableLanguage := False
             PreferredLanguage := False
@@ -628,12 +632,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
             }
             If PreferredLanguage = False And Not FirstAvailableLanguage = False {
-                OCRResult := OCR.FromWindow("A", FirstAvailableLanguage, OCRScale)
+                OCRResult := OCR.FromWindow("A", FirstAvailableLanguage, OCRScale, ClientOnly)
                 OCRResult := OCRResult.Crop(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate)
                 Return OCRResult.Text
             }
             Else If PreferredLanguage = OCRLanguage{
-                OCRResult := OCR.FromWindow("A", PreferredLanguage, OCRScale)
+                OCRResult := OCR.FromWindow("A", PreferredLanguage, OCRScale, ClientOnly)
                 OCRResult := OCRResult.Crop(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate)
                 Return OCRResult.Text
             }
