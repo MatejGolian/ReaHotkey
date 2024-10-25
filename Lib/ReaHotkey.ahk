@@ -9,7 +9,6 @@ Class ReaHotkey {
     Static FoundStandalone := False
     Static NonRemappableHotkeys := Array("^+#F1", "^+#F5", "Control", "Ctrl", "LCtrl", "RCtrl", "^+#A", "^+#C", "^+#P", "^+#Q", "^+#R")
     Static PluginHotkeyOverrides := Array()
-    Static PluginWinCriteria := "ahk_exe reaper.exe ahk_class #32770"
     Static RequiredScreenWidth := 1920
     Static RequiredScreenHeight := 1080
     Static StandaloneHotkeyOverrides := Array()
@@ -38,6 +37,13 @@ Class ReaHotkey {
         SetTimer ReaHotkey.ManageState, 100
         If ReaHotkey.Config.Get("WarnIfWinCovered") = 1
         SetTimer ReaHotkey.CheckIfWinCovered, 10000
+    }
+    
+    Static __Get(Name, Params) {
+        Try
+        Return ReaHotkey.Get%Name%()
+        Catch As ErrorMessage
+        Throw ErrorMessage
     }
     
     Static FindOverrideHotkey(Type, Name := "", KeyName := "") {
@@ -498,6 +504,16 @@ Class ReaHotkey {
                 MsgBox "Your resolution is not set to " . ReaHotkey.RequiredScreenWidth . " × " . ReaHotkey.RequiredScreenHeight . ".`nReaHotkey may not operate properly.", "ReaHotkey"
                 Sleep 500
             }
+        }
+    }
+    
+    Class GetPluginWinCriteria {
+        Static Call() {
+            PluginWinCriteria := ["ahk_exe reaper.exe ahk_class #32770", "ahk_exe reaper_host32.exe ahk_class REAPERb32host", "ahk_exe reaper_host64.exe ahk_class REAPERb32host", "ahk_exe reaper_host64.exe ahk_class REAPERb32host3"]
+            For PluginWinCriterion In PluginWinCriteria
+            If WinActive(PluginWinCriterion)
+            Return PluginWinCriterion
+            Return PluginWinCriteria[1]
         }
     }
     
