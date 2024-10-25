@@ -45,24 +45,31 @@ ModifyCoordinates() {
     A_Clipboard := ClipboardBK
 }
 
-SetOffset(Type) {
+SetOffset(Type, Value) {
     Global XOffset, YOffset
-    OffsetDialog := InputBox("Enter the Value.", "Set " . Type . " offset", "", %Type%Offset)
-    Try
+    OffsetDialog := InputBox("Enter the Value.", "Set " . Type . " offset", "", Value)
     If OffsetDialog.Result == "OK"
-    If OffsetDialog.Value + 0 Is Integer {
-        %Type%Offset := OffsetDialog.Value
+    Try {
+        If OffsetDialog.Value + 0 Is Integer {
+            %Type%Offset := OffsetDialog.Value
+        }
+        Else {
+            MsgBox "The offset must be an integer", "Error"
+            SetOffset(Type, OffsetDialog.Value)
+        }
     }
-    Else {
+    Catch {
         MsgBox "The offset must be an integer", "Error"
-        SetOffset(Type)
+        SetOffset(Type, OffsetDialog.Value)
     }
 }
 
 SetXOffset() {
-    SetOffset("X")
+    Global XOffset
+    SetOffset("X", XOffset)
 }
 
 SetYOffset() {
-    SetOffset("Y")
+    Global YOffset
+    SetOffset("Y", YOffset)
 }
