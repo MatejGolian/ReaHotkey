@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Retrieve release and version information from GitHub API
 -   Use 'REAPER-alike' update dialogs
 -   HotspotHelper: Add function for retrieving window position and dimensions
--   HotspotHelper: Change hotkey modifier from Win+ctrl+Shift to ctrl+Shift
+-   HotspotHelper: Change hotkey modifier from Win+Ctrl+Shift to Alt+Ctrl+Win
 
 ## [0.5.1] - 2024-10-20
 
