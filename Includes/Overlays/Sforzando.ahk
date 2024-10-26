@@ -9,11 +9,9 @@ Class Sforzando {
     
     Static CheckPlugin(*) {
         Thread "NoTimers"
-        Try {
-            PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
-            If PluginInstance Is Plugin And PluginInstance.Name = "sforzando"
-            Return True
-        }
+        PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
+        If PluginInstance Is Plugin And PluginInstance.Name = "sforzando"
+        Return True
         UIAElement := GetUIAElement("15,1")
         Try
         If not UIAElement = False And UIAElement.Name = "PlogueXMLGUI"
