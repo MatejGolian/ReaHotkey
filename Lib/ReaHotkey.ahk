@@ -9,6 +9,7 @@ Class ReaHotkey {
     Static FoundStandalone := False
     Static NonRemappableHotkeys := Array("^+#F1", "^+#F5", "Control", "Ctrl", "LCtrl", "RCtrl", "^+#A", "^+#C", "^+#P", "^+#Q", "^+#R")
     Static PluginHotkeyOverrides := Array()
+    Static PluginWinCriteriaList := ["ahk_exe reaper.exe ahk_class #32770", "ahk_exe reaper_host32.exe ahk_class REAPERb32host", "ahk_exe reaper_host64.exe ahk_class REAPERb32host", "ahk_exe reaper_host64.exe ahk_class REAPERb32host3"]
     Static RequiredScreenWidth := 1920
     Static RequiredScreenHeight := 1080
     Static StandaloneHotkeyOverrides := Array()
@@ -282,21 +283,17 @@ Class ReaHotkey {
     }
     
     Static TurnHotkeysOff(Type, Name := "") {
+        Thread "NoTimers"
         If Type = "Plugin" Or Type = "Standalone" {
             If Type = "Plugin"
-            HotIfWinActive(ReaHotkey.PluginWinCriteria)
-            If Type = "Standalone"
-            HotIf
-            Hotkey "Tab", "Off"
-            Hotkey "+Tab", "Off"
-            Hotkey "^Tab", "Off"
-            Hotkey "^+Tab", "Off"
-            Hotkey "Left", "Off"
-            Hotkey "Right", "Off"
-            Hotkey "Up", "Off"
-            Hotkey "Down", "Off"
-            Hotkey "Enter", "Off"
-            Hotkey "Space", "Off"
+            For PluginWinCriteria In ReaHotkey.PluginWinCriteriaList {
+                HotIfWinActive(PluginWinCriteria)
+                TurnCommonOff()
+            }
+            If Type = "Standalone" {
+                HotIf
+                TurnCommonOff()
+            }
             If Name = "" {
                 For HotkeyEntry In %Type%.GetList()
                 For DefinedHotkey In HotkeyEntry["Hotkeys"]
@@ -333,25 +330,29 @@ Class ReaHotkey {
             Else
             HotIf
         }
+        TurnCommonOff() {
+            Hotkey "Tab", "Off"
+            Hotkey "+Tab", "Off"
+            Hotkey "^Tab", "Off"
+            Hotkey "^+Tab", "Off"
+            Hotkey "Left", "Off"
+            Hotkey "Right", "Off"
+            Hotkey "Up", "Off"
+            Hotkey "Down", "Off"
+            Hotkey "Enter", "Off"
+            Hotkey "Space", "Off"
+        }
     }
     
     Static TurnHotkeysOn(Type, Name := "") {
+        Thread "NoTimers"
         If Type = "Plugin" Or Type = "Standalone"
         If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.NoHotkeys = False {
             If Type = "Plugin"
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If Type = "Standalone"
             HotIf
-            Hotkey "Tab", TabHK, "On"
-            Hotkey "+Tab", ShiftTabHK, "On"
-            Hotkey "^Tab", ControlTabHK, "On"
-            Hotkey "^+Tab", ControlShiftTabHK, "On"
-            Hotkey "Left", LeftRightHK, "On"
-            Hotkey "Right", LeftRightHK, "On"
-            Hotkey "Up", UpDownHK, "On"
-            Hotkey "Down", UpDownHK, "On"
-            Hotkey "Enter", EnterSpaceHK, "On"
-            Hotkey "Space", EnterSpaceHK, "On"
+            TurnCommonOn()
             If Name = "" {
                 If ReaHotkey.Found%Type% Is %Type% {
                     For DefinedHotkey In ReaHotkey.Found%Type%.GetHotkeys()
@@ -387,6 +388,18 @@ Class ReaHotkey {
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             Else
             HotIf
+        }
+        TurnCommonOn() {
+            Hotkey "Tab", TabHK, "On"
+            Hotkey "+Tab", ShiftTabHK, "On"
+            Hotkey "^Tab", ControlTabHK, "On"
+            Hotkey "^+Tab", ControlShiftTabHK, "On"
+            Hotkey "Left", LeftRightHK, "On"
+            Hotkey "Right", LeftRightHK, "On"
+            Hotkey "Up", UpDownHK, "On"
+            Hotkey "Down", UpDownHK, "On"
+            Hotkey "Enter", EnterSpaceHK, "On"
+            Hotkey "Space", EnterSpaceHK, "On"
         }
     }
     
@@ -499,11 +512,11 @@ Class ReaHotkey {
     
     Class GetPluginWinCriteria {
         Static Call() {
-            PluginWinCriteria := ["ahk_exe reaper.exe ahk_class #32770", "ahk_exe reaper_host32.exe ahk_class REAPERb32host", "ahk_exe reaper_host64.exe ahk_class REAPERb32host", "ahk_exe reaper_host64.exe ahk_class REAPERb32host3"]
-            For PluginWinCriterion In PluginWinCriteria
-            If WinActive(PluginWinCriterion)
-            Return PluginWinCriterion
-            Return PluginWinCriteria[1]
+            Thread "NoTimers"
+            For PluginWinCriteria In ReaHotkey.PluginWinCriteriaList
+            If WinActive(PluginWinCriteria)
+            Return PluginWinCriteria
+            Return ReaHotkey.PluginWinCriteriaList[1]
         }
     }
     
