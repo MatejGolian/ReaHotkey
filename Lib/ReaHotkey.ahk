@@ -512,11 +512,13 @@ Class ReaHotkey {
     
     Class GetPluginWinCriteria {
         Static Call() {
-            Thread "NoTimers"
+            Static PreviousCriteria := ReaHotkey.PluginWinCriteriaList[1]
             For PluginWinCriteria In ReaHotkey.PluginWinCriteriaList
-            If WinActive(PluginWinCriteria)
-            Return PluginWinCriteria
-            Return ReaHotkey.PluginWinCriteriaList[1]
+            If WinActive(PluginWinCriteria) {
+                PreviousCriteria := PluginWinCriteria
+                Return PluginWinCriteria
+            }
+            Return PreviousCriteria
         }
     }
     
