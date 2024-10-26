@@ -16,7 +16,6 @@ Class Sforzando {
         Try
         If not UIAElement = False And UIAElement.Name = "PlogueXMLGUI"
         Return True
-        Sleep 500
         Return False
     }
     
