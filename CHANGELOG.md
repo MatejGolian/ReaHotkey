@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Changed message spoken on reload
 -   Changed to 'Client' CoordMode
 -   Make it easier to add/manage configuration settings
+-   Remove 'win covered' warning' in standalone applications
 -   Retrieve release and version information from GitHub API
 -   Use 'REAPER-alike' update dialogs
 -   HotspotHelper: Add function for retrieving window position and dimensions
