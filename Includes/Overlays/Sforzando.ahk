@@ -12,18 +12,18 @@ Class Sforzando {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "sforzando"
         Return True
-        Try {
-            UIAElement := GetUIAElement(1)
-            If not UIAElement = False And UIAElement.Name = "PlogueXMLGUI"
-            Return True
-            UIAElement := GetUIAElement(2)
-            If not UIAElement = False And UIAElement.Name = "PlogueXMLGUI"
-            Return True
-            UIAElement := GetUIAElement("15,1")
-            If not UIAElement = False And UIAElement.Name = "PlogueXMLGUI"
-            Return True
-        }
-        Sleep 500
+        UIAElement := GetUIAElement(1)
+        Try
+        If not UIAElement = False And UIAElement.Name = "PlogueXMLGUI"
+        Return True
+        UIAElement := GetUIAElement(2)
+        Try
+        If not UIAElement = False And UIAElement.Name = "PlogueXMLGUI"
+        Return True
+        UIAElement := GetUIAElement("15,1")
+        Try
+        If not UIAElement = False And UIAElement.Name = "PlogueXMLGUI"
+        Return True
         Return False
     }
     

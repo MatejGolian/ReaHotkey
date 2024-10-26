@@ -7,7 +7,7 @@ Static Settings := Array()
 Static __New() {
 This.Add("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1, "Check screen resolution on startup")
 This.Add("ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup", 1, "Check for updates on startup")
-This.Add("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1, "Warn if another window may be covering the interface")
+This.Add("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1, "Warn if another window may be covering the interface in specific cases")
 This.Add("ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection", 1, "Use image search for Engine 2 plug-in detection")
 This.Add("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1, "Automatically close library browsers in Kontakt and Komplete Kontrol plug-ins")
 This.Add("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1, "Automatically close library browsers in Kontakt and Komplete Kontrol standalone applications")

@@ -477,20 +477,10 @@ Class ReaHotkey {
             Thread "NoTimers"
             Try
             If WinActive(ReaHotkey.PluginWinCriteria) And ReaHotkey.FoundPlugin Is Plugin {
-                If WinExist("Error opening devices ahk_exe reaper.exe")
-                ReportError()
-            }
-            Else If Not ReaHotkey.StandaloneWinCriteria = False And WinActive(ReaHotkey.StandaloneWinCriteria) And ReaHotkey.FoundStandalone Is standalone {
-                CurrentWinID := WinGetID("A")
-                AllWinIDs := WinGetList(,, "Program Manager")
-                For WinNumber, WinID In AllWinIDs
-                If WinID = CurrentWinID And WinNumber > 2 And Not WinExist("ahk_class #32768") {
+                If WinExist("Error opening devices ahk_exe reaper.exe") {
                     ReportError()
-                    Break
+                    Return
                 }
-            }
-            Else {
-                Return
             }
             ReportError() {
                 AccessibilityOverlay.Speak("Warning: Another window may be covering the interface. ReaHotkey may not work correctly.")
