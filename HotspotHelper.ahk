@@ -175,6 +175,25 @@ CopyControlInfoToClipboard() {
                 ControlDimensions := ""
                 ControlPos := ""
             }
+            ControlHwnd := ControlGetHwnd(ControlClass, "A")
+            Try {
+                WinGetPos &WinX, &WinY, &WinW, &WinH, ControlHwnd
+                WinDimensions := WinW . " × " . WinH
+                WinPos := "X " . WinX . ", Y " . WinY
+            }
+            Catch {
+                WinDimensions := ""
+                WinPos := ""
+            }
+            Try {
+                WinGetClientPos &ClientX, &ClientY, &ClientW, &ClientH, ControlHwnd
+                ClientDimensions := ClientW . " × " . ClientH
+                ClientPos := "X " . ClientX . ", Y " . ClientY
+            }
+            Catch {
+                ClientDimensions := ""
+                ClientPos := ""
+            }
         }
         Catch {
             Speak("Focused control not found")
@@ -184,7 +203,7 @@ CopyControlInfoToClipboard() {
         ConfirmationDialog := MsgBox("Copy info About the currently focused control to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
             Sleep 1000
-            A_Clipboard := "Control class: " . ControlClass . "`nControl Dimensions: " . ControlDimensions . "`nControl Position: " . ControlPos
+            A_Clipboard := "Control class: " . ControlClass . "`nControl Position: " . ControlPos . "`nControl Dimensions: " . ControlDimensions . "`n`nWhen Treated As A Window:`nWindow Position: " . WinPos . "`nWindow Dimensions: " . WinDimensions . "`nClient Area Position: " . ClientPos . "`nClient Area Dimensions: " . ClientDimensions
             Speak("Control info copied to clipboard")
         }
         DialogOpen := 0
@@ -355,7 +374,7 @@ CopyWindowInfoToClipboard() {
         ConfirmationDialog := MsgBox("Copy info about the active window to clipboard?", AppName, 4)
         If ConfirmationDialog == "Yes" {
             Sleep 1000
-            A_Clipboard := "Process Name: " . ProcessName . "`nProcess Path: " . ProcessPath . "`nWindow Class: " . WindowClass . "`nWindow ID: " . WindowID . "`nWindow Title: " . WindowTitle . "`nWindow Dimensions: " . WinDimensions . "`nWindow position: " . WinPos . "`nClient Area Dimensions: " . ClientDimensions . "`nClient Area Position: " . ClientPos
+            A_Clipboard := "Process Name: " . ProcessName . "`nProcess Path: " . ProcessPath . "`nWindow Class: " . WindowClass . "`nWindow ID: " . WindowID . "`nWindow Title: " . WindowTitle . "`nWindow Position: " . WinPos . "`nWindow Dimensions: " . WinDimensions . "`nClient Area Position: " . ClientPos . "`nClient Area Dimensions: " . ClientDimensions
             Speak("Window info copied to clipboard")
         }
         DialogOpen := 0
