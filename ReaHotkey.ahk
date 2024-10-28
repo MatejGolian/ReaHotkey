@@ -11,19 +11,6 @@ InstallKeybdHook
 SendMode "Input"
 SetTitleMatchMode "RegEx"
 
-#Include Includes/Version.ahk
-#Include <AccessibilityOverlay>
-#Include <AccessibleMenu>
-#Include <AccessiblePluginMenu>
-#Include <AccessibleStandaloneMenu>
-#Include <JXON>
-#Include <OCR>
-#Include <Program>
-#Include <Plugin>
-#Include <ReaHotkey>
-#Include <Standalone>
-#Include <UIA>
-
 A_IconTip := "ReaHotkey"
 A_TrayMenu.Delete
 A_TrayMenu.Add("&Configuration...", ReaHotkey.ShowConfigBox)
@@ -39,4 +26,17 @@ A_TrayMenu.Default := "&Configuration..."
 #Include Includes/Hotkey.Functions.ahk
 #Include Includes/Overlay.Definitions.ahk
 #Include Includes/Overlay.Functions.ahk
+#Include Includes/Version.ahk
 #Include *i Includes/CIVersion.ahk
+
+#Include <AccessibilityOverlay>
+#Include <AccessibleMenu>
+#Include <AccessiblePluginMenu>
+#Include <AccessibleStandaloneMenu>
+#Include <JXON>
+#Include <OCR>
+#Include <Program>
+#Include <Plugin>
+#Include <ReaHotkey>
+#Include <Standalone>
+#Include <UIA>
