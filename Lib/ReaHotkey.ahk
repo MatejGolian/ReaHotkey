@@ -16,9 +16,9 @@ Class ReaHotkey {
     Static StandaloneWinCriteria := False
     
     Static __New() {
-        OnError ReaHotkey.HandleError
         ReaHotkey.TurnPluginHotkeysOff()
         ReaHotkey.TurnStandaloneHotkeysOff()
+        OnError ReaHotkey.HandleError
         ScriptReloaded := False
         For Arg In A_Args
         If Arg = "Reload" {
