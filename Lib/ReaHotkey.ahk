@@ -271,8 +271,8 @@ Class ReaHotkey {
         ReaHotkey.OverrideHotkey("Plugin", PluginName, KeyName, Action, Options)
     }
     
-    Static OverrideStandaloneHotkey(standaloneName := "", KeyName := "", Action := "", Options := "") {
-        ReaHotkey.OverrideHotkey("standalone", standaloneName, KeyName, Action, Options)
+    Static OverrideStandaloneHotkey(StandaloneName := "", KeyName := "", Action := "", Options := "") {
+        ReaHotkey.OverrideHotkey("Standalone", StandaloneName, KeyName, Action, Options)
     }
     
     Static TurnHotkeysOff(Type, Name := "") {
@@ -528,8 +528,8 @@ Class ReaHotkey {
                     ReaHotkey.FoundPlugin := False
                     ReaHotkey.FoundStandalone := False
                     ReaHotkey.StandaloneWinCriteria := False
-                    For standaloneDefinition In Standalone.List
-                    For WinCriterion In standaloneDefinition["WinCriteria"]
+                    For StandaloneDefinition In Standalone.List
+                    For WinCriterion In StandaloneDefinition["WinCriteria"]
                     If WinActive(WinCriterion) {
                         ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
                         ReaHotkey.StandaloneWinCriteria := WinCriterion
