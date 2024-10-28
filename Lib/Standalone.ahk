@@ -67,7 +67,7 @@ Class Standalone Extends Program {
             HotIf
             If ReaHotkey.FoundStandalone Is Standalone
             Hotkey KeyName, Action, Options.String
-            If WinActive(ReaHotkey.PluginWinCriteria)
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
         }
     }
