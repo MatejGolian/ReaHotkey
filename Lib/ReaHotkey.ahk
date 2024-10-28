@@ -346,11 +346,14 @@ Class ReaHotkey {
         Thread "NoTimers"
         If Type = "Plugin" Or Type = "Standalone"
         If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.NoHotkeys = False {
-            If ReaHotkey.PluginWinCriteria And Type = "Plugin"
-            HotIfWinActive(ReaHotkey.PluginWinCriteria)
-            If Type = "Standalone"
-            HotIf
-            TurnCommonOn()
+            If ReaHotkey.PluginWinCriteria And Type = "Plugin" {
+                HotIfWinActive(ReaHotkey.PluginWinCriteria)
+                TurnCommonOn()
+            }
+            If ReaHotkey.StandaloneWinCriteria And Type = "Standalone" {
+                HotIf
+                TurnCommonOn()
+            }
             If Name = "" {
                 If ReaHotkey.Found%Type% Is %Type% {
                     For DefinedHotkey In ReaHotkey.Found%Type%.GetHotkeys()
