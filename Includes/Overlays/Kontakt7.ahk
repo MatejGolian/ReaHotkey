@@ -75,7 +75,7 @@ Class Kontakt7 {
         If Found = False
         %Type%.SetNoHotkeys("Kontakt 7", False)
         Else
-%Type%.SetNoHotkeys("Kontakt 7", True)
+        %Type%.SetNoHotkeys("Kontakt 7", True)
     }
     
     Static CheckPlugin(*) {
@@ -188,7 +188,7 @@ Class Kontakt7 {
         Static Call(HeaderButton) {
             Critical
             UIAElement := False
-            If ReaHotkey.PluginWinCriteria = "ahk_exe reaper.exe ahk_class #32770"
+            If ReaHotkey.PluginNative
             StartingElement := "15,1"
             Else
             StartingElement := 2
@@ -225,7 +225,7 @@ Class Kontakt7 {
     Class ActivatePluginInstrumentButton {
         Static Call(InstrumentButton) {
             Critical
-            If ReaHotkey.PluginWinCriteria = "ahk_exe reaper.exe ahk_class #32770"
+            If ReaHotkey.PluginNative
             StartingElement := "15,1"
             Else
             StartingElement := 2
@@ -257,7 +257,7 @@ Class Kontakt7 {
     Class ActivatePluginMultiButton {
         Static Call(MultiButton) {
             Critical
-            If ReaHotkey.PluginWinCriteria = "ahk_exe reaper.exe ahk_class #32770"
+            If ReaHotkey.PluginNative
             StartingElement := "15,1"
             Else
             StartingElement := 2
@@ -289,7 +289,7 @@ Class Kontakt7 {
     Class ActivatePluginSnapshotButton {
         Static Call(SnapshotButton) {
             Critical
-            If ReaHotkey.PluginWinCriteria = "ahk_exe reaper.exe ahk_class #32770"
+            If ReaHotkey.PluginNative
             StartingElement := "15,1"
             Else
             StartingElement := 2
@@ -364,7 +364,7 @@ Class Kontakt7 {
             Label := InstrumentButton
             If InstrumentButton Is Object
             Label := InstrumentButton.Label
-            If ReaHotkey.PluginWinCriteria = "ahk_exe reaper.exe ahk_class #32770"
+            If ReaHotkey.PluginNative
             StartingElement := "15,1"
             Else
             StartingElement := 2
@@ -387,7 +387,7 @@ Class Kontakt7 {
             Label := MultiButton
             If MultiButton Is Object
             Label := MultiButton.Label
-            If ReaHotkey.PluginWinCriteria = "ahk_exe reaper.exe ahk_class #32770"
+            If ReaHotkey.PluginNative
             StartingElement := "15,1"
             Else
             StartingElement := 2
@@ -412,7 +412,7 @@ Class Kontakt7 {
             Label := SnapshotButton
             If SnapshotButton Is Object
             Label := SnapshotButton.Label
-            If ReaHotkey.PluginWinCriteria = "ahk_exe reaper.exe ahk_class #32770"
+            If ReaHotkey.PluginNative
             StartingElement := "15,1"
             Else
             StartingElement := 2

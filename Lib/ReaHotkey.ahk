@@ -511,6 +511,24 @@ Class ReaHotkey {
         }
     }
     
+    Class GetPluginBridged {
+        Static Call() {
+            If Not ReaHotkey.PluginWinCriteria
+            Return False
+            If ReaHotkey.PluginWinCriteria = "ahk_exe reaper.exe ahk_class #32770"
+            Return False
+            Return True
+        }
+    }
+    
+    Class GetPluginNative {
+        Static Call() {
+            If ReaHotkey.PluginWinCriteria = "ahk_exe reaper.exe ahk_class #32770"
+            Return True
+            Return False
+        }
+    }
+    
     Class GetPluginWinCriteria {
         Static Call() {
             For PluginWinCriteria In ReaHotkey.PluginWinCriteriaList
