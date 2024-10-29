@@ -108,11 +108,10 @@ Class KompleteKontrol {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol"
         Return True
-        Try
         UIAElement := GetUIAElement("15,1")
+        Try
         If Not UIAElement = False And UIAElement.Name = "Komplete Kontrol" And UIAElement.ClassName = "ni::qt::QuickWindow"
         Return True
-        Sleep 500
         Return False
     }
     
