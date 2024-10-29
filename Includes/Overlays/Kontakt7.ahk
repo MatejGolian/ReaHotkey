@@ -105,8 +105,12 @@ Class Kontakt7 {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 7 Content Missing Dialog"
         Return True
-        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing"
-        Return True
+        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing" {
+            UIAElement := GetUIAElement("1,1")
+            Try
+            If Not UIAElement = False And UIAElement.Name = "Kontakt 7" And UIAElement.ClassName = "ni::qt::QuickWindow"
+            Return True
+        }
         Return False
     }
     
