@@ -14,9 +14,10 @@ Class ReaHotkey {
     Static StandaloneHotkeyOverrides := Array()
     
     Static __New() {
-        OnError ReaHotkey.HandleError
         ReaHotkey.TurnPluginHotkeysOff()
         ReaHotkey.TurnStandaloneHotkeysOff()
+        ReaHotkey.InitConfig()
+        OnError ReaHotkey.HandleError
         ScriptReloaded := False
         For Arg In A_Args
         If Arg = "Reload" {
@@ -163,6 +164,16 @@ Class ReaHotkey {
             }
         }
         Return False
+    }
+    
+    Static InitConfig() {
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1, "Check screen resolution on startup")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup", 1, "Check for updates on startup")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1, "Warn if another window may be covering the interface in specific cases", ReaHotkey.ManageWinCovered)
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection", 1, "Use image search for Engine 2 plug-in detection")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1, "Automatically close library browsers in Kontakt and Komplete Kontrol plug-ins")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1, "Automatically close library browsers in Kontakt and Komplete Kontrol standalone applications")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1, "Automatically detect libraries in Kontakt and Komplete Kontrol plug-ins")
     }
     
     Static InPluginControl(ControlToCheck) {
@@ -683,6 +694,15 @@ Class ReaHotkey {
         }
     }
     
+    Class ManageWinCovered {
+        Static Call(Setting) {
+            If Setting.Value
+            SetTimer ReaHotkey.CheckIfWinCovered, 10000
+            Else
+            SetTimer ReaHotkey.CheckIfWinCovered, 0
+        }
+    }
+    
     Class Quit {
         Static Call(*) {
             ExitApp
@@ -722,43 +742,7 @@ Class ReaHotkey {
     
     Class ShowConfigBox {
         Static Call(*) {
-            Static ConfigBox := False, ConfigBoxWinID := ""
-            If ConfigBox = False {
-                ConfigBox := Gui(, "ReaHotkey Configuration")
-                SettingBoxes := Map()
-                For Index, Setting In ReaHotkey.Config.Settings {
-                    Checked := ""
-                    If Setting.Value = 1
-                    Checked := "Checked"
-                    If Index = 1
-                    SettingBoxes[Setting.KeyName] := ConfigBox.AddCheckBox(Checked, Setting.Label)
-                    Else
-                    SettingBoxes[Setting.KeyName] := ConfigBox.AddCheckBox("XS " . Checked, Setting.Label)
-                }
-                ConfigBox.AddButton("Section XS Default", "OK").OnEvent("Click", SaveConfig)
-                ConfigBox.AddButton("YS", "Cancel").OnEvent("Click", CloseConfigBox)
-                ConfigBox.OnEvent("Close", CloseConfigBox)
-                ConfigBox.OnEvent("Escape", CloseConfigBox)
-                ConfigBox.Show()
-                ConfigBoxWinID := WinGetID("A")
-            }
-            Else {
-                WinActivate(ConfigBoxWinID)
-            }
-            CloseConfigBox(*) {
-                ConfigBox.Destroy()
-                ConfigBox := False
-                ConfigBoxWinID := ""
-            }
-            SaveConfig(*) {
-                For KeyName, SettingBox In SettingBoxes
-                ReaHotkey.Config.set(KeyName, SettingBox.Value)
-                If ReaHotkey.Config.Get("WarnIfWinCovered")
-                SetTimer ReaHotkey.CheckIfWinCovered, 10000
-                Else
-                SetTimer ReaHotkey.CheckIfWinCovered, 0
-                CloseConfigBox()
-            }
+            ReaHotkey.Config.ShowBox("ReaHotkey Configuration")
         }
     }
     
