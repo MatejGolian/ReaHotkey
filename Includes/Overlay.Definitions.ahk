@@ -13,7 +13,7 @@ Standalone.ChooserOverlay.AddCustomButton("Choose overlay",,, ChooseStandaloneOv
 #Include Overlays/Dubler2.ahk
 #Include Overlays/Engine2.ahk
 #Include Overlays/FabFilter.ahk
-#Include Overlays/KompleteKontrol.ahk
 #Include Overlays/Kontakt7.ahk
 #Include Overlays/Kontakt8.ahk
+#Include Overlays/KompleteKontrol.ahk
 #Include Overlays/Sforzando.ahk

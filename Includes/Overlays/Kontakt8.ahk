@@ -8,6 +8,8 @@ Class Kontakt8 {
     Static StandaloneOverlays := Array()
     
     Static __New() {
+        Kontakt8.InitConfig()
+        
         PluginHeader := AccessibilityOverlay("Kontakt 8")
         PluginHeader.AddStaticText("Kontakt 8")
         PluginHeader.AddCustomButton("FILE menu",,, Kontakt8.ActivatePluginHeaderButton).SetHotkey("!F", "Alt+F")
@@ -92,9 +94,9 @@ Class Kontakt8 {
     
     Static CheckPluginConfig() {
         Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 8", True, True)
-        If ReaHotkey.Config.Get("AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins") = 1
+        If ReaHotkey.Config.Get("CloseK8Browser") = 1
         Kontakt8.ClosePluginBrowser()
-        If ReaHotkey.Config.Get("AutomaticallyDetectLibrariesInKontaktAndKKPlugins") = 1
+        If ReaHotkey.Config.Get("DetectLibsInK8") = 1
         Plugin.SetTimer("Kontakt 8", PluginAutoChangeFunction, 500)
         Else
         Plugin.SetTimer("Kontakt 8", PluginAutoChangeFunction, 0)
@@ -119,7 +121,7 @@ Class Kontakt8 {
     }
     
     Static CheckStandaloneConfig() {
-        If ReaHotkey.Config.Get("AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones") = 1
+        If ReaHotkey.Config.Get("CloseK8Browser") = 1
         Kontakt8.CloseStandaloneBrowser()
     }
     
@@ -155,6 +157,11 @@ Class Kontakt8 {
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
         }
+    }
+    
+    Static InitConfig() {
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CloseK8Browser", 1, "Automatically close library browser in Kontakt 8", "Advanced")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "DetectLibsInK8", 1, "Automatically detect libraries in Kontakt 8 plug-in")
     }
     
     Static InitPlugin(PluginInstance) {

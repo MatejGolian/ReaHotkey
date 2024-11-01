@@ -14,6 +14,9 @@ Class Configuration {
     }
     
     Add(FileName, SectionName, KeyName, DefaultValue, Label := False, Tab := False, FuncOnSet := False) {
+        For Setting In This.Settings
+        If Setting.FileName = FileName And Setting.SectionName = SectionName And Setting.KeyName = KeyName
+        Return
         If Not This.PrevIousTab
         This.PrevIousTab := This.DefaultTab
         If Not Tab

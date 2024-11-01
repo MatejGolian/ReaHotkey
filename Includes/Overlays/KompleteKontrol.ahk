@@ -8,6 +8,8 @@ Class KompleteKontrol {
     Static StandaloneOverlays := Array()
     
     Static __New() {
+        KompleteKontrol.InitConfig()
+        
         PluginHeader := AccessibilityOverlay("Komplete Kontrol")
         PluginHeader.AddStaticText("Komplete Kontrol")
         PluginHeader.AddHotspotButton("Menu", 297, 17, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
@@ -117,9 +119,9 @@ Class KompleteKontrol {
     
     Static CheckPluginConfig() {
         Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True)
-        If ReaHotkey.Config.Get("AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins") = 1
+        If ReaHotkey.Config.Get("CloseKKBrowser") = 1
         KompleteKontrol.ClosePluginBrowser()
-        If ReaHotkey.Config.Get("AutomaticallyDetectLibrariesInKontaktAndKKPlugins") = 1
+        If ReaHotkey.Config.Get("DetectLibsInKK") = 1
         Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 500)
         Else
         Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 0)
@@ -162,7 +164,7 @@ Class KompleteKontrol {
     }
     
     Static CheckStandaloneConfig() {
-        If ReaHotkey.Config.Get("AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones") = 1
+        If ReaHotkey.Config.Get("CloseKKBrowser") = 1
         KompleteKontrol.CloseStandaloneBrowser()
     }
     
@@ -217,6 +219,11 @@ Class KompleteKontrol {
         Sleep 1000
         If KKInstance.Overlay.CurrentControlID = 0
         KKInstance.Overlay.Focus()
+    }
+    
+    Static InitConfig() {
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CloseKKBrowser", 1, "Automatically close library browser in Komplete Kontrol")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "DetectLibsInKK", 1, "Automatically detect libraries in Komplete Kontrol plug-in")
     }
     
     Static InitPlugin(PluginInstance) {
