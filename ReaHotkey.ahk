@@ -17,6 +17,7 @@ SetTitleMatchMode "RegEx"
 #Include <AccessibleMenu>
 #Include <AccessiblePluginMenu>
 #Include <AccessibleStandaloneMenu>
+#Include <Configuration>
 #Include <JXON>
 #Include <OCR>
 #Include <Program>

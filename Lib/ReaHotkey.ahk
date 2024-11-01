@@ -162,9 +162,10 @@ Class ReaHotkey {
     }
     
     Static InitConfig() {
+        ReaHotkey.Config := Configuration("ReaHotkey Configuration")
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1, "Check screen resolution on startup")
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup", 1, "Check for updates on startup")
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1, "Warn if another window may be covering the interface in specific cases", ReaHotkey.ManageWinCovered)
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1, "Warn if another window may be covering the interface in specific cases",, ReaHotkey.ManageWinCovered)
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection", 1, "Use image search for Engine 2 plug-in detection")
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1, "Automatically close library browsers in Kontakt and Komplete Kontrol plug-ins")
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1, "Automatically close library browsers in Kontakt and Komplete Kontrol standalone applications")
@@ -677,7 +678,7 @@ Class ReaHotkey {
     
     Class ShowConfigBox {
         Static Call(*) {
-            ReaHotkey.Config.ShowBox("ReaHotkey Configuration")
+            ReaHotkey.Config.ShowBox()
         }
     }
     
@@ -745,7 +746,6 @@ Class ReaHotkey {
         }
     }
     
-    #Include <Config>
     #Include <Update>
     
 }
