@@ -14,9 +14,9 @@ Class Configuration {
     }
     
     Add(FileName, SectionName, KeyName, DefaultValue, Label := False, Tab := False, FuncOnSet := False) {
-        For Setting In This.Settings
+        For Index, Setting In This.Settings
         If Setting.FileName = FileName And Setting.SectionName = SectionName And Setting.KeyName = KeyName
-        Return
+        Return Index
         If Not This.PrevIousTab
         This.PrevIousTab := This.DefaultTab
         If Not Tab
@@ -29,8 +29,9 @@ Class Configuration {
         This.Settings.Push(Setting)
         For Value In This.Tabs
         If Setting.Tab = Value
-        Return
+        Return This.Settings.Length
         This.Tabs.Push(Setting.Tab)
+        Return This.Settings.Length
     }
     
     Get(KeyNameOrNumber) {

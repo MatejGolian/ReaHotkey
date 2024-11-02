@@ -12,6 +12,7 @@ Class ReaHotkey {
     Static PluginWinCriteria := "ahk_exe reaper.exe ahk_class #32770"
     Static RequiredScreenWidth := 1920
     Static RequiredScreenHeight := 1080
+    Static RequiredWinVer := 10
     Static StandaloneHotkeyOverrides := Array()
     Static StandaloneWinCriteria := False
     
@@ -28,16 +29,18 @@ Class ReaHotkey {
         }
         If Not ScriptReloaded {
             AccessibilityOverlay.Speak("ReaHotkey ready")
-            If ReaHotkey.Config.Get("ScreenResCheck") = 1
+            If ReaHotkey.Config.Get("CheckWinVer") = 1
+            ReaHotkey.CheckWinVer()
+            If ReaHotkey.Config.Get("CheckScreenResolution") = 1
             ReaHotkey.CheckResolution()
-            If ReaHotkey.Config.Get("UpdateCheck") = 1
+            If ReaHotkey.Config.Get("CheckUpdate") = 1
             ReaHotkey.CheckForUpdates()
         }
         Else {
             AccessibilityOverlay.Speak("Reloaded ReaHotkey")
         }
         SetTimer ReaHotkey.ManageState, 100
-        If ReaHotkey.Config.Get("WinCoveredWarning") = 1
+        If ReaHotkey.Config.Get("CheckIfWinCovered") = 1
         SetTimer ReaHotkey.CheckIfWinCovered, 10000
     }
     
@@ -163,9 +166,10 @@ Class ReaHotkey {
     
     Static InitConfig() {
         ReaHotkey.Config := Configuration("ReaHotkey Configuration")
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "ScreenResCheck", 1, "Check screen resolution on startup")
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "UpdateCheck", 1, "Check for updates on startup")
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "WinCoveredWarning", 1, "Warn if another window may be covering the interface in specific cases",, ReaHotkey.ManageWinCovered)
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckWinVer", 1, "Check Windows version on startup")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckScreenResolution", 1, "Check screen resolution on startup")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckUpdate", 1, "Check for updates on startup")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckIfWinCovered", 1, "Warn if another window may be covering the interface in specific cases",, ReaHotkey.ManageWinCovered)
     }
     
     Static InPluginControl(ControlToCheck) {
@@ -499,6 +503,15 @@ Class ReaHotkey {
         }
     }
     
+    Class CheckWinVer {
+        Static Call() {
+            If Not SubStr(A_OSVersion, 1, InStr(A_OSVersion, ".")) >= ReaHotkey.RequiredWinVer {
+                MsgBox "ReaHotkey requires Windows " . ReaHotkey.RequiredWinVer . " or higher.`nSome functions may not operate properly.", "ReaHotkey"
+                Sleep 500
+            }
+        }
+    }
+    
     Class HandleError {
         Static Call(Exception, Mode) {
             ReaHotkey.TurnPluginHotkeysOff()
@@ -693,7 +706,7 @@ Class ReaHotkey {
             }
             Else {
                 SetTimer ReaHotkey.ManageState, 100
-                If ReaHotkey.Config.Get("WinCoveredWarning") = 1
+                If ReaHotkey.Config.Get("CheckIfWinCovered") = 1
                 SetTimer ReaHotkey.CheckIfWinCovered, 10000
             }
         }
