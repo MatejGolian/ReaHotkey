@@ -3,6 +3,7 @@
 Class Engine2 {
     
     Static __New() {
+        Engine2.InitConfig()
         
         Plugin.Register("Engine 2", "^Plugin[0-9A-F]{17}$",, False, False, False, ObjBindMethod(Engine2, "CheckPlugin"))
         Standalone.Register("Engine 2", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe",, False, False)
@@ -53,7 +54,7 @@ Class Engine2 {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Engine 2"
         Return True
-        If ReaHotkey.Config.Get("UseImageSearchForEngine2PluginDetection") = 1 And FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate() + 492, GetPluginYCoordinate(), GetPluginXCoordinate() + 892, GetPluginYCoordinate() + 100) Is Object {
+        If ReaHotkey.Config.Get("Engine2ImageSearch") = 1 And FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate() + 492, GetPluginYCoordinate(), GetPluginXCoordinate() + 892, GetPluginYCoordinate() + 100) Is Object {
             Return True
         }
         Else {
@@ -76,6 +77,10 @@ Class Engine2 {
         Engine2LibrariesTab.Focus(False)
         Engine2AddLibraryButton.Focus(False)
         AccessibilityOverlay.Speak("")
+    }
+    
+    Static InitConfig() {
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "Engine2ImageSearch", 1, "Use image search for Engine 2 plug-in detection", "Engine 2")
     }
     
 }

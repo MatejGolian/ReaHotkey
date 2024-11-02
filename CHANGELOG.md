@@ -10,11 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added/Changed
 
 -   Added support for bridged mode in Reaper
+-   Added Windows version checking on startup
+-   Added dedicated settings for each NI product
+-   Changed to client CoordMode
 -   Changed message spoken on reload
 -   Make it easier to add/manage configuration settings
 -   Remove 'win covered' warning' in standalone applications
 -   Retrieve release and version information from GitHub API
--   Use 'REAPER-alike' update dialogs
+-   Split up configuration settings among several tabs
+-   Use update dialogs similar to REAPER
 -   HotspotHelper: Add function for reporting the color under the mouse cursor
 -   HotspotHelper: Add function for retrieving window position and dimensions
 -   HotspotHelper: Group several operations on to one hotkey / Free up no longer needed hotkeys

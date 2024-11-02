@@ -11,6 +11,7 @@ Class ReaHotkey {
     Static PluginHotkeyOverrides := Array()
     Static RequiredScreenWidth := 1920
     Static RequiredScreenHeight := 1080
+    Static RequiredWinVer := 10
     Static StandaloneHotkeyOverrides := Array()
     
     Static __New() {
@@ -26,16 +27,18 @@ Class ReaHotkey {
         }
         If Not ScriptReloaded {
             AccessibilityOverlay.Speak("ReaHotkey ready")
-            If ReaHotkey.Config.Get("CheckScreenResolutionOnStartup") = 1
+            If ReaHotkey.Config.Get("CheckWinVer") = 1
+            ReaHotkey.CheckWinVer()
+            If ReaHotkey.Config.Get("CheckScreenResolution") = 1
             ReaHotkey.CheckResolution()
-            If ReaHotkey.Config.Get("CheckForUpdatesOnStartup") = 1
+            If ReaHotkey.Config.Get("CheckUpdate") = 1
             ReaHotkey.CheckForUpdates()
         }
         Else {
             AccessibilityOverlay.Speak("Reloaded ReaHotkey")
         }
         SetTimer ReaHotkey.ManageState, 100
-        If ReaHotkey.Config.Get("WarnIfWinCovered") = 1
+        If ReaHotkey.Config.Get("CheckIfWinCovered") = 1
         SetTimer ReaHotkey.CheckIfWinCovered, 10000
     }
     
@@ -168,13 +171,10 @@ Class ReaHotkey {
     
     Static InitConfig() {
         ReaHotkey.Config := Configuration("ReaHotkey Configuration")
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckScreenResolutionOnStartup", 1, "Check screen resolution on startup")
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckForUpdatesOnStartup", 1, "Check for updates on startup")
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "WarnIfWinCovered", 1, "Warn if another window may be covering the interface in specific cases",, ReaHotkey.ManageWinCovered)
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "UseImageSearchForEngine2PluginDetection", 1, "Use image search for Engine 2 plug-in detection")
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins", 1, "Automatically close library browsers in Kontakt and Komplete Kontrol plug-ins")
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones", 1, "Automatically close library browsers in Kontakt and Komplete Kontrol standalone applications")
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "AutomaticallyDetectLibrariesInKontaktAndKKPlugins", 1, "Automatically detect libraries in Kontakt and Komplete Kontrol plug-ins")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckWinVer", 1, "Check Windows version on startup")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckScreenResolution", 1, "Check screen resolution on startup")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckUpdate", 1, "Check for updates on startup")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckIfWinCovered", 1, "Warn if another window may be covering the interface in specific cases",, ReaHotkey.ManageWinCovered)
     }
     
     Static InPluginControl(ControlToCheck) {
@@ -523,6 +523,15 @@ Class ReaHotkey {
         }
     }
     
+    Class CheckWinVer {
+        Static Call() {
+            If Not SubStr(A_OSVersion, 1, InStr(A_OSVersion, ".")) >= ReaHotkey.RequiredWinVer {
+                MsgBox "ReaHotkey requires Windows " . ReaHotkey.RequiredWinVer . " or higher.`nSome functions may not operate properly.", "ReaHotkey"
+                Sleep 500
+            }
+        }
+    }
+    
     Class GetPluginBridged {
         Static Call() {
             If Not ReaHotkey.PluginWinCriteria
@@ -762,7 +771,7 @@ Class ReaHotkey {
             }
             Else {
                 SetTimer ReaHotkey.ManageState, 100
-                If ReaHotkey.Config.Get("WarnIfWinCovered") = 1
+                If ReaHotkey.Config.Get("CheckIfWinCovered") = 1
                 SetTimer ReaHotkey.CheckIfWinCovered, 10000
             }
         }

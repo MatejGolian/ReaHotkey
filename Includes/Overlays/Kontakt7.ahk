@@ -8,6 +8,8 @@ Class Kontakt7 {
     Static StandaloneOverlays := Array()
     
     Static __New() {
+        Kontakt7.InitConfig()
+        
         PluginHeader := AccessibilityOverlay("Kontakt 7")
         PluginHeader.AddStaticText("Kontakt 7")
         PluginHeader.AddCustomButton("FILE menu",,, Kontakt7.ActivatePluginHeaderButton).SetHotkey("!F", "Alt+F")
@@ -96,9 +98,9 @@ Class Kontakt7 {
     
     Static CheckPluginConfig() {
         Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True)
-        If ReaHotkey.Config.Get("AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins") = 1
+        If ReaHotkey.Config.Get("CloseK7Browser") = 1
         Kontakt7.ClosePluginBrowser()
-        If ReaHotkey.Config.Get("AutomaticallyDetectLibrariesInKontaktAndKKPlugins") = 1
+        If ReaHotkey.Config.Get("DetectLibsInK7") = 1
         Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 500)
         Else
         Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 0)
@@ -123,7 +125,7 @@ Class Kontakt7 {
     }
     
     Static CheckStandaloneConfig() {
-        If ReaHotkey.Config.Get("AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones") = 1
+        If ReaHotkey.Config.Get("CloseK7Browser") = 1
         Kontakt7.CloseStandaloneBrowser()
     }
     
@@ -171,6 +173,11 @@ Class Kontakt7 {
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
         }
+    }
+    
+    Static InitConfig() {
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CloseK7Browser", 1, "Automatically close library browser in Kontakt 7", "Kontakt / Komplete Kontrol")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "DetectLibsInK7", 1, "Automatically detect libraries in Kontakt 7 plug-in")
     }
     
     Static InitPlugin(PluginInstance) {
