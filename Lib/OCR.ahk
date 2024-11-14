@@ -11,7 +11,7 @@
  * OCR.FromWindow(WinTitle?, lang?, transform:=1, onlyClientArea:=0, mode:=4)
  * OCR.FromFile(FileName, lang?, transform:=1)
  * OCR.FromBitmap(bitmap, lang?, transform:=1, hDC?)
- * OCR.FromPDF(FileName, lang?, transform:=1)   => returns an array of results for each PDF page
+ * OCR.FromPDF(FileName, lang?, transform:=1, start:=1, end?)   => returns an array of results for each PDF page
  * OCR.FromPDFPage(FileName, page:=1, lang?, transform:=1)
  * 
  * Note: the first parameter of the OCR initiation methods may be an object mimicking named parameters.
@@ -176,7 +176,7 @@ class OCR {
      * Images of other types should be first converted to this format (eg from file, from bitmap).
      * @param RandomAccessStreamOrSoftwareBitmap Pointer or an object containing a ptr to a RandomAccessStream or SoftwareBitmap
      * @param {String} lang OCR language. Default is first from available languages.
-     * @param {Integer|Object} transform Either a scale factor number, or an object {scale:Integer, grayscale:Boolean, invertcolors:Boolean}
+     * @param {Integer|Object} transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
      * @param {String} decoder Optional bitmap codec name to decode RandomAccessStream. Default is automatic detection.
      *  Possible values are gif, ico, jpeg, jpegxr, png, tiff, bmp.
      * @returns {OCR.OcrResult} 
@@ -184,7 +184,7 @@ class OCR {
     __New(RandomAccessStreamOrSoftwareBitmap, lang := "FirstFromAvailableLanguages", transform := 1, decoder := "") {
         local SoftwareBitmap := 0, RandomAccessStream := 0, width, height, x, y, w, h, __OCR := this.__OCR, scale, grayscale, invertcolors
         __OCR.__ExtractTransformParameters(RandomAccessStreamOrSoftwareBitmap, &transform)
-        scale := transform.scale, grayscale := transform.grayscale, invertcolors := transform.invertcolors
+        scale := transform.scale, grayscale := transform.grayscale, invertcolors := transform.invertcolors, rotate := transform.rotate, flip := transform.flip
         __OCR.__ExtractNamedParameters(RandomAccessStreamOrSoftwareBitmap, "x", &x, "y", &y, "w", &w, "h", &h, "lang", &lang, "decoder", &decoder, "RandomAccessStream", &RandomAccessStreamOrSoftwareBitmap, "RAS", &RandomAccessStreamOrSoftwareBitmap, "SoftwareBitmap", &RandomAccessStreamOrSoftwareBitmap)
         __OCR.LoadLanguage(lang)
 
@@ -195,8 +195,8 @@ class OCR {
             this.ImageWidth := width, this.ImageHeight := height
             if (Floor(width*scale) > __OCR.MaxImageDimension) or (Floor(height*scale) > __OCR.MaxImageDimension)
                throw ValueError("Image is too big - " width "x" height ".`nIt should be maximum - " __OCR.MaxImageDimension " pixels (with scale applied)")
-            if scale != 1 || IsSet(x)
-                SoftwareBitmap := __OCR.TransformSoftwareBitmap(SoftwareBitmap, &width, &height, scale, x, y, w, h)
+            if scale != 1 || IsSet(x) || rotate || flip
+                SoftwareBitmap := __OCR.TransformSoftwareBitmap(SoftwareBitmap, &width, &height, scale, rotate, flip, x?, y?, w?, h?)
             goto SoftwareBitmapCommon
         }
         RandomAccessStream := RandomAccessStreamOrSoftwareBitmap
@@ -227,8 +227,8 @@ class OCR {
             ComCall(6, BitmapFrameWithSoftwareBitmap, "ptr*", SoftwareBitmap:=ComValue(13,0))   ; GetSoftwareBitmapAsync
         }
         __OCR.WaitForAsync(&SoftwareBitmap)
-        if IsSet(x)
-            SoftwareBitmap := __OCR.TransformSoftwareBitmap(SoftwareBitmap, &width, &height, scale, x, y, w, h)
+        if IsSet(x) || rotate || flip
+            SoftwareBitmap := __OCR.TransformSoftwareBitmap(SoftwareBitmap, &width, &height, scale, rotate, flip, x?, y?, w?, h?)
 
         SoftwareBitmapCommon:
 
@@ -710,12 +710,12 @@ class OCR {
      * the top left corner of the image.
      * @param FileName Either full or relative (to A_WorkingDir) path to the file.
      * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Integer, grayscale:Boolean, invertcolors:Boolean}
+     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
      * @returns {OCR.OcrResult} 
      */
     static FromFile(FileName, lang?, transform:=1) {
         this.__ExtractTransformParameters(FileName, &transform)
-        this.__ExtractNamedParameters(FileName, "lang", &lang, "scale", &scale, "FileName", &FileName)
+        this.__ExtractNamedParameters(FileName, "lang", &lang, "FileName", &FileName)
         if !(fe := FileExist(FileName)) or InStr(fe, "D")
             throw TargetError("File `"" FileName "`" doesn't exist", -1)
         GUID := this.CLSIDFromString(this.IID_IRandomAccessStream)
@@ -728,12 +728,14 @@ class OCR {
      * the top left corner of the PDF page.
      * @param FileName Either full or relative (to A_WorkingDir) path to the file.
      * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Integer, grayscale:Boolean, invertcolors:Boolean}
+     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
+     * @param start Page number to start from. Default is first page.
+     * @param end Page number to end with (included). Default is last page.
      * @returns {OCR.OcrResult} 
      */
-    static FromPDF(FileName, lang?, transform:=1) {
+    static FromPDF(FileName, lang?, transform:=1, start:=1, end?) {
         this.__ExtractTransformParameters(FileName, &transform)
-        this.__ExtractNamedParameters(FileName, "lang", &lang, "scale", &scale, "FileName", &FileName)
+        this.__ExtractNamedParameters(FileName, "lang", &lang, "start", &start, "end", &end, "FileName", &FileName)
         if !(fe := FileExist(FileName)) or InStr(fe, "D")
             throw TargetError("File `"" FileName "`" doesn't exist", -1)
 
@@ -742,12 +744,14 @@ class OCR {
         ComCall(8, PdfDocumentStatics, "ptr", IRandomAccessStream, "ptr*", PdfDocument:=this.IBase()) ; LoadFromStreamAsync
         this.WaitForAsync(&PdfDocument)
         this.CloseIClosable(IRandomAccessStream)
-        ComCall(7, PdfDocument, "uint*", &count:=0) ; GetPageCount
-        if !count
-            throw Error("Unable to get PDF page count", -1)
-        results := []
-        Loop count
-            results.Push(this.FromPDFPage(PdfDocument, A_Index, lang?, transform:=1))
+        if !IsSet(end) {
+            ComCall(7, PdfDocument, "uint*", &end:=0) ; GetPageCount
+            if !end
+                throw Error("Unable to get PDF page count", -1)
+        }
+        local results := []
+        Loop (end+1-start)
+            results.Push(this.FromPDFPage(PdfDocument, start+(A_Index-1), lang?, transform))
         return results
     }
 
@@ -757,12 +761,12 @@ class OCR {
      * @param FileName Either full or relative (to A_WorkingDir) path to the file.
      * @param Page The page number to OCR. Default is 1.
      * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Integer, grayscale:Boolean, invertcolors:Boolean}
+     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
      * @returns {OCR.OcrResult} 
      */
     static FromPDFPage(FileName, page:=1, lang?, transform:=1) {
         this.__ExtractTransformParameters(FileName, &transform)
-        this.__ExtractNamedParameters(FileName, "page", page, "lang", &lang, "scale", &scale, "FileName", &FileName)
+        this.__ExtractNamedParameters(FileName, "page", page, "lang", &lang, "FileName", &FileName)
         if FileName is String {
             if !(fe := FileExist(FileName)) or InStr(fe, "D")
                 throw TargetError("File `"" FileName "`" doesn't exist", -1)
@@ -791,7 +795,7 @@ class OCR {
      * Additionally, Result.Relative.Screen.x and y are also stored. 
      * @param WinTitle A window title or other criteria identifying the target window.
      * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Integer, grayscale:Boolean, invertcolors:Boolean}
+     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
      * @param {Number, Object} onlyClientArea Whether only the client area or the whole window should be OCR-d. Default is 0.
      *     This can also be an object which can contain {X,Y,W,H, onlyClientArea} (relative coordinates from where to OCR).
      * @param {Number} mode Different methods of capturing the window. 
@@ -847,7 +851,7 @@ class OCR {
 
             local offsetX := 0, offsetY := 0, sbW := SoftwareBitmap.W, sbH := SoftwareBitmap.H, sbX := SoftwareBitmap.X, sbY := SoftwareBitmap.Y
 
-            if scale != 1 || customRect || onlyClientArea {
+            if scale != 1 || transform.rotate || transform.flip || customRect || onlyClientArea {
                 ; The bounds need to fit inside the SoftwareBitmap bounds, so possibly X,Y need to be adjusted along with W,H
                 local tX := X, tY := Y, tW := W, tH := H
                 if onlyClientArea
@@ -860,8 +864,8 @@ class OCR {
                     tH += tY, offsetY := -tY, tY := 0
                 tW := Min(sbW-tX, tW), tH := Min(sbH-tY, tH)
 
-                SoftwareBitmap := this.TransformSoftwareBitmap(SoftwareBitmap, &sbW, &sbH, scale, tX, tY, tW, tH)
-                transform.scale := 1
+                SoftwareBitmap := this.TransformSoftwareBitmap(SoftwareBitmap, &sbW, &sbH, scale, transform.rotate, transform.flip, tX, tY, tW, tH)
+                transform.scale := 1, transform.rotate := 0, transform.flip := 0
             }
             result := this(SoftwareBitmap, lang?, transform)
         } else {
@@ -885,7 +889,7 @@ class OCR {
      * then coordinates might be relative to the monitor, whereas relative offsets will be stored in
      * Result.Relative.Screen.x and y properties. 
      * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Integer, grayscale:Boolean, invertcolors:Boolean}
+     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
      * @param monitor The monitor from which to get the desktop area. Default is primary monitor.
      *   If screen scaling between monitors differs, then use DllCall("SetThreadDpiAwarenessContext", "ptr", -3)
      * @returns {OCR.OcrResult} 
@@ -908,7 +912,7 @@ class OCR {
      * @param w Region width. Maximum is OCR.MaxImageDimension; minimum is 40 pixels (source: user FanaticGuru in AutoHotkey forums), smaller images will be scaled to at least 40 pixels.
      * @param h Region height. Maximum is OCR.MaxImageDimension; minimum is 40 pixels, smaller images will be scaled accordingly.
      * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Integer, grayscale:Boolean, invertcolors:Boolean}
+     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
      * @returns {OCR.OcrResult} 
      */
     static FromRect(x, y?, w?, h?, lang?, transform:=1) {
@@ -927,7 +931,7 @@ class OCR {
      * @param bitmap A pointer to a GDIP Bitmap object, or HBITMAP, or an object with a ptr property
      *  set to one of the two.
      * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Integer, grayscale:Boolean, invertcolors:Boolean}
+     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
      * @param hDC Optional: a device context for the bitmap. If omitted then the screen DC is used.
      * @returns {OCR.OcrResult} 
      */
@@ -1223,7 +1227,9 @@ class OCR {
     ;; Only internal methods ahead
 
     ; Scales and optionally crops a SoftwareBitmap. Crop parameters need to not be scale-adjusted.
-    static TransformSoftwareBitmap(SoftwareBitmap, &sbW, &sbH, scale:=1, X?, Y?, W?, H?) {
+    ; Rotation can be clockwise 0, 90, 180, or 270 degrees
+    ; Flip: 0 = no flip, 1 = around y-axis, 2 = around x-axis
+    static TransformSoftwareBitmap(SoftwareBitmap, &sbW, &sbH, scale:=1, rotate:=0, flip:=0, X?, Y?, W?, H?) {
         InMemoryRandomAccessStream := this.SoftwareBitmapToRandomAccessStream(SoftwareBitmap)
 
         ComCall(this.Vtbl_GetDecoder.png, this.BitmapDecoderStatics, "ptr", DecoderGUID:=Buffer(16))
@@ -1235,15 +1241,23 @@ class OCR {
 
         BitmapTransform := this.CreateClass("Windows.Graphics.Imaging.BitmapTransform")
 
-        sW := Floor(sbW*scale), sH := Floor(sbH*scale) 
+        local sW := Floor(sbW*scale), sH := Floor(sbH*scale), intermediate
         if scale != 1 {
             ; First the bitmap is scaled, then cropped
             ComCall(7, BitmapTransform, "uint", sW) ; put_ScaledWidth
             ComCall(9, BitmapTransform, "uint", sH) ; put_ScaledHeight
         }
+        if rotate {
+            ComCall(15, BitmapTransform, "uint", rotate//90) ; put_Rotation
+            if rotate = 90 || rotate = 270
+                intermediate := sW, sW := sH, sH := intermediate
+        }
+        if flip
+            ComCall(13, BitmapTransform, "uint", flip) ; put_Flip
+
         if IsSet(X) {
-            bounds := Buffer(16,0), NumPut("int", Floor(X*scale), "int", Floor(Y*scale), "int", Floor(Min(sbW-X, W)*scale), W, "int", Floor(Min(sbH-Y, H)*scale), bounds)
-            ComCall(17, BitmapTransform, "ptr", bounds)
+            bounds := Buffer(16,0), NumPut("int", Floor(X*scale), "int", Floor(Y*scale), "int", Floor(Min(sbW-X, W)*scale), "int", Floor(Min(sbH-Y, H)*scale), bounds)
+            ComCall(17, BitmapTransform, "ptr", bounds) ; put_Bounds
         }
         ComCall(8, BitmapFrame, "uint*", &BitmapPixelFormat:=0) ; get_BitmapPixelFormat
         ComCall(9, BitmapFrame, "uint*", &BitmapAlphaMode:=0) ; get_BitmapAlphaMode
@@ -1549,17 +1563,18 @@ class OCR {
     }
 
     static __ExtractTransformParameters(obj, &transform) {
-        local scale := 1, grayscale := 0, invertcolors := 0
+        local scale := 1, grayscale := 0, invertcolors := 0, rotate := 0, flip := 0
         if IsObject(obj)
-            this.__ExtractNamedParameters(obj, "scale", &scale, "grayscale", &grayscale, "invertcolors", &invertcolors, "transform", &transform)
+            this.__ExtractNamedParameters(obj, "scale", &scale, "grayscale", &grayscale, "invertcolors", &invertcolors, "rotate", &rotate, "flip", &flip, "transform", &transform)
 
         if IsObject(transform) {
-            for prop in ["scale", "grayscale", "invertcolors"]
+            for prop in ["scale", "grayscale", "invertcolors", "rotate", "flip"]
                 if !transform.HasProp(prop)
                     transform.%prop% := %prop%
-        }
-        else
-            transform := {scale:scale, grayscale:grayscale, invertcolors:invertcolors}
+        } else
+            transform := {scale:scale, grayscale:grayscale, invertcolors:invertcolors, rotate:rotate, flip:flip}
+    
+        transform.flip := transform.flip = "y" ? 1 : transform.flip = "x" ? 2 : transform.flip
     }
 
     OffsetCoordinates(offsetX?, offsetY?) {
