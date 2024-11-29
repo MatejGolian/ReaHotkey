@@ -12,13 +12,15 @@ Class ReaHotkey {
     Static PluginWinCriteria := "ahk_exe reaper.exe ahk_class #32770"
     Static RequiredScreenWidth := 1920
     Static RequiredScreenHeight := 1080
+    Static RequiredWinVer := 10
     Static StandaloneHotkeyOverrides := Array()
     Static StandaloneWinCriteria := False
     
     Static __New() {
-        OnError ReaHotkey.HandleError
         ReaHotkey.TurnPluginHotkeysOff()
         ReaHotkey.TurnStandaloneHotkeysOff()
+        ReaHotkey.InitConfig()
+        OnError ReaHotkey.HandleError
         ScriptReloaded := False
         For Arg In A_Args
         If Arg = "Reload" {
@@ -27,16 +29,18 @@ Class ReaHotkey {
         }
         If Not ScriptReloaded {
             AccessibilityOverlay.Speak("ReaHotkey ready")
-            If ReaHotkey.Config.Get("CheckScreenResolutionOnStartup") = 1
+            If ReaHotkey.Config.Get("CheckWinVer") = 1
+            ReaHotkey.CheckWinVer()
+            If ReaHotkey.Config.Get("CheckScreenResolution") = 1
             ReaHotkey.CheckResolution()
-            If ReaHotkey.Config.Get("CheckForUpdatesOnStartup") = 1
+            If ReaHotkey.Config.Get("CheckUpdate") = 1
             ReaHotkey.CheckForUpdates()
         }
         Else {
             AccessibilityOverlay.Speak("Reloaded ReaHotkey")
         }
         SetTimer ReaHotkey.ManageState, 100
-        If ReaHotkey.Config.Get("WarnIfWinCovered") = 1
+        If ReaHotkey.Config.Get("CheckIfWinCovered") = 1
         SetTimer ReaHotkey.CheckIfWinCovered, 10000
     }
     
@@ -158,6 +162,14 @@ Class ReaHotkey {
             }
         }
         Return False
+    }
+    
+    Static InitConfig() {
+        ReaHotkey.Config := Configuration("ReaHotkey Configuration")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckWinVer", 1, "Check Windows version on startup")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckScreenResolution", 1, "Check screen resolution on startup")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckUpdate", 1, "Check for updates on startup")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CheckIfWinCovered", 1, "Warn if another window may be covering the interface in specific cases",, ReaHotkey.ManageWinCovered)
     }
     
     Static InPluginControl(ControlToCheck) {
@@ -491,6 +503,15 @@ Class ReaHotkey {
         }
     }
     
+    Class CheckWinVer {
+        Static Call() {
+            If Not SubStr(A_OSVersion, 1, InStr(A_OSVersion, ".")) >= ReaHotkey.RequiredWinVer {
+                MsgBox "ReaHotkey requires Windows " . ReaHotkey.RequiredWinVer . " or higher.`nSome functions may not operate properly.", "ReaHotkey"
+                Sleep 500
+            }
+        }
+    }
+    
     Class HandleError {
         Static Call(Exception, Mode) {
             ReaHotkey.TurnPluginHotkeysOff()
@@ -618,6 +639,15 @@ Class ReaHotkey {
         }
     }
     
+    Class ManageWinCovered {
+        Static Call(Setting) {
+            If Setting.Value
+            SetTimer ReaHotkey.CheckIfWinCovered, 10000
+            Else
+            SetTimer ReaHotkey.CheckIfWinCovered, 0
+        }
+    }
+    
     Class Quit {
         Static Call(*) {
             ExitApp
@@ -657,43 +687,7 @@ Class ReaHotkey {
     
     Class ShowConfigBox {
         Static Call(*) {
-            Static ConfigBox := False, ConfigBoxWinID := ""
-            If ConfigBox = False {
-                ConfigBox := Gui(, "ReaHotkey Configuration")
-                SettingBoxes := Map()
-                For Index, Setting In ReaHotkey.Config.Settings {
-                    Checked := ""
-                    If Setting.Value = 1
-                    Checked := "Checked"
-                    If Index = 1
-                    SettingBoxes[Setting.KeyName] := ConfigBox.AddCheckBox(Checked, Setting.Label)
-                    Else
-                    SettingBoxes[Setting.KeyName] := ConfigBox.AddCheckBox("XS " . Checked, Setting.Label)
-                }
-                ConfigBox.AddButton("Section XS Default", "OK").OnEvent("Click", SaveConfig)
-                ConfigBox.AddButton("YS", "Cancel").OnEvent("Click", CloseConfigBox)
-                ConfigBox.OnEvent("Close", CloseConfigBox)
-                ConfigBox.OnEvent("Escape", CloseConfigBox)
-                ConfigBox.Show()
-                ConfigBoxWinID := WinGetID("A")
-            }
-            Else {
-                WinActivate(ConfigBoxWinID)
-            }
-            CloseConfigBox(*) {
-                ConfigBox.Destroy()
-                ConfigBox := False
-                ConfigBoxWinID := ""
-            }
-            SaveConfig(*) {
-                For KeyName, SettingBox In SettingBoxes
-                ReaHotkey.Config.set(KeyName, SettingBox.Value)
-                If ReaHotkey.Config.Get("WarnIfWinCovered")
-                SetTimer ReaHotkey.CheckIfWinCovered, 10000
-                Else
-                SetTimer ReaHotkey.CheckIfWinCovered, 0
-                CloseConfigBox()
-            }
+            ReaHotkey.Config.ShowBox()
         }
     }
     
@@ -712,7 +706,7 @@ Class ReaHotkey {
             }
             Else {
                 SetTimer ReaHotkey.ManageState, 100
-                If ReaHotkey.Config.Get("WarnIfWinCovered") = 1
+                If ReaHotkey.Config.Get("CheckIfWinCovered") = 1
                 SetTimer ReaHotkey.CheckIfWinCovered, 10000
             }
         }
@@ -761,7 +755,6 @@ Class ReaHotkey {
         }
     }
     
-    #Include <Config>
     #Include <Update>
     
 }

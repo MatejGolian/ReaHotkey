@@ -8,6 +8,8 @@ Class Kontakt7 {
     Static StandaloneOverlays := Array()
     
     Static __New() {
+        Kontakt7.InitConfig()
+        
         PluginHeader := AccessibilityOverlay("Kontakt 7")
         PluginHeader.AddStaticText("Kontakt 7")
         PluginHeader.AddCustomButton("FILE menu",,, Kontakt7.ActivatePluginHeaderButton).SetHotkey("!F", "Alt+F")
@@ -42,7 +44,7 @@ Class Kontakt7 {
         Plugin.Register("Kontakt 7 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(Kontakt7, "CheckPluginContentMissing"))
         
         PluginContentMissingOverlay := AccessibilityOverlay("Content Missing")
-        PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372).SetHotkey("!B", "Alt+B")
+        PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")
         Plugin.RegisterOverlay("Kontakt 7 Content Missing Dialog", PluginContentMissingOverlay)
         
         Standalone.Register("Kontakt 7", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe", False, False)
@@ -53,7 +55,7 @@ Class Kontakt7 {
         Standalone.Register("Kontakt 7 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe", False, False)
         
         StandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
-        StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 226, 372).SetHotkey("!B", "Alt+B")
+        StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")
         Standalone.RegisterOverlay("Kontakt 7 Content Missing Dialog", StandaloneContentMissingOverlay)
     }
     
@@ -92,9 +94,9 @@ Class Kontakt7 {
     
     Static CheckPluginConfig() {
         Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True)
-        If ReaHotkey.Config.Get("AutomaticallyCloseLibrariBrowsersInKontaktAndKKPlugins") = 1
+        If ReaHotkey.Config.Get("CloseK7Browser") = 1
         Kontakt7.ClosePluginBrowser()
-        If ReaHotkey.Config.Get("AutomaticallyDetectLibrariesInKontaktAndKKPlugins") = 1
+        If ReaHotkey.Config.Get("DetectLibsInK7") = 1
         Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 500)
         Else
         Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 0)
@@ -105,8 +107,12 @@ Class Kontakt7 {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 7 Content Missing Dialog"
         Return True
-        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing"
-        Return True
+        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing" {
+            UIAElement := GetUIAElement("1,1")
+            Try
+            If Not UIAElement = False And UIAElement.Name = "Kontakt 7" And UIAElement.ClassName = "ni::qt::QuickWindow"
+            Return True
+        }
         Return False
     }
     
@@ -115,7 +121,7 @@ Class Kontakt7 {
     }
     
     Static CheckStandaloneConfig() {
-        If ReaHotkey.Config.Get("AutomaticallyCloseLibrariBrowsersInKontaktAndKKStandalones") = 1
+        If ReaHotkey.Config.Get("CloseK7Browser") = 1
         Kontakt7.CloseStandaloneBrowser()
     }
     
@@ -151,6 +157,11 @@ Class Kontakt7 {
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
         }
+    }
+    
+    Static InitConfig() {
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CloseK7Browser", 1, "Automatically close library browser in Kontakt 7", "Kontakt / Komplete Kontrol")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "DetectLibsInK7", 1, "Automatically detect libraries in Kontakt 7 plug-in")
     }
     
     Static InitPlugin(PluginInstance) {
@@ -335,9 +346,9 @@ Class Kontakt7 {
                 Catch
                 Return
                 If Label = "Previous instrument"
-                MouseMove ControlX + ControlWidth - 344, ControlY + 138
+                MouseMove ControlX + ControlWidth - 352, ControlY + 87
                 Else
-                MouseMove ControlX + ControlWidth - 324, ControlY + 138
+                MouseMove ControlX + ControlWidth - 332, ControlY + 87
             }
         }
     }
@@ -354,9 +365,9 @@ Class Kontakt7 {
                 Catch
                 Return
                 If Label = "Previous multi"
-                MouseMove ControlX + 712, ControlY + 104
+                MouseMove ControlX + 704, ControlY + 53
                 Else
-                MouseMove ControlX + 730, ControlY + 104
+                MouseMove ControlX + 722, ControlY + 53
             }
         }
     }
@@ -375,16 +386,16 @@ Class Kontakt7 {
                 Catch
                 Return
                 If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
-                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - 580, ControlY + 160, ControlX + ControlWidth - 580 + 200, ControlY + 180)
+                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
                     If Not OCRResult = ""
                     SnapshotButton.Label := "Snapshot " . OcrResult
                 }
                 If InStr(Label, "Snapshot", True)
-                MouseMove ControlX + ControlWidth - 580, ControlY + 169
+                MouseMove ControlX + ControlWidth - 588, ControlY + 118
                 Else If InStr(Label, "Previous snapshot", True)
-                MouseMove ControlX + ControlWidth - 397, ControlY + 169
+                MouseMove ControlX + ControlWidth - 405, ControlY + 118
                 Else
-                MouseMove ControlX + ControlWidth - 381, ControlY + 169
+                MouseMove ControlX + ControlWidth - 389, ControlY + 118
             }
         }
     }

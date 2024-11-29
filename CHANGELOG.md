@@ -9,12 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added/Changed
 
+-   Added Windows version checking on startup
+-   Added dedicated settings for each NI product
 -   Changed message spoken on reload
+-   Changed to 'Client' CoordMode
+-   Fix/Update Chorus overlay
 -   Make it easier to add/manage configuration settings
 -   Remove 'win covered' warning' in standalone applications
 -   Retrieve release and version information from GitHub API
--   Use 'REAPER-alike' update dialogs
+-   Split up configuration settings among several tabs
+-   Use update dialogs similar to REAPER
+-   HotspotHelper: Add function for reporting the color under the mouse cursor
 -   HotspotHelper: Add function for retrieving window position and dimensions
+-   HotspotHelper: Group several operations on to one hotkey / Free up no longer needed hotkeys
 -   HotspotHelper: Change hotkey modifier from Win+Ctrl+Shift to Shift+Win
 
 ## [0.5.1] - 2024-10-20

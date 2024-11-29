@@ -3,10 +3,11 @@
 #MaxThreadsPerHotkey 1
 #SingleInstance Force
 #Warn All
-CoordMode "Caret", "Window"
-CoordMode "Menu", "Window"
-CoordMode "Mouse", "Window"
-CoordMode "Pixel", "Window"
+CoordMode "Caret", "Client"
+CoordMode "Menu", "Client"
+CoordMode "Mouse", "Client"
+CoordMode "Pixel", "Client"
+CoordMode "ToolTip", "Client"
 InstallKeybdHook
 SendMode "Input"
 SetTitleMatchMode "RegEx"
@@ -16,6 +17,7 @@ SetTitleMatchMode "RegEx"
 #Include <AccessibleMenu>
 #Include <AccessiblePluginMenu>
 #Include <AccessibleStandaloneMenu>
+#Include <Configuration>
 #Include <JXON>
 #Include <OCR>
 #Include <Program>
