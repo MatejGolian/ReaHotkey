@@ -62,7 +62,7 @@ Class Kontakt7 {
     Static CheckMenu(Type) {
         Thread "NoTimers"
         If Type = "Plugin"
-        UIAPaths := ["15,1,14", "15,1,15", "15,1,16", "15,1,17"]
+        UIAPaths := ["2,14", "2,15", "2,16", "2,17", "15,1,14", "15,1,15", "15,1,16", "15,1,17"]
         Else
         UIAPaths := ["1,14", "1,15", "1,16", "1,17"]
         Found := False
@@ -84,6 +84,10 @@ Class Kontakt7 {
         Thread "NoTimers"
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 7"
+        Return True
+        UIAElement := GetUIAElement(2)
+        Try
+        If Not UIAElement = False And UIAElement.Name = "Kontakt 7" And UIAElement.ClassName = "ni::qt::QuickWindow"
         Return True
         UIAElement := GetUIAElement("15,1")
         Try
@@ -130,6 +134,18 @@ Class Kontakt7 {
     }
     
     Static ClosePluginBrowser() {
+        UIAElement := GetUIAElement("2,14,3")
+        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+            UIAElement.Click()
+            AccessibilityOverlay.Speak("Library Browser closed.")
+            Sleep 1000
+        }
+        UIAElement := GetUIAElement("2,16,3")
+        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+            UIAElement.Click()
+            AccessibilityOverlay.Speak("Library Browser closed.")
+            Sleep 1000
+        }
         UIAElement := GetUIAElement("15,1,14,3")
         If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
@@ -179,17 +195,21 @@ Class Kontakt7 {
         Static Call(HeaderButton) {
             Critical
             UIAElement := False
+            If ReaHotkey.PluginNative
+            StartingElement := "15,1"
+            Else
+            StartingElement := 2
             Switch HeaderButton.Label {
                 Case "FILE menu":
-                UIAElement := GetUIAElement("15,1,2")
+                UIAElement := GetUIAElement(StartingElement . ",2")
                 Case "LIBRARY On/Off":
-                UIAElement := GetUIAElement("15,1,3")
+                UIAElement := GetUIAElement(StartingElement . ",3")
                 Case "VIEW menu":
-                UIAElement := GetUIAElement("15,1,4")
+                UIAElement := GetUIAElement(StartingElement . ",4")
                 Case "SHOP (Opens in default web browser)":
-                UIAElement := GetUIAElement("15,1,5")
+                UIAElement := GetUIAElement(StartingElement . ",5")
                 If UIAElement = False Or Not UIAElement.Name = "SHOP"
-                UIAElement := GetUIAElement("15,1,7")
+                UIAElement := GetUIAElement(StartingElement . ",7")
             }
             If Not UIAElement = False
             Switch HeaderButton.Label {
@@ -212,7 +232,11 @@ Class Kontakt7 {
     Class ActivatePluginInstrumentButton {
         Static Call(InstrumentButton) {
             Critical
-            UIAElement := GetUIAElement("15,1,5")
+            If ReaHotkey.PluginNative
+            StartingElement := "15,1"
+            Else
+            StartingElement := 2
+            UIAElement := GetUIAElement(StartingElement . ",5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
                 ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
@@ -240,7 +264,11 @@ Class Kontakt7 {
     Class ActivatePluginMultiButton {
         Static Call(MultiButton) {
             Critical
-            UIAElement := GetUIAElement("15,1,5")
+            If ReaHotkey.PluginNative
+            StartingElement := "15,1"
+            Else
+            StartingElement := 2
+            UIAElement := GetUIAElement(StartingElement . ",5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
                 ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
@@ -268,7 +296,11 @@ Class Kontakt7 {
     Class ActivatePluginSnapshotButton {
         Static Call(SnapshotButton) {
             Critical
-            UIAElement := GetUIAElement("15,1,5")
+            If ReaHotkey.PluginNative
+            StartingElement := "15,1"
+            Else
+            StartingElement := 2
+            UIAElement := GetUIAElement(StartingElement . ",5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
                 ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
@@ -339,7 +371,11 @@ Class Kontakt7 {
             Label := InstrumentButton
             If InstrumentButton Is Object
             Label := InstrumentButton.Label
-            UIAElement := GetUIAElement("15,1,5")
+            If ReaHotkey.PluginNative
+            StartingElement := "15,1"
+            Else
+            StartingElement := 2
+            UIAElement := GetUIAElement(StartingElement . ",5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
                 ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
@@ -358,7 +394,11 @@ Class Kontakt7 {
             Label := MultiButton
             If MultiButton Is Object
             Label := MultiButton.Label
-            UIAElement := GetUIAElement("15,1,5")
+            If ReaHotkey.PluginNative
+            StartingElement := "15,1"
+            Else
+            StartingElement := 2
+            UIAElement := GetUIAElement(StartingElement . ",5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
                 ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
@@ -379,7 +419,11 @@ Class Kontakt7 {
             Label := SnapshotButton
             If SnapshotButton Is Object
             Label := SnapshotButton.Label
-            UIAElement := GetUIAElement("15,1,5")
+            If ReaHotkey.PluginNative
+            StartingElement := "15,1"
+            Else
+            StartingElement := 2
+            UIAElement := GetUIAElement(StartingElement . ",5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
                 ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"

@@ -9,12 +9,10 @@ Class ReaHotkey {
     Static FoundStandalone := False
     Static NonRemappableHotkeys := Array("^+#F1", "^+#F5", "Control", "Ctrl", "LCtrl", "RCtrl", "^+#A", "^+#C", "^+#P", "^+#Q", "^+#R")
     Static PluginHotkeyOverrides := Array()
-    Static PluginWinCriteria := "ahk_exe reaper.exe ahk_class #32770"
     Static RequiredScreenWidth := 1920
     Static RequiredScreenHeight := 1080
     Static RequiredWinVer := 10
     Static StandaloneHotkeyOverrides := Array()
-    Static StandaloneWinCriteria := False
     
     Static __New() {
         ReaHotkey.TurnPluginHotkeysOff()
@@ -42,6 +40,13 @@ Class ReaHotkey {
         SetTimer ReaHotkey.ManageState, 100
         If ReaHotkey.Config.Get("CheckIfWinCovered") = 1
         SetTimer ReaHotkey.CheckIfWinCovered, 10000
+    }
+    
+    Static __Get(Name, Params) {
+        Try
+        Return ReaHotkey.Get%Name%()
+        Catch As ErrorMessage
+        Throw ErrorMessage
     }
     
     Static FindOverrideHotkey(Type, Name := "", KeyName := "") {
@@ -134,7 +139,7 @@ Class ReaHotkey {
     }
     
     Static GetPluginControl() {
-        If WinActive(ReaHotkey.PluginWinCriteria) {
+        If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria) {
             ReaperControlPatterns := ["^#327701$", "^Button[0-9]+$", "^ComboBox[0-9]+$", "^Edit[0-9]+$", "^REAPERknob[0-9]+$", "^reaperPluginHostWrapProc[0-9]+$", "^Static[0-9]+$", "^SysHeader321$", "^SysListView321$", "^SysTreeView321$"]
             Controls := WinGetControls(ReaHotkey.PluginWinCriteria)
             For Index, Control In Controls
@@ -173,7 +178,7 @@ Class ReaHotkey {
     }
     
     Static InPluginControl(ControlToCheck) {
-        If WinActive(ReaHotkey.PluginWinCriteria) {
+        If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria) {
             PluginControl := ReaHotkey.GetPluginControl()
             If Not PluginControl = False {
                 Controls := WinGetControls(ReaHotkey.PluginWinCriteria)
@@ -234,7 +239,7 @@ Class ReaHotkey {
             Else {
                 Return False
             }
-            If Type = "Plugin"
+            If ReaHotkey.PluginWinCriteria And Type = "Plugin"
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If Type = "Standalone"
             HotIf
@@ -243,7 +248,7 @@ Class ReaHotkey {
             Else
             If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.Name = Name
             Hotkey KeyName, Action, Options.String
-            If WinActive(ReaHotkey.PluginWinCriteria)
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             Else
             HotIf
@@ -288,21 +293,17 @@ Class ReaHotkey {
     }
     
     Static TurnHotkeysOff(Type, Name := "") {
+        Thread "NoTimers"
         If Type = "Plugin" Or Type = "Standalone" {
             If Type = "Plugin"
-            HotIfWinActive(ReaHotkey.PluginWinCriteria)
-            If Type = "Standalone"
-            HotIf
-            Hotkey "Tab", "Off"
-            Hotkey "+Tab", "Off"
-            Hotkey "^Tab", "Off"
-            Hotkey "^+Tab", "Off"
-            Hotkey "Left", "Off"
-            Hotkey "Right", "Off"
-            Hotkey "Up", "Off"
-            Hotkey "Down", "Off"
-            Hotkey "Enter", "Off"
-            Hotkey "Space", "Off"
+            For PluginWinCriteria In ReaHotkey.PluginWinCriteriaList {
+                HotIfWinActive(PluginWinCriteria)
+                TurnCommonOff()
+            }
+            If Type = "Standalone" {
+                HotIf
+                TurnCommonOff()
+            }
             If Name = "" {
                 For HotkeyEntry In %Type%.GetList()
                 For DefinedHotkey In HotkeyEntry["Hotkeys"]
@@ -314,13 +315,13 @@ Class ReaHotkey {
                 If Not DefinedHotkey["State"] = "Off"
                 Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], "Off"
             }
-            If WinActive(ReaHotkey.PluginWinCriteria)
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             Else
             HotIf
         }
         If Type = "Plugin" Or Type = "Standalone" {
-            If Type = "Plugin"
+            If ReaHotkey.PluginWinCriteria And Type = "Plugin"
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If Type = "Standalone"
             HotIf
@@ -334,30 +335,37 @@ Class ReaHotkey {
                 If DefinedHotkey.Has("Name") And DefinedHotkey["Name"] = Name And Not DefinedHotkey["State"] = "Off"
                 Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], "Off"
             }
-            If WinActive(ReaHotkey.PluginWinCriteria)
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             Else
             HotIf
         }
+        TurnCommonOff() {
+            Hotkey "Tab", "Off"
+            Hotkey "+Tab", "Off"
+            Hotkey "^Tab", "Off"
+            Hotkey "^+Tab", "Off"
+            Hotkey "Left", "Off"
+            Hotkey "Right", "Off"
+            Hotkey "Up", "Off"
+            Hotkey "Down", "Off"
+            Hotkey "Enter", "Off"
+            Hotkey "Space", "Off"
+        }
     }
     
     Static TurnHotkeysOn(Type, Name := "") {
+        Thread "NoTimers"
         If Type = "Plugin" Or Type = "Standalone"
         If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.NoHotkeys = False {
-            If Type = "Plugin"
-            HotIfWinActive(ReaHotkey.PluginWinCriteria)
-            If Type = "Standalone"
-            HotIf
-            Hotkey "Tab", TabHK, "On"
-            Hotkey "+Tab", ShiftTabHK, "On"
-            Hotkey "^Tab", ControlTabHK, "On"
-            Hotkey "^+Tab", ControlShiftTabHK, "On"
-            Hotkey "Left", LeftRightHK, "On"
-            Hotkey "Right", LeftRightHK, "On"
-            Hotkey "Up", UpDownHK, "On"
-            Hotkey "Down", UpDownHK, "On"
-            Hotkey "Enter", EnterSpaceHK, "On"
-            Hotkey "Space", EnterSpaceHK, "On"
+            If ReaHotkey.PluginWinCriteria And Type = "Plugin" {
+                HotIfWinActive(ReaHotkey.PluginWinCriteria)
+                TurnCommonOn()
+            }
+            If ReaHotkey.StandaloneWinCriteria And Type = "Standalone" {
+                HotIf
+                TurnCommonOn()
+            }
             If Name = "" {
                 If ReaHotkey.Found%Type% Is %Type% {
                     For DefinedHotkey In ReaHotkey.Found%Type%.GetHotkeys()
@@ -370,13 +378,13 @@ Class ReaHotkey {
                 If Not DefinedHotkey["State"] = "Off"
                 Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
             }
-            If WinActive(ReaHotkey.PluginWinCriteria)
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             Else
             HotIf
         }
         If Type = "Plugin" Or Type = "Standalone" {
-            If Type = "Plugin"
+            If ReaHotkey.PluginWinCriteria And Type = "Plugin"
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If Type = "Standalone"
             HotIf
@@ -389,10 +397,22 @@ Class ReaHotkey {
                 If DefinedHotkey.Has("Name") And DefinedHotkey["Name"] = Name And Not DefinedHotkey["State"] = "Off"
                 Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
             }
-            If WinActive(ReaHotkey.PluginWinCriteria)
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             Else
             HotIf
+        }
+        TurnCommonOn() {
+            Hotkey "Tab", TabHK, "On"
+            Hotkey "+Tab", ShiftTabHK, "On"
+            Hotkey "^Tab", ControlTabHK, "On"
+            Hotkey "^+Tab", ControlShiftTabHK, "On"
+            Hotkey "Left", LeftRightHK, "On"
+            Hotkey "Right", LeftRightHK, "On"
+            Hotkey "Up", UpDownHK, "On"
+            Hotkey "Down", UpDownHK, "On"
+            Hotkey "Enter", EnterSpaceHK, "On"
+            Hotkey "Space", EnterSpaceHK, "On"
         }
     }
     
@@ -482,7 +502,7 @@ Class ReaHotkey {
         Static Call() {
             Thread "NoTimers"
             Try
-            If WinActive(ReaHotkey.PluginWinCriteria) And ReaHotkey.FoundPlugin Is Plugin {
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria) And ReaHotkey.FoundPlugin Is Plugin {
                 If WinExist("Error opening devices ahk_exe reaper.exe") {
                     ReportError()
                     Return
@@ -512,6 +532,59 @@ Class ReaHotkey {
         }
     }
     
+    Class GetPluginBridged {
+        Static Call() {
+            If Not ReaHotkey.PluginWinCriteria
+            Return False
+            If ReaHotkey.PluginWinCriteria = "ahk_exe reaper.exe ahk_class #32770"
+            Return False
+            Return True
+        }
+    }
+    
+    Class GetPluginNative {
+        Static Call() {
+            If ReaHotkey.PluginWinCriteria = "ahk_exe reaper.exe ahk_class #32770"
+            Return True
+            Return False
+        }
+    }
+    
+    Class GetPluginWinCriteria {
+        Static Call() {
+            For PluginWinCriteria In ReaHotkey.PluginWinCriteriaList
+            If WinActive(PluginWinCriteria)
+            Return PluginWinCriteria
+            Return False
+        }
+    }
+    
+    Class GetPluginWinCriteriaList {
+        Static Call() {
+            Return ["ahk_exe reaper.exe ahk_class #32770", "ahk_exe reaper_host32.exe ahk_class #32770", "ahk_exe reaper_host32.exe ahk_class REAPERb32host", "ahk_exe reaper_host64.exe ahk_class #32770", "ahk_exe reaper_host64.exe ahk_class REAPERb32host", "ahk_exe reaper_host64.exe ahk_class REAPERb32host3"]
+        }
+    }
+    
+    Class GetStandaloneWinCriteria {
+        Static Call() {
+            For StandaloneDefinition In Standalone.List
+            For WinCriteria In StandaloneDefinition["WinCriteria"]
+            If WinActive(WinCriteria)
+            Return WinCriteria
+            Return False
+        }
+    }
+    
+    Class GetStandaloneWinCriteriaList {
+        Static Call() {
+            WinCriteriaList := Array()
+            For StandaloneDefinition In Standalone.List
+            For WinCriteria In StandaloneDefinition["WinCriteria"]
+            WinCriteriaList.Push(WinCriteria)
+            Return WinCriteriaList
+        }
+    }
+    
     Class HandleError {
         Static Call(Exception, Mode) {
             ReaHotkey.TurnPluginHotkeysOff()
@@ -524,10 +597,9 @@ Class ReaHotkey {
             Static CurrentPluginName := False, PreviousPluginName := False, CurrentStandaloneName := False, PreviousStandaloneName := False
             Critical
             Try {
-                If WinActive(ReaHotkey.PluginWinCriteria) {
+                If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria) {
                     ReaHotkey.AutoFocusStandaloneOverlay := True
                     ReaHotkey.FoundStandalone := False
-                    ReaHotkey.StandaloneWinCriteria := False
                     If Not ReaHotkey.GetPluginControl() {
                         ReaHotkey.AutoFocusPluginOverlay := True
                         ReaHotkey.FoundPlugin := False
@@ -548,14 +620,8 @@ Class ReaHotkey {
                     ReaHotkey.AutoFocusPluginOverlay := True
                     ReaHotkey.FoundPlugin := False
                     ReaHotkey.FoundStandalone := False
-                    ReaHotkey.StandaloneWinCriteria := False
-                    For StandaloneDefinition In Standalone.List
-                    For WinCriterion In StandaloneDefinition["WinCriteria"]
-                    If WinActive(WinCriterion) {
-                        ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
-                        ReaHotkey.StandaloneWinCriteria := WinCriterion
-                        Break 2
-                    }
+                    If ReaHotkey.StandaloneWinCriteria And WinActive(ReaHotkey.StandaloneWinCriteria)
+                    ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
                     If ReaHotkey.FoundStandalone = False
                     ReaHotkey.AutoFocusStandaloneOverlay := True
                 }
@@ -565,10 +631,9 @@ Class ReaHotkey {
                 ReaHotkey.FoundPlugin := False
                 ReaHotkey.AutoFocusStandaloneOverlay := True
                 ReaHotkey.FoundStandalone := False
-                ReaHotkey.StandaloneWinCriteria := False
             }
             Critical "Off"
-            If WinActive(ReaHotkey.PluginWinCriteria) {
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria) {
                 ReaHotkey.Context := "Plugin"
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
@@ -597,7 +662,7 @@ Class ReaHotkey {
                     ReaHotkey.TurnPluginHotkeysOn(ReaHotkey.FoundPlugin.Name)
                 }
             }
-            Else If Not ReaHotkey.StandaloneWinCriteria = False And WinActive(ReaHotkey.StandaloneWinCriteria) {
+            Else If ReaHotkey.StandaloneWinCriteria And WinActive(ReaHotkey.StandaloneWinCriteria) {
                 ReaHotkey.Context := "Standalone"
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
