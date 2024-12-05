@@ -53,8 +53,8 @@ Class AudioImperia {
         NucleusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Nucleus", "Image", Map("File", "Images/KontaktKompleteKontrol/Nucleus/Product.png"))
         NucleusOverlay.AddAccessibilityOverlay()
         NucleusOverlay.AddStaticText("Nucleus")
-        NucleusOverlay.AddGraphicalToggleButton("Classic Mix", This.%PluginClass%XOffset + 102, This.%PluginClass%YOffset + 249, This.%PluginClass%XOffset + 182, This.%PluginClass%YOffset + 309, "Images/KontaktKompleteKontrol/Nucleus/ClassicMixOn.png", "Images/KontaktKompleteKontrol/Nucleus/ClassicMixOff.png", CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        NucleusOverlay.AddGraphicalToggleButton("Modern Mix", This.%PluginClass%XOffset + 102, This.%PluginClass%YOffset + 279, This.%PluginClass%XOffset + 182, This.%PluginClass%YOffset + 309, "Images/KontaktKompleteKontrol/Nucleus/ModernMixOn.png", "Images/KontaktKompleteKontrol/Nucleus/ModernMixOff.png", CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        NucleusOverlay.AddGraphicalToggleButton("Classic Mix", This.%PluginClass%XOffset + 92, This.%PluginClass%YOffset + 239, This.%PluginClass%XOffset + 192, This.%PluginClass%YOffset + 319, "Images/KontaktKompleteKontrol/Nucleus/ClassicMixOn.png", "Images/KontaktKompleteKontrol/Nucleus/ClassicMixOff.png", CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        NucleusOverlay.AddGraphicalToggleButton("Modern Mix", This.%PluginClass%XOffset + 92, This.%PluginClass%YOffset + 269, This.%PluginClass%XOffset + 192, This.%PluginClass%YOffset + 319, "Images/KontaktKompleteKontrol/Nucleus/ModernMixOn.png", "Images/KontaktKompleteKontrol/Nucleus/ModernMixOff.png", CompensatePluginCoordinates,, CompensatePluginCoordinates)
         %PluginClass%.PluginOverlays.Push(NucleusOverlay)
         
         SoloOverlay := AccessibilityOverlay("Solo")

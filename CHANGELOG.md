@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added dedicated settings for each NI product
 -   Changed to client CoordMode
 -   Changed message spoken on reload
--   Fix/Update Chorus overlay
+-   Fix/Update Chorus and Nucleus overlays
 -   Make it easier to add/manage configuration settings
 -   Remove 'win covered' warning' in standalone applications
 -   Retrieve release and version information from GitHub API
