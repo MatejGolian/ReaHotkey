@@ -38,9 +38,12 @@ Class Soundiron {
     }
     
     Static ClickFXRack(ButtonObj) {
-        OverlayObj := ButtonObj.GetMasterControl()
         PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
-        If ImageSearch(&FoundXCoordinate, &FoundYCoordinate, 0, 0, A_ScreenWidth, A_ScreenHeight, OverlayObj.Metadata["Image"]["File"]) {
+        OverlayObj := ButtonObj.GetMasterControl()
+        Image := OverlayObj.Metadata["Image"]
+        If Image Is Map
+        Image := Image["File"]
+        If ImageSearch(&FoundXCoordinate, &FoundYCoordinate, 0, 0, A_ScreenWidth, A_ScreenHeight, Image) {
             Switch OverlayObj.Metadata["Product"] {
                 Case "Mimi Page Light & Shadow":
                 Case "Voices Of Gaia":
