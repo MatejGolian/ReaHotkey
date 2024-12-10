@@ -32,7 +32,9 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - Works both inside REAPER and in the standalone version of Kontakt. This feature may not work with Komplete Kontrol.
 * Makes it possible to switch Between various microphone positions in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
   - Only works inside REAPER.
-* Makes it possible to toggle Microphone positions in Cinematic Studio Strings.
+* Makes it possible to toggle microphone positions in Cinematic Studio Strings.
+  - Only works inside REAPER.
+* Makes it possible to toggle the reverb on/off in some Soundiron libraries.
   - Only works inside REAPER.
 * Makes it possible to load instruments, set polyphony and pitchbend range in Plogue sforzando.
   - Works both inside REAPER and in the standalone version of sforzando.

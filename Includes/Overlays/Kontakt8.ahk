@@ -403,5 +403,6 @@ Class Kontakt8 {
     #IncludeAgain KontaktKompleteKontrol/NoProduct.ahk
     #IncludeAgain KontaktKompleteKontrol/AudioImperia.ahk
     #IncludeAgain KontaktKompleteKontrol/CinematicStudioSeries.ahk
+    #IncludeAgain KontaktKompleteKontrol/Soundiron.ahk
     
 }

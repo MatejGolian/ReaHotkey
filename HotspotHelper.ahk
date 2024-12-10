@@ -514,6 +514,7 @@ ExtractImage(*) {
                             FileName := FileName . ".png"
                             ImageFile .= ".png"
                         }
+                        Sleep 500
                         ScreenArea2File(Directory, FileName, {X: X1, Y: Y1, W: W, H: H})
                         If Not FileExist(ImageFile) Or InStr(FileExist(ImageFile), "D") {
                             MsgBox "An error occurred while saving file.`nPlease try again.", AppName
