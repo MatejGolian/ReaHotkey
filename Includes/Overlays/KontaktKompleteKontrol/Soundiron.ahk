@@ -43,14 +43,20 @@ Class Soundiron {
         If ImageSearch(&FoundXCoordinate, &FoundYCoordinate, 0, 0, A_ScreenWidth, A_ScreenHeight, Image) {
             Switch OverlayObj.Metadata["Product"] {
                 Case "Mimi Page Light & Shadow":
-                If PixelGetColor(This.%PluginClass%XOffset + CompensatePluginXCoordinate(162), This.%PluginClass%YOffset + CompensatePluginYCoordinate(652)) = "0x575757"
-                Click This.%PluginClass%XOffset + CompensatePluginXCoordinate(162), This.%PluginClass%YOffset + CompensatePluginYCoordinate(652)
+                If PixelGetColor(This.%PluginClass%XOffset + CompensatePluginXCoordinate(162), This.%PluginClass%YOffset + CompensatePluginYCoordinate(652)) = "0x575757" {
+                    Click This.%PluginClass%XOffset + CompensatePluginXCoordinate(162), This.%PluginClass%YOffset + CompensatePluginYCoordinate(652)
+                    Sleep 250
+                }
                 Case "Voices Of Gaia":
-                If PixelGetColor(This.%PluginClass%XOffset + CompensatePluginXCoordinate(155), This.%PluginClass%YOffset + CompensatePluginYCoordinate(582)) = "0x575757"
-                Click This.%PluginClass%XOffset + CompensatePluginXCoordinate(155), This.%PluginClass%YOffset + CompensatePluginYCoordinate(582)
+                If PixelGetColor(This.%PluginClass%XOffset + CompensatePluginXCoordinate(155), This.%PluginClass%YOffset + CompensatePluginYCoordinate(582)) = "0x575757" {
+                    Click This.%PluginClass%XOffset + CompensatePluginXCoordinate(155), This.%PluginClass%YOffset + CompensatePluginYCoordinate(582)
+                    Sleep 250
+                }
                 Case "Voices of Wind Collection":
-                If PixelGetColor(This.%PluginClass%XOffset + CompensatePluginXCoordinate(164), This.%PluginClass%YOffset + CompensatePluginYCoordinate(663)) = "0x565656"
-                Click This.%PluginClass%XOffset + CompensatePluginXCoordinate(164), This.%PluginClass%YOffset + CompensatePluginYCoordinate(663)
+                If PixelGetColor(This.%PluginClass%XOffset + CompensatePluginXCoordinate(164), This.%PluginClass%YOffset + CompensatePluginYCoordinate(663)) = "0x565656" {
+                    Click This.%PluginClass%XOffset + CompensatePluginXCoordinate(164), This.%PluginClass%YOffset + CompensatePluginYCoordinate(663)
+                    Sleep 250
+                }
             }
         }
     }
