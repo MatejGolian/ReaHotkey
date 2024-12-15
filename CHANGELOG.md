@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added reverb toggling in a couple of Soundiron libraries
 -   Changed to client CoordMode
 -   Changed message spoken on reload
+-   Fix plug-ins not being detected on some systems
 -   Fix/Update Chorus and Nucleus overlays
 -   Make it easier to add/manage configuration settings
 -   Remove 'win covered' warning' in standalone applications
