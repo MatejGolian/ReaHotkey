@@ -209,8 +209,6 @@ Class Kontakt8 {
                 UIAElement := GetUIAElement(StartingPath . ",4")
                 Case "SHOP (Opens in default web browser)":
                 UIAElement := GetUIAElement(StartingPath . ",5")
-                If UIAElement = False Or Not UIAElement.Name = "SHOP"
-                UIAElement := GetUIAElement(StartingPath . ",7")
             }
             If Not UIAElement = False
             Switch HeaderButton.Label {
@@ -233,19 +231,15 @@ Class Kontakt8 {
     Class ActivatePluginInstrumentButton {
         Static Call(InstrumentButton) {
             Critical
-            StartingPath := Kontakt8.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            Kontakt8.MoveToPluginInstrumentButton("Previous instrument")
+            If CheckColor() {
+                Kontakt8.MoveToPluginInstrumentButton(InstrumentButton)
+                Click
                 Return
-                Kontakt8.MoveToPluginInstrumentButton("Previous instrument")
-                If CheckColor() {
-                    Kontakt8.MoveToPluginInstrumentButton(InstrumentButton)
-                    Click
-                    Return
-                }
             }
             AccessibilityOverlay.Speak("Instrument switching unavailable. Make sure that an instrument is loaded and that you're in classic view.")
             CheckColor() {
@@ -262,19 +256,15 @@ Class Kontakt8 {
     Class ActivatePluginMultiButton {
         Static Call(MultiButton) {
             Critical
-            StartingPath := Kontakt8.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            Kontakt8.MoveToPluginMultiButton("Previous multi")
+            If CheckColor() {
+                Kontakt8.MoveToPluginMultiButton(MultiButton)
+                Click
                 Return
-                Kontakt8.MoveToPluginMultiButton("Previous multi")
-                If CheckColor() {
-                    Kontakt8.MoveToPluginMultiButton(MultiButton)
-                    Click
-                    Return
-                }
             }
             AccessibilityOverlay.Speak("Multi switching unavailable. Make sure that a multi is loaded and that you're in classic view.")
             CheckColor() {
@@ -291,26 +281,22 @@ Class Kontakt8 {
     Class ActivatePluginSnapshotButton {
         Static Call(SnapshotButton) {
             Critical
-            StartingPath := Kontakt8.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            Kontakt8.MoveToPluginSnapshotButton("Previous snapshot")
+            If CheckColor()
+            If InStr(SnapshotButton.Label, "Snapshot", True) {
+                Kontakt8.MoveToPluginSnapshotButton(SnapshotButton)
+                Click
+                Kontakt8.CheckPluginMenu()
                 Return
-                Kontakt8.MoveToPluginSnapshotButton("Previous snapshot")
-                If CheckColor()
-                If InStr(SnapshotButton.Label, "Snapshot", True) {
-                    Kontakt8.MoveToPluginSnapshotButton(SnapshotButton)
-                    Click
-                    Kontakt8.CheckPluginMenu()
-                    Return
-                }
-                Else {
-                    Kontakt8.MoveToPluginSnapshotButton(SnapshotButton)
-                    Click
-                    Return
-                }
+            }
+            Else {
+                Kontakt8.MoveToPluginSnapshotButton(SnapshotButton)
+                Click
+                Return
             }
             AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in classic view.")
             CheckColor() {
@@ -337,8 +323,6 @@ Class Kontakt8 {
                 UIAElement := GetUIAElement("1,4")
                 Case "SHOP (Opens in default web browser)":
                 UIAElement := GetUIAElement("1,5")
-                If UIAElement = False Or Not UIAElement.Name = "SHOP"
-                UIAElement := GetUIAElement("1,7")
             }
             If Not UIAElement = False
             Switch HeaderButton.Label {
@@ -363,18 +347,14 @@ Class Kontakt8 {
             Label := InstrumentButton
             If InstrumentButton Is Object
             Label := InstrumentButton.Label
-            StartingPath := Kontakt8.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
-                Return
-                If Label = "Previous instrument"
-                MouseMove ControlX + ControlWidth - 352, ControlY + 87
-                Else
-                MouseMove ControlX + ControlWidth - 332, ControlY + 87
-            }
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            If Label = "Previous instrument"
+            MouseMove ControlX + ControlWidth - 352, ControlY + 87
+            Else
+            MouseMove ControlX + ControlWidth - 332, ControlY + 87
         }
     }
     
@@ -383,18 +363,14 @@ Class Kontakt8 {
             Label := MultiButton
             If MultiButton Is Object
             Label := MultiButton.Label
-            StartingPath := Kontakt8.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
-                Return
-                If Label = "Previous multi"
-                MouseMove ControlX + 722, ControlY + 53
-                Else
-                MouseMove ControlX + 742, ControlY + 53
-            }
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            If Label = "Previous multi"
+            MouseMove ControlX + 722, ControlY + 53
+            Else
+            MouseMove ControlX + 742, ControlY + 53
         }
     }
     
@@ -405,25 +381,21 @@ Class Kontakt8 {
             Label := SnapshotButton
             If SnapshotButton Is Object
             Label := SnapshotButton.Label
-            StartingPath := Kontakt8.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
-                Return
-                If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
-                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
-                    If Not OCRResult = ""
-                    SnapshotButton.Label := "Snapshot " . OcrResult
-                }
-                If InStr(Label, "Snapshot", True)
-                MouseMove ControlX + ControlWidth - 588, ControlY + 118
-                Else If InStr(Label, "Previous snapshot", True)
-                MouseMove ControlX + ControlWidth - 405, ControlY + 118
-                Else
-                MouseMove ControlX + ControlWidth - 389, ControlY + 118
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
+                OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
+                If Not OCRResult = ""
+                SnapshotButton.Label := "Snapshot " . OcrResult
             }
+            If InStr(Label, "Snapshot", True)
+            MouseMove ControlX + ControlWidth - 588, ControlY + 118
+            Else If InStr(Label, "Previous snapshot", True)
+            MouseMove ControlX + ControlWidth - 405, ControlY + 118
+            Else
+            MouseMove ControlX + ControlWidth - 389, ControlY + 118
         }
     }
     
