@@ -110,15 +110,10 @@ Class KompleteKontrol {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol"
         Return True
-        If ReaHotkey.PluginNative
-        Try {
-            UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-            UIAElement := UIAElement.FindElement({Name:"Komplete Kontrol", ClassName:"ni::qt::QuickWindow"})
-            If UIAElement Is UIA.IUIAutomationElement
+        If ReaHotkey.PluginNative {
+            StartingPath := KompleteKontrol.GetPluginStartingPath()
+            If StartingPath
             Return True
-        }
-        Catch {
-            Return False
         }
         Return False
     }
@@ -191,19 +186,7 @@ Class KompleteKontrol {
     }
     
     Static ClosePluginBrowser() {
-        Try {
-            UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-            StartingElement := UIAElement.FindElement({Name:"Komplete Kontrol", ClassName:"ni::qt::QuickWindow"})
-            If Not StartingElement Is UIA.IUIAutomationElement
-            StartingPath := ""
-            Else
-            StartingPath := UIAElement.GetUIAPath(StartingElement)
-        }
-        Catch {
-            UIAElement := False
-            StartingElement := False
-            StartingPath := ""
-        }
+        StartingPath := KompleteKontrol.GetPluginStartingPath()
         UIAElement := GetUIAElement(StartingPath . ",3")
         If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
@@ -238,6 +221,24 @@ Class KompleteKontrol {
         Sleep 1000
         If KKInstance.Overlay.CurrentControlID = 0
         KKInstance.Overlay.Focus()
+    }
+    
+    Static GetPluginStartingPath() {
+        Try {
+            UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+            For Index, ChildElement In UIAElement.Children {
+                UIAPaths := [Index, Index . ",1"]
+                For UIAPath In UIAPaths {
+                    Try
+                    TestElement := UIAElement.ElementFromPath(UIAPath)
+                    Catch
+                    TestElement := False
+                    If TestElement And TestElement.Name = "Komplete Kontrol" And TestElement.ClassName = "ni::qt::QuickWindow"
+                    Return UIAPath
+                }
+            }
+        }
+        Return ""
     }
     
     Static InitConfig() {

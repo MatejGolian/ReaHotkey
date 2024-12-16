@@ -12,16 +12,28 @@ Class Sforzando {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "sforzando"
         Return True
+        StartingPath := Sforzando.GetPluginStartingPath()
+        If StartingPath
+        Return True
+        Return False
+    }
+    
+    Static GetPluginStartingPath() {
         Try {
             UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-            UIAElement := UIAElement.FindElement({Name:"PlogueXMLGUI"})
-            If UIAElement Is UIA.IUIAutomationElement
-            Return True
+            For Index, ChildElement In UIAElement.Children {
+                UIAPaths := [Index, Index . ",1"]
+                For UIAPath In UIAPaths {
+                    Try
+                    TestElement := UIAElement.ElementFromPath(UIAPath)
+                    Catch
+                    TestElement := False
+                    If TestElement And TestElement.Name = "PlogueXMLGUI"
+                    Return UIAPath
+                }
+            }
         }
-        Catch {
-            Return False
-        }
-        Return False
+        Return ""
     }
     
     Static InitPlugin(PluginInstance) {

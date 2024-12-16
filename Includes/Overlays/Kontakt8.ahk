@@ -61,19 +61,7 @@ Class Kontakt8 {
     
     Static CheckMenu(Type) {
         Thread "NoTimers"
-        Try {
-            UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-            StartingElement := UIAElement.FindElement({Name:"Kontakt 8", ClassName:"ni::qt::QuickWindow"})
-            If Not StartingElement Is UIA.IUIAutomationElement
-            StartingPath := ""
-            Else
-            StartingPath := UIAElement.GetUIAPath(StartingElement)
-        }
-        Catch {
-            UIAElement := False
-            StartingElement := False
-            StartingPath := ""
-        }
+        StartingPath := Kontakt8.GetPluginStartingPath()
         UIAPaths := [StartingPath . ",14", StartingPath . ",15", StartingPath . ",16", StartingPath . ",17"]
         Found := False
         Try
@@ -95,15 +83,10 @@ Class Kontakt8 {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 8"
         Return True
-        If ReaHotkey.PluginNative
-        Try {
-            UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-            UIAElement := UIAElement.FindElement({Name:"Kontakt 8", ClassName:"ni::qt::QuickWindow"})
-            If UIAElement Is UIA.IUIAutomationElement
+        If ReaHotkey.PluginNative {
+            StartingPath := Kontakt8.GetPluginStartingPath()
+            If StartingPath
             Return True
-        }
-        Catch {
-            Return False
         }
         Return False
     }
@@ -124,15 +107,10 @@ Class Kontakt8 {
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 8 Content Missing Dialog"
         Return True
         If ReaHotkey.PluginNative
-        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing"
-        Try {
-            UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-            UIAElement := UIAElement.FindElement({Name:"Kontakt 8", ClassName:"ni::qt::QuickWindow"})
-            If UIAElement Is UIA.IUIAutomationElement
+        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing" {
+            StartingPath := Kontakt8.GetPluginStartingPath()
+            If StartingPath
             Return True
-        }
-        Catch {
-            Return False
         }
         Return False
     }
@@ -151,20 +129,8 @@ Class Kontakt8 {
     }
     
     Static ClosePluginBrowser() {
-        Try {
-            UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-            StartingElement := UIAElement.FindElement({Name:"Kontakt 8", ClassName:"ni::qt::QuickWindow"})
-            If Not StartingElement Is UIA.IUIAutomationElement
-            StartingPath := ""
-            Else
-            StartingPath := UIAElement.GetUIAPath(StartingElement)
-        }
-        Catch {
-            UIAElement := False
-            StartingElement := False
-            StartingPath := ""
-        }
         If ReaHotkey.PluginNative {
+            StartingPath := Kontakt8.GetPluginStartingPath()
             UIAElement := GetUIAElement(StartingPath . ",14,3")
             If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
                 UIAElement.Click()
@@ -195,6 +161,24 @@ Class Kontakt8 {
         }
     }
     
+    Static GetPluginStartingPath() {
+        Try {
+            UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+            For Index, ChildElement In UIAElement.Children {
+                UIAPaths := [Index, Index . ",1"]
+                For UIAPath In UIAPaths {
+                    Try
+                    TestElement := UIAElement.ElementFromPath(UIAPath)
+                    Catch
+                    TestElement := False
+                    If TestElement And TestElement.Name = "Kontakt 8" And TestElement.ClassName = "ni::qt::QuickWindow"
+                    Return UIAPath
+                }
+            }
+        }
+        Return ""
+    }
+    
     Static InitConfig() {
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CloseK8Browser", 1, "Automatically close library browser in Kontakt 8", "Kontakt / Komplete Kontrol")
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "DetectLibsInK8", 1, "Automatically detect libraries in Kontakt 8 plug-in")
@@ -211,22 +195,10 @@ Class Kontakt8 {
         Plugin.RegisterOverlayHotkeys("Kontakt 8", PluginInstance.Overlay)
     }
     
-    Class  ActivatePluginHeaderButton {
+    Class ActivatePluginHeaderButton {
         Static Call(HeaderButton) {
             Critical
-            Try {
-                UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-                StartingElement := UIAElement.FindElement({Name:"Kontakt 8", ClassName:"ni::qt::QuickWindow"})
-                If Not StartingElement Is UIA.IUIAutomationElement
-                StartingPath := ""
-                Else
-                StartingPath := UIAElement.GetUIAPath(StartingElement)
-            }
-            Catch {
-                UIAElement := False
-                StartingElement := False
-                StartingPath := ""
-            }
+            StartingPath := Kontakt8.GetPluginStartingPath()
             If StartingPath
             Switch HeaderButton.Label {
                 Case "FILE menu":
@@ -261,19 +233,7 @@ Class Kontakt8 {
     Class ActivatePluginInstrumentButton {
         Static Call(InstrumentButton) {
             Critical
-            Try {
-                UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-                StartingElement := UIAElement.FindElement({Name:"Kontakt 8", ClassName:"ni::qt::QuickWindow"})
-                If Not StartingElement Is UIA.IUIAutomationElement
-                StartingPath := ""
-                Else
-                StartingPath := UIAElement.GetUIAPath(StartingElement)
-            }
-            Catch {
-                UIAElement := False
-                StartingElement := False
-                StartingPath := ""
-            }
+            StartingPath := Kontakt8.GetPluginStartingPath()
             UIAElement := GetUIAElement(StartingPath . ",5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
@@ -302,19 +262,7 @@ Class Kontakt8 {
     Class ActivatePluginMultiButton {
         Static Call(MultiButton) {
             Critical
-            Try {
-                UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-                StartingElement := UIAElement.FindElement({Name:"Kontakt 8", ClassName:"ni::qt::QuickWindow"})
-                If Not StartingElement Is UIA.IUIAutomationElement
-                StartingPath := ""
-                Else
-                StartingPath := UIAElement.GetUIAPath(StartingElement)
-            }
-            Catch {
-                UIAElement := False
-                StartingElement := False
-                StartingPath := ""
-            }
+            StartingPath := Kontakt8.GetPluginStartingPath()
             UIAElement := GetUIAElement(StartingPath . ",5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
@@ -343,19 +291,7 @@ Class Kontakt8 {
     Class ActivatePluginSnapshotButton {
         Static Call(SnapshotButton) {
             Critical
-            Try {
-                UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-                StartingElement := UIAElement.FindElement({Name:"Kontakt 8", ClassName:"ni::qt::QuickWindow"})
-                If Not StartingElement Is UIA.IUIAutomationElement
-                StartingPath := ""
-                Else
-                StartingPath := UIAElement.GetUIAPath(StartingElement)
-            }
-            Catch {
-                UIAElement := False
-                StartingElement := False
-                StartingPath := ""
-            }
+            StartingPath := Kontakt8.GetPluginStartingPath()
             UIAElement := GetUIAElement(StartingPath . ",5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
@@ -388,7 +324,7 @@ Class Kontakt8 {
         }
     }
     
-    Class  ActivateStandaloneHeaderButton {
+    Class ActivateStandaloneHeaderButton {
         Static Call(HeaderButton) {
             Critical
             UIAElement := False
@@ -427,19 +363,7 @@ Class Kontakt8 {
             Label := InstrumentButton
             If InstrumentButton Is Object
             Label := InstrumentButton.Label
-            Try {
-                UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-                StartingElement := UIAElement.FindElement({Name:"Kontakt 8", ClassName:"ni::qt::QuickWindow"})
-                If Not StartingElement Is UIA.IUIAutomationElement
-                StartingPath := ""
-                Else
-                StartingPath := UIAElement.GetUIAPath(StartingElement)
-            }
-            Catch {
-                UIAElement := False
-                StartingElement := False
-                StartingPath := ""
-            }
+            StartingPath := Kontakt8.GetPluginStartingPath()
             UIAElement := GetUIAElement(StartingPath . ",5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
@@ -459,19 +383,7 @@ Class Kontakt8 {
             Label := MultiButton
             If MultiButton Is Object
             Label := MultiButton.Label
-            Try {
-                UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-                StartingElement := UIAElement.FindElement({Name:"Kontakt 8", ClassName:"ni::qt::QuickWindow"})
-                If Not StartingElement Is UIA.IUIAutomationElement
-                StartingPath := ""
-                Else
-                StartingPath := UIAElement.GetUIAPath(StartingElement)
-            }
-            Catch {
-                UIAElement := False
-                StartingElement := False
-                StartingPath := ""
-            }
+            StartingPath := Kontakt8.GetPluginStartingPath()
             UIAElement := GetUIAElement(StartingPath . ",5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
@@ -493,19 +405,7 @@ Class Kontakt8 {
             Label := SnapshotButton
             If SnapshotButton Is Object
             Label := SnapshotButton.Label
-            Try {
-                UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-                StartingElement := UIAElement.FindElement({Name:"Kontakt 8", ClassName:"ni::qt::QuickWindow"})
-                If Not StartingElement Is UIA.IUIAutomationElement
-                StartingPath := ""
-                Else
-                StartingPath := UIAElement.GetUIAPath(StartingElement)
-            }
-            Catch {
-                UIAElement := False
-                StartingElement := False
-                StartingPath := ""
-            }
+            StartingPath := Kontakt8.GetPluginStartingPath()
             UIAElement := GetUIAElement(StartingPath . ",5")
             If Not UIAElement = False And UIAElement.Name = "SHOP" {
                 Try
