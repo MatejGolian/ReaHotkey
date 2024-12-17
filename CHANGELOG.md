@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added Windows version checking on startup
 -   Added dedicated settings for each NI product
 -   Added reverb toggling in a couple of Soundiron libraries
+-   Automatically close update notice in Kontakt 7 plug-in
 -   Changed to client CoordMode
 -   Changed message spoken on reload
 -   Fix plug-ins not being detected on some systems

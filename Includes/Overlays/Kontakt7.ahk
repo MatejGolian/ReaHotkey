@@ -97,6 +97,7 @@ Class Kontakt7 {
         Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 500)
         Else
         Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 0)
+        Kontakt7.ClosePluginPopup()
     }
     
     Static CheckPluginContentMissing(*) {
@@ -139,6 +140,25 @@ Class Kontakt7 {
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
         }
+    }
+    
+    Static ClosePluginPopup() {
+        Try {
+            StartingPath := Kontakt7.GetPluginStartingPath()
+            UIAElement := GetUIAElement(StartingPath)
+            If UIAElement
+            For Index, ChildElement In UIAElement.Children {
+                Try
+                TestElement := UIAElement.ElementFromPath(Index)
+                Catch
+                TestElement := False
+                If TestElement And RegExMatch(TestElement.ClassName, "^UpdateDialog_QMLTYPE_[0-9]+$") {
+                    TestElement.ElementFromPath(1).Click("Left")
+                    Return
+                }
+            }
+        }
+        
     }
     
     Static CloseStandaloneBrowser() {
