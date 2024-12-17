@@ -5,7 +5,7 @@ Class Engine2 {
     Static __New() {
         Engine2.InitConfig()
         
-        Plugin.Register("Engine 2", "^Plugin[0-9A-F]{17}$",, False, False, False, ObjBindMethod(Engine2, "CheckPlugin"))
+        Plugin.Register("Engine 2", "^Plugin[0-9A-F]{1,}$",, False, False, False, ObjBindMethod(Engine2, "CheckPlugin"))
         Standalone.Register("Engine 2", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe",, False, False)
         
         Engine2PluginOverlay := AccessibilityOverlay("Engine 2")
@@ -54,10 +54,9 @@ Class Engine2 {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Engine 2"
         Return True
-        If ReaHotkey.Config.Get("Engine2ImageSearch") = 1 And FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate() + 492, GetPluginYCoordinate(), GetPluginXCoordinate() + 892, GetPluginYCoordinate() + 100) Is Object {
-            Return True
-        }
-        Else {
+        If ReaHotkey.Config.Get("Engine2ImageSearch") = 1 And FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate() + 492, GetPluginYCoordinate(), GetPluginXCoordinate() + 892, GetPluginYCoordinate() + 100) Is Object
+        Return True
+        If ReaHotkey.PluginNative {
             Try
             ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
             Catch
@@ -66,6 +65,13 @@ Class Engine2 {
             For ReaperPluginName In ReaperPluginNames
             If ReaperListItem = ReaperPluginName
             Return True
+        }
+        If ReaHotkey.PluginBridged {
+            Try
+            If RegExMatch(WinGetTitle("A"), "^ENGINE \(x(64)|(86) bridged\)$")
+            Return True
+            Catch
+            Return False
         }
         Return False
     }
