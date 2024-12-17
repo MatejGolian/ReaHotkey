@@ -110,10 +110,11 @@ Class KompleteKontrol {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol"
         Return True
-        UIAElement := GetUIAElement("15,1")
-        Try
-        If Not UIAElement = False And UIAElement.Name = "Komplete Kontrol" And UIAElement.ClassName = "ni::qt::QuickWindow"
-        Return True
+        If ReaHotkey.PluginNative {
+            StartingPath := KompleteKontrol.GetPluginStartingPath()
+            If StartingPath
+            Return True
+        }
         Return False
     }
     
@@ -185,7 +186,8 @@ Class KompleteKontrol {
     }
     
     Static ClosePluginBrowser() {
-        UIAElement := GetUIAElement("15,1,3")
+        StartingPath := KompleteKontrol.GetPluginStartingPath()
+        UIAElement := GetUIAElement(StartingPath . ",3")
         If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
             AccessibilityOverlay.Speak("Library Browser closed.")
@@ -219,6 +221,24 @@ Class KompleteKontrol {
         Sleep 1000
         If KKInstance.Overlay.CurrentControlID = 0
         KKInstance.Overlay.Focus()
+    }
+    
+    Static GetPluginStartingPath() {
+        Try {
+            UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+            For Index, ChildElement In UIAElement.Children {
+                UIAPaths := [Index, Index . ",1"]
+                For UIAPath In UIAPaths {
+                    Try
+                    TestElement := UIAElement.ElementFromPath(UIAPath)
+                    Catch
+                    TestElement := False
+                    If TestElement And TestElement.Name = "Komplete Kontrol" And TestElement.ClassName = "ni::qt::QuickWindow"
+                    Return UIAPath
+                }
+            }
+        }
+        Return ""
     }
     
     Static InitConfig() {

@@ -61,10 +61,8 @@ Class Kontakt8 {
     
     Static CheckMenu(Type) {
         Thread "NoTimers"
-        If Type = "Plugin"
-        UIAPaths := ["15,1,14", "15,1,15", "15,1,16", "15,1,17"]
-        Else
-        UIAPaths := ["1,14", "1,15", "1,16", "1,17"]
+        StartingPath := Kontakt8.GetPluginStartingPath()
+        UIAPaths := [StartingPath . ",14", StartingPath . ",15", StartingPath . ",16", StartingPath . ",17"]
         Found := False
         Try
         For UIAPath In UIAPaths {
@@ -85,10 +83,11 @@ Class Kontakt8 {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 8"
         Return True
-        UIAElement := GetUIAElement("15,1")
-        Try
-        If Not UIAElement = False And UIAElement.Name = "Kontakt 8" And UIAElement.ClassName = "ni::qt::QuickWindow"
-        Return True
+        If ReaHotkey.PluginNative {
+            StartingPath := Kontakt8.GetPluginStartingPath()
+            If StartingPath
+            Return True
+        }
         Return False
     }
     
@@ -107,10 +106,10 @@ Class Kontakt8 {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 8 Content Missing Dialog"
         Return True
+        If ReaHotkey.PluginNative
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing" {
-            UIAElement := GetUIAElement("1,1")
-            Try
-            If Not UIAElement = False And UIAElement.Name = "Kontakt 8" And UIAElement.ClassName = "ni::qt::QuickWindow"
+            StartingPath := Kontakt8.GetPluginStartingPath()
+            If StartingPath
             Return True
         }
         Return False
@@ -130,17 +129,20 @@ Class Kontakt8 {
     }
     
     Static ClosePluginBrowser() {
-        UIAElement := GetUIAElement("15,1,14,3")
-        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
-            UIAElement.Click()
-            AccessibilityOverlay.Speak("Library Browser closed.")
-            Sleep 1000
-        }
-        UIAElement := GetUIAElement("15,1,16,3")
-        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
-            UIAElement.Click()
-            AccessibilityOverlay.Speak("Library Browser closed.")
-            Sleep 1000
+        If ReaHotkey.PluginNative {
+            StartingPath := Kontakt8.GetPluginStartingPath()
+            UIAElement := GetUIAElement(StartingPath . ",14,3")
+            If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+                UIAElement.Click()
+                AccessibilityOverlay.Speak("Library Browser closed.")
+                Sleep 1000
+            }
+            UIAElement := GetUIAElement(StartingPath . ",16,3")
+            If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
+                UIAElement.Click()
+                AccessibilityOverlay.Speak("Library Browser closed.")
+                Sleep 1000
+            }
         }
     }
     
@@ -159,6 +161,24 @@ Class Kontakt8 {
         }
     }
     
+    Static GetPluginStartingPath() {
+        Try {
+            UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+            For Index, ChildElement In UIAElement.Children {
+                UIAPaths := [Index, Index . ",1"]
+                For UIAPath In UIAPaths {
+                    Try
+                    TestElement := UIAElement.ElementFromPath(UIAPath)
+                    Catch
+                    TestElement := False
+                    If TestElement And TestElement.Name = "Kontakt 8" And TestElement.ClassName = "ni::qt::QuickWindow"
+                    Return UIAPath
+                }
+            }
+        }
+        Return ""
+    }
+    
     Static InitConfig() {
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CloseK8Browser", 1, "Automatically close library browser in Kontakt 8", "Kontakt / Komplete Kontrol")
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "DetectLibsInK8", 1, "Automatically detect libraries in Kontakt 8 plug-in")
@@ -175,21 +195,20 @@ Class Kontakt8 {
         Plugin.RegisterOverlayHotkeys("Kontakt 8", PluginInstance.Overlay)
     }
     
-    Class  ActivatePluginHeaderButton {
+    Class ActivatePluginHeaderButton {
         Static Call(HeaderButton) {
             Critical
-            UIAElement := False
+            StartingPath := Kontakt8.GetPluginStartingPath()
+            If StartingPath
             Switch HeaderButton.Label {
                 Case "FILE menu":
-                UIAElement := GetUIAElement("15,1,2")
+                UIAElement := GetUIAElement(StartingPath . ",2")
                 Case "LIBRARY On/Off":
-                UIAElement := GetUIAElement("15,1,3")
+                UIAElement := GetUIAElement(StartingPath . ",3")
                 Case "VIEW menu":
-                UIAElement := GetUIAElement("15,1,4")
+                UIAElement := GetUIAElement(StartingPath . ",4")
                 Case "SHOP (Opens in default web browser)":
-                UIAElement := GetUIAElement("15,1,5")
-                If UIAElement = False Or Not UIAElement.Name = "SHOP"
-                UIAElement := GetUIAElement("15,1,7")
+                UIAElement := GetUIAElement(StartingPath . ",5")
             }
             If Not UIAElement = False
             Switch HeaderButton.Label {
@@ -212,18 +231,15 @@ Class Kontakt8 {
     Class ActivatePluginInstrumentButton {
         Static Call(InstrumentButton) {
             Critical
-            UIAElement := GetUIAElement("15,1,5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            Kontakt8.MoveToPluginInstrumentButton("Previous instrument")
+            If CheckColor() {
+                Kontakt8.MoveToPluginInstrumentButton(InstrumentButton)
+                Click
                 Return
-                Kontakt8.MoveToPluginInstrumentButton("Previous instrument")
-                If CheckColor() {
-                    Kontakt8.MoveToPluginInstrumentButton(InstrumentButton)
-                    Click
-                    Return
-                }
             }
             AccessibilityOverlay.Speak("Instrument switching unavailable. Make sure that an instrument is loaded and that you're in classic view.")
             CheckColor() {
@@ -240,18 +256,15 @@ Class Kontakt8 {
     Class ActivatePluginMultiButton {
         Static Call(MultiButton) {
             Critical
-            UIAElement := GetUIAElement("15,1,5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            Kontakt8.MoveToPluginMultiButton("Previous multi")
+            If CheckColor() {
+                Kontakt8.MoveToPluginMultiButton(MultiButton)
+                Click
                 Return
-                Kontakt8.MoveToPluginMultiButton("Previous multi")
-                If CheckColor() {
-                    Kontakt8.MoveToPluginMultiButton(MultiButton)
-                    Click
-                    Return
-                }
             }
             AccessibilityOverlay.Speak("Multi switching unavailable. Make sure that a multi is loaded and that you're in classic view.")
             CheckColor() {
@@ -268,25 +281,22 @@ Class Kontakt8 {
     Class ActivatePluginSnapshotButton {
         Static Call(SnapshotButton) {
             Critical
-            UIAElement := GetUIAElement("15,1,5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            Kontakt8.MoveToPluginSnapshotButton("Previous snapshot")
+            If CheckColor()
+            If InStr(SnapshotButton.Label, "Snapshot", True) {
+                Kontakt8.MoveToPluginSnapshotButton(SnapshotButton)
+                Click
+                Kontakt8.CheckPluginMenu()
                 Return
-                Kontakt8.MoveToPluginSnapshotButton("Previous snapshot")
-                If CheckColor()
-                If InStr(SnapshotButton.Label, "Snapshot", True) {
-                    Kontakt8.MoveToPluginSnapshotButton(SnapshotButton)
-                    Click
-                    Kontakt8.CheckPluginMenu()
-                    Return
-                }
-                Else {
-                    Kontakt8.MoveToPluginSnapshotButton(SnapshotButton)
-                    Click
-                    Return
-                }
+            }
+            Else {
+                Kontakt8.MoveToPluginSnapshotButton(SnapshotButton)
+                Click
+                Return
             }
             AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in classic view.")
             CheckColor() {
@@ -300,7 +310,7 @@ Class Kontakt8 {
         }
     }
     
-    Class  ActivateStandaloneHeaderButton {
+    Class ActivateStandaloneHeaderButton {
         Static Call(HeaderButton) {
             Critical
             UIAElement := False
@@ -313,8 +323,6 @@ Class Kontakt8 {
                 UIAElement := GetUIAElement("1,4")
                 Case "SHOP (Opens in default web browser)":
                 UIAElement := GetUIAElement("1,5")
-                If UIAElement = False Or Not UIAElement.Name = "SHOP"
-                UIAElement := GetUIAElement("1,7")
             }
             If Not UIAElement = False
             Switch HeaderButton.Label {
@@ -339,17 +347,14 @@ Class Kontakt8 {
             Label := InstrumentButton
             If InstrumentButton Is Object
             Label := InstrumentButton.Label
-            UIAElement := GetUIAElement("15,1,5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
-                Return
-                If Label = "Previous instrument"
-                MouseMove ControlX + ControlWidth - 352, ControlY + 87
-                Else
-                MouseMove ControlX + ControlWidth - 332, ControlY + 87
-            }
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            If Label = "Previous instrument"
+            MouseMove ControlX + ControlWidth - 352, ControlY + 87
+            Else
+            MouseMove ControlX + ControlWidth - 332, ControlY + 87
         }
     }
     
@@ -358,17 +363,14 @@ Class Kontakt8 {
             Label := MultiButton
             If MultiButton Is Object
             Label := MultiButton.Label
-            UIAElement := GetUIAElement("15,1,5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
-                Return
-                If Label = "Previous multi"
-                MouseMove ControlX + 722, ControlY + 53
-                Else
-                MouseMove ControlX + 742, ControlY + 53
-            }
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            If Label = "Previous multi"
+            MouseMove ControlX + 722, ControlY + 53
+            Else
+            MouseMove ControlX + 742, ControlY + 53
         }
     }
     
@@ -379,24 +381,21 @@ Class Kontakt8 {
             Label := SnapshotButton
             If SnapshotButton Is Object
             Label := SnapshotButton.Label
-            UIAElement := GetUIAElement("15,1,5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
-                Return
-                If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
-                    OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
-                    If Not OCRResult = ""
-                    SnapshotButton.Label := "Snapshot " . OcrResult
-                }
-                If InStr(Label, "Snapshot", True)
-                MouseMove ControlX + ControlWidth - 588, ControlY + 118
-                Else If InStr(Label, "Previous snapshot", True)
-                MouseMove ControlX + ControlWidth - 405, ControlY + 118
-                Else
-                MouseMove ControlX + ControlWidth - 389, ControlY + 118
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
+                OCRResult := AccessibilityOverlay.Ocr(ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
+                If Not OCRResult = ""
+                SnapshotButton.Label := "Snapshot " . OcrResult
             }
+            If InStr(Label, "Snapshot", True)
+            MouseMove ControlX + ControlWidth - 588, ControlY + 118
+            Else If InStr(Label, "Previous snapshot", True)
+            MouseMove ControlX + ControlWidth - 405, ControlY + 118
+            Else
+            MouseMove ControlX + ControlWidth - 389, ControlY + 118
         }
     }
     
