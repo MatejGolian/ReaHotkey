@@ -14,29 +14,39 @@ Class ImpactSoundworks {
     }
     
     Static CreateElement() {
-        PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
-        Kontakt7XOffset := 0
-        Kontakt7YOffset := 0
-        Kontakt8XOffset := 0
-        Kontakt8YOffset := 29
-        KompleteKontrolXOffset := 190
-        KompleteKontrolYOffset := 111
         Try {
             If ImageSearch(&FoundX, &FoundY, GetPluginXCoordinate(), GetPluginYCoordinate(), A_ScreenWidth, A_ScreenHeight, "Images/KontaktKompleteKontrol/Juggernaut/Bass1.png") {
-                Element := StaticText("This NKI file is not supported yet")
+                Element := Create("Bass")
                 Return Element
             }
             If ImageSearch(&FoundX, &FoundY, GetPluginXCoordinate(), GetPluginYCoordinate(), A_ScreenWidth, A_ScreenHeight, "Images/KontaktKompleteKontrol/Juggernaut/Bass2.png") {
-                Element := StaticText("This NKI file is not supported yet")
+                Element := Create("Bass")
                 Return Element
             }
             If ImageSearch(&FoundX, &FoundY, GetPluginXCoordinate(), GetPluginYCoordinate(), A_ScreenWidth, A_ScreenHeight, "Images/KontaktKompleteKontrol/Juggernaut/DrumsAndFX.png") {
-                Element := This.OCRButton("Preset", "Unknown", %PluginClass%XOffset + 100, %PluginClass%YOffset + 130, %PluginClass%XOffset + 400, %PluginClass%YOffset + 150,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+                Element := Create("DrumsAndFX")
                 Return Element
             }
         }
-        Element := StaticText("NKI file not detected")
+        Element := Create()
         Return Element
+        Create(What := "") {
+            PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            Kontakt7XOffset := 0
+            Kontakt7YOffset := 0
+            Kontakt8XOffset := 0
+            Kontakt8YOffset := 29
+            KompleteKontrolXOffset := 190
+            KompleteKontrolYOffset := 111
+            Switch What {
+                Case "Bass":
+                Return This.OCRButton("Preset", "Unknown", %PluginClass%XOffset + 354, %PluginClass%YOffset + 125, %PluginClass%XOffset + 562, %PluginClass%YOffset + 175,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+                Case "DrumsAndFX":
+                Return This.OCRButton("Preset", "Unknown", %PluginClass%XOffset + 150, %PluginClass%YOffset + 132, %PluginClass%XOffset + 360, %PluginClass%YOffset + 170,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+                Default:
+                Return StaticText("NKI file not detected")
+            }
+        }
     }
     
     Static ActivatePresetButton(*) {

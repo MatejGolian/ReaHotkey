@@ -34,6 +34,8 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - Only works inside REAPER.
 * Makes it possible to toggle microphone positions in Cinematic Studio Strings.
   - Only works inside REAPER.
+  * Makes it possible to switch presets in the 'Juggernaut' library by Impact Soundworks 
+  - Only works inside REAPER
 * Makes it possible to toggle the reverb on/off in some Soundiron libraries.
   - Only works inside REAPER.
 * Makes it possible to load instruments, set polyphony and pitchbend range in Plogue sforzando.
