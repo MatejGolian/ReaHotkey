@@ -7,18 +7,18 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
     PluginControlPos := GetPluginControlPos()
     OverlayList := %Type%.GetOverlays(Name)
     UnknownProductCounter := 1
+    WinWidth := ""
+    WinHeight := ""
+    Try {
+        WinGetPos ,, &WinWidth, &WinHeight, "A"
+    }
+    Catch {
+        WinWidth := A_ScreenWidth
+        WinHeight := A_ScreenHeight
+    }
     For OverlayNumber, OverlayEntry In OverlayList {
         FoundX := ""
         FoundY := ""
-        WinWidth := ""
-        WinHeight := ""
-        Try {
-            WinGetPos ,, &WinWidth, &WinHeight, "A"
-        }
-        Catch {
-            WinWidth := A_ScreenWidth
-            WinHeight := A_ScreenHeight
-        }
         If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Product") And Not OverlayEntry.Metadata["Product"] = "" {
             Product := OverlayEntry.Metadata["Product"]
         }
@@ -29,43 +29,19 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             Product := "unknown product " . UnknownProductCounter
             UnknownProductCounter++
         }
-        If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.Overlay.HasProp("OverlayNumber") And Not ReaHotkey.Found%Type%.Overlay.OverlayNumber = OverlayEntry.OverlayNumber
-        If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Image") And Not OverlayEntry.Metadata["Image"] = "" {
-            If Not OverlayEntry.Metadata["Image"] Is Map
-            OverlayMetadata := Map("File", OverlayEntry.Metadata["Image"])
-            Else
-            OverlayMetadata := OverlayEntry.Metadata["Image"].Clone()
-            If Not OverlayMetadata.Has("File")
-            OverlayMetadata.Set("File", OverlayEntry.Metadata["Image"])
-            If Not OverlayMetadata.Has("X1Coordinate")
-            OverlayMetadata.Set("X1Coordinate", 0)
-            If Not OverlayMetadata.Has("Y1Coordinate")
-            OverlayMetadata.Set("Y1Coordinate", 0)
-            If Not OverlayMetadata.Has("X2Coordinate")
-            OverlayMetadata.Set("X2Coordinate", WinWidth)
-            If Not OverlayMetadata.Has("Y2Coordinate")
-            OverlayMetadata.Set("Y2Coordinate", WinHeight)
-            If Not OverlayMetadata["X1Coordinate"] Is Number Or OverlayMetadata["X1Coordinate"] < 0
-            OverlayMetadata["X1Coordinate"] := 0
-            If Not OverlayMetadata["Y1Coordinate"] Is Number Or OverlayMetadata["Y1Coordinate"] < 0
-            OverlayMetadata["Y1Coordinate"] := 0
-            If Not OverlayMetadata["X2Coordinate"] Is Number Or OverlayMetadata["X2Coordinate"] <= 0
-            OverlayMetadata["X2Coordinate"] := WinWidth
-            If Not OverlayMetadata["Y2Coordinate"] Is Number Or OverlayMetadata["Y2Coordinate"] <= 0
-            OverlayMetadata["Y2Coordinate"] := WinHeight
-            If Type = "Plugin" And CompensatePluginCoordinates = True {
-                OverlayMetadata["X1Coordinate"] := PluginControlPos.X + OverlayMetadata["X1Coordinate"]
-                OverlayMetadata["Y1Coordinate"] := PluginControlPos.Y + OverlayMetadata["Y1Coordinate"]
-                OverlayMetadata["X2Coordinate"] := PluginControlPos.X + OverlayMetadata["X2Coordinate"]
-                OverlayMetadata["Y2Coordinate"] := PluginControlPos.Y + OverlayMetadata["Y2Coordinate"]
-                If OverlayMetadata["X2Coordinate"] > WinWidth
-                OverlayMetadata["X2Coordinate"] := WinWidth
-                If OverlayMetadata["Y2Coordinate"] > WinHeight
-                OverlayMetadata["Y2Coordinate"] := WinHeight
+        If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.Overlay.HasProp("OverlayNumber") And Not ReaHotkey.Found%Type%.Overlay.OverlayNumber = OverlayEntry.OverlayNumber {
+            ImageEntries := Array()
+            If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Image") And Not OverlayEntry.Metadata["Image"] = "" {
+                ImageEntries := OverlayEntry.Metadata["Image"].Clone()
+                If Not ImageEntries Is Array
+                ImageEntries := Array(ImageEntries)
+                For ImageIndex, ImageEntry In ImageEntries
+                ImageEntries[ImageIndex] := ProcessImageEntry(Type, CompensatePluginCoordinates, ImageEntry, WinWidth, WinHeight)
             }
-            If FileExist(OverlayMetadata["File"]) {
+            For ImageEntry In ImageEntries
+            If FileExist(ImageEntry["File"]) {
                 Try
-                ImageFound := ImageSearch(&FoundX, &FoundY, OverlayMetadata["X1Coordinate"], OverlayMetadata["Y1Coordinate"], OverlayMetadata["X2Coordinate"], OverlayMetadata["Y2Coordinate"], OverlayMetadata["File"])
+                ImageFound := ImageSearch(&FoundX, &FoundY, ImageEntry["X1Coordinate"], ImageEntry["Y1Coordinate"], ImageEntry["X2Coordinate"], ImageEntry["Y2Coordinate"], ImageEntry["File"])
                 Catch
                 ImageFound := 0
                 If ImageFound = 1
@@ -85,7 +61,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                     ReaHotkey.Found%Type%.Overlay.FocusControl(ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[2].ControlID)
                     If ReaHotkey.AutoFocus%Type%Overlay = True
                     ReaHotkey.AutoFocus%Type%Overlay := False
-                    Break
+                    Break 2
                 }
                 Else {
                     ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
@@ -96,10 +72,45 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                     ReaHotkey.Found%Type%.Overlay.FocusControl(ReaHotkey.Found%Type%.Overlay.ChildControls[2].ControlID)
                     If ReaHotkey.AutoFocus%Type%Overlay = True
                     ReaHotkey.AutoFocus%Type%Overlay := False
-                    Break
+                    Break 2
                 }
             }
         }
+    }
+    ProcessImageEntry(Type, CompensatePluginCoordinates, ImageEntry, WinWidth, WinHeight) {
+        If Not ImageEntry Is Map
+        EntryData := Map("File", ImageEntry)
+        Else
+        EntryData := ImageEntry.Clone()
+        If Not EntryData.Has("File")
+        EntryData.Set("File", ImageEntry)
+        If Not EntryData.Has("X1Coordinate")
+        EntryData.Set("X1Coordinate", 0)
+        If Not EntryData.Has("Y1Coordinate")
+        EntryData.Set("Y1Coordinate", 0)
+        If Not EntryData.Has("X2Coordinate")
+        EntryData.Set("X2Coordinate", WinWidth)
+        If Not EntryData.Has("Y2Coordinate")
+        EntryData.Set("Y2Coordinate", WinHeight)
+        If Not EntryData["X1Coordinate"] Is Number Or EntryData["X1Coordinate"] < 0
+        EntryData["X1Coordinate"] := 0
+        If Not EntryData["Y1Coordinate"] Is Number Or EntryData["Y1Coordinate"] < 0
+        EntryData["Y1Coordinate"] := 0
+        If Not EntryData["X2Coordinate"] Is Number Or EntryData["X2Coordinate"] <= 0
+        EntryData["X2Coordinate"] := WinWidth
+        If Not EntryData["Y2Coordinate"] Is Number Or EntryData["Y2Coordinate"] <= 0
+        EntryData["Y2Coordinate"] := WinHeight
+        If Type = "Plugin" And CompensatePluginCoordinates = True {
+            EntryData["X1Coordinate"] := PluginControlPos.X + EntryData["X1Coordinate"]
+            EntryData["Y1Coordinate"] := PluginControlPos.Y + EntryData["Y1Coordinate"]
+            EntryData["X2Coordinate"] := PluginControlPos.X + EntryData["X2Coordinate"]
+            EntryData["Y2Coordinate"] := PluginControlPos.Y + EntryData["Y2Coordinate"]
+            If EntryData["X2Coordinate"] > WinWidth
+            EntryData["X2Coordinate"] := WinWidth
+            If EntryData["Y2Coordinate"] > WinHeight
+            EntryData["Y2Coordinate"] := WinHeight
+        }
+        Return EntryData
     }
 }
 
@@ -440,26 +451,6 @@ InArray(Needle, Haystack) {
     If FoundValue == Needle
     Return FoundIndex
     Return False
-}
-
-KeyWaitCombo() {
-    IH := InputHook()
-    IH.VisibleNonText := True
-    IH.KeyOpt("{All}", "E")
-    IH.KeyOpt("{LCtrl}{RCtrl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}", "-E")
-    IH.Timeout := 0.125
-    IH.Start()
-    IH.Wait(0.125)
-    Return RegExReplace(IH.EndMods . IH.EndKey, "[<>](.)(?:>\1)?", "$1")
-}
-
-KeyWaitSingle() {
-    IH := InputHook()
-    IH.VisibleNonText := True
-    IH.KeyOpt("{All}", "E")
-    IH.Start()
-    IH.Wait()
-    Return IH.EndKey
 }
 
 StrJoin(obj,delimiter:="",OmitChars:=""){
