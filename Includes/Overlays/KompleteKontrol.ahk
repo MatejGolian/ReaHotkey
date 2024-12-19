@@ -30,6 +30,7 @@ Class KompleteKontrol {
         Plugin.RegisterOverlayHotkeys("Komplete Kontrol", PluginHeader)
         
         Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(KompleteKontrol, "CheckPluginConfig"), -1)
+        Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(KompleteKontrol, "CheckPluginMenu"), 200)
         
         Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(KompleteKontrol, "CheckPluginPreferenceDialog"))
         
@@ -105,6 +106,23 @@ Class KompleteKontrol {
         Standalone.RegisterOverlay("Komplete Kontrol Save As Dialog", StandaloneSaveAsOverlay)
     }
     
+    Static CheckMenu(Type) {
+        Thread "NoTimers"
+        Found := False
+        StartingPath := KompleteKontrol.GetPluginStartingPath()
+        If StartingPath
+        Try {
+            StartingElement := GetUIAElement(StartingPath)
+            MenuElements := StartingElement.FindElements({Type:50009})
+            If MenuElements.Length > 0
+            Found := True
+        }
+        Catch {
+            Found := False
+        }
+        %Type%.SetNoHotkeys("Komplete Kontrol", Found)
+    }
+    
     Static CheckPlugin(*) {
         Thread "NoTimers"
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
@@ -126,6 +144,10 @@ Class KompleteKontrol {
         Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 500)
         Else
         Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 0)
+    }
+    
+    Static CheckPluginMenu() {
+        KompleteKontrol.CheckMenu("Plugin")
     }
     
     Static CheckPluginPreferenceDialog(PluginData) {
@@ -274,7 +296,7 @@ Class KompleteKontrol {
     #IncludeAgain KontaktKompleteKontrol/NoProduct.ahk
     #IncludeAgain KontaktKompleteKontrol/AudioImperia.ahk
     #IncludeAgain KontaktKompleteKontrol/CinematicStudioSeries.ahk
-    #IncludeAgain KontaktKompleteKontrol/ImpactSoundworks.ahk
+    ;#IncludeAgain KontaktKompleteKontrol/ImpactSoundworks.ahk
     #IncludeAgain KontaktKompleteKontrol/Soundiron.ahk
     
 }

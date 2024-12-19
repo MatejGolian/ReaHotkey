@@ -51,8 +51,11 @@ Class ImpactSoundworks {
     
     Static ActivatePresetButton(*) {
         Element := This.CreateElement()
-        If Element.HasMethod("Activate")
-        Element.Activate(False)
+        If Element.HasMethod("Activate") {
+            PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            Element.Activate(False)
+            %PluginClass%.CheckPluginMenu()
+        }
     }
     
     Static FocusPresetButton(*) {
