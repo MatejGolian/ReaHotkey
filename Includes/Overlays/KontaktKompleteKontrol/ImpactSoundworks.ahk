@@ -6,7 +6,7 @@ Class ImpactSoundworks {
         PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
         
         JuggernautOverlay := AccessibilityOverlay("Juggernaut")
-        JuggernautOverlay.Metadata := Map("Vendor", "Impact Soundworks", "Product", "Juggernaut", "Image", [Map("File", "Images/KontaktKompleteKontrol/Juggernaut/Bass1.png"), Map("File", "Images/KontaktKompleteKontrol/Juggernaut/Bass2.png"), Map("File", "Images/KontaktKompleteKontrol/Juggernaut/DrumsAndFX.png")])
+        JuggernautOverlay.Metadata := Map("Vendor", "Impact Soundworks", "Product", "Juggernaut", "Image", [Map("File", "Images/KontaktKompleteKontrol/Juggernaut/Bass.png"), Map("File", "Images/KontaktKompleteKontrol/Juggernaut/DrumsAndFX.png")])
         JuggernautOverlay.AddAccessibilityOverlay()
         JuggernautOverlay.AddStaticText("Juggernaut")
         JuggernautOverlay.AddActivatableCustom("", ObjBindMethod(This, "FocusPresetButton"),, ObjBindMethod(This, "ActivatePresetButton"))
@@ -15,11 +15,7 @@ Class ImpactSoundworks {
     
     Static CreateElement() {
         Try {
-            If ImageSearch(&FoundX, &FoundY, GetPluginXCoordinate(), GetPluginYCoordinate(), A_ScreenWidth, A_ScreenHeight, "Images/KontaktKompleteKontrol/Juggernaut/Bass1.png") {
-                Element := Create("Bass")
-                Return Element
-            }
-            If ImageSearch(&FoundX, &FoundY, GetPluginXCoordinate(), GetPluginYCoordinate(), A_ScreenWidth, A_ScreenHeight, "Images/KontaktKompleteKontrol/Juggernaut/Bass2.png") {
+            If ImageSearch(&FoundX, &FoundY, GetPluginXCoordinate(), GetPluginYCoordinate(), A_ScreenWidth, A_ScreenHeight, "Images/KontaktKompleteKontrol/Juggernaut/Bass.png") {
                 Element := Create("Bass")
                 Return Element
             }
