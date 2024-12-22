@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added Windows version checking on startup
 -   Added dedicated settings for each NI product
 -   Libraries can now define multiple images used for automatic detection
+-   It's now possible to define multiple overlays per library via the 'Patch' metadata property
 -   Add support for preset switching in Juggernaut by Impact Soundworks (Kontakt 7 plug-in only)
 -   Added reverb toggling in a couple of Soundiron libraries
 -   Automatically close update notice in Kontakt 7 plug-in

@@ -125,7 +125,7 @@ AutoChangeStandaloneOverlay(Name, ReportChange := False) {
 ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
     Critical
     OverlayList := %Type%.GetOverlays(ReaHotkey.Found%Type%.Name)
-    OverlayNumber := OverlayMenu.OverlayNumbers[ItemNumber]
+    OverlayNumber := OverlayMenu.OverlayNumbers[ItemName]
     If Not ReaHotkey.Found%Type%.Overlay.OverlayNumber = OverlayNumber
     If ReaHotkey.Found%Type%.Chooser = True {
         OverlayHeader := ReaHotkey.Found%Type%.Overlay.ChildControls[1].Clone()
@@ -260,12 +260,14 @@ CreateOverlayMenu(Type) {
     OverlayEntries := %Type%.GetOverlays(Found.Name)
     OverlayList := ""
     OverlayMenu := Accessible%Type%Menu()
-    OverlayMenu.OverlayNumbers := Array()
+    OverlayMenu.OverlayNumbers := Map()
     UnknownProductCounter := 1
+    UnknownPatchCounter := 1
     If CurrentOverlay.HasProp("Metadata") And CurrentOverlay.Metadata.Has("Vendor") And Not CurrentOverlay.Metadata["Vendor"] = ""
     CurrentVendor := CurrentOverlay.Metadata["Vendor"]
     Else
     CurrentVendor := ""
+    ProductSubmenus := Map()
     For OverlayNumber, OverlayEntry In OverlayEntries {
         If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Vendor") And Not OverlayEntry.Metadata["Vendor"] = "" {
             Vendor := OverlayEntry.Metadata["Vendor"]
@@ -273,6 +275,8 @@ CreateOverlayMenu(Type) {
         Else {
             Vendor := ""
         }
+        If Not ProductSubmenus.Has(Vendor)
+        ProductSubmenus.Set(Vendor, Map())
         If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Product") And Not OverlayEntry.Metadata["Product"] = "" {
             Product := OverlayEntry.Metadata["Product"]
         }
@@ -283,62 +287,94 @@ CreateOverlayMenu(Type) {
             Product := "unknown product " . UnknownProductCounter
             UnknownProductCounter++
         }
-        OverlayList .= Vendor . "`t" . Product . "`t" . OverlayNumber . "`n"
+        If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Patch") And Not OverlayEntry.Metadata["Patch"] = "" {
+            Patch  := OverlayEntry.Metadata["Patch"]
+            If Not ProductSubmenus[Vendor].Has(Product)
+            ProductSubmenus[Vendor].Set(Product, Accessible%Type%Menu())
+        }
+        Else {
+            Patch := "unknown patch " . UnknownPatchCounter
+            UnknownPatchCounter++
+        }
+        OverlayList .= Vendor . "`t" . Product . "`t" . Patch . "`t" . OverlayNumber . "`n"
         OverlayList := Sort(OverlayList)
+        A_Clipboard := OverlayList
     }
     MainMenuItems := Array()
-    Submenus := Map()
+    VendorSubmenus := Map()
     Loop parse, OverlayList, "`n" {
         OverlayEntry := StrSplit(A_LoopField, "`t")
-        If OverlayEntry.Length = 3 {
+        If OverlayEntry.Length = 4 {
             Vendor := OverlayEntry[1]
             For ElementIndex, ElementValue In OverlayEntry {
                 If Vendor = "" {
                     If ElementIndex = 1
-                    MainMenuItems.Push(Map("Product", "", "OverlayNumber", ""))
+                    MainMenuItems.Push(Map("Product", "", "Patch", "", "OverlayNumber", ""))
                     If ElementIndex = 2
                     MainMenuItems[MainMenuItems.Length]["Product"] := ElementValue
                     If ElementIndex = 3
+                    MainMenuItems[MainMenuItems.Length]["Patch"] := ElementValue
+                    If ElementIndex = 4
                     MainMenuItems[MainMenuItems.Length]["OverlayNumber"] := ElementValue
                 }
                 Else {
                     If ElementIndex = 1 {
-                        If Not Submenus.Has(Vendor)
-                        Submenus.Set(Vendor, Array())
-                        Submenus[Vendor].Push(Map("Product", "", "OverlayNumber", ""))
+                        If Not VendorSubmenus.Has(Vendor)
+                        VendorSubmenus.Set(Vendor, Array())
+                        VendorSubmenus[Vendor].Push(Map("Product", "", "Patch", "", "OverlayNumber", ""))
                     }
                     If ElementIndex = 2
-                    Submenus[Vendor][Submenus[Vendor].Length]["Product"] := ElementValue
+                    VendorSubmenus[Vendor][VendorSubmenus[Vendor].Length]["Product"] := ElementValue
                     If ElementIndex = 3
-                    Submenus[Vendor][Submenus[Vendor].Length]["OverlayNumber"] := ElementValue
+                    VendorSubmenus[Vendor][VendorSubmenus[Vendor].Length]["Patch"] := ElementValue
+                    If ElementIndex = 4
+                    VendorSubmenus[Vendor][VendorSubmenus[Vendor].Length]["OverlayNumber"] := ElementValue
                 }
             }
         }
     }
-    For Vendor, OverlayEntries In Submenus {
-        Submenu := Accessible%Type%Menu()
-        Submenu.OverlayNumbers := Array()
-        For OverlayEntry In OverlayEntries {
-            Submenu.Add(OverlayEntry["Product"], Change%Type%Overlay)
-            If OverlayEntry["OverlayNumber"] = CurrentOverlay.OverlayNumber
-            Submenu.Check(OverlayEntry["Product"])
-            Submenu.OverlayNumbers.Push(OverlayEntry["OverlayNumber"])
+    For Vendor, OverlayEntries In VendorSubmenus {
+        VendorSubmenu := Accessible%Type%Menu()
+        VendorSubmenu.OverlayNumbers := Map()
+        AddedProductSubmenus := Map()
+        For ProductName, ProductSubmenu In ProductSubmenus[Vendor]
+        AddedProductSubmenus.Set(ProductName, False)
+        For OverlayEntry In OverlayEntries
+        If ProductSubmenus[Vendor].Has(OverlayEntry["Product"]) {
+            ProductSubmenu := ProductSubmenus[Vendor][OverlayEntry["Product"]]
+            If Not AddedProductSubmenus[OverlayEntry["Product"]] {
+                VendorSubmenu.Add(OverlayEntry["Product"], ProductSubmenu)
+                AddedProductSubmenus[OverlayEntry["Product"]] := True
+            }
+            If Not ProductSubmenu.HasProp("OverlayNumbers")
+            ProductSubmenu.OverlayNumbers := Map()
+            ProductSubmenu.Add(OverlayEntry["Patch"], Change%Type%Overlay)
+            If OverlayEntry["OverlayNumber"] = CurrentOverlay.OverlayNumber {
+                VendorSubmenu.Check(OverlayEntry["Product"])
+                ProductSubmenu.Check(OverlayEntry["Patch"])
+            }
+            ProductSubmenu.OverlayNumbers.Set(OverlayEntry["Patch"], OverlayEntry["OverlayNumber"])
         }
-        Submenu.Add("")
-        Submenu.OverlayNumbers.Push(0)
-        OverlayMenu.Add(Vendor, Submenu)
+        Else {
+            VendorSubmenu.Add(OverlayEntry["Product"], Change%Type%Overlay)
+            If OverlayEntry["OverlayNumber"] = CurrentOverlay.OverlayNumber
+            VendorSubmenu.Check(OverlayEntry["Product"])
+            VendorSubmenu.OverlayNumbers.Set(OverlayEntry["Product"], OverlayEntry["OverlayNumber"])
+        }
+        For ProductName, ProductSubmenu In ProductSubmenus[Vendor]
+        ProductSubmenu.Add("")
+        VendorSubmenu.Add("")
+        OverlayMenu.Add(Vendor, VendorSubmenu)
         If Vendor = CurrentVendor
         OverlayMenu.Check(Vendor)
-        OverlayMenu.OverlayNumbers.Push(0)
     }
     For OverlayEntry In MainMenuItems {
         OverlayMenu.Add(OverlayEntry["Product"], Change%Type%Overlay)
         If OverlayEntry["OverlayNumber"] = CurrentOverlay.OverlayNumber
         OverlayMenu.Check(OverlayEntry["Product"])
-        OverlayMenu.OverlayNumbers.Push(OverlayEntry["OverlayNumber"])
+        OverlayMenu.OverlayNumbers.Set(OverlayEntry["Product"], OverlayEntry["OverlayNumber"])
     }
     OverlayMenu.Add("")
-    OverlayMenu.OverlayNumbers.Push(0)
     Return OverlayMenu
 }
 
