@@ -38,7 +38,7 @@ Class PopulatedComboBox extends CustomComboBox {
 
     OnChange(*) {
 
-        If This.Values.Length == 0 Or This.CurrentOption > This.Options.Length
+        If This.Values.Length == 0 Or This.CurrentOption >= This.Options.Length
             Return
 
         If This.Values[This.CurrentOption]["Selector"] != ""
