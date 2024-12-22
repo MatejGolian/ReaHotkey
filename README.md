@@ -22,7 +22,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 * Makes it possible to add new user library folders and perform library and plug-in rescans in Komplete Kontrol. It's also possible to toggle the setting for user content scanning on start-up on/off, as well as the setting for always using the latest versions of Native Instruments plug-ins.
   - Works both inside REAPER and in the standalone version of Komplete Kontrol, although due to how REAPER FX windows behave with screen readers, using the standalone version for performing these tasks provides a more stable and reliable user experience and is therefore preferred.
   - Komplete Kontrol version 3 is highly recommended, although most of the above functionality may work with older versions of the application as well. That being said, ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
-  * Makes it possible to Save new presets in Komplete Kontrol.
+* Makes it possible to Save new presets in Komplete Kontrol.
   - Works both inside REAPER and in the standalone version of Komplete Kontrol.
 * Makes it possible to interact with Kontakt menus.
   - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.10 or higher is required.
@@ -34,7 +34,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - Only works inside REAPER.
 * Makes it possible to toggle microphone positions in Cinematic Studio Strings.
   - Only works inside REAPER.
-  * Makes it possible to switch presets in the 'Juggernaut' library by Impact Soundworks 
+* Makes it possible to switch presets in the 'Juggernaut' library by Impact Soundworks 
   - Only works inside REAPER and only when using Kontakt 7
 * Makes it possible to toggle the reverb on/off in some Soundiron libraries.
   - Only works inside REAPER.
