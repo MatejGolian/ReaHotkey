@@ -79,16 +79,16 @@ Static ClickLoadProfileButton(Index) {
     Local X, Y
 
     If Index <= 2
-        Y := 330
+        Y := 299
     Else
-        Y := 521
+        Y := 490
 
     If Index == 1 Or Index == 4
-        X := 567
+        X := 559
     Else If Index == 2 Or Index == 5
-        X := 848
+        X := 840
     Else If Index == 3
-        X := 293
+        X := 285
 
     Click(X, Y)
 }
@@ -126,9 +126,9 @@ Static DeleteProfile(ProfileFile, Index, *) {
 }
 
 Static CreateNewProfileButton(*) {
-    Click(200, 256)
+    Click(192, 225)
     Sleep 1000
-    Click(362, 56)
+    Click(354, 25)
     Sleep 300
 
     Dubler2.CloseOverlay()

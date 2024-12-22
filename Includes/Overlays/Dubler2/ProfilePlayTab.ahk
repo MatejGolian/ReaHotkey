@@ -19,7 +19,7 @@ ActivateRenameProfileButton(ButtonObj) {
 
     Dubler2.CloseOverlay("Dubler 2 Profile")
 
-    Click(362, 56)
+    Click(354, 25)
     Sleep 1000
 
     FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
@@ -29,14 +29,14 @@ ActivateRenameProfileButton(ButtonObj) {
 
     Sleep 1000
     
-    Click(258, 104)
+    Click(250, 73)
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-PlayTab := HotspotTab("Play", 258, 104, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
+PlayTab := HotspotTab("Play", 250, 73, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
 
 PlayTab.SetHotkey("^1", "Ctrl + 1")
 PlayTab.AddControl(CustomButton("Rename profile", ObjBindMethod(Dubler2, "FocusButton"), , ActivateRenameProfileButton))
-PlayTab.AddControl(Dubler2.HotspotCheckbox("Inbuilt audio enabled", 730, 619, Dubler2.ProfileLoaded["Current"]["DublerModel"]["audioOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
-PlayTab.AddControl(Dubler2.HotspotCheckbox("MIDI out enabled", 829, 621, Dubler2.ProfileLoaded["Current"]["DublerModel"]["midiOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+PlayTab.AddControl(Dubler2.HotspotCheckbox("Inbuilt audio enabled", 722, 588, Dubler2.ProfileLoaded["Current"]["DublerModel"]["audioOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+PlayTab.AddControl(Dubler2.HotspotCheckbox("MIDI out enabled", 821, 590, Dubler2.ProfileLoaded["Current"]["DublerModel"]["midiOutputEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))

@@ -16,18 +16,18 @@ Static SpeakRecordedTakes() {
     OldTakes := Dubler2.TakesDetected
 
     For Take In [
-                [380, 348],
-                [430, 348],
-                [481, 348],
-                [532, 348],
-                [582, 347],
-                [633, 347],
-                [684, 347],
-                [736, 344],
-                [784, 346],
-                [822, 336],
-                [873, 335],
-                [919, 337],
+                [372, 317],
+                [422, 317],
+                [473, 317],
+                [524, 317],
+                [574, 316],
+                [625, 316],
+                [676, 316],
+                [728, 313],
+                [776, 315],
+                [814, 305],
+                [865, 304],
+                [911, 306],
             ] {
 
         If A_Index <= Dubler2.TakesDetected
@@ -61,7 +61,7 @@ Static CreateRecordingTakesOverlay(Overlay) {
 
     Standalone.SetTimer("Dubler 2", ObjBindMethod(Dubler2, "SpeakRecordedTakes"), 100)
 
-    Overlay.AddHotspotButton("Stop recording", 512, 295, ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "ClickStopRecordingTakesButton"))
+    Overlay.AddHotspotButton("Stop recording", 504, 264, ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "ClickStopRecordingTakesButton"))
 
     Return Overlay
 }

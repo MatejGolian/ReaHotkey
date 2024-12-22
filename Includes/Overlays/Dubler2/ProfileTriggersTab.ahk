@@ -2,14 +2,14 @@
 
 SetupTriggers(TabObj) {
     TriggerSlots := [
-        [134, 245],
-        [243, 243],
-        [130, 340],
-        [243, 341],
-        [133, 442],
-        [245, 438],
-        [130, 536],
-        [244, 541]
+        [126, 214],
+        [235, 212],
+        [122, 309],
+        [235, 310],
+        [125, 411],
+        [237, 407],
+        [122, 505],
+        [236, 510]
     ]
 
     Loop Dubler2.ProfileLoaded["Current"]["triggers"]["numTriggers"] {
@@ -56,7 +56,7 @@ ClickTriggerButton(ButtonObj) {
 
 StartRecordingTakes(*) {
 
-    Click(512, 295)
+    Click(504, 264)
 
     Dubler2.ShowRecordingTakesOverlay := True
 
@@ -67,14 +67,14 @@ MuteTrigger(Index, *) {
 
     Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["muted"] := !Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["muted"]
 
-    Click(885, 197)
+    Click(877, 166)
 }
 
 ToggleTriggerVelocityResponse(Index, *) {
 
     Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["velocityResponse"] := !Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["velocityResponse"]
 
-    Click(581, 295)
+    Click(573, 264)
 }
 
 ChangeTriggerMidiNote(Index, *) {
@@ -110,7 +110,7 @@ ChangeTriggerMidiNote(Index, *) {
 
     Dubler2.CloseOverlay("Dubler 2 Profile")
 
-    Click(362, 56)
+    Click(354, 25)
     Sleep 1000
 
     FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
@@ -120,7 +120,7 @@ ChangeTriggerMidiNote(Index, *) {
 
     Sleep 1000
     
-    Click(407, 105)
+    Click(399, 74)
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
@@ -129,7 +129,7 @@ ClearAllTriggerTakes(Index, *) {
 
     Dubler2.CloseOverlay("Dubler 2 Profile")
 
-    Click(362, 56)
+    Click(354, 25)
     Sleep 1000
 
     ID := Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["id"]
@@ -142,7 +142,7 @@ ClearAllTriggerTakes(Index, *) {
 
     Sleep 1000
     
-    Click(407, 105)
+    Click(399, 74)
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
@@ -166,7 +166,7 @@ RenameTrigger(ButtonObj, *) {
 
     Dubler2.CloseOverlay("Dubler 2 Profile")
 
-    Click(362, 56)
+    Click(354, 25)
     Sleep 1000
 
     FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
@@ -176,7 +176,7 @@ RenameTrigger(ButtonObj, *) {
 
     Sleep 1000
     
-    Click(407, 105)
+    Click(399, 74)
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
@@ -204,7 +204,7 @@ DeleteTrigger(Index, *) {
 
     Dubler2.CloseOverlay("Dubler 2 Profile")
 
-    Click(362, 56)
+    Click(354, 25)
     Sleep 1000
 
     ID := Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["id"]
@@ -218,7 +218,7 @@ DeleteTrigger(Index, *) {
 
     Sleep 1000
     
-    Click(407, 105)
+    Click(399, 74)
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
@@ -249,7 +249,7 @@ ActivateTriggerSensitivityButton(ButtonObj) {
 
     Dubler2.CloseOverlay("Dubler 2 Profile")
 
-    Click(362, 56)
+    Click(354, 25)
     Sleep 1000
 
     FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
@@ -259,14 +259,14 @@ ActivateTriggerSensitivityButton(ButtonObj) {
 
     Sleep 1000
     
-    Click(407, 105)
+    Click(399, 74)
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
-TriggersTab := HotspotTab("Triggers", 407, 105, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
+TriggersTab := HotspotTab("Triggers", 399, 74, ObjBindMethod(Dubler2, "DisableNotesAnnouncement"))
 TriggersTab.SetHotkey("^4", "Ctrl + 4")
 
-TriggersTab.AddControl(Dubler2.HotspotCheckbox("Triggers enabled", 97, 158, Dubler2.ProfileLoaded["Current"]["triggers"]["triggersEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+TriggersTab.AddControl(Dubler2.HotspotCheckbox("Triggers enabled", 89, 127, Dubler2.ProfileLoaded["Current"]["triggers"]["triggersEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 SetupTriggers(TriggersTab)
 TriggersTab.AddControl(CustomButton("Sensitivity: " . Integer(Dubler2.ProfileLoaded["Current"]["DublerModel"]["triggerSensitivity"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), , ActivateTriggerSensitivityButton))

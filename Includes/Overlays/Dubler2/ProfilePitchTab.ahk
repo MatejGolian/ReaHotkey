@@ -26,7 +26,7 @@ ActivatePitchInputGainButton(Button) {
 
     Dubler2.CloseOverlay("Dubler 2 Profile")
 
-    Click(362, 56)
+    Click(354, 25)
     Sleep 1000
 
     FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
@@ -36,7 +36,7 @@ ActivatePitchInputGainButton(Button) {
 
     Sleep 1000
     
-    Click(258, 104)
+    Click(250, 73)
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
@@ -82,61 +82,61 @@ ClickNotesButton(Note, *) {
 
     Switch(Note) {
         Case "C":
-            Click(527, 207)
+            Click(519, 176)
         Case "C#":
-            Click(573, 242)
+            Click(565, 211)
         Case "D":
-            Click(614, 282)
+            Click(606, 251)
         Case "D#":
-            Click(631, 343)
+            Click(623, 312)
         Case "E":
-            Click(623, 376)
+            Click(615, 345)
         Case "F":
-            Click(577, 411)
+            Click(569, 380)
         Case "F#":
-            Click(510, 427)
+            Click(502, 396)
         Case "G":
-            Click(471, 427)
+            Click(463, 396)
         Case "G#":
-            Click(415, 398)
+            Click(407, 367)
         Case "A":
-            Click(410, 335)
+            Click(402, 304)
         Case "A#":
-            Click(419, 251)
+            Click(411, 220)
         Case "B":
-            Click(433, 235)
+            Click(425, 204)
     }
 }
 
 ClickKey(Key) {
-    Click(543, 501)
+    Click(535, 470)
     Sleep 300
 
     Switch(Key) {
         Case "C":
-            Click(542, 198)
+            Click(534, 167)
         Case "C#":
-            Click(547, 223)
+            Click(539, 192)
         Case "D":
-            Click(543, 250)
+            Click(535, 219)
         Case "D#":
-            Click(548, 272)
+            Click(540, 241)
         Case "E":
-            Click(536, 295)
+            Click(528, 264)
         Case "F":
-            Click(543, 321)
+            Click(535, 290)
         Case "F#":
-            Click(543, 347)
+            Click(535, 316)
         Case "G":
-            Click(546, 370)
+            Click(538, 339)
         Case "G#":
-            Click(545, 393)
+            Click(537, 362)
         Case "A":
-            Click(544, 422)
+            Click(536, 391)
         Case "A#":
-            Click(542, 445)
+            Click(534, 414)
         Case "B":
-            Click(547, 467)
+            Click(539, 436)
     }
 }
 
@@ -146,7 +146,7 @@ ClickPitchOctaveShiftButton(ButtonObj, Octave, *) {
 
     Dubler2.CloseOverlay("Dubler 2 Profile")
 
-    Click(362, 56)
+    Click(354, 25)
     Sleep 1000
 
     FileDelete(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"])
@@ -156,78 +156,78 @@ ClickPitchOctaveShiftButton(ButtonObj, Octave, *) {
 
     Sleep 1000
     
-    Click(258, 104)
+    Click(250, 73)
 
     ReaHotkey.FoundStandalone.Overlay.Label := ""
 }
 
 ClickScale(Scale) {
-    Click(662, 502)
+    Click(654, 471)
     Sleep 300
 
     Switch(Scale) {
         Case "Major":
-            Click(700, 97)
+            Click(692, 66)
         Case "Minor":
-            Click(682, 123)
+            Click(674, 92)
         Case "Harmonic Minor":
-            Click(690, 151)
+            Click(682, 120)
         Case "Major Pentatonic":
-            Click(690, 171)
+            Click(682, 140)
         Case "Minor Pentatonic":
-            Click(697, 193)
+            Click(689, 162)
         Case "Blues":
-            Click(698, 221)
+            Click(690, 190)
         Case "Locrian":
-            Click(699, 247)
+            Click(691, 216)
         Case "Dorian":
-            Click(683, 272)
+            Click(675, 241)
         Case "Phrygian":
-            Click(694, 295)
+            Click(686, 264)
         Case "Lydian":
-            Click(684, 326)
+            Click(676, 295)
         Case "Mixolydian":
-            Click(678, 344)
+            Click(670, 313)
         Case "Hungarian (Gypsy) Minor":
-            Click(723, 371)
+            Click(715, 340)
         Case "Whole Tone":
-            Click(681, 400)
+            Click(673, 369)
         Case "Aeolian Dominant (Hindu)":
-            Click(719, 420)
+            Click(711, 389)
         Case "Chromatic":
-            Click(684, 449)
+            Click(676, 418)
     }
 }
 
 ClickSynthPreset(Preset) {
-    Click(678, 620)
+    Click(670, 589)
     Sleep 300
 
     Switch(Preset) {
         Case "Pure":
-            Click(679, 468)
+            Click(671, 437)
         Case "Pad":
-            Click(675, 490)
+            Click(667, 459)
         Case "Boards":
-            Click(686, 506)
+            Click(678, 475)
         Case "8 Bit Lead":
-            Click(699, 524)
+            Click(691, 493)
         Case "Bass Pluck":
-            Click(694, 542)
+            Click(686, 511)
         Case "Wobble Bass":
-            Click(700, 558)
+            Click(692, 527)
         Case "Trumpet Lead":
-            Click(699, 578)
+            Click(691, 547)
         Case "Trap Bass":
-            Click(693, 597)
+            Click(685, 566)
     }
 }
 
-PitchTab := HotspotTab("Pitch", 258, 104, ObjBindMethod(Dubler2, "FocusTab"))
+PitchTab := HotspotTab("Pitch", 250, 73, ObjBindMethod(Dubler2, "FocusTab"))
 PitchTab.SetHotkey("^2", "Ctrl + 2")
 
-PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch enabled", 371, 161, Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
-PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch Bend enabled", 354, 501, Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchBendEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch enabled", 363, 130, Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
+PitchTab.AddControl(Dubler2.HotspotCheckbox("Pitch Bend enabled", 346, 470, Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchBendEnabled"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 
 SynthPresetCtrl := PopulatedComboBox("Synth Preset", ObjBindMethod(Dubler2, "FocusComboBox"), , ObjBindMethod(Dubler2, "SelectComboBoxItem"))
 

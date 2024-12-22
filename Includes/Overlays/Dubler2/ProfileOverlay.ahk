@@ -86,7 +86,7 @@ Static RevertProfileButton(*) {
 
     Dubler2.CloseOverlay("Dubler 2 Profile")
 
-    Click(362, 56)
+    Click(354, 25)
     Dubler2.ProfileLoaded.Set("Current", "")
     Sleep 1000
 
@@ -101,8 +101,8 @@ Static AutoSaveProfile() {
 
     If Not ReaHotkey.FoundStandalone Is Standalone Or ReaHotkey.FoundStandalone.Overlay.Label != "Dubler 2 Profile" Or Not WinActive(ReaHotkey.StandaloneWinCriteria)
         Return
-    If PixelGetColor(635, 55) == 0xFA9FA8 {
-        Click(635, 55)
+    If PixelGetColor(627, 24) == 0xFA9FA8 {
+        Click(627, 24)
         Sleep 300
 
         Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . Dubler2.ProfileLoaded["File"], "UTF-8")
@@ -149,18 +149,18 @@ Static SpeakNotes() {
         Return
 
     For Position In [
-        [527, 207, "C"],
-        [573, 242, "C#"],
-        [614, 282, "D"],
-        [631, 343, "D#"],
-        [623, 376, "E"],
-        [577, 411, "F"],
-        [510, 427, "F#"],
-        [471, 427, "G"],
-        [415, 398, "G#"],
-        [410, 335, "A"],
-        [419, 251, "A#"],
-        [433, 235, "B"]] {
+        [519, 176, "C"],
+        [565, 211, "C#"],
+        [606, 251, "D"],
+        [623, 312, "D#"],
+        [615, 345, "E"],
+        [569, 380, "F"],
+        [502, 396, "F#"],
+        [463, 396, "G"],
+        [407, 367, "G#"],
+        [402, 304, "A"],
+        [411, 220, "A#"],
+        [425, 204, "B"]] {
 
         Sleep(-1)
 
@@ -205,7 +205,7 @@ Static CreateProfileOverlay(Overlay) {
     Dubler2.ProfileLoaded.Set("Current", ProfileObj)
 
     Overlay.AddCustomButton("Revert Changes", ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "RevertProfileButton"))
-    Overlay.AddHotspotButton("Unload Profile", 362, 56, ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "CloseProfileOverlay"))
+    Overlay.AddHotspotButton("Unload Profile", 354, 25, ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "CloseProfileOverlay"))
     ;Overlay.AddHotspotButton("User Settings", 900, 57, FocusButton)
 
     #Include ProfileAssignTab.ahk
