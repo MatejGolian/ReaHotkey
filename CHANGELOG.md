@@ -20,10 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Changed to client CoordMode
 -   Changed message spoken on reload
 -   Fixed plug-ins not being detected on some systems
--   Fixed a bug where plug-in specific hotkeys would not deactivate
 -   Fixed/Updated Chorus and Nucleus overlays
--   Make it easier to add/manage configuration settings
--   Remove 'win covered' warning' in standalone applications
+-   Made it easier to add/manage configuration settings
+-   Removed 'win covered' warning' in standalone applications
 -   Retrieve release and version information from GitHub API
 -   Split up configuration settings among several tabs
 -   Use update dialogs similar to REAPER
