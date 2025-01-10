@@ -14,22 +14,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added dedicated settings for each NI product
 -   Libraries can now define multiple images used for automatic detection
 -   It's now possible to define multiple overlays per library via the 'Patch' metadata property
--   Add support for preset switching in Juggernaut by Impact Soundworks (Kontakt 7 plug-in only)
+-   Added support for preset switching in Juggernaut by Impact Soundworks (Kontakt 7 plug-in only)
 -   Added reverb toggling in a couple of Soundiron libraries
 -   Automatically close update notice in Kontakt 7 plug-in
 -   Changed to client CoordMode
 -   Changed message spoken on reload
--   Fix plug-ins not being detected on some systems
--   Fix/Update Chorus and Nucleus overlays
+-   Fixed plug-ins not being detected on some systems
+-   Fixed a bug where plug-in specific hotkeys would not deactivate
+-   Fixed/Updated Chorus and Nucleus overlays
 -   Make it easier to add/manage configuration settings
 -   Remove 'win covered' warning' in standalone applications
 -   Retrieve release and version information from GitHub API
 -   Split up configuration settings among several tabs
 -   Use update dialogs similar to REAPER
--   HotspotHelper: Add function for reporting the color under the mouse cursor
--   HotspotHelper: Add function for retrieving window position and dimensions
+-   HotspotHelper: Added function for reporting the color under the mouse cursor
+-   HotspotHelper: Added function for retrieving window position and dimensions
 -   HotspotHelper: Group several operations on to one hotkey / Free up no longer needed hotkeys
--   HotspotHelper: Change hotkey modifier from Win+Ctrl+Shift to Shift+Win
+-   HotspotHelper: Changed hotkey modifier from Win+Ctrl+Shift to Shift+Win
 
 ## [0.5.1] - 2024-10-20
 
