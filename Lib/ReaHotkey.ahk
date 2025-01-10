@@ -299,21 +299,12 @@ Class ReaHotkey {
             For PluginWinCriteria In ReaHotkey.PluginWinCriteriaList {
                 HotIfWinActive(PluginWinCriteria)
                 TurnCommonOff()
+                TurnSpecificsOff(Type, Name)
             }
             If Type = "Standalone" {
                 HotIf
                 TurnCommonOff()
-            }
-            If Name = "" {
-                For HotkeyEntry In %Type%.GetList()
-                For DefinedHotkey In HotkeyEntry["Hotkeys"]
-                If Not DefinedHotkey["State"] = "Off"
-                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], "Off"
-            }
-            Else {
-                For DefinedHotkey In %Type%.GetHotkeys(Name)
-                If Not DefinedHotkey["State"] = "Off"
-                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], "Off"
+                TurnSpecificsOff(Type, Name)
             }
             If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
@@ -352,6 +343,19 @@ Class ReaHotkey {
             Hotkey "Enter", "Off"
             Hotkey "Space", "Off"
         }
+        TurnSpecificsOff(Type, Name) {
+            If Name = "" {
+                For HotkeyEntry In %Type%.GetList()
+                For DefinedHotkey In HotkeyEntry["Hotkeys"]
+                If Not DefinedHotkey["State"] = "Off"
+                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], "Off"
+            }
+            Else {
+                For DefinedHotkey In %Type%.GetHotkeys(Name)
+                If Not DefinedHotkey["State"] = "Off"
+                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], "Off"
+            }
+        }
     }
     
     Static TurnHotkeysOn(Type, Name := "") {
@@ -361,22 +365,12 @@ Class ReaHotkey {
             If ReaHotkey.PluginWinCriteria And Type = "Plugin" {
                 HotIfWinActive(ReaHotkey.PluginWinCriteria)
                 TurnCommonOn()
+                TurnSpecificsOn(Type, Name)
             }
             If ReaHotkey.StandaloneWinCriteria And Type = "Standalone" {
                 HotIf
                 TurnCommonOn()
-            }
-            If Name = "" {
-                If ReaHotkey.Found%Type% Is %Type% {
-                    For DefinedHotkey In ReaHotkey.Found%Type%.GetHotkeys()
-                    If Not DefinedHotkey["State"] = "Off"
-                    Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-                }
-            }
-            Else {
-                For DefinedHotkey In %Type%.GetHotkeys(Name)
-                If Not DefinedHotkey["State"] = "Off"
-                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
+                TurnSpecificsOn(Type, Name)
             }
             If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
@@ -413,6 +407,20 @@ Class ReaHotkey {
             Hotkey "Down", UpDownHK, "On"
             Hotkey "Enter", EnterSpaceHK, "On"
             Hotkey "Space", EnterSpaceHK, "On"
+        }
+        TurnSpecificsOn(Type, Name) {
+            If Name = "" {
+                If ReaHotkey.Found%Type% Is %Type% {
+                    For DefinedHotkey In ReaHotkey.Found%Type%.GetHotkeys()
+                    If Not DefinedHotkey["State"] = "Off"
+                    Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
+                }
+            }
+            Else {
+                For DefinedHotkey In %Type%.GetHotkeys(Name)
+                If Not DefinedHotkey["State"] = "Off"
+                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
+            }
         }
     }
     
