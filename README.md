@@ -43,7 +43,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 
 ## General Notes
 
-* ReaHotkey requires a screen resolution of 1920 x 1080 to operate properly.
+* ReaHotkey requires a screen resolution of 1920 x 1080 to operate properly. Shouldn't you have a display connected, or your display doesn't support the required screen resolution, you can either buy a cheap HDMI display simulation dongle (usually about $10), or try the following free software-based solution which installs a virtual display driver that can emulate screen resolutions without having to have an actual display connected: [Click here to visit the latest GitHub release of Virtual Display Driver](https://github.com/VirtualDisplay/Virtual-Display-Driver/releases/latest)
 * In order to make ReaHotkey work successfully with a certain application such as REAPER, ReaHotkey should be run with at least the same user privileges as the application to be controlled, otherwise ReaHotkey keyboard commands may not get enabled. For instance, if you are running REAPER as administrator, you should run ReaHotkey as administrator as well.
 * Because ReaHotkey also passes through some keys to the application window itself, it's highly recommended to enable the 'Send all keyboard input to plug-in' option in REAPER's FX menu, when interacting with a supported plug-in interface.
 
@@ -61,7 +61,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 ## Known Issues
 
 * The ReaHotkey script can crash while In Dubler 2 audio calibration view. In that case just start the script again.
-* Using any other zoom value in Kontakt than 100% may result in ReaHotkey not operating as excepted.
+* Using any other zoom value in Kontakt than 100% may result in ReaHotkey not operating as expected.
 * At present library-specific overlays may not always behave correctly when used directly in the Kontakt 8 plug-in. In such case try using Kontakt 7 or open the given library from within Komplete Kontrol instead.
 * Due to OCR limitations the Komplete Kontrol Save Preset dialog may display incorrect preset names at times.
 
