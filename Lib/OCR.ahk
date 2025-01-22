@@ -895,9 +895,9 @@ class OCR {
      * @returns {OCR.OcrResult} 
      */
     static FromDesktop(lang?, transform:=1, monitor?) {
-        if IsSet(lang) {
+        if IsSet(lang) && IsObject(lang) {
             this.__ExtractTransformParameters(lang, &transform)
-            lang := lang.HasProp("lang") ? lang : unset
+            lang := lang.HasProp("lang") ? lang.lang : unset
         }
         MonitorGet(monitor?, &Left, &Top, &Right, &Bottom)
         return this.FromRect(Left, Top, Right-Left, Bottom-Top, lang?, transform)
@@ -1336,7 +1336,7 @@ class OCR {
         , DllCall("SelectObject", "Ptr", PDC, "Ptr", OBM)
         , DllCall("DeleteDC", "Ptr", HDC)
         , oHBM := this.IBase(HBM), oHBM.DC := PDC
-        return oHBM.DefineProp("__Delete", {call:(this, *)=>(DllCall("DeleteObject", "Ptr", this), DllCall("ReleaseDC", "Ptr", 0, "Ptr", this.DC))})
+        return oHBM.DefineProp("__Delete", {call:(this, *)=>(DllCall("DeleteObject", "Ptr", this), DllCall("DeleteDC", "Ptr", this.DC))})
     }
 
     static CreateDirect3DSoftwareBitmapFromWindow(hWnd) {
