@@ -11,6 +11,7 @@ Class ReaHotkey {
     Static PluginHotkeyOverrides := Array()
     Static RequiredScreenWidth := 1920
     Static RequiredScreenHeight := 1080
+    Static RequiredWinBuild := 10240
     Static RequiredWinVer := 10
     Static StandaloneHotkeyOverrides := Array()
     
@@ -524,6 +525,14 @@ Class ReaHotkey {
             If Not SubStr(A_OSVersion, 1, InStr(A_OSVersion, ".")) >= ReaHotkey.RequiredWinVer {
                 MsgBox "ReaHotkey requires Windows " . ReaHotkey.RequiredWinVer . " or higher.`nSome functions may not operate properly.", "ReaHotkey"
                 Sleep 500
+            }
+            Else {
+                WinBuildNumber := StrSplit(A_OSVersion, ".")
+                WinBuildNumber := WinBuildNumber[3]
+                If SubStr(A_OSVersion, 1, InStr(A_OSVersion, ".")) = ReaHotkey.RequiredWinVer And Not WinBuildNumber >= ReaHotkey.RequiredWinBuild {
+                    MsgBox "ReaHotkey requires Windows " . ReaHotkey.RequiredWinVer . " build " . ReaHotkey.RequiredWinBuild . ".0 or later.`nSome functions may not operate properly.", "ReaHotkey"
+                    Sleep 500
+                }
             }
         }
     }
