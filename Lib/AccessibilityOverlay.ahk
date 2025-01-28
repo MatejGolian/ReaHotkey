@@ -2158,6 +2158,7 @@ Class HotspotTab Extends Tab {
 Class OCRButton Extends Button {
     
     DefaultLabel := ""
+    LabelPrefix := ""
     OCRLanguage := ""
     OCRScale := 1
     X1Coordinate := 0
@@ -2165,8 +2166,10 @@ Class OCRButton Extends Button {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+    __New(LabelPrefix, DefaultLabel, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
         Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+        This.DefaultLabel := DefaultLabel
+        This.LabelPrefix := LabelPrefix
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.X1Coordinate := X1Coordinate
@@ -2190,15 +2193,16 @@ Class OCRButton Extends Button {
     SpeakOnActivation(Speak := True) {
         Message := ""
         CheckResult := This.GetState()
-        LabelString := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
-        This.Label := LabelString
-        If LabelString = ""
-        LabelString := This.DefaultLabel
+        This.Label := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+        If This.Label = ""
+        This.Label := This.DefaultLabel
+        Else
+        This.Label := This.LabelPrefix . " " . This.Label
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
         If Not This.controlID = AccessibilityOverlay.PreviousControlID
-        Message := LabelString . " " . This.ControlTypeLabel . " " . StateString
+        Message := This.Label . " " . This.ControlTypeLabel . " " . StateString
         Else
         If This.States.Count > 1
         Message := StateString
@@ -2209,14 +2213,16 @@ Class OCRButton Extends Button {
     SpeakOnFocus(Speak := True) {
         Message := ""
         CheckResult := This.GetState()
-        LabelString := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
-        If LabelString = ""
-        LabelString := This.DefaultLabel
+        This.Label := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+        If This.Label = ""
+        This.Label := This.DefaultLabel
+        Else
+        This.Label := This.LabelPrefix . " " . This.Label
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
         If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
-        Message := LabelString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel
+        Message := This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
     }
@@ -2333,8 +2339,9 @@ Class OCRTab Extends Tab {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+    __New(DefaultLabel, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
         Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions)
+        This.DefaultLabel := DefaultLabel
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.X1Coordinate := X1Coordinate
@@ -2370,6 +2377,7 @@ Class OCRTab Extends Tab {
 Class OCRText Extends FocusableControl {
     
     ControlType := "Text"
+    DefaultValue := ""
     OCRLanguage := ""
     OCRScale := 1
     X1Coordinate := 0
@@ -2377,8 +2385,9 @@ Class OCRText Extends FocusableControl {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+    __New(DefaultValue, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
         Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions)
+        This.DefaultValue := DefaultValue
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.X1Coordinate := X1Coordinate
@@ -2394,6 +2403,8 @@ Class OCRText Extends FocusableControl {
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
         ValueString := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+        If ValueString = ""
+        ValueString := This.DefaultValue
         This.Value := ValueString
         If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
         Message := ValueString . " " . StateString . " " . This.HotkeyLabel
