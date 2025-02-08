@@ -28,7 +28,7 @@ Class AudioImperia {
         CerberusComboBox := CerberusOverlay.AddCustomComboBox("Patch type:", ObjBindMethod(This, "SelectCerberusPatchType"),, ObjBindMethod(This, "SelectCerberusPatchType"))
         CerberusComboBox.SetOptions(["Normal", "Epic Mix"])
         CerberusOverlay.AddAccessibilityOverlay()
-        CerberusOverlay.AddFocusableCustom("Cerberus Redirector", ObjBindMethod(This, "RedirectCerberusKeyPress"))
+        CerberusOverlay.ChildControls[CerberusOverlay.ChildControls.Length] := This.SelectCerberusPatchType(CerberusComboBox)
         %PluginClass%.PluginOverlays.Push(CerberusOverlay)
         
         ChorusOverlay := AccessibilityOverlay("Chorus")
@@ -75,26 +75,6 @@ Class AudioImperia {
         %PluginClass%.PluginOverlays.Push(TalosOverlay)
     }
     
-    Static RedirectCerberusKeyPress(OverlayControl, Speak := True) {
-        ParentOverlay := OverlayControl.GetSuperordinateControl()
-        MasterOverlay := ParentOverlay.GetSuperordinateControl()
-        If A_PriorHotkey = "+Tab" {
-            TypeCombo := ParentOverlay.ChildControls[3]
-            This.SelectCerberusPatchType(TypeCombo)
-            MasterOverlay.FocusPreviousControl()
-        }
-        Else If GetKeyState("Shift") And A_PriorHotkey = "Tab" {
-            TypeCombo := ParentOverlay.ChildControls[3]
-            This.SelectCerberusPatchType(TypeCombo)
-            MasterOverlay.FocusPreviousControl()
-        }
-        Else {
-            If A_PriorHotkey = "Tab" {
-                MasterOverlay.FocusNextControl()
-            }
-        }
-    }
-    
     Static SelectCerberusPatchType(TypeCombo, Speak := True) {
         ParentOverlay := TypeCombo.GetSuperordinateControl()
         PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
@@ -116,6 +96,7 @@ Class AudioImperia {
             ChildOverlay.AddStaticText("Invalid patch type")
             ParentOverlay.ChildControls[4] := ChildOverlay
         }
+        Return ChildOverlay
     }
     
 }
