@@ -750,8 +750,9 @@ Class FocusableControl Extends AccessibilityControl {
     }
     
     ReportValue() {
-        If This.GetValue()
-        AccessibilityOverlay.Speak(This.GetValue())
+        This.Value := This.GetValue()
+        If This.Value
+        AccessibilityOverlay.Speak(This.Value)
         Else
         AccessibilityOverlay.Speak(This.DefaultValue)
     }
