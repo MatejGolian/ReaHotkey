@@ -22,9 +22,7 @@ F6HK(ThisHotkey) {
         ControlFocus Controls[ContainerIndex], ReaHotkey.PluginWinCriteria
     }
     Else {
-        Hotkey ThisHotkey, "Off"
-        Send "{" . ThisHotkey . "}"
-        Hotkey ThisHotkey, "On"
+        ReaHotkey.PassThroughHotkey(ThisHotkey)
     }
 }
 
@@ -100,26 +98,18 @@ LeftRightHK(ThisHotkey) {
     ReaHotkey.Found%ReaHotkey.Context% := False
     If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
         Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
+            Case "Edit":
+            ReaHotkey.PassThroughHotkey(ThisHotkey)
             Case "Slider":
-            Hotkey ThisHotkey, "Off"
-            Send "{" . ThisHotkey . "}"
             If ThisHotkey = "Left"
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.DecreaseSlider()
             Else
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.IncreaseSlider()
-            Hotkey ThisHotkey, "On"
             Case "TabControl":
-            Hotkey ThisHotkey, "Off"
-            Send "{" . ThisHotkey . "}"
             If ThisHotkey = "Left"
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.FocusPreviousTab()
             Else
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.FocusNextTab()
-            Hotkey ThisHotkey, "On"
-            Default:
-            Hotkey ThisHotkey, "Off"
-            Send "{" . ThisHotkey . "}"
-            Hotkey ThisHotkey, "On"
         }
     }
 }
@@ -137,25 +127,17 @@ UpDownHK(ThisHotkey) {
     If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
         Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
             Case "ComboBox":
-            Hotkey ThisHotkey, "Off"
-            Send "{" . ThisHotkey . "}"
             If ThisHotkey = "Up"
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.SelectPreviousOption()
             Else
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.SelectNextOption()
-            Hotkey ThisHotkey, "On"
+            Case "Edit":
+            ReaHotkey.PassThroughHotkey(ThisHotkey)
             Case "Slider":
-            Hotkey ThisHotkey, "Off"
-            Send "{" . ThisHotkey . "}"
             If ThisHotkey = "Down"
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.DecreaseSlider()
             Else
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.IncreaseSlider()
-            Hotkey ThisHotkey, "On"
-            Default:
-            Hotkey ThisHotkey, "Off"
-            Send "{" . ThisHotkey . "}"
-            Hotkey ThisHotkey, "On"
         }
     }
 }
@@ -173,13 +155,9 @@ EnterSpaceHK(ThisHotkey) {
     If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
         Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
             Case "Edit":
-            Hotkey ThisHotkey, "Off"
-            Send "{" . ThisHotkey . "}"
-            Hotkey ThisHotkey, "On"
+            ReaHotkey.PassThroughHotkey(ThisHotkey)
             Case "Focusable":
-            Hotkey ThisHotkey, "Off"
-            Send "{" . ThisHotkey . "}"
-            Hotkey ThisHotkey, "On"
+            ReaHotkey.PassThroughHotkey(ThisHotkey)
             Default:
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.ActivateCurrentControl()
         }
@@ -214,17 +192,16 @@ QuitHK(ThisHotkey) {
 
 ReadmeHK(ThisHotkey) {
     ReaHotkey.ViewReadme()
-    }
-    
-    ReaHotkeyMenuHK(ThisHotkey) {
-        A_TrayMenu.Show()
-    }
-    
-    ReloadHK(ThisHotkey) {
-        ReaHotkey.Reload()
-    }
-    
-    UpdateCheckHK(ThisHotkey) {
-        ReaHotkey.CheckForUpdates(True)
-    }
-        
+}
+
+ReaHotkeyMenuHK(ThisHotkey) {
+    A_TrayMenu.Show()
+}
+
+ReloadHK(ThisHotkey) {
+    ReaHotkey.Reload()
+}
+
+UpdateCheckHK(ThisHotkey) {
+    ReaHotkey.CheckForUpdates(True)
+}

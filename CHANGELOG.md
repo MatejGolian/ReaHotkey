@@ -19,9 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Automatically close update notice in Kontakt 7 plug-in
 -   Changed to client CoordMode
 -   Changed message spoken on reload
+-   Changed hotkey pass through conditions
 -   Added link to README to install a virtual display driver that can enable the necessary screen resolution on machines that don't have a proper display connected
 -   Fixed plug-ins not being detected on some systems
--   Fixed/Updated Chorus and Nucleus overlays
+-   Fixed/Updated Cerberus, Chorus and Nucleus overlays
 -   Made it easier to add/manage configuration settings
 -   Removed 'win covered' warning' in standalone applications
 -   Retrieve release and version information from GitHub API

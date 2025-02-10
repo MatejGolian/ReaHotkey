@@ -218,7 +218,7 @@ Class ReaHotkey {
                 Options := Action . " " . Options
                 GetOptions()
                 If Not Action Is Object
-                Action := ReaHotkey.TriggerOverrideHotkey
+                Action := ReaHotkey.PassThroughHotkey
                 If Name = ""
                 ReaHotkey.%Type%HotkeyOverrides.Push(Map("KeyName", KeyName, "Action", Action, "Options", Options.String, "State", Options.OnOff))
                 Else
@@ -718,6 +718,21 @@ Class ReaHotkey {
         }
     }
     
+    Class PassThroughHotkey {
+        Static Call(ThisHotkey) {
+            Match := RegExMatch(ThisHotkey, "[a-zA-Z]")
+            If Match > 0 {
+                Modifiers := SubStr(ThisHotkey, 1, Match - 1)
+                KeyName := SubStr(ThisHotkey, Match)
+                If StrLen(KeyName) > 1
+                KeyName := "{" . KeyName . "}"
+                Hotkey ThisHotkey, "Off"
+                Send Modifiers . KeyName
+                Hotkey ThisHotkey, "On"
+            }
+        }
+    }
+    
     Class Quit {
         Static Call(*) {
             ExitApp
@@ -778,21 +793,6 @@ Class ReaHotkey {
                 SetTimer ReaHotkey.ManageState, 100
                 If ReaHotkey.Config.Get("CheckIfWinCovered") = 1
                 SetTimer ReaHotkey.CheckIfWinCovered, 10000
-            }
-        }
-    }
-    
-    Class TriggerOverrideHotkey {
-        Static Call(ThisHotkey) {
-            Match := RegExMatch(ThisHotkey, "[a-zA-Z]")
-            If Match > 0 {
-                Modifiers := SubStr(ThisHotkey, 1, Match - 1)
-                KeyName := SubStr(ThisHotkey, Match)
-                If StrLen(KeyName) > 1
-                KeyName := "{" . KeyName . "}"
-                Hotkey ThisHotkey, "Off"
-                Send Modifiers . KeyName
-                Hotkey ThisHotkey, "On"
             }
         }
     }
