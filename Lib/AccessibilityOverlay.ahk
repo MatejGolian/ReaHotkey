@@ -750,7 +750,10 @@ Class FocusableControl Extends AccessibilityControl {
     }
     
     ReportValue() {
+        If This.GetValue()
         AccessibilityOverlay.Speak(This.GetValue())
+        Else
+        AccessibilityOverlay.Speak(This.DefaultValue)
     }
     
     SetHotkey(HotkeyCommand, HotkeyLabel := "", HotkeyFunctions := "") {
@@ -2258,6 +2261,18 @@ Class OCRComboBox Extends ComboBox {
     GetValue() {
         This.Value := AccessibilityOverlay.OCR(This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
         Return This.Value
+    }
+    
+    SelectNextOption() {
+        For ChangeFunction In This.ChangeFunctions
+        ChangeFunction.Call(This)
+        This.ReportValue()
+    }
+    
+    SelectPreviousOption() {
+        For ChangeFunction In This.ChangeFunctions
+        ChangeFunction.Call(This)
+        This.ReportValue()
     }
     
     SpeakOnFocus(Speak := True) {
