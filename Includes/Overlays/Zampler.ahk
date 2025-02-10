@@ -13,7 +13,7 @@ Class Zampler {
         MainTab.AddHotspotButton("Save bank", 352, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Load patch", 399, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Save patch", 440, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        MainTab.AddOCRComboBox("Polyphony", 320, 369, 349, 379,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        MainTab.AddOCRComboBox("Polyphony", "value not detected", 320, 369, 349, 379,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SetPolyphony")])
         ZamplerTabControl.AddTabs(MainTab)
         ModMatrixTab := HotspotTab("Mod matrix", 415, 210, CompensatePluginCoordinates)
         ZamplerTabControl.AddTabs(ModMatrixTab)
@@ -48,6 +48,13 @@ Class Zampler {
             Return False
         }
         Return False
+    }
+    
+    Static SetPolyphony(OverlayObj) {
+        If A_ThisHotkey = "Up"
+        Send "{WheelUp 1}"
+        If A_ThisHotkey = "Down"
+        Send "{WheelDown 1}"
     }
     
 }
