@@ -2238,8 +2238,9 @@ Class OCRComboBox Extends ComboBox {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "") {
+    __New(Label, DefaultValue, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "") {
         Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions)
+        This.DefaultValue := DefaultValue
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.X1Coordinate := X1Coordinate
