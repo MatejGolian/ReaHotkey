@@ -28,7 +28,7 @@ Class AudioImperia {
         CerberusComboBox := CerberusOverlay.AddCustomComboBox("Patch type:", ObjBindMethod(This, "SelectCerberusPatchType"),, ObjBindMethod(This, "SelectCerberusPatchType"))
         CerberusComboBox.SetOptions(["Normal", "Epic Mix"])
         CerberusOverlay.AddAccessibilityOverlay()
-        CerberusOverlay.ChildControls[CerberusOverlay.ChildControls.Length] := This.SelectCerberusPatchType(CerberusComboBox)
+        This.SelectCerberusPatchType(CerberusComboBox)
         %PluginClass%.PluginOverlays.Push(CerberusOverlay)
         
         ChorusOverlay := AccessibilityOverlay("Chorus")
@@ -96,7 +96,6 @@ Class AudioImperia {
             ChildOverlay.AddStaticText("Invalid patch type")
             ParentOverlay.ChildControls[4] := ChildOverlay
         }
-        Return ChildOverlay
     }
     
 }
