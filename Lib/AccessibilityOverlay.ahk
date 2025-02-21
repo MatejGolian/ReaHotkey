@@ -1719,7 +1719,7 @@ Class GraphicalCheckbox Extends ActivatableGraphic {
     ControlType := "Checkbox"
     ControlTypeLabel := "checkbox"
     DefaultLabel := "unlabelled"
-    States := Map(-1, "not found", 0, "Not checked", 1, "checked")
+    States := Map(-1, "not found", 0, "not checked", 1, "checked")
     
     __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, CheckedImages, UncheckedImages, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
         Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "Checked", -1, Map("Checked", CheckedImages, "Unchecked", UncheckedImages))
@@ -1756,7 +1756,7 @@ Class GraphicalSlider Extends FocusableGraphic {
     End := 0
     Size := 0
     Start := 0
-    States := Map(0, "Not Found", 1, "")
+    States := Map(0, "not found", 1, "")
     Type := False
     
     __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, Start := "", End := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
