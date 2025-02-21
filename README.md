@@ -19,9 +19,9 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - The keyboard bindings only work with the unified interfaces of e.g. C-2, Q-3 etc, but not with the newer R-2 yet
 * Makes it possible to interact with Komplete Kontrol menus.
   - Works both inside REAPER and in the standalone version of Komplete Kontrol. Note that Komplete Kontrol version 3 is absolutely required in case of the plug-in.
-* Makes it possible to add new user library folders and perform library and plug-in rescans in Komplete Kontrol. It's also possible to toggle the setting for user content scanning on start-up on/off, as well as the setting for always using the latest versions of Native Instruments plug-ins.
-  - Works both inside REAPER and in the standalone version of Komplete Kontrol, although due to how REAPER FX windows behave with screen readers, using the standalone version for performing these tasks provides a more stable and reliable user experience and is therefore preferred.
-  - Komplete Kontrol version 3 is highly recommended, although most of the above functionality may work with older versions of the application as well. That being said, ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
+* Makes it possible to add new user library folders and perform library and plug-in rescans in Komplete Kontrol. In addition, one can also toggle certain settings on/off.
+  - Works both inside REAPER and in the standalone version of Komplete Kontrol, although due to how REAPER FX windows behave with screen readers, using the standalone version for performing these tasks may provide a more stable and reliable user experience and is therefore preferred.
+  - Komplete Kontrol version 3.4 is highly recommended, although most of the above functionality may work with older versions of the application as well. That being said, ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
 * Makes it possible to Save new presets in Komplete Kontrol.
   - Works both inside REAPER and in the standalone version of Komplete Kontrol.
 * Makes it possible to interact with Kontakt menus.
