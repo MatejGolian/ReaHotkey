@@ -38,6 +38,8 @@ SAPI := False
 #+F4::SetY2Coordinate()
 #+F5::Create1()
 #+F6::Create2()
+#+F7::Copy1()
+#+F8::Copy2()
 #+F9::Compare()
 
 A_IconTip := AppName
@@ -66,9 +68,31 @@ Compare() {
         Speak("Maps are identical.")
     }
     Else {
-        A_Clipboard := CompResults
+        A_Clipboard := Sort(CompResults, "CLogical")
         Speak("Comparison results copied to clipboard.")
     }
+}
+
+Copy(MapNumber) {
+    Global Map1, Map2
+    If Map%MapNumber%.Count = 0 {
+        Speak("Nothing to copy.")
+        Return
+    }
+    Speak("Copying map " . MapNumber . ", please wait...")
+    CopyResult := "Coordinate:`tColor:`n"
+    For Key, Value In Map%MapNumber%
+    CopyResult .= Key . "`t" . Map%MapNumber%[Key] . "`n"
+    A_Clipboard := Sort(CopyResult, "CLogical")
+    Speak("Map " . MapNumber . " copied to clipboard.")
+}
+
+Copy1() {
+    Copy(1)
+}
+
+Copy2() {
+    Copy(2)
 }
 
 Create(MapNumber) {
@@ -94,7 +118,7 @@ Create(MapNumber) {
     Map%MapNumber% := Map()
     CurrentRow := 1
     RowCount := Y2Coordinate - Y1Coordinate
-    Loop WinHeight {
+    Loop WinHeight + 1 {
         If CreationCanceled {
             ReportCancellation()
             Break
@@ -105,13 +129,11 @@ Create(MapNumber) {
         If CurrentY < Y1Coordinate
         Continue
         If CurrentY > Y2Coordinate
-        Break
+        Continue
         If CurrentRow <= RowCount
         Speak("Creating map " . MapNumber . " (row " . CurrentRow . " of " . RowCount . "), please wait...")
-        Else
-        Break
         CurrentRow++
-        Loop WinHeight {
+        Loop WinWidth + 1 {
             If CreationCanceled {
                 ReportCancellation()
                 Break 2
