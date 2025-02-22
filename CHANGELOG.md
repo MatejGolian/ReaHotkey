@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2025-02-22
+
 ### Added/Changed
 
 -   Added support for bridged mode in Reaper
@@ -207,7 +209,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.1...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.2...HEAD
+
+[0.5.2]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.1...0.5.2
 
 [0.5.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.0...0.5.1
 
