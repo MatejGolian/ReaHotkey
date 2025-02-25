@@ -27,7 +27,7 @@ Class Tesseract {
         If Not FileExist(This.TesseractExe)
         Return
         Static Quote := Chr(0x22)
-        Command .= Quote . This.TesseractExe . Quote . " --tessdata-dir " . Quote . Fast . Quote . " " . Quote . Input . Quote . " " . Quote . SubStr(Output, 1, -4) . Quote
+        Command := Quote . This.TesseractExe . Quote . " --tessdata-dir " . Quote . Fast . Quote . " " . Quote . Input . Quote . " " . Quote . SubStr(Output, 1, -4) . Quote
         Command .= (This.Language) ? " -l " . Quote . This.Language . Quote : ""
         Command := A_ComSpec . " /C " . Quote . Command . Quote
         RunWait Command,, "Hide"
@@ -63,7 +63,7 @@ Class Tesseract {
         This.Language := Language
         Screenshot := ImagePutFile({Image: [X, Y, W, H, "A"]}, This.OriginalImage)
         This.Preprocess(Screenshot, This.ProcessedImage, ScaleFactor)
-        This.ConvertFast(This.ProcessedImage, This.OCRTextFile)
+        This.ConvertBest(This.ProcessedImage, This.OCRTextFile)
         This.OCRResult := This.GetResult(This.OCRTextFile)
         This.Cleanup()
         Return This.OCRResult
@@ -81,7 +81,7 @@ Class Tesseract {
         If Not FileExist(This.LeptonicaExe)
         Return
         Static Quote := Chr(0x22)
-        Command .= Quote . This.LeptonicaExe . Quote . " " . Quote . Input . Quote . " " . Quote . Output . Quote
+        Command := Quote . This.LeptonicaExe . Quote . " " . Quote . Input . Quote . " " . Quote . Output . Quote
         Command .= " " . NegateArg . " 0.5 " . PerformScaleArg . " " . ScaleFactor . " " . OCRPreProcessing . " 5 2.5 " . OCRPreProcessing . " 2000 2000 0 0 0.0"
         Command := A_ComSpec . " /C " . Quote . Command . Quote
         RunWait Command,, "Hide"
