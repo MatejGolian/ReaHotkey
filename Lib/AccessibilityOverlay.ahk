@@ -2209,7 +2209,7 @@ Class OCRButton Extends Button {
         This.LabelPrefix := LabelPrefix
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
-        This.OCRType := OCRType
+        This.OCRType := (OCRType = "Tesseract" Or OCRType = "UWP" ? OCRType : This.OCRType)
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
@@ -2282,7 +2282,7 @@ Class OCRComboBox Extends ComboBox {
         This.DefaultValue := DefaultValue
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
-        This.OCRType := OCRType
+        This.OCRType := (OCRType = "Tesseract" Or OCRType = "UWP" ? OCRType : This.OCRType)
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
@@ -2346,7 +2346,7 @@ Class OCREdit Extends Edit {
         Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
-        This.OCRType := OCRType
+        This.OCRType := (OCRType = "Tesseract" Or OCRType = "UWP" ? OCRType : This.OCRType)
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
@@ -2400,7 +2400,7 @@ Class OCRTab Extends Tab {
         This.DefaultLabel := DefaultLabel
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
-        This.OCRType := OCRType
+        This.OCRType := (OCRType = "Tesseract" Or OCRType = "UWP" ? OCRType : This.OCRType)
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
@@ -2448,7 +2448,7 @@ Class OCRText Extends FocusableControl {
         This.DefaultValue := DefaultValue
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
-        This.OCRType := OCRType
+        This.OCRType := (OCRType = "Tesseract" Or OCRType = "UWP" ? OCRType : This.OCRType)
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
