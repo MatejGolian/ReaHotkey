@@ -44,8 +44,8 @@ Class Tesseract {
         Return This.Convert(Input, Output, 1)
     }
     
-    Static FromRect(X, Y, W, H, Language := "", ScaleFactor := "") {
-        Return This.OCR(X, Y, W, H, Language, ScaleFactor)
+    Static FromRect(X, Y, W, H, Language := "", ScaleFactor := "", Fast := 1) {
+        Return This.OCR(X, Y, W, H, Language, ScaleFactor, Fast)
     }
     
     Static GetResult(Input := "") {
@@ -59,10 +59,14 @@ Class Tesseract {
         Return Output
     }
     
-    Static OCR(X, Y, W, H, Language := "", ScaleFactor := "") {
+    Static OCR(X, Y, W, H, Language := "", ScaleFactor := "", Fast := 1) {
+        Fast := (Fast) ? 1 : 0
         This.Language := Language
         Screenshot := ImagePutFile({Image: [X, Y, W, H, "A"]}, This.OriginalImage)
         This.Preprocess(Screenshot, This.ProcessedImage, ScaleFactor)
+        If Fast
+        This.ConvertFast(This.ProcessedImage, This.OCRTextFile)
+        Else
         This.ConvertBest(This.ProcessedImage, This.OCRTextFile)
         This.OCRResult := This.GetResult(This.OCRTextFile)
         This.Cleanup()
