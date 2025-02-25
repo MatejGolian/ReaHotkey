@@ -652,6 +652,20 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     Static TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", Fast := 1) {
         If IsSet(Tesseract) {
+            Try {
+                If A_CoordModeMouse := "Client"
+                WinGetClientPos &WinX, &WinY,,, "A"
+                Else
+                WinGetPos &WinX, &WinY,,, "A"
+            }
+            Catch {
+                WinX := 0
+                WinY := 0
+            }
+            X1Coordinate := WinX + X1Coordinate
+            Y1Coordinate := WinY + Y1Coordinate
+            X2Coordinate := WinX + X2Coordinate
+            Y2Coordinate := WinY + Y2Coordinate
             RectWidth := X2Coordinate - X1Coordinate
             RectHeight := Y2Coordinate - Y1Coordinate
             Return Tesseract.FromRect(X1Coordinate, Y1Coordinate, RectWidth, RectHeight, OCRLanguage, OCRScale, Fast)
