@@ -40,7 +40,7 @@ jobs:
         name: "Prepare artifact"
         run: |
           xcopy Images build\Images /I /S
-              xcopy Leptonica_Util build\Leptonica_Util /I /S
+              xcopy Leptonica_Util build\Leptonica_Util /I
           xcopy Sounds build\Sounds /I
               xcopy Tesseract build\Tesseract /I /S
           xcopy bassasio32.dll build
