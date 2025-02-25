@@ -66,6 +66,7 @@ Class Zampler {
         Send "{WheelUp 1}"
         If A_ThisHotkey = "Down"
         Send "{WheelDown 1}"
+        Sleep 100
     }
     
 }
