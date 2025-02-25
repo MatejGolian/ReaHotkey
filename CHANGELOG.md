@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2025-02-22
+
 ### Added/Changed
 
 -   Added support for bridged mode in Reaper
 -   Added Windows version checking on startup
--   Added dedicated settings for each NI product
+-   Added support for opting out of using specific plugin formats in Komplete Kontrol (recomended KK version is now 3.4.0)
+-   Added dedicated settings for each NI product to configuration dialog
 -   Libraries can now define multiple images used for automatic detection
 -   It's now possible to define multiple overlays per library via the 'Patch' metadata property
 -   Added support for preset switching in Juggernaut by Impact Soundworks (Kontakt 7 plug-in only)
@@ -206,7 +209,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.1...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.2...HEAD
+
+[0.5.2]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.1...0.5.2
 
 [0.5.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.0...0.5.1
 

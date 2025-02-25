@@ -51,8 +51,10 @@ Class KompleteKontrol {
         PluginPreferenceLibraryTabTabControl.AddTabs(PluginPreferenceLibraryFactoryTab, PluginPreferenceLibraryUserTab)
         PluginPreferenceLibraryTab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
         PluginPreferencePluginTab := HotspotTab("Plug-ins", 49, 189)
-        PluginPreferencePluginTab.AddHotspotCheckbox("Always Use Latest Version Of NI Plug-ins", 412, 391, ["0xCCCCCC", "0xFFFFFF"], ["0x323232", "0x5F5F5F"])
-        PluginPreferencePluginTab.AddHotspotButton("Rescan", 546, 417)
+        PluginPreferencePluginTab.AddHotspotCheckbox("Always Use Latest Version Of NI Plug-ins", 406, 371, ["0xCCCCCC", "0xFFFFFF"], ["0x323232", "0x5F5F5F"])
+        PluginPreferencePluginTab.AddHotspotCheckbox("Use VST3 Plug-ins", 406, 398, ["0xCCCCCC", "0xFFFFFF"], ["0x323232", "0x5F5F5F"])
+        PluginPreferencePluginTab.AddHotspotCheckbox("Use VST2 Plug-ins", 406, 421, ["0xCCCCCC", "0xFFFFFF"], ["0x323232", "0x5F5F5F"])
+        PluginPreferencePluginTab.AddHotspotButton("Rescan", 549, 387)
         PluginPreferencePluginTab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "ClosePluginPreferenceDialog"))
         PluginPreferenceTabControl.AddTabs(PluginPreferenceMIDITab, PluginPreferenceGeneralTab, PluginPreferenceLibraryTab, PluginPreferencePluginTab)
         Plugin.RegisterOverlay("Komplete Kontrol Preference Dialog", PluginPreferenceOverlay)
@@ -91,8 +93,10 @@ Class KompleteKontrol {
         StandalonePreferenceLibraryTabTabControl.AddTabs(StandalonePreferenceLibraryFactoryTab, StandalonePreferenceLibraryUserTab)
         StandalonePreferenceLibraryTab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
         StandalonePreferencePluginTab := HotspotTab("Plug-ins", 49, 230)
-        StandalonePreferencePluginTab.AddHotspotCheckbox("Always Use Latest Version Of NI Plug-ins", 412, 391, ["0xCCCCCC", "0xFFFFFF"], ["0x323232", "0x5F5F5F"])
-        StandalonePreferencePluginTab.AddHotspotButton("Rescan", 539, 410)
+        StandalonePreferencePluginTab.AddHotspotCheckbox("Always Use Latest Version Of NI Plug-ins", 406, 371, ["0xCCCCCC", "0xFFFFFF"], ["0x323232", "0x5F5F5F"])
+        StandalonePreferencePluginTab.AddHotspotCheckbox("Use VST3 Plug-ins", 406, 398, ["0xCCCCCC", "0xFFFFFF"], ["0x323232", "0x5F5F5F"])
+        StandalonePreferencePluginTab.AddHotspotCheckbox("Use VST2 Plug-ins", 406, 421, ["0xCCCCCC", "0xFFFFFF"], ["0x323232", "0x5F5F5F"])
+        StandalonePreferencePluginTab.AddHotspotButton("Rescan", 549, 387)
         StandalonePreferencePluginTab.AddCustomButton("Close",,, ObjBindMethod(KompleteKontrol, "CloseStandalonePreferenceDialog"))
         StandalonePreferenceTabControl.AddTabs(StandalonePreferenceAudioTab, StandalonePreferenceMIDITab, StandalonePreferenceGeneralTab, StandalonePreferenceLibraryTab, StandalonePreferencePluginTab)
         Standalone.RegisterOverlay("Komplete Kontrol Preference Dialog", StandalonePreferenceOverlay)
@@ -246,21 +250,32 @@ Class KompleteKontrol {
     }
     
     Static GetPluginStartingPath() {
-        Try {
-            UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-            For Index, ChildElement In UIAElement.Children {
-                UIAPaths := [Index, Index . ",1"]
-                For UIAPath In UIAPaths {
-                    Try
-                    TestElement := UIAElement.ElementFromPath(UIAPath)
-                    Catch
-                    TestElement := False
-                    If TestElement And TestElement.Name = "Komplete Kontrol" And TestElement.ClassName = "ni::qt::QuickWindow"
-                    Return UIAPath
-                }
-            }
+        Static UIAPath := False
+        Try
+        UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+        Catch
+        UIAElement := False
+        If UIAElement And UIAPath And CheckPath(UIAElement, UIAPath)
+        Return UIAPath
+        If UIAElement
+        Try
+        For Index, ChildElement In UIAElement.Children {
+            UIAPaths := [Index, Index . ",1"]
+            For UIAPath In UIAPaths
+            If CheckPath(UIAElement, UIAPath)
+            Return UIAPath
         }
+        UIAPath := False
         Return ""
+        CheckPath(UIAElement, UIAPath) {
+            Try
+            TestElement := UIAElement.ElementFromPath(UIAPath)
+            Catch
+            TestElement := False
+            If TestElement And TestElement.Name = "Komplete Kontrol" And TestElement.ClassName = "ni::qt::QuickWindow"
+            Return True
+            Return False
+        }
     }
     
     Static InitConfig() {

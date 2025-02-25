@@ -19,21 +19,32 @@ Class Sforzando {
     }
     
     Static GetPluginStartingPath() {
-        Try {
-            UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-            For Index, ChildElement In UIAElement.Children {
-                UIAPaths := [Index, Index . ",1"]
-                For UIAPath In UIAPaths {
-                    Try
-                    TestElement := UIAElement.ElementFromPath(UIAPath)
-                    Catch
-                    TestElement := False
-                    If TestElement And TestElement.Name = "PlogueXMLGUI"
-                    Return UIAPath
-                }
-            }
+        Static UIAPath := False
+        Try
+        UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+        Catch
+        UIAElement := False
+        If UIAElement And UIAPath And CheckPath(UIAElement, UIAPath)
+        Return UIAPath
+        If UIAElement
+        Try
+        For Index, ChildElement In UIAElement.Children {
+            UIAPaths := [Index, Index . ",1"]
+            For UIAPath In UIAPaths
+            If CheckPath(UIAElement, UIAPath)
+            Return UIAPath
         }
+        UIAPath := False
         Return ""
+        CheckPath(UIAElement, UIAPath) {
+            Try
+            TestElement := UIAElement.ElementFromPath(UIAPath)
+            Catch
+            TestElement := False
+            If TestElement And TestElement.Name = "PlogueXMLGUI"
+            Return True
+            Return False
+        }
     }
     
     Static InitPlugin(PluginInstance) {
