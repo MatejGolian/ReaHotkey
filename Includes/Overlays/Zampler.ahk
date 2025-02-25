@@ -13,6 +13,7 @@ Class Zampler {
         MainTab.AddHotspotButton("Save bank", 352, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Load patch", 399, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Save patch", 440, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        MainTab.AddHotspotButton("SFZ/REX", 499, 244, [CompensatePluginCoordinates, ObjBindMethod(This, "GetSFZREXInstrument")],, [CompensatePluginCoordinates, ObjBindMethod(This, "GetSFZREXInstrument")])
         MainTab.AddOCRComboBox("Polyphony", "not detected", "TesseractBest", 332, 364, 348, 380,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SetPolyphony")])
         ZamplerTabControl.AddTabs(MainTab)
         ModMatrixTab := HotspotTab("Mod matrix", 415, 210, CompensatePluginCoordinates)
@@ -48,6 +49,14 @@ Class Zampler {
             Return False
         }
         Return False
+    }
+    
+    Static GetSFZREXInstrument(OverlayObj) {
+        Static InitialLabel := OverlayObj.Label
+        Result := AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(460), CompensatePluginYCoordinate(220), CompensatePluginXCoordinate(540), CompensatePluginYCoordinate(240))
+        If Not Result
+        Result := "Empty"
+        OverlayObj.Label := InitialLabel . " " . Result
     }
     
     Static SetPolyphony(OverlayObj) {
