@@ -12,6 +12,10 @@ Class Tesseract {
     Static TessDataBest := A_WorkingDir . "\Tesseract\tessdata_best"
     Static TessDataFast := A_WorkingDir . "\Tesseract\tessdata_fast"
     
+    Static __Call(X, Y, W, H, Language := "", ScaleFactor := "", Fast := 1) {
+        Return This.OCR(X, Y, W, H, Language, ScaleFactor, Fast)
+    }
+    
     Static Cleanup() {
         FileDelete This.OriginalImage
         FileDelete This.ProcessedImage
