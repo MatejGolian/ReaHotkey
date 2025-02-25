@@ -650,7 +650,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
     }
     
-    Static TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", Fast := 0) {
+    Static TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", Fast := 1) {
         If IsSet(Tesseract) {
             RectWidth := X2Coordinate - X1Coordinate
             RectHeight := Y2Coordinate - Y1Coordinate
