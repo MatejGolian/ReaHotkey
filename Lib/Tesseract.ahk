@@ -16,10 +16,10 @@ Class Tesseract {
         Return This.OCR(X, Y, W, H, Language, ScaleFactor, Fast)
     }
     
-    Static Cleanup() {
-        FileDelete This.OriginalImage
-        FileDelete This.ProcessedImage
-        FileDelete This.OCRTextFile
+    Static Cleanup(ID) {
+        FileDelete This.UniqueName(This.OriginalImage, ID)
+        FileDelete This.UniqueName(This.ProcessedImage, ID)
+        FileDelete This.UniqueName(This.OCRTextFile, ID)
     }
     
     Static Convert(Input := "", Output := "", Fast := 1) {
@@ -65,15 +65,16 @@ Class Tesseract {
     
     Static OCR(X, Y, W, H, Language := "", ScaleFactor := "", Fast := 1) {
         Fast := (Fast) ? 1 : 0
+        ID := A_TickCount
         This.Language := Language
-        Screenshot := ImagePutFile({Image: [X, Y, W, H, "A"]}, This.OriginalImage)
-        This.Preprocess(Screenshot, This.ProcessedImage, ScaleFactor)
+        Screenshot := ImagePutFile({Image: [X, Y, W, H]}, This.UniqueName(This.OriginalImage, ID))
+        This.Preprocess(Screenshot, This.UniqueName(This.ProcessedImage, ID), ScaleFactor)
         If Fast
-        This.ConvertFast(This.ProcessedImage, This.OCRTextFile)
+        This.ConvertFast(This.UniqueName(This.ProcessedImage, ID), This.UniqueName(This.OCRTextFile, ID))
         Else
-        This.ConvertBest(This.ProcessedImage, This.OCRTextFile)
-        This.OCRResult := This.GetResult(This.OCRTextFile)
-        This.Cleanup()
+        This.ConvertBest(This.UniqueName(This.ProcessedImage, ID), This.UniqueName(This.OCRTextFile, ID))
+        This.OCRResult := This.GetResult(This.UniqueName(This.OCRTextFile, ID))
+        This.Cleanup(ID)
         Return This.OCRResult
     }
     
@@ -96,6 +97,12 @@ Class Tesseract {
         If Not FileExist(Output)
         Return
         Return Output
+    }
+    
+    Static UniqueName(Name, ID) {
+        SplitPath Name,, &Dir, &Ext, &NameNoExt
+        Name := Dir . "\" . NameNoExt . ID . "." . Ext
+        Return Name
     }
     
 }
