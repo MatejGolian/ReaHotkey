@@ -397,7 +397,7 @@ Class Kontakt8 {
             Catch
             Return
             If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
-                OCRResult := AccessibilityOverlay.Ocr("Tesseract", ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
+                OCRResult := AccessibilityOverlay.Ocr("UWP", ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
                 If Not OCRResult = ""
                 SnapshotButton.Label := "Snapshot " . OcrResult
             }
