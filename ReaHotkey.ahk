@@ -3,6 +3,7 @@
 #MaxThreadsPerHotkey 1
 #SingleInstance Force
 #Warn All
+#Warn LocalSameAsGlobal, Off
 CoordMode "Caret", "Client"
 CoordMode "Menu", "Client"
 CoordMode "Mouse", "Client"
@@ -18,12 +19,14 @@ SetTitleMatchMode "RegEx"
 #Include <AccessiblePluginMenu>
 #Include <AccessibleStandaloneMenu>
 #Include <Configuration>
+#Include <ImagePut>
 #Include <JXON>
 #Include <OCR>
 #Include <Program>
 #Include <Plugin>
 #Include <ReaHotkey>
 #Include <Standalone>
+#Include <Tesseract>
 #Include <UIA>
 
 A_IconTip := "ReaHotkey"

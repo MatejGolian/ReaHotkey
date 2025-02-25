@@ -49,9 +49,9 @@ Class Sforzando {
     
     Static InitPlugin(PluginInstance) {
         PluginHeader := AccessibilityOverlay()
-        PluginHeader.AddOCRButton("Instrument", "Instrument (value not detected)", 92, 25, 332, 36,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        PluginHeader.AddOCRButton("Polyphony", "Polyphony (value not detected)", 472, 39, 532, 69,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        PluginHeader.AddOCRButton("Pitchbend range", "Pitchbend range (value not detected)", 572, 39, 602, 59,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        PluginHeader.AddOCRButton("Instrument", "Instrument (value not detected)", "Tesseract", 90, 22, 200, 36,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        PluginHeader.AddOCRButton("Polyphony", "Polyphony (value not detected)", "Tesseract", 478, 39, 512, 69,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        PluginHeader.AddOCRButton("Pitchbend range", "Pitchbend range (value not detected)", "Tesseract", 576, 39, 602, 59,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         PluginInstance.Overlay.Label := "sforzando"
         If PluginInstance.Overlay.ChildControls.Length = 0
         PluginInstance.Overlay.AddAccessibilityOverlay()
@@ -60,9 +60,9 @@ Class Sforzando {
     
     Static InitStandalone(StandaloneInstance) {
         StandaloneHeader := AccessibilityOverlay()
-        StandaloneHeader.AddOCRButton("Instrument", "Instrument (value not detected)", 92, 25, 332, 36)
-        StandaloneHeader.AddOCRButton("Polyphony", "Polyphony (value not detected)", 472, 39, 532, 69)
-        StandaloneHeader.AddOCRButton("Pitchbend range", "Pitchbend range (value not detected)", 572, 39, 602, 59)
+        StandaloneHeader.AddOCRButton("Instrument", "Instrument (value not detected)", "Tesseract", 90, 22, 200, 36)
+        StandaloneHeader.AddOCRButton("Polyphony", "Polyphony (value not detected)", "Tesseract", 478, 39, 512, 69)
+        StandaloneHeader.AddOCRButton("Pitchbend range", "Pitchbend range (value not detected)", "Tesseract", 576, 39, 602, 59)
         StandaloneInstance.Overlay.Label := "sforzando"
         If StandaloneInstance.Overlay.ChildControls.Length = 0
         StandaloneInstance.Overlay.AddAccessibilityOverlay()
