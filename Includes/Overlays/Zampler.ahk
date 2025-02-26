@@ -28,6 +28,7 @@ Class Zampler {
         ArpeggiatorTab := HotspotTab("Arpeggiator", 503, 210, CompensatePluginCoordinates)
         ArpeggiatorTab.AddOCRButton("Pattern", "Pattern not detected", "TesseractBest", 500, 224, 580, 240,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         ZamplerTabControl.AddTabs(ArpeggiatorTab)
+        ZamplerOverlay.AddOCRComboBox("Filter", "not detected", "TesseractBest", 700, 96, 756, 108,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
         
         Plugin.RegisterOverlay("Zampler", ZamplerOverlay)
     }
