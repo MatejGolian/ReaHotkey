@@ -1394,11 +1394,9 @@ Class ComboBox Extends FocusableControl {
             This.CurrentOption++
             This.Value := This.Options[This.CurrentOption]
         }
-        If Not CurrentOption = This.CurrentOption {
-            For ChangeFunction In This.ChangeFunctions
-            ChangeFunction.Call(This)
-            This.ReportValue()
-        }
+        For ChangeFunction In This.ChangeFunctions
+        ChangeFunction.Call(This)
+        This.ReportValue()
     }
     
     SelectOption(Option) {
@@ -1409,11 +1407,9 @@ Class ComboBox Extends FocusableControl {
         This.CurrentOption := Option
         If This.Options.Has(Option)
         This.Value := This.Options[Option]
-        If Not CurrentOption = This.CurrentOption {
-            For ChangeFunction In This.ChangeFunctions
-            ChangeFunction.Call(This)
-            This.ReportValue()
-        }
+        For ChangeFunction In This.ChangeFunctions
+        ChangeFunction.Call(This)
+        This.ReportValue()
     }
     
     SelectPreviousOption() {
@@ -1423,11 +1419,9 @@ Class ComboBox Extends FocusableControl {
             This.CurrentOption--
             This.Value := This.Options[This.CurrentOption]
         }
-        If Not CurrentOption = This.CurrentOption {
-            For ChangeFunction In This.ChangeFunctions
-            ChangeFunction.Call(This)
-            This.ReportValue()
-        }
+        For ChangeFunction In This.ChangeFunctions
+        ChangeFunction.Call(This)
+        This.ReportValue()
     }
     
     SetOptions(Options, DefaultOption := 1) {

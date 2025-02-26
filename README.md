@@ -40,6 +40,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - Only works inside REAPER.
 * Makes it possible to load instruments, set polyphony and pitchbend range in Plogue sforzando.
   - Works both inside REAPER and in the standalone version of sforzando.
+* Makes it possible to use the Zampler plug-in by Synapse Audio in REAPER
 
 ## General Notes
 

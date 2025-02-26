@@ -13,14 +13,15 @@ Class Zampler {
         MainTab.AddHotspotButton("Save bank", 352, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Load patch", 399, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Save patch", 440, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        MainTab.AddHotspotButton("SFZ/REX", 499, 244, [CompensatePluginCoordinates, ObjBindMethod(This, "GetSFZREXInstrument")],, [CompensatePluginCoordinates, ObjBindMethod(This, "GetSFZREXInstrument")])
+        MainTab.AddHotspotButton("SFZ/REX", 499, 244, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetSFZREXInstrument")],, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel")])
         MainTab.AddOCRComboBox("Polyphony", "not detected", "TesseractBest", 332, 364, 348, 380,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
         MainTab.AddOCRComboBox("Bend up", "not detected", "TesseractBest", 337, 392, 369, 408,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
         MainTab.AddOCRComboBox("Bend down", "not detected", "TesseractBest", 428, 392, 460, 408,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
         ZamplerTabControl.AddTabs(MainTab)
         ModMatrixTab := HotspotTab("Mod matrix", 415, 210, CompensatePluginCoordinates)
-        ModMatrixTab.AddHotspotButton("SOURCE", 344, 246, [CompensatePluginCoordinates, ObjBindMethod(This, "GetModSource")],, [CompensatePluginCoordinates, ObjBindMethod(This, "GetModSource")])
-        ModMatrixTab.AddHotspotButton("DESTINATION", 503, 246, [CompensatePluginCoordinates, ObjBindMethod(This, "GetModDestination")],, [CompensatePluginCoordinates, ObjBindMethod(This, "GetModDestination")])
+        ModMatrixTab.AddHotspotButton("SOURCE", 344, 246, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetModSource")],, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel")])
+        ModMatrixTab.AddOCRComboBox("AMOUNT", "not detected", "TesseractBest", 400, 240, 440, 260,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
+        ModMatrixTab.AddHotspotButton("DESTINATION", 503, 246, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetModDestination")],, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel")])
         ZamplerTabControl.AddTabs(ModMatrixTab)
         ArpeggiatorTab := HotspotTab("Arpeggiator", 503, 210, CompensatePluginCoordinates)
         ArpeggiatorTab.AddOCRButton("Pattern", "Pattern not detected", "TesseractBest", 500, 224, 580, 240,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
@@ -73,10 +74,17 @@ Class Zampler {
     
     Static GetSFZREXInstrument(OverlayObj) {
         Static InitialLabel := OverlayObj.Label
-        Result := AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(460), CompensatePluginYCoordinate(220), CompensatePluginXCoordinate(540), CompensatePluginYCoordinate(240))
+        Result := AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(436), CompensatePluginYCoordinate(226), CompensatePluginXCoordinate(636), CompensatePluginYCoordinate(236))
         If Not Result
         Result := "Empty"
         OverlayObj.Label := InitialLabel . " " . Result
+    }
+    
+    Static ResetLabel(OverlayObj) {
+        Static InitialLabels := Map()
+        If Not InitialLabels.Has(OverlayObj.ControlID)
+        InitialLabels.Set(OverlayObj.ControlID, OverlayObj.Label)
+        OverlayObj.Label := InitialLabels[OverlayObj.ControlID]
     }
     
     Static SendWheel(OverlayObj) {
