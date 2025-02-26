@@ -897,12 +897,16 @@ Class ActivatableControl Extends FocusableControl {
 
 Class FocusableCustom Extends FocusableControl {
     
+    ControlType := "Custom"
+    
     SpeakOnFocus(*) {
     }
     
 }
 
 Class ActivatableCustom Extends ActivatableControl {
+    
+    ControlType := "Custom"
     
     SpeakOnActivation(*) {
     }

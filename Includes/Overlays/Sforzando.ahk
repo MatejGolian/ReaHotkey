@@ -49,9 +49,9 @@ Class Sforzando {
     
     Static InitPlugin(PluginInstance) {
         PluginHeader := AccessibilityOverlay()
-        PluginHeader.AddOCRButton("Instrument", "Instrument (value not detected)", "UWP", 92, 25, 332, 36,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        PluginHeader.AddOCRButton("Polyphony", "Polyphony (value not detected)", "UWP", 472, 39, 532, 69,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        PluginHeader.AddOCRButton("Pitchbend range", "Pitchbend range (value not detected)", "UWP", 572, 39, 602, 59,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        PluginHeader.AddOCRButton("Instrument", "Instrument not detected", "UWP", 92, 25, 332, 36,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        PluginHeader.AddOCRButton("Polyphony", "Polyphony not detected", "UWP", 472, 39, 532, 69,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        PluginHeader.AddOCRButton("Pitchbend range", "Pitchbend range not detected", "UWP", 572, 39, 602, 59,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         PluginInstance.Overlay.Label := "sforzando"
         If PluginInstance.Overlay.ChildControls.Length = 0
         PluginInstance.Overlay.AddAccessibilityOverlay()
@@ -60,9 +60,9 @@ Class Sforzando {
     
     Static InitStandalone(StandaloneInstance) {
         StandaloneHeader := AccessibilityOverlay()
-        StandaloneHeader.AddOCRButton("Instrument", "Instrument (value not detected)", "UWP", 92, 25, 332, 36)
-        StandaloneHeader.AddOCRButton("Polyphony", "Polyphony (value not detected)", "UWP", 472, 39, 532, 69)
-        StandaloneHeader.AddOCRButton("Pitchbend range", "Pitchbend range (value not detected)", "UWP", 572, 39, 602, 59)
+        StandaloneHeader.AddOCRButton("Instrument", "Instrument not detected", "UWP", 92, 25, 332, 36)
+        StandaloneHeader.AddOCRButton("Polyphony", "Polyphony not detected", "UWP", 472, 39, 532, 69)
+        StandaloneHeader.AddOCRButton("Pitchbend range", "Pitchbend range not detected", "UWP", 572, 39, 602, 59)
         StandaloneInstance.Overlay.Label := "sforzando"
         If StandaloneInstance.Overlay.ChildControls.Length = 0
         StandaloneInstance.Overlay.AddAccessibilityOverlay()

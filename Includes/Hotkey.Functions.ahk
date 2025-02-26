@@ -98,6 +98,8 @@ LeftRightHK(ThisHotkey) {
     ReaHotkey.Found%ReaHotkey.Context% := False
     If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
         Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
+            Case "Custom":
+            ReaHotkey.Found%ReaHotkey.Context%.Overlay.Focus(False)
             Case "Edit":
             ReaHotkey.PassThroughHotkey(ThisHotkey)
             Case "Slider":
@@ -131,6 +133,8 @@ UpDownHK(ThisHotkey) {
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.SelectPreviousOption()
             Else
             ReaHotkey.Found%ReaHotkey.Context%.Overlay.SelectNextOption()
+            Case "Custom":
+            ReaHotkey.Found%ReaHotkey.Context%.Overlay.Focus(False)
             Case "Edit":
             ReaHotkey.PassThroughHotkey(ThisHotkey)
             Case "Slider":
