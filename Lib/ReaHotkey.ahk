@@ -77,11 +77,8 @@ Class ReaHotkey {
                     Break
                     If SuperordinateControl Is TabControl {
                         Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
-                        If SuperordinateControl.CurrentTab < SuperordinateControl.Tabs.Length
-                        SuperordinateControl.CurrentTab++
-                        Else
-                        SuperordinateControl.CurrentTab := 1
-                        SuperordinateControl.Focus()
+                        Overlay.FocusControl(SuperordinateControl.ControlID)
+                        Overlay.FocusNextTab()
                         Break
                     }
                     SuperordinateControl := SuperordinateControl.GetSuperordinateControl()
@@ -118,11 +115,8 @@ Class ReaHotkey {
                     Break
                     If SuperordinateControl Is TabControl {
                         Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
-                        If SuperordinateControl.CurrentTab <= 1
-                        SuperordinateControl.CurrentTab := SuperordinateControl.Tabs.Length
-                        Else
-                        SuperordinateControl.CurrentTab--
-                        SuperordinateControl.Focus()
+                        Overlay.FocusControl(SuperordinateControl.ControlID)
+                        Overlay.FocusPreviousTab()
                         Break
                     }
                     SuperordinateControl := SuperordinateControl.GetSuperordinateControl()
