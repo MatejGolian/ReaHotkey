@@ -3,7 +3,7 @@
 Class Tesseract {
     
     Static language := ""
-    Static LeptonicaExe := A_WorkingDir . "\Leptonica_Util\leptonica_util.exe"
+    Static LeptonicaExe := A_WorkingDir . "\Tesseract\leptonica_util.exe"
     Static OCRResult := ""
     Static OCRTextFile := A_Temp . "\TesseractResult.txt"
     Static ProcessedImage := A_Temp . "\TesseractProcessed.tif"
