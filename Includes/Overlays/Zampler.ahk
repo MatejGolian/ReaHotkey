@@ -102,7 +102,7 @@ Class Zampler {
         Static InitialLabel := OverlayObj.Label
         Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(466), CompensatePluginYCoordinate(240), CompensatePluginXCoordinate(536), CompensatePluginYCoordinate(260)))
         If Not Result
-        Result := "Empty"
+        Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
     }
     
@@ -110,7 +110,7 @@ Class Zampler {
         Static InitialLabel := OverlayObj.Label
         Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(310), CompensatePluginYCoordinate(240), CompensatePluginXCoordinate(370), CompensatePluginYCoordinate(260)))
         If Not Result
-        Result := "Empty"
+        Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
     }
     
@@ -118,7 +118,7 @@ Class Zampler {
         Static InitialLabel := OverlayObj.Label
         Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(436), CompensatePluginYCoordinate(226), CompensatePluginXCoordinate(636), CompensatePluginYCoordinate(236)))
         If Not Result
-        Result := "Empty"
+        Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
     }
     
