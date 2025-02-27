@@ -1599,6 +1599,22 @@ Class TabControl Extends FocusableControl {
         Return This.Tabs.Get(This.CurrentTab, 0)
     }
     
+    GetNextTab() {
+        If This.CurrentTab < This.Tabs.Length
+        TabNumber := This.CurrentTab + 1
+        Else
+        TabNumber := 1
+        Return This.Tabs.Get(TabNumber, 0)
+    }
+    
+    GetPreviousTab() {
+        If This.CurrentTab <= 1
+        TabNumber := This.Tabs.Length
+        Else
+        TabNumber := This.CurrentTab - 1
+        Return This.Tabs.Get(TabNumber, 0)
+    }
+    
     GetTab(TabNumber) {
         Return This.Tabs.Get(TabNumber, 0)
     }

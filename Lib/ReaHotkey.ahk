@@ -67,21 +67,24 @@ Class ReaHotkey {
     Static FocusNextTab(Overlay) {
         If Overlay Is AccessibilityOverlay And Overlay.ChildControls.Length > 0 {
             CurrentControl := Overlay.GetCurrentControl()
-            If CurrentControl Is TabControl
-            Overlay.FocusNextTab()
-            Else
-            If CurrentControl Is Object {
-                SuperordinateControl := CurrentControl.GetSuperordinateControl()
+            If CurrentControl Is TabControl {
+                Sleep 200
+                Overlay.FocusNextTab()
+            }
+            Else {
+                If CurrentControl Is Object
                 Loop AccessibilityOverlay.TotalNumberOfControls {
+                    SuperordinateControl := CurrentControl.GetSuperordinateControl()
                     If SuperordinateControl = 0
                     Break
                     If SuperordinateControl Is TabControl {
                         Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
                         Overlay.FocusControl(SuperordinateControl.ControlID)
+                        Sleep 200
                         Overlay.FocusNextTab()
                         Break
                     }
-                    SuperordinateControl := SuperordinateControl.GetSuperordinateControl()
+                    CurrentControl := SuperordinateControl
                 }
             }
         }
@@ -105,21 +108,24 @@ Class ReaHotkey {
     Static FocusPreviousTab(Overlay) {
         If Overlay Is AccessibilityOverlay And Overlay.ChildControls.Length > 0 {
             CurrentControl := Overlay.GetCurrentControl()
-            If CurrentControl Is TabControl
-            Overlay.FocusPreviousTab()
-            Else
-            If CurrentControl Is Object {
-                SuperordinateControl := CurrentControl.GetSuperordinateControl()
+            If CurrentControl Is TabControl {
+                Sleep 200
+                Overlay.FocusPreviousTab()
+            }
+            Else {
+                If CurrentControl Is Object
                 Loop AccessibilityOverlay.TotalNumberOfControls {
+                    SuperordinateControl := CurrentControl.GetSuperordinateControl()
                     If SuperordinateControl = 0
                     Break
                     If SuperordinateControl Is TabControl {
                         Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
                         Overlay.FocusControl(SuperordinateControl.ControlID)
+                        Sleep 200
                         Overlay.FocusPreviousTab()
                         Break
                     }
-                    SuperordinateControl := SuperordinateControl.GetSuperordinateControl()
+                    CurrentControl := SuperordinateControl
                 }
             }
         }

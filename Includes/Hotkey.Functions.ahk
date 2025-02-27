@@ -36,9 +36,8 @@ TabHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
-        ReaHotkey.Found%ReaHotkey.Context%.Overlay.FocusNextControl()
-    }
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context%
+    ReaHotkey.Found%ReaHotkey.Context%.Overlay.FocusNextControl()
 }
 
 ShiftTabHK(ThisHotkey) {
@@ -51,9 +50,8 @@ ShiftTabHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
-        ReaHotkey.Found%ReaHotkey.Context%.Overlay.FocusPreviousControl()
-    }
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context%
+    ReaHotkey.Found%ReaHotkey.Context%.Overlay.FocusPreviousControl()
 }
 
 ControlTabHK(ThisHotkey) {
@@ -66,9 +64,8 @@ ControlTabHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
-        ReaHotkey.FocusNextTab(ReaHotkey.Found%ReaHotkey.Context%.Overlay)
-    }
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context%
+    ReaHotkey.FocusNextTab(ReaHotkey.Found%ReaHotkey.Context%.Overlay)
 }
 
 ControlShiftTabHK(ThisHotkey) {
@@ -81,9 +78,8 @@ ControlShiftTabHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
-        ReaHotkey.FocusPreviousTab(ReaHotkey.Found%ReaHotkey.Context%.Overlay)
-    }
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context%
+    ReaHotkey.FocusPreviousTab(ReaHotkey.Found%ReaHotkey.Context%.Overlay)
 }
 
 LeftRightHK(ThisHotkey) {
@@ -96,23 +92,22 @@ LeftRightHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
-        Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
-            Case "Custom":
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.Focus(False)
-            Case "Edit":
-            ReaHotkey.PassThroughHotkey(ThisHotkey)
-            Case "Slider":
-            If ThisHotkey = "Left"
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.DecreaseSlider()
-            Else
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.IncreaseSlider()
-            Case "TabControl":
-            If ThisHotkey = "Left"
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.FocusPreviousTab()
-            Else
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.FocusNextTab()
-        }
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context%
+    Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
+        Case "Custom":
+        ReaHotkey.Found%ReaHotkey.Context%.Overlay.Focus(False)
+        Case "Edit":
+        ReaHotkey.PassThroughHotkey(ThisHotkey)
+        Case "Slider":
+        If ThisHotkey = "Left"
+        ReaHotkey.Found%ReaHotkey.Context%.Overlay.DecreaseSlider()
+        Else
+        ReaHotkey.Found%ReaHotkey.Context%.Overlay.IncreaseSlider()
+        Case "TabControl":
+        If ThisHotkey = "Left"
+        ReaHotkey.Found%ReaHotkey.Context%.Overlay.FocusPreviousTab()
+        Else
+        ReaHotkey.Found%ReaHotkey.Context%.Overlay.FocusNextTab()
     }
 }
 
@@ -126,23 +121,22 @@ UpDownHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
-        Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
-            Case "ComboBox":
-            If ThisHotkey = "Up"
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.SelectPreviousOption()
-            Else
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.SelectNextOption()
-            Case "Custom":
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.Focus(False)
-            Case "Edit":
-            ReaHotkey.PassThroughHotkey(ThisHotkey)
-            Case "Slider":
-            If ThisHotkey = "Down"
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.DecreaseSlider()
-            Else
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.IncreaseSlider()
-        }
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context%
+    Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
+        Case "ComboBox":
+        If ThisHotkey = "Up"
+        ReaHotkey.Found%ReaHotkey.Context%.Overlay.SelectPreviousOption()
+        Else
+        ReaHotkey.Found%ReaHotkey.Context%.Overlay.SelectNextOption()
+        Case "Custom":
+        ReaHotkey.Found%ReaHotkey.Context%.Overlay.Focus(False)
+        Case "Edit":
+        ReaHotkey.PassThroughHotkey(ThisHotkey)
+        Case "Slider":
+        If ThisHotkey = "Down"
+        ReaHotkey.Found%ReaHotkey.Context%.Overlay.DecreaseSlider()
+        Else
+        ReaHotkey.Found%ReaHotkey.Context%.Overlay.IncreaseSlider()
     }
 }
 
@@ -156,15 +150,14 @@ EnterSpaceHK(ThisHotkey) {
     ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
-    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context% {
-        Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
-            Case "Edit":
-            ReaHotkey.PassThroughHotkey(ThisHotkey)
-            Case "Focusable":
-            ReaHotkey.PassThroughHotkey(ThisHotkey)
-            Default:
-            ReaHotkey.Found%ReaHotkey.Context%.Overlay.ActivateCurrentControl()
-        }
+    If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context%
+    Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
+        Case "Edit":
+        ReaHotkey.PassThroughHotkey(ThisHotkey)
+        Case "Focusable":
+        ReaHotkey.PassThroughHotkey(ThisHotkey)
+        Default:
+        ReaHotkey.Found%ReaHotkey.Context%.Overlay.ActivateCurrentControl()
     }
 }
 

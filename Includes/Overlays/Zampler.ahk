@@ -28,7 +28,6 @@ Class Zampler {
         ArpeggiatorTab := HotspotTab("Arpeggiator", 503, 210, CompensatePluginCoordinates)
         ArpeggiatorTab.AddOCRButton("Pattern", "Pattern not detected", "TesseractBest", 500, 224, 580, 240,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         ZamplerTabControl.AddTabs(ArpeggiatorTab)
-        ZamplerOverlay.AddOCRComboBox("Filter", "not detected", "TesseractBest", 700, 96, 756, 108,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
         
         Plugin.RegisterOverlay("Zampler", ZamplerOverlay)
     }
@@ -59,6 +58,14 @@ Class Zampler {
             Return False
         }
         Return False
+    }
+    
+    Static GetFilter(OverlayObj) {
+        Static InitialLabel := OverlayObj.Label
+        Result := AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(700), CompensatePluginYCoordinate(96), CompensatePluginXCoordinate(756), CompensatePluginYCoordinate(108))
+        If Not Result
+        Result := "not detected"
+        OverlayObj.Label := InitialLabel . " " . Result
     }
     
     Static GetModDestination(OverlayObj) {
