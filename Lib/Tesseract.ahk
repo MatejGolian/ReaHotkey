@@ -11,9 +11,10 @@ Class Tesseract {
     Static TesseractExe := A_WorkingDir . "\Tesseract\tesseract.exe"
     Static TessDataBest := A_WorkingDir . "\Tesseract\tessdata_best"
     Static TessDataFast := A_WorkingDir . "\Tesseract\tessdata_fast"
+    Static TessDataLegacy := A_WorkingDir . "\Tesseract\tessdata"
     
-    Static __Call(X, Y, W, H, Language := "", ScaleFactor := "", Fast := 1) {
-        Return This.OCR(X, Y, W, H, Language, ScaleFactor, Fast)
+    Static __Call(X, Y, W, H, Language := "", ScaleFactor := "", Type := "") {
+        Return This.OCR(X, Y, W, H, Language, ScaleFactor, Type)
     }
     
     Static Cleanup(ScreenshotImage, ProcessedImage, OCRTextFile) {
@@ -25,16 +26,23 @@ Class Tesseract {
         FileDelete OCRTextFile
     }
     
-    Static Convert(Input := "", Output := "", Fast := 1) {
+    Static Convert(Input := "", Output := "", Type := "") {
         Input := (Input) ? Input : This.ProcessedImage
         Output := (Output) ? Output : This.OCRTextFile
-        Fast := (Fast) ? This.TessDataFast : This.TessDataBest
+        If Type = 1
+        Type := This.TessDataBest
+        Else If Type = 2
+        Type := This.TessDataFast
+        Else If Type = 3
+        Type := This.TessDataLegacy
+        Else
+        Type := This.TessDataFast
         If Not FileExist(Input)
         Return
         If Not FileExist(This.TesseractExe)
         Return
         Static Quote := Chr(0x22)
-        Command := Quote . This.TesseractExe . Quote . " --tessdata-dir " . Quote . Fast . Quote . " " . Quote . Input . Quote . " " . Quote . SubStr(Output, 1, -4) . Quote
+        Command := Quote . This.TesseractExe . Quote . " --tessdata-dir " . Quote . Type . Quote . " " . Quote . Input . Quote . " " . Quote . SubStr(Output, 1, -4) . Quote
         Command .= (This.Language) ? " -l " . Quote . This.Language . Quote : ""
         Command := A_ComSpec . " /C " . Quote . Command . Quote
         RunWait Command,, "Hide"
@@ -44,15 +52,19 @@ Class Tesseract {
     }
     
     Static ConvertBest(Input :="", Output := "") {
-        Return This.Convert(Input, Output, 0)
-    }
-    
-    Static ConvertFast(Input := "", Output := "") {
         Return This.Convert(Input, Output, 1)
     }
     
-    Static FromRect(X, Y, W, H, Language := "", ScaleFactor := "", Fast := 1) {
-        Return This.OCR(X, Y, W, H, Language, ScaleFactor, Fast)
+    Static ConvertFast(Input := "", Output := "") {
+        Return This.Convert(Input, Output, 2)
+    }
+    
+    Static ConvertLegacy(Input :="", Output := "") {
+        Return This.Convert(Input, Output, 3)
+    }
+    
+    Static FromRect(X, Y, W, H, Language := "", ScaleFactor := "", Type := "") {
+        Return This.OCR(X, Y, W, H, Language, ScaleFactor, Type)
     }
     
     Static GetResult(Input := "") {
@@ -65,21 +77,17 @@ Class Tesseract {
         Output := StrReplace(Output, Chr(0xc), "")
         Output := Trim(Output)
         Return Output
-    }
+        }
     
-    Static OCR(X, Y, W, H, Language := "", ScaleFactor := "", Fast := 1) {
-        Fast := (Fast) ? 1 : 0
+    Static OCR(X, Y, W, H, Language := "", ScaleFactor := "", Type := "") {
+        This.Language := (Language) ? Language : "eng"
         ID := A_TickCount
-        This.Language := Language
         ScreenshotImage := This.UniqueName(This.ScreenshotImage, ID)
         ProcessedImage := This.UniqueName(This.ProcessedImage, ID)
         OCRTextFile := This.UniqueName(This.OCRTextFile, ID)
         ScreenshotImage := ImagePutFile({Image: [X, Y, W, H]}, ScreenshotImage)
         This.Preprocess(ScreenshotImage, ProcessedImage, ScaleFactor)
-        If Fast
-        This.ConvertFast(ProcessedImage, OCRTextFile)
-        Else
-        This.ConvertBest(ProcessedImage, OCRTextFile)
+        This.Convert(ProcessedImage, OCRTextFile, Type)
         This.OCRResult := This.GetResult(OCRTextFile)
         This.Cleanup(ScreenshotImage, ProcessedImage, OCRTextFile)
         Return This.OCRResult
