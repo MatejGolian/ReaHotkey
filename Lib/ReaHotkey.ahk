@@ -65,29 +65,7 @@ Class ReaHotkey {
     }
     
     Static FocusNextTab(Overlay) {
-        If Overlay Is AccessibilityOverlay And Overlay.ChildControls.Length > 0 {
-            CurrentControl := Overlay.GetCurrentControl()
-            If CurrentControl Is TabControl {
-                Sleep 200
-                Overlay.FocusNextTab()
-            }
-            Else {
-                If CurrentControl Is Object
-                Loop AccessibilityOverlay.TotalNumberOfControls {
-                    SuperordinateControl := CurrentControl.GetSuperordinateControl()
-                    If SuperordinateControl = 0
-                    Break
-                    If SuperordinateControl Is TabControl {
-                        Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
-                        Overlay.FocusControl(SuperordinateControl.ControlID)
-                        Sleep 200
-                        Overlay.FocusNextTab()
-                        Break
-                    }
-                    CurrentControl := SuperordinateControl
-                }
-            }
-        }
+        ReaHotkey.FocusTab("Next", Overlay)
     }
     
     Static FocusPluginOverlay() {
@@ -106,11 +84,23 @@ Class ReaHotkey {
     }
     
     Static FocusPreviousTab(Overlay) {
+        ReaHotkey.FocusTab("Previous", Overlay)
+    }
+    
+    Static FocusStandaloneOverlay() {
+        If ReaHotkey.FoundStandalone Is Standalone And ReaHotkey.FoundStandalone.NoHotkeys = False {
+            ReaHotkey.Wait(500)
+            If ReaHotkey.FoundStandalone Is Standalone
+            ReaHotkey.FoundStandalone.Overlay.Focus()
+        }
+    }
+    
+    Static FocusTab(Which, Overlay) {
         If Overlay Is AccessibilityOverlay And Overlay.ChildControls.Length > 0 {
             CurrentControl := Overlay.GetCurrentControl()
             If CurrentControl Is TabControl {
                 Sleep 200
-                Overlay.FocusPreviousTab()
+                Overlay.Focus%Which%Tab()
             }
             Else {
                 If CurrentControl Is Object
@@ -122,20 +112,12 @@ Class ReaHotkey {
                         Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
                         Overlay.FocusControl(SuperordinateControl.ControlID)
                         Sleep 200
-                        Overlay.FocusPreviousTab()
+                        Overlay.Focus%Which%Tab()
                         Break
                     }
                     CurrentControl := SuperordinateControl
                 }
             }
-        }
-    }
-    
-    Static FocusStandaloneOverlay() {
-        If ReaHotkey.FoundStandalone Is Standalone And ReaHotkey.FoundStandalone.NoHotkeys = False {
-            ReaHotkey.Wait(500)
-            If ReaHotkey.FoundStandalone Is Standalone
-            ReaHotkey.FoundStandalone.Overlay.Focus()
         }
     }
     

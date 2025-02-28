@@ -17,8 +17,11 @@ Class Tesseract {
     }
     
     Static Cleanup(ScreenshotImage, ProcessedImage, OCRTextFile) {
+        If FileExist(ScreenshotImage)
         FileDelete ScreenshotImage
+        If FileExist(ProcessedImage)
         FileDelete ProcessedImage
+        If FileExist(OCRTextFile)
         FileDelete OCRTextFile
     }
     
@@ -70,8 +73,8 @@ Class Tesseract {
         ScreenshotImage := This.UniqueName(This.ScreenshotImage, ID)
         ProcessedImage := This.UniqueName(This.ProcessedImage, ID)
         OCRTextFile := This.UniqueName(This.OCRTextFile, ID)
-        Screenshot := ImagePutFile({Image: [X, Y, W, H]}, ScreenshotImage)
-        This.Preprocess(Screenshot, ProcessedImage, ScaleFactor)
+        ScreenshotImage := ImagePutFile({Image: [X, Y, W, H]}, ScreenshotImage)
+        This.Preprocess(ScreenshotImage, ProcessedImage, ScaleFactor)
         If Fast
         This.ConvertFast(ProcessedImage, OCRTextFile)
         Else

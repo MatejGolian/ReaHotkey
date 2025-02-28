@@ -41,7 +41,7 @@ jobs:
         run: |
           xcopy Images build\Images /I /S
           xcopy Sounds build\Sounds /I
-              xcopy Tesseract build\Tesseract /I /S
+          xcopy Tesseract build\Tesseract /I /S
           xcopy bassasio32.dll build
           xcopy bassasio64.dll build
           xcopy nvdaControllerClient32.dll build
