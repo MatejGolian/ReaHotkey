@@ -615,10 +615,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     Static OCR(OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "") {
-        If OCRType = "Tesseract" Or OCRType = "TesseractFast"
-        Return AccessibilityOverlay.TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 1)
-        Else If OCRType = "TesseractBest"
-        Return AccessibilityOverlay.TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 0)
+        If OCRType = "Tesseract"
+        Return AccessibilityOverlay.TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale)
         Else
         Return AccessibilityOverlay.UWPOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale)
     }
@@ -650,7 +648,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
     }
     
-    Static TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", Fast := 1) {
+    Static TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "") {
         If IsSet(Tesseract) {
             Try {
                 If A_CoordModeMouse := "Client"
@@ -668,7 +666,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Y2Coordinate := WinY + Y2Coordinate
             RectWidth := X2Coordinate - X1Coordinate
             RectHeight := Y2Coordinate - Y1Coordinate
-            Return Tesseract.FromRect(X1Coordinate, Y1Coordinate, RectWidth, RectHeight, OCRLanguage, OCRScale, Fast)
+            Return Tesseract.FromRect(X1Coordinate, Y1Coordinate, RectWidth, RectHeight, OCRLanguage, OCRScale)
         }
         Return ""
     }
