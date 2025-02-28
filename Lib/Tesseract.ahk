@@ -61,6 +61,7 @@ Class Tesseract {
         Return
         Output := FileRead(Input)
         Output := StrReplace(Output, "`n", " ")
+        Output := StrReplace(Output, Chr(0x7c), "")
         Output := StrReplace(Output, Chr(0xc), "")
         Output := Trim(Output)
         Return Output
