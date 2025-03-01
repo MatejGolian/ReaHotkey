@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.4] - 2025-03-01
+
 ### Changed
 
 -   Improved Zampler and Tesseract OCR
@@ -221,7 +223,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.3...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.4...HEAD
+
+[0.5.4]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.3...0.5.4
 
 [0.5.3]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.2...0.5.3
 
