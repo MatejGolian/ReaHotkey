@@ -3,15 +3,19 @@
 Class Tesseract {
     
     Static language := ""
-    Static LeptonicaExe := A_WorkingDir . "\Tesseract\leptonica_util.exe"
+    Static LeptonicaExe := A_WorkingDir . "\Leptonica\leptonica_util.exe"
     Static OCRResult := ""
     Static OCRTextFile := A_Temp . "\TesseractResult.txt"
     Static ProcessedImage := A_Temp . "\TesseractProcessed.tif"
     Static ScreenshotImage := A_Temp . "\TesseractScreenshot.bmp"
-    Static TesseractExe := A_WorkingDir . "\Tesseract\tesseract.exe"
-    Static TessDataBest := A_WorkingDir . "\Tesseract\tessdata_best"
-    Static TessDataFast := A_WorkingDir . "\Tesseract\tessdata_fast"
-    Static TessDataLegacy := A_WorkingDir . "\Tesseract\tessdata"
+    Static TesseractExe32 := A_WorkingDir . "\Tesseract32\tesseract.exe"
+    Static TesseractExe64 := A_WorkingDir . "\Tesseract64\tesseract.exe"
+    Static TessDataBest32 := A_WorkingDir . "\Tesseract32\tessdata_best"
+    Static TessDataBest64 := A_WorkingDir . "\Tesseract64\tessdata_best"
+    Static TessDataFast32 := A_WorkingDir . "\Tesseract32\tessdata_fast"
+    Static TessDataFast64 := A_WorkingDir . "\Tesseract64\tessdata_fast"
+    Static TessDataLegacy32 := A_WorkingDir . "\Tesseract32\tessdata"
+    Static TessDataLegacy64 := A_WorkingDir . "\Tesseract64\tessdata"
     
     Static __Call(X, Y, W, H, Language := "", ScaleFactor := "", Type := "") {
         Return This.OCR(X, Y, W, H, Language, ScaleFactor, Type)
@@ -29,20 +33,30 @@ Class Tesseract {
     Static Convert(Input := "", Output := "", Type := "") {
         Input := (Input) ? Input : This.ProcessedImage
         Output := (Output) ? Output : This.OCRTextFile
-        If Type = 1
-        Type := This.TessDataBest
-        Else If Type = 2
-        Type := This.TessDataFast
-        Else If Type = 3
-        Type := This.TessDataLegacy
-        Else
-        Type := This.TessDataFast
+        TesseractExe := "TesseractExe" . A_PtrSize * 8
+        TesseractExe := This.%TesseractExe%
+        If Type = 1 {
+            Type := "TessDataBest" . A_PtrSize * 8
+            Type := This.%Type%
+        }
+        Else If Type = 2 {
+            Type := "TessDataFast" . A_PtrSize * 8
+            Type := This.%Type%
+        }
+        Else If Type = 3 {
+            Type := "TessDataLegacy" . A_PtrSize * 8
+            Type := This.%Type%
+        }
+        Else {
+            Type := "TessDataFast" . A_PtrSize * 8
+            Type := This.%Type%
+        }
+        If Not FileExist(TesseractExe)
+        Return
         If Not FileExist(Input)
         Return
-        If Not FileExist(This.TesseractExe)
-        Return
         Static Quote := Chr(0x22)
-        Command := Quote . This.TesseractExe . Quote . " --tessdata-dir " . Quote . Type . Quote . " " . Quote . Input . Quote . " " . Quote . SubStr(Output, 1, -4) . Quote
+        Command := Quote . TesseractExe . Quote . " --tessdata-dir " . Quote . Type . Quote . " " . Quote . Input . Quote . " " . Quote . SubStr(Output, 1, -4) . Quote
         Command .= (This.Language) ? " -l " . Quote . This.Language . Quote : ""
         Command := A_ComSpec . " /C " . Quote . Command . Quote
         RunWait Command,, "Hide"
@@ -65,7 +79,7 @@ Class Tesseract {
         Output := StrReplace(Output, Chr(0xc), "")
         Output := Trim(Output)
         Return Output
-        }
+    }
     
     Static OCR(X, Y, W, H, Language := "", ScaleFactor := "", Type := "") {
         This.Language := (Language) ? Language : "eng"
