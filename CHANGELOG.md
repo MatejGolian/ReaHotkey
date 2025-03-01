@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+-   Use newer Tesseract build
 -   Small code updates
 
 ## [0.5.3] - 2025-02-28
