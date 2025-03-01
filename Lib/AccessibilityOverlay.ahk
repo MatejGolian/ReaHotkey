@@ -670,7 +670,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Y2Coordinate := WinY + Y2Coordinate
             RectWidth := X2Coordinate - X1Coordinate
             RectHeight := Y2Coordinate - Y1Coordinate
-            Return Tesseract.FromRect(X1Coordinate, Y1Coordinate, RectWidth, RectHeight, OCRLanguage, OCRScale, OCRType)
+            Return Trim(Tesseract.FromRect(X1Coordinate, Y1Coordinate, RectWidth, RectHeight, OCRLanguage, OCRScale, OCRType))
         }
         Return ""
     }
@@ -697,12 +697,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 OCRScale := 1
                 OCRResult := OCR.FromWindow("A", FirstAvailableLanguage, OCRScale, ClientOnly)
                 OCRResult := OCRResult.Crop(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate)
-                Return OCRResult.Text
+                Return Trim(OCRResult.Text)
             }
             Else If PreferredLanguage = OCRLanguage{
                 OCRResult := OCR.FromWindow("A", PreferredLanguage, OCRScale, ClientOnly)
                 OCRResult := OCRResult.Crop(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate)
-                Return OCRResult.Text
+                Return Trim(OCRResult.Text)
             }
             Else {
                 Return ""
@@ -762,6 +762,8 @@ Class FocusableControl Extends AccessibilityControl {
         FocusFunction.Call(This)
         This.CheckFocus()
         If This.HasFocus() {
+            If This.HasMethod("GetValue")
+            This.GetValue()
             If This.HasMethod("ExecuteOnFocusPreSpeech")
             This.ExecuteOnFocusPreSpeech()
             This.CheckState()
@@ -778,6 +780,8 @@ Class FocusableControl Extends AccessibilityControl {
     }
     
     GetValue() {
+        Value := This.Value
+        This.Value := Value
         Return This.Value
     }
     
@@ -786,8 +790,7 @@ Class FocusableControl Extends AccessibilityControl {
     }
     
     ReportValue() {
-        This.Value := This.GetValue()
-        If This.Value
+        If Not This.Value = ""
         AccessibilityOverlay.Speak(This.Value)
         Else
         AccessibilityOverlay.Speak(This.DefaultValue)
@@ -815,7 +818,7 @@ Class FocusableControl Extends AccessibilityControl {
         LabelString := This.Label
         If LabelString = ""
         LabelString := This.DefaultLabel
-        ValueString := This.GetValue()
+        ValueString := This.Value
         If ValueString = ""
         ValueString := This.DefaultValue
         StateString := ""
@@ -880,7 +883,7 @@ Class ActivatableControl Extends FocusableControl {
         LabelString := This.Label
         If LabelString = ""
         LabelString := This.DefaultLabel
-        ValueString := This.GetValue()
+        ValueString := This.Value
         If ValueString = ""
         ValueString := This.DefaultValue
         StateString := ""
@@ -1047,7 +1050,7 @@ Class ActivatableGraphic Extends FocusableGraphic {
         LabelString := This.Label
         If LabelString = ""
         LabelString := This.DefaultLabel
-        ValueString := This.GetValue()
+        ValueString := This.Value
         If ValueString = ""
         ValueString := This.DefaultValue
         StateString := ""
@@ -1176,7 +1179,7 @@ Class ActivatableNative Extends FocusableNative {
         LabelString := This.Label
         If LabelString = ""
         LabelString := This.DefaultLabel
-        ValueString := This.GetValue()
+        ValueString := This.Value
         If ValueString = ""
         ValueString := This.DefaultValue
         StateString := ""
@@ -1314,7 +1317,7 @@ Class ActivatableUIA Extends FocusableUIA {
         LabelString := This.Label
         If LabelString = ""
         LabelString := This.DefaultLabel
-        ValueString := This.GetValue()
+        ValueString := This.Value
         If ValueString = ""
         ValueString := This.DefaultValue
         StateString := ""
@@ -1638,7 +1641,7 @@ Class TabControl Extends FocusableControl {
         LabelString := This.Label
         If LabelString = ""
         LabelString := This.DefaultLabel
-        ValueString := This.GetValue()
+        ValueString := This.Value
         If ValueString = ""
         ValueString := This.DefaultValue
         If This.controlID = AccessibilityOverlay.PreviousControlID
@@ -2319,14 +2322,26 @@ Class OCRComboBox Extends ComboBox {
     }
     
     SelectNextOption() {
-        For ChangeFunction In This.ChangeFunctions
-        ChangeFunction.Call(This)
+        If This.ChangeFunctions.Length = 0
+        If This.HasOwnProp("Value") And This.HasMethod("GetValue")
+        This.Value := This.GetValue()
+        For ChangeFunction In This.ChangeFunctions {
+            If This.HasOwnProp("Value") And This.HasMethod("GetValue")
+            This.Value := This.GetValue()
+            ChangeFunction.Call(This)
+        }
         This.ReportValue()
     }
     
     SelectPreviousOption() {
-        For ChangeFunction In This.ChangeFunctions
-        ChangeFunction.Call(This)
+        If This.ChangeFunctions.Length = 0
+        If This.HasOwnProp("Value") And This.HasMethod("GetValue")
+        This.Value := This.GetValue()
+        For ChangeFunction In This.ChangeFunctions {
+            If This.HasOwnProp("Value") And This.HasMethod("GetValue")
+            This.Value := This.GetValue()
+            ChangeFunction.Call(This)
+        }
         This.ReportValue()
     }
     
@@ -2336,7 +2351,7 @@ Class OCRComboBox Extends ComboBox {
         LabelString := This.Label
         If LabelString = ""
         LabelString := This.DefaultLabel
-        ValueString := This.GetValue()
+        ValueString := This.Value
         If ValueString = ""
         ValueString := This.DefaultValue
         StateString := ""
@@ -2388,7 +2403,7 @@ Class OCREdit Extends Edit {
         LabelString := This.Label
         If LabelString = ""
         LabelString := This.DefaultLabel
-        ValueString := This.GetValue()
+        ValueString := This.Value
         If ValueString = ""
         ValueString := This.DefaultValue
         StateString := ""

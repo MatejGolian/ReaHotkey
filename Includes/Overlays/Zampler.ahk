@@ -11,13 +11,13 @@ Class Zampler {
         FilterBox := CustomComboBox("Filter", [ObjBindMethod(This, "MoveToFilter"), ObjBindMethod(This, "GetFilter")],, ObjBindMethod(This, "ChangeFilter"))
         ZamplerTabControl := ZamplerOverlay.AddTabControl()
         MainTab := HotspotTab("Main", 329, 210, CompensatePluginCoordinates)
-        MainTab.AddOCRButton("Patch", "Patch not detected", "TesseractBest", 297, 264, 409, 277,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        MainTab.AddOCRButton("Patch", "Patch not detected", "TesseractBest", 296, 264, 496, 277,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Load bank", 312, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Save bank", 352, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Load patch", 399, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Save patch", 440, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("SFZ/REX", 499, 244, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetSFZREXInstrument")],, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel")])
-        MainTab.AddOCRComboBox("Polyphony", "not detected", "TesseractBest", 332, 364, 348, 380,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
+        MainTab.AddControl(This.PolyphonyBox("Polyphony", "not detected", "TesseractBest", 332, 364, 348, 380,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel"), ObjBindMethod(This, "FixPolyphony")]))
         MainTab.AddOCRComboBox("Bend up", "not detected", "TesseractBest", 337, 392, 369, 408,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
         MainTab.AddOCRComboBox("Bend down", "not detected", "TesseractBest", 428, 392, 460, 408,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
         MainTab.AddControl(FilterBox)
@@ -93,6 +93,11 @@ Class Zampler {
         Return False
     }
     
+    Static FixPolyphony(OverlayObj) {
+        If OverlayObj.Value And OverlayObj.Value + 0 < 8
+        OverlayObj.Value := 8
+    }
+    
     Static GetFilter(OverlayObj) {
         Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(700), CompensatePluginYCoordinate(96), CompensatePluginXCoordinate(756), CompensatePluginYCoordinate(108)))
         OverlayObj.Value := Result
@@ -101,7 +106,7 @@ Class Zampler {
     Static GetModDestination(OverlayObj) {
         Static InitialLabel := OverlayObj.Label
         Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(466), CompensatePluginYCoordinate(240), CompensatePluginXCoordinate(536), CompensatePluginYCoordinate(260)))
-        If Not Result
+        If Result := ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
     }
@@ -109,15 +114,15 @@ Class Zampler {
     Static GetModSource(OverlayObj) {
         Static InitialLabel := OverlayObj.Label
         Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(310), CompensatePluginYCoordinate(240), CompensatePluginXCoordinate(370), CompensatePluginYCoordinate(260)))
-        If Not Result
+        If Result = ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
     }
     
     Static GetSFZREXInstrument(OverlayObj) {
         Static InitialLabel := OverlayObj.Label
-        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(436), CompensatePluginYCoordinate(226), CompensatePluginXCoordinate(636), CompensatePluginYCoordinate(236)))
-        If Not Result
+        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(448), CompensatePluginYCoordinate(226), CompensatePluginXCoordinate(648), CompensatePluginYCoordinate(236)))
+        If Result = ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
     }
@@ -138,11 +143,23 @@ Class Zampler {
     }
     
     Static SendWheel(OverlayObj) {
+        StepSize := 1
+        If OverlayObj.Label = "Polyphony"
+        StepSize := 2
         If A_ThisHotkey = "Up"
-        Send "{WheelUp 1}"
+        Send "{WheelUp " . StepSize . "}"
         If A_ThisHotkey = "Down"
-        Send "{WheelDown 1}"
+        Send "{WheelDown " . StepSize . "}"
         Sleep 100
+        OverlayObj.Value := OverlayObj.GetValue()
+    }
+    
+    Class PolyphonyBox Extends OCRComboBox {
+        ExecuteOnFocusPreSpeech() {
+            Super.ExecuteOnFocusPreSpeech()
+            If This.Value And This.Value + 0 < 8
+            This.Value := 8
+        }
     }
     
 }

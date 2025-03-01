@@ -65,7 +65,7 @@ ControlTabHK(ThisHotkey) {
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
     If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context%
-    ReaHotkey.FocusNextTab(ReaHotkey.Found%ReaHotkey.Context%.Overlay)
+    FocusNextPreviousTab("Next", ReaHotkey.Found%ReaHotkey.Context%.Overlay)
 }
 
 ControlShiftTabHK(ThisHotkey) {
@@ -79,7 +79,7 @@ ControlShiftTabHK(ThisHotkey) {
     Catch
     ReaHotkey.Found%ReaHotkey.Context% := False
     If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context%
-    ReaHotkey.FocusPreviousTab(ReaHotkey.Found%ReaHotkey.Context%.Overlay)
+    FocusNextPreviousTab("Previous", ReaHotkey.Found%ReaHotkey.Context%.Overlay)
 }
 
 LeftRightHK(ThisHotkey) {
@@ -201,4 +201,30 @@ ReloadHK(ThisHotkey) {
 
 UpdateCheckHK(ThisHotkey) {
     ReaHotkey.CheckForUpdates(True)
+}
+
+FocusNextPreviousTab(Which, Overlay) {
+    If Overlay Is AccessibilityOverlay And Overlay.ChildControls.Length > 0 {
+        CurrentControl := Overlay.GetCurrentControl()
+        If CurrentControl Is TabControl {
+            Sleep 200
+            Overlay.Focus%Which%Tab()
+        }
+        Else {
+            If CurrentControl Is Object
+            Loop AccessibilityOverlay.TotalNumberOfControls {
+                SuperordinateControl := CurrentControl.GetSuperordinateControl()
+                If SuperordinateControl = 0
+                Break
+                If SuperordinateControl Is TabControl {
+                    Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
+                    Overlay.FocusControl(SuperordinateControl.ControlID)
+                    Sleep 200
+                    Overlay.Focus%Which%Tab()
+                    Break
+                }
+                CurrentControl := SuperordinateControl
+            }
+        }
+    }
 }
