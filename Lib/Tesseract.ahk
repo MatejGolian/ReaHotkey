@@ -56,7 +56,7 @@ Class Tesseract {
         If Not FileExist(Input)
         Return
         Static Quote := Chr(0x22)
-        Command := Quote . TesseractExe . Quote . " --tessdata-dir " . Quote . Type . Quote . " " . Quote . Input . Quote . " " . Quote . SubStr(Output, 1, -4) . Quote
+        Command := Quote . TesseractExe . Quote . " --tessdata-dir " . Quote . Type . Quote . " --psm 7 " . Quote . Input . Quote . " " . Quote . SubStr(Output, 1, -4) . Quote
         Command .= (This.Language) ? " -l " . Quote . This.Language . Quote : ""
         Command := A_ComSpec . " /C " . Quote . Command . Quote
         RunWait Command,, "Hide"
