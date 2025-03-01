@@ -11,7 +11,7 @@ Class Zampler {
         FilterBox := CustomComboBox("Filter", [ObjBindMethod(This, "MoveToFilter"), ObjBindMethod(This, "GetFilter")],, ObjBindMethod(This, "ChangeFilter"))
         ZamplerTabControl := ZamplerOverlay.AddTabControl()
         MainTab := HotspotTab("Main", 329, 210, CompensatePluginCoordinates)
-        MainTab.AddOCRButton("Patch", "Patch not detected", "TesseractBest", 297, 264, 409, 277,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        MainTab.AddOCRButton("Patch", "Patch not detected", "TesseractBest", 296, 264, 496, 277,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Load bank", 312, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Save bank", 352, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Load patch", 399, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
@@ -101,7 +101,7 @@ Class Zampler {
     Static GetModDestination(OverlayObj) {
         Static InitialLabel := OverlayObj.Label
         Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(466), CompensatePluginYCoordinate(240), CompensatePluginXCoordinate(536), CompensatePluginYCoordinate(260)))
-        If Not Result
+        If Result := ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
     }
@@ -109,15 +109,15 @@ Class Zampler {
     Static GetModSource(OverlayObj) {
         Static InitialLabel := OverlayObj.Label
         Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(310), CompensatePluginYCoordinate(240), CompensatePluginXCoordinate(370), CompensatePluginYCoordinate(260)))
-        If Not Result
+        If Result = ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
     }
     
     Static GetSFZREXInstrument(OverlayObj) {
         Static InitialLabel := OverlayObj.Label
-        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(436), CompensatePluginYCoordinate(226), CompensatePluginXCoordinate(636), CompensatePluginYCoordinate(236)))
-        If Not Result
+        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(448), CompensatePluginYCoordinate(226), CompensatePluginXCoordinate(648), CompensatePluginYCoordinate(236)))
+        If Result = ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
     }
