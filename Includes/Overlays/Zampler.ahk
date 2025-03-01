@@ -143,10 +143,13 @@ Class Zampler {
     }
     
     Static SendWheel(OverlayObj) {
+        StepSize := 1
+        If OverlayObj.Label = "Polyphony"
+        StepSize := 2
         If A_ThisHotkey = "Up"
-        Send "{WheelUp 1}"
+        Send "{WheelUp " . StepSize . "}"
         If A_ThisHotkey = "Down"
-        Send "{WheelDown 1}"
+        Send "{WheelDown " . StepSize . "}"
         Sleep 100
         OverlayObj.Value := OverlayObj.GetValue()
     }
