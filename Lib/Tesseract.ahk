@@ -51,18 +51,6 @@ Class Tesseract {
         Return Output
     }
     
-    Static ConvertBest(Input :="", Output := "") {
-        Return This.Convert(Input, Output, 1)
-    }
-    
-    Static ConvertFast(Input := "", Output := "") {
-        Return This.Convert(Input, Output, 2)
-    }
-    
-    Static ConvertLegacy(Input :="", Output := "") {
-        Return This.Convert(Input, Output, 3)
-    }
-    
     Static FromRect(X, Y, W, H, Language := "", ScaleFactor := "", Type := "") {
         Return This.OCR(X, Y, W, H, Language, ScaleFactor, Type)
     }
