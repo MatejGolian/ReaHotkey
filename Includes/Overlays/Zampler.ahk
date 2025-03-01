@@ -17,7 +17,7 @@ Class Zampler {
         MainTab.AddHotspotButton("Load patch", 399, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("Save patch", 440, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
         MainTab.AddHotspotButton("SFZ/REX", 499, 244, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetSFZREXInstrument")],, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel")])
-        MainTab.AddOCRComboBox("Polyphony", "not detected", "TesseractBest", 332, 364, 348, 380,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
+        MainTab.AddControl(This.PolyphonyBox("Polyphony", "not detected", "TesseractBest", 332, 364, 348, 380,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel"), ObjBindMethod(This, "FixPolyphony")]))
         MainTab.AddOCRComboBox("Bend up", "not detected", "TesseractBest", 337, 392, 369, 408,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
         MainTab.AddOCRComboBox("Bend down", "not detected", "TesseractBest", 428, 392, 460, 408,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
         MainTab.AddControl(FilterBox)
@@ -93,6 +93,11 @@ Class Zampler {
         Return False
     }
     
+    Static FixPolyphony(OverlayObj) {
+        If OverlayObj.Value And OverlayObj.Value + 0 < 8
+        OverlayObj.Value := 8
+    }
+    
     Static GetFilter(OverlayObj) {
         Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(700), CompensatePluginYCoordinate(96), CompensatePluginXCoordinate(756), CompensatePluginYCoordinate(108)))
         OverlayObj.Value := Result
@@ -143,6 +148,15 @@ Class Zampler {
         If A_ThisHotkey = "Down"
         Send "{WheelDown 1}"
         Sleep 100
+        OverlayObj.Value := OverlayObj.GetValue()
+    }
+    
+    Class PolyphonyBox Extends OCRComboBox {
+        ExecuteOnFocusPreSpeech() {
+            Super.ExecuteOnFocusPreSpeech()
+            If This.Value And This.Value + 0 < 8
+            This.Value := 8
+        }
     }
     
 }
