@@ -2323,11 +2323,11 @@ Class OCRComboBox Extends ComboBox {
     
     SelectNextOption() {
         If This.ChangeFunctions.Length = 0
-        If This.HasOwnProp("Value") And This.HasMethod("GetValue")
-        This.Value := This.GetValue()
+        If This.HasMethod("GetValue")
+        This.GetValue()
         For ChangeFunction In This.ChangeFunctions {
-            If This.HasOwnProp("Value") And This.HasMethod("GetValue")
-            This.Value := This.GetValue()
+            If This.HasMethod("GetValue")
+            This.GetValue()
             ChangeFunction.Call(This)
         }
         This.ReportValue()
@@ -2335,11 +2335,11 @@ Class OCRComboBox Extends ComboBox {
     
     SelectPreviousOption() {
         If This.ChangeFunctions.Length = 0
-        If This.HasOwnProp("Value") And This.HasMethod("GetValue")
-        This.Value := This.GetValue()
+        If This.HasMethod("GetValue")
+        This.GetValue()
         For ChangeFunction In This.ChangeFunctions {
-            If This.HasOwnProp("Value") And This.HasMethod("GetValue")
-            This.Value := This.GetValue()
+            If This.HasMethod("GetValue")
+            This.GetValue()
             ChangeFunction.Call(This)
         }
         This.ReportValue()

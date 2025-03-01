@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.5] - 2025-03-01
+
+Changed
+
+-   More cleanup (See changelog for previous updates)
+
 ## [0.5.4] - 2025-03-01
 
 ### Changed
@@ -223,7 +229,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.4...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.5...HEAD
+
+[0.5.5]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.4...0.5.5
 
 [0.5.4]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.3...0.5.4
 
