@@ -10,6 +10,7 @@ Standalone.DefaultOverlay.AddStaticText("No overlay defined")
 Standalone.ChooserOverlay := AccessibilityOverlay()
 Standalone.ChooserOverlay.AddCustomButton("Choose overlay",,, ChooseStandaloneOverlay).SetHotkey("!C", "Alt+C")
 
+#Include Overlays/AbletonLive.ahk
 #Include Overlays/Dubler2.ahk
 #Include Overlays/Engine2.ahk
 #Include Overlays/FabFilter.ahk
