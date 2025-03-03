@@ -721,7 +721,7 @@ Class ReaHotkey {
     
     Class GetAbletonPluginWinCriteriaList {
         Static Call() {
-            Return ["ahk_exe Ableton Live 12( (Beta)|(Lite))?.exe ahk_class #32770", "ahk_exe Ableton Live 12( (Beta)|(Lite))?.exe ahk_class AbletonVstPlugClass", "ahk_exe Ableton Live 12( (Beta)|(Lite))?.exe ahk_class Vst3PlugWindow"]
+            Return ["ahk_exe Ableton Live 12(\s[A-Za-z]*)?.exe ahk_class #32770", "ahk_exe Ableton Live 12(\s[A-Za-z]*)?.exe ahk_class AbletonVstPlugClass", "ahk_exe Ableton Live 12(\s[A-Za-z]*)?.exe ahk_class Vst3PlugWindow"]
         }
     }
     
