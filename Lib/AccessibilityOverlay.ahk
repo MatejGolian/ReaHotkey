@@ -762,7 +762,6 @@ Class FocusableControl Extends AccessibilityControl {
         FocusFunction.Call(This)
         This.CheckFocus()
         If This.HasFocus() {
-            If This.HasMethod("GetValue")
             This.GetValue()
             If This.HasMethod("ExecuteOnFocusPreSpeech")
             This.ExecuteOnFocusPreSpeech()

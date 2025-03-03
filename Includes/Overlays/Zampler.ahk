@@ -3,9 +3,9 @@
 Class Zampler {
     
     Static __New() {
-        Zampler.InitConfig()
+        This.InitConfig()
         
-        Plugin.Register("Zampler", "^Plugin[0-9A-F]{1,}$", False, False, False, False, ObjBindMethod(Zampler, "Check"))
+        Plugin.Register("Zampler", "^Plugin[0-9A-F]{1,}$", False, False, False, False, ObjBindMethod(This, "Check"))
         
         ZamplerOverlay := AccessibilityOverlay("Zampler")
         FilterBox := CustomComboBox("Filter", [ObjBindMethod(This, "MoveToFilter"), ObjBindMethod(This, "GetFilter")],, ObjBindMethod(This, "ChangeFilter"))
@@ -67,13 +67,13 @@ Class Zampler {
     
     Static Check(*) {
         Thread "NoTimers"
-        ReaperPluginNames := ["VSTi: Zampler (Synapse Audio)"]
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Zampler"
         Return True
         If ReaHotkey.Config.Get("ZamplerImageSearch") = 1 And FindImage("Images/Zampler/Zampler.png", GetPluginXCoordinate() + 0, GetPluginYCoordinate() + 140, GetPluginXCoordinate() + 230, GetPluginYCoordinate() + 170) Is Object
         Return True
-        If ReaHotkey.PluginNative {
+        If ReaHotkey.ReaperPluginNative {
+            ReaperPluginNames := ["VSTi: Zampler (Synapse Audio)"]
             Try
             ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
             Catch
@@ -83,7 +83,7 @@ Class Zampler {
             If ReaperListItem = ReaperPluginName
             Return True
         }
-        If ReaHotkey.PluginBridged {
+        If ReaHotkey.ReaperPluginBridged {
             Try
             If RegExMatch(WinGetTitle("A"), "^Zampler \(x(64)|(86) bridged\)$")
             Return True

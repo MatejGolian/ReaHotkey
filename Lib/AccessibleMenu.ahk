@@ -14,7 +14,7 @@ Class AccessibleMenu {
     Static Translations := Map()
     
     Static __New() {
-        AccessibleMenu.Translations := AccessibleMenu.SetupTranslations()
+        This.Translations := This.SetupTranslations()
     }
     
     Add(MenuItemName, CallbackOrSubmenu := "", Options := "") {

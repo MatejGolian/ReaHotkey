@@ -3,9 +3,9 @@
 Class Engine2 {
     
     Static __New() {
-        Engine2.InitConfig()
+        This.InitConfig()
         
-        Plugin.Register("Engine 2", "^Plugin[0-9A-F]{1,}$",, False, False, False, ObjBindMethod(Engine2, "CheckPlugin"))
+        Plugin.Register("Engine 2", "^Plugin[0-9A-F]{1,}$",, False, False, False, ObjBindMethod(This, "CheckPlugin"))
         Standalone.Register("Engine 2", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe",, False, False)
         
         Engine2PluginOverlay := AccessibilityOverlay("Engine 2")
@@ -20,7 +20,7 @@ Class Engine2 {
         Engine2PluginOverlay.AddTabControl(, Engine2PluginQuickEditTab, Engine2PluginProEditTab, Engine2PluginBrowserTab, Engine2PluginMixerTab, Engine2PluginPreferencesTab, Engine2PluginHelpTab)
         Engine2PluginEngineTab := HotspotTab("Engine", 388, 61, CompensatePluginCoordinates)
         Engine2PluginLibrariesTab := HotspotTab("Libraries", 416, 61, CompensatePluginCoordinates)
-        Engine2PluginLibrariesTab.AddHotspotButton("Add library", 428, 95, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(Engine2, "ActivatePluginAddLibraryButton")])
+        Engine2PluginLibrariesTab.AddHotspotButton("Add library", 428, 95, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "ActivatePluginAddLibraryButton")])
         Engine2PluginUserFolderTab := HotspotTab("User folder", 480, 61, CompensatePluginCoordinates)
         Engine2PluginOutputSurrTab := HotspotTab("Output/Surr", 564, 61, CompensatePluginCoordinates)
         Engine2PluginMiscTab := HotspotTab("Misc.", 648, 61, CompensatePluginCoordinates)
@@ -50,13 +50,13 @@ Class Engine2 {
     
     Static CheckPlugin(*) {
         Thread "NoTimers"
-        ReaperPluginNames := ["VSTi: ENGINE (Best Service) (24 out)"]
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Engine 2"
         Return True
         If ReaHotkey.Config.Get("Engine2ImageSearch") = 1 And FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate() + 492, GetPluginYCoordinate(), GetPluginXCoordinate() + 892, GetPluginYCoordinate() + 100) Is Object
         Return True
-        If ReaHotkey.PluginNative {
+        If ReaHotkey.ReaperPluginNative {
+            ReaperPluginNames := ["VSTi: ENGINE (Best Service) (24 out)"]
             Try
             ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
             Catch
@@ -66,7 +66,7 @@ Class Engine2 {
             If ReaperListItem = ReaperPluginName
             Return True
         }
-        If ReaHotkey.PluginBridged {
+        If ReaHotkey.ReaperPluginBridged {
             Try
             If RegExMatch(WinGetTitle("A"), "^ENGINE \(x(64)|(86) bridged\)$")
             Return True
