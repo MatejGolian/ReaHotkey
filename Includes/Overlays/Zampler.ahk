@@ -106,7 +106,7 @@ Class Zampler {
     Static GetModDestination(OverlayObj) {
         Static InitialLabel := OverlayObj.Label
         Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(466), CompensatePluginYCoordinate(240), CompensatePluginXCoordinate(536), CompensatePluginYCoordinate(260)))
-        If Result := ""
+        If Result = ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
     }
@@ -156,7 +156,6 @@ Class Zampler {
     
     Class PolyphonyBox Extends OCRComboBox {
         ExecuteOnFocusPreSpeech() {
-            Super.ExecuteOnFocusPreSpeech()
             If This.Value And This.Value + 0 < 8
             This.Value := 8
         }

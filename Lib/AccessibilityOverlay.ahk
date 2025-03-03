@@ -2171,8 +2171,14 @@ Class HotspotComboBox Extends ComboBox {
         This.YCoordinate := YCoordinate
     }
     
-    ExecuteOnFocusPreSpeech() {
+    SelectNextOption() {
         Click This.XCoordinate, This.YCoordinate
+        Super.SelectNextOption()
+    }
+    
+    SelectPreviousOption() {
+        Click This.XCoordinate, This.YCoordinate
+        Super.SelectPreviousOption()
     }
     
 }
@@ -2309,18 +2315,15 @@ Class OCRComboBox Extends ComboBox {
         This.Y2Coordinate := Y2Coordinate
     }
     
-    ExecuteOnFocusPreSpeech() {
-        XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
-        YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
-        Click XCoordinate, YCoordinate
-    }
-    
     GetValue() {
         This.Value := AccessibilityOverlay.OCR(This.OCRType, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
         Return This.Value
     }
     
     SelectNextOption() {
+        XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
+        YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
+        Click XCoordinate, YCoordinate
         If This.ChangeFunctions.Length = 0
         If This.HasMethod("GetValue")
         This.GetValue()
@@ -2333,6 +2336,9 @@ Class OCRComboBox Extends ComboBox {
     }
     
     SelectPreviousOption() {
+        XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
+        YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
+        Click XCoordinate, YCoordinate
         If This.ChangeFunctions.Length = 0
         If This.HasMethod("GetValue")
         This.GetValue()

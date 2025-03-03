@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Make it possible to use the supported plug-ins in Ableton Live 12
+-   Support plug-ins running in Ableton Live 12
+
+### Changed/Fixed
+
+-   Only click combo boxes when changing the value
+-   Fixed the mod destination not being reported in Zampler
 -   various code improvements
 
 ## [0.5.5] - 2025-03-01
