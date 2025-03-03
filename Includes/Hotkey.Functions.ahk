@@ -3,27 +3,39 @@
 F6HK(ThisHotkey) {
     Thread "NoTimers"
     Controls := WinGetControls(ReaHotkey.PluginWinCriteria)
-    ContainerIndex := 0
-    Try
-    For Index, Control In Controls
-    If Control = "reaperPluginHostWrapProc1" And Index < Controls.Length {
-        ContainerIndex := Index + 1
-        Break
-    }
-    CurrentIndex := 0
-    Try
-    For Index, Control In Controls
-    If Control = ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)) {
-        CurrentIndex := Index
-        Break
-    }
-    If CurrentIndex > 0 And ContainerIndex > 0 And CurrentIndex <= 6 And Not CurrentIndex = ContainerIndex {
+    If ReaHotkey.AbletonPlugin {
         Try
-        ControlFocus Controls[ContainerIndex], ReaHotkey.PluginWinCriteria
+        PluginControl := ReaHotkey.GetPluginControl()
+        Catch
+        PluginControl := 0
+        If PluginControl {
+            Try
+            ControlFocus Controls[1], ReaHotkey.PluginWinCriteria
+            Return
+        }
     }
-    Else {
-        ReaHotkey.PassThroughHotkey(ThisHotkey)
+    If ReaHotkey.ReaperPlugin {
+        ContainerIndex := 0
+        Try
+        For Index, Control In Controls
+        If Control = "reaperPluginHostWrapProc1" And Index < Controls.Length {
+            ContainerIndex := Index + 1
+            Break
+        }
+        CurrentIndex := 0
+        Try
+        For Index, Control In Controls
+        If Control = ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria)) {
+            CurrentIndex := Index
+            Break
+        }
+        If CurrentIndex > 0 And ContainerIndex > 0 And CurrentIndex <= 6 And Not CurrentIndex = ContainerIndex {
+            Try
+            ControlFocus Controls[ContainerIndex], ReaHotkey.PluginWinCriteria
+            Return
+        }
     }
+    ReaHotkey.PassThroughHotkey(ThisHotkey)
 }
 
 TabHK(ThisHotkey) {
