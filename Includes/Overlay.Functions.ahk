@@ -297,8 +297,7 @@ CreateOverlayMenu(Type) {
             UnknownPatchCounter++
         }
         OverlayList .= Vendor . "`t" . Product . "`t" . Patch . "`t" . OverlayNumber . "`n"
-        OverlayList := Sort(OverlayList)
-        A_Clipboard := OverlayList
+        OverlayList := Sort(OverlayList, "CLogical")
     }
     MainMenuItems := Array()
     VendorSubmenus := Map()

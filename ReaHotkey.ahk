@@ -31,13 +31,13 @@ SetTitleMatchMode "RegEx"
 
 A_IconTip := "ReaHotkey"
 A_TrayMenu.Delete
-A_TrayMenu.Add("&Configuration...", ReaHotkey.ShowConfigBox)
-A_TrayMenu.Add("&Pause", ReaHotkey.TogglePause)
-A_TrayMenu.Add("&Reload", ReaHotkey.Reload)
-A_TrayMenu.Add("&View Readme", ReaHotkey.ViewReadme)
-A_TrayMenu.Add("Check for &updates...", ReaHotkey.CheckForUpdates)
-A_TrayMenu.Add("&About...", ReaHotkey.ShowAboutBox)
-A_TrayMenu.Add("&Quit", ReaHotkey.Quit)
+A_TrayMenu.Add("&Configuration...", ObjBindMethod(ReaHotkey, "ShowConfigBox"))
+A_TrayMenu.Add("&Pause", ObjBindMethod(ReaHotkey, "TogglePause"))
+A_TrayMenu.Add("&Reload", ObjBindMethod(ReaHotkey, "Reload"))
+A_TrayMenu.Add("&View Readme", ObjBindMethod(ReaHotkey, "ViewReadme"))
+A_TrayMenu.Add("Check for &updates...", ObjBindMethod(ReaHotkey, "CheckForUpdates"))
+A_TrayMenu.Add("&About...", ObjBindMethod(ReaHotkey, "ShowAboutBox"))
+A_TrayMenu.Add("&Quit", ObjBindMethod(ReaHotkey, "Quit"))
 A_TrayMenu.Default := "&Configuration..."
 
 #Include Includes/Hotkey.Contexts.ahk
