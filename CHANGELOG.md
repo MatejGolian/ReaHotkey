@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Make it possible to use the supported plug-ins in Ableton Live 12
+-   various code improvements
+
 ## [0.5.5] - 2025-03-01
 
-Changed
+### Changed
 
 -   More cleanup (See changelog for previous updates)
 

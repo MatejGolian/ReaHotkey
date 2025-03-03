@@ -337,6 +337,17 @@ Class ReaHotkey {
         SetTimer ObjBindMethod(This, "CheckIfWinCovered"), 0
     }
     
+    Static MergeArrays(Params*) {
+        Merged := Array()
+        For Param In Params
+        If Param Is Array
+        For Item In Param
+        Merged.Push(Item)
+        Else
+        Merged.Push(Param)
+        Return Merged
+    }
+    
     Static OverrideHotkey(Type, Name := "", KeyName := "", Action := "", Options := "") {
         If Type = "Plugin" Or Type = "Standalone" {
             For NonRemappableHotkey In This.NonRemappableHotkeys
@@ -681,6 +692,16 @@ Class ReaHotkey {
         }
     }
     
+    Static Wait(Period) {
+        If IsInteger(Period) And Period > 0 And Period <= 4294967295 {
+            PeriodEnd := A_TickCount + Period
+            Loop {
+                If A_TickCount > PeriodEnd
+                Break
+            }
+        }
+    }
+    
     Class GetAbletonPlugin {
         Static Call() {
             If ReaHotkey.AbletonPluginWinCriteria
@@ -700,7 +721,7 @@ Class ReaHotkey {
     
     Class GetAbletonPluginWinCriteriaList {
         Static Call() {
-            Return ["ahk_exe Ableton Live 12( Beta)?.exe ahk_class AbletonVstPlugClass", "ahk_exe Ableton Live 12( Beta)?.exe ahk_class Vst3PlugWindow"]
+            Return ["ahk_exe Ableton Live 12( Beta)?.exe ahk_class #32770", "ahk_exe Ableton Live 12( Beta)?.exe ahk_class AbletonVstPlugClass", "ahk_exe Ableton Live 12( Beta)?.exe ahk_class Vst3PlugWindow"]
         }
     }
     
@@ -783,19 +804,6 @@ Class ReaHotkey {
         }
     }
     
-    Class MergeArrays {
-        Static Call(Params*) {
-            Merged := Array()
-            For Param In Params
-            If Param Is Array
-            For Item In Param
-            Merged.Push(Item)
-            Else
-            Merged.Push(Param)
-            Return Merged
-        }
-    }
-    
     Class PassThroughHotkey {
         Static Call(ThisHotkey) {
             Match := RegExMatch(ThisHotkey, "[a-zA-Z]")
@@ -807,18 +815,6 @@ Class ReaHotkey {
                 Hotkey ThisHotkey, "Off"
                 Send Modifiers . KeyName
                 Hotkey ThisHotkey, "On"
-            }
-        }
-    }
-    
-    Class Wait {
-        Static Call(Period) {
-            If IsInteger(Period) And Period > 0 And Period <= 4294967295 {
-                PeriodEnd := A_TickCount + Period
-                Loop {
-                    If A_TickCount > PeriodEnd
-                    Break
-                }
             }
         }
     }

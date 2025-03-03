@@ -1,7 +1,10 @@
 #Requires AutoHotkey v2.0
 
-#HotIf WinActive("ahk_exe Ableton Live 12( Beta)?.exe ahk_class AbletonVstPlugClass")
+#HotIf WinActive("ahk_exe Ableton Live 12( Beta)?.exe ahk_class #32770")
 #Include Hotkey.Definitions.ahk
+
+#HotIf WinActive("ahk_exe Ableton Live 12( Beta)?.exe ahk_class AbletonVstPlugClass")
+#IncludeAgain Hotkey.Definitions.ahk
 
 #HotIf WinActive("ahk_exe Ableton Live 12( Beta)?.exe ahk_class Vst3PlugWindow")
 #IncludeAgain Hotkey.Definitions.ahk

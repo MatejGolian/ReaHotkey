@@ -450,12 +450,30 @@ GetImgSize(Img) {
 GetPluginControlPos() {
     PluginControlX := 0
     PluginControlY := 0
+    Try
+    ControlGetPos &PluginControlX, &PluginControlY,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    Catch
     Try {
-        ControlGetPos &PluginControlX, &PluginControlY,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+        If ReaHotkey.AbletonPlugin {
+            PluginControlX := 0
+            PluginControlY := 0
+        }
+        Else If ReaHotkey.ReaperPluginBridged {
+            PluginControlX := 0
+            PluginControlY := 0
+        }
+        Else If ReaHotkey.ReaperPluginNative {
+            PluginControlX := 210
+            PluginControlY := 53
+        }
+        Else {
+            PluginControlX := 0
+            PluginControlY := 0
+        }
     }
     Catch {
-        PluginControlX := 210
-        PluginControlY := 53
+        PluginControlX := 0
+        PluginControlY := 0
     }
     Return {X: PluginControlX, Y: PluginControlY}
 }
