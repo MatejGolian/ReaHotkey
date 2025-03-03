@@ -1,8 +1,11 @@
 #Requires AutoHotkey v2.0
 
+#HotIf WinActive("ahk_exe Ableton Live 12( Beta)?.exe ahk_class Vst3PlugWindow")
+#Include Hotkey.Definitions.ahk
+
 #HotIf WinActive("ahk_exe reaper.exe ahk_class #32770")
 F6:: F6HK(ThisHotkey)
-#Include Hotkey.Definitions.ahk
+#IncludeAgain Hotkey.Definitions.ahk
 
 #HotIf WinActive("ahk_exe reaper_host32.exe ahk_class #32770")
 F6:: F6HK(ThisHotkey)

@@ -8,48 +8,48 @@ Class Kontakt7 {
     Static StandaloneOverlays := Array()
     
     Static __New() {
-        Kontakt7.InitConfig()
+        This.InitConfig()
         
         PluginHeader := AccessibilityOverlay("Kontakt 7")
         PluginHeader.AddStaticText("Kontakt 7")
-        PluginHeader.AddCustomButton("FILE menu",,, Kontakt7.ActivatePluginHeaderButton).SetHotkey("!F", "Alt+F")
-        PluginHeader.AddCustomButton("LIBRARY On/Off",,, Kontakt7.ActivatePluginHeaderButton).SetHotkey("!L", "Alt+L")
-        PluginHeader.AddCustomButton("VIEW menu",,, Kontakt7.ActivatePluginHeaderButton).SetHotkey("!V", "Alt+V")
-        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",,, Kontakt7.ActivatePluginHeaderButton).SetHotkey("!S", "Alt+S")
-        PluginHeader.AddCustomButton("Previous instrument", Kontakt7.MoveToPluginInstrumentButton,,, Kontakt7.ActivatePluginInstrumentButton).SetHotkey("^P", "Ctrl+P")
-        PluginHeader.AddCustomButton("Next instrument", Kontakt7.MoveToPluginInstrumentButton,,, Kontakt7.ActivatePluginInstrumentButton).SetHotkey("^N", "Ctrl+N")
-        PluginHeader.AddCustomButton("Previous multi", Kontakt7.MoveToPluginMultiButton,,, Kontakt7.ActivatePluginMultiButton).SetHotkey("^+P", "Ctrl+Shift+P")
-        PluginHeader.AddCustomButton("Next multi", Kontakt7.MoveToPluginMultiButton,,, Kontakt7.ActivatePluginMultiButton).SetHotkey("^+N", "Ctrl+Shift+N")
-        PluginHeader.AddCustomButton("Snapshot menu", Kontakt7.MoveToPluginSnapshotButton,,, Kontakt7.ActivatePluginSnapshotButton).SetHotkey("!M", "Alt+M")
-        PluginHeader.AddCustomButton("Previous snapshot", Kontakt7.MoveToPluginSnapshotButton,,, Kontakt7.ActivatePluginSnapshotButton).SetHotkey("!P", "Alt+P")
-        PluginHeader.AddCustomButton("Next snapshot", Kontakt7.MoveToPluginSnapshotButton,,, Kontakt7.ActivatePluginSnapshotButton).SetHotkey("!N", "Alt+N")
-        Kontakt7.PluginHeader := PluginHeader
+        PluginHeader.AddCustomButton("FILE menu",,, This.ActivatePluginHeaderButton).SetHotkey("!F", "Alt+F")
+        PluginHeader.AddCustomButton("LIBRARY On/Off",,, This.ActivatePluginHeaderButton).SetHotkey("!L", "Alt+L")
+        PluginHeader.AddCustomButton("VIEW menu",,, This.ActivatePluginHeaderButton).SetHotkey("!V", "Alt+V")
+        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",,, This.ActivatePluginHeaderButton).SetHotkey("!S", "Alt+S")
+        PluginHeader.AddCustomButton("Previous instrument", This.MoveToPluginInstrumentButton,,, This.ActivatePluginInstrumentButton).SetHotkey("^P", "Ctrl+P")
+        PluginHeader.AddCustomButton("Next instrument", This.MoveToPluginInstrumentButton,,, This.ActivatePluginInstrumentButton).SetHotkey("^N", "Ctrl+N")
+        PluginHeader.AddCustomButton("Previous multi", This.MoveToPluginMultiButton,,, This.ActivatePluginMultiButton).SetHotkey("^+P", "Ctrl+Shift+P")
+        PluginHeader.AddCustomButton("Next multi", This.MoveToPluginMultiButton,,, This.ActivatePluginMultiButton).SetHotkey("^+N", "Ctrl+Shift+N")
+        PluginHeader.AddCustomButton("Snapshot menu", This.MoveToPluginSnapshotButton,,, This.ActivatePluginSnapshotButton).SetHotkey("!M", "Alt+M")
+        PluginHeader.AddCustomButton("Previous snapshot", This.MoveToPluginSnapshotButton,,, This.ActivatePluginSnapshotButton).SetHotkey("!P", "Alt+P")
+        PluginHeader.AddCustomButton("Next snapshot", This.MoveToPluginSnapshotButton,,, This.ActivatePluginSnapshotButton).SetHotkey("!N", "Alt+N")
+        This.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Kontakt 7")
-        StandaloneHeader.AddCustomButton("FILE menu",,, Kontakt7.ActivateStandaloneHeaderButton).SetHotkey("!F", "Alt+F")
-        StandaloneHeader.AddCustomButton("LIBRARY On/Off",,, Kontakt7.ActivateStandaloneHeaderButton).SetHotkey("!L", "Alt+L")
-        StandaloneHeader.AddCustomButton("VIEW menu",,, Kontakt7.ActivateStandaloneHeaderButton).SetHotkey("!V", "Alt+V")
-        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",,, Kontakt7.ActivateStandaloneHeaderButton).SetHotkey("!S", "Alt+S")
-        Kontakt7.StandaloneHeader := StandaloneHeader
+        StandaloneHeader.AddCustomButton("FILE menu",,, This.ActivateStandaloneHeaderButton).SetHotkey("!F", "Alt+F")
+        StandaloneHeader.AddCustomButton("LIBRARY On/Off",,, This.ActivateStandaloneHeaderButton).SetHotkey("!L", "Alt+L")
+        StandaloneHeader.AddCustomButton("VIEW menu",,, This.ActivateStandaloneHeaderButton).SetHotkey("!V", "Alt+V")
+        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",,, This.ActivateStandaloneHeaderButton).SetHotkey("!S", "Alt+S")
+        This.StandaloneHeader := StandaloneHeader
         
-        Plugin.Register("Kontakt 7", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(Kontakt7, "InitPlugin"), True, False, False, ObjBindMethod(Kontakt7, "CheckPlugin"))
+        Plugin.Register("Kontakt 7", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), True, False, False, ObjBindMethod(This, "CheckPlugin"))
         
-        For PluginOverlay In Kontakt7.PluginOverlays
+        For PluginOverlay In This.PluginOverlays
         Plugin.RegisterOverlay("Kontakt 7", PluginOverlay)
         Plugin.RegisterOverlayHotkeys("Kontakt 7", PluginHeader)
         
-        Plugin.SetTimer("Kontakt 7", ObjBindMethod(Kontakt7, "CheckPluginConfig"), -1)
-        Plugin.SetTimer("Kontakt 7", ObjBindMethod(Kontakt7, "CheckPluginMenu"), 200)
+        Plugin.SetTimer("Kontakt 7", ObjBindMethod(This, "CheckPluginConfig"), -1)
+        Plugin.SetTimer("Kontakt 7", ObjBindMethod(This, "CheckPluginMenu"), 200)
         
-        Plugin.Register("Kontakt 7 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(Kontakt7, "CheckPluginContentMissing"))
+        Plugin.Register("Kontakt 7 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(This, "CheckPluginContentMissing"))
         
         PluginContentMissingOverlay := AccessibilityOverlay("Content Missing")
         PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")
         Plugin.RegisterOverlay("Kontakt 7 Content Missing Dialog", PluginContentMissingOverlay)
         
         Standalone.Register("Kontakt 7", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe", False, False)
-        Standalone.SetTimer("Kontakt 7", ObjBindMethod(Kontakt7, "CheckStandaloneConfig"), -1)
-        Standalone.SetTimer("Kontakt 7", ObjBindMethod(Kontakt7, "CheckStandaloneMenu"), 200)
+        Standalone.SetTimer("Kontakt 7", ObjBindMethod(This, "CheckStandaloneConfig"), -1)
+        Standalone.SetTimer("Kontakt 7", ObjBindMethod(This, "CheckStandaloneMenu"), 200)
         Standalone.RegisterOverlay("Kontakt 7", StandaloneHeader)
         
         Standalone.Register("Kontakt 7 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe", False, False)
@@ -61,7 +61,7 @@ Class Kontakt7 {
     
     Static CheckMenu(Type) {
         Thread "NoTimers"
-        StartingPath := Kontakt7.GetPluginStartingPath()
+        StartingPath := This.GetPluginStartingPath()
         UIAPaths := [StartingPath . ",14", StartingPath . ",15", StartingPath . ",16", StartingPath . ",17"]
         Found := False
         Try
@@ -83,7 +83,7 @@ Class Kontakt7 {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 7"
         Return True
-        StartingPath := Kontakt7.GetPluginStartingPath()
+        StartingPath := This.GetPluginStartingPath()
         If StartingPath
         Return True
         Return False
@@ -92,12 +92,12 @@ Class Kontakt7 {
     Static CheckPluginConfig() {
         Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True)
         If ReaHotkey.Config.Get("CloseK7Browser") = 1
-        Kontakt7.ClosePluginBrowser()
+        This.ClosePluginBrowser()
         If ReaHotkey.Config.Get("DetectLibsInK7") = 1
         Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 500)
         Else
         Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 0)
-        Kontakt7.ClosePluginPopup()
+        This.ClosePluginPopup()
     }
     
     Static CheckPluginContentMissing(*) {
@@ -106,7 +106,7 @@ Class Kontakt7 {
         If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 7 Content Missing Dialog"
         Return True
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing" {
-            StartingPath := Kontakt7.GetPluginStartingPath()
+            StartingPath := This.GetPluginStartingPath()
             If StartingPath
             Return True
         }
@@ -114,20 +114,20 @@ Class Kontakt7 {
     }
     
     Static CheckPluginMenu() {
-        Kontakt7.CheckMenu("Plugin")
+        This.CheckMenu("Plugin")
     }
     
     Static CheckStandaloneConfig() {
         If ReaHotkey.Config.Get("CloseK7Browser") = 1
-        Kontakt7.CloseStandaloneBrowser()
+        This.CloseStandaloneBrowser()
     }
     
     Static CheckStandaloneMenu() {
-        Kontakt7.CheckMenu("Standalone")
+        This.CheckMenu("Standalone")
     }
     
     Static ClosePluginBrowser() {
-        StartingPath := Kontakt7.GetPluginStartingPath()
+        StartingPath := This.GetPluginStartingPath()
         UIAElement := GetUIAElement(StartingPath . ",14,3")
         If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
             UIAElement.Click()
@@ -144,7 +144,7 @@ Class Kontakt7 {
     
     Static ClosePluginPopup() {
         Try {
-            StartingPath := Kontakt7.GetPluginStartingPath()
+            StartingPath := This.GetPluginStartingPath()
             UIAElement := GetUIAElement(StartingPath)
             If UIAElement
             For Index, ChildElement In UIAElement.Children {
@@ -213,7 +213,7 @@ Class Kontakt7 {
     Static InitPlugin(PluginInstance) {
         If PluginInstance.Overlay.ChildControls.Length = 0
         PluginInstance.Overlay.AddAccessibilityOverlay()
-        PluginInstance.Overlay.ChildControls[1] := Kontakt7.PluginHeader.Clone()
+        PluginInstance.Overlay.ChildControls[1] := This.PluginHeader.Clone()
         If Not HasProp(PluginInstance.Overlay, "Metadata") {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
             PluginInstance.Overlay.OverlayNumber := 1
