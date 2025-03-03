@@ -12,24 +12,24 @@ Class Kontakt7 {
         
         PluginHeader := AccessibilityOverlay("Kontakt 7")
         PluginHeader.AddStaticText("Kontakt 7")
-        PluginHeader.AddCustomButton("FILE menu",,, This.ActivatePluginHeaderButton).SetHotkey("!F", "Alt+F")
-        PluginHeader.AddCustomButton("LIBRARY On/Off",,, This.ActivatePluginHeaderButton).SetHotkey("!L", "Alt+L")
-        PluginHeader.AddCustomButton("VIEW menu",,, This.ActivatePluginHeaderButton).SetHotkey("!V", "Alt+V")
-        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",,, This.ActivatePluginHeaderButton).SetHotkey("!S", "Alt+S")
-        PluginHeader.AddCustomButton("Previous instrument", This.MoveToPluginInstrumentButton,,, This.ActivatePluginInstrumentButton).SetHotkey("^P", "Ctrl+P")
-        PluginHeader.AddCustomButton("Next instrument", This.MoveToPluginInstrumentButton,,, This.ActivatePluginInstrumentButton).SetHotkey("^N", "Ctrl+N")
-        PluginHeader.AddCustomButton("Previous multi", This.MoveToPluginMultiButton,,, This.ActivatePluginMultiButton).SetHotkey("^+P", "Ctrl+Shift+P")
-        PluginHeader.AddCustomButton("Next multi", This.MoveToPluginMultiButton,,, This.ActivatePluginMultiButton).SetHotkey("^+N", "Ctrl+Shift+N")
-        PluginHeader.AddCustomButton("Snapshot menu", This.MoveToPluginSnapshotButton,,, This.ActivatePluginSnapshotButton).SetHotkey("!M", "Alt+M")
-        PluginHeader.AddCustomButton("Previous snapshot", This.MoveToPluginSnapshotButton,,, This.ActivatePluginSnapshotButton).SetHotkey("!P", "Alt+P")
-        PluginHeader.AddCustomButton("Next snapshot", This.MoveToPluginSnapshotButton,,, This.ActivatePluginSnapshotButton).SetHotkey("!N", "Alt+N")
+        PluginHeader.AddCustomButton("FILE menu",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!F", "Alt+F")
+        PluginHeader.AddCustomButton("LIBRARY On/Off",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!L", "Alt+L")
+        PluginHeader.AddCustomButton("VIEW menu",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!V", "Alt+V")
+        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!S", "Alt+S")
+        PluginHeader.AddCustomButton("Previous instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^P", "Ctrl+P")
+        PluginHeader.AddCustomButton("Next instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^N", "Ctrl+N")
+        PluginHeader.AddCustomButton("Previous multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+P", "Ctrl+Shift+P")
+        PluginHeader.AddCustomButton("Next multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+N", "Ctrl+Shift+N")
+        PluginHeader.AddCustomButton("Snapshot menu", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!M", "Alt+M")
+        PluginHeader.AddCustomButton("Previous snapshot", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!P", "Alt+P")
+        PluginHeader.AddCustomButton("Next snapshot", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!N", "Alt+N")
         This.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Kontakt 7")
-        StandaloneHeader.AddCustomButton("FILE menu",,, This.ActivateStandaloneHeaderButton).SetHotkey("!F", "Alt+F")
-        StandaloneHeader.AddCustomButton("LIBRARY On/Off",,, This.ActivateStandaloneHeaderButton).SetHotkey("!L", "Alt+L")
-        StandaloneHeader.AddCustomButton("VIEW menu",,, This.ActivateStandaloneHeaderButton).SetHotkey("!V", "Alt+V")
-        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",,, This.ActivateStandaloneHeaderButton).SetHotkey("!S", "Alt+S")
+        StandaloneHeader.AddCustomButton("FILE menu",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!F", "Alt+F")
+        StandaloneHeader.AddCustomButton("LIBRARY On/Off",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!L", "Alt+L")
+        StandaloneHeader.AddCustomButton("VIEW menu",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!V", "Alt+V")
+        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!S", "Alt+S")
         This.StandaloneHeader := StandaloneHeader
         
         Plugin.Register("Kontakt 7", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), True, False, False, ObjBindMethod(This, "CheckPlugin"))
@@ -57,6 +57,126 @@ Class Kontakt7 {
         StandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
         StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")
         Standalone.RegisterOverlay("Kontakt 7 Content Missing Dialog", StandaloneContentMissingOverlay)
+    }
+    
+    Static ActivatePluginHeaderButton(HeaderButton) {
+        Critical
+        StartingPath := This.GetPluginStartingPath()
+        If StartingPath
+        Switch HeaderButton.Label {
+            Case "FILE menu":
+            UIAElement := GetUIAElement(StartingPath . ",2")
+            Case "LIBRARY On/Off":
+            UIAElement := GetUIAElement(StartingPath . ",3")
+            Case "VIEW menu":
+            UIAElement := GetUIAElement(StartingPath . ",4")
+            Case "SHOP (Opens in default web browser)":
+            UIAElement := GetUIAElement(StartingPath . ",5")
+            If UIAElement = False Or Not UIAElement.Name = "SHOP"
+            UIAElement := GetUIAElement(StartingPath . ",7")
+        }
+        If Not UIAElement = False
+        Switch HeaderButton.Label {
+            Case "FILE menu":
+            UIAElement.Click("Left")
+            This.CheckPluginMenu()
+            Case "LIBRARY On/Off":
+            UIAElement.Click("Left")
+            Case "VIEW menu":
+            UIAElement.Click("Left")
+            This.CheckPluginMenu()
+            Case "SHOP (Opens in default web browser)":
+            UIAElement.Click("Left")
+        }
+        Else
+        AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
+    }
+    
+    Static ActivatePluginInstrumentButton(InstrumentButton) {
+        Critical
+        StartingPath := This.GetPluginStartingPath()
+        UIAElement := GetUIAElement(StartingPath . ",5")
+        If Not UIAElement = False And UIAElement.Name = "SHOP" {
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            This.MoveToPluginInstrumentButton(InstrumentButton)
+            Click
+            Return
+        }
+        AccessibilityOverlay.Speak("Instrument switching unavailable. Make sure that an instrument is loaded and that you're in rack view.")
+    }
+    
+    Static ActivatePluginMultiButton(MultiButton) {
+        Critical
+        StartingPath := This.GetPluginStartingPath()
+        UIAElement := GetUIAElement(StartingPath . ",5")
+        If Not UIAElement = False And UIAElement.Name = "SHOP" {
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            This.MoveToPluginMultiButton(MultiButton)
+            Click
+            Return
+        }
+        AccessibilityOverlay.Speak("Multi switching unavailable. Make sure that a multi is loaded and that you're in rack view.")
+    }
+    
+    Static ActivatePluginSnapshotButton(SnapshotButton) {
+        Critical
+        StartingPath := This.GetPluginStartingPath()
+        UIAElement := GetUIAElement(StartingPath . ",5")
+        If Not UIAElement = False And UIAElement.Name = "SHOP" {
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            This.MoveToPluginSnapshotButton(SnapshotButton)
+            If InStr(SnapshotButton.Label, "Snapshot", True) {
+                Click
+                This.CheckPluginMenu()
+                Return
+            }
+            Else {
+                Click
+                Return
+            }
+        }
+        AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in rack view.")
+    }
+    
+    Static ActivateStandaloneHeaderButton(HeaderButton) {
+        Critical
+        UIAElement := False
+        Switch HeaderButton.Label {
+            Case "FILE menu":
+            UIAElement := GetUIAElement("1,2")
+            Case "LIBRARY On/Off":
+            UIAElement := GetUIAElement("1,3")
+            Case "VIEW menu":
+            UIAElement := GetUIAElement("1,4")
+            Case "SHOP (Opens in default web browser)":
+            UIAElement := GetUIAElement("1,5")
+            If UIAElement = False Or Not UIAElement.Name = "SHOP"
+            UIAElement := GetUIAElement("1,7")
+        }
+        If Not UIAElement = False
+        Switch HeaderButton.Label {
+            Case "FILE menu":
+            UIAElement.Click("Left")
+            This.CheckStandaloneMenu()
+            Case "LIBRARY On/Off":
+            UIAElement.Click("Left")
+            Case "VIEW menu":
+            UIAElement.Click("Left")
+            This.CheckStandaloneMenu()
+            Case "SHOP (Opens in default web browser)":
+            UIAElement.Click("Left")
+        }
+        Else
+        AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
     }
     
     Static CheckMenu(Type) {
@@ -221,202 +341,66 @@ Class Kontakt7 {
         Plugin.RegisterOverlayHotkeys("Kontakt 7", PluginInstance.Overlay)
     }
     
-    Class ActivatePluginHeaderButton {
-        Static Call(HeaderButton) {
-            Critical
-            StartingPath := Kontakt7.GetPluginStartingPath()
-            If StartingPath
-            Switch HeaderButton.Label {
-                Case "FILE menu":
-                UIAElement := GetUIAElement(StartingPath . ",2")
-                Case "LIBRARY On/Off":
-                UIAElement := GetUIAElement(StartingPath . ",3")
-                Case "VIEW menu":
-                UIAElement := GetUIAElement(StartingPath . ",4")
-                Case "SHOP (Opens in default web browser)":
-                UIAElement := GetUIAElement(StartingPath . ",5")
-                If UIAElement = False Or Not UIAElement.Name = "SHOP"
-                UIAElement := GetUIAElement(StartingPath . ",7")
-            }
-            If Not UIAElement = False
-            Switch HeaderButton.Label {
-                Case "FILE menu":
-                UIAElement.Click("Left")
-                Kontakt7.CheckPluginMenu()
-                Case "LIBRARY On/Off":
-                UIAElement.Click("Left")
-                Case "VIEW menu":
-                UIAElement.Click("Left")
-                Kontakt7.CheckPluginMenu()
-                Case "SHOP (Opens in default web browser)":
-                UIAElement.Click("Left")
-            }
+    Static MoveToPluginInstrumentButton(InstrumentButton) {
+        Label := InstrumentButton
+        If InstrumentButton Is Object
+        Label := InstrumentButton.Label
+        StartingPath := This.GetPluginStartingPath()
+        UIAElement := GetUIAElement(StartingPath . ",5")
+        If Not UIAElement = False And UIAElement.Name = "SHOP" {
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            If Label = "Previous instrument"
+            MouseMove ControlX + ControlWidth - 352, ControlY + 87
             Else
-            AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
+            MouseMove ControlX + ControlWidth - 332, ControlY + 87
         }
     }
     
-    Class ActivatePluginInstrumentButton {
-        Static Call(InstrumentButton) {
-            Critical
-            StartingPath := Kontakt7.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
-                Return
-                Kontakt7.MoveToPluginInstrumentButton(InstrumentButton)
-                Click
-                Return
-            }
-            AccessibilityOverlay.Speak("Instrument switching unavailable. Make sure that an instrument is loaded and that you're in rack view.")
-        }
-    }
-    
-    Class ActivatePluginMultiButton {
-        Static Call(MultiButton) {
-            Critical
-            StartingPath := Kontakt7.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
-                Return
-                Kontakt7.MoveToPluginMultiButton(MultiButton)
-                Click
-                Return
-            }
-            AccessibilityOverlay.Speak("Multi switching unavailable. Make sure that a multi is loaded and that you're in rack view.")
-        }
-    }
-    
-    Class ActivatePluginSnapshotButton {
-        Static Call(SnapshotButton) {
-            Critical
-            StartingPath := Kontakt7.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
-                Return
-                Kontakt7.MoveToPluginSnapshotButton(SnapshotButton)
-                If InStr(SnapshotButton.Label, "Snapshot", True) {
-                    Click
-                    Kontakt7.CheckPluginMenu()
-                    Return
-                }
-                Else {
-                    Click
-                    Return
-                }
-            }
-            AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in rack view.")
-        }
-    }
-    
-    Class ActivateStandaloneHeaderButton {
-        Static Call(HeaderButton) {
-            Critical
-            UIAElement := False
-            Switch HeaderButton.Label {
-                Case "FILE menu":
-                UIAElement := GetUIAElement("1,2")
-                Case "LIBRARY On/Off":
-                UIAElement := GetUIAElement("1,3")
-                Case "VIEW menu":
-                UIAElement := GetUIAElement("1,4")
-                Case "SHOP (Opens in default web browser)":
-                UIAElement := GetUIAElement("1,5")
-                If UIAElement = False Or Not UIAElement.Name = "SHOP"
-                UIAElement := GetUIAElement("1,7")
-            }
-            If Not UIAElement = False
-            Switch HeaderButton.Label {
-                Case "FILE menu":
-                UIAElement.Click("Left")
-                Kontakt7.CheckStandaloneMenu()
-                Case "LIBRARY On/Off":
-                UIAElement.Click("Left")
-                Case "VIEW menu":
-                UIAElement.Click("Left")
-                Kontakt7.CheckStandaloneMenu()
-                Case "SHOP (Opens in default web browser)":
-                UIAElement.Click("Left")
-            }
+    Static MoveToPluginMultiButton(MultiButton) {
+        Label := MultiButton
+        If MultiButton Is Object
+        Label := MultiButton.Label
+        StartingPath := This.GetPluginStartingPath()
+        UIAElement := GetUIAElement(StartingPath . ",5")
+        If Not UIAElement = False And UIAElement.Name = "SHOP" {
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            If Label = "Previous multi"
+            MouseMove ControlX + 704, ControlY + 53
             Else
-            AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
+            MouseMove ControlX + 722, ControlY + 53
         }
     }
     
-    Class MoveToPluginInstrumentButton {
-        Static Call(InstrumentButton) {
-            Label := InstrumentButton
-            If InstrumentButton Is Object
-            Label := InstrumentButton.Label
-            StartingPath := Kontakt7.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
-                Return
-                If Label = "Previous instrument"
-                MouseMove ControlX + ControlWidth - 352, ControlY + 87
-                Else
-                MouseMove ControlX + ControlWidth - 332, ControlY + 87
+    Static MoveToPluginSnapshotButton(SnapshotButton) {
+        If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True)
+        SnapshotButton.Label := "Snapshot menu"
+        Label := SnapshotButton
+        If SnapshotButton Is Object
+        Label := SnapshotButton.Label
+        StartingPath := This.GetPluginStartingPath()
+        UIAElement := GetUIAElement(StartingPath . ",5")
+        If Not UIAElement = False And UIAElement.Name = "SHOP" {
+            Try
+            ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
+            Catch
+            Return
+            If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
+                OCRResult := AccessibilityOverlay.Ocr("UWP", ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
+                If Not OCRResult = ""
+                SnapshotButton.Label := "Snapshot " . OcrResult
             }
-        }
-    }
-    
-    Class MoveToPluginMultiButton {
-        Static Call(MultiButton) {
-            Label := MultiButton
-            If MultiButton Is Object
-            Label := MultiButton.Label
-            StartingPath := Kontakt7.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
-                Return
-                If Label = "Previous multi"
-                MouseMove ControlX + 704, ControlY + 53
-                Else
-                MouseMove ControlX + 722, ControlY + 53
-            }
-        }
-    }
-    
-    Class MoveToPluginSnapshotButton {
-        Static Call(SnapshotButton) {
-            If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True)
-            SnapshotButton.Label := "Snapshot menu"
-            Label := SnapshotButton
-            If SnapshotButton Is Object
-            Label := SnapshotButton.Label
-            StartingPath := Kontakt7.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",5")
-            If Not UIAElement = False And UIAElement.Name = "SHOP" {
-                Try
-                ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-                Catch
-                Return
-                If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
-                    OCRResult := AccessibilityOverlay.Ocr("UWP", ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
-                    If Not OCRResult = ""
-                    SnapshotButton.Label := "Snapshot " . OcrResult
-                }
-                If InStr(Label, "Snapshot", True)
-                MouseMove ControlX + ControlWidth - 588, ControlY + 118
-                Else If InStr(Label, "Previous snapshot", True)
-                MouseMove ControlX + ControlWidth - 405, ControlY + 118
-                Else
-                MouseMove ControlX + ControlWidth - 389, ControlY + 118
-            }
+            If InStr(Label, "Snapshot", True)
+            MouseMove ControlX + ControlWidth - 588, ControlY + 118
+            Else If InStr(Label, "Previous snapshot", True)
+            MouseMove ControlX + ControlWidth - 405, ControlY + 118
+            Else
+            MouseMove ControlX + ControlWidth - 389, ControlY + 118
         }
     }
     

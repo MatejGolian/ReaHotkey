@@ -132,7 +132,7 @@ Class KompleteKontrol {
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol"
         Return True
-        If ReaHotkey.ReaperPluginNative {
+        If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative {
             StartingPath := This.GetPluginStartingPath()
             If StartingPath
             Return True
@@ -209,7 +209,7 @@ Class KompleteKontrol {
         If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png")
         Return True
         Return False
-    }
+        }
     
     Static ClosePluginBrowser() {
         StartingPath := This.GetPluginStartingPath()

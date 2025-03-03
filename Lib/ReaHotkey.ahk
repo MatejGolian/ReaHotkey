@@ -134,9 +134,19 @@ Class ReaHotkey {
     }
     
     Static GetPluginControl() {
-        If This.PluginWinCriteria And WinActive(This.PluginWinCriteria) {
+        If Not This.PluginWinCriteria Or Not WinActive(This.PluginWinCriteria)
+        Return False
+        Controls := WinGetControls(This.PluginWinCriteria)
+        If This.AbletonPlugin {
+            If Controls.Length > 0
+            For PluginEntry In Plugin.List
+            If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
+            For ControlClass In PluginEntry["ControlClasses"]
+            If RegExMatch(Controls[1], ControlClass)
+            Return Controls[1]
+        }
+        If This.ReaperPlugin {
             ReaperControlPatterns := ["^#327701$", "^Button[0-9]+$", "^ComboBox[0-9]+$", "^Edit[0-9]+$", "^REAPERknob[0-9]+$", "^reaperPluginHostWrapProc[0-9]+$", "^Static[0-9]+$", "^SysHeader321$", "^SysListView321$", "^SysTreeView321$"]
-            Controls := WinGetControls(This.PluginWinCriteria)
             For Index, Control In Controls
             If Control = "reaperPluginHostWrapProc1" And Index < Controls.Length {
                 PluginControl := Controls[Index + 1]
@@ -180,27 +190,31 @@ Class ReaHotkey {
     Static InPluginControl(ControlToCheck) {
         If This.PluginWinCriteria And WinActive(This.PluginWinCriteria) {
             PluginControl := This.GetPluginControl()
-            If Not PluginControl = False {
-                Controls := WinGetControls(This.PluginWinCriteria)
-                PluginPosition := 0
-                For Index, Control In Controls
-                If Control = PluginControl {
-                    PluginPosition := Index
-                    Break
-                }
-                CheckPosition := 0
-                For Index, Control In Controls
-                If Control = ControlToCheck {
-                    CheckPosition := Index
-                    Break
-                }
-                If PluginPosition > 0 And CheckPosition > 0 And PluginPosition <= CheckPosition {
-                    ReaperControlPatterns := ["^#327701$", "^Button[0-9]+$", "^ComboBox[0-9]+$", "^Edit[0-9]+$", "^REAPERknob[0-9]+$", "^reaperPluginHostWrapProc[0-9]+$", "^Static[0-9]+$", "^SysHeader321$", "^SysListView321$", "^SysTreeView321$"]
-                    For ReaperControlPattern In ReaperControlPatterns
-                    If RegExMatch(ControlToCheck, ReaperControlPattern)
-                    Return False
-                    Return True
-                }
+            If Not PluginControl
+            Return False
+            Controls := WinGetControls(This.PluginWinCriteria)
+            PluginPosition := 0
+            For Index, Control In Controls
+            If Control = PluginControl {
+                PluginPosition := Index
+                Break
+            }
+            CheckPosition := 0
+            For Index, Control In Controls
+            If Control = ControlToCheck {
+                CheckPosition := Index
+                Break
+            }
+            If Not PluginPosition > 0 Or Not CheckPosition > 0 Or Not PluginPosition <= CheckPosition
+            Return False
+            If This.AbletonPlugin
+            Return True
+            If This.ReaperPlugin {
+                ReaperControlPatterns := ["^#327701$", "^Button[0-9]+$", "^ComboBox[0-9]+$", "^Edit[0-9]+$", "^REAPERknob[0-9]+$", "^reaperPluginHostWrapProc[0-9]+$", "^Static[0-9]+$", "^SysHeader321$", "^SysListView321$", "^SysTreeView321$"]
+                For ReaperControlPattern In ReaperControlPatterns
+                If RegExMatch(ControlToCheck, ReaperControlPattern)
+                Return False
+                Return True
             }
         }
         Return False
@@ -702,6 +716,17 @@ Class ReaHotkey {
     Class GetPluginWinCriteriaList {
         Static Call() {
             Return ReaHotkey.MergeArrays(ReaHotkey.AbletonPluginWinCriteriaList, ReaHotkey.reaperPluginWinCriteriaList)
+        }
+    }
+    
+    Class GetReaperPlugin {
+        Static Call() {
+            If Not ReaHotkey.ReaperPluginWinCriteria
+            Return False
+            For PluginWinCriteria In ReaHotkey.ReaperPluginWinCriteriaList
+            If WinActive(PluginWinCriteria)
+            Return True
+            Return False
         }
     }
     

@@ -67,13 +67,13 @@ Class Zampler {
     
     Static Check(*) {
         Thread "NoTimers"
-        ReaperPluginNames := ["VSTi: Zampler (Synapse Audio)"]
         PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
         If PluginInstance Is Plugin And PluginInstance.Name = "Zampler"
         Return True
         If ReaHotkey.Config.Get("ZamplerImageSearch") = 1 And FindImage("Images/Zampler/Zampler.png", GetPluginXCoordinate() + 0, GetPluginYCoordinate() + 140, GetPluginXCoordinate() + 230, GetPluginYCoordinate() + 170) Is Object
         Return True
         If ReaHotkey.ReaperPluginNative {
+            ReaperPluginNames := ["VSTi: Zampler (Synapse Audio)"]
             Try
             ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
             Catch
