@@ -72,6 +72,10 @@ Class Zampler {
         Return True
         If ReaHotkey.Config.Get("ZamplerImageSearch") = 1 And FindImage("Images/Zampler/Zampler.png", GetPluginXCoordinate() + 0, GetPluginYCoordinate() + 140, GetPluginXCoordinate() + 230, GetPluginYCoordinate() + 170) Is Object
         Return True
+        If ReaHotkey.AbletonPlugin {
+            If RegExMatch(WinGetTitle("A"), "^Zampler-RX/([1-9][0-9]*)-Zampler-RX$")
+            Return True
+        }
         If ReaHotkey.ReaperPluginNative {
             ReaperPluginNames := ["VSTi: Zampler (Synapse Audio)"]
             Try

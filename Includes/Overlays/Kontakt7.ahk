@@ -278,8 +278,7 @@ Class Kontakt7 {
                 }
             }
         }
-        
-    }
+        }
     
     Static CloseStandaloneBrowser() {
         UIAElement := GetUIAElement("1,14,3")
