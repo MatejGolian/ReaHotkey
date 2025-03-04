@@ -200,9 +200,9 @@ Class Kontakt7 {
     
     Static CheckPlugin(*) {
         Thread "NoTimers"
-        PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
-        If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 7"
-        Return True
+        ;PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
+            ;If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 7"
+        ;Return True
         StartingPath := This.GetPluginStartingPath()
         If StartingPath
         Return True
@@ -278,7 +278,7 @@ Class Kontakt7 {
                 }
             }
         }
-        }
+    }
     
     Static CloseStandaloneBrowser() {
         UIAElement := GetUIAElement("1,14,3")
@@ -296,22 +296,23 @@ Class Kontakt7 {
     }
     
     Static GetPluginStartingPath() {
-        Static UIAPath := False
+        Static CachedPath := False
         Try
         UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
         Catch
         UIAElement := False
-        If UIAElement And UIAPath And CheckPath(UIAElement, UIAPath)
-        Return UIAPath
+        If UIAElement And CachedPath And CheckPath(UIAElement, CachedPath)
+        Return CachedPath
         If UIAElement
         Try
         For Index, ChildElement In UIAElement.Children {
             UIAPaths := [Index, Index . ",1"]
             For UIAPath In UIAPaths
-            If CheckPath(UIAElement, UIAPath)
-            Return UIAPath
+            If CheckPath(UIAElement, UIAPath) {
+                CachedPath := UIAPath
+                Return UIAPath
+            }
         }
-        UIAPath := False
         Return ""
         CheckPath(UIAElement, UIAPath) {
             Try

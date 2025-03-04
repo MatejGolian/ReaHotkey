@@ -19,22 +19,23 @@ Class Sforzando {
     }
     
     Static GetPluginStartingPath() {
-        Static UIAPath := False
+        Static CachedPath := False
         Try
         UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
         Catch
         UIAElement := False
-        If UIAElement And UIAPath And CheckPath(UIAElement, UIAPath)
-        Return UIAPath
+        If UIAElement And CachedPath And CheckPath(UIAElement, CachedPath)
+        Return CachedPath
         If UIAElement
         Try
         For Index, ChildElement In UIAElement.Children {
             UIAPaths := [Index, Index . ",1"]
             For UIAPath In UIAPaths
-            If CheckPath(UIAElement, UIAPath)
-            Return UIAPath
+            If CheckPath(UIAElement, UIAPath) {
+                CachedPath := UIAPath
+                Return UIAPath
+            }
         }
-        UIAPath := False
         Return ""
         CheckPath(UIAElement, UIAPath) {
             Try
