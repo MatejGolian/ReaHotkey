@@ -2,7 +2,7 @@
 
 ## What's This And Who Is It For?
 
-This is an AutoHotkey scripth which aims to make certain virtual instruments/sample libraries  and related software at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although in particular cases standalone versions of programs/instruments may be supported as well.
+This is an AutoHotkey scripth which aims to make certain virtual instruments/sample libraries  and related software at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although other programs/instruments are supported as well.
 
 ## What's new?
 
@@ -14,42 +14,34 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - standalone and MIDI capture plugin support
   - not all features are supported, nor do we know if they ever will be (see [below](#dubler2))
 * Makes it possible to load instruments and add libraries in Best Service Engine 2.
-  - Works both inside REAPER and in the standalone version of Engine 2.
+  - Works inside REAPER and Ableton Live 12. The standalone version of Engine 2 is also supported.
 * Allows to click the presets button in various FabFilter plugins
   - The keyboard bindings only work with the unified interfaces of e.g. C-2, Q-3 etc, but not with the newer R-2 yet
-* Makes it possible to interact with Komplete Kontrol menus.
-  - Works both inside REAPER and in the standalone version of Komplete Kontrol. Note that Komplete Kontrol version 3 is absolutely required in case of the plug-in.
-* Makes it possible to add new user library folders and perform library and plug-in rescans in Komplete Kontrol. In addition, one can also toggle certain settings on/off.
-  - Works both inside REAPER and in the standalone version of Komplete Kontrol, although due to how REAPER FX windows behave with screen readers, using the standalone version for performing these tasks may provide a more stable and reliable user experience and is therefore preferred.
-  - Komplete Kontrol version 3.4 is highly recommended, although most of the above functionality may work with older versions of the application as well. That being said, ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
-* Makes it possible to Save new presets in Komplete Kontrol.
-  - Works both inside REAPER and in the standalone version of Komplete Kontrol.
-* Makes it possible to interact with Kontakt menus.
-  - Works both inside REAPER and in the standalone version of Kontakt, Full and Player. Note that Kontakt version 7.10 or higher is required.
-* Makes it possible to switch Between instruments, multis and snapshots in Kontakt.
-  - Only works inside REAPER.
-* Provides support for the 'Browse' button in the Kontakt Content Missing dialog.
-  - Works both inside REAPER and in the standalone version of Kontakt. This feature may not work with Komplete Kontrol.
-* Makes it possible to switch Between various microphone positions in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries.
-  - Only works inside REAPER.
-* Makes it possible to toggle microphone positions in Cinematic Studio Strings.
-  - Only works inside REAPER.
-* Makes it possible to switch presets in the 'Juggernaut' library by Impact Soundworks 
-  - Only works inside REAPER and only when using Kontakt 7
-* Makes it possible to toggle the reverb on/off in some Soundiron libraries.
-  - Only works inside REAPER.
+* Makes it possible to  access the menus and save new presets in Komplete Kontrol. It's also possible to change a number of settings in Preferences and add new user library folders and perform library and plug-in rescans.
+  - Works inside REAPER, Ableton Live 12 and in the standalone version of Komplete Kontrol.
+  - Note that Komplete Kontrol version 3 or above is absolutely required in case of the plug-in.
+  - Version 3.4 is highly recommended, although most of the above functionality may work in older versions as well. That being said, ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
+  - The standalone version may provide a more stable and reliable user experience overall.
+* Makes it possible to interact with Kontakt menus, switch Between instruments, multis and snapshots. There's also support for the 'Browse' button in the Content Missing dialog.
+  - Works inside REAPER and Ableton Live 12. Note that Kontakt version 7.10 or higher is required.
+  - Switching Between instruments/multis/snapshots Only works inside REAPER and Ableton Live 12 - ReaHotkey does not support these features in the standalone versions of Kontakt.
+  - The Content Missing dialog may not be accessible when running Kontakt inside Komplete Kontrol.
+* Makes it possible to switch Between various mixes and microphone positions in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries. There is also support for toggling microphone positions in Cinematic Studio Strings, switching presets in the 'Juggernaut' library by Impact Soundworks and toggling the reverb on/off in a couple of Soundiron libraries.
+  - Only works inside REAPER and Ableton Live 12.
+  - The overlay for Juggernaut is only accessible when using Kontakt 7, but otherwise everything else works both in Kontakt and Komplete Kontrol.
 * Makes it possible to load instruments, set polyphony and pitchbend range in Plogue sforzando.
-  - Works both inside REAPER and in the standalone version of sforzando.
-* Makes it possible to use the Zampler plug-in by Synapse Audio in REAPER
+  - Works inside REAPER, Ableton Live 12 and in the standalone version of sforzando.
+* Makes it possible to use the Zampler plug-in by Synapse Audio in REAPER and Ableton Live 12.
 
 ## General Notes
 
 * ReaHotkey requires a screen resolution of 1920 x 1080 to operate properly. Shouldn't you have a display connected, or your display doesn't support the required screen resolution, you can either buy a cheap HDMI display simulation dongle (usually about $10), or try the following free software-based solution which installs a virtual display driver that can emulate screen resolutions without having to have an actual display connected: [Click here to visit the latest GitHub release of Virtual Display Driver](https://github.com/VirtualDisplay/Virtual-Display-Driver/releases/latest)
 * In order to make ReaHotkey work successfully with a certain application such as REAPER, ReaHotkey should be run with at least the same user privileges as the application to be controlled, otherwise ReaHotkey keyboard commands may not get enabled. For instance, if you are running REAPER as administrator, you should run ReaHotkey as administrator as well.
-* Because ReaHotkey may pass through some keys to the active application in specific cases, it's generally recommended to enable the 'Send all keyboard input to plug-in' option in REAPER's FX menu, when interacting with a supported plug-in interface.
+* Because ReaHotkey may pass through some keys to the active application in specific cases, you can try enabling the 'Send all keyboard input to plug-in' option in REAPER's FX menu when interacting with a supported plug-in interface, should you find that you're dropping out of the plug-in window unexpectedly.
 
 ## Keyboard Shortcuts
 
+* f6 - focus plug-in window/interface
 * ctrl+shift+windows+a - about
 * ctrl+shift+windows+c - configuration
 * ctrl+shift+windows+p - pause
@@ -62,9 +54,10 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 ## Known Issues
 
 * The ReaHotkey script can crash while In Dubler 2 audio calibration view. In that case just start the script again.
+* When you add a plug-in in Ableton Live, the plug-in window does not get automatically focused - not even if its user interface is visible and on top. To get around this behavior, press F6 while ReaHotkey is running to make the plug-in window active.
 * Using any other zoom value in Kontakt than 100% may result in ReaHotkey not operating as expected.
 * At present library-specific overlays may not always behave correctly when used directly in the Kontakt 8 plug-in. In such case try using Kontakt 7 or open the given library from within Komplete Kontrol instead.
-* Due to OCR limitations the Komplete Kontrol Save Preset dialog may display incorrect preset names at times.
+* Due to OCR limitations the Komplete Kontrol Save Preset dialog may display incorrect preset names.
 
 ## <a name="dubler2"></a>Dubler 2 Accessibility
 
