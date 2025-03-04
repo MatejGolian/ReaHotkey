@@ -198,11 +198,11 @@ Class Kontakt7 {
         %Type%.SetNoHotkeys("Kontakt 7", True)
     }
     
-    Static CheckPlugin(*) {
+    Static CheckPlugin(PluginInstance) {
         Thread "NoTimers"
-        ;PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
-            ;If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 7"
-        ;Return True
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance.Name = "Kontakt 7"
+        Return True
         StartingPath := This.GetPluginStartingPath()
         If StartingPath
         Return True
@@ -220,10 +220,10 @@ Class Kontakt7 {
         This.ClosePluginPopup()
     }
     
-    Static CheckPluginContentMissing(*) {
+    Static CheckPluginContentMissing(PluginInstance) {
         Thread "NoTimers"
-        PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
-        If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 7 Content Missing Dialog"
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance.Name = "Kontakt 7 Content Missing Dialog"
         Return True
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing" {
             StartingPath := This.GetPluginStartingPath()

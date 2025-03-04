@@ -127,10 +127,10 @@ Class KompleteKontrol {
         %Type%.SetNoHotkeys("Komplete Kontrol", Found)
     }
     
-    Static CheckPlugin(*) {
+    Static CheckPlugin(PluginInstance) {
         Thread "NoTimers"
-        PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
-        If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol"
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance.Name = "Komplete Kontrol"
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative {
             StartingPath := This.GetPluginStartingPath()
@@ -154,38 +154,30 @@ Class KompleteKontrol {
         This.CheckMenu("Plugin")
     }
     
-    Static CheckPluginPreferenceDialog(PluginData) {
+    Static CheckPluginPreferenceDialog(PluginInstance) {
         Thread "NoTimers"
         Static PreviousWinID := ""
         CurrentWinID := WinGetID("A")
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Preferences" {
-            If PluginData Is Map And PluginData["Name"] = "Komplete Kontrol Preference Dialog"
+            If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol Preference Dialog"
+            If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
+            PluginInstance.Overlay.Reset()
+            PreviousWinID := CurrentWinID
             Return True
-            Else
-            If PluginData Is Plugin And PluginData.Name = "Komplete Kontrol Preference Dialog" {
-                If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
-                PluginData.Overlay.Reset()
-                PreviousWinID := CurrentWinID
-                Return True
-            }
         }
         Return False
     }
     
-    Static CheckPluginSaveAsDialog(PluginData) {
+    Static CheckPluginSaveAsDialog(PluginInstance) {
         Thread "NoTimers"
         Static PreviousWinID := ""
         CurrentWinID := WinGetID("A")
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
-            If PluginData Is Map And PluginData["Name"] = "Komplete Kontrol Save As Dialog"
+            If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol Save As Dialog"
+            If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
+            PluginInstance.Overlay.Reset()
+            PreviousWinID := CurrentWinID
             Return True
-            Else
-            If PluginData Is Plugin And PluginData.Name = "Komplete Kontrol Save As Dialog" {
-                If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
-                PluginData.Overlay.Reset()
-                PreviousWinID := CurrentWinID
-                Return True
-            }
         }
         Return False
     }
@@ -195,11 +187,10 @@ Class KompleteKontrol {
         This.CloseStandaloneBrowser()
     }
     
-    Static CheckStandaloneSaveAsDialog(*) {
+    Static CheckStandaloneSaveAsDialog(StandaloneInstance) {
         Thread "NoTimers"
         Static PreviousWinID := ""
         CurrentWinID := WinGetID("A")
-        StandaloneInstance := Standalone.GetInstance(CurrentWinID)
         If StandaloneInstance Is Standalone And StandaloneInstance.Name = "Komplete Kontrol Save As Dialog" {
             If Not PreviousWinID = CurrentWinID
             Send "{Tab}"

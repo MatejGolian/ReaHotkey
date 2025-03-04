@@ -215,10 +215,10 @@ Class Kontakt8 {
         %Type%.SetNoHotkeys("Kontakt 8", True)
     }
     
-    Static CheckPlugin(*) {
+    Static CheckPlugin(PluginInstance) {
         Thread "NoTimers"
-        PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
-        If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 8"
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance.Name = "Kontakt 8"
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative {
             StartingPath := This.GetPluginStartingPath()
@@ -238,10 +238,10 @@ Class Kontakt8 {
         Plugin.SetTimer("Kontakt 8", PluginAutoChangeFunction, 0)
     }
     
-    Static CheckPluginContentMissing(*) {
+    Static CheckPluginContentMissing(PluginInstance) {
         Thread "NoTimers"
-        PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
-        If PluginInstance Is Plugin And PluginInstance.Name = "Kontakt 8 Content Missing Dialog"
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance.Name = "Kontakt 8 Content Missing Dialog"
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing" {

@@ -69,16 +69,17 @@ Class Plugin Extends Program {
                     }
                 }
             }
-            FirstValidNumber := 0
-            For PluginNumber In PluginNumbers
-            If This.List[PluginNumber]["CheckerFunction"].Call(This.List[PluginNumber]) = True {
-                FirstValidNumber := PluginNumber
-                Break
-            }
-            If FirstValidNumber > 0 {
-                PluginInstance := Plugin(This.List[FirstValidNumber]["Name"], ControlClass, WinTitle)
-                PluginInstance.%PropertyName% := PropertyValue
-                Return PluginInstance
+            For PluginNumber In PluginNumbers {
+                PreviousInstanceCount := This.Instances.Length
+                PluginInstance := Plugin("", ControlClass, WinTitle)
+                CheckResult := This.List[PluginNumber]["CheckerFunction"].Call(PluginInstance)
+                If This.Instances.Length > PreviousInstanceCount
+                This.Instances.Pop()
+                If CheckResult = True {
+                    PluginInstance := Plugin(This.List[PluginNumber]["Name"], ControlClass, WinTitle)
+                    PluginInstance.%PropertyName% := PropertyValue
+                    Return PluginInstance
+                }
             }
         }
         Return False

@@ -7,10 +7,10 @@ Class Sforzando {
         Standalone.Register("sforzando", "Plogue Art et Technologie, Inc sforzando ahk_class PLGWindowClass ahk_exe sforzando( x64)?.exe", ObjBindMethod(This, "InitStandalone"), False, False)
     }
     
-    Static CheckPlugin(*) {
+    Static CheckPlugin(PluginInstance) {
         Thread "NoTimers"
-        PluginInstance := Plugin.GetInstance(GetCurrentControlClass())
-        If PluginInstance Is Plugin And PluginInstance.Name = "sforzando"
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance.Name = "sforzando"
         Return True
         StartingPath := This.GetPluginStartingPath()
         If StartingPath
