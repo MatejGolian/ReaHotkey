@@ -5,10 +5,15 @@ F6HK(ThisHotkey) {
     Controls := WinGetControls(ReaHotkey.PluginWinCriteria)
     If ReaHotkey.AbletonPlugin {
         Try
+        CurrentControl := ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))
+        Catch
+        CurrentControl := 0
+        Try
         PluginControl := ReaHotkey.GetPluginControl()
         Catch
         PluginControl := 0
-        If PluginControl {
+        If PluginControl
+        If Not PluginControl = CurrentControl {
             Try
             ControlFocus Controls[1], ReaHotkey.PluginWinCriteria
             Return
