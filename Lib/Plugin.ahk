@@ -70,11 +70,8 @@ Class Plugin Extends Program {
                 }
             }
             For PluginNumber In PluginNumbers {
-                PreviousInstanceCount := This.Instances.Length
-                PluginInstance := Plugin("", ControlClass, WinTitle)
+                PluginInstance := Plugin("", "", "")
                 CheckResult := This.List[PluginNumber]["CheckerFunction"].Call(PluginInstance)
-                If This.Instances.Length > PreviousInstanceCount
-                This.Instances.Pop()
                 If CheckResult = True {
                     PluginInstance := Plugin(This.List[PluginNumber]["Name"], ControlClass, WinTitle)
                     PluginInstance.%PropertyName% := PropertyValue

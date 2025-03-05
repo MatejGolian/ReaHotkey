@@ -72,7 +72,7 @@ Class Engine2 {
         }
         If ReaHotkey.ReaperPluginBridged {
             Try
-            If RegExMatch(WinGetTitle("A"), "^ENGINE \(x(64)|(86) bridged\)$")
+            If RegExMatch(WinGetTitle("A"), "^ENGINE \(x(64|86) bridged\)$")
             Return True
             Catch
             Return False

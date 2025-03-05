@@ -54,7 +54,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 ## Known Issues
 
 * The ReaHotkey script can crash while In Dubler 2 audio calibration view. In that case just start the script again.
-* When you add a plug-in in Ableton Live, the plug-in window does not get automatically focused - not even if its user interface is visible and on top. To get around this behavior, press F6 while ReaHotkey is running to make the plug-in window active.
+* After adding a plug-in, the plug-in window may not get automatically focused - not even if its user interface is visible and on top. To get around this behavior, press F6 while ReaHotkey is running to make the plug-in interface active.
 * Using any other zoom value in Kontakt than 100% may result in ReaHotkey not operating as expected.
 * At present library-specific overlays may not always behave correctly when used directly in the Kontakt 8 plug-in. In such case try using Kontakt 7 or open the given library from within Komplete Kontrol instead.
 * Due to OCR limitations the Komplete Kontrol Save Preset dialog may display incorrect preset names.

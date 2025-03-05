@@ -39,11 +39,8 @@ Class Standalone Extends Program {
         WinID := WinGetID("A")
         StandaloneNumber := This.FindByActiveWindow()
         If Not StandaloneNumber = 0 {
-            PreviousInstanceCount := This.Instances.Length
-            StandaloneInstance := Standalone("", WinID)
+            StandaloneInstance := Standalone("", "")
             CheckResult := This.List[StandaloneNumber]["CheckerFunction"].Call(StandaloneInstance)
-            If This.Instances.Length > PreviousInstanceCount
-            This.Instances.Pop()
             If CheckResult = True {
                 StandaloneInstance := Standalone(This.List[StandaloneNumber]["Name"], WinID)
                 Return StandaloneInstance

@@ -89,7 +89,7 @@ Class Zampler {
         }
         If ReaHotkey.ReaperPluginBridged {
             Try
-            If RegExMatch(WinGetTitle("A"), "^Zampler \(x(64)|(86) bridged\)$")
+            If RegExMatch(WinGetTitle("A"), "^Zampler \(x(64|86) bridged\)$")
             Return True
             Catch
             Return False
