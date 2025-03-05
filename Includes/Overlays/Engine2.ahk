@@ -7,6 +7,7 @@ Class Engine2 {
         
         Plugin.Register("Engine 2", "^Plugin[0-9A-F]{1,}$",, False, False, False, ObjBindMethod(This, "CheckPlugin"))
         Standalone.Register("Engine 2", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe",, False, False)
+        Standalone.Register("Engine 2 Add Library Dialog", "add library... ahk_class #32770 ahk_exe Engine 2.exe", ObjBindMethod(This, "InitAddLibraryDialog"), False, True)
         
         Engine2PluginOverlay := AccessibilityOverlay("Engine 2")
         Engine2PluginOverlay.Metadata := Map("Vendor", "Best Service", "Product", "Engine 2")
@@ -45,7 +46,30 @@ Class Engine2 {
         Engine2StandaloneMiscTab := HotspotTab("Misc.", 648, 61)
         Engine2StandalonePreferencesTab.AddTabControl(, Engine2StandaloneEngineTab, Engine2StandaloneLibrariesTab, Engine2StandaloneUserFolderTab, Engine2StandaloneOutputSurrTab, Engine2StandaloneMiscTab)
         Standalone.RegisterOverlay("Engine 2", Engine2StandaloneOverlay)
-        
+    }
+    
+    Static ActivatePluginAddLibraryButton(Engine2AddLibraryButton) {
+        Engine2LibrariesTab := Engine2AddLibraryButton.GetSuperordinateControl()
+        Engine2PreferencesTab := Engine2LibrariesTab.GetSuperordinateControl()
+        Engine2PreferencesTab.Focus(False)
+        Engine2LibrariesTab.Focus(False)
+        Engine2AddLibraryButton.Focus(False)
+        AccessibilityOverlay.Speak("")
+    }
+    
+    Static AltOHK(ThisHotkey) {
+        Try {
+            ControlFocus "Button2", "A"
+            TargetControl := "Button2"
+        }
+        Catch {
+            TargetControl := 0
+        }
+        Try
+        If TargetControl = "Button2"
+        ControlClick TargetControl, "A"
+        Else
+        ReaHotkey.PassThroughHotkey(ThisHotkey)
     }
     
     Static CheckPlugin(PluginInstance) {
@@ -80,13 +104,22 @@ Class Engine2 {
         Return False
     }
     
-    Static ActivatePluginAddLibraryButton(Engine2AddLibraryButton) {
-        Engine2LibrariesTab := Engine2AddLibraryButton.GetSuperordinateControl()
-        Engine2PreferencesTab := Engine2LibrariesTab.GetSuperordinateControl()
-        Engine2PreferencesTab.Focus(False)
-        Engine2LibrariesTab.Focus(False)
-        Engine2AddLibraryButton.Focus(False)
-        AccessibilityOverlay.Speak("")
+    Static EnterSpaceHK(ThisHotkey) {
+        Try
+        CurrentControl := ControlGetClassNN(ControlGetFocus("A"))
+        Catch
+        CurrentControl := 0
+        Try
+        If CurrentControl = "Button2"
+        ControlClick CurrentControl, "A"
+        Else
+        ReaHotkey.PassThroughHotkey(ThisHotkey)
+    }
+    
+    Static InitAddLibraryDialog(StandaloneInstance) {
+        ReaHotkey.OverrideStandaloneHotkey("Engine 2 Add Library Dialog", "Enter", ObjBindMethod(This, "EnterSpaceHK"))
+        ReaHotkey.OverrideStandaloneHotkey("Engine 2 Add Library Dialog", "Space", ObjBindMethod(This, "EnterSpaceHK"))
+        ReaHotkey.OverrideStandaloneHotkey("Engine 2 Add Library Dialog", "!O", ObjBindMethod(This, "AltOHK"))
     }
     
     Static InitConfig() {
