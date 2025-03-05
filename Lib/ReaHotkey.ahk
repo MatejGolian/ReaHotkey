@@ -553,7 +553,8 @@ Class ReaHotkey {
     Static TurnHotkeysOn(Type, Name := "") {
         Thread "NoTimers"
         If Type = "Plugin" Or Type = "Standalone"
-        If This.Found%Type% Is %Type% And This.Found%Type%.NoHotkeys = False {
+        If This.Found%Type% Is %Type%
+        If This.Found%Type%.NoHotkeys = False {
             If This.PluginWinCriteria And Type = "Plugin" {
                 HotIfWinActive(This.PluginWinCriteria)
                 TurnCommonOn()
@@ -564,6 +565,24 @@ Class ReaHotkey {
                 HotIf
                 TurnCommonOn()
                 TurnSpecificsOn(Type, Name)
+                TurnOverridesOn(Type, Name)
+            }
+            If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
+            HotIfWinActive(This.PluginWinCriteria)
+            Else
+            HotIf
+        }
+        Else {
+            If This.PluginWinCriteria And Type = "Plugin" {
+                HotIfWinActive(This.PluginWinCriteria)
+                TurnOverridesOn(Type, "")
+                If Not Name = ""
+                TurnOverridesOn(Type, Name)
+            }
+            If This.StandaloneWinCriteria And Type = "Standalone" {
+                HotIf
+                TurnOverridesOn(Type, "")
+                If Not Name = ""
                 TurnOverridesOn(Type, Name)
             }
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
