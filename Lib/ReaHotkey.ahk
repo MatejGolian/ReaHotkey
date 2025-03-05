@@ -575,14 +575,10 @@ Class ReaHotkey {
         Else {
             If This.PluginWinCriteria And Type = "Plugin" {
                 HotIfWinActive(This.PluginWinCriteria)
-                TurnOverridesOn(Type, "")
-                If Not Name = ""
                 TurnOverridesOn(Type, Name)
             }
             If This.StandaloneWinCriteria And Type = "Standalone" {
                 HotIf
-                TurnOverridesOn(Type, "")
-                If Not Name = ""
                 TurnOverridesOn(Type, Name)
             }
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
@@ -621,15 +617,13 @@ Class ReaHotkey {
             }
         }
         TurnOverridesOn(Type, Name) {
-            For DefinedHotkey In This.%Type%HotkeyOverrides {
-                If Not DefinedHotkey.Has("Name") And Not DefinedHotkey["State"] = "Off"
-                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-            }
-            If Not Name = "" {
-                For DefinedHotkey In This.%Type%HotkeyOverrides
-                If DefinedHotkey.Has("Name") And DefinedHotkey["Name"] = Name And Not DefinedHotkey["State"] = "Off"
-                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-            }
+            For DefinedHotkey In This.%Type%HotkeyOverrides
+            If Not DefinedHotkey.Has("Name") And Not DefinedHotkey["State"] = "Off"
+            Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
+            If Not Name = ""
+            For DefinedHotkey In This.%Type%HotkeyOverrides
+            If DefinedHotkey.Has("Name") And DefinedHotkey["Name"] = Name And Not DefinedHotkey["State"] = "Off"
+            Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
         }
     }
     
