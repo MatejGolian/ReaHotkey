@@ -56,7 +56,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                     ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
                     If ReportChange = True {
                         AccessibilityOverlay.Speak(Product . " overlay active")
-                        ReaHotkey.Wait(1250)
+                        Wait(1250)
                     }
                     ReaHotkey.Found%Type%.Overlay.FocusControl(ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[2].ControlID)
                     If ReaHotkey.AutoFocus%Type%Overlay = True
@@ -67,7 +67,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                     ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
                     If ReportChange = True {
                         AccessibilityOverlay.Speak(Product . " overlay active")
-                        ReaHotkey.Wait(1250)
+                        Wait(1250)
                     }
                     ReaHotkey.Found%Type%.Overlay.FocusControl(ReaHotkey.Found%Type%.Overlay.ChildControls[2].ControlID)
                     If ReaHotkey.AutoFocus%Type%Overlay = True
@@ -506,9 +506,30 @@ InArray(Needle, Haystack) {
     Return False
 }
 
+MergeArrays(Params*) {
+    Merged := Array()
+    For Param In Params
+    If Param Is Array
+    For Item In Param
+    Merged.Push(Item)
+    Else
+    Merged.Push(Param)
+    Return Merged
+}
+
 StrJoin(obj,delimiter:="",OmitChars:=""){
     S := obj[1]
     Loop obj.Length - 1
     S .= delimiter Trim(obj[A_Index+1],OmitChars)
     return S
+}
+
+Wait(Period) {
+    If IsInteger(Period) And Period > 0 And Period <= 4294967295 {
+        PeriodEnd := A_TickCount + Period
+        Loop {
+            If A_TickCount > PeriodEnd
+            Break
+        }
+    }
 }

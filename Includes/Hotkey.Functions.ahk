@@ -40,7 +40,7 @@ F6HK(ThisHotkey) {
             Return
         }
     }
-    ReaHotkey.PassThroughHotkey(ThisHotkey)
+    PassThroughHotkey(ThisHotkey)
 }
 
 TabHK(ThisHotkey) {
@@ -114,7 +114,7 @@ LeftRightHK(ThisHotkey) {
         Case "Custom":
         ReaHotkey.Found%ReaHotkey.Context%.Overlay.Focus(False)
         Case "Edit":
-        ReaHotkey.PassThroughHotkey(ThisHotkey)
+        PassThroughHotkey(ThisHotkey)
         Case "Slider":
         If ThisHotkey = "Left"
         ReaHotkey.Found%ReaHotkey.Context%.Overlay.DecreaseSlider()
@@ -148,7 +148,7 @@ UpDownHK(ThisHotkey) {
         Case "Custom":
         ReaHotkey.Found%ReaHotkey.Context%.Overlay.Focus(False)
         Case "Edit":
-        ReaHotkey.PassThroughHotkey(ThisHotkey)
+        PassThroughHotkey(ThisHotkey)
         Case "Slider":
         If ThisHotkey = "Down"
         ReaHotkey.Found%ReaHotkey.Context%.Overlay.DecreaseSlider()
@@ -170,9 +170,9 @@ EnterSpaceHK(ThisHotkey) {
     If Not ReaHotkey.Context = False And ReaHotkey.Found%ReaHotkey.Context% Is %ReaHotkey.Context%
     Switch(ReaHotkey.Found%ReaHotkey.Context%.Overlay.GetCurrentControlType()) {
         Case "Edit":
-        ReaHotkey.PassThroughHotkey(ThisHotkey)
+        PassThroughHotkey(ThisHotkey)
         Case "Focusable":
-        ReaHotkey.PassThroughHotkey(ThisHotkey)
+        PassThroughHotkey(ThisHotkey)
         Default:
         ReaHotkey.Found%ReaHotkey.Context%.Overlay.ActivateCurrentControl()
     }
@@ -243,5 +243,18 @@ FocusNextPreviousTab(Which, Overlay) {
                 CurrentControl := SuperordinateControl
             }
         }
+    }
+}
+
+PassThroughHotkey(ThisHotkey) {
+    Match := RegExMatch(ThisHotkey, "[a-zA-Z]")
+    If Match > 0 {
+        Modifiers := SubStr(ThisHotkey, 1, Match - 1)
+        KeyName := SubStr(ThisHotkey, Match)
+        If StrLen(KeyName) > 1
+        KeyName := "{" . KeyName . "}"
+        Hotkey ThisHotkey, "Off"
+        Send Modifiers . KeyName
+        Hotkey ThisHotkey, "On"
     }
 }

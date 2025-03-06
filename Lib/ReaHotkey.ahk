@@ -96,17 +96,13 @@ Class ReaHotkey {
         }
     }
     
-    Static FindOverrideHotkey(Type, Name := "", KeyName := "") {
-        If Not KeyName = ""
+    Static FindOverrideHotkey(Type, Name, KeyName) {
+        If Not %Type%.FindName(Name)
+        Return 0
+        If KeyName
         For HotkeyNumber, HotkeyParams In This.%Type%HotkeyOverrides
-        If Name = "" {
-            If Not HotkeyParams.Has("Name") And HotkeyParams["KeyName"] = KeyName
-            Return HotkeyNumber
-        }
-        Else {
-            If HotkeyParams.Has("Name") And HotkeyParams["Name"] = Name And HotkeyParams["KeyName"] = KeyName
-            Return HotkeyNumber
-        }
+        If HotkeyParams["Name"] = Name And HotkeyParams["KeyName"] = KeyName
+        Return HotkeyNumber
         Return 0
     }
     
@@ -127,7 +123,7 @@ Class ReaHotkey {
     
     Static FocusStandaloneOverlay() {
         If This.FoundStandalone Is Standalone And This.FoundStandalone.NoHotkeys = False {
-            This.Wait(500)
+            Wait(500)
             If This.FoundStandalone Is Standalone
             This.FoundStandalone.Overlay.Focus()
         }
@@ -337,32 +333,20 @@ Class ReaHotkey {
         SetTimer ObjBindMethod(This, "CheckIfWinCovered"), 0
     }
     
-    Static MergeArrays(Params*) {
-        Merged := Array()
-        For Param In Params
-        If Param Is Array
-        For Item In Param
-        Merged.Push(Item)
-        Else
-        Merged.Push(Param)
-        Return Merged
-    }
-    
-    Static OverrideHotkey(Type, Name := "", KeyName := "", Action := "", Options := "") {
+    Static OverrideHotkey(Type, Name, KeyName, Action := "", Options := "") {
         If Type = "Plugin" Or Type = "Standalone" {
+            If Not %Type%.FindName(Name)
+            Return False
             For NonRemappableHotkey In This.NonRemappableHotkeys
             If KeyName = NonRemappableHotkey
             Return False
             HotkeyNumber := This.FindOverrideHotkey(Type, Name, KeyName)
-            If Not KeyName = "" And HotkeyNumber = 0 {
+            If HotkeyNumber = 0 {
                 If Not Action Is Object
                 Options := Action . " " . Options
                 GetOptions()
                 If Not Action Is Object
-                Action := This.PassThroughHotkey
-                If Name = ""
-                This.%Type%HotkeyOverrides.Push(Map("KeyName", KeyName, "Action", Action, "Options", Options.String, "State", Options.OnOff))
-                Else
+                Action := PassThroughHotkey
                 This.%Type%HotkeyOverrides.Push(Map("Name", Name, "KeyName", KeyName, "Action", Action, "Options", Options.String, "State", Options.OnOff))
             }
             Else If HotkeyNumber > 0 {
@@ -385,9 +369,6 @@ Class ReaHotkey {
             HotIfWinActive(This.PluginWinCriteria)
             If Type = "Standalone"
             HotIf
-            If Name = "" And This.Found%Type% Is %Type%
-            Hotkey KeyName, Action, Options.String
-            Else
             If This.Found%Type% Is %Type% And This.Found%Type%.Name = Name
             Hotkey KeyName, Action, Options.String
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
@@ -426,11 +407,11 @@ Class ReaHotkey {
         }
     }
     
-    Static OverridePluginHotkey(PluginName := "", KeyName := "", Action := "", Options := "") {
+    Static OverridePluginHotkey(PluginName, KeyName, Action := "", Options := "") {
         This.OverrideHotkey("Plugin", PluginName, KeyName, Action, Options)
     }
     
-    Static OverrideStandaloneHotkey(StandaloneName := "", KeyName := "", Action := "", Options := "") {
+    Static OverrideStandaloneHotkey(StandaloneName, KeyName, Action := "", Options := "") {
         This.OverrideHotkey("Standalone", StandaloneName, KeyName, Action, Options)
     }
     
@@ -544,7 +525,7 @@ Class ReaHotkey {
             }
             Else {
                 For DefinedHotkey In This.%Type%HotkeyOverrides
-                If DefinedHotkey.Has("Name") And DefinedHotkey["Name"] = Name And Not DefinedHotkey["State"] = "Off"
+                If DefinedHotkey["Name"] = Name And Not DefinedHotkey["State"] = "Off"
                 Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], "Off"
             }
         }
@@ -618,11 +599,7 @@ Class ReaHotkey {
         }
         TurnOverridesOn(Type, Name) {
             For DefinedHotkey In This.%Type%HotkeyOverrides
-            If Not DefinedHotkey.Has("Name") And Not DefinedHotkey["State"] = "Off"
-            Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
-            If Not Name = ""
-            For DefinedHotkey In This.%Type%HotkeyOverrides
-            If DefinedHotkey.Has("Name") And DefinedHotkey["Name"] = Name And Not DefinedHotkey["State"] = "Off"
+            If DefinedHotkey["Name"] = Name And Not DefinedHotkey["State"] = "Off"
             Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
         }
     }
@@ -711,16 +688,6 @@ Class ReaHotkey {
         }
     }
     
-    Static Wait(Period) {
-        If IsInteger(Period) And Period > 0 And Period <= 4294967295 {
-            PeriodEnd := A_TickCount + Period
-            Loop {
-                If A_TickCount > PeriodEnd
-                Break
-            }
-        }
-    }
-    
     Class GetAbletonPlugin {
         Static Call() {
             If ReaHotkey.AbletonPluginWinCriteria
@@ -755,7 +722,7 @@ Class ReaHotkey {
     
     Class GetPluginWinCriteriaList {
         Static Call() {
-            Return ReaHotkey.MergeArrays(ReaHotkey.AbletonPluginWinCriteriaList, ReaHotkey.reaperPluginWinCriteriaList)
+            Return MergeArrays(ReaHotkey.AbletonPluginWinCriteriaList, ReaHotkey.reaperPluginWinCriteriaList)
         }
     }
     
@@ -820,21 +787,6 @@ Class ReaHotkey {
             For WinCriteria In StandaloneDefinition["WinCriteria"]
             WinCriteriaList.Push(WinCriteria)
             Return WinCriteriaList
-        }
-    }
-    
-    Class PassThroughHotkey {
-        Static Call(ThisHotkey) {
-            Match := RegExMatch(ThisHotkey, "[a-zA-Z]")
-            If Match > 0 {
-                Modifiers := SubStr(ThisHotkey, 1, Match - 1)
-                KeyName := SubStr(ThisHotkey, Match)
-                If StrLen(KeyName) > 1
-                KeyName := "{" . KeyName . "}"
-                Hotkey ThisHotkey, "Off"
-                Send Modifiers . KeyName
-                Hotkey ThisHotkey, "On"
-            }
         }
     }
     

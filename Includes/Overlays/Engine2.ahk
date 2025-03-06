@@ -69,7 +69,7 @@ Class Engine2 {
         If TargetControl = "Button2"
         ControlClick TargetControl, "A"
         Else
-        ReaHotkey.PassThroughHotkey(ThisHotkey)
+        PassThroughHotkey(ThisHotkey)
     }
     
     Static CheckPlugin(PluginInstance) {
@@ -113,7 +113,7 @@ Class Engine2 {
         If CurrentControl = "Button2"
         ControlClick CurrentControl, "A"
         Else
-        ReaHotkey.PassThroughHotkey(ThisHotkey)
+        PassThroughHotkey(ThisHotkey)
     }
     
     Static InitAddLibraryDialog(StandaloneInstance) {
