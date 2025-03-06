@@ -55,6 +55,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 
 * The ReaHotkey script can crash while In Dubler 2 audio calibration view. In that case just start the script again.
 * After adding a plug-in, the plug-in window may not get automatically focused - not even if its user interface is visible and on top. To get around this behavior, press F6 while ReaHotkey is running to make the plug-in interface active.
+* If you're using NVDA with the SIBIAC or LBL add-ons in REAPER, ReaHotkey and SIBIAC/LBL may collide in the plug-ins that ReaHotkey also supports. For that reason, either pause ReaHotkey while interacting with one of the plug-ins in question, or disable SIBIAC/LBL.
 * Using any other zoom value in Kontakt than 100% may result in ReaHotkey not operating as expected.
 * At present library-specific overlays may not always behave correctly when used directly in the Kontakt 8 plug-in. In such case try using Kontakt 7 or open the given library from within Komplete Kontrol instead.
 * Due to OCR limitations the Komplete Kontrol Save Preset dialog may display incorrect preset names.

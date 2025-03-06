@@ -38,9 +38,9 @@ Class ReaHotkey {
         Else {
             AccessibilityOverlay.Speak("Reloaded ReaHotkey")
         }
-        SetTimer ObjBindMethod(This, "ManageState"), 100
+        SetTimer This.ManageState, 100
         If This.Config.Get("CheckIfWinCovered") = 1
-        SetTimer ObjBindMethod(This, "CheckIfWinCovered"), 10000
+        SetTimer This.CheckIfWinCovered, 10000
     }
     
     Static __Get(Name, Params) {
@@ -57,20 +57,6 @@ Class ReaHotkey {
             This.Update.Check(True)
             Else
             This.Update.Check(False)
-        }
-    }
-    
-    Static CheckIfWinCovered() {
-        Thread "NoTimers"
-        Try
-        If This.PluginWinCriteria And WinActive(This.PluginWinCriteria) And This.FoundPlugin Is Plugin {
-            If WinExist("Error opening devices ahk_exe reaper.exe") {
-                ReportError()
-                Return
-            }
-        }
-        ReportError() {
-            AccessibilityOverlay.Speak("Warning: Another window may be covering the interface. ReaHotkey may not work correctly.")
         }
     }
     
@@ -216,121 +202,11 @@ Class ReaHotkey {
         Return False
     }
     
-    Static ManageState() {
-        Static CurrentPluginName := False, PreviousPluginName := False, CurrentStandaloneName := False, PreviousStandaloneName := False
-        Critical
-        Try {
-            If This.PluginWinCriteria And WinActive(This.PluginWinCriteria) {
-                This.AutoFocusStandaloneOverlay := True
-                This.FoundStandalone := False
-                If Not This.GetPluginControl() {
-                    This.AutoFocusPluginOverlay := True
-                    This.FoundPlugin := False
-                }
-                Else If Not ControlGetFocus(This.PluginWinCriteria) {
-                    This.AutoFocusPluginOverlay := True
-                    This.FoundPlugin := False
-                }
-                Else If Not This.InPluginControl(ControlGetClassNN(ControlGetFocus(This.PluginWinCriteria))) {
-                    This.AutoFocusPluginOverlay := True
-                    This.FoundPlugin := False
-                }
-                Else {
-                    This.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
-                }
-            }
-            Else {
-                This.AutoFocusPluginOverlay := True
-                This.FoundPlugin := False
-                This.FoundStandalone := False
-                If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria)
-                This.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
-                If This.FoundStandalone = False
-                This.AutoFocusStandaloneOverlay := True
-            }
-        }
-        Catch {
-            This.AutoFocusPluginOverlay := True
-            This.FoundPlugin := False
-            This.AutoFocusStandaloneOverlay := True
-            This.FoundStandalone := False
-        }
-        Critical "Off"
-        If This.PluginWinCriteria And WinActive(This.PluginWinCriteria) {
-            This.Context := "Plugin"
-            This.TurnStandaloneTimersOff()
-            This.TurnStandaloneHotkeysOff()
-            If Not This.FoundPlugin Is Plugin Or WinExist("ahk_class #32768") {
-                PreviousPluginName := False
-                This.TurnPluginTimersOff()
-                This.TurnPluginHotkeysOff()
-                AccessibleMenu.CurrentMenu := False
-            }
-            Else {
-                CurrentPluginName := This.FoundPlugin.Name
-                If PreviousPluginName = False
-                PreviousPluginName := CurrentPluginName
-                If Not CurrentPluginName = PreviousPluginName {
-                    This.TurnPluginTimersOff(PreviousPluginName)
-                    This.TurnPluginHotkeysOff(PreviousPluginName)
-                    Sleep 250
-                }
-                PreviousPluginName := CurrentPluginName
-                This.TurnPluginTimersOn(This.FoundPlugin.Name)
-                Sleep 250
-                If This.AutoFocusPluginOverlay = True {
-                    This.FocusPluginOverlay()
-                    This.AutoFocusPluginOverlay := False
-                }
-                This.TurnPluginHotkeysOn(This.FoundPlugin.Name)
-            }
-        }
-        Else If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria) {
-            This.Context := "Standalone"
-            This.TurnPluginTimersOff()
-            This.TurnPluginHotkeysOff()
-            If Not This.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
-                PreviousStandaloneName := False
-                This.TurnStandaloneTimersOff()
-                This.TurnStandaloneHotkeysOff()
-                AccessibleMenu.CurrentMenu := False
-            }
-            Else {
-                CurrentStandaloneName := This.FoundStandalone.Name
-                If PreviousStandaloneName = False
-                PreviousStandaloneName := CurrentStandaloneName
-                If Not CurrentStandaloneName = PreviousStandaloneName {
-                    This.TurnStandaloneTimersOff(PreviousStandaloneName)
-                    This.TurnStandaloneHotkeysOff(PreviousStandaloneName)
-                    Sleep 250
-                }
-                PreviousStandaloneName := CurrentStandaloneName
-                This.TurnStandaloneTimersOn(This.FoundStandalone.Name)
-                Sleep 250
-                If This.AutoFocusStandaloneOverlay = True {
-                    This.FocusStandaloneOverlay()
-                    This.AutoFocusStandaloneOverlay := False
-                }
-                This.TurnStandaloneHotkeysOn(This.FoundStandalone.Name)
-            }
-        }
-        Else {
-            This.Context := False
-            PreviousPluginName := False
-            This.TurnPluginTimersOff()
-            This.TurnPluginHotkeysOff()
-            PreviousStandaloneName := False
-            This.TurnStandaloneTimersOff()
-            This.TurnStandaloneHotkeysOff()
-            AccessibleMenu.CurrentMenu := False
-        }
-    }
-    
     Static ManageWinCovered(Setting) {
         If Setting.Value
-        SetTimer ObjBindMethod(This, "CheckIfWinCovered"), 10000
+        SetTimer This.CheckIfWinCovered, 10000
         Else
-        SetTimer ObjBindMethod(This, "CheckIfWinCovered"), 0
+        SetTimer This.CheckIfWinCovered, 0
     }
     
     Static OverrideHotkey(Type, Name, KeyName, Action := "", Options := "") {
@@ -454,8 +330,8 @@ Class ReaHotkey {
         A_TrayMenu.ToggleCheck("&Pause")
         Suspend -1
         If A_IsSuspended = 1 {
-            SetTimer ObjBindMethod(This, "ManageState"), 0
-            SetTimer ObjBindMethod(This, "CheckIfWinCovered"), 0
+            SetTimer This.ManageState, 0
+            SetTimer This.CheckIfWinCovered, 0
             This.TurnPluginTimersOff()
             This.TurnPluginHotkeysOff()
             This.TurnStandaloneTimersOff()
@@ -463,9 +339,9 @@ Class ReaHotkey {
             AccessibleMenu.CurrentMenu := False
         }
         Else {
-            SetTimer ObjBindMethod(This, "ManageState"), 100
+            SetTimer This.ManageState, 100
             If This.Config.Get("CheckIfWinCovered") = 1
-            SetTimer ObjBindMethod(This, "CheckIfWinCovered"), 10000
+            SetTimer This.CheckIfWinCovered, 10000
         }
     }
     
@@ -688,6 +564,22 @@ Class ReaHotkey {
         }
     }
     
+    Class CheckIfWinCovered {
+        Static Call() {
+            Thread "NoTimers"
+            Try
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria) And ReaHotkey.FoundPlugin Is Plugin {
+                If WinExist("Error opening devices ahk_exe reaper.exe") {
+                    ReportError()
+                    Return
+                }
+            }
+            ReportError() {
+                AccessibilityOverlay.Speak("Warning: Another window may be covering the interface. ReaHotkey may not work correctly.")
+            }
+        }
+    }
+    
     Class GetAbletonPlugin {
         Static Call() {
             If ReaHotkey.AbletonPluginWinCriteria
@@ -787,6 +679,118 @@ Class ReaHotkey {
             For WinCriteria In StandaloneDefinition["WinCriteria"]
             WinCriteriaList.Push(WinCriteria)
             Return WinCriteriaList
+        }
+    }
+    
+    Class ManageState {
+        Static Call() {
+            Static CurrentPluginName := False, PreviousPluginName := False, CurrentStandaloneName := False, PreviousStandaloneName := False
+            Critical
+            Try {
+                If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria) {
+                    ReaHotkey.AutoFocusStandaloneOverlay := True
+                    ReaHotkey.FoundStandalone := False
+                    If Not ReaHotkey.GetPluginControl() {
+                        ReaHotkey.AutoFocusPluginOverlay := True
+                        ReaHotkey.FoundPlugin := False
+                    }
+                    Else If Not ControlGetFocus(ReaHotkey.PluginWinCriteria) {
+                        ReaHotkey.AutoFocusPluginOverlay := True
+                        ReaHotkey.FoundPlugin := False
+                    }
+                    Else If Not ReaHotkey.InPluginControl(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) {
+                        ReaHotkey.AutoFocusPluginOverlay := True
+                        ReaHotkey.FoundPlugin := False
+                    }
+                    Else {
+                        ReaHotkey.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
+                    }
+                }
+                Else {
+                    ReaHotkey.AutoFocusPluginOverlay := True
+                    ReaHotkey.FoundPlugin := False
+                    ReaHotkey.FoundStandalone := False
+                    If ReaHotkey.StandaloneWinCriteria And WinActive(ReaHotkey.StandaloneWinCriteria)
+                    ReaHotkey.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
+                    If ReaHotkey.FoundStandalone = False
+                    ReaHotkey.AutoFocusStandaloneOverlay := True
+                }
+            }
+            Catch {
+                ReaHotkey.AutoFocusPluginOverlay := True
+                ReaHotkey.FoundPlugin := False
+                ReaHotkey.AutoFocusStandaloneOverlay := True
+                ReaHotkey.FoundStandalone := False
+            }
+            Critical "Off"
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria) {
+                ReaHotkey.Context := "Plugin"
+                ReaHotkey.TurnStandaloneTimersOff()
+                ReaHotkey.TurnStandaloneHotkeysOff()
+                If Not ReaHotkey.FoundPlugin Is Plugin Or WinExist("ahk_class #32768") {
+                    PreviousPluginName := False
+                    ReaHotkey.TurnPluginTimersOff()
+                    ReaHotkey.TurnPluginHotkeysOff()
+                    AccessibleMenu.CurrentMenu := False
+                }
+                Else {
+                    CurrentPluginName := ReaHotkey.FoundPlugin.Name
+                    If PreviousPluginName = False
+                    PreviousPluginName := CurrentPluginName
+                    If Not CurrentPluginName = PreviousPluginName {
+                        ReaHotkey.TurnPluginTimersOff(PreviousPluginName)
+                        ReaHotkey.TurnPluginHotkeysOff(PreviousPluginName)
+                        Sleep 250
+                    }
+                    PreviousPluginName := CurrentPluginName
+                    ReaHotkey.TurnPluginTimersOn(ReaHotkey.FoundPlugin.Name)
+                    Sleep 250
+                    If ReaHotkey.AutoFocusPluginOverlay = True {
+                        ReaHotkey.FocusPluginOverlay()
+                        ReaHotkey.AutoFocusPluginOverlay := False
+                    }
+                    ReaHotkey.TurnPluginHotkeysOn(ReaHotkey.FoundPlugin.Name)
+                }
+            }
+            Else If ReaHotkey.StandaloneWinCriteria And WinActive(ReaHotkey.StandaloneWinCriteria) {
+                ReaHotkey.Context := "Standalone"
+                ReaHotkey.TurnPluginTimersOff()
+                ReaHotkey.TurnPluginHotkeysOff()
+                If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
+                    PreviousStandaloneName := False
+                    ReaHotkey.TurnStandaloneTimersOff()
+                    ReaHotkey.TurnStandaloneHotkeysOff()
+                    AccessibleMenu.CurrentMenu := False
+                }
+                Else {
+                    CurrentStandaloneName := ReaHotkey.FoundStandalone.Name
+                    If PreviousStandaloneName = False
+                    PreviousStandaloneName := CurrentStandaloneName
+                    If Not CurrentStandaloneName = PreviousStandaloneName {
+                        ReaHotkey.TurnStandaloneTimersOff(PreviousStandaloneName)
+                        ReaHotkey.TurnStandaloneHotkeysOff(PreviousStandaloneName)
+                        Sleep 250
+                    }
+                    PreviousStandaloneName := CurrentStandaloneName
+                    ReaHotkey.TurnStandaloneTimersOn(ReaHotkey.FoundStandalone.Name)
+                    Sleep 250
+                    If ReaHotkey.AutoFocusStandaloneOverlay = True {
+                        ReaHotkey.FocusStandaloneOverlay()
+                        ReaHotkey.AutoFocusStandaloneOverlay := False
+                    }
+                    ReaHotkey.TurnStandaloneHotkeysOn(ReaHotkey.FoundStandalone.Name)
+                }
+            }
+            Else {
+                ReaHotkey.Context := False
+                PreviousPluginName := False
+                ReaHotkey.TurnPluginTimersOff()
+                ReaHotkey.TurnPluginHotkeysOff()
+                PreviousStandaloneName := False
+                ReaHotkey.TurnStandaloneTimersOff()
+                ReaHotkey.TurnStandaloneHotkeysOff()
+                AccessibleMenu.CurrentMenu := False
+            }
         }
     }
     

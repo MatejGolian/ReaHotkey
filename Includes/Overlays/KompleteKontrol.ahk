@@ -29,8 +29,8 @@ Class KompleteKontrol {
         Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
         Plugin.RegisterOverlayHotkeys("Komplete Kontrol", PluginHeader)
         
-        Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(This, "CheckPluginConfig"), -1)
-        Plugin.SetTimer("Komplete Kontrol", ObjBindMethod(This, "CheckPluginMenu"), 200)
+        Plugin.SetTimer("Komplete Kontrol", This.CheckPluginConfig, -1)
+        Plugin.SetTimer("Komplete Kontrol", This.CheckPluginMenu, 200)
         
         Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(This, "CheckPluginPreferenceDialog"))
         
@@ -68,7 +68,7 @@ Class KompleteKontrol {
         Plugin.RegisterOverlay("Komplete Kontrol Save As Dialog", PluginSaveAsOverlay)
         
         Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe",, False, False)
-        Standalone.SetTimer("Komplete Kontrol", ObjBindMethod(This, "CheckStandaloneConfig"), -1)
+        Standalone.SetTimer("Komplete Kontrol", This.CheckStandaloneConfig, -1)
         Standalone.RegisterOverlay("Komplete Kontrol", StandaloneHeader)
         
         Standalone.Register("Komplete Kontrol Preference Dialog", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(This, "FocusStandalonePreferenceTab"), False, False)
@@ -140,20 +140,6 @@ Class KompleteKontrol {
         Return False
     }
     
-    Static CheckPluginConfig() {
-        Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True)
-        If ReaHotkey.Config.Get("CloseKKBrowser") = 1
-        This.ClosePluginBrowser()
-        If ReaHotkey.Config.Get("DetectLibsInKK") = 1
-        Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 500)
-        Else
-        Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 0)
-    }
-    
-    Static CheckPluginMenu() {
-        This.CheckMenu("Plugin")
-    }
-    
     Static CheckPluginPreferenceDialog(PluginInstance) {
         Thread "NoTimers"
         Static PreviousWinID := ""
@@ -180,11 +166,6 @@ Class KompleteKontrol {
             Return True
         }
         Return False
-    }
-    
-    Static CheckStandaloneConfig() {
-        If ReaHotkey.Config.Get("CloseKKBrowser") = 1
-        This.CloseStandaloneBrowser()
     }
     
     Static CheckStandaloneSaveAsDialog(StandaloneInstance) {
@@ -297,6 +278,31 @@ Class KompleteKontrol {
         Else {
             If WinExist("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe") And Not WinActive("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
             WinActivate("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
+        }
+    }
+    
+    Class CheckPluginConfig {
+        Static Call() {
+            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True)
+            If ReaHotkey.Config.Get("CloseKKBrowser") = 1
+            KompleteKontrol.ClosePluginBrowser()
+            If ReaHotkey.Config.Get("DetectLibsInKK") = 1
+            Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 500)
+            Else
+            Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 0)
+        }
+    }
+    
+    Class CheckPluginMenu {
+        Static Call() {
+            KompleteKontrol.CheckMenu("Plugin")
+        }
+    }
+    
+    Class CheckStandaloneConfig {
+        Static Call() {
+            If ReaHotkey.Config.Get("CloseKKBrowser") = 1
+            KompleteKontrol.CloseStandaloneBrowser()
         }
     }
     

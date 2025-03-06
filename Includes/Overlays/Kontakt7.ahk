@@ -38,8 +38,8 @@ Class Kontakt7 {
         Plugin.RegisterOverlay("Kontakt 7", PluginOverlay)
         Plugin.RegisterOverlayHotkeys("Kontakt 7", PluginHeader)
         
-        Plugin.SetTimer("Kontakt 7", ObjBindMethod(This, "CheckPluginConfig"), -1)
-        Plugin.SetTimer("Kontakt 7", ObjBindMethod(This, "CheckPluginMenu"), 200)
+        Plugin.SetTimer("Kontakt 7", This.CheckPluginConfig, -1)
+        Plugin.SetTimer("Kontakt 7", This.CheckPluginMenu, 200)
         
         Plugin.Register("Kontakt 7 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(This, "CheckPluginContentMissing"))
         
@@ -48,8 +48,8 @@ Class Kontakt7 {
         Plugin.RegisterOverlay("Kontakt 7 Content Missing Dialog", PluginContentMissingOverlay)
         
         Standalone.Register("Kontakt 7", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe", False, False)
-        Standalone.SetTimer("Kontakt 7", ObjBindMethod(This, "CheckStandaloneConfig"), -1)
-        Standalone.SetTimer("Kontakt 7", ObjBindMethod(This, "CheckStandaloneMenu"), 200)
+        Standalone.SetTimer("Kontakt 7", This.CheckStandaloneConfig, -1)
+        Standalone.SetTimer("Kontakt 7", This.CheckStandaloneMenu, 200)
         Standalone.RegisterOverlay("Kontakt 7", StandaloneHeader)
         
         Standalone.Register("Kontakt 7 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe", False, False)
@@ -209,17 +209,6 @@ Class Kontakt7 {
         Return False
     }
     
-    Static CheckPluginConfig() {
-        Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True)
-        If ReaHotkey.Config.Get("CloseK7Browser") = 1
-        This.ClosePluginBrowser()
-        If ReaHotkey.Config.Get("DetectLibsInK7") = 1
-        Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 500)
-        Else
-        Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 0)
-        This.ClosePluginPopup()
-    }
-    
     Static CheckPluginContentMissing(PluginInstance) {
         Thread "NoTimers"
         If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
@@ -231,19 +220,6 @@ Class Kontakt7 {
             Return True
         }
         Return False
-    }
-    
-    Static CheckPluginMenu() {
-        This.CheckMenu("Plugin")
-    }
-    
-    Static CheckStandaloneConfig() {
-        If ReaHotkey.Config.Get("CloseK7Browser") = 1
-        This.CloseStandaloneBrowser()
-    }
-    
-    Static CheckStandaloneMenu() {
-        This.CheckMenu("Standalone")
     }
     
     Static ClosePluginBrowser() {
@@ -401,6 +377,38 @@ Class Kontakt7 {
             MouseMove ControlX + ControlWidth - 405, ControlY + 118
             Else
             MouseMove ControlX + ControlWidth - 389, ControlY + 118
+        }
+    }
+    
+    Class CheckPluginConfig {
+        Static Call() {
+            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True)
+            If ReaHotkey.Config.Get("CloseK7Browser") = 1
+            Kontakt7.ClosePluginBrowser()
+            If ReaHotkey.Config.Get("DetectLibsInK7") = 1
+            Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 500)
+            Else
+            Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 0)
+            Kontakt7.ClosePluginPopup()
+        }
+    }
+    
+    Class CheckPluginMenu {
+        Static Call() {
+            Kontakt7.CheckMenu("Plugin")
+        }
+    }
+    
+    Class CheckStandaloneConfig {
+        Static Call() {
+            If ReaHotkey.Config.Get("CloseK7Browser") = 1
+            Kontakt7.CloseStandaloneBrowser()
+        }
+    }
+    
+    Class CheckStandaloneMenu {
+        Static Call() {
+            Kontakt7.CheckMenu("Standalone")
         }
     }
     

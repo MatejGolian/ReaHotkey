@@ -38,8 +38,8 @@ Class Kontakt8 {
         Plugin.RegisterOverlay("Kontakt 8", PluginOverlay)
         Plugin.RegisterOverlayHotkeys("Kontakt 8", PluginHeader)
         
-        Plugin.SetTimer("Kontakt 8", ObjBindMethod(This, "CheckPluginConfig"), -1)
-        Plugin.SetTimer("Kontakt 8", ObjBindMethod(This, "CheckPluginMenu"), 200)
+        Plugin.SetTimer("Kontakt 8", This.CheckPluginConfig, -1)
+        Plugin.SetTimer("Kontakt 8", This.CheckPluginMenu, 200)
         
         Plugin.Register("Kontakt 8 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(This, "CheckPluginContentMissing"))
         
@@ -48,8 +48,8 @@ Class Kontakt8 {
         Plugin.RegisterOverlay("Kontakt 8 Content Missing Dialog", PluginContentMissingOverlay)
         
         Standalone.Register("Kontakt 8", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 8.exe", False, False)
-        Standalone.SetTimer("Kontakt 8", ObjBindMethod(This, "CheckStandaloneConfig"), -1)
-        Standalone.SetTimer("Kontakt 8", ObjBindMethod(This, "CheckStandaloneMenu"), 200)
+        Standalone.SetTimer("Kontakt 8", This.CheckStandaloneConfig, -1)
+        Standalone.SetTimer("Kontakt 8", This.CheckStandaloneMenu, 200)
         Standalone.RegisterOverlay("Kontakt 8", StandaloneHeader)
         
         Standalone.Register("Kontakt 8 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 8.exe", False, False)
@@ -228,16 +228,6 @@ Class Kontakt8 {
         Return False
     }
     
-    Static CheckPluginConfig() {
-        Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 8", True, True)
-        If ReaHotkey.Config.Get("CloseK8Browser") = 1
-        This.ClosePluginBrowser()
-        If ReaHotkey.Config.Get("DetectLibsInK8") = 1
-        Plugin.SetTimer("Kontakt 8", PluginAutoChangeFunction, 500)
-        Else
-        Plugin.SetTimer("Kontakt 8", PluginAutoChangeFunction, 0)
-    }
-    
     Static CheckPluginContentMissing(PluginInstance) {
         Thread "NoTimers"
         If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
@@ -250,19 +240,6 @@ Class Kontakt8 {
             Return True
         }
         Return False
-    }
-    
-    Static CheckPluginMenu(*) {
-        This.CheckMenu("Plugin")
-    }
-    
-    Static CheckStandaloneConfig() {
-        If ReaHotkey.Config.Get("CloseK8Browser") = 1
-        This.CloseStandaloneBrowser()
-    }
-    
-    Static CheckStandaloneMenu(*) {
-        This.CheckMenu("Standalone")
     }
     
     Static ClosePluginBrowser() {
@@ -393,6 +370,37 @@ Class Kontakt8 {
         MouseMove ControlX + ControlWidth - 405, ControlY + 118
         Else
         MouseMove ControlX + ControlWidth - 389, ControlY + 118
+    }
+    
+    Class CheckPluginConfig {
+        Static Call() {
+            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 8", True, True)
+            If ReaHotkey.Config.Get("CloseK8Browser") = 1
+            Kontakt8.ClosePluginBrowser()
+            If ReaHotkey.Config.Get("DetectLibsInK8") = 1
+            Plugin.SetTimer("Kontakt 8", PluginAutoChangeFunction, 500)
+            Else
+            Plugin.SetTimer("Kontakt 8", PluginAutoChangeFunction, 0)
+        }
+    }
+    
+    Class CheckPluginMenu {
+        Static Call(*) {
+            Kontakt8.CheckMenu("Plugin")
+        }
+    }
+    
+    Class CheckStandaloneConfig {
+        Static Call() {
+            If ReaHotkey.Config.Get("CloseK8Browser") = 1
+            Kontakt8.CloseStandaloneBrowser()
+        }
+    }
+    
+    Class CheckStandaloneMenu {
+        Static Call(*) {
+            Kontakt8.CheckMenu("Standalone")
+        }
     }
     
     #IncludeAgain KontaktKompleteKontrol/NoProduct.ahk
