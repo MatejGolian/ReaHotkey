@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Support plug-ins running in Ableton Live 12
+-   Support plug-ins running in Ableton Live 12 (press F6 to enter FX UI)
 -   Make the add library dialog in Engine 2 standalone more accessible
 
 ### Changed/Fixed
