@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.6] - 2025-03-06
+
 ### Added
 
 -   Support plug-ins running in Ableton Live 12 (press F6 to enter FX UI)
@@ -242,7 +244,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.5...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.6...HEAD
+
+[0.5.6]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.5...0.5.6
 
 [0.5.5]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.4...0.5.5
 
