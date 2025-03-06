@@ -527,9 +527,8 @@ StrJoin(obj,delimiter:="",OmitChars:=""){
 Wait(Period) {
     If IsInteger(Period) And Period > 0 And Period <= 4294967295 {
         PeriodEnd := A_TickCount + Period
-        Loop {
-            If A_TickCount > PeriodEnd
-            Break
-        }
+        Loop
+        If A_TickCount > PeriodEnd
+        Break
     }
 }
