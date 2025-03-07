@@ -110,8 +110,9 @@ Class ReaHotkey {
     Static FocusStandaloneOverlay() {
         If This.FoundStandalone Is Standalone And This.FoundStandalone.NoHotkeys = False {
             Wait(500)
-            If This.FoundStandalone Is Standalone
-            This.FoundStandalone.Overlay.Focus()
+            If This.FoundStandalone Is Standalone {
+                This.FoundStandalone.Overlay.Focus()
+            }
         }
     }
     

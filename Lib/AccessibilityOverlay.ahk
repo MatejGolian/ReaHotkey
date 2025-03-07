@@ -66,9 +66,13 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(ControlID)
             If Found > 0 {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
+                If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
+                Speak := True
+                If ControlID = This.CurrentControlID
+                Speak := False
                 If TargetControl.HasMethod("Activate")
-                TargetControl.Activate()
+                TargetControl.Activate(Speak)
                 This.SetCurrentControlID(ControlID)
             }
         }
@@ -78,10 +82,15 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If This.ChildControls.Length > 0 {
             This.FocusableControlIDs := This.GetFocusableControlIDs()
             If ControlNumber > 0 And This.FocusableControlIDs.Length >= ControlNumber {
+                ControlID := This.FocusableControlIDs[ControlNumber]
+                TargetControl := AccessibilityOverlay.GetControl(ControlID)
+                If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
-                TargetControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[ControlNumber])
+                Speak := True
+                If ControlID = This.CurrentControlID
+                Speak := False
                 If TargetControl.HasMethod("Activate")
-                TargetControl.Activate()
+                TargetControl.Activate(Speak)
                 This.SetCurrentControlID(TargetControl.ControlID)
             }
         }
@@ -93,10 +102,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
-                This.SetPreviousControlID(This.CurrentControlID)
                 If CurrentControl.HasMethod("Activate")
-                CurrentControl.Activate()
-                This.SetCurrentControlID(CurrentControl.ControlID)
+                CurrentControl.Activate(False)
             }
         }
     }
@@ -180,8 +187,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             ControlID := This.FocusableControlIDs[1]
             Else
             ControlID := This.CurrentControlID
-            If controlID {
+            If ControlID {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
+                If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
                 If TargetControl.HasMethod("Focus")
                 TargetControl.Focus(Speak)
@@ -196,9 +204,13 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(ControlID)
             If Found > 0 {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
+                If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
+                Speak := True
+                If ControlID = This.CurrentControlID
+                Speak := False
                 If TargetControl.HasMethod("Focus")
-                TargetControl.Focus()
+                TargetControl.Focus(Speak)
                 This.SetCurrentControlID(ControlID)
             }
         }
@@ -208,14 +220,16 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If This.ChildControls.Length > 0 {
             This.FocusableControlIDs := This.GetFocusableControlIDs()
             If ControlNumber > 0 And This.FocusableControlIDs.Length >= ControlNumber {
-                Found := This.FindFocusableControlID(This.CurrentControlID)
-                If Not ControlNumber = Found {
-                    This.SetPreviousControlID(This.CurrentControlID)
-                    TargetControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[ControlNumber])
-                    If TargetControl.HasMethod("Focus")
-                    TargetControl.Focus()
-                    This.SetCurrentControlID(TargetControl.ControlID)
-                }
+                ControlID := This.FocusableControlIDs[ControlNumber]
+                TargetControl := AccessibilityOverlay.GetControl(ControlID)
+                If Not ControlID = This.CurrentControlID
+                This.SetPreviousControlID(This.CurrentControlID)
+                Speak := True
+                If ControlID = This.CurrentControlID
+                Speak := False
+                If TargetControl.HasMethod("Focus")
+                TargetControl.Focus(Speak)
+                This.SetCurrentControlID(TargetControl.ControlID)
             }
         }
     }
@@ -226,10 +240,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
-                This.SetPreviousControlID(This.CurrentControlID)
                 If CurrentControl.HasMethod("Focus")
                 CurrentControl.Focus()
-                This.SetCurrentControlID(CurrentControl.controlID)
             }
         }
     }
@@ -245,6 +257,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Else
             ControlID := This.FocusableControlIDs[Found + 1]
             TargetControl := AccessibilityOverlay.GetControl(ControlID)
+            If Not ControlID = This.CurrentControlID
             This.SetPreviousControlID(This.CurrentControlID)
             If TargetControl Is Object And TargetControl.HasMethod("Focus")
             TargetControl.Focus()
@@ -263,6 +276,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Else
             ControlID := This.FocusableControlIDs[Found - 1]
             TargetControl := AccessibilityOverlay.GetControl(ControlID)
+            If Not ControlID = This.CurrentControlID
             This.SetPreviousControlID(This.CurrentControlID)
             If TargetControl Is Object And TargetControl.HasMethod("Focus")
             TargetControl.Focus()
@@ -294,7 +308,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If CurrentControl Is TabControl {
                     This.SetPreviousControlID(This.CurrentControlID)
                     CurrentControl.FocusPreviousTab()
-                    This.SetCurrentControlID(CurrentControl.controlID)
+                    This.SetCurrentControlID(CurrentControl.ControlID)
                 }
             }
         }
@@ -523,14 +537,14 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         }
     }
     
-    SetCurrentControlID(controlID) {
+    SetCurrentControlID(ControlID) {
         This.CurrentControlID := ControlID
-        AccessibilityOverlay.CurrentControlID := controlID
+        AccessibilityOverlay.CurrentControlID := ControlID
     }
     
-    SetPreviousControlID(controlID) {
+    SetPreviousControlID(ControlID) {
         This.PreviousControlID := ControlID
-        AccessibilityOverlay.PreviousControlID := controlID
+        AccessibilityOverlay.PreviousControlID := ControlID
     }
     
     TriggerHotkey(HotkeyCommand) {
@@ -1633,13 +1647,13 @@ Class TabControl Extends FocusableControl {
         ValueString := This.Value
         If ValueString = ""
         ValueString := This.DefaultValue
-        If This.controlID = AccessibilityOverlay.PreviousControlID
+        If This.ControlID = AccessibilityOverlay.PreviousControlID
         If This.CurrentTab = This.PreviousTab And This.Tabs.Length > 1
         ValueString := ""
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.controlID = AccessibilityOverlay.PreviousControlID
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID
         Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
         Else
         Message := ValueString
@@ -2255,7 +2269,7 @@ Class OCRButton Extends Button {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.controlID = AccessibilityOverlay.PreviousControlID
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID
         Message := This.Label . " " . This.ControlTypeLabel . " " . StateString
         Else
         If This.States.Count > 1
