@@ -115,6 +115,20 @@ Class ReaHotkey {
         }
     }
     
+    Static GetContext() {
+        If Not This.Context = False
+        Try
+        If This.Context = "Plugin"
+        This.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
+        Else
+        This.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
+        Catch
+        This.Found%ReaHotkey.Context% := False
+        If Not This.Context = False And This.Found%This.Context% Is %This.Context%
+        Return This.Context
+        Return False
+    }
+    
     Static GetPluginControl() {
         If Not This.PluginWinCriteria Or Not WinActive(This.PluginWinCriteria)
         Return False

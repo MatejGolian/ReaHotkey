@@ -44,37 +44,38 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                 ImageFound := ImageSearch(&FoundX, &FoundY, ImageEntry["X1Coordinate"], ImageEntry["Y1Coordinate"], ImageEntry["X2Coordinate"], ImageEntry["Y2Coordinate"], ImageEntry["File"])
                 Catch
                 ImageFound := 0
-                If ImageFound = 1
-                If ReaHotkey.Found%Type%.Chooser = True {
-                    OverlayHeader := ReaHotkey.Found%Type%.Overlay.ChildControls[1].Clone()
+                If ImageFound
+                If ReaHotkey.Found%Type%.Chooser {
                     ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(OverlayEntry.Label)
                     ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
                     If OverlayEntry.HasProp("Metadata")
                     ReaHotkey.Found%Type%.Overlay.Metadata := OverlayEntry.Metadata
-                    ReaHotkey.Found%Type%.Overlay.AddControl(OverlayHeader)
                     ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
                     ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
-                    If ReportChange = True {
-                        AccessibilityOverlay.Speak(Product . " overlay active")
-                        Wait(1250)
-                    }
-                    ReaHotkey.Found%Type%.Overlay.FocusControl(ReaHotkey.Found%Type%.Overlay.ChildControls[2].ChildControls[2].ControlID)
-                    If ReaHotkey.AutoFocus%Type%Overlay = True
-                    ReaHotkey.AutoFocus%Type%Overlay := False
+                    If ReportChange
+                    Report(Product)
+                    FocusElement(Type)
                     Break 2
                 }
                 Else {
                     ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
-                    If ReportChange = True {
-                        AccessibilityOverlay.Speak(Product . " overlay active")
-                        Wait(1250)
-                    }
-                    ReaHotkey.Found%Type%.Overlay.FocusControl(ReaHotkey.Found%Type%.Overlay.ChildControls[2].ControlID)
-                    If ReaHotkey.AutoFocus%Type%Overlay = True
-                    ReaHotkey.AutoFocus%Type%Overlay := False
+                    If ReportChange
+                    Report(Product)
+                    FocusElement(Type)
                     Break 2
                 }
             }
+        }
+    }
+    FocusElement(Type) {
+        If ReaHotkey.AutoFocus%Type%Overlay
+        ReaHotkey.AutoFocus%Type%Overlay := False
+        If ReaHotkey.Found%Type%.Chooser {
+            ReaHotkey.Found%Type%.Overlay.ChildControls[2].Focus()
+            ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[2].CurrentControlID)
+        }
+        Else {
+            ReaHotkey.Found%Type%.Overlay.Focus()
         }
     }
     ProcessImageEntry(Type, CompensatePluginCoordinates, ImageEntry, WinWidth, WinHeight) {
@@ -112,6 +113,10 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
         }
         Return EntryData
     }
+    Report(Product) {
+        AccessibilityOverlay.Speak(Product . " overlay active")
+        Wait(1250)
+    }
 }
 
 AutoChangePluginOverlay(Name, CompensatePluginCoordinates := False, ReportChange := False) {
@@ -127,24 +132,28 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
     OverlayList := %Type%.GetOverlays(ReaHotkey.Found%Type%.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemName]
     If Not ReaHotkey.Found%Type%.Overlay.OverlayNumber = OverlayNumber
-    If ReaHotkey.Found%Type%.Chooser = True {
-        OverlayHeader := ReaHotkey.Found%Type%.Overlay.ChildControls[1].Clone()
+    If ReaHotkey.Found%Type%.Chooser {
         ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(ItemName)
         ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
         If OverlayList[OverlayNumber].HasProp("Metadata")
         ReaHotkey.Found%Type%.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
-        ReaHotkey.Found%Type%.Overlay.AddControl(OverlayHeader)
         ReaHotkey.Found%Type%.Overlay.AddControl(OverlayList[OverlayNumber].Clone())
         ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
-        ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls.Length].ControlID)
-        ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls[ReaHotkey.Found%Type%.Overlay.ChildControls[3].ChildControls.Length].Focus()
     }
     Else {
         ReaHotkey.Found%Type%.Overlay := OverlayList[OverlayNumber].Clone()
-        ReaHotkey.Found%Type%.Overlay.Focus()
     }
     Else
-    ReaHotkey.Found%Type%.Overlay.Focus()
+    ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(0)
+    If ReaHotkey.AutoFocus%Type%Overlay
+    ReaHotkey.AutoFocus%Type%Overlay := False
+    If ReaHotkey.Found%Type%.Chooser {
+        ReaHotkey.Found%Type%.Overlay.ChildControls[2].Focus()
+        ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[2].CurrentControlID)
+    }
+    Else {
+        ReaHotkey.Found%Type%.Overlay.Focus()
+    }
 }
 
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {

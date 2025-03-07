@@ -25,9 +25,10 @@ Class KompleteKontrol {
         
         Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), True, False, False, ObjBindMethod(This, "CheckPlugin"))
         
-        For PluginOverlay In This.PluginOverlays
-        Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
-        Plugin.RegisterOverlayHotkeys("Komplete Kontrol", PluginHeader)
+        For PluginOverlay In This.PluginOverlays {
+            PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
+            Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
+        }
         
         Plugin.SetTimer("Komplete Kontrol", This.CheckPluginConfig, -1)
         Plugin.SetTimer("Komplete Kontrol", This.CheckPluginMenu, 200)

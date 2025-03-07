@@ -34,9 +34,10 @@ Class Kontakt7 {
         
         Plugin.Register("Kontakt 7", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), True, False, False, ObjBindMethod(This, "CheckPlugin"))
         
-        For PluginOverlay In This.PluginOverlays
-        Plugin.RegisterOverlay("Kontakt 7", PluginOverlay)
-        Plugin.RegisterOverlayHotkeys("Kontakt 7", PluginHeader)
+        For PluginOverlay In This.PluginOverlays {
+            PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
+            Plugin.RegisterOverlay("Kontakt 7", PluginOverlay)
+        }
         
         Plugin.SetTimer("Kontakt 7", This.CheckPluginConfig, -1)
         Plugin.SetTimer("Kontakt 7", This.CheckPluginMenu, 200)
