@@ -23,6 +23,7 @@ Class Kontakt8 {
         PluginHeader.AddCustomButton("Snapshot menu", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!M", "Alt+M")
         PluginHeader.AddCustomButton("Previous snapshot", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!P", "Alt+P")
         PluginHeader.AddCustomButton("Next snapshot", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!N", "Alt+N")
+        PluginHeader.AddCustomButton("Choose library",,, ChoosePluginOverlay).SetHotkey("!C", "Alt+C")
         This.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Kontakt 8")
@@ -32,7 +33,7 @@ Class Kontakt8 {
         StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!S", "Alt+S")
         This.StandaloneHeader := StandaloneHeader
         
-        Plugin.Register("Kontakt 8", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), True, False, False, ObjBindMethod(This, "CheckPlugin"))
+        Plugin.Register("Kontakt 8", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, False, False, ObjBindMethod(This, "CheckPlugin"))
         
         For PluginOverlay In This.PluginOverlays {
             PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
@@ -315,6 +316,7 @@ Class Kontakt8 {
         If PluginInstance.Overlay.ChildControls.Length = 0
         PluginInstance.Overlay.AddAccessibilityOverlay()
         PluginInstance.Overlay.ChildControls[1] := This.PluginHeader.Clone()
+        PluginInstance.Overlay.AddAccessibilityOverlay()
         If Not HasProp(PluginInstance.Overlay, "Metadata") {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
             PluginInstance.Overlay.OverlayNumber := 1

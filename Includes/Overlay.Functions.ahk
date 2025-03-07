@@ -70,13 +70,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
     FocusElement(Type) {
         If ReaHotkey.AutoFocus%Type%Overlay
         ReaHotkey.AutoFocus%Type%Overlay := False
-        If ReaHotkey.Found%Type%.Chooser {
-            ReaHotkey.Found%Type%.Overlay.ChildControls[2].Focus()
-            ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[2].CurrentControlID)
-        }
-        Else {
-            ReaHotkey.Found%Type%.Overlay.Focus()
-        }
+        ReaHotkey.Found%Type%.Overlay.Focus()
     }
     ProcessImageEntry(Type, CompensatePluginCoordinates, ImageEntry, WinWidth, WinHeight) {
         If Not ImageEntry Is Map
@@ -263,7 +257,11 @@ ConvertBase(InputBase, OutputBase, nptr)    ; Base 2 - 36
     return s
 }
 
-CreateOverlayMenu(Type) {
+CreateOverlayMenu(Type, MenuHandler := False) {
+    If Not MenuHandler {
+        MenuHandler := "Change" . Type . "Overlay"
+        MenuHandler := %MenuHandler%
+    }
     Found := ReaHotkey.Found%Type%
     CurrentOverlay := Found.Overlay
     OverlayEntries := %Type%.GetOverlays(Found.Name)
@@ -356,7 +354,7 @@ CreateOverlayMenu(Type) {
             }
             If Not ProductSubmenu.HasProp("OverlayNumbers")
             ProductSubmenu.OverlayNumbers := Map()
-            ProductSubmenu.Add(OverlayEntry["Patch"], Change%Type%Overlay)
+            ProductSubmenu.Add(OverlayEntry["Patch"], MenuHandler)
             If OverlayEntry["OverlayNumber"] = CurrentOverlay.OverlayNumber {
                 VendorSubmenu.Check(OverlayEntry["Product"])
                 ProductSubmenu.Check(OverlayEntry["Patch"])
@@ -364,7 +362,7 @@ CreateOverlayMenu(Type) {
             ProductSubmenu.OverlayNumbers.Set(OverlayEntry["Patch"], OverlayEntry["OverlayNumber"])
         }
         Else {
-            VendorSubmenu.Add(OverlayEntry["Product"], Change%Type%Overlay)
+            VendorSubmenu.Add(OverlayEntry["Product"], MenuHandler)
             If OverlayEntry["OverlayNumber"] = CurrentOverlay.OverlayNumber
             VendorSubmenu.Check(OverlayEntry["Product"])
             VendorSubmenu.OverlayNumbers.Set(OverlayEntry["Product"], OverlayEntry["OverlayNumber"])
@@ -377,7 +375,7 @@ CreateOverlayMenu(Type) {
         OverlayMenu.Check(Vendor)
     }
     For OverlayEntry In MainMenuItems {
-        OverlayMenu.Add(OverlayEntry["Product"], Change%Type%Overlay)
+        OverlayMenu.Add(OverlayEntry["Product"], MenuHandler)
         If OverlayEntry["OverlayNumber"] = CurrentOverlay.OverlayNumber
         OverlayMenu.Check(OverlayEntry["Product"])
         OverlayMenu.OverlayNumbers.Set(OverlayEntry["Product"], OverlayEntry["OverlayNumber"])
