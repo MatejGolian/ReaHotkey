@@ -114,19 +114,21 @@ Class KompleteKontrol {
     
     Static CheckMenu(Type) {
         Thread "NoTimers"
-        Found := False
+        If Type = "Plugin"
         StartingPath := This.GetPluginStartingPath()
-        If StartingPath
-        Try {
-            StartingElement := GetUIAElement(StartingPath)
-            MenuElements := StartingElement.FindElements({Type:50009})
-            If MenuElements.Length > 0
-            Found := True
-        }
-        Catch {
-            Found := False
-        }
-        %Type%.SetNoHotkeys("Komplete Kontrol", Found)
+        Else
+        StartingPath := 1
+        Found := False
+        Try
+        UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Menu"})
+        Catch
+        UIAElement := False
+        If UIAElement Is Object And UIAElement.Type = 50009
+        Found := True
+        If Found = False
+        %Type%.SetNoHotkeys("Komplete Kontrol", False)
+        Else
+        %Type%.SetNoHotkeys("Komplete Kontrol", True)
     }
     
     Static CheckPlugin(PluginInstance) {
@@ -185,14 +187,26 @@ Class KompleteKontrol {
         Return False
     }
     
-    Static ClosePluginBrowser() {
+    Static closeBrowser(Type) {
+        Thread "NoTimers"
+        If Type = "Plugin"
         StartingPath := This.GetPluginStartingPath()
-        UIAElement := GetUIAElement(StartingPath . ",3")
-        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
-            UIAElement.Click()
+        Else
+        StartingPath := 1
+        Try
+        UIAElement := GetUIAElement(StartingPath).FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
+        Catch
+        UIAElement := False
+        If UIAElement Is Object And UIAElement.Type = 50018 {
+            Try
+            UIAElement.WalkTree(-1).Click("Left")
             AccessibilityOverlay.Speak("Library Browser closed.")
             Sleep 1000
         }
+    }
+    
+    Static ClosePluginBrowser() {
+        This.closeBrowser("Plugin")
     }
     
     Static ClosePluginPreferenceDialog(*) {
@@ -205,12 +219,7 @@ Class KompleteKontrol {
     }
     
     Static CloseStandaloneBrowser() {
-        UIAElement := GetUIAElement("1,3")
-        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
-            UIAElement.Click()
-            AccessibilityOverlay.Speak("Library Browser closed.")
-            Sleep 1000
-        }
+        This.closeBrowser("Standalone")
     }
     
     Static CloseStandalonePreferenceDialog(*) {

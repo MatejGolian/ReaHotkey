@@ -20,7 +20,7 @@ Class Kontakt8 {
         PluginHeader.AddCustomButton("Next instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^N", "Ctrl+N")
         PluginHeader.AddCustomButton("Previous multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+P", "Ctrl+Shift+P")
         PluginHeader.AddCustomButton("Next multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+N", "Ctrl+Shift+N")
-        PluginHeader.AddCustomButton("Snapshot menu", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!M", "Alt+M")
+        ;PluginHeader.AddCustomButton("Snapshot menu", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!M", "Alt+M")
         PluginHeader.AddCustomButton("Previous snapshot", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!P", "Alt+P")
         PluginHeader.AddCustomButton("Next snapshot", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!N", "Alt+N")
         PluginHeader.AddCustomButton("Choose library",,, ObjBindMethod(ChoosePluginOverlay,,,, PluginHeader.FocusableControlIDs.Length + 1)).SetHotkey("!C", "Alt+C")
@@ -61,20 +61,26 @@ Class Kontakt8 {
         Standalone.RegisterOverlay("Kontakt 8 Content Missing Dialog", StandaloneContentMissingOverlay)
     }
     
-    Static ActivatePluginHeaderButton(HeaderButton) {
+    Static ActivateHeaderButton(Type, HeaderButton) {
         Critical
+        If Type = "Plugin"
         StartingPath := This.GetPluginStartingPath()
+        Else
+        StartingPath := 1
+        Try
         If StartingPath
         Switch HeaderButton.Label {
             Case "FILE menu":
-            UIAElement := GetUIAElement(StartingPath . ",2")
+            UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Button", Name:"FILE"})
             Case "LIBRARY On/Off":
-            UIAElement := GetUIAElement(StartingPath . ",3")
+            UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Button", Name:"LIBRARY"})
             Case "VIEW menu":
-            UIAElement := GetUIAElement(StartingPath . ",4")
+            UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Button", Name:"VIEW"})
             Case "SHOP (Opens in default web browser)":
-            UIAElement := GetUIAElement(StartingPath . ",5")
+            UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Button", Name:"SHOP"})
         }
+        Catch
+        UIAElement := False
         If Not UIAElement = False
         Switch HeaderButton.Label {
             Case "FILE menu":
@@ -90,6 +96,10 @@ Class Kontakt8 {
         }
         Else
         AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
+    }
+    
+    Static ActivatePluginHeaderButton(HeaderButton) {
+        This.ActivateHeaderButton("Plugin", HeaderButton)
     }
     
     Static ActivatePluginInstrumentButton(InstrumentButton) {
@@ -169,48 +179,22 @@ Class Kontakt8 {
     }
     
     Static ActivateStandaloneHeaderButton(HeaderButton) {
-        Critical
-        UIAElement := False
-        Switch HeaderButton.Label {
-            Case "FILE menu":
-            UIAElement := GetUIAElement("1,2")
-            Case "LIBRARY On/Off":
-            UIAElement := GetUIAElement("1,3")
-            Case "VIEW menu":
-            UIAElement := GetUIAElement("1,4")
-            Case "SHOP (Opens in default web browser)":
-            UIAElement := GetUIAElement("1,5")
-        }
-        If Not UIAElement = False
-        Switch HeaderButton.Label {
-            Case "FILE menu":
-            UIAElement.Click("Left")
-            This.CheckStandaloneMenu()
-            Case "LIBRARY On/Off":
-            UIAElement.Click("Left")
-            Case "VIEW menu":
-            UIAElement.Click("Left")
-            This.CheckStandaloneMenu()
-            Case "SHOP (Opens in default web browser)":
-            UIAElement.Click("Left")
-        }
-        Else
-        AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
+        This.ActivateHeaderButton("Standalone", HeaderButton)
     }
     
     Static CheckMenu(Type) {
         Thread "NoTimers"
+        If Type = "Plugin"
         StartingPath := This.GetPluginStartingPath()
-        UIAPaths := [StartingPath . ",14", StartingPath . ",15", StartingPath . ",16", StartingPath . ",17"]
+        Else
+        StartingPath := 1
         Found := False
         Try
-        For UIAPath In UIAPaths {
-            UIAElement := GetUIAElement(UIAPath)
-            If UIAElement Is Object And UIAElement.Type = 50009 {
-                Found := True
-                Break
-            }
-        }
+        UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Menu"})
+        Catch
+        UIAElement := False
+        If UIAElement Is Object And UIAElement.Type = 50009
+        Found := True
         If Found = False
         %Type%.SetNoHotkeys("Kontakt 8", False)
         Else
@@ -244,37 +228,30 @@ Class Kontakt8 {
         Return False
     }
     
-    Static ClosePluginBrowser() {
-        If ReaHotkey.ReaperPluginNative {
-            StartingPath := This.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",14,3")
-            If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
-                UIAElement.Click()
-                AccessibilityOverlay.Speak("Library Browser closed.")
-                Sleep 1000
-            }
-            UIAElement := GetUIAElement(StartingPath . ",16,3")
-            If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
-                UIAElement.Click()
-                AccessibilityOverlay.Speak("Library Browser closed.")
-                Sleep 1000
-            }
+    Static closeBrowser(Type) {
+        Thread "NoTimers"
+        If Type = "Plugin"
+        StartingPath := This.GetPluginStartingPath()
+        Else
+        StartingPath := 1
+        Try
+        UIAElement := GetUIAElement(StartingPath).FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
+        Catch
+        UIAElement := False
+        If UIAElement Is Object And UIAElement.Type = 50018 {
+            Try
+            UIAElement.WalkTree(-1).Click("Left")
+            AccessibilityOverlay.Speak("Library Browser closed.")
+            Sleep 1000
         }
     }
     
+    Static ClosePluginBrowser() {
+        This.closeBrowser("Plugin")
+    }
+    
     Static CloseStandaloneBrowser() {
-        UIAElement := GetUIAElement("1,14,3")
-        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
-            UIAElement.Click()
-            AccessibilityOverlay.Speak("Library Browser closed.")
-            Sleep 1000
-        }
-        UIAElement := GetUIAElement("1,16,3")
-        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
-            UIAElement.Click()
-            AccessibilityOverlay.Speak("Library Browser closed.")
-            Sleep 1000
-        }
+        This.closeBrowser("Standalone")
     }
     
     Static GetPluginStartingPath() {
