@@ -60,7 +60,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return False
     }
     
-    ActivateControl(ControlID) {
+    ActivateControlID(ControlID) {
         If This.ChildControls.Length > 0 {
             This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(ControlID)
@@ -198,7 +198,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         }
     }
     
-    FocusControl(ControlID) {
+    FocusControlID(ControlID) {
         If This.ChildControls.Length > 0 {
             This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(ControlID)
@@ -353,6 +353,11 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     GetCurrentControlID() {
         Return This.CurrentControlID
+    }
+    
+    GetCurrentControlNumber() {
+        If This.ChildControls.Length > 0
+        Return This.FindFocusableControlID(This.CurrentControlID)
     }
     
     GetCurrentControlType() {
@@ -565,9 +570,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             }
             This.SetPreviousControlID(This.CurrentControlID)
             If ControlToTrigger.HasMethod("Activate")
-            This.ActivateControl(ControlToTrigger.ControlID)
+            This.ActivateControlID(ControlToTrigger.ControlID)
             Else
-            This.FocusControl(ControlToTrigger.ControlID)
+            This.FocusControlID(ControlToTrigger.ControlID)
             For HotkeyFunction In HotkeyFunctions
             HotkeyFunction.Call(HotkeyTarget)
             This.SetCurrentControlID(ControlToTrigger.ControlID)
