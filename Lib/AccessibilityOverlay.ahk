@@ -202,10 +202,14 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
                 If TargetControl.HasMethod("Focus") {
-                    If TargetControl.ControlType := "TabControl"
-                    TargetControl.Focus(True)
-                    Else
+                    If Speak And TargetControl.ControlType = "TabControl" {
+                        TruePrev := AccessibilityOverlay.PreviousControlID
+                        AccessibilityOverlay.PreviousControlID := 0
+                    }
                     TargetControl.Focus(Speak)
+                    If Speak And TargetControl.ControlType = "TabControl" {
+                        AccessibilityOverlay.PreviousControlID := TruePrev
+                    }
                 }
                 This.SetCurrentControlID(ControlID)
             }
