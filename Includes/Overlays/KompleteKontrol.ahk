@@ -13,7 +13,7 @@ Class KompleteKontrol {
         PluginHeader := AccessibilityOverlay("Komplete Kontrol")
         PluginHeader.AddStaticText("Komplete Kontrol")
         PluginHeader.AddHotspotButton("Menu", 297, 17, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
-        PluginHeader.AddCustomButton("Choose library",,, ChoosePluginOverlay).SetHotkey("!C", "Alt+C")
+        PluginHeader.AddCustomButton("Choose library",,, ObjBindMethod(ChoosePluginOverlay,,,, PluginHeader.FocusableControlIDs.Length + 1)).SetHotkey("!C", "Alt+C")
         This.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Komplete Kontrol")
@@ -262,7 +262,6 @@ Class KompleteKontrol {
         If PluginInstance.Overlay.ChildControls.Length = 0
         PluginInstance.Overlay.AddAccessibilityOverlay()
         PluginInstance.Overlay.ChildControls[1] := This.PluginHeader.Clone()
-        PluginInstance.Overlay.AddAccessibilityOverlay()
         If Not HasProp(PluginInstance.Overlay, "Metadata") {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
             PluginInstance.Overlay.OverlayNumber := 1
@@ -286,7 +285,7 @@ Class KompleteKontrol {
     
     Class CheckPluginConfig {
         Static Call() {
-            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True)
+            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True, KompleteKontrol.PluginHeader.FocusableControlIDs.Length + 1)
             If ReaHotkey.Config.Get("CloseKKBrowser") = 1
             KompleteKontrol.ClosePluginBrowser()
             If ReaHotkey.Config.Get("DetectLibsInKK") = 1

@@ -23,7 +23,7 @@ Class Kontakt8 {
         PluginHeader.AddCustomButton("Snapshot menu", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!M", "Alt+M")
         PluginHeader.AddCustomButton("Previous snapshot", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!P", "Alt+P")
         PluginHeader.AddCustomButton("Next snapshot", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!N", "Alt+N")
-        PluginHeader.AddCustomButton("Choose library",,, ChoosePluginOverlay).SetHotkey("!C", "Alt+C")
+        PluginHeader.AddCustomButton("Choose library",,, ObjBindMethod(ChoosePluginOverlay,,,, PluginHeader.FocusableControlIDs.Length + 1)).SetHotkey("!C", "Alt+C")
         This.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Kontakt 8")
@@ -316,7 +316,6 @@ Class Kontakt8 {
         If PluginInstance.Overlay.ChildControls.Length = 0
         PluginInstance.Overlay.AddAccessibilityOverlay()
         PluginInstance.Overlay.ChildControls[1] := This.PluginHeader.Clone()
-        PluginInstance.Overlay.AddAccessibilityOverlay()
         If Not HasProp(PluginInstance.Overlay, "Metadata") {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
             PluginInstance.Overlay.OverlayNumber := 1
@@ -377,7 +376,7 @@ Class Kontakt8 {
     
     Class CheckPluginConfig {
         Static Call() {
-            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 8", True, True)
+            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 8", True, True, Kontakt8.PluginHeader.FocusableControlIDs.Length + 1)
             If ReaHotkey.Config.Get("CloseK8Browser") = 1
             Kontakt8.ClosePluginBrowser()
             If ReaHotkey.Config.Get("DetectLibsInK8") = 1

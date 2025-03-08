@@ -2,7 +2,13 @@
 
 Global A_IsUnicode := True
 
-AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False) {
+ActivateChooser(*) {
+    Context := ReaHotkey.GetContext()
+    If Context
+    Choose%Context%Overlay()
+}
+
+AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False, NumberToFocus := 0) {
     Critical
     PluginControlPos := GetPluginControlPos()
     OverlayList := %Type%.GetOverlays(Name)
@@ -54,23 +60,32 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                     ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
                     If ReportChange
                     Report(Product)
-                    FocusElement(Type)
+                    FocusElement(Type, NumberToFocus)
                     Break 2
                 }
                 Else {
                     ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
                     If ReportChange
                     Report(Product)
-                    FocusElement(Type)
+                    FocusElement(Type, NumberToFocus)
                     Break 2
                 }
             }
         }
     }
-    FocusElement(Type) {
-        If ReaHotkey.AutoFocus%Type%Overlay
-        ReaHotkey.AutoFocus%Type%Overlay := False
-        ReaHotkey.Found%Type%.Overlay.Focus()
+    FocusElement(Type, NumberToFocus) {
+        If Not NumberToFocus Or ReaHotkey.Found%Type%.Overlay.FocusableControlIDs.Length = 0 {
+            ReaHotkey.AutoFocus%Type%Overlay := True
+        }
+        Else {
+            ReaHotkey.AutoFocus%Type%Overlay := False
+            If NumberToFocus >= 1 And NumberToFocus <= ReaHotkey.Found%Type%.Overlay.FocusableControlIDs.Length
+            ReaHotkey.Found%Type%.Overlay.FocusControlNumber(NumberToFocus)
+            Else If NumberToFocus < 0 And ReaHotkey.Found%Type%.Overlay.FocusableControlIDs.Length + 1 + NumberToFocus >= 1
+            ReaHotkey.Found%Type%.Overlay.FocusControlNumber(ReaHotkey.Found%Type%.Overlay.FocusableControlIDs.Length + 1 + NumberToFocus)
+            Else
+            ReaHotkey.Found%Type%.Overlay.FocusControlNumber(1)
+        }
     }
     ProcessImageEntry(Type, CompensatePluginCoordinates, ImageEntry, WinWidth, WinHeight) {
         If Not ImageEntry Is Map
@@ -113,15 +128,15 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
     }
 }
 
-AutoChangePluginOverlay(Name, CompensatePluginCoordinates := False, ReportChange := False) {
-    AutoChangeOverlay("Plugin", Name, CompensatePluginCoordinates, ReportChange)
+AutoChangePluginOverlay(Name, CompensatePluginCoordinates := False, ReportChange := False, NumberToFocus := 0) {
+    AutoChangeOverlay("Plugin", Name, CompensatePluginCoordinates, ReportChange, NumberToFocus)
 }
 
-AutoChangeStandaloneOverlay(Name, ReportChange := False) {
-    AutoChangeOverlay("Standalone", Name, False, ReportChange)
+AutoChangeStandaloneOverlay(Name, ReportChange := False, NumberToFocus := 0) {
+    AutoChangeOverlay("Standalone", Name, False, ReportChange, NumberToFocus)
 }
 
-ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
+ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu, NumberToFocus := 0) {
     Critical
     OverlayList := %Type%.GetOverlays(ReaHotkey.Found%Type%.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemName]
@@ -137,38 +152,39 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu) {
     Else {
         ReaHotkey.Found%Type%.Overlay := OverlayList[OverlayNumber].Clone()
     }
-    Else
-    ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(0)
-    If ReaHotkey.AutoFocus%Type%Overlay
-    ReaHotkey.AutoFocus%Type%Overlay := False
-    If ReaHotkey.Found%Type%.Chooser {
-        ReaHotkey.Found%Type%.Overlay.ChildControls[2].Focus()
-        ReaHotkey.Found%Type%.Overlay.SetCurrentControlID(ReaHotkey.Found%Type%.Overlay.ChildControls[2].CurrentControlID)
+    If Not NumberToFocus Or ReaHotkey.Found%Type%.Overlay.FocusableControlIDs.Length = 0 {
+        ReaHotkey.AutoFocus%Type%Overlay := True
     }
     Else {
-        ReaHotkey.Found%Type%.Overlay.Focus()
+        ReaHotkey.AutoFocus%Type%Overlay := False
+        If NumberToFocus >= 1 And NumberToFocus <= ReaHotkey.Found%Type%.Overlay.FocusableControlIDs.Length
+        ReaHotkey.Found%Type%.Overlay.FocusControlNumber(NumberToFocus)
+        Else If NumberToFocus < 0 And ReaHotkey.Found%Type%.Overlay.FocusableControlIDs.Length + 1 + NumberToFocus >= 1
+        ReaHotkey.Found%Type%.Overlay.FocusControlNumber(ReaHotkey.Found%Type%.Overlay.FocusableControlIDs.Length + 1 + NumberToFocus)
+        Else
+        ReaHotkey.Found%Type%.Overlay.FocusControlNumber(1)
     }
 }
 
-ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu) {
-    ChangeOverlay("Plugin", ItemName, ItemNumber, OverlayMenu)
+ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu, NumberToFocus := 0) {
+    ChangeOverlay("Plugin", ItemName, ItemNumber, OverlayMenu, NumberToFocus)
 }
 
-ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu) {
-    ChangeOverlay("Standalone", ItemName, ItemNumber, OverlayMenu)
+ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu, NumberToFocus := 0) {
+    ChangeOverlay("Standalone", ItemName, ItemNumber, OverlayMenu, NumberToFocus)
 }
 
-ChooseOverlay(Type) {
-    OverlayMenu := CreateOverlayMenu(Type)
+ChooseOverlay(Type, MenuHandler := False, HandlerParams*) {
+    OverlayMenu := CreateOverlayMenu(Type, MenuHandler, HandlerParams*)
     OverlayMenu.Show()
 }
 
-ChoosePluginOverlay(*) {
-    ChooseOverlay("Plugin")
+ChoosePluginOverlay(OverlayControl, MenuHandler := False, HandlerParams*) {
+    ChooseOverlay("Plugin", MenuHandler, HandlerParams*)
 }
 
-ChooseStandaloneOverlay(*) {
-    ChooseOverlay("Standalone")
+ChooseStandaloneOverlay(OverlayControl, MenuHandler := False, HandlerParams*) {
+    ChooseOverlay("Standalone", MenuHandler, HandlerParams*)
 }
 
 CompensateFocusedControlXCoordinate(ControlXCoordinate) {
@@ -257,11 +273,12 @@ ConvertBase(InputBase, OutputBase, nptr)    ; Base 2 - 36
     return s
 }
 
-CreateOverlayMenu(Type, MenuHandler := False) {
+CreateOverlayMenu(Type, MenuHandler := False, HandlerParams*) {
     If Not MenuHandler {
         MenuHandler := "Change" . Type . "Overlay"
         MenuHandler := %MenuHandler%
     }
+    MenuHandler := MenuHandler.Bind(,,, HandlerParams*)
     Found := ReaHotkey.Found%Type%
     CurrentOverlay := Found.Overlay
     OverlayEntries := %Type%.GetOverlays(Found.Name)

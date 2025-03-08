@@ -62,17 +62,18 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     ActivateControlID(ControlID) {
         If This.ChildControls.Length > 0 {
-            Found := This.FindFocusableControlID(ControlID)
-            If Found > 0 {
-                TargetControl := AccessibilityOverlay.GetControl(ControlID)
-                If Not ControlID = This.CurrentControlID
-                This.SetPreviousControlID(This.CurrentControlID)
-                Speak := True
-                If ControlID = This.CurrentControlID
-                Speak := False
-                If TargetControl.HasMethod("Activate")
-                TargetControl.Activate(Speak)
-                This.SetCurrentControlID(ControlID)
+            If ControlID = This.CurrentControlID {
+                This.ActivateCurrentControl()
+            }
+            Else {
+                Found := This.FindFocusableControlID(ControlID)
+                If Found > 0 {
+                    TargetControl := AccessibilityOverlay.GetControl(ControlID)
+                    This.SetPreviousControlID(This.CurrentControlID)
+                    If TargetControl.HasMethod("Activate")
+                    TargetControl.Activate()
+                    This.SetCurrentControlID(ControlID)
+                }
             }
         }
     }
@@ -82,15 +83,16 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             This.GetFocusableControlIDs()
             If ControlNumber > 0 And This.FocusableControlIDs.Length >= ControlNumber {
                 ControlID := This.FocusableControlIDs[ControlNumber]
-                TargetControl := AccessibilityOverlay.GetControl(ControlID)
-                If Not ControlID = This.CurrentControlID
-                This.SetPreviousControlID(This.CurrentControlID)
-                Speak := True
-                If ControlID = This.CurrentControlID
-                Speak := False
-                If TargetControl.HasMethod("Activate")
-                TargetControl.Activate(Speak)
-                This.SetCurrentControlID(TargetControl.ControlID)
+                If ControlID = This.CurrentControlID {
+                    This.ActivateCurrentControl()
+                }
+                Else {
+                    TargetControl := AccessibilityOverlay.GetControl(ControlID)
+                    This.SetPreviousControlID(This.CurrentControlID)
+                    If TargetControl.HasMethod("Activate")
+                    TargetControl.Activate()
+                    This.SetCurrentControlID(TargetControl.ControlID)
+                }
             }
         }
     }
@@ -100,8 +102,19 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
+                If CurrentControl.ControlType = "checkbox" Or CurrentControl.ControlType = "ToggleButton" {
+                    TruePrev := AccessibilityOverlay.PreviousControlID
+                    AccessibilityOverlay.PreviousControlID := CurrentControl.ControlID
+                    Speak := True
+                }
+                Else {
+                    Speak := False
+                }
                 If CurrentControl.HasMethod("Activate")
-                CurrentControl.Activate(False)
+                CurrentControl.Activate(Speak)
+                If CurrentControl.ControlType = "checkbox" Or CurrentControl.ControlType = "ToggleButton" {
+                    AccessibilityOverlay.PreviousControlID := TruePrev
+                }
             }
         }
     }
@@ -206,11 +219,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
                 If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
-                Speak := True
-                If ControlID = This.CurrentControlID
-                Speak := False
                 If TargetControl.HasMethod("Focus")
-                TargetControl.Focus(Speak)
+                TargetControl.Focus()
                 This.SetCurrentControlID(ControlID)
             }
         }
@@ -224,11 +234,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
                 If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
-                Speak := True
-                If ControlID = This.CurrentControlID
-                Speak := False
                 If TargetControl.HasMethod("Focus")
-                TargetControl.Focus(Speak)
+                TargetControl.Focus()
                 This.SetCurrentControlID(TargetControl.ControlID)
             }
         }
@@ -1347,6 +1354,7 @@ Class Button Extends ActivatableControl {
 
 Class ToggleButton Extends Button {
     
+    ControlType := "ToggleButton"
     States := Map(-1, "unknown state", 0, "off", 1, "on")
     
 }
@@ -1738,7 +1746,7 @@ Class GraphicalButton Extends  ActivatableGraphic {
 
 Class GraphicalToggleButton Extends  ActivatableGraphic {
     
-    ControlType := "Button"
+    ControlType := "ToggleButton"
     ControlTypeLabel := "button"
     DefaultLabel := "unlabelled"
     States := Map(-1, "not found", 0, "off", 1, "on")
@@ -2054,6 +2062,7 @@ Class HotspotButton Extends Button {
 
 Class HotspotToggleButton Extends ToggleButton {
     
+    ControlType := "ToggleButton"
     OffColors := Array()
     OnColors := Array()
     XCoordinate := 0
