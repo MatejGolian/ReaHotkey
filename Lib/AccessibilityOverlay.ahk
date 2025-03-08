@@ -62,7 +62,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     ActivateControlID(ControlID) {
         If This.ChildControls.Length > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(ControlID)
             If Found > 0 {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
@@ -80,7 +79,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     ActivateControlNumber(ControlNumber) {
         If This.ChildControls.Length > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
+            This.GetFocusableControlIDs()
             If ControlNumber > 0 And This.FocusableControlIDs.Length >= ControlNumber {
                 ControlID := This.FocusableControlIDs[ControlNumber]
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
@@ -98,7 +97,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     ActivateCurrentControl() {
         If This.ChildControls.Length > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
@@ -111,7 +109,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     AddControl(Control) {
         Control.SuperordinateControlID := This.ControlID
         This.ChildControls.Push(Control)
-        This.FocusableControlIDs := This.GetFocusableControlIDs()
+        This.GetFocusableControlIDs()
         Return This.ChildControls[This.ChildControls.Length]
     }
     
@@ -120,7 +118,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Index := This.ChildControls.Length + 1
         Control.SuperordinateControlID := This.ControlID
         This.ChildControls.InsertAt(Index, Control)
-        This.FocusableControlIDs := This.GetFocusableControlIDs()
+        This.GetFocusableControlIDs()
         Return This.ChildControls[Index]
     }
     
@@ -161,7 +159,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     DecreaseSlider() {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
@@ -191,8 +188,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
                 If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
-                If TargetControl.HasMethod("Focus")
-                TargetControl.Focus(Speak)
+                If TargetControl.HasMethod("Focus") {
+                    If TargetControl.ControlType := "TabControl"
+                    TargetControl.Focus(True)
+                    Else
+                    TargetControl.Focus(Speak)
+                }
                 This.SetCurrentControlID(ControlID)
             }
         }
@@ -200,7 +201,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusControlID(ControlID) {
         If This.ChildControls.Length > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(ControlID)
             If Found > 0 {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
@@ -218,7 +218,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusControlNumber(ControlNumber) {
         If This.ChildControls.Length > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
+            This.FocusableControlIDs :=This.GetFocusableControlIDs()
             If ControlNumber > 0 And This.FocusableControlIDs.Length >= ControlNumber {
                 ControlID := This.FocusableControlIDs[ControlNumber]
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
@@ -236,7 +236,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusCurrentControl() {
         If This.ChildControls.Length > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
@@ -248,7 +247,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusNextControl() {
         If This.ChildControls.Length > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If This.FocusableControlIDs.Length = 0
             ControlID := 0
@@ -267,7 +265,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusPreviousControl() {
         If This.ChildControls.Length > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If This.FocusableControlIDs.Length = 0
             ControlID := 0
@@ -286,7 +283,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusNextTab() {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
@@ -301,7 +297,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusPreviousTab() {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
@@ -392,12 +387,13 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 FocusableControlIDs.Push(CurrentControl.ControlID)
             }
         }
-        Return FocusableControlIDs
+        This.FocusableControlIDs := FocusableControlIDs
+        Return This.FocusableControlIDs
     }
     
     GetFocusableControls() {
         FocusableControls := Array()
-        This.FocusableControlIDs := This.GetFocusableControlIDs()
+        This.GetFocusableControlIDs()
         For FocusableControlID In This.FocusableControlIDs
         FocusableControls.Push(AccessibilityOverlay.GetControl(FocusableControlID))
         Return FocusableControls
@@ -433,7 +429,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     IncreaseSlider() {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
@@ -447,8 +442,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If This.ChildControls.Length > 0 {
             OldList := This.GetFocusableControlIDs()
             This.ChildControls.Pop()
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
-            NewList := This.FocusableControlIDs
+            NewList := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found = 0 Or Not OldList[Found] = NewList[Found]
             If NewList.Length = 0 {
@@ -474,8 +468,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If Index > 0 And Index <= This.ChildControls.Length {
             OldList := This.GetFocusableControlIDs()
             This.ChildControls.RemoveAt(Index)
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
-            NewList := This.FocusableControlIDs
+            NewList := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found = 0 Or Not OldList[Found] = NewList[Found]
             If NewList.Length = 0 {
@@ -520,7 +513,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     SelectNextOption() {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
@@ -532,7 +524,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     SelectPreviousOption() {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
-            This.FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
