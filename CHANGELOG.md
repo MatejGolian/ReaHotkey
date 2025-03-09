@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed/Fixed
+### Changed
 
 -   Reworked K7/K8/KK overlays
--   All relevant elements now make use of Tesseract OCR
+-   All relevant elements now make use of Tesseract OCR instead of UWP
+-   Enabled Juggernaut in K8 and KK
+-   Updated README
 
 ## [0.5.7] - 2025-03-06
 

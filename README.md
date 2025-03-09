@@ -28,10 +28,13 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - The Content Missing dialog may not be accessible when running Kontakt inside Komplete Kontrol.
 * Makes it possible to switch Between various mixes and microphone positions in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries. There is also support for toggling microphone positions in Cinematic Studio Strings, switching presets in the 'Juggernaut' library by Impact Soundworks and toggling the reverb on/off in a couple of Soundiron libraries.
   - Only works inside REAPER and Ableton Live 12.
-  - The overlay for Juggernaut is only accessible when using Kontakt 7, but otherwise everything else works both in Kontakt and Komplete Kontrol.
 * Makes it possible to load instruments, set polyphony and pitchbend range in Plogue sforzando.
   - Works inside REAPER, Ableton Live 12 and in the standalone version of sforzando.
 * Makes it possible to use the Zampler plug-in by Synapse Audio in REAPER and Ableton Live 12.
+
+## Getting Started
+
+Just extract the downloaded archive and run one of the ReaHotkey executables depending on your OS architecture - 'ReaHotkey_x64.exe' if you're on a 64-bit version of Windows and 'ReaHotkey_x86.exe' if your build of Windows is 32-bit. If you than launch one of the supported plug-ins or applications, you will be able to interact with it simiilarly to how you would interact with any accessible application, like moving Between controls with Tab and Shift+Tab, switching tabs with the left or right arrows and so on. In case you want to use ReaHotkey together with one of the supported VST plug-ins in REAPER or Ableton, you can press the F6 key to move the focus inside the given plug-in's user interface. Note that for REAPER this is standard behavior - even without ReaHotkey being active.
 
 ## General Notes
 

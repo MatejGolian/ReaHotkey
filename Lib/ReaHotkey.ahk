@@ -190,9 +190,11 @@ Class ReaHotkey {
             If Not PluginControl
             Return False
             Controls := WinGetControls(This.PluginWinCriteria)
+            CurrentControl := 0
             PluginPosition := 0
             For Index, Control In Controls
             If Control = PluginControl {
+                CurrentControl := Control
                 PluginPosition := Index
                 Break
             }
@@ -204,17 +206,27 @@ Class ReaHotkey {
             }
             If Not PluginPosition > 0 Or Not CheckPosition > 0 Or Not PluginPosition <= CheckPosition
             Return False
-            If This.AbletonPlugin
-            Return True
+            If This.AbletonPlugin {
+                AdjustFocus(CurrentControl, PluginControl)
+                Return True
+            }
             If This.ReaperPlugin {
                 ReaperControlPatterns := ["^#327701$", "^Button[0-9]+$", "^ComboBox[0-9]+$", "^Edit[0-9]+$", "^REAPERknob[0-9]+$", "^reaperPluginHostWrapProc[0-9]+$", "^Static[0-9]+$", "^SysHeader321$", "^SysListView321$", "^SysTreeView321$"]
                 For ReaperControlPattern In ReaperControlPatterns
                 If RegExMatch(ControlToCheck, ReaperControlPattern)
                 Return False
+                AdjustFocus(CurrentControl, PluginControl)
                 Return True
             }
         }
         Return False
+        AdjustFocus(CurrentControl, PluginControl) {
+            If CurrentControl And PluginControl
+            If Not CurrentControl = PluginControl {
+                Try
+                ControlFocus PluginControl, This.PluginWinCriteria
+            }
+        }
     }
     
     Static ManageWinCovered(Setting) {
