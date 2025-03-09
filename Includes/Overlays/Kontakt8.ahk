@@ -255,6 +255,7 @@ Class Kontakt8 {
     }
     
     Static GetPluginStartingPath() {
+        Critical
         Static CachedPath := False
         Try
         UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
@@ -301,6 +302,7 @@ Class Kontakt8 {
     }
     
     Static MoveToPluginInstrumentButton(InstrumentButton) {
+        Critical
         Label := InstrumentButton
         If InstrumentButton Is Object
         Label := InstrumentButton.Label
@@ -315,6 +317,7 @@ Class Kontakt8 {
     }
     
     Static MoveToPluginMultiButton(MultiButton) {
+        Critical
         Label := MultiButton
         If MultiButton Is Object
         Label := MultiButton.Label
@@ -329,6 +332,7 @@ Class Kontakt8 {
     }
     
     Static MoveToPluginSnapshotButton(SnapshotButton) {
+        Critical
         If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True)
         SnapshotButton.Label := "Snapshot menu"
         Label := SnapshotButton

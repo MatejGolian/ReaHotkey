@@ -251,6 +251,7 @@ Class Kontakt7 {
     }
     
     Static GetPluginStartingPath() {
+        Critical
         Static CachedPath := False
         Try
         UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
@@ -289,7 +290,7 @@ Class Kontakt7 {
     }
     
     Static GetView(Type) {
-        Thread "NoTimers"
+        Critical
         If Type = "Plugin"
         StartingPath := This.GetPluginStartingPath()
         Else
@@ -330,6 +331,7 @@ Class Kontakt7 {
     }
     
     Static MoveToPluginInstrumentButton(InstrumentButton) {
+        Critical
         Label := InstrumentButton
         If InstrumentButton Is Object
         Label := InstrumentButton.Label
@@ -348,6 +350,7 @@ Class Kontakt7 {
     }
     
     Static MoveToPluginMultiButton(MultiButton) {
+        Critical
         Label := MultiButton
         If MultiButton Is Object
         Label := MultiButton.Label

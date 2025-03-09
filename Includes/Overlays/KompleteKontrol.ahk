@@ -233,6 +233,7 @@ Class KompleteKontrol {
     }
     
     Static GetPluginStartingPath() {
+        Critical
         Static CachedPath := False
         Try
         UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
