@@ -20,7 +20,7 @@ Class Kontakt7 {
         PluginHeader.AddCustomButton("Next instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^N", "Ctrl+N")
         PluginHeader.AddCustomButton("Previous multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+P", "Ctrl+Shift+P")
         PluginHeader.AddCustomButton("Next multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+N", "Ctrl+Shift+N")
-        ;PluginHeader.AddCustomButton("Snapshot menu", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!M", "Alt+M")
+        PluginHeader.AddCustomButton("Snapshot menu", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!M", "Alt+M")
         PluginHeader.AddCustomButton("Previous snapshot", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!P", "Alt+P")
         PluginHeader.AddCustomButton("Next snapshot", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!N", "Alt+N")
         PluginHeader.AddCustomButton("Choose library",,, ObjBindMethod(ChoosePluginOverlay,,,, PluginHeader.FocusableControlIDs.Length + 1)).SetHotkey("!C", "Alt+C")
@@ -335,9 +335,7 @@ Class Kontakt7 {
         Label := InstrumentButton
         If InstrumentButton Is Object
         Label := InstrumentButton.Label
-        StartingPath := This.GetPluginStartingPath()
-        UIAElement := GetUIAElement(StartingPath . ",5")
-        If Not UIAElement = False And UIAElement.Name = "SHOP" {
+        If This.GetPluginView() = "rack" {
             Try
             ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
             Catch
@@ -354,9 +352,7 @@ Class Kontakt7 {
         Label := MultiButton
         If MultiButton Is Object
         Label := MultiButton.Label
-        StartingPath := This.GetPluginStartingPath()
-        UIAElement := GetUIAElement(StartingPath . ",5")
-        If Not UIAElement = False And UIAElement.Name = "SHOP" {
+        If This.GetPluginView() = "rack" {
             Try
             ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
             Catch
@@ -375,15 +371,13 @@ Class Kontakt7 {
         Label := SnapshotButton
         If SnapshotButton Is Object
         Label := SnapshotButton.Label
-        StartingPath := This.GetPluginStartingPath()
-        UIAElement := GetUIAElement(StartingPath . ",5")
-        If Not UIAElement = False And UIAElement.Name = "SHOP" {
+        If This.GetPluginView() = "rack" {
             Try
             ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
             Catch
             Return
             If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
-                OCRResult := AccessibilityOverlay.Ocr("UWP", ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
+                OCRResult := AccessibilityOverlay.Ocr("TesseractBest", ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
                 If Not OCRResult = ""
                 SnapshotButton.Label := "Snapshot " . OcrResult
             }
@@ -399,13 +393,14 @@ Class Kontakt7 {
     Class CheckPluginConfig {
         Static Call() {
             Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True, Kontakt7.PluginHeader.FocusableControlIDs.Length + 1)
+            Kontakt7.ClosePluginUpdateDialog()
+            Sleep 1000
             If ReaHotkey.Config.Get("CloseK7Browser") = 1
             Kontakt7.ClosePluginBrowser()
             If ReaHotkey.Config.Get("DetectLibsInK7") = 1
             Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 500)
             Else
             Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 0)
-            Kontakt7.ClosePluginUpdateDialog()
         }
     }
     
@@ -417,9 +412,10 @@ Class Kontakt7 {
     
     Class CheckStandaloneConfig {
         Static Call() {
+            Kontakt7.CloseStandaloneUpdateDialog()
+            Sleep 1000
             If ReaHotkey.Config.Get("CloseK7Browser") = 1
             Kontakt7.CloseStandaloneBrowser()
-            Kontakt7.CloseStandaloneUpdateDialog()
         }
     }
     

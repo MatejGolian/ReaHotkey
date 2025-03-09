@@ -20,7 +20,7 @@ Class Kontakt8 {
         PluginHeader.AddCustomButton("Next instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^N", "Ctrl+N")
         PluginHeader.AddCustomButton("Previous multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+P", "Ctrl+Shift+P")
         PluginHeader.AddCustomButton("Next multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+N", "Ctrl+Shift+N")
-        ;PluginHeader.AddCustomButton("Snapshot menu", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!M", "Alt+M")
+        PluginHeader.AddCustomButton("Snapshot menu", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!M", "Alt+M")
         PluginHeader.AddCustomButton("Previous snapshot", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!P", "Alt+P")
         PluginHeader.AddCustomButton("Next snapshot", ObjBindMethod(This, "MoveToPluginSnapshotButton"),,, ObjBindMethod(This, "ActivatePluginSnapshotButton")).SetHotkey("!N", "Alt+N")
         PluginHeader.AddCustomButton("Choose library",,, ObjBindMethod(ChoosePluginOverlay,,,, PluginHeader.FocusableControlIDs.Length + 1)).SetHotkey("!C", "Alt+C")
@@ -104,78 +104,40 @@ Class Kontakt8 {
     
     Static ActivatePluginInstrumentButton(InstrumentButton) {
         Critical
-        Try
-        ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-        Catch
-        Return
-        This.MoveToPluginInstrumentButton("Previous instrument")
-        If CheckColor() {
+        If This.CheckPluginClassicViewColor("instrument") {
             This.MoveToPluginInstrumentButton(InstrumentButton)
             Click
             Return
         }
         AccessibilityOverlay.Speak("Instrument switching unavailable. Make sure that an instrument is loaded and that you're in classic view.")
-        CheckColor() {
-            MouseGetPos &mouseXPosition, &mouseYPosition
-            Sleep 10
-            FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
-            If FoundColor = "0x545355" Or FoundColor = "0x656465"
-            Return True
-            Return False
-        }
     }
     
     Static ActivatePluginMultiButton(MultiButton) {
         Critical
-        Try
-        ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-        Catch
-        Return
-        This.MoveToPluginMultiButton("Previous multi")
-        If CheckColor() {
+        If This.CheckPluginClassicViewColor("multi") {
             This.MoveToPluginMultiButton(MultiButton)
             Click
             Return
         }
         AccessibilityOverlay.Speak("Multi switching unavailable. Make sure that a multi is loaded and that you're in classic view.")
-        CheckColor() {
-            MouseGetPos &mouseXPosition, &mouseYPosition
-            Sleep 10
-            FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
-            If FoundColor = "0x323232"
-            Return True
-            Return False
-        }
     }
     
     Static ActivatePluginSnapshotButton(SnapshotButton) {
         Critical
-        Try
-        ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-        Catch
-        Return
-        This.MoveToPluginSnapshotButton("Previous snapshot")
-        If CheckColor()
-        If InStr(SnapshotButton.Label, "Snapshot", True) {
+        If This.CheckPluginClassicViewColor("Snapshot") {
             This.MoveToPluginSnapshotButton(SnapshotButton)
-            Click
-            This.CheckPluginMenu()
-            Return
-        }
-        Else {
-            This.MoveToPluginSnapshotButton(SnapshotButton)
-            Click
-            Return
+            If InStr(SnapshotButton.Label, "Snapshot", True) {
+                Click
+                This.CheckPluginMenu()
+                Return
+            }
+            Else {
+                This.MoveToPluginSnapshotButton(SnapshotButton)
+                Click
+                Return
+            }
         }
         AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in classic view.")
-        CheckColor() {
-            MouseGetPos &mouseXPosition, &mouseYPosition
-            Sleep 10
-            FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
-            If FoundColor = "0x424142" Or FoundColor = "0x545454"
-            Return True
-            Return False
-        }
     }
     
     Static ActivateStandaloneHeaderButton(HeaderButton) {
@@ -212,6 +174,30 @@ Class Kontakt8 {
             Return True
         }
         Return False
+    }
+    
+    Static CheckPluginClassicViewColor(Mode) {
+        InstrumentColors := ["0x545355", "0x656465"]
+        MultiColors := ["0x323232"]
+        SnapshotColors := ["0x424142", "0x545454"]
+        Switch Mode {
+            Case "Instrument":
+            This.MoveToPluginInstrumentButton("Previous instrument")
+            Case "Multi":
+            This.MoveToPluginMultiButton("Previous multi")
+            Case "Snapshot":
+            This.MoveToPluginSnapshotButton("Previous snapshot")
+        }
+        Return CheckColor(%Mode%Colors)
+        CheckColor(ModeColors) {
+            MouseGetPos &mouseXPosition, &mouseYPosition
+            Sleep 10
+            FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
+            For ModeColor In ModeColors
+            If FoundColor = ModeColor
+            Return True
+            Return False
+        }
     }
     
     Static CheckPluginContentMissing(PluginInstance) {
@@ -342,8 +328,8 @@ Class Kontakt8 {
         ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
         Catch
         Return
-        If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
-            OCRResult := AccessibilityOverlay.Ocr("UWP", ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
+        If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) And This.CheckPluginClassicViewColor("Snapshot") {
+            OCRResult := AccessibilityOverlay.Ocr("TesseractBest", ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
             If Not OCRResult = ""
             SnapshotButton.Label := "Snapshot " . OcrResult
         }
