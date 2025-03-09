@@ -12,38 +12,29 @@ Class Sforzando {
         If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
         If PluginInstance.Name = "sforzando"
         Return True
-        StartingPath := This.GetPluginStartingPath()
-        If StartingPath
+        UIAElement := This.GetPluginUIAElement()
+        If UIAElement
         Return True
         Return False
     }
     
-    Static GetPluginStartingPath() {
+    Static GetPluginUIAElement() {
         Critical
-        Static CachedPath := False
         Try
-        UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+        UIAElement := GetUIAWindow()
+        If Not UIAElement Is Object
+        Return False
+        If CheckElement(UIAElement)
+        Return UIAElement
+        Try
+        UIAElement := UIAElement.FindElement({Name:"PlogueXMLGUI"})
         Catch
-        UIAElement := False
-        If UIAElement And CachedPath And CheckPath(UIAElement, CachedPath)
-        Return CachedPath
-        If UIAElement
-        Try
-        For Index, ChildElement In UIAElement.Children {
-            UIAPaths := [Index, Index . ",1"]
-            For UIAPath In UIAPaths
-            If CheckPath(UIAElement, UIAPath) {
-                CachedPath := UIAPath
-                Return UIAPath
-            }
-        }
-        Return ""
-        CheckPath(UIAElement, UIAPath) {
-            Try
-            TestElement := UIAElement.ElementFromPath(UIAPath)
-            Catch
-            TestElement := False
-            If TestElement And TestElement.Name = "PlogueXMLGUI"
+        Return False
+        If CheckElement(UIAElement)
+        Return UIAElement
+        Return False
+        CheckElement(UIAElement) {
+            If UIAElement Is Object And UIAElement.Type = 50033
             Return True
             Return False
         }

@@ -510,17 +510,14 @@ GetPluginYCoordinate() {
     Return GetPluginControlPos().Y
 }
 
-GetUIAElement(UIAPath) {
+GetUIAWindow() {
     If Not IsSet(UIA)
     Return False
-    Try {
-        Element := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-        Element := Element.ElementFromPath(UIAPath)
-    }
-    Catch {
-        Return False
-    }
-    Return Element
+    Try
+    Window := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+    Catch
+    Return False
+    Return Window
 }
 
 InArray(Needle, Haystack) {
