@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed/Fixed
+
+-   Reworked K7/K8/KK overlays
+-   All relevant elements now make use of Tesseract OCR
+
 ## [0.5.7] - 2025-03-06
 
 ### Changed/Fixed
