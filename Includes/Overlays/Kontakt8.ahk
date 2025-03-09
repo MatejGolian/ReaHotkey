@@ -61,20 +61,26 @@ Class Kontakt8 {
         Standalone.RegisterOverlay("Kontakt 8 Content Missing Dialog", StandaloneContentMissingOverlay)
     }
     
-    Static ActivatePluginHeaderButton(HeaderButton) {
+    Static ActivateHeaderButton(Type, HeaderButton) {
         Critical
+        If Type = "Plugin"
         StartingPath := This.GetPluginStartingPath()
+        Else
+        StartingPath := 1
+        Try
         If StartingPath
         Switch HeaderButton.Label {
             Case "FILE menu":
-            UIAElement := GetUIAElement(StartingPath . ",2")
+            UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Button", Name:"FILE"})
             Case "LIBRARY On/Off":
-            UIAElement := GetUIAElement(StartingPath . ",3")
+            UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Button", Name:"LIBRARY"})
             Case "VIEW menu":
-            UIAElement := GetUIAElement(StartingPath . ",4")
+            UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Button", Name:"VIEW"})
             Case "SHOP (Opens in default web browser)":
-            UIAElement := GetUIAElement(StartingPath . ",5")
+            UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Button", Name:"SHOP"})
         }
+        Catch
+        UIAElement := False
         If Not UIAElement = False
         Switch HeaderButton.Label {
             Case "FILE menu":
@@ -92,125 +98,65 @@ Class Kontakt8 {
         AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
     }
     
+    Static ActivatePluginHeaderButton(HeaderButton) {
+        This.ActivateHeaderButton("Plugin", HeaderButton)
+    }
+    
     Static ActivatePluginInstrumentButton(InstrumentButton) {
         Critical
-        Try
-        ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-        Catch
-        Return
-        This.MoveToPluginInstrumentButton("Previous instrument")
-        If CheckColor() {
+        If This.CheckPluginClassicViewColor("instrument") {
             This.MoveToPluginInstrumentButton(InstrumentButton)
             Click
             Return
         }
         AccessibilityOverlay.Speak("Instrument switching unavailable. Make sure that an instrument is loaded and that you're in classic view.")
-        CheckColor() {
-            MouseGetPos &mouseXPosition, &mouseYPosition
-            Sleep 10
-            FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
-            If FoundColor = "0x545355" Or FoundColor = "0x656465"
-            Return True
-            Return False
-        }
     }
     
     Static ActivatePluginMultiButton(MultiButton) {
         Critical
-        Try
-        ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-        Catch
-        Return
-        This.MoveToPluginMultiButton("Previous multi")
-        If CheckColor() {
+        If This.CheckPluginClassicViewColor("multi") {
             This.MoveToPluginMultiButton(MultiButton)
             Click
             Return
         }
         AccessibilityOverlay.Speak("Multi switching unavailable. Make sure that a multi is loaded and that you're in classic view.")
-        CheckColor() {
-            MouseGetPos &mouseXPosition, &mouseYPosition
-            Sleep 10
-            FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
-            If FoundColor = "0x323232"
-            Return True
-            Return False
-        }
     }
     
     Static ActivatePluginSnapshotButton(SnapshotButton) {
         Critical
-        Try
-        ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
-        Catch
-        Return
-        This.MoveToPluginSnapshotButton("Previous snapshot")
-        If CheckColor()
-        If InStr(SnapshotButton.Label, "Snapshot", True) {
+        If This.CheckPluginClassicViewColor("Snapshot") {
             This.MoveToPluginSnapshotButton(SnapshotButton)
-            Click
-            This.CheckPluginMenu()
-            Return
-        }
-        Else {
-            This.MoveToPluginSnapshotButton(SnapshotButton)
-            Click
-            Return
+            If InStr(SnapshotButton.Label, "Snapshot", True) {
+                Click
+                This.CheckPluginMenu()
+                Return
+            }
+            Else {
+                This.MoveToPluginSnapshotButton(SnapshotButton)
+                Click
+                Return
+            }
         }
         AccessibilityOverlay.Speak("Snapshot switching unavailable. Make sure that an instrument is loaded and that you're in classic view.")
-        CheckColor() {
-            MouseGetPos &mouseXPosition, &mouseYPosition
-            Sleep 10
-            FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
-            If FoundColor = "0x424142" Or FoundColor = "0x545454"
-            Return True
-            Return False
-        }
     }
     
     Static ActivateStandaloneHeaderButton(HeaderButton) {
-        Critical
-        UIAElement := False
-        Switch HeaderButton.Label {
-            Case "FILE menu":
-            UIAElement := GetUIAElement("1,2")
-            Case "LIBRARY On/Off":
-            UIAElement := GetUIAElement("1,3")
-            Case "VIEW menu":
-            UIAElement := GetUIAElement("1,4")
-            Case "SHOP (Opens in default web browser)":
-            UIAElement := GetUIAElement("1,5")
-        }
-        If Not UIAElement = False
-        Switch HeaderButton.Label {
-            Case "FILE menu":
-            UIAElement.Click("Left")
-            This.CheckStandaloneMenu()
-            Case "LIBRARY On/Off":
-            UIAElement.Click("Left")
-            Case "VIEW menu":
-            UIAElement.Click("Left")
-            This.CheckStandaloneMenu()
-            Case "SHOP (Opens in default web browser)":
-            UIAElement.Click("Left")
-        }
-        Else
-        AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
+        This.ActivateHeaderButton("Standalone", HeaderButton)
     }
     
     Static CheckMenu(Type) {
         Thread "NoTimers"
+        If Type = "Plugin"
         StartingPath := This.GetPluginStartingPath()
-        UIAPaths := [StartingPath . ",14", StartingPath . ",15", StartingPath . ",16", StartingPath . ",17"]
+        Else
+        StartingPath := 1
         Found := False
         Try
-        For UIAPath In UIAPaths {
-            UIAElement := GetUIAElement(UIAPath)
-            If UIAElement Is Object And UIAElement.Type = 50009 {
-                Found := True
-                Break
-            }
-        }
+        UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Menu"})
+        Catch
+        UIAElement := False
+        If UIAElement Is Object And UIAElement.Type = 50009
+        Found := True
         If Found = False
         %Type%.SetNoHotkeys("Kontakt 8", False)
         Else
@@ -230,6 +176,30 @@ Class Kontakt8 {
         Return False
     }
     
+    Static CheckPluginClassicViewColor(Mode) {
+        InstrumentColors := ["0x545355", "0x656465"]
+        MultiColors := ["0x323232"]
+        SnapshotColors := ["0x424142", "0x545454"]
+        Switch Mode {
+            Case "Instrument":
+            This.MoveToPluginInstrumentButton("Previous instrument")
+            Case "Multi":
+            This.MoveToPluginMultiButton("Previous multi")
+            Case "Snapshot":
+            This.MoveToPluginSnapshotButton("Previous snapshot")
+        }
+        Return CheckColor(%Mode%Colors)
+        CheckColor(ModeColors) {
+            MouseGetPos &mouseXPosition, &mouseYPosition
+            Sleep 10
+            FoundColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
+            For ModeColor In ModeColors
+            If FoundColor = ModeColor
+            Return True
+            Return False
+        }
+    }
+    
     Static CheckPluginContentMissing(PluginInstance) {
         Thread "NoTimers"
         If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
@@ -244,40 +214,34 @@ Class Kontakt8 {
         Return False
     }
     
-    Static ClosePluginBrowser() {
-        If ReaHotkey.ReaperPluginNative {
-            StartingPath := This.GetPluginStartingPath()
-            UIAElement := GetUIAElement(StartingPath . ",14,3")
-            If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
-                UIAElement.Click()
-                AccessibilityOverlay.Speak("Library Browser closed.")
-                Sleep 1000
-            }
-            UIAElement := GetUIAElement(StartingPath . ",16,3")
-            If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
-                UIAElement.Click()
-                AccessibilityOverlay.Speak("Library Browser closed.")
-                Sleep 1000
-            }
+    Static closeBrowser(Type) {
+        Thread "NoTimers"
+        If Type = "Plugin"
+        StartingPath := This.GetPluginStartingPath()
+        Else
+        StartingPath := 1
+        Try
+        UIAElement := GetUIAElement(StartingPath).FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
+        Catch
+        UIAElement := False
+        If UIAElement Is Object And UIAElement.Type = 50018 {
+            Try
+            UIAElement.WalkTree(-1).Click("Left")
+            AccessibilityOverlay.Speak("Library Browser closed.")
+            Sleep 1000
         }
+    }
+    
+    Static ClosePluginBrowser() {
+        This.closeBrowser("Plugin")
     }
     
     Static CloseStandaloneBrowser() {
-        UIAElement := GetUIAElement("1,14,3")
-        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
-            UIAElement.Click()
-            AccessibilityOverlay.Speak("Library Browser closed.")
-            Sleep 1000
-        }
-        UIAElement := GetUIAElement("1,16,3")
-        If Not UIAElement = False And RegExMatch(UIAElement.ClassName, "^LumenButton_QMLTYPE_[0-9]+$") {
-            UIAElement.Click()
-            AccessibilityOverlay.Speak("Library Browser closed.")
-            Sleep 1000
-        }
+        This.closeBrowser("Standalone")
     }
     
     Static GetPluginStartingPath() {
+        Critical
         Static CachedPath := False
         Try
         UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
@@ -324,6 +288,7 @@ Class Kontakt8 {
     }
     
     Static MoveToPluginInstrumentButton(InstrumentButton) {
+        Critical
         Label := InstrumentButton
         If InstrumentButton Is Object
         Label := InstrumentButton.Label
@@ -338,6 +303,7 @@ Class Kontakt8 {
     }
     
     Static MoveToPluginMultiButton(MultiButton) {
+        Critical
         Label := MultiButton
         If MultiButton Is Object
         Label := MultiButton.Label
@@ -352,6 +318,7 @@ Class Kontakt8 {
     }
     
     Static MoveToPluginSnapshotButton(SnapshotButton) {
+        Critical
         If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True)
         SnapshotButton.Label := "Snapshot menu"
         Label := SnapshotButton
@@ -361,8 +328,8 @@ Class Kontakt8 {
         ControlGetPos &ControlX, &ControlY, &ControlWidth, &ControlHeight, ReaHotkey.GetPluginControl(), "A"
         Catch
         Return
-        If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) {
-            OCRResult := AccessibilityOverlay.Ocr("UWP", ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
+        If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) And This.CheckPluginClassicViewColor("Snapshot") {
+            OCRResult := AccessibilityOverlay.Ocr("TesseractBest", ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
             If Not OCRResult = ""
             SnapshotButton.Label := "Snapshot " . OcrResult
         }
