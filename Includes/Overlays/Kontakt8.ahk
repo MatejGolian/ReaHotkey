@@ -64,20 +64,20 @@ Class Kontakt8 {
     Static ActivateHeaderButton(Type, HeaderButton) {
         Critical
         If Type = "Plugin"
-        StartingPath := This.GetPluginStartingPath()
+        UIAElement := This.GetPluginUIAElement()
         Else
-        StartingPath := 1
+        UIAElement := GetUIAWindow()
         Try
-        If StartingPath
+        If UIAElement
         Switch HeaderButton.Label {
             Case "FILE menu":
-            UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Button", Name:"FILE"})
+            UIAElement := UIAElement.FindElement({Type:"Button", Name:"FILE"})
             Case "LIBRARY On/Off":
-            UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Button", Name:"LIBRARY"})
+            UIAElement := UIAElement.FindElement({Type:"Button", Name:"LIBRARY"})
             Case "VIEW menu":
-            UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Button", Name:"VIEW"})
+            UIAElement := UIAElement.FindElement({Type:"Button", Name:"VIEW"})
             Case "SHOP (Opens in default web browser)":
-            UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Button", Name:"SHOP"})
+            UIAElement := UIAElement.FindElement({Type:"Button", Name:"SHOP"})
         }
         Catch
         UIAElement := False
@@ -147,17 +147,17 @@ Class Kontakt8 {
     Static CheckMenu(Type) {
         Thread "NoTimers"
         If Type = "Plugin"
-        StartingPath := This.GetPluginStartingPath()
+        UIAElement := This.GetPluginUIAElement()
         Else
-        StartingPath := 1
+        UIAElement := GetUIAWindow()
         Found := False
         Try
-        UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Menu"})
+        UIAElement := UIAElement.FindElement({Type:"Menu"})
         Catch
         UIAElement := False
         If UIAElement Is Object And UIAElement.Type = 50009
         Found := True
-        If Found = False
+        If Not Found
         %Type%.SetNoHotkeys("Kontakt 8", False)
         Else
         %Type%.SetNoHotkeys("Kontakt 8", True)
@@ -169,8 +169,8 @@ Class Kontakt8 {
         If PluginInstance.Name = "Kontakt 8"
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative {
-            StartingPath := This.GetPluginStartingPath()
-            If StartingPath
+            UIAElement := This.GetPluginUIAElement()
+            If UIAElement
             Return True
         }
         Return False
@@ -207,8 +207,8 @@ Class Kontakt8 {
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing" {
-            StartingPath := This.GetPluginStartingPath()
-            If StartingPath
+            UIAElement := This.GetPluginUIAElement()
+            If UIAElement
             Return True
         }
         Return False
@@ -217,11 +217,11 @@ Class Kontakt8 {
     Static closeBrowser(Type) {
         Thread "NoTimers"
         If Type = "Plugin"
-        StartingPath := This.GetPluginStartingPath()
+        UIAElement := This.GetPluginUIAElement()
         Else
-        StartingPath := 1
+        UIAElement := GetUIAWindow()
         Try
-        UIAElement := GetUIAElement(StartingPath).FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
+        UIAElement := UIAElement.FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
         Catch
         UIAElement := False
         If UIAElement Is Object And UIAElement.Type = 50018 {
@@ -240,32 +240,23 @@ Class Kontakt8 {
         This.closeBrowser("Standalone")
     }
     
-    Static GetPluginStartingPath() {
+    Static GetPluginUIAElement() {
         Critical
-        Static CachedPath := False
         Try
-        UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+        UIAElement := GetUIAWindow()
+        If Not UIAElement Is Object
+        Return False
+        If CheckElement(UIAElement)
+        Return UIAElement
+        Try
+        UIAElement := UIAElement.FindElement({ClassName:"ni::qt::QuickWindow"})
         Catch
-        UIAElement := False
-        If UIAElement And CachedPath And CheckPath(UIAElement, CachedPath)
-        Return CachedPath
-        If UIAElement
-        Try
-        For Index, ChildElement In UIAElement.Children {
-            UIAPaths := [Index, Index . ",1"]
-            For UIAPath In UIAPaths
-            If CheckPath(UIAElement, UIAPath) {
-                CachedPath := UIAPath
-                Return UIAPath
-            }
-        }
-        Return ""
-        CheckPath(UIAElement, UIAPath) {
-            Try
-            TestElement := UIAElement.ElementFromPath(UIAPath)
-            Catch
-            TestElement := False
-            If TestElement And TestElement.Name = "Kontakt 8" And TestElement.ClassName = "ni::qt::QuickWindow"
+        Return False
+        If CheckElement(UIAElement)
+        Return UIAElement
+        Return False
+        CheckElement(UIAElement) {
+            If UIAElement Is Object And UIAElement.Name = "Kontakt 8" And UIAElement.Type = 50032
             Return True
             Return False
         }

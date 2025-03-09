@@ -115,17 +115,17 @@ Class KompleteKontrol {
     Static CheckMenu(Type) {
         Thread "NoTimers"
         If Type = "Plugin"
-        StartingPath := This.GetPluginStartingPath()
+        UIAElement := This.GetPluginUIAElement()
         Else
-        StartingPath := 1
+        UIAElement := GetUIAWindow()
         Found := False
         Try
-        UIAElement := GetUIAElement(StartingPath).FindElement({Type:"Menu"})
+        UIAElement := UIAElement.FindElement({Type:"Menu"})
         Catch
         UIAElement := False
         If UIAElement Is Object And UIAElement.Type = 50009
         Found := True
-        If Found = False
+        If Not Found
         %Type%.SetNoHotkeys("Komplete Kontrol", False)
         Else
         %Type%.SetNoHotkeys("Komplete Kontrol", True)
@@ -137,8 +137,8 @@ Class KompleteKontrol {
         If PluginInstance.Name = "Komplete Kontrol"
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative {
-            StartingPath := This.GetPluginStartingPath()
-            If StartingPath
+            UIAElement := This.GetPluginUIAElement()
+            If UIAElement
             Return True
         }
         Return False
@@ -190,11 +190,11 @@ Class KompleteKontrol {
     Static closeBrowser(Type) {
         Thread "NoTimers"
         If Type = "Plugin"
-        StartingPath := This.GetPluginStartingPath()
+        UIAElement := This.GetPluginUIAElement()
         Else
-        StartingPath := 1
+        UIAElement := GetUIAWindow()
         Try
-        UIAElement := GetUIAElement(StartingPath).FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
+        UIAElement := UIAElement.FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
         Catch
         UIAElement := False
         If UIAElement Is Object And UIAElement.Type = 50018 {
@@ -232,32 +232,23 @@ Class KompleteKontrol {
         KKInstance.Overlay.Focus()
     }
     
-    Static GetPluginStartingPath() {
+    Static GetPluginUIAElement() {
         Critical
-        Static CachedPath := False
         Try
-        UIAElement := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+        UIAElement := GetUIAWindow()
+        If Not UIAElement Is Object
+        Return False
+        If CheckElement(UIAElement)
+        Return UIAElement
+        Try
+        UIAElement := UIAElement.FindElement({ClassName:"ni::qt::QuickWindow"})
         Catch
-        UIAElement := False
-        If UIAElement And CachedPath And CheckPath(UIAElement, CachedPath)
-        Return CachedPath
-        If UIAElement
-        Try
-        For Index, ChildElement In UIAElement.Children {
-            UIAPaths := [Index, Index . ",1"]
-            For UIAPath In UIAPaths
-            If CheckPath(UIAElement, UIAPath) {
-                CachedPath := UIAPath
-                Return UIAPath
-            }
-        }
-        Return ""
-        CheckPath(UIAElement, UIAPath) {
-            Try
-            TestElement := UIAElement.ElementFromPath(UIAPath)
-            Catch
-            TestElement := False
-            If TestElement And TestElement.Name = "Komplete Kontrol" And TestElement.ClassName = "ni::qt::QuickWindow"
+        Return False
+        If CheckElement(UIAElement)
+        Return UIAElement
+        Return False
+        CheckElement(UIAElement) {
+            If UIAElement Is Object And UIAElement.Name = "Komplete Kontrol" And UIAElement.Type = 50032
             Return True
             Return False
         }
