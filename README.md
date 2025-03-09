@@ -61,7 +61,7 @@ Just extract the downloaded archive and run one of the ReaHotkey executables dep
 * If you're using NVDA with the SIBIAC or LBL add-ons in REAPER, ReaHotkey and SIBIAC/LBL may collide in the plug-ins that ReaHotkey also supports. For that reason, either pause ReaHotkey while interacting with one of the plug-ins in question, or disable SIBIAC/LBL.
 * Using any other zoom value in Kontakt than 100% may result in ReaHotkey not operating as expected.
 * At present library-specific overlays may not always behave correctly when used directly in the Kontakt 8 plug-in. In such case try using Kontakt 7 or open the given library from within Komplete Kontrol instead.
-* Due to OCR limitations the Komplete Kontrol Save Preset dialog may display incorrect preset names.
+* Due to OCR limitations, OCR-based elements may not report completely accurate information.
 
 ## <a name="dubler2"></a>Dubler 2 Accessibility
 
