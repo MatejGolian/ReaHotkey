@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+-   Automatically focus plug-ins in REAPER's bridged mode
 -   Reworked K7/K8/KK overlays
 -   All relevant elements now make use of Tesseract OCR instead of UWP
 -   Enabled Juggernaut in K8 and KK

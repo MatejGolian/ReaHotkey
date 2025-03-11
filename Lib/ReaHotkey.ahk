@@ -101,20 +101,23 @@ Class ReaHotkey {
         PluginControl := This.GetPluginControl()
         Catch
         PluginControl := 0
-        If Not PluginControl And ReaHotkey.ReaperPluginNative
+        If ReaHotkey.ReaperPluginNative And Not PluginControl
         Return False
         Else If PluginControl = CurrentControl
         Return False
-        Else If Not This.InPluginControl(CurrentControl)
-        Try {
-            ControlFocus PluginControl, This.PluginWinCriteria
-            Return True
-        }
-        Catch {
-            Return False
-        }
-        Else
+        Else If ReaHotkey.ReaperPluginNative And Not This.InPluginControl(CurrentControl)
         Return False
+        Else
+        Return AttemptFocus(PluginControl)
+        AttemptFocus(PluginControl) {
+            Try {
+                ControlFocus PluginControl, This.PluginWinCriteria
+                Return True
+            }
+            Catch {
+                Return False
+            }
+        }
     }
     
     Static FocusPluginOverlay() {
@@ -750,6 +753,11 @@ Class ReaHotkey {
                     PluginControl := ReaHotkey.GetPluginControl()
                     Catch
                     PluginControl := 0
+                    If PluginControl And ReaHotkey.ReaperPluginBridged
+                    If Not CurrentControl = PluginControl And Not ReaHotkey.InPluginControl(CurrentControl){
+                        ReaHotkey.FocusPluginControl()
+                        Return
+                    }
                     If Not PluginControl {
                         ReaHotkey.AutoFocusPluginOverlay := True
                         ReaHotkey.FoundPlugin := False
