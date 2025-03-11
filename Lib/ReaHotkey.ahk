@@ -742,15 +742,23 @@ Class ReaHotkey {
                 If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria) {
                     ReaHotkey.AutoFocusStandaloneOverlay := True
                     ReaHotkey.FoundStandalone := False
-                    If Not ReaHotkey.GetPluginControl() {
+                    Try
+                    CurrentControl := ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))
+                    Catch
+                    CurrentControl := 0
+                    Try
+                    PluginControl := ReaHotkey.GetPluginControl()
+                    Catch
+                    PluginControl := 0
+                    If Not PluginControl {
                         ReaHotkey.AutoFocusPluginOverlay := True
                         ReaHotkey.FoundPlugin := False
                     }
-                    Else If Not ControlGetFocus(ReaHotkey.PluginWinCriteria) {
+                    Else If Not CurrentControl {
                         ReaHotkey.AutoFocusPluginOverlay := True
                         ReaHotkey.FoundPlugin := False
                     }
-                    Else If Not ReaHotkey.InPluginControl(ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))) {
+                    Else If Not ReaHotkey.InPluginControl(CurrentControl) {
                         ReaHotkey.AutoFocusPluginOverlay := True
                         ReaHotkey.FoundPlugin := False
                     }
