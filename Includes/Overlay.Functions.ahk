@@ -513,8 +513,9 @@ GetPluginYCoordinate() {
 GetUIAWindow() {
     If Not IsSet(UIA)
     Return False
+    CacheRequest := UIA.CreateCacheRequest(["Type", "LocalizedType", "AutomationId", "Name", "Value", "ClassName", "AcceleratorKey", "WindowCanMaximize"], ["Window"], "Subtree")
     Try
-    Window := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
+    Window := UIA.ElementFromHandle("ahk_id " . WinGetID("A"), CacheRequest)
     Catch
     Return False
     Return Window

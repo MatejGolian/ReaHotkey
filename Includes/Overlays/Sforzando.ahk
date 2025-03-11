@@ -20,9 +20,13 @@ Class Sforzando {
     
     Static GetPluginUIAElement() {
         Critical
+        If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
+        Return False
         Try
         UIAElement := GetUIAWindow()
-        If Not UIAElement Is Object
+        Catch
+        Return False
+        If Not UIAElement Is UIA.IUIAutomationElement
         Return False
         If CheckElement(UIAElement)
         Return UIAElement
@@ -34,7 +38,7 @@ Class Sforzando {
         Return UIAElement
         Return False
         CheckElement(UIAElement) {
-            If UIAElement Is Object And UIAElement.Type = 50033
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50033
             Return True
             Return False
         }

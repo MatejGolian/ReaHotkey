@@ -155,7 +155,7 @@ Class Kontakt8 {
         UIAElement := UIAElement.FindElement({Type:"Menu"})
         Catch
         UIAElement := False
-        If UIAElement Is Object And UIAElement.Type = 50009
+        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50009
         Found := True
         If Not Found
         %Type%.SetNoHotkeys("Kontakt 8", False)
@@ -224,7 +224,7 @@ Class Kontakt8 {
         UIAElement := UIAElement.FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
         Catch
         UIAElement := False
-        If UIAElement Is Object And UIAElement.Type = 50018 {
+        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50018 {
             Try
             UIAElement.WalkTree(-1).Click("Left")
             AccessibilityOverlay.Speak("Library Browser closed.")
@@ -242,9 +242,13 @@ Class Kontakt8 {
     
     Static GetPluginUIAElement() {
         Critical
+        If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
+        Return False
         Try
         UIAElement := GetUIAWindow()
-        If Not UIAElement Is Object
+        Catch
+        Return False
+        If Not UIAElement Is UIA.IUIAutomationElement
         Return False
         If CheckElement(UIAElement)
         Return UIAElement
@@ -256,7 +260,7 @@ Class Kontakt8 {
         Return UIAElement
         Return False
         CheckElement(UIAElement) {
-            If UIAElement Is Object And UIAElement.Name = "Kontakt 8" And UIAElement.Type = 50032
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Name = "Kontakt 8" And UIAElement.Type = 50032
             Return True
             Return False
         }

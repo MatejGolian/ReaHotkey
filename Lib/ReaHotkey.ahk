@@ -92,6 +92,31 @@ Class ReaHotkey {
         Return 0
     }
     
+    Static FocusPluginControl() {
+        Try
+        CurrentControl := ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))
+        Catch
+        CurrentControl := 0
+        Try
+        PluginControl := This.GetPluginControl()
+        Catch
+        PluginControl := 0
+        If Not PluginControl And ReaHotkey.ReaperPluginNative
+        Return False
+        Else If PluginControl = CurrentControl
+        Return False
+        Else If Not This.InPluginControl(CurrentControl)
+        Try {
+            ControlFocus PluginControl, This.PluginWinCriteria
+            Return True
+        }
+        Catch {
+            Return False
+        }
+        Else
+        Return False
+    }
+    
     Static FocusPluginOverlay() {
         If This.FoundPlugin Is Plugin And This.FoundPlugin.NoHotkeys = False
         If This.FoundPlugin.Overlay.ChildControls.Length > 0 And This.FoundPlugin.Overlay.GetFocusableControlIDs().Length > 0 {
