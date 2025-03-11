@@ -39,7 +39,7 @@ Class ReaHotkey {
         Else {
             AccessibilityOverlay.Speak("Reloaded ReaHotkey")
         }
-        SetTimer This.ManageState, 100
+        SetTimer This.ManageState, 200
         If This.Config.Get("CheckIfWinCovered") = 1
         SetTimer This.CheckIfWinCovered, 8000
     }
@@ -146,17 +146,8 @@ Class ReaHotkey {
     }
     
     Static GetContext() {
-        If Not This.Context = False
-        Try
-        If This.Context = "Plugin"
-        This.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
-        Else
-        This.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
-        Catch
-        This.Found%ReaHotkey.Context% := False
-        If Not This.Context = False And This.Found%This.Context% Is %This.Context%
+        This.ManageState()
         Return This.Context
-        Return False
     }
     
     Static GetPluginControl() {
@@ -422,7 +413,7 @@ Class ReaHotkey {
             AccessibleMenu.CurrentMenu := False
         }
         Else {
-            SetTimer This.ManageState, 100
+            SetTimer This.ManageState, 200
             If This.Config.Get("CheckIfWinCovered") = 1
             SetTimer This.CheckIfWinCovered, 8000
         }
@@ -899,9 +890,9 @@ Class ReaHotkey {
         Static Call(Name := "") {
             If ReaHotkey.Config.Get("PromptOnAbletonPlugin") = 1 {
                 If Name
-                AccessibilityOverlay.Speak(Name . " detected. Press F6 to focus it.")
+                AccessibilityOverlay.Speak(Name . " detected. Press F6 to focus its window.")
                 Else
-                AccessibilityOverlay.Speak("Supported plug-in detected. Press F6 to focus it.")
+                AccessibilityOverlay.Speak("Supported plug-in detected. Press F6 to focus its window.")
             }
             Else {
                 This.StopAbletonPluginTimer()

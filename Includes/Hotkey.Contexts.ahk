@@ -5,12 +5,10 @@
 
 #HotIf WinActive("ahk_exe Ableton Live 12(.*).exe ahk_class AbletonVstPlugClass")
 F6:: F6HK(ThisHotkey)
-!F4::AltF4HK(ThisHotkey)
 #IncludeAgain Hotkey.Definitions.ahk
 
 #HotIf WinActive("ahk_exe Ableton Live 12(.*).exe ahk_class Vst3PlugWindow")
 F6:: F6HK(ThisHotkey)
-!F4::AltF4HK(ThisHotkey)
 #IncludeAgain Hotkey.Definitions.ahk
 
 #HotIf WinActive("ahk_exe reaper.exe ahk_class #32770")

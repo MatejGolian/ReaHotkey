@@ -6,24 +6,14 @@ F6HK(ThisHotkey) {
     PassThroughHotkey(ThisHotkey)
 }
 
-AltF4HK(ThisHotkey) {
-    If ReaHotkey.AbletonPlugin And ReaHotkey.FoundPlugin Is Plugin {
-        SetTimer ReaHotkey.ManageState, 0
-        Sleep 500
-        PassThroughHotkey(ThisHotkey)
-        WinWaitNotActive
-        SetTimer ReaHotkey.ManageState, 100
-        Return
-    }
-    PassThroughHotkey(ThisHotkey)
-}
-
 TabHK(ThisHotkey) {
     Thread "NoTimers"
     Context := ReaHotkey.GetContext()
     If Context {
         ReaHotkey.Found%Context%.Overlay.FocusNextControl()
+        Return
     }
+    PassThroughHotkey(ThisHotkey)
 }
 
 ShiftTabHK(ThisHotkey) {
@@ -31,7 +21,9 @@ ShiftTabHK(ThisHotkey) {
     Context := ReaHotkey.GetContext()
     If Context {
         ReaHotkey.Found%Context%.Overlay.FocusPreviousControl()
+        Return
     }
+    PassThroughHotkey(ThisHotkey)
 }
 
 ControlTabHK(ThisHotkey) {
@@ -39,7 +31,9 @@ ControlTabHK(ThisHotkey) {
     Context := ReaHotkey.GetContext()
     If Context {
         FocusNextPreviousTab("Next", ReaHotkey.Found%Context%.Overlay)
+        Return
     }
+    PassThroughHotkey(ThisHotkey)
 }
 
 ControlShiftTabHK(ThisHotkey) {
@@ -47,7 +41,9 @@ ControlShiftTabHK(ThisHotkey) {
     Context := ReaHotkey.GetContext()
     If Context {
         FocusNextPreviousTab("Previous", ReaHotkey.Found%Context%.Overlay)
+        Return
     }
+    PassThroughHotkey(ThisHotkey)
 }
 
 LeftRightHK(ThisHotkey) {
@@ -69,7 +65,9 @@ LeftRightHK(ThisHotkey) {
             Else
             ReaHotkey.Found%Context%.Overlay.FocusNextTab()
         }
+        Return
     }
+    PassThroughHotkey(ThisHotkey)
 }
 
 UpDownHK(ThisHotkey) {
@@ -91,7 +89,9 @@ UpDownHK(ThisHotkey) {
             Else
             ReaHotkey.Found%Context%.Overlay.IncreaseSlider()
         }
+        Return
     }
+    PassThroughHotkey(ThisHotkey)
 }
 
 EnterSpaceHK(ThisHotkey) {
@@ -106,7 +106,9 @@ EnterSpaceHK(ThisHotkey) {
             Default:
             ReaHotkey.Found%Context%.Overlay.ActivateCurrentControl()
         }
+        Return
     }
+    PassThroughHotkey(ThisHotkey)
 }
 
 AboutHK(ThisHotkey) {
