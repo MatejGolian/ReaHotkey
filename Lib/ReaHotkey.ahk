@@ -450,8 +450,10 @@ Class ReaHotkey {
             HotIf
         }
         TurnCommonOff() {
-            Try
-            Hotkey("F6")
+            Try {
+                Hotkey("F6")
+                Hotkey "F6", "Off"
+            }
             Hotkey "Tab", "Off"
             Hotkey "+Tab", "Off"
             Hotkey "^Tab", "Off"
