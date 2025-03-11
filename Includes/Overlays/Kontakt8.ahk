@@ -350,6 +350,7 @@ Class Kontakt8 {
     
     Class CheckPluginMenu {
         Static Call(*) {
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
             Kontakt8.CheckMenu("Plugin")
         }
     }

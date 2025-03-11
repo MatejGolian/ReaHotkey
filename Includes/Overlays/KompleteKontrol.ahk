@@ -302,6 +302,7 @@ Class KompleteKontrol {
     
     Class CheckPluginMenu {
         Static Call() {
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
             KompleteKontrol.CheckMenu("Plugin")
         }
     }

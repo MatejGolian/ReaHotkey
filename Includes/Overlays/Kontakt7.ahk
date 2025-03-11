@@ -401,6 +401,7 @@ Class Kontakt7 {
     
     Class CheckPluginMenu {
         Static Call() {
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
             Kontakt7.CheckMenu("Plugin")
         }
     }
