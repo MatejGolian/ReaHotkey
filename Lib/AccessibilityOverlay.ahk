@@ -60,6 +60,14 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return False
     }
     
+    ActivateChildNumber(ChildNumber) {
+        If This.ChildControls.Length > 0
+        If ChildNumber > 0 And This.ChildControls.Length >= ChildNumber {
+            ControlID := This.ChildControls[ChildNumber].ControlID
+            This.ActivateControlID(ControlID)
+        }
+    }
+    
     ActivateControlID(ControlID) {
         If This.ChildControls.Length > 0 {
             If ControlID = This.CurrentControlID {
@@ -70,9 +78,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If Found > 0 {
                     TargetControl := AccessibilityOverlay.GetControl(ControlID)
                     This.SetPreviousControlID(This.CurrentControlID)
+                    This.SetCurrentControlID(ControlID)
                     If TargetControl.HasMethod("Activate")
                     TargetControl.Activate()
-                    This.SetCurrentControlID(ControlID)
                 }
             }
         }
@@ -89,9 +97,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 Else {
                     TargetControl := AccessibilityOverlay.GetControl(ControlID)
                     This.SetPreviousControlID(This.CurrentControlID)
+                    This.SetCurrentControlID(TargetControl.ControlID)
                     If TargetControl.HasMethod("Activate")
                     TargetControl.Activate()
-                    This.SetCurrentControlID(TargetControl.ControlID)
                 }
             }
         }
@@ -213,6 +221,14 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
                 This.SetCurrentControlID(ControlID)
             }
+        }
+    }
+    
+    FocusChildNumber(ChildNumber) {
+        If This.ChildControls.Length > 0
+        If ChildNumber > 0 And This.ChildControls.Length >= ChildNumber {
+            ControlID := This.ChildControls[ChildNumber].ControlID
+            This.FocusControlID(ControlID)
         }
     }
     
