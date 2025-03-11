@@ -2,6 +2,7 @@
 
 Class ReaHotkey {
     
+    Static AbletonPluginTimer := False
     Static AutoFocusPluginOverlay := True
     Static AutoFocusStandaloneOverlay := True
     Static Context := False
@@ -40,7 +41,7 @@ Class ReaHotkey {
         }
         SetTimer This.ManageState, 100
         If This.Config.Get("CheckIfWinCovered") = 1
-        SetTimer This.CheckIfWinCovered, 10000
+        SetTimer This.CheckIfWinCovered, 8000
     }
     
     Static __Get(Name, Params) {
@@ -210,6 +211,7 @@ Class ReaHotkey {
         This.Config.Add("ReaHotkey.ini", "Config", "CheckScreenResolution", 1, "Check screen resolution on startup")
         This.Config.Add("ReaHotkey.ini", "Config", "CheckUpdate", 1, "Check for updates on startup")
         This.Config.Add("ReaHotkey.ini", "Config", "CheckIfWinCovered", 1, "Warn if another window may be covering the interface in specific cases",, ObjBindMethod(This, "ManageWinCovered"))
+        This.Config.Add("ReaHotkey.ini", "Config", "PromptOnAbletonPlugin", 1, "Prompt if a compatible plug-in is detected but does not have focus", "Ableton Live", ObjBindMethod(This, "ManageAbletonPluginPrompt"))
     }
     
     Static InPluginControl(ControlToCheck) {
@@ -257,9 +259,14 @@ Class ReaHotkey {
         }
     }
     
+    Static ManageAbletonPluginPrompt(Setting) {
+        If Not Setting.Value
+        This.StopAbletonPluginTimer()
+    }
+    
     Static ManageWinCovered(Setting) {
         If Setting.Value
-        SetTimer This.CheckIfWinCovered, 10000
+        SetTimer This.CheckIfWinCovered, 8000
         Else
         SetTimer This.CheckIfWinCovered, 0
     }
@@ -381,12 +388,33 @@ Class ReaHotkey {
         This.Config.ShowBox()
     }
     
+    Static StartAbletonPluginTimer() {
+        If ReaHotkey.Config.Get("PromptOnAbletonPlugin") = 1
+        If Not ReaHotkey.AbletonPluginTimer {
+            AbletonPluginName := ""
+            TestPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
+            If TestPlugin
+            AbletonPluginName := TestPlugin.Name
+            ReaHotkey.AbletonPluginTimer := ObjBindMethod(ReaHotkey, "ReportAbletonPlugin", AbletonPluginName)
+            ReaHotkey.AbletonPluginTimer.Call()
+            SetTimer ReaHotkey.AbletonPluginTimer, 8000
+        }
+    }
+    
+    Static StopAbletonPluginTimer() {
+        If ReaHotkey.AbletonPluginTimer {
+            SetTimer ReaHotkey.AbletonPluginTimer, 0
+            ReaHotkey.AbletonPluginTimer := False
+        }
+    }
+    
     Static TogglePause(*) {
         A_TrayMenu.ToggleCheck("&Pause")
         Suspend -1
         If A_IsSuspended = 1 {
             SetTimer This.ManageState, 0
             SetTimer This.CheckIfWinCovered, 0
+            This.StopAbletonPluginTimer()
             This.TurnPluginTimersOff()
             This.TurnPluginHotkeysOff()
             This.TurnStandaloneTimersOff()
@@ -396,7 +424,7 @@ Class ReaHotkey {
         Else {
             SetTimer This.ManageState, 100
             If This.Config.Get("CheckIfWinCovered") = 1
-            SetTimer This.CheckIfWinCovered, 10000
+            SetTimer This.CheckIfWinCovered, 8000
         }
     }
     
@@ -753,8 +781,17 @@ Class ReaHotkey {
                     PluginControl := ReaHotkey.GetPluginControl()
                     Catch
                     PluginControl := 0
+                    If ReaHotkey.Config.Get("PromptOnAbletonPlugin") = 1 And PluginControl And ReaHotkey.AbletonPlugin {
+                        If Not CurrentControl = PluginControl And Not ReaHotkey.InPluginControl(CurrentControl)
+                        ReaHotkey.StartAbletonPluginTimer()
+                        Else
+                        ReaHotkey.StopAbletonPluginTimer()
+                    }
+                    Else {
+                        ReaHotkey.StopAbletonPluginTimer()
+                    }
                     If PluginControl And ReaHotkey.ReaperPluginBridged
-                    If Not CurrentControl = PluginControl And Not ReaHotkey.InPluginControl(CurrentControl){
+                    If Not CurrentControl = PluginControl And Not ReaHotkey.InPluginControl(CurrentControl) {
                         ReaHotkey.FocusPluginControl()
                         Return
                     }
@@ -822,6 +859,7 @@ Class ReaHotkey {
             }
             Else If ReaHotkey.StandaloneWinCriteria And WinActive(ReaHotkey.StandaloneWinCriteria) {
                 ReaHotkey.Context := "Standalone"
+                ReaHotkey.StopAbletonPluginTimer()
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
                 If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
@@ -852,12 +890,27 @@ Class ReaHotkey {
             Else {
                 ReaHotkey.Context := False
                 PreviousPluginName := False
+                ReaHotkey.StopAbletonPluginTimer()
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
                 PreviousStandaloneName := False
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 AccessibleMenu.CurrentMenu := False
+            }
+        }
+    }
+    
+    Class ReportAbletonPlugin {
+        Static Call(Name := "") {
+            If ReaHotkey.Config.Get("PromptOnAbletonPlugin") = 1 {
+                If Name
+                AccessibilityOverlay.Speak(Name . " detected. Press F6 to focus it.")
+                Else
+                AccessibilityOverlay.Speak("Supported plug-in detected. Press F6 to focus it.")
+            }
+            Else {
+                This.StopAbletonPluginTimer()
             }
         }
     }

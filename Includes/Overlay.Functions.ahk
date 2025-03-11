@@ -514,6 +514,7 @@ GetUIAWindow() {
     If Not IsSet(UIA)
     Return False
     CacheRequest := UIA.CreateCacheRequest(["Type", "LocalizedType", "AutomationId", "Name", "Value", "ClassName", "AcceleratorKey", "WindowCanMaximize"], ["Window"], "Subtree")
+    WinWaitActive("A")
     Try
     Window := UIA.ElementFromHandle("ahk_id " . WinGetID("A"), CacheRequest)
     Catch

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added prompt when a Supported plug-in is detected in Ableton
+
 ### Changed
 
 -   Automatically focus plug-ins in REAPER's bridged mode
