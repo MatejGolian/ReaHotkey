@@ -6,6 +6,18 @@ F6HK(ThisHotkey) {
     PassThroughHotkey(ThisHotkey)
 }
 
+AltF4HK(ThisHotkey) {
+    If ReaHotkey.AbletonPlugin And ReaHotkey.FoundPlugin Is Plugin {
+        SetTimer ReaHotkey.ManageState, 0
+        Sleep 500
+        PassThroughHotkey(ThisHotkey)
+        WinWaitNotActive
+        SetTimer ReaHotkey.ManageState, 100
+        Return
+    }
+    PassThroughHotkey(ThisHotkey)
+}
+
 TabHK(ThisHotkey) {
     Thread "NoTimers"
     Context := ReaHotkey.GetContext()

@@ -450,10 +450,6 @@ Class ReaHotkey {
             HotIf
         }
         TurnCommonOff() {
-            Try {
-                Hotkey("F6")
-                Hotkey "F6", "Off"
-            }
             Hotkey "Tab", "Off"
             Hotkey "+Tab", "Off"
             Hotkey "^Tab", "Off"
@@ -529,10 +525,6 @@ Class ReaHotkey {
             HotIf
         }
         TurnCommonOn() {
-            Try {
-                Hotkey("F6")
-                Hotkey "F6", "F6HK", "On"
-            }
             Hotkey "Tab", TabHK, "On"
             Hotkey "+Tab", ShiftTabHK, "On"
             Hotkey "^Tab", ControlTabHK, "On"
