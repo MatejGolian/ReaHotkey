@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added prompt when a Supported plug-in is detected in Ableton
--   Added search / Clear search buttons to the KK overlay when the browser is open
+-   Added support for the search field in KK
 
 ### Changed
 

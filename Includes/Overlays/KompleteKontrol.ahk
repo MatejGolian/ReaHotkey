@@ -13,8 +13,8 @@ Class KompleteKontrol {
         This.InitConfig()
         
         PluginSearchOverlay := AccessibilityOverlay("Search")
-        PluginSearchOverlay.AddHotspotButton("Search", 83, 233, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!S", "Alt+S")
-        PluginSearchOverlay.AddHotspotButton("Clear search", 874, 233, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!X", "Alt+X")
+        PluginSearchOverlay.AddCustomEdit("Search", ObjBindMethod(This, "FocusPluginSearchField")).SetHotkey("!S", "Alt+S")
+        PluginSearchOverlay.AddCustomButton("Clear search",,, ObjBindMethod(This, "ActivatePluginClearSearch")).SetHotkey("!X", "Alt+X")
         This.PluginSearchOverlay := PluginSearchOverlay
         
         PluginNoSearchOverlay := AccessibilityOverlay("No Search")
@@ -124,6 +124,11 @@ Class KompleteKontrol {
         Standalone.RegisterOverlay("Komplete Kontrol Save As Dialog", StandaloneSaveAsOverlay)
     }
     
+    Static ActivatePluginClearSearch(ClearSearchButton) {
+        Click CompensatePluginXCoordinate(874), CompensatePluginYCoordinate(233)
+        ReaHotkey.FoundPlugin.Overlay.FocusPreviousControl()
+    }
+    
     Static CheckMenu(Type) {
         Thread "NoTimers"
         If Type = "Plugin"
@@ -229,6 +234,24 @@ Class KompleteKontrol {
     
     Static CloseStandalonePreferenceDialog(*) {
         WinClose("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
+    }
+    
+    Static FocusPluginSearchField(SearchEdit) {
+        Critical
+        SearchEdit.Value := ""
+        UIAElement := This.GetPluginUIAElement()
+        If UIAElement Is UIA.IUIAutomationElement {
+            Try
+            UIAElement := UIAElement.FindElement({Type:"Edit"})
+            Catch
+            Return
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50004 {
+                UIAElement.SetFocus()
+                SearchEdit.Value := UIAElement.Value
+                Return
+            }
+        }
+        Return
     }
     
     Static FocusStandalonePreferenceTab(KKInstance) {
