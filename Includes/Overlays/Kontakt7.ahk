@@ -387,7 +387,7 @@ Class Kontakt7 {
     
     Class CheckPluginConfig {
         Static Call() {
-            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True, "C2")
+            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True, "C", 2)
             Kontakt7.ClosePluginUpdateDialog()
             Sleep 1000
             If ReaHotkey.Config.Get("CloseK7Browser") = 1

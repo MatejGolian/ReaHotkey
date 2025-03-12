@@ -338,7 +338,7 @@ Class Kontakt8 {
     
     Class CheckPluginConfig {
         Static Call() {
-            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 8", True, True, "C2")
+            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 8", True, True, "C", 2)
             If ReaHotkey.Config.Get("CloseK8Browser") = 1
             Kontakt8.ClosePluginBrowser()
             If ReaHotkey.Config.Get("DetectLibsInK8") = 1

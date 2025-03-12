@@ -6,15 +6,28 @@ Class KompleteKontrol {
     Static StandaloneHeader := Object()
     Static PluginOverlays := Array()
     Static StandaloneOverlays := Array()
+    Static PluginSearchOverlay := Object()
+    Static PluginNoSearchOverlay := Object()
     
     Static __New() {
         This.InitConfig()
         
+        Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, False, False, ObjBindMethod(This, "CheckPlugin"))
+        
+        PluginSearchOverlay := AccessibilityOverlay("Search")
+        PluginSearchOverlay.AddHotspotButton("Search", 83, 233, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!S", "Alt+S")
+        PluginSearchOverlay.AddHotspotButton("Clear search", 874, 233, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!X", "Alt+X")
+        Plugin.RegisterOverlayHotkeys("Komplete Kontrol", PluginSearchOverlay)
+        This.PluginSearchOverlay := PluginSearchOverlay
+        
+        PluginNoSearchOverlay := AccessibilityOverlay("No Search")
+        This.PluginNoSearchOverlay := PluginNoSearchOverlay
+        
         PluginHeader := AccessibilityOverlay("Komplete Kontrol")
         PluginHeader.AddStaticText("Komplete Kontrol")
         PluginHeader.AddHotspotButton("Menu", 297, 17, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
-                           PluginHeader.AddControl(This.TogglePluginSearchVisible())
-        PluginHeader.AddCustomButton("Choose library",,, ObjBindMethod(ChoosePluginOverlay,,,, "LChoose library")).SetHotkey("!C", "Alt+C")
+        PluginHeader.AddAccessibilityOverlay(This.PluginSearchOverlay)
+        PluginHeader.AddCustomButton("Choose library",,, ObjBindMethod(ChoosePluginOverlay,,,, "L", "Choose library")).SetHotkey("!C", "Alt+C")
         This.PluginHeader := PluginHeader
         
         StandaloneHeader := AccessibilityOverlay("Komplete Kontrol")
@@ -25,10 +38,8 @@ Class KompleteKontrol {
         StandaloneHeader.AddHotspotButton("Help menu", 194, -10).SetHotkey("!H", "Alt+H")
         This.StandaloneHeader := StandaloneHeader
         
-        Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, False, False, ObjBindMethod(This, "CheckPlugin"))
-        
         For PluginOverlay In This.PluginOverlays {
-                        PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
+            PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
             Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
         }
         
@@ -300,7 +311,7 @@ Class KompleteKontrol {
     
     Class CheckPluginConfig {
         Static Call() {
-            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True, "C2")
+            Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True, "C", 2)
             If ReaHotkey.Config.Get("CloseKKBrowser") = 1
             KompleteKontrol.ClosePluginBrowser()
             If ReaHotkey.Config.Get("DetectLibsInKK") = 1
@@ -326,28 +337,15 @@ Class KompleteKontrol {
     
     Class TogglePluginSearchVisible {
         Static Call() {
-            Static NoSearchOverlay, SearchOverlay
-            If Not IsSet(NoSearchOverlay) {
-                NoSearchOverlay := AccessibilityOverlay("No search")
-            }
-            If Not IsSet(SearchOverlay) {
-                SearchOverlay := AccessibilityOverlay("Search")
-                SearchOverlay.AddHotspotButton("Search", 83, 233, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-                SearchOverlay.AddHotspotButton("Clear search", 874, 233, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-            }
-                                        CurrentOverlay := NoSearchOverlay
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
             If KompleteKontrol.GetBrowser("Plugin") {
                 If Not ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3].Label = "Search"
-                ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3] := SearchOverlay
-                            CurrentOverlay := SearchOverlay
+                ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3] := KompleteKontrol.PluginSearchOverlay
             }
             Else {
                 If Not ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3].Label = "No Search"
-                ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3] := NoSearchOverlay
-                            CurrentOverlay := NoSearchOverlay
+                ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3] := KompleteKontrol.PluginNoSearchOverlay
             }
-            Return CurrentOverlay
         }
     }
     

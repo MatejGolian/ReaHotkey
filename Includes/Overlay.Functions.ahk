@@ -8,7 +8,7 @@ ActivateChooser(*) {
     Choose%Context%Overlay()
 }
 
-AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False, WhatToFocus := 0) {
+AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False, TypeToFocus := "C", ValueToFocus := 0) {
     Critical
     SourceNumber := ReaHotkey.Found%Type%.Overlay.GetCurrentControlNumber()
     PluginControlPos := GetPluginControlPos()
@@ -61,14 +61,14 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                     ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
                     If ReportChange
                     Report(Product)
-                    FocusElement(Type, SourceNumber, WhatToFocus)
+                    FocusElement(Type, SourceNumber, TypeToFocus, ValueToFocus)
                     Break 2
                 }
                 Else {
                     ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
                     If ReportChange
                     Report(Product)
-                    FocusElement(Type, SourceNumber, WhatToFocus)
+                    FocusElement(Type, SourceNumber, TypeToFocus, ValueToFocus)
                     Break 2
                 }
             }
@@ -115,15 +115,15 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
     }
 }
 
-AutoChangePluginOverlay(Name, CompensatePluginCoordinates := False, ReportChange := False, WhatToFocus := 0) {
-    AutoChangeOverlay("Plugin", Name, CompensatePluginCoordinates, ReportChange, WhatToFocus)
+AutoChangePluginOverlay(Name, CompensatePluginCoordinates := False, ReportChange := False, TypeToFocus := "C", ValueToFocus := 0) {
+    AutoChangeOverlay("Plugin", Name, CompensatePluginCoordinates, ReportChange, TypeToFocus, ValueToFocus)
 }
 
-AutoChangeStandaloneOverlay(Name, ReportChange := False, WhatToFocus := 0) {
-    AutoChangeOverlay("Standalone", Name, False, ReportChange, WhatToFocus)
+AutoChangeStandaloneOverlay(Name, ReportChange := False, TypeToFocus := "C", ValueToFocus := 0) {
+    AutoChangeOverlay("Standalone", Name, False, ReportChange, TypeToFocus, ValueToFocus)
 }
 
-ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu, WhatToFocus := 0) {
+ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu, TypeToFocus := "C", ValueToFocus := 0) {
     Critical
     SourceNumber := ReaHotkey.Found%Type%.Overlay.GetCurrentControlNumber()
     OverlayList := %Type%.GetOverlays(ReaHotkey.Found%Type%.Name)
@@ -140,15 +140,15 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu, WhatToFocus := 0) {
     Else {
         ReaHotkey.Found%Type%.Overlay := OverlayList[OverlayNumber].Clone()
     }
-    FocusElement(Type, SourceNumber, WhatToFocus)
+    FocusElement(Type, SourceNumber, TypeToFocus, ValueToFocus)
 }
 
-ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu, WhatToFocus := 0) {
-    ChangeOverlay("Plugin", ItemName, ItemNumber, OverlayMenu, WhatToFocus)
+ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu, TypeToFocus := "C", ValueToFocus := 0) {
+    ChangeOverlay("Plugin", ItemName, ItemNumber, OverlayMenu, TypeToFocus, ValueToFocus)
 }
 
-ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu, WhatToFocus := 0) {
-    ChangeOverlay("Standalone", ItemName, ItemNumber, OverlayMenu, WhatToFocus)
+ChangeStandaloneOverlay(ItemName, ItemNumber, OverlayMenu, TypeToFocus := "C", ValueToFocus := 0) {
+    ChangeOverlay("Standalone", ItemName, ItemNumber, OverlayMenu, TypeToFocus, ValueToFocus)
 }
 
 ChooseOverlay(Type, MenuHandler := False, HandlerParams*) {
@@ -409,27 +409,16 @@ FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2
     Return False
 }
 
-FocusElement(Type, SourceNumber, WhatToFocus) {
-    TypeToFocus := "C"
+FocusElement(Type, SourceNumber, TypeToFocus := "C", ValueToFocus := 0) {
     LabelToFocus := ""
     NumberToFocus := 0
-    If WhatToFocus
-    If Not WhatToFocus Is String And WhatToFocus > 0 {
-        NumberToFocus := WhatToFocus
-    }
-    Else {
-        If SubStr(WhatToFocus, 1, 1) = "C" Or SubStr(WhatToFocus, 1, 1) = "L" Or SubStr(WhatToFocus, 1, 1) = "N"
-        TypeToFocus := SubStr(WhatToFocus, 1, 1)
-        If StrLen(WhatToFocus) > 1 And Not SubStr(WhatToFocus, 2) = ""
-        LabelToFocus := SubStr(WhatToFocus, 2)
-        If StrLen(WhatToFocus) > 1 And SubStr(WhatToFocus, 2) Is Number And SubStr(WhatToFocus, 2) < 0
-        NumberToFocus := SubStr(WhatToFocus, 2)
-        If StrLen(WhatToFocus) > 1 And SubStr(WhatToFocus, 2) Is Number And SubStr(WhatToFocus, 2) > 0
-        NumberToFocus := SubStr(WhatToFocus, 2)
-        If SubStr(WhatToFocus, 1, 1) = "O" {
-            TypeToFocus := "N"
-            NumberToFocus := SourceNumber + NumberToFocus
-        }
+    If ValueToFocus Is String
+    LabelToFocus := ValueToFocus
+    Else
+    NumberToFocus := ValueToFocus
+    If TypeToFocus = "O" {
+        TypeToFocus := "N"
+        NumberToFocus := SourceNumber + NumberToFocus
     }
     If TypeToFocus = "L" {
         OverlayControls := ReaHotkey.Found%Type%.Overlay.GetFocusableControls()
@@ -440,7 +429,6 @@ FocusElement(Type, SourceNumber, WhatToFocus) {
             Return
         }
         ReaHotkey.AutoFocus%Type%Overlay := True
-        
     }
     Else {
         PropertyName := "ChildControls"
