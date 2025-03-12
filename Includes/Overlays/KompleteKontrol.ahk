@@ -12,12 +12,9 @@ Class KompleteKontrol {
     Static __New() {
         This.InitConfig()
         
-        Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, False, False, ObjBindMethod(This, "CheckPlugin"))
-        
         PluginSearchOverlay := AccessibilityOverlay("Search")
         PluginSearchOverlay.AddHotspotButton("Search", 83, 233, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!S", "Alt+S")
         PluginSearchOverlay.AddHotspotButton("Clear search", 874, 233, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!X", "Alt+X")
-        Plugin.RegisterOverlayHotkeys("Komplete Kontrol", PluginSearchOverlay)
         This.PluginSearchOverlay := PluginSearchOverlay
         
         PluginNoSearchOverlay := AccessibilityOverlay("No Search")
@@ -26,7 +23,7 @@ Class KompleteKontrol {
         PluginHeader := AccessibilityOverlay("Komplete Kontrol")
         PluginHeader.AddStaticText("Komplete Kontrol")
         PluginHeader.AddHotspotButton("Menu", 297, 17, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
-        PluginHeader.AddAccessibilityOverlay(This.PluginSearchOverlay)
+        PluginHeader.AddControl(This.PluginSearchOverlay)
         PluginHeader.AddCustomButton("Choose library",,, ObjBindMethod(ChoosePluginOverlay,,,, "L", "Choose library")).SetHotkey("!C", "Alt+C")
         This.PluginHeader := PluginHeader
         
@@ -37,6 +34,8 @@ Class KompleteKontrol {
         StandaloneHeader.AddHotspotButton("Controller menu", 138, -10).SetHotkey("!C", "Alt+C")
         StandaloneHeader.AddHotspotButton("Help menu", 194, -10).SetHotkey("!H", "Alt+H")
         This.StandaloneHeader := StandaloneHeader
+        
+        Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, False, False, ObjBindMethod(This, "CheckPlugin"))
         
         For PluginOverlay In This.PluginOverlays {
             PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
