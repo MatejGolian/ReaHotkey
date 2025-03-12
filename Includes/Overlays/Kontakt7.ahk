@@ -41,7 +41,7 @@ Class Kontakt7 {
         }
         
         Plugin.SetTimer("Kontakt 7", This.CheckPluginConfig, -1)
-        Plugin.SetTimer("Kontakt 7", This.CheckPluginMenu, 200)
+        Plugin.SetTimer("Kontakt 7", This.CheckPluginMenu, 250)
         
         Plugin.Register("Kontakt 7 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(This, "CheckPluginContentMissing"))
         
@@ -51,7 +51,7 @@ Class Kontakt7 {
         
         Standalone.Register("Kontakt 7", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe", False, False)
         Standalone.SetTimer("Kontakt 7", This.CheckStandaloneConfig, -1)
-        Standalone.SetTimer("Kontakt 7", This.CheckStandaloneMenu, 200)
+        Standalone.SetTimer("Kontakt 7", This.CheckStandaloneMenu, 250)
         Standalone.RegisterOverlay("Kontakt 7", StandaloneHeader)
         
         Standalone.Register("Kontakt 7 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe", False, False)

@@ -10,22 +10,7 @@ ActivateChooser(*) {
 
 AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False, WhatToFocus := 0) {
     Critical
-    TypeToFocus := "C"
-    NumberToFocus := 0
-    If WhatToFocus
-    If Not WhatToFocus Is String And WhatToFocus > 0 {
-        NumberToFocus := WhatToFocus
-    }
-    Else {
-        If SubStr(WhatToFocus, 1, 1) = "C" Or SubStr(WhatToFocus, 1, 1) = "N"
-        TypeToFocus := SubStr(WhatToFocus, 1, 1)
-        If StrLen(WhatToFocus) > 1 And SubStr(WhatToFocus, 2) > 0
-        NumberToFocus := SubStr(WhatToFocus, 2)
-        If SubStr(WhatToFocus, 1, 1) = "O" {
-            TypeToFocus := "N"
-            NumberToFocus := ReaHotkey.Found%Type%.Overlay.GetCurrentControlNumber()
-        }
-    }
+    SourceNumber := ReaHotkey.Found%Type%.Overlay.GetCurrentControlNumber()
     PluginControlPos := GetPluginControlPos()
     OverlayList := %Type%.GetOverlays(Name)
     UnknownProductCounter := 1
@@ -76,37 +61,17 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                     ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
                     If ReportChange
                     Report(Product)
-                    FocusElement(Type, TypeToFocus, NumberToFocus)
+                    FocusElement(Type, SourceNumber, WhatToFocus)
                     Break 2
                 }
                 Else {
                     ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
                     If ReportChange
                     Report(Product)
-                    FocusElement(Type, TypeToFocus, NumberToFocus)
+                    FocusElement(Type, SourceNumber, WhatToFocus)
                     Break 2
                 }
             }
-        }
-    }
-    FocusElement(Type, TypeToFocus, NumberToFocus) {
-        PropertyName := "ChildControls"
-        MethodName := "FocusChildNumber"
-        If TypeToFocus = "N" {
-            PropertyName := "FocusableControlIDs"
-            MethodName := "FocusControlNumber"
-        }
-        If Not NumberToFocus Or ReaHotkey.Found%Type%.Overlay.%PropertyName%.Length = 0 {
-            ReaHotkey.AutoFocus%Type%Overlay := True
-        }
-        Else {
-            ReaHotkey.AutoFocus%Type%Overlay := False
-            If NumberToFocus >= 1 And NumberToFocus <= ReaHotkey.Found%Type%.Overlay.%PropertyName%.Length
-            ReaHotkey.Found%Type%.Overlay.%MethodName%(NumberToFocus)
-            Else If NumberToFocus < 0 And ReaHotkey.Found%Type%.Overlay.FocusableControlIDs.Length + 1 + NumberToFocus >= 1
-            ReaHotkey.Found%Type%.Overlay.%MethodName%(ReaHotkey.Found%Type%.Overlay.%PropertyName%.Length + 1 + NumberToFocus)
-            Else
-            ReaHotkey.Found%Type%.Overlay.%MethodName%(1)
         }
     }
     ProcessImageEntry(Type, CompensatePluginCoordinates, ImageEntry, WinWidth, WinHeight) {
@@ -160,22 +125,7 @@ AutoChangeStandaloneOverlay(Name, ReportChange := False, WhatToFocus := 0) {
 
 ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu, WhatToFocus := 0) {
     Critical
-    TypeToFocus := "C"
-    NumberToFocus := 0
-    If WhatToFocus
-    If Not WhatToFocus Is String And WhatToFocus > 0 {
-        NumberToFocus := WhatToFocus
-    }
-    Else {
-        If SubStr(WhatToFocus, 1, 1) = "C" Or SubStr(WhatToFocus, 1, 1) = "N"
-        TypeToFocus := SubStr(WhatToFocus, 1, 1)
-        If StrLen(WhatToFocus) > 1 And SubStr(WhatToFocus, 2) > 0
-        NumberToFocus := SubStr(WhatToFocus, 2)
-        If SubStr(WhatToFocus, 1, 1) = "O" {
-            TypeToFocus := "N"
-            NumberToFocus := ReaHotkey.Found%Type%.Overlay.GetCurrentControlNumber()
-        }
-    }
+    SourceNumber := ReaHotkey.Found%Type%.Overlay.GetCurrentControlNumber()
     OverlayList := %Type%.GetOverlays(ReaHotkey.Found%Type%.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemName]
     If Not ReaHotkey.Found%Type%.Overlay.OverlayNumber = OverlayNumber
@@ -190,24 +140,7 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu, WhatToFocus := 0) {
     Else {
         ReaHotkey.Found%Type%.Overlay := OverlayList[OverlayNumber].Clone()
     }
-    PropertyName := "ChildControls"
-    MethodName := "FocusChildNumber"
-    If TypeToFocus = "N" {
-        PropertyName := "FocusableControlIDs"
-        MethodName := "FocusControlNumber"
-    }
-    If Not NumberToFocus Or ReaHotkey.Found%Type%.Overlay.%PropertyName%.Length = 0 {
-        ReaHotkey.AutoFocus%Type%Overlay := True
-    }
-    Else {
-        ReaHotkey.AutoFocus%Type%Overlay := False
-        If NumberToFocus >= 1 And NumberToFocus <= ReaHotkey.Found%Type%.Overlay.%PropertyName%.Length
-        ReaHotkey.Found%Type%.Overlay.%MethodName%(NumberToFocus)
-        Else If NumberToFocus < 0 And ReaHotkey.Found%Type%.Overlay.FocusableControlIDs.Length + 1 + NumberToFocus >= 1
-        ReaHotkey.Found%Type%.Overlay.%MethodName%(ReaHotkey.Found%Type%.Overlay.%PropertyName%.Length + 1 + NumberToFocus)
-        Else
-        ReaHotkey.Found%Type%.Overlay.%MethodName%(1)
-    }
+    FocusElement(Type, SourceNumber, WhatToFocus)
 }
 
 ChangePluginOverlay(ItemName, ItemNumber, OverlayMenu, WhatToFocus := 0) {
@@ -474,6 +407,61 @@ FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2
         Return {X: FoundX, Y: FoundY}
     }
     Return False
+}
+
+FocusElement(Type, SourceNumber, WhatToFocus) {
+    TypeToFocus := "C"
+    LabelToFocus := ""
+    NumberToFocus := 0
+    If WhatToFocus
+    If Not WhatToFocus Is String And WhatToFocus > 0 {
+        NumberToFocus := WhatToFocus
+    }
+    Else {
+        If SubStr(WhatToFocus, 1, 1) = "C" Or SubStr(WhatToFocus, 1, 1) = "L" Or SubStr(WhatToFocus, 1, 1) = "N"
+        TypeToFocus := SubStr(WhatToFocus, 1, 1)
+        If StrLen(WhatToFocus) > 1 And Not SubStr(WhatToFocus, 2) = ""
+        LabelToFocus := SubStr(WhatToFocus, 2)
+        If StrLen(WhatToFocus) > 1 And SubStr(WhatToFocus, 2) Is Number And SubStr(WhatToFocus, 2) < 0
+        NumberToFocus := SubStr(WhatToFocus, 2)
+        If StrLen(WhatToFocus) > 1 And SubStr(WhatToFocus, 2) Is Number And SubStr(WhatToFocus, 2) > 0
+        NumberToFocus := SubStr(WhatToFocus, 2)
+        If SubStr(WhatToFocus, 1, 1) = "O" {
+            TypeToFocus := "N"
+            NumberToFocus := SourceNumber + NumberToFocus
+        }
+    }
+    If TypeToFocus = "L" {
+        OverlayControls := ReaHotkey.Found%Type%.Overlay.GetFocusableControls()
+        If OverlayControls.Length > 0
+        For OverlayControl In OverlayControls
+        If OverlayControl.Label = LabelToFocus {
+            ReaHotkey.Found%Type%.Overlay.FocusControlID(OverlayControl.ControlID)
+            Return
+        }
+        ReaHotkey.AutoFocus%Type%Overlay := True
+        
+    }
+    Else {
+        PropertyName := "ChildControls"
+        MethodName := "FocusChildNumber"
+        If TypeToFocus = "N" {
+            PropertyName := "FocusableControlIDs"
+            MethodName := "FocusControlNumber"
+        }
+        If Not NumberToFocus Or ReaHotkey.Found%Type%.Overlay.%PropertyName%.Length = 0 {
+            ReaHotkey.AutoFocus%Type%Overlay := True
+        }
+        Else {
+            ReaHotkey.AutoFocus%Type%Overlay := False
+            If NumberToFocus >= 1 And NumberToFocus <= ReaHotkey.Found%Type%.Overlay.%PropertyName%.Length
+            ReaHotkey.Found%Type%.Overlay.%MethodName%(NumberToFocus)
+            Else If NumberToFocus < 0 And ReaHotkey.Found%Type%.Overlay.FocusableControlIDs.Length + 1 + NumberToFocus >= 1
+            ReaHotkey.Found%Type%.Overlay.%MethodName%(ReaHotkey.Found%Type%.Overlay.%PropertyName%.Length + 1 + NumberToFocus)
+            Else
+            ReaHotkey.Found%Type%.Overlay.%MethodName%(1)
+        }
+    }
 }
 
 GetCurrentControlClass() {
