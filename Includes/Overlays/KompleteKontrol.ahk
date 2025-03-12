@@ -279,7 +279,7 @@ Class KompleteKontrol {
     }
     
     Static InitConfig() {
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CloseKKBrowser", 1, "Automatically close library browser in Komplete Kontrol", "Kontakt / Komplete Kontrol")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CloseKKBrowser", 0, "Automatically close library browser in Komplete Kontrol", "Kontakt / Komplete Kontrol")
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "DetectLibsInKK", 1, "Automatically detect libraries in Komplete Kontrol plug-in")
     }
     
