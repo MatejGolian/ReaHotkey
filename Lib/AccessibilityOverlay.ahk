@@ -586,14 +586,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
                 ControlToTrigger.CurrentTab := TabNumber
             }
-            This.SetPreviousControlID(This.CurrentControlID)
             If ControlToTrigger.HasMethod("Activate")
             This.ActivateControlID(ControlToTrigger.ControlID)
             Else
             This.FocusControlID(ControlToTrigger.ControlID)
             For HotkeyFunction In HotkeyFunctions
             HotkeyFunction.Call(HotkeyTarget)
-            This.SetCurrentControlID(ControlToTrigger.ControlID)
             Break
         }
     }
