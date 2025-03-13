@@ -64,14 +64,14 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If This.ChildControls.Length > 0
         If ChildNumber > 0 And This.ChildControls.Length >= ChildNumber {
             ControlID := This.ChildControls[ChildNumber].ControlID
-            This.ActivateControlID(ControlID)
+            Return This.ActivateControlID(ControlID)
         }
     }
     
     ActivateControlID(ControlID) {
         If This.ChildControls.Length > 0 {
             If ControlID = This.CurrentControlID {
-                This.ActivateCurrentControl()
+                Return This.ActivateCurrentControl()
             }
             Else {
                 Found := This.FindFocusableControlID(ControlID)
@@ -81,6 +81,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                     This.SetCurrentControlID(ControlID)
                     If TargetControl.HasMethod("Activate")
                     TargetControl.Activate()
+                    Return TargetControl
                 }
             }
         }
@@ -92,7 +93,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             If ControlNumber > 0 And This.FocusableControlIDs.Length >= ControlNumber {
                 ControlID := This.FocusableControlIDs[ControlNumber]
                 If ControlID = This.CurrentControlID {
-                    This.ActivateCurrentControl()
+                    Return This.ActivateCurrentControl()
                 }
                 Else {
                     TargetControl := AccessibilityOverlay.GetControl(ControlID)
@@ -100,6 +101,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                     This.SetCurrentControlID(TargetControl.ControlID)
                     If TargetControl.HasMethod("Activate")
                     TargetControl.Activate()
+                    Return TargetControl
                 }
             }
         }
@@ -123,6 +125,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If CurrentControl.ControlType = "checkbox" Or CurrentControl.ControlType = "ToggleButton" {
                     AccessibilityOverlay.PreviousControlID := TruePrev
                 }
+                Return CurrentControl
             }
         }
     }
@@ -220,6 +223,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                     }
                 }
                 This.SetCurrentControlID(ControlID)
+                Return TargetControl
             }
         }
     }
@@ -228,7 +232,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If This.ChildControls.Length > 0
         If ChildNumber > 0 And This.ChildControls.Length >= ChildNumber {
             ControlID := This.ChildControls[ChildNumber].ControlID
-            This.FocusControlID(ControlID)
+            Return This.FocusControlID(ControlID)
         }
     }
     
@@ -242,6 +246,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If TargetControl.HasMethod("Focus")
                 TargetControl.Focus()
                 This.SetCurrentControlID(ControlID)
+                Return TargetControl
             }
         }
     }
@@ -257,6 +262,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If TargetControl.HasMethod("Focus")
                 TargetControl.Focus()
                 This.SetCurrentControlID(TargetControl.ControlID)
+                Return TargetControl
             }
         }
     }
@@ -268,6 +274,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
                 If CurrentControl.HasMethod("Focus")
                 CurrentControl.Focus()
+                Return CurrentControl
             }
         }
     }
@@ -287,6 +294,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             If TargetControl Is Object And TargetControl.HasMethod("Focus")
             TargetControl.Focus()
             This.SetCurrentControlID(TargetControl.ControlID)
+            Return TargetControl
         }
     }
     
@@ -305,6 +313,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             If TargetControl Is Object And TargetControl.HasMethod("Focus")
             TargetControl.Focus()
             This.SetCurrentControlID(TargetControl.ControlID)
+            Return TargetControl
         }
     }
     
@@ -317,6 +326,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                     This.SetPreviousControlID(This.CurrentControlID)
                     CurrentControl.FocusNextTab()
                     This.SetCurrentControlID(CurrentControl.ControlID)
+                    Return CurrentControl.GetCurrentTab()
                 }
             }
         }
@@ -331,6 +341,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                     This.SetPreviousControlID(This.CurrentControlID)
                     CurrentControl.FocusPreviousTab()
                     This.SetCurrentControlID(CurrentControl.ControlID)
+                    Return CurrentControl.GetCurrentTab()
                 }
             }
         }
@@ -543,8 +554,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
-                If CurrentControl.ControlType = "ComboBox"
-                CurrentControl.SelectNextOption()
+                If CurrentControl.ControlType = "ComboBox" {
+                    CurrentControl.SelectNextOption()
+                    Return CurrentControl.GetValue()
+                }
             }
         }
     }
@@ -554,8 +567,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
-                If CurrentControl.ControlType = "ComboBox"
-                CurrentControl.SelectPreviousOption()
+                If CurrentControl.ControlType = "ComboBox" {
+                    CurrentControl.SelectPreviousOption()
+                    Return CurrentControl.GetValue()
+                }
             }
         }
     }
