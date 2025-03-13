@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.8] - 2025-03-13
+
 ### Added
 
 -   Added prompt when a Supported plug-in is detected in Ableton
@@ -265,7 +267,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.7...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.8...HEAD
+
+[0.5.8]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.7...0.5.8
 
 [0.5.7]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.6...0.5.7
 
