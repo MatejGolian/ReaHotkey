@@ -890,9 +890,9 @@ Class ReaHotkey {
         Static Call(Name := "") {
             If ReaHotkey.Config.Get("PromptOnAbletonPlugin") = 1 {
                 If Name
-                AccessibilityOverlay.Speak(Name . " detected. Press F6 to focus its window.")
+                AccessibilityOverlay.Speak(Name . " detected. Press F6 to focus it.")
                 Else
-                AccessibilityOverlay.Speak("Supported plug-in detected. Press F6 to focus its window.")
+                AccessibilityOverlay.Speak("Supported plug-in detected. Press F6 to focus it.")
             }
             Else {
                 This.StopAbletonPluginTimer()
