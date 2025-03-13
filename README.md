@@ -10,6 +10,8 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 
 ## Features
 
+The following list contains the gist of what ReaHotkey has to offer. There may be some features not specifically mentioned here - either because they are experimental or self-explanatory.
+
 * Enables accessibility for Dubler 2.2 by Vochlea
   - standalone and MIDI capture plugin support
   - not all features are supported, nor do we know if they ever will be (see [below](#dubler2))
@@ -19,6 +21,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
   - The keyboard bindings only work with the unified interfaces of e.g. C-2, Q-3 etc, but not with the newer R-2 yet
 * Makes it possible to  access the menus and save new presets in Komplete Kontrol. It's also possible to change a number of settings in Preferences and add new user library folders and perform library and plug-in rescans.
   - Works inside REAPER, Ableton Live 12 and in the standalone version of Komplete Kontrol.
+  - The overlay for the plug-in also provides basic support for the search function in the library Browser as an extra Feature.
   - Note that Komplete Kontrol version 3 or above is absolutely required in case of the plug-in.
   - Version 3.4 is highly recommended, although most of the above functionality may work in older versions as well. That being said, ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
   - The standalone version may provide a more stable and reliable user experience overall.
@@ -41,6 +44,7 @@ Just extract the downloaded archive and run one of the ReaHotkey executables dep
 * ReaHotkey requires a screen resolution of 1920 x 1080 to operate properly. Shouldn't you have a display connected, or your display doesn't support the required screen resolution, you can either buy a cheap HDMI display simulation dongle (usually about $10), or try the following free software-based solution which installs a virtual display driver that can emulate screen resolutions without having to have an actual display connected: [Click here to visit the latest GitHub release of Virtual Display Driver](https://github.com/VirtualDisplay/Virtual-Display-Driver/releases/latest)
 * In order to make ReaHotkey work successfully with a certain application such as REAPER, ReaHotkey should be run with at least the same user privileges as the application to be controlled, otherwise ReaHotkey keyboard commands may not get enabled. For instance, if you are running REAPER as administrator, you should run ReaHotkey as administrator as well.
 * Because ReaHotkey may pass through some keys to the active application in specific cases, you can try enabling the 'Send all keyboard input to plug-in' option in REAPER's FX menu when interacting with a supported plug-in interface, should you find that you're dropping out of the plug-in window unexpectedly.
+* The default ReaHotkey behavior may not be optimal for everyone. It's therefore advised to explore the configuration dialog to see what settings are available.
 
 ## Keyboard Shortcuts
 

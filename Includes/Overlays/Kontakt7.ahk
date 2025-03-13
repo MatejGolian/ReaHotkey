@@ -310,7 +310,7 @@ Class Kontakt7 {
     }
     
     Static InitConfig() {
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CloseK7Browser", 0, "Automatically close library browser in Kontakt 7", "Kontakt / Komplete Kontrol")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CloseK7Browser", 1, "Automatically close library browser in Kontakt 7", "Kontakt / Komplete Kontrol")
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "DetectLibsInK7", 0, "Automatically detect libraries in Kontakt 7 plug-in")
     }
     

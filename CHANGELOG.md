@@ -10,13 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added prompt when a Supported plug-in is detected in Ableton
--   Added support for the search field in KK
+-   Added support for the search field in KK (the browser autoclose feature in configuration must be disabled for it to work)
 
 ### Changed
 
 -   Automatically focus plug-ins in REAPER's bridged mode
 -   Reworked K7/K8/KK overlays
--   The K7/K8/KK browsers now no longer close by default
+-   Now the KK browser no longer closes by default
 -   All relevant elements now make use of Tesseract OCR instead of UWP
 -   Enabled Juggernaut in K8 and KK
 -   Updated README
