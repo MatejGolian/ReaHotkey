@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2025-03-15
+
 ### Fixed
 
 -   Fix library detection being off by default for new users in Kontakt 7
@@ -277,7 +279,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.9...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.0...HEAD
+
+[0.6.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.9...0.6.0
 
 [0.5.9]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.8...0.5.9
 
