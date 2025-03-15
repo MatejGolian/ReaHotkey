@@ -1,39 +1,61 @@
 #Requires AutoHotkey v2.0
 
 #HotIf WinActive("ahk_exe Ableton Live 12(.*).exe ahk_class #32770")
-#Include Hotkey.Definitions.ahk
+#Include Hotkeys.Common.ahk
 
 #HotIf WinActive("ahk_exe Ableton Live 12(.*).exe ahk_class AbletonVstPlugClass")
-F6:: F6HK(ThisHotkey)
-#IncludeAgain Hotkey.Definitions.ahk
-
+#Include Hotkeys.Plugin.ahk
+#IncludeAgain Hotkeys.Common.ahk
 #HotIf WinActive("ahk_exe Ableton Live 12(.*).exe ahk_class Vst3PlugWindow")
-F6:: F6HK(ThisHotkey)
-#IncludeAgain Hotkey.Definitions.ahk
+#IncludeAgain Hotkeys.Plugin.ahk
+#IncludeAgain Hotkeys.Common.ahk
 
 #HotIf WinActive("ahk_exe reaper.exe ahk_class #32770")
-F6:: F6HK(ThisHotkey)
-#IncludeAgain Hotkey.Definitions.ahk
-
+#IncludeAgain Hotkeys.Plugin.ahk
+#IncludeAgain Hotkeys.Common.ahk
 #HotIf WinActive("ahk_exe reaper_host32.exe ahk_class #32770")
-F6:: F6HK(ThisHotkey)
-#IncludeAgain Hotkey.Definitions.ahk
-
+#IncludeAgain Hotkeys.Plugin.ahk
+#IncludeAgain Hotkeys.Common.ahk
 #HotIf WinActive("ahk_exe reaper_host32.exe ahk_class REAPERb32host")
-F6:: F6HK(ThisHotkey)
-#IncludeAgain Hotkey.Definitions.ahk
-
+#IncludeAgain Hotkeys.Plugin.ahk
+#IncludeAgain Hotkeys.Common.ahk
 #HotIf WinActive("ahk_exe reaper_host64.exe ahk_class #32770")
-F6:: F6HK(ThisHotkey)
-#IncludeAgain Hotkey.Definitions.ahk
-
+#IncludeAgain Hotkeys.Plugin.ahk
+#IncludeAgain Hotkeys.Common.ahk
 #HotIf WinActive("ahk_exe reaper_host64.exe ahk_class REAPERb32host")
-F6:: F6HK(ThisHotkey)
-#IncludeAgain Hotkey.Definitions.ahk
-
+#IncludeAgain Hotkeys.Plugin.ahk
+#IncludeAgain Hotkeys.Common.ahk
 #HotIf WinActive("ahk_exe reaper_host64.exe ahk_class REAPERb32host3")
-F6:: F6HK(ThisHotkey)
-#IncludeAgain Hotkey.Definitions.ahk
+#IncludeAgain Hotkeys.Plugin.ahk
+#IncludeAgain Hotkeys.Common.ahk
+
+#HotIf WinActive("Vochlea\sDubler\s2\.2 ahk_class Qt5155QWindowOwnDCIcon")
+#IncludeAgain Hotkeys.Common.ahk
+
+#HotIf WinActive("Best Service Engine ahk_class Engine ahk_exe Engine 2.exe")
+#IncludeAgain Hotkeys.Common.ahk
+#HotIf WinActive("add library... ahk_class #32770 ahk_exe Engine 2.exe")
+#IncludeAgain Hotkeys.Common.ahk
+
+#HotIf WinActive("Kontakt 7 ahk_class NINormalWindow* ahk_exe Kontakt 7.exe")
+#IncludeAgain Hotkeys.Common.ahk
+#HotIf WinActive("Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe")
+#IncludeAgain Hotkeys.Common.ahk
+
+#HotIf WinActive("Kontakt 8 ahk_class NINormalWindow* ahk_exe Kontakt 8.exe")
+#IncludeAgain Hotkeys.Common.ahk
+#HotIf WinActive("Content Missing ahk_class #32770 ahk_exe Kontakt 8.exe")
+#IncludeAgain Hotkeys.Common.ahk
+
+#HotIf WinActive("Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe")
+#IncludeAgain Hotkeys.Common.ahk
+#HotIf WinActive("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
+#IncludeAgain Hotkeys.Common.ahk
+#HotIf WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe")
+#IncludeAgain Hotkeys.Common.ahk
+
+#HotIf WinActive("Plogue Art et Technologie, Inc sforzando ahk_class PLGWindowClass ahk_exe sforzando( x64)?.exe")
+#IncludeAgain Hotkeys.Common.ahk
 
 #HotIf
-#IncludeAgain Hotkey.Definitions.ahk
+#Include Hotkeys.Global.ahk

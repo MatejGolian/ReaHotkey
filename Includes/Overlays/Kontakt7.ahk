@@ -49,7 +49,7 @@ Class Kontakt7 {
         PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")
         Plugin.RegisterOverlay("Kontakt 7 Content Missing Dialog", PluginContentMissingOverlay)
         
-        Standalone.Register("Kontakt 7", "Kontakt ahk_class NINormalWindow* ahk_exe Kontakt 7.exe", False, False)
+        Standalone.Register("Kontakt 7", "Kontakt 7 ahk_class NINormalWindow* ahk_exe Kontakt 7.exe", False, False)
         Standalone.SetTimer("Kontakt 7", This.CheckStandaloneConfig, -1)
         Standalone.SetTimer("Kontakt 7", This.CheckStandaloneMenu, 250)
         Standalone.RegisterOverlay("Kontakt 7", StandaloneHeader)

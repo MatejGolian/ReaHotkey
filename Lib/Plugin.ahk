@@ -136,7 +136,11 @@ Class Plugin Extends Program {
             HotIfWinActive(ReaHotkey.PluginWinCriteria)
             If ReaHotkey.FoundPlugin Is Plugin
             Hotkey KeyName, Action, Options.String
-            If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
+            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
+            HotIfWinActive(ReaHotkey.PluginWinCriteria)
+            Else If ReaHotkey.StandaloneWinCriteria And WinActive(ReaHotkey.StandaloneWinCriteria)
+            HotIfWinActive(ReaHotkey.StandaloneWinCriteria)
+            Else
             HotIf
         }
     }

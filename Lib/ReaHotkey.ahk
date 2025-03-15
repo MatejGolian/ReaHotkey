@@ -296,12 +296,14 @@ Class ReaHotkey {
             }
             If This.PluginWinCriteria And Type = "Plugin"
             HotIfWinActive(This.PluginWinCriteria)
-            If Type = "Standalone"
-            HotIf
+            If This.StandaloneWinCriteria And Type = "Standalone"
+            HotIfWinActive(This.StandaloneWinCriteria)
             If This.Found%Type% Is %Type% And This.Found%Type%.Name = Name
             Hotkey KeyName, Action, Options.String
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
             HotIfWinActive(This.PluginWinCriteria)
+            Else If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria)
+            HotIfWinActive(This.StandaloneWinCriteria)
             Else
             HotIf
             Return True
@@ -429,14 +431,17 @@ Class ReaHotkey {
                 TurnSpecificsOff(Type, Name)
                 TurnOverridesOff(Type, Name)
             }
-            If Type = "Standalone" {
-                HotIf
+            If Type = "Standalone"
+            For StandaloneWinCriteria In This.StandaloneWinCriteriaList {
+                HotIfWinActive(StandaloneWinCriteria)
                 TurnCommonOff()
                 TurnSpecificsOff(Type, Name)
                 TurnOverridesOff(Type, Name)
             }
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
             HotIfWinActive(This.PluginWinCriteria)
+            Else If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria)
+            HotIfWinActive(This.StandaloneWinCriteria)
             Else
             HotIf
         }
@@ -491,13 +496,15 @@ Class ReaHotkey {
                 TurnOverridesOn(Type, Name)
             }
             If This.StandaloneWinCriteria And Type = "Standalone" {
-                HotIf
+                HotIfWinActive(This.StandaloneWinCriteria)
                 TurnCommonOn()
                 TurnSpecificsOn(Type, Name)
                 TurnOverridesOn(Type, Name)
             }
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
             HotIfWinActive(This.PluginWinCriteria)
+            Else If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria)
+            HotIfWinActive(This.StandaloneWinCriteria)
             Else
             HotIf
         }
@@ -507,11 +514,13 @@ Class ReaHotkey {
                 TurnOverridesOn(Type, Name)
             }
             If This.StandaloneWinCriteria And Type = "Standalone" {
-                HotIf
+                HotIfWinActive(This.StandaloneWinCriteria)
                 TurnOverridesOn(Type, Name)
             }
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
             HotIfWinActive(This.PluginWinCriteria)
+            Else If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria)
+            HotIfWinActive(This.StandaloneWinCriteria)
             Else
             HotIf
         }
@@ -812,12 +821,12 @@ Class ReaHotkey {
                 ReaHotkey.AutoFocusStandaloneOverlay := True
                 ReaHotkey.FoundStandalone := False
             }
-            Critical "Off"
             If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria) {
                 ReaHotkey.Context := "Plugin"
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 If Not ReaHotkey.FoundPlugin Is Plugin Or WinExist("ahk_class #32768") {
+                    ReaHotkey.Context := False
                     PreviousPluginName := False
                     ReaHotkey.TurnPluginTimersOff()
                     ReaHotkey.TurnPluginHotkeysOff()
@@ -848,6 +857,7 @@ Class ReaHotkey {
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
                 If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
+                    ReaHotkey.Context := False
                     PreviousStandaloneName := False
                     ReaHotkey.TurnStandaloneTimersOff()
                     ReaHotkey.TurnStandaloneHotkeysOff()
