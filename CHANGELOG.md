@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.9] - 2025-03-15
+
 ### Changed
 
 -   Separate #HotIfs per standalone
@@ -271,7 +273,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.8...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.9...HEAD
+
+[0.5.9]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.8...0.5.9
 
 [0.5.8]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.7...0.5.8
 
