@@ -148,7 +148,10 @@ Class Zampler {
     }
     
     Static ResetOverlay() {
-        If ReaHotkey.FoundPlugin Is Plugin {
+        Static PreviousWinID := False
+        CurrentWinID := WinGetID("A")
+        If Not CurrentWinID = PreviousWinID And ReaHotkey.FoundPlugin Is Plugin {
+            PreviousWinID := CurrentWinID
             ReaHotkey.FoundPlugin.Overlay.Reset()
             ReaHotkey.FoundPlugin.Overlay.FocusControlNumber(1)
         }
