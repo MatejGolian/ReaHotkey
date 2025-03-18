@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2025-03-18
+
 ### Changed/Fixed
 
 -   The Zampler overlay now resets after closing and re-opening the plug-in
@@ -284,7 +286,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.0...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.1...HEAD
+
+[0.6.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.0...0.6.1
 
 [0.6.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.5.9...0.6.0
 
