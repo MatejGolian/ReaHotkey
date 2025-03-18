@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.3] - 2025-03-18
+
 ### Fixed
 
 -   Fixed newly introduced regressions related to accessible menu
@@ -297,7 +299,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.2...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.3...HEAD
+
+[0.6.3]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.2...0.6.3
 
 [0.6.2]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.1...0.6.2
 
