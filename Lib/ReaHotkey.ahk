@@ -837,20 +837,21 @@ Class ReaHotkey {
                 }
                 Else {
                     ReaHotkey.CurrentPluginName := ReaHotkey.FoundPlugin.Name
+                    If Not ReaHotkey.CurrentPluginName = ReaHotkey.PreviousPluginName
+                    If ReaHotkey.PreviousPluginName {
+                        ReaHotkey.TurnPluginTimersOff(ReaHotkey.PreviousPluginName)
+                        ReaHotkey.TurnPluginHotkeysOff(ReaHotkey.PreviousPluginName)
+                        Sleep 250
+                    }
                     If Not ReaHotkey.CurrentPluginName = ReaHotkey.PreviousPluginName {
-                        If ReaHotkey.PreviousPluginName {
-                            ReaHotkey.TurnPluginTimersOff(ReaHotkey.PreviousPluginName)
-                            ReaHotkey.TurnPluginHotkeysOff(ReaHotkey.PreviousPluginName)
-                            Sleep 250
-                        }
                         ReaHotkey.TurnPluginTimersOn(ReaHotkey.FoundPlugin.Name)
                         Sleep 250
+                        ReaHotkey.TurnPluginHotkeysOn(ReaHotkey.FoundPlugin.Name)
                     }
                     If ReaHotkey.AutoFocusPluginOverlay = True {
                         ReaHotkey.FocusPluginOverlay()
                         ReaHotkey.AutoFocusPluginOverlay := False
                     }
-                    ReaHotkey.TurnPluginHotkeysOn(ReaHotkey.FoundPlugin.Name)
                     ReaHotkey.PreviousPluginName := ReaHotkey.CurrentPluginName
                 }
             }
@@ -868,20 +869,21 @@ Class ReaHotkey {
                 }
                 Else {
                     ReaHotkey.CurrentStandaloneName := ReaHotkey.FoundStandalone.Name
+                    If Not ReaHotkey.CurrentStandaloneName = ReaHotkey.PreviousStandaloneName
+                    If ReaHotkey.PreviousStandaloneName {
+                        ReaHotkey.TurnStandaloneTimersOff(ReaHotkey.PreviousStandaloneName)
+                        ReaHotkey.TurnStandaloneHotkeysOff(ReaHotkey.PreviousStandaloneName)
+                        Sleep 250
+                    }
                     If Not ReaHotkey.CurrentStandaloneName = ReaHotkey.PreviousStandaloneName {
-                        If ReaHotkey.PreviousStandaloneName {
-                            ReaHotkey.TurnStandaloneTimersOff(ReaHotkey.PreviousStandaloneName)
-                            ReaHotkey.TurnStandaloneHotkeysOff(ReaHotkey.PreviousStandaloneName)
-                            Sleep 250
-                        }
                         ReaHotkey.TurnStandaloneTimersOn(ReaHotkey.FoundStandalone.Name)
                         Sleep 250
+                        ReaHotkey.TurnStandaloneHotkeysOn(ReaHotkey.FoundStandalone.Name)
                     }
                     If ReaHotkey.AutoFocusStandaloneOverlay = True {
                         ReaHotkey.FocusStandaloneOverlay()
                         ReaHotkey.AutoFocusStandaloneOverlay := False
                     }
-                    ReaHotkey.TurnStandaloneHotkeysOn(ReaHotkey.FoundStandalone.Name)
                     ReaHotkey.PreviousStandaloneName := ReaHotkey.CurrentStandaloneName
                 }
             }

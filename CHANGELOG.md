@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed/Fixed
+
+-   Simplify checking for updates
+-   Avoid setting hotkeys again if the plug-in/standalone did not change
+
 ## [0.6.1] - 2025-03-18
 
 ### Changed/Fixed
