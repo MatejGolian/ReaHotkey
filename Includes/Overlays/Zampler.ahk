@@ -34,6 +34,7 @@ Class Zampler {
         ZamplerTabControl.AddTabs(ArpeggiatorTab)
         
         Plugin.RegisterOverlay("Zampler", ZamplerOverlay)
+        Plugin.SetTimer("Zampler", ObjBindMethod(This, "ResetOverlay"), -1)
     }
     
     Static ChangeFilter(OverlayObj) {
@@ -144,6 +145,13 @@ Class Zampler {
         If Not InitialLabels.Has(OverlayObj.ControlID)
         InitialLabels.Set(OverlayObj.ControlID, OverlayObj.Label)
         OverlayObj.Label := InitialLabels[OverlayObj.ControlID]
+    }
+    
+    Static ResetOverlay() {
+        If ReaHotkey.FoundPlugin Is Plugin {
+            ReaHotkey.FoundPlugin.Overlay.Reset()
+            ReaHotkey.FoundPlugin.Overlay.FocusControlNumber(1)
+        }
     }
     
     Static SendWheel(OverlayObj) {

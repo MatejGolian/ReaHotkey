@@ -6,10 +6,14 @@ Class ReaHotkey {
     Static AutoFocusPluginOverlay := True
     Static AutoFocusStandaloneOverlay := True
     Static Context := False
+    Static CurrentPluginName := False
+    Static CurrentStandaloneName := False
     Static FoundPlugin := False
     Static FoundStandalone := False
     Static NonRemappableHotkeys := Array("^+#F1", "^+#F5", "Control", "Ctrl", "LCtrl", "RCtrl", "^+#A", "^+#C", "^+#P", "^+#Q", "^+#R")
     Static PluginHotkeyOverrides := Array()
+    Static PreviousPluginName := False
+    Static PreviousStandaloneName := False
     Static RequiredScreenWidth := 1920
     Static RequiredScreenHeight := 1080
     Static RequiredWinBuild := 10240
@@ -761,7 +765,6 @@ Class ReaHotkey {
     
     Class ManageState {
         Static Call() {
-            Static CurrentPluginName := False, PreviousPluginName := False, CurrentStandaloneName := False, PreviousStandaloneName := False
             Critical
             Try {
                 If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria) {
@@ -827,28 +830,28 @@ Class ReaHotkey {
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 If Not ReaHotkey.FoundPlugin Is Plugin Or WinExist("ahk_class #32768") {
                     ReaHotkey.Context := False
-                    PreviousPluginName := False
+                    ReaHotkey.PreviousPluginName := False
                     ReaHotkey.TurnPluginTimersOff()
                     ReaHotkey.TurnPluginHotkeysOff()
                     AccessibleMenu.CurrentMenu := False
                 }
                 Else {
-                    CurrentPluginName := ReaHotkey.FoundPlugin.Name
-                    If PreviousPluginName = False
-                    PreviousPluginName := CurrentPluginName
-                    If Not CurrentPluginName = PreviousPluginName {
-                        ReaHotkey.TurnPluginTimersOff(PreviousPluginName)
-                        ReaHotkey.TurnPluginHotkeysOff(PreviousPluginName)
+                    ReaHotkey.CurrentPluginName := ReaHotkey.FoundPlugin.Name
+                    If Not ReaHotkey.CurrentPluginName = ReaHotkey.PreviousPluginName {
+                        If ReaHotkey.PreviousPluginName {
+                            ReaHotkey.TurnPluginTimersOff(ReaHotkey.PreviousPluginName)
+                            ReaHotkey.TurnPluginHotkeysOff(ReaHotkey.PreviousPluginName)
+                            Sleep 250
+                        }
+                        ReaHotkey.TurnPluginTimersOn(ReaHotkey.FoundPlugin.Name)
                         Sleep 250
                     }
-                    PreviousPluginName := CurrentPluginName
-                    ReaHotkey.TurnPluginTimersOn(ReaHotkey.FoundPlugin.Name)
-                    Sleep 250
                     If ReaHotkey.AutoFocusPluginOverlay = True {
                         ReaHotkey.FocusPluginOverlay()
                         ReaHotkey.AutoFocusPluginOverlay := False
                     }
                     ReaHotkey.TurnPluginHotkeysOn(ReaHotkey.FoundPlugin.Name)
+                    ReaHotkey.PreviousPluginName := ReaHotkey.CurrentPluginName
                 }
             }
             Else If ReaHotkey.StandaloneWinCriteria And WinActive(ReaHotkey.StandaloneWinCriteria) {
@@ -858,37 +861,37 @@ Class ReaHotkey {
                 ReaHotkey.TurnPluginHotkeysOff()
                 If Not ReaHotkey.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
                     ReaHotkey.Context := False
-                    PreviousStandaloneName := False
+                    ReaHotkey.PreviousStandaloneName := False
                     ReaHotkey.TurnStandaloneTimersOff()
                     ReaHotkey.TurnStandaloneHotkeysOff()
                     AccessibleMenu.CurrentMenu := False
                 }
                 Else {
-                    CurrentStandaloneName := ReaHotkey.FoundStandalone.Name
-                    If PreviousStandaloneName = False
-                    PreviousStandaloneName := CurrentStandaloneName
-                    If Not CurrentStandaloneName = PreviousStandaloneName {
-                        ReaHotkey.TurnStandaloneTimersOff(PreviousStandaloneName)
-                        ReaHotkey.TurnStandaloneHotkeysOff(PreviousStandaloneName)
+                    ReaHotkey.CurrentStandaloneName := ReaHotkey.FoundStandalone.Name
+                    If Not ReaHotkey.CurrentStandaloneName = ReaHotkey.PreviousStandaloneName {
+                        If ReaHotkey.PreviousStandaloneName {
+                            ReaHotkey.TurnStandaloneTimersOff(ReaHotkey.PreviousStandaloneName)
+                            ReaHotkey.TurnStandaloneHotkeysOff(ReaHotkey.PreviousStandaloneName)
+                            Sleep 250
+                        }
+                        ReaHotkey.TurnStandaloneTimersOn(ReaHotkey.FoundStandalone.Name)
                         Sleep 250
                     }
-                    PreviousStandaloneName := CurrentStandaloneName
-                    ReaHotkey.TurnStandaloneTimersOn(ReaHotkey.FoundStandalone.Name)
-                    Sleep 250
                     If ReaHotkey.AutoFocusStandaloneOverlay = True {
                         ReaHotkey.FocusStandaloneOverlay()
                         ReaHotkey.AutoFocusStandaloneOverlay := False
                     }
                     ReaHotkey.TurnStandaloneHotkeysOn(ReaHotkey.FoundStandalone.Name)
+                    ReaHotkey.PreviousStandaloneName := ReaHotkey.CurrentStandaloneName
                 }
             }
             Else {
                 ReaHotkey.Context := False
-                PreviousPluginName := False
+                ReaHotkey.PreviousPluginName := False
                 ReaHotkey.StopAbletonPluginTimer()
                 ReaHotkey.TurnPluginTimersOff()
                 ReaHotkey.TurnPluginHotkeysOff()
-                PreviousStandaloneName := False
+                ReaHotkey.PreviousStandaloneName := False
                 ReaHotkey.TurnStandaloneTimersOff()
                 ReaHotkey.TurnStandaloneHotkeysOff()
                 AccessibleMenu.CurrentMenu := False

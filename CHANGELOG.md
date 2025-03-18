@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed/Fixed
+
+-   The Zampler overlay now resets after closing and re-opening the plug-in
+-   Avoid setting timers again if the plug-in/standalone did not change
+
 ## [0.6.0] - 2025-03-15
 
 ### Fixed

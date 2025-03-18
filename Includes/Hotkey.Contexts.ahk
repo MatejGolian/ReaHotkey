@@ -1,5 +1,8 @@
 #Requires AutoHotkey v2.0
 
+#HotIf
+#Include Hotkeys.Global.ahk
+
 #HotIf WinActive("ahk_exe Ableton Live 12(.*).exe ahk_class #32770")
 #Include Hotkeys.Common.ahk
 
@@ -56,6 +59,3 @@
 
 #HotIf WinActive("Plogue Art et Technologie, Inc sforzando ahk_class PLGWindowClass ahk_exe sforzando( x64)?.exe")
 #IncludeAgain Hotkeys.Common.ahk
-
-#HotIf
-#Include Hotkeys.Global.ahk
