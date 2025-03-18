@@ -5,8 +5,8 @@ Class AccessibleStandaloneMenu Extends AccessibleMenu {
     Type := "Standalone"
     
     Show() {
-        ReaHotkey.TurnStandaloneTimersOff()
-        ReaHotkey.TurnStandaloneHotkeysOff()
+        ReaHotkey.TurnStandaloneTimersOff(ReaHotkey.FoundStandalone.Name)
+        ReaHotkey.TurnStandaloneHotkeysOff(ReaHotkey.FoundStandalone.Name)
         AccessibilityOverlay.Speak(This.ContextMenuString)
         AccessibleMenu.CurrentMenu := This
         Loop {
@@ -26,6 +26,8 @@ Class AccessibleStandaloneMenu Extends AccessibleMenu {
                 AccessibleMenu.CurrentMenu.Manage()
             }
         }
-    }
+        ReaHotkey.TurnStandaloneTimersOn(ReaHotkey.FoundStandalone.Name)
+        ReaHotkey.TurnStandaloneHotkeysOn(ReaHotkey.FoundStandalone.Name)
+        }
     
 }

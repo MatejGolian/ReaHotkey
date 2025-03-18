@@ -5,8 +5,8 @@ Class AccessiblePluginMenu Extends AccessibleMenu {
     Type := "Plugin"
     
     Show() {
-        ReaHotkey.TurnPluginTimersOff()
-        ReaHotkey.TurnPluginHotkeysOff()
+        ReaHotkey.TurnPluginTimersOff(ReaHotkey.FoundPlugin.Name)
+        ReaHotkey.TurnPluginHotkeysOff(ReaHotkey.FoundPlugin.Name)
         AccessibilityOverlay.Speak(This.ContextMenuString)
         AccessibleMenu.CurrentMenu := This
         Loop {
@@ -26,6 +26,8 @@ Class AccessiblePluginMenu Extends AccessibleMenu {
                 AccessibleMenu.CurrentMenu.Manage()
             }
         }
-    }
+        ReaHotkey.TurnPluginTimersOn(ReaHotkey.FoundPlugin.Name)
+        ReaHotkey.TurnPluginHotkeysOn(ReaHotkey.FoundPlugin.Name)
+        }
     
 }
