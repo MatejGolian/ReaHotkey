@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.5] - 2025-03-18
 
+### Added
+
+-   Added basic support for Serum 2 synthesizer by Xfer Records
+-   Added basic support for Diva synthesizer by u-HE
+
 ### Changed
 
 -   Improved Zampler reset behavior

@@ -34,6 +34,9 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
 * Makes it possible to load instruments, set polyphony and pitchbend range in Plogue sforzando.
   - Works inside REAPER, Ableton Live 12 and in the standalone version of sforzando.
 * Makes it possible to use the Zampler plug-in by Synapse Audio in REAPER and Ableton Live 12.
+* Adds basic support for u-HE Diva and Xfer Records Serum 2 synthesizers inside REAPER and Ableton Live 12.
+  - Supported preset browsing and accessing vendor menu in Serum and Diva.
+  - Serum version 2 or later is required, because this support won't work properly in Serum 1.X.
 
 ## Getting Started
 
