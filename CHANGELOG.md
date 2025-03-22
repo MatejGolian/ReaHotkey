@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.6] - 2025-03-22
+
 ### Added
 
 -   Added basic support for the Diva synthesizer by u-HE (Thanks to Hrvoje Katić)
@@ -320,7 +322,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.5...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.6...HEAD
+
+[0.6.6]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.5...0.6.6
 
 [0.6.5]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.4...0.6.5
 
