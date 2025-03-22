@@ -9,8 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Added basic support for the Serum 2 synthesizer by Xfer Records (Thanks to Hrvoje Katić)
 -   Added basic support for the Diva synthesizer by u-HE (Thanks to Hrvoje Katić)
+-   Added basic support for the Serum 2 synthesizer by Xfer Records (Thanks to Hrvoje Katić)
+
+### Changed
+
+-   Revert to using previous behavior when setting hotkeys and timers (May be re-visited later)
 
 ## [0.6.5] - 2025-03-18
 
