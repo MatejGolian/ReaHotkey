@@ -12,6 +12,8 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 
 The following list contains the gist of what ReaHotkey has to offer. There may be some features not specifically mentioned here - either because they are experimental or self-explanatory.
 
+* Adds basic support for the u-HE Diva synthesizer inside REAPER and Ableton Live 12.
+  - currently supported Features include preset browsing and accessing the vendor menu.
 * Enables accessibility for Dubler 2.2 by Vochlea
   - standalone and MIDI capture plugin support
   - not all features are supported, nor do we know if they ever will be (see [below](#dubler2))
@@ -31,13 +33,15 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
   - The Content Missing dialog may not be accessible when running Kontakt inside Komplete Kontrol.
 * Makes it possible to switch Between various mixes and microphone positions in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries. There is also support for toggling microphone positions in Cinematic Studio Strings, switching presets in the 'Juggernaut' library by Impact Soundworks and toggling the reverb on/off in a couple of Soundiron libraries.
   - Only works inside REAPER and Ableton Live 12.
+  * Adds basic support for the Xfer Records Serum 2 synthesizer inside REAPER and Ableton Live 12.
+  - currently supported Features include preset browsing and accessing the vendor menu.
+  - Serum version 2 or later is required, as the overlay won't work properly in Serum 1.X.
 * Makes it possible to load instruments, set polyphony and pitchbend range in Plogue sforzando.
   - Works inside REAPER, Ableton Live 12 and in the standalone version of sforzando.
 * Makes it possible to use the Zampler plug-in by Synapse Audio in REAPER and Ableton Live 12.
 * Adds basic support for Xfer Records Serum 2 and u-HE Diva synthesizers inside REAPER and Ableton Live 12.
-  - Supported preset browsing and accessing vendor menu in Serum and Diva.
-  - Serum version 2 or later is required, because this support won't work properly in Serum 1.X.
-
+  - currently supported Features include preset browsing and accessing the vendor menus
+  - Serum version 2 or later is required, as the overall won't work properly in Serum 1.X.
 
 ## Getting Started
 
