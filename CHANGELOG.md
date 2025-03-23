@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.7] - 2025-03-23
+
 ### Added
 
 -   Added basic support for the Hive 2 synthesizer by u-HE (Thanks to Hrvoje Katić)
@@ -333,7 +335,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.6...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.7...HEAD
+
+[0.6.7]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.6...0.6.7
 
 [0.6.6]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.5...0.6.6
 
