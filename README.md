@@ -12,8 +12,8 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 
 The following list contains the gist of what ReaHotkey has to offer. There may be some features not specifically mentioned here - either because they are experimental or self-explanatory.
 
-* Adds basic support for the u-HE Diva synthesizer inside REAPER and Ableton Live 12.
-  - Currently supported Features include preset browsing and accessing the vendor menu.
+* Adds basic support for the u-HE Diva and Hive 2 synthesizers inside REAPER and Ableton Live 12.
+  - Currently supported Features include preset browsing and accessing the vendor menus.
 * Enables accessibility for Dubler 2.2 by Vochlea
   - standalone and MIDI capture plugin support
   - not all features are supported, nor do we know if they ever will be (see [below](#dubler2))

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+-   Added basic support for the Hive 2 synthesizer by u-HE (Thanks to Hrvoje Katić)
 -   Added checking if Serum instance is indeed version 2
 
 ### Changed
