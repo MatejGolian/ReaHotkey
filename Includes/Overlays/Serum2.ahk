@@ -3,6 +3,7 @@
 Class Serum2 {
     
     Static __New() {
+        This.InitConfig()
         Plugin.Register("Serum 2", "^VSTGUI[0-9A-F]+$",, False, False, False, ObjBindMethod(This, "Check"))
         Ol := AccessibilityOverlay("Serum 2")
         Ol.AddCustomButton("Main Menu", ObjBindMethod(This, "ClickOrMoveToCoords",, "Move", 1058, 4),,, ObjBindMethod(This, "ClickOrMoveToCoords",, "Click", 1058, 4)).SetHotkey("^M", "Ctrl+M")
@@ -17,6 +18,8 @@ Class Serum2 {
         Thread "NoTimers"
         If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
         If PluginInstance.Name = "Serum 2"
+        Return True
+        If ReaHotkey.Config.Get("Serum2ImageSearch") = 1 And FindImage("Images/Serum2/Serum2.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 200, GetPluginYCoordinate() + 100) Is Object
         Return True
         If ReaHotkey.AbletonPlugin {
             If RegExMatch(WinGetTitle("A"), "^Serum 2/[1-9][0-9]*-Serum 2$")
@@ -48,6 +51,10 @@ Class Serum2 {
         Send "{Click " . CompensatePluginXCoordinate(XCoord) . " " . CompensatePluginYCoordinate(YCoord) . "}"
         Else
         MouseMove CompensatePluginXCoordinate(XCoord), CompensatePluginYCoordinate(YCoord)
+    }
+    
+    Static InitConfig() {
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "Serum2ImageSearch", 1, "Use image search for plug-in detection", "Serum 2")
     }
     
 }
