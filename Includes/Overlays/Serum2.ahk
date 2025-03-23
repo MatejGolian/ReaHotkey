@@ -19,7 +19,7 @@ Class Serum2 {
         If PluginInstance.Name = "Serum 2"
         Return True
         If ReaHotkey.AbletonPlugin {
-            If RegExMatch(WinGetTitle("A"), "^Serum 2/([1-9][0-9]*)-Serum 2$")
+            If RegExMatch(WinGetTitle("A"), "^Serum 2/[1-9][0-9]*-Serum 2$")
             Return True
         }
         If ReaHotkey.ReaperPluginNative {

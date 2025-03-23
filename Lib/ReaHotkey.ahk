@@ -386,15 +386,13 @@ Class ReaHotkey {
     }
     
     Static StartAbletonPluginTimer() {
-        If ReaHotkey.Config.Get("PromptOnAbletonPlugin") = 1
-        If Not ReaHotkey.AbletonPluginTimer {
-            AbletonPluginName := ""
+        If ReaHotkey.Config.Get("PromptOnAbletonPlugin") = 1 And Not ReaHotkey.AbletonPluginTimer {
             TestPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
-            If TestPlugin
-            AbletonPluginName := TestPlugin.Name
-            ReaHotkey.AbletonPluginTimer := ObjBindMethod(ReaHotkey, "ReportAbletonPlugin", AbletonPluginName)
-            ReaHotkey.AbletonPluginTimer.Call()
-            SetTimer ReaHotkey.AbletonPluginTimer, 8000
+            If TestPlugin Is Plugin And Not TestPlugin.Name = "Unnamed Plugin" {
+                ReaHotkey.AbletonPluginTimer := ObjBindMethod(ReaHotkey, "ReportAbletonPlugin", TestPlugin.Name)
+                ReaHotkey.AbletonPluginTimer.Call()
+                SetTimer ReaHotkey.AbletonPluginTimer, 8000
+            }
         }
     }
     
