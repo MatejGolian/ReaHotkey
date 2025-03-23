@@ -71,7 +71,7 @@ Just extract the downloaded archive and run one of the ReaHotkey executables dep
 * The ReaHotkey script can crash while In Dubler 2 audio calibration view. In that case just start the script again.
 * After adding a plug-in, the plug-in window may not get automatically focused - not even if its user interface is visible and on top. To get around this behavior, press F6 while ReaHotkey is running to make the plug-in interface active.
 * If you're using NVDA with the SIBIAC or LBL add-ons in REAPER, ReaHotkey and SIBIAC/LBL may collide in the plug-ins that ReaHotkey also supports. For that reason, either pause ReaHotkey while interacting with one of the plug-ins in question, or disable SIBIAC/LBL.
-* Using any other zoom value in Kontakt than 100% may result in ReaHotkey not operating as expected.
+* Using any other zoom value in Kontakt and Serum than 100% will result in ReaHotkey not operating as expected. Certain parts of the Kontakt overlays will still work, as not every single of its controls depends on mouse coordinates, that, however, is not the case in Serum.
 * At present library-specific overlays may not always behave correctly when used directly in the Kontakt 8 plug-in. In such case try using Kontakt 7 or open the given library from within Komplete Kontrol instead.
 * Due to OCR limitations, OCR-based elements may not report completely accurate information.
 
