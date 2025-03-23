@@ -310,16 +310,7 @@ Class Program {
     
     Class TriggerOverlayHotkey {
         Static Call(ThisHotkey) {
-            Match := RegExMatch(ThisHotkey, "[a-zA-Z]")
-            If Match > 0 {
-                Modifiers := SubStr(ThisHotkey, 1, Match - 1)
-                KeyName := SubStr(ThisHotkey, Match)
-                If StrLen(KeyName) > 1
-                KeyName := "{" . KeyName . "}"
-                Hotkey ThisHotkey, "Off"
-                Send Modifiers . KeyName
-                Hotkey ThisHotkey, "On"
-            }
+            PassThroughHotkey(ThisHotkey)
         }
     }
     

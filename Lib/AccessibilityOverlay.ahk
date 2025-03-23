@@ -2083,7 +2083,7 @@ Class HotspotButton Extends Button {
         This.YCoordinate := YCoordinate
     }
     
-    ExecuteOnActivationPreSpeech() {
+    ExecuteOnActivationPostSpeech() {
         Click This.XCoordinate, This.YCoordinate
     }
     
@@ -2284,7 +2284,7 @@ Class OCRButton Extends Button {
         This.Y2Coordinate := Y2Coordinate
     }
     
-    ExecuteOnActivationPreSpeech() {
+    ExecuteOnActivationPostSpeech() {
         XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
         YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
         Click XCoordinate, YCoordinate

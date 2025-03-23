@@ -153,8 +153,10 @@ Class Plugin Extends Program {
     
     Class TriggerOverlayHotkey {
         Static Call(ThisHotkey) {
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay Is AccessibilityOverlay
-            ReaHotkey.FoundPlugin.Overlay.TriggerHotkey(ThisHotkey)
+            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Overlay Is AccessibilityOverlay {
+                HotkeyWait(ThisHotkey)
+                ReaHotkey.FoundPlugin.Overlay.TriggerHotkey(ThisHotkey)
+            }
         }
     }
     

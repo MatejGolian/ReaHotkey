@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added checking if Serum instance is indeed version 2
+
+### Changed
+
+-   Make overlay hotkeys only fire actions up on release to prevent eventual multiple triggering
+
 ## [0.6.6] - 2025-03-22
 
 ### Added

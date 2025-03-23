@@ -99,7 +99,7 @@ Class Zampler {
     }
     
     Static FixPolyphony(OverlayObj) {
-        If OverlayObj.Value And OverlayObj.Value + 0 < 8
+        If OverlayObj.Value And RegExMatch(OverlayObj.Value, "\+|\-?[0-9]+") And OverlayObj.Value < 8
         OverlayObj.Value := 8
     }
     
@@ -171,7 +171,7 @@ Class Zampler {
     
     Class PolyphonyBox Extends OCRComboBox {
         ExecuteOnFocusPreSpeech() {
-            If This.Value And This.Value + 0 < 8
+            If This.Value And RegExMatch(This.Value, "\+|\-?[0-9]+") And This.Value < 8
             This.Value := 8
         }
     }
