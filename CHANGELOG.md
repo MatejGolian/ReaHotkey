@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.8B] - 2025-03-24
+
 ### Added
 
 -   Added basic support for u-HE Repro and Zebra Legacy
@@ -344,7 +346,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.8...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.8B...HEAD
+
+[0.6.8B]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.7...0.6.8B
 
 [0.6.8]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.7...0.6.8
 
