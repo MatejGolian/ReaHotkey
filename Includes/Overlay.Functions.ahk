@@ -2,10 +2,10 @@
 
 Global A_IsUnicode := True
 
-ActivateChooser(*) {
+ActivateChooser(OverlayControl) {
     Context := ReaHotkey.GetContext()
     If Context
-    Choose%Context%Overlay()
+    Choose%Context%Overlay(OverlayControl)
 }
 
 AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False, TypeToFocus := "C", ValueToFocus := 0) {

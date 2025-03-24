@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+-   Added basic support for u-HE Repro and Zebra Legacy
+-   Added functionality to save presets in u-HE plug-ins
+
+### Changed
+
+-   Consolidate image search options on to one single 'Misc' tab
+
+### Added
+
 -   Added basic support for the Hive 2 synthesizer by u-HE (Thanks to Hrvoje Katić)
 -   Added checking if Serum instance is indeed version 2
 
