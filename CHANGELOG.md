@@ -7,10 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.6.8] - 2025-03-24
-
-## [0.6.7] - 2025-03-23
-
 ### Added
 
 -   Added basic support for u-HE Repro and Zebra Legacy
@@ -19,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   Consolidate image search options on to one single 'Misc' tab
+
+## [0.6.7] - 2025-03-23
 
 ### Added
 
