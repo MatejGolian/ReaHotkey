@@ -8,7 +8,7 @@ Class Repro {
         ReproOverlay.AddHotspotButton("u-HE Logo Menu", 64, 44, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("^U", "Ctrl+U")
         ReproOverlay.AddActivatableCustom("", ObjBindMethod(This, "FocusOrActivateBrowserToggler",, "Focus"),, ObjBindMethod(This, "FocusOrActivateBrowserToggler",, "Activate")).SetHotkey("!B", "Alt+B")
         ReproOverlay.AddHotspotButton("Previous Preset", 440, 53, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!P", "Alt+P")
-        ReproOverlay.AddOCRButton("Presets Menu, currently loaded", "Presets Menu, preset name not detected", "TesseractBest", 460, 36, 670, 70,,, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
+        ReproOverlay.AddOCRButton("Preset Menu, currently loaded", "Preset Menu, preset name not detected", "TesseractBest", 460, 36, 670, 70,,, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
         ReproOverlay.AddHotspotButton("Next Preset", 730, 53, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!N", "Alt+N")
         ReproOverlay.AddHotspotButton("Save Preset", 808, 53, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("^S", "Ctrl+S")
         Plugin.RegisterOverlay("Repro", ReproOverlay)
