@@ -6,8 +6,8 @@ Class Standalone Extends Program {
     Chooser := True
     InitFunction := ""
     InstanceNumber := 0
+    HotkeyMode := 1
     Name := ""
-    NoHotkeys := False
     Overlay := AccessibilityOverlay()
     Overlays := Array()
     StandaloneNumber := 0
@@ -56,8 +56,8 @@ Class Standalone Extends Program {
         Return False
     }
     
-    Static Register(StandaloneName, WinCriteria, InitFunction := "", Chooser := False, NoHotkeys := False, CheckerFunction := "") {
-        If Super.Register(StandaloneName, InitFunction, Chooser, NoHotkeys, CheckerFunction) = True {
+    Static Register(StandaloneName, WinCriteria, InitFunction := False, Chooser := False, HotkeyMode := 1, CheckerFunction := False) {
+        If Super.Register(StandaloneName, InitFunction, Chooser, HotkeyMode, CheckerFunction) = True {
             StandaloneEntry := This.List[This.List.Length]
             If WinCriteria Is Array
             StandaloneEntry["WinCriteria"] := WinCriteria
