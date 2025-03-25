@@ -56,7 +56,7 @@ Class Standalone Extends Program {
         Return False
     }
     
-    Static Register(StandaloneName, WinCriteria, InitFunction := "", Chooser := True, NoHotkeys := False, CheckerFunction := "") {
+    Static Register(StandaloneName, WinCriteria, InitFunction := "", Chooser := False, NoHotkeys := False, CheckerFunction := "") {
         If Super.Register(StandaloneName, InitFunction, Chooser, NoHotkeys, CheckerFunction) = True {
             StandaloneEntry := This.List[This.List.Length]
             If WinCriteria Is Array
