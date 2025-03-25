@@ -494,6 +494,7 @@ Class ReaHotkey {
             If This.PluginWinCriteria And Type = "Plugin" {
                 HotIfWinActive(This.PluginWinCriteria)
                 TurnCommonOn()
+                TurnPluginOn()
                 TurnSpecificsOn(Type, Name)
                 TurnOverridesOn(Type, Name)
             }
@@ -537,6 +538,9 @@ Class ReaHotkey {
             Hotkey "Down", UpDownHK, "On"
             Hotkey "Enter", EnterSpaceHK, "On"
             Hotkey "Space", EnterSpaceHK, "On"
+        }
+        TurnPluginOn() {
+            Hotkey "F6", F6HK, "On"
         }
         TurnSpecificsOn(Type, Name) {
             If Name = "" {

@@ -3,7 +3,13 @@
 Class SinePlayer {
     
     Static __New() {
-        Plugin.Register("SINE Player", "^JUCE_[0-9a-f]+$",, False, True, False, ObjBindMethod(This, "CheckInstance"))
+        Plugin.Register("SINE Player", "^JUCE_[0-9a-f]+$",, False, False, False, ObjBindMethod(This, "CheckInstance"))
+        SineOverlay := AccessibilityOverlay("SINE Player")
+        SineOverlay.AddStaticText("SINE Player")
+        Plugin.RegisterOverlay("SINE Player", SineOverlay)
+        HKList := ["Tab", "+Tab", "^Tab", "^+Tab", "Left", "Right", "Up", "Down", "Enter", "Space"]
+        For HK In HKList
+        Plugin.SetHotkey("SINE Player", HK, PassThroughHotkey)
         Plugin.SetTimer("SINE Player", This.ClickUI, -1)
     }
     

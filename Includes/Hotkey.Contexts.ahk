@@ -4,10 +4,10 @@
 #Include Hotkeys.Global.ahk
 
 #HotIf WinActive("ahk_exe Ableton Live 12(.*).exe ahk_class #32770")
-#Include Hotkeys.Common.ahk
-
-#HotIf WinActive("ahk_exe Ableton Live 12(.*).exe ahk_class AbletonVstPlugClass")
 #Include Hotkeys.Plugin.ahk
+#Include Hotkeys.Common.ahk
+#HotIf WinActive("ahk_exe Ableton Live 12(.*).exe ahk_class AbletonVstPlugClass")
+#IncludeAgain Hotkeys.Plugin.ahk
 #IncludeAgain Hotkeys.Common.ahk
 #HotIf WinActive("ahk_exe Ableton Live 12(.*).exe ahk_class Vst3PlugWindow")
 #IncludeAgain Hotkeys.Plugin.ahk
