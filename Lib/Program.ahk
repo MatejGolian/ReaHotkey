@@ -91,10 +91,8 @@ Class Program {
     }
     
     SetHotkeyMode(Value) {
-        This.HotkeyMode := Value
-        ReaHotkey.Turn%This.__Class%HotkeysOff(This.Name)
-        ReaHotkey.Turn%This.__Class%HotkeysOn(This.Name)
-    }
+        %This.Base.__Class%.SetHotkeyMode(This.Name, Value)
+        }
     
     SetTimer(Function, Period := "", Priority := "") {
         %This.__Class%.SetTimer(This.Name, Function, Period, Priority)

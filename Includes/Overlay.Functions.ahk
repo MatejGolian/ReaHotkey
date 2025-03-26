@@ -14,15 +14,12 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
     PluginControlPos := GetPluginControlPos()
     OverlayList := %Type%.GetOverlays(Name)
     UnknownProductCounter := 1
-    WinWidth := ""
-    WinHeight := ""
-    Try {
-        WinGetPos ,, &WinWidth, &WinHeight, "A"
-    }
-    Catch {
-        WinWidth := A_ScreenWidth
-        WinHeight := A_ScreenHeight
-    }
+    WinWidth := GetWinWidth()
+    WinHeight := GetWinHeight()
+    If WinWidth = 0
+    WinWidth := A_ScreenWidth
+    If WinHeight = 0
+    WinHeight := A_ScreenHeight
     For OverlayNumber, OverlayEntry In OverlayList {
         FoundX := ""
         FoundY := ""
@@ -381,15 +378,12 @@ CreateOverlayMenu(Type, MenuHandler := False, HandlerParams*) {
 FindImage(ImageFile, X1Coordinate := 0, Y1Coordinate := 0, X2Coordinate := 0, Y2Coordinate := 0) {
     FoundX := ""
     FoundY := ""
-    WinWidth := ""
-    WinHeight := ""
-    Try {
-        WinGetPos ,, &WinWidth, &WinHeight, "A"
-    }
-    Catch {
-        WinWidth := A_ScreenWidth
-        WinHeight := A_ScreenHeight
-    }
+    WinWidth := GetWinWidth()
+    WinHeight := GetWinHeight()
+    If WinWidth = 0
+    WinWidth := A_ScreenWidth
+    If WinHeight = 0
+    WinHeight := A_ScreenHeight
     If Not X1Coordinate Is Number Or X1Coordinate < 0
     X1Coordinate := 0
     If Not Y1Coordinate Is Number Or Y1Coordinate < 0
@@ -539,6 +533,39 @@ GetUIAWindow() {
     Catch
     Return False
     Return Window
+}
+
+GetWinPos() {
+    WinX := 0
+    WinY := 0
+    WinW := 0
+    WinH := 0
+    Try {
+        WinGetPos &WinX, &WinY, &WinW, &WinH, "A"
+    }
+    Catch {
+        WinX := 0
+        WinY := 0
+        WinW := 0
+        WinH := 0
+    }
+    Return {X: WinX, Y: WinY, W: WinW, H: WinH}
+}
+
+GetWinHeight() {
+    Return GetWinPos().H
+}
+
+GetWinWidth() {
+    Return GetWinPos().W
+}
+
+GetWinXCoordinate() {
+    Return GetWinPos().X
+}
+
+GetWinYCoordinate() {
+    Return GetWinPos().Y
 }
 
 InArray(Needle, Haystack) {
