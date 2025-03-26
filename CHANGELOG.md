@@ -7,10 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
--   Added the ability to focus the SINE Player plug-in
-
 ### Changed
 
 -   Various internal updates and enhancements
