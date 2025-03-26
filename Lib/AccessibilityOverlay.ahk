@@ -666,6 +666,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     Static Speak(Message) {
+        Message := Trim(Message)
         If Not Message = "" {
             AccessibilityOverlay.LastMessage := Message
             If (Not AccessibilityOverlay.JAWS = False And ProcessExist("jfw.exe")) Or (FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And Not DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")) {
@@ -1108,11 +1109,13 @@ Class ActivatableGraphic Extends FocusableGraphic {
 
 Class FocusableNative Extends FocusableControl {
     
+    ControlTypeLabel := ""
     NativeControlID := ""
     States := Map(-1, "Can not focus control", 0, "not found", 1, "")
     
-    __New(NativeControlID, Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+    __New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
         Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+        This.ControlTypeLabel := ControlTypeLabel
         This.NativeControlID := NativeControlID
     }
     
@@ -1123,7 +1126,7 @@ Class FocusableNative Extends FocusableControl {
         Found := False
         If Not Found {
             This.Focused := 0
-            AccessibilityOverlay.Speak(This.States[0])
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.States[0])
         }
         Else {
             Try {
@@ -1133,7 +1136,7 @@ Class FocusableNative Extends FocusableControl {
             Catch {
                 This.Focused := 0
                 This.State := -1
-                AccessibilityOverlay.Speak(This.States[-1])
+                AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.States[-1])
             }
             If This.Focused
             Return True
@@ -1166,8 +1169,8 @@ Class ActivatableNative Extends FocusableNative {
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     
-    __New(NativeControlID, Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(NativeControlID, Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions, PostExecFocusFunctions)
         If Not PreExecActivationFunctions = "" {
             If Not PreExecActivationFunctions Is Array
             PreExecActivationFunctions := Array(PreExecActivationFunctions)
@@ -1237,22 +1240,26 @@ Class ActivatableNative Extends FocusableNative {
 
 Class FocusableUIA Extends FocusableControl {
     
+    ControlTypeLabel := ""
+    element := False
+    SearchCriteria := ""
     States := Map("0", "not found", "1", "")
-    UIAPath := ""
+    Window := False
     
-    __New(UIAPath, Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+    __New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
         Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
-        This.UIAPath := UIAPath
+        This.ControlTypeLabel := ControlTypeLabel
+        This.SearchCriteria := SearchCriteria
     }
     
     CheckFocus() {
         Try
-        Found := This.GetControl()
+        Found := This.FindElement()
         Catch
         Found := False
         If Not Found {
             This.Focused := 0
-            AccessibilityOverlay.Speak(This.States[0])
+            AccessibilityOverlay.Speak(This.Label . " " . This.ControlTypeLabel . " " . This.States[0])
         }
         Else {
             This.Focused := 1
@@ -1263,7 +1270,7 @@ Class FocusableUIA Extends FocusableControl {
     
     CheckState() {
         Try
-        Found := This.GetElement()
+        Found := This.FindElement()
         Catch
         Found := False
         If Found {
@@ -1278,22 +1285,33 @@ Class FocusableUIA Extends FocusableControl {
     
     ExecuteOnFocusPreSpeech() {
         Try {
-            element := This.GetElement()
+            element := This.FindElement()
             element.SetFocus()
         }
     }
     
-    GetElement() {
+    FindElement() {
+        Window := This.GetWindow()
+        If Not Window
+        Return False
+        Try
+        Element := Window.FindElement(This.SearchCriteria)
+        Catch
+        Return False
+        This.element := element
+        Return Element
+    }
+    
+    GetWindow() {
         If Not IsSet(UIA)
         Return False
-        Try {
-            element := UIA.ElementFromHandle("ahk_id " . WinGetID("A"))
-            element := element.ElementFromPath(This.UIAPath)
-        }
-        Catch {
-            Return False
-        }
-        Return Element
+        CacheRequest := UIA.CreateCacheRequest(["Type", "LocalizedType", "AutomationId", "Name", "Value", "ClassName", "AcceleratorKey", "WindowCanMaximize"], ["Window"], "Subtree")
+        Try
+        Window := UIA.ElementFromHandle("ahk_id " . WinGetID("A"), CacheRequest)
+        Catch
+        Return False
+        This.Window := Window
+        Return Window
     }
     
 }
@@ -1304,8 +1322,8 @@ Class ActivatableUIA Extends FocusableUIA {
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     
-    __New(UIAPath, Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(UIAPath, Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
+        Super.__New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions, PostExecFocusFunctions)
         If Not PreExecActivationFunctions = "" {
             If Not PreExecActivationFunctions Is Array
             PreExecActivationFunctions := Array(PreExecActivationFunctions)
@@ -1345,7 +1363,7 @@ Class ActivatableUIA Extends FocusableUIA {
     
     ExecuteOnActivationPreSpeech() {
         Try {
-            element := This.GetElement()
+            element := This.FindElement()
             element.Click("Left")
         }
     }

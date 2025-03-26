@@ -10,15 +10,12 @@ Class ReaHotkey {
     Static CurrentStandaloneName := False
     Static FoundPlugin := False
     Static FoundStandalone := False
-    Static NonRemappableHotkeys := Array("^+#F1", "^+#F5", "Control", "Ctrl", "LCtrl", "RCtrl", "^+#A", "^+#C", "^+#P", "^+#Q", "^+#R")
-    Static PluginHotkeyOverrides := Array()
     Static PreviousPluginName := False
     Static PreviousStandaloneName := False
     Static RequiredScreenWidth := 1920
     Static RequiredScreenHeight := 1080
     Static RequiredWinBuild := 10240
     Static RequiredWinVer := 10
-    Static StandaloneHotkeyOverrides := Array()
     
     Static __New() {
         This.TurnPluginHotkeysOff()
@@ -87,16 +84,6 @@ Class ReaHotkey {
         }
     }
     
-    Static FindOverrideHotkey(Type, Name, KeyName) {
-        If Not %Type%.FindName(Name)
-        Return 0
-        If KeyName
-        For HotkeyNumber, HotkeyParams In This.%Type%HotkeyOverrides
-        If HotkeyParams["Name"] = Name And HotkeyParams["KeyName"] = KeyName
-        Return HotkeyNumber
-        Return 0
-    }
-    
     Static FocusPluginControl() {
         Try
         CurrentControl := ControlGetClassNN(ControlGetFocus(ReaHotkey.PluginWinCriteria))
@@ -126,7 +113,7 @@ Class ReaHotkey {
     }
     
     Static FocusPluginOverlay() {
-        If This.FoundPlugin Is Plugin And This.FoundPlugin.NoHotkeys = False
+        If This.FoundPlugin Is Plugin And This.FoundPlugin.HotkeyMode = 1
         If This.FoundPlugin.Overlay.ChildControls.Length > 0 And This.FoundPlugin.Overlay.GetFocusableControlIDs().Length > 0 {
             This.FoundPlugin.Overlay.Focus()
         }
@@ -141,7 +128,7 @@ Class ReaHotkey {
     }
     
     Static FocusStandaloneOverlay() {
-        If This.FoundStandalone Is Standalone And This.FoundStandalone.NoHotkeys = False {
+        If This.FoundStandalone Is Standalone And This.FoundStandalone.HotkeyMode = 1 {
             Wait(500)
             If This.FoundStandalone Is Standalone {
                 This.FoundStandalone.Overlay.Focus()
@@ -266,90 +253,6 @@ Class ReaHotkey {
         SetTimer This.CheckIfWinCovered, 0
     }
     
-    Static OverrideHotkey(Type, Name, KeyName, Action := "", Options := "") {
-        If Type = "Plugin" Or Type = "Standalone" {
-            If Not %Type%.FindName(Name)
-            Return False
-            For NonRemappableHotkey In This.NonRemappableHotkeys
-            If KeyName = NonRemappableHotkey
-            Return False
-            HotkeyNumber := This.FindOverrideHotkey(Type, Name, KeyName)
-            If HotkeyNumber = 0 {
-                If Not Action Is Object
-                Options := Action . " " . Options
-                GetOptions()
-                If Not Action Is Object
-                Action := PassThroughHotkey
-                This.%Type%HotkeyOverrides.Push(Map("Name", Name, "KeyName", KeyName, "Action", Action, "Options", Options.String, "State", Options.OnOff))
-            }
-            Else If HotkeyNumber > 0 {
-                CurrentAction := This.%Type%HotkeyOverrides[HotkeyNumber]["Action"]
-                CurrentOptions := This.%Type%HotkeyOverrides[HotkeyNumber]["Options"]
-                If Not Action Is Object
-                Options := Action . " " . Options
-                Options := Options . " " . CurrentOptions
-                GetOptions()
-                If Not Action Is Object
-                Action := CurrentAction
-                This.%Type%HotkeyOverrides[HotkeyNumber]["Action"] := Action
-                This.%Type%HotkeyOverrides[HotkeyNumber]["Options"] := Options.String
-                This.%Type%HotkeyOverrides[HotkeyNumber]["State"] := Options.OnOff
-            }
-            Else {
-                Return False
-            }
-            If This.PluginWinCriteria And Type = "Plugin"
-            HotIfWinActive(This.PluginWinCriteria)
-            If This.StandaloneWinCriteria And Type = "Standalone"
-            HotIfWinActive(This.StandaloneWinCriteria)
-            If This.Found%Type% Is %Type% And This.Found%Type%.Name = Name
-            Hotkey KeyName, Action, Options.String
-            If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
-            HotIfWinActive(This.PluginWinCriteria)
-            Else If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria)
-            HotIfWinActive(This.StandaloneWinCriteria)
-            Else
-            HotIf
-            Return True
-        }
-        Return False
-        GetOptions() {
-            OnOff := ""
-            B := ""
-            P := ""
-            S := ""
-            T := ""
-            I := ""
-            Options := StrSplit(Options, [A_Space, A_Tab])
-            Match := ""
-            For Option In Options {
-                If OnOff = "" And RegexMatch(Option, "i)^((On)|(Off))$", &Match)
-                OnOff := Match[0]
-                If B = "" And RegexMatch(Option, "i)^(B0?)$", &Match)
-                B := Match[0]
-                If P = "" And RegexMatch(Option, "i)^((P[1-9][0-9]*)|(P0?))$", &Match)
-                P := Match[0]
-                If S = "" And RegexMatch(Option, "i)^(S0?)$", &Match)
-                S := Match[0]
-                If T = "" And RegexMatch(Option, "i)^(T([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))$", &Match)
-                T := Match[0]
-                If I = "" And RegexMatch(Option, "i)^(I([0-9]|[1-9][0-9]|100))$", &Match)
-                I := Match[0]
-            }
-            If Not OnOff = "On" And Not OnOff = "Off"
-            OnOff := "On"
-            Options := {OnOff: OnOff, B: B, P: P, S: S, T: T, I: I, String: Trim(OnOff . " " . B . " " . P . " " . S . " " . T . " " . I)}
-        }
-    }
-    
-    Static OverridePluginHotkey(PluginName, KeyName, Action := "", Options := "") {
-        This.OverrideHotkey("Plugin", PluginName, KeyName, Action, Options)
-    }
-    
-    Static OverrideStandaloneHotkey(StandaloneName, KeyName, Action := "", Options := "") {
-        This.OverrideHotkey("Standalone", StandaloneName, KeyName, Action, Options)
-    }
-    
     Static Quit(*) {
         ExitApp
     }
@@ -431,14 +334,13 @@ Class ReaHotkey {
                 HotIfWinActive(PluginWinCriteria)
                 TurnCommonOff()
                 TurnSpecificsOff(Type, Name)
-                TurnOverridesOff(Type, Name)
+                Hotkey "F6", F6HK, "on"
             }
             If Type = "Standalone"
             For StandaloneWinCriteria In This.StandaloneWinCriteriaList {
                 HotIfWinActive(StandaloneWinCriteria)
                 TurnCommonOff()
                 TurnSpecificsOff(Type, Name)
-                TurnOverridesOff(Type, Name)
             }
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
             HotIfWinActive(This.PluginWinCriteria)
@@ -472,52 +374,27 @@ Class ReaHotkey {
                 Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], "Off"
             }
         }
-        TurnOverridesOff(Type, Name) {
-            If Name = "" {
-                For DefinedHotkey In This.%Type%HotkeyOverrides
-                If Not DefinedHotkey["State"] = "Off"
-                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], "Off"
-            }
-            Else {
-                For DefinedHotkey In This.%Type%HotkeyOverrides
-                If DefinedHotkey["Name"] = Name And Not DefinedHotkey["State"] = "Off"
-                Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], "Off"
-            }
-        }
     }
     
     Static TurnHotkeysOn(Type, Name := "") {
         Thread "NoTimers"
         If Type = "Plugin" Or Type = "Standalone"
         If This.Found%Type% Is %Type%
-        If This.Found%Type%.NoHotkeys = False {
+        If This.Found%Type%.HotkeyMode < 3 {
             If This.PluginWinCriteria And Type = "Plugin" {
                 HotIfWinActive(This.PluginWinCriteria)
+                TurnPluginOn()
+                If This.Found%Type%.HotkeyMode < 2
                 TurnCommonOn()
+                If This.Found%Type%.HotkeyMode < 3
                 TurnSpecificsOn(Type, Name)
-                TurnOverridesOn(Type, Name)
             }
             If This.StandaloneWinCriteria And Type = "Standalone" {
                 HotIfWinActive(This.StandaloneWinCriteria)
+                If This.Found%Type%.HotkeyMode < 2
                 TurnCommonOn()
+                If This.Found%Type%.HotkeyMode < 3
                 TurnSpecificsOn(Type, Name)
-                TurnOverridesOn(Type, Name)
-            }
-            If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
-            HotIfWinActive(This.PluginWinCriteria)
-            Else If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria)
-            HotIfWinActive(This.StandaloneWinCriteria)
-            Else
-            HotIf
-        }
-        Else {
-            If This.PluginWinCriteria And Type = "Plugin" {
-                HotIfWinActive(This.PluginWinCriteria)
-                TurnOverridesOn(Type, Name)
-            }
-            If This.StandaloneWinCriteria And Type = "Standalone" {
-                HotIfWinActive(This.StandaloneWinCriteria)
-                TurnOverridesOn(Type, Name)
             }
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
             HotIfWinActive(This.PluginWinCriteria)
@@ -538,6 +415,9 @@ Class ReaHotkey {
             Hotkey "Enter", EnterSpaceHK, "On"
             Hotkey "Space", EnterSpaceHK, "On"
         }
+        TurnPluginOn() {
+            Hotkey "F6", F6HK, "On"
+        }
         TurnSpecificsOn(Type, Name) {
             If Name = "" {
                 If This.Found%Type% Is %Type% {
@@ -551,11 +431,6 @@ Class ReaHotkey {
                 If Not DefinedHotkey["State"] = "Off"
                 Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
             }
-        }
-        TurnOverridesOn(Type, Name) {
-            For DefinedHotkey In This.%Type%HotkeyOverrides
-            If DefinedHotkey["Name"] = Name And Not DefinedHotkey["State"] = "Off"
-            Hotkey DefinedHotkey["KeyName"], DefinedHotkey["Action"], DefinedHotkey["Options"]
         }
     }
     
@@ -617,6 +492,9 @@ Class ReaHotkey {
             For Timer In TimerEntry["Timers"]
             If Timer["Enabled"] = False {
                 Timer["Enabled"] := True
+                If Not Timer["Period"] = 0
+                Timer["Function"].Call()
+                If Timer["Period"] > 0
                 SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
             }
         }
@@ -624,6 +502,9 @@ Class ReaHotkey {
             For Timer In %Type%.GetTimers(Name)
             If Timer["Enabled"] = False {
                 Timer["Enabled"] := True
+                If Not Timer["Period"] = 0
+                Timer["Function"].Call()
+                If Timer["Period"] > 0
                 SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
             }
         }

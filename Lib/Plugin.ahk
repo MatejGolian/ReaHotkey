@@ -5,10 +5,10 @@ Class Plugin Extends Program {
     CheckerFunction := ""
     Chooser := True
     ControlClass := ""
+    HotkeyMode := 1
     InitFunction := ""
     InstanceNumber := 0
     Name := ""
-    NoHotkeys := False
     Overlay := AccessibilityOverlay()
     Overlays := Array()
     PluginNumber := 0
@@ -116,8 +116,8 @@ Class Plugin Extends Program {
         Return False
     }
     
-    Static Register(PluginName, ControlClasses, InitFunction := "", Chooser := True, NoHotkeys := False, SingleInstance := False, CheckerFunction := "") {
-        If Super.Register(PluginName, InitFunction, Chooser, NoHotkeys, CheckerFunction) = True {
+    Static Register(PluginName, ControlClasses, InitFunction := False, Chooser := False, HotkeyMode := 1, SingleInstance := False, CheckerFunction := False) {
+        If Super.Register(PluginName, InitFunction, Chooser, HotkeyMode, CheckerFunction) = True {
             PluginEntry := This.List[This.List.Length]
             If Not SingleInstance = True And Not SingleInstance = False
             SingleInstance := True

@@ -35,7 +35,7 @@ Class KompleteKontrol {
         StandaloneHeader.AddHotspotButton("Help menu", 194, -10).SetHotkey("!H", "Alt+H")
         This.StandaloneHeader := StandaloneHeader
         
-        Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, False, False, ObjBindMethod(This, "CheckPlugin"))
+        Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
         
         For PluginOverlay In This.PluginOverlays {
             PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
@@ -46,7 +46,7 @@ Class KompleteKontrol {
         Plugin.SetTimer("Komplete Kontrol", This.CheckPluginMenu, 250)
         Plugin.SetTimer("Komplete Kontrol", This.TogglePluginSearchVisible, 500)
         
-        Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(This, "CheckPluginPreferenceDialog"))
+        Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, 1, True, ObjBindMethod(This, "CheckPluginPreferenceDialog"))
         
         PluginPreferenceOverlay := AccessibilityOverlay()
         PluginPreferenceTabControl := PluginPreferenceOverlay.AddTabControl()
@@ -73,7 +73,7 @@ Class KompleteKontrol {
         PluginPreferenceTabControl.AddTabs(PluginPreferenceMIDITab, PluginPreferenceGeneralTab, PluginPreferenceLibraryTab, PluginPreferencePluginTab)
         Plugin.RegisterOverlay("Komplete Kontrol Preference Dialog", PluginPreferenceOverlay)
         
-        Plugin.Register("Komplete Kontrol Save As Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, False, True, ObjBindMethod(This, "CheckPluginSaveAsDialog"))
+        Plugin.Register("Komplete Kontrol Save As Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, 1, True, ObjBindMethod(This, "CheckPluginSaveAsDialog"))
         
         PluginSaveAsOverlay := AccessibilityOverlay()
         PluginSaveAsOverlay.AddOCREdit("Save Preset, Name:", "UWP", 24, 72, 500, 88)
@@ -81,11 +81,11 @@ Class KompleteKontrol {
         PluginSaveAsOverlay.AddHotspotButton("Cancel", 301, 135)
         Plugin.RegisterOverlay("Komplete Kontrol Save As Dialog", PluginSaveAsOverlay)
         
-        Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe",, False, False)
+        Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe", False, False, 1)
         Standalone.SetTimer("Komplete Kontrol", This.CheckStandaloneConfig, -1)
         Standalone.RegisterOverlay("Komplete Kontrol", StandaloneHeader)
         
-        Standalone.Register("Komplete Kontrol Preference Dialog", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(This, "FocusStandalonePreferenceTab"), False, False)
+        Standalone.Register("Komplete Kontrol Preference Dialog", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(This, "FocusStandalonePreferenceTab"), False, False, 1)
         Standalone.SetHotkey("Komplete Kontrol Preference Dialog", "^,", ObjBindMethod(This, "ManageStandalonePreferenceDialog"))
         
         StandalonePreferenceOverlay := AccessibilityOverlay()
@@ -115,7 +115,7 @@ Class KompleteKontrol {
         StandalonePreferenceTabControl.AddTabs(StandalonePreferenceAudioTab, StandalonePreferenceMIDITab, StandalonePreferenceGeneralTab, StandalonePreferenceLibraryTab, StandalonePreferencePluginTab)
         Standalone.RegisterOverlay("Komplete Kontrol Preference Dialog", StandalonePreferenceOverlay)
         
-        Standalone.Register("Komplete Kontrol Save As Dialog", "ahk_class #32770 ahk_exe Komplete Kontrol.exe",, False, False, ObjBindMethod(This, "CheckStandaloneSaveAsDialog"))
+        Standalone.Register("Komplete Kontrol Save As Dialog", "ahk_class #32770 ahk_exe Komplete Kontrol.exe", False, False, 1, ObjBindMethod(This, "CheckStandaloneSaveAsDialog"))
         
         StandaloneSaveAsOverlay := AccessibilityOverlay()
         StandaloneSaveAsOverlay.AddOCREdit("Save Preset, Name:", "UWP", 24, 72, 500, 88)
@@ -143,9 +143,9 @@ Class KompleteKontrol {
         If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50009
         Found := True
         If Not Found
-        %Type%.SetNoHotkeys("Komplete Kontrol", False)
+        %Type%.SetHotkeyMode("Komplete Kontrol", 1)
         Else
-        %Type%.SetNoHotkeys("Komplete Kontrol", True)
+        %Type%.SetHotkeyMode("Komplete Kontrol", 3)
     }
     
     Static CheckPlugin(PluginInstance) {

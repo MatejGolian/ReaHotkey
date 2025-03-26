@@ -5,7 +5,7 @@ Class Zampler {
     Static __New() {
         This.InitConfig()
         
-        Plugin.Register("Zampler", "^Plugin[0-9A-F]{1,}$", False, False, False, False, ObjBindMethod(This, "Check"))
+        Plugin.Register("Zampler", "^Plugin[0-9A-F]{1,}$", False, False, 1, False, ObjBindMethod(This, "Check"))
         
         ZamplerOverlay := AccessibilityOverlay("Zampler")
         FilterBox := CustomComboBox("Filter", [ObjBindMethod(This, "MoveToFilter"), ObjBindMethod(This, "GetFilter")],, ObjBindMethod(This, "ChangeFilter"))

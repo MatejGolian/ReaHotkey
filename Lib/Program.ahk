@@ -6,8 +6,8 @@ Class Program {
     Chooser := True
     InitFunction := ""
     InstanceNumber := 0
+    HotkeyMode := 1
     Name := ""
-    NoHotkeys := False
     Overlay := AccessibilityOverlay()
     Overlays := Array()
     ProgramNumber := 0
@@ -29,7 +29,7 @@ Class Program {
             ProgramEntry := %This.__Class%.List[ProgramNumber]
             This.InitFunction := ProgramEntry["InitFunction"]
             This.Chooser := ProgramEntry["Chooser"]
-            This.NoHotkeys := ProgramEntry["NoHotkeys"]
+            This.HotkeyMode := ProgramEntry["HotkeyMode"]
             This.CheckerFunction := ProgramEntry["CheckerFunction"]
             For OverlayNumber, Overlay In ProgramEntry["Overlays"]
             This.Overlays.Push(Overlay.Clone())
@@ -90,13 +90,9 @@ Class Program {
         %This.__Class%.SetHotkey(This.Name, KeyName, Action, Options)
     }
     
-    SetNoHotkeys(Value) {
-        This.NoHotkeys := Value
-        If Value = False
-        ReaHotkey.Turn%This.__Class%HotkeysOn(This.Name)
-        If Value = True
-        ReaHotkey.Turn%This.__Class%HotkeysOff(This.Name)
-    }
+    SetHotkeyMode(Value) {
+        %This.Base.__Class%.SetHotkeyMode(This.Name, Value)
+        }
     
     SetTimer(Function, Period := "", Priority := "") {
         %This.__Class%.SetTimer(This.Name, Function, Period, Priority)
@@ -181,21 +177,23 @@ Class Program {
         Return Array()
     }
     
-    Static Register(ProgramName, InitFunction := "", Chooser := True, NoHotkeys := False, CheckerFunction := "") {
+    Static Register(ProgramName, InitFunction := False, Chooser := False, HotkeyMode := 1, CheckerFunction := False) {
         If This.FindName(ProgramName) = False {
             If ProgramName = ""
             ProgramName := %This.Prototype.__Class%.Unnamed%This.Prototype.__Class%Name
+            If Not InitFunction Is Object Or Not InitFunction.HasMethod("Call")
+            InitFunction := False
             If Not Chooser = True And Not Chooser = False
-            Chooser := True
-            If Not NoHotkeys = True And Not NoHotkeys = False
-            NoHotkeys := False
+            Chooser := False
+            If Not HotkeyMode Is Integer Or HotkeyMode < 1 Or HotkeyMode > 3
+            HotkeyMode := 1
             If Not CheckerFunction Is Object Or Not CheckerFunction.HasMethod("Call")
             CheckerFunction := %This.Prototype.__Class%.DefaultChecker
             ProgramEntry := Map()
             ProgramEntry["Name"] := ProgramName
             ProgramEntry["InitFunction"] := InitFunction
             ProgramEntry["Chooser"] := Chooser
-            ProgramEntry["NoHotkeys"] := NoHotkeys
+            ProgramEntry["HotkeyMode"] := HotkeyMode
             ProgramEntry["CheckerFunction"] := CheckerFunction
             ProgramEntry["Hotkeys"] := Array()
             ProgramEntry["Overlays"] := Array()
@@ -226,9 +224,6 @@ Class Program {
     }
     
     Static SetHotkey(ProgramName, KeyName, Action := "", Options := "") {
-        For NonRemappableHotkey In ReaHotkey.NonRemappableHotkeys
-        If KeyName = NonRemappableHotkey
-        Return False
         ProgramNumber := This.FindName(ProgramName)
         HotkeyNumber := This.FindHotkey(ProgramName, KeyName)
         If ProgramNumber > 0 And HotkeyNumber = 0 {
@@ -258,17 +253,15 @@ Class Program {
         Return True
     }
     
-    Static SetNoHotkeys(ProgramName, Value) {
+    Static SetHotkeyMode(ProgramName, Value) {
         ProgramNumber := This.FindName(ProgramName)
         If ProgramNumber > 0 {
             For ProgramInstance In This.Instances
             If ProgramInstance.%This.Prototype.__Class%Number = ProgramNumber
-            ProgramInstance.NoHotkeys := Value
-            This.List[ProgramNumber]["NoHotkeys"] := Value
-            If Value = False
-            ReaHotkey.Turn%This.Prototype.__Class%HotkeysOn(ProgramName)
-            If Value = True
+            ProgramInstance.HotkeyMode := Value
+            This.List[ProgramNumber]["HotkeyMode"] := Value
             ReaHotkey.Turn%This.Prototype.__Class%HotkeysOff(ProgramName)
+            ReaHotkey.Turn%This.Prototype.__Class%HotkeysOn(ProgramName)
         }
     }
     
