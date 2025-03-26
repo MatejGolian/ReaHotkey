@@ -38,8 +38,8 @@ Class SinePlayer {
         If CheckElement(RootElement)
         Return RootElement
         Return False
-        CheckElement(UIAElement) {
-            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50025
+        CheckElement(Element) {
+            If Element Is UIA.IUIAutomationElement And Element.Type = 50025
             Return True
             Return False
         }
@@ -47,6 +47,8 @@ Class SinePlayer {
     
     Static ToggleFocus(ToggleHK) {
         Critical
+        PluginControl := ReaHotkey.GetPluginControl()
+        PluginWinCriteria := ReaHotkey.PluginWinCriteria
         RootElement := This.GetRootElement()
         If Not RootElement Is UIA.IUIAutomationElement
         Return
@@ -71,15 +73,23 @@ Class SinePlayer {
             TargetElement := RootElement.FindElement({Type:"Edit"})
             Catch
             TargetElement := False
-            If TargetElement Is UIA.IUIAutomationElement
-            TargetElement.SetFocus()
+            If TargetElement Is UIA.IUIAutomationElement {
+                TargetElement.SetFocus()
+                ControlFocus PluginControl, PluginWinCriteria
+                WinActivate PluginWinCriteria
+                WinWaitActive PluginWinCriteria
+            }
             Case 2:
             Try
             TargetElement := RootElement.FindElement({ClassName:"Chrome_WidgetWin_1"})
             Catch
             TargetElement := False
-            If TargetElement Is UIA.IUIAutomationElement
-            TargetElement.SetFocus()
+            If TargetElement Is UIA.IUIAutomationElement {
+                TargetElement.SetFocus()
+                ControlFocus PluginControl, PluginWinCriteria
+                WinActivate PluginWinCriteria
+                WinWaitActive PluginWinCriteria
+            }
         }
     }
     
