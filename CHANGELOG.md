@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added ability to choose presets in Native instruments Raum
+
 ### Changed
 
 -   Add checker function to Dubler 2 MIDI Capture plug-in

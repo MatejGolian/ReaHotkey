@@ -4,11 +4,11 @@ Class Serum2 {
     
     Static __New() {
         This.InitConfig()
-        Plugin.Register("Serum 2", "^VSTGUI[0-9A-F]+$",, False, False, False, ObjBindMethod(This, "Check"))
+        Plugin.Register("Serum 2", "^VSTGUI[0-9A-F]+$", False, False, 1, False, ObjBindMethod(This, "Check"))
         Serum2Overlay := AccessibilityOverlay("Serum 2")
         Serum2Overlay.AddCustomButton("Main Menu", ObjBindMethod(This, "ClickOrMoveToCoords",, "Move", 1058, 4),,, ObjBindMethod(This, "ClickOrMoveToCoords",, "Click", 1058, 4)).SetHotkey("^M", "Ctrl+M")
         Serum2Overlay.AddCustomButton("Save Preset As...", ObjBindMethod(This, "ClickOrMoveToCoords",, "Move", 518, 4),,, ObjBindMethod(This, "ClickOrMoveToCoords",, "Click", 518, 4)).SetHotkey("^S", "Ctrl+S")
-        Serum2Overlay.AddOCRButton("Presets Menu, currently loaded", "Presets Menu, preset name not detected", "TesseractBest", 540, 13, 608, 23,,, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
+        Serum2Overlay.AddOCRButton("Preset Menu, currently loaded", "Preset Menu, preset name not detected", "TesseractBest", 540, 13, 608, 23,,, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
         Serum2Overlay.AddHotspotButton("Previous Preset", 938, 4, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!P", "Alt+P")
         Serum2Overlay.AddHotspotButton("Next Preset", 968, 4, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!N", "Alt+N")
         Plugin.RegisterOverlay("Serum 2", Serum2Overlay)
