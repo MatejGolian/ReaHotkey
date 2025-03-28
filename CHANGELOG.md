@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+-   Add checker function to Dubler 2 MIDI Capture plug-in
 -   Various internal updates and enhancements
 
 ## [0.6.8B] - 2025-03-24
