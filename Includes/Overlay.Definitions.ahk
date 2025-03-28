@@ -11,6 +11,7 @@ Standalone.ChooserOverlay := AccessibilityOverlay()
 Standalone.ChooserOverlay.AddCustomButton("Choose overlay",,, ActivateChooser).SetHotkey("!C", "Alt+C")
 
 #Include Overlays/Diva.ahk
+#Include Overlays/Dubler2.ahk
 #Include Overlays/FabFilter.ahk
 #Include Overlays/Hive2.ahk
 #Include Overlays/Kontakt7.ahk
@@ -19,7 +20,6 @@ Standalone.ChooserOverlay.AddCustomButton("Choose overlay",,, ActivateChooser).S
 #Include Overlays/Repro.ahk
 #Include Overlays/Sforzando.ahk
 #Include Overlays/ZebraLegacy.ahk
-#Include Overlays/Dubler2.ahk
 #Include Overlays/Engine2.ahk
 #Include Overlays/Serum2.ahk
 #Include Overlays/Zampler.ahk

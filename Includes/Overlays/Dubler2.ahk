@@ -500,8 +500,46 @@ Class Dubler2MIDICapturePlugin {
 
         Instance.RegisterOverlay(Ol)
     }
+
+    Static Check(Instance) {
+        Thread "NoTimers"
+        If Instance Is Plugin And Instance.ControlClass = GetCurrentControlClass()
+        If Instance.Name = "Dubler 2 MIDI Capture"
+        Return True
+        UIAElement := This.GetRootUIAElement()
+        If UIAElement
+        Return True
+        Return False
+    }
+    
+    Static GetRootUIAElement() {
+        Critical
+        If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
+        Return False
+        Try
+        UIAElement := GetUIAWindow()
+        Catch
+        Return False
+        If Not UIAElement Is UIA.IUIAutomationElement
+        Return False
+        If CheckElement(UIAElement)
+        Return UIAElement
+        Try
+        UIAElement := UIAElement.FindElement({Name:"Dubler Midi Capture"})
+        Catch
+        Return False
+        If CheckElement(UIAElement)
+        Return UIAElement
+        Return False
+        CheckElement(UIAElement) {
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Name = "Dubler Midi Capture"
+            Return True
+            Return False
+        }
+    }
+
 }
 
-Plugin.Register("Dubler 2 MIDI Capture", "JUCE_[0-9a-f]{12}", ObjBindMethod(Dubler2MIDICapturePlugin, "Init"), False)
+Plugin.Register("Dubler 2 MIDI Capture", "JUCE_[0-9a-f]{12}", ObjBindMethod(Dubler2MIDICapturePlugin, "Init"), False, 1, False, ObjBindMethod(Dubler2MIDICapturePlugin, "Check"))
 Standalone.Register("Dubler 2", "Vochlea\sDubler\s2\.2 ahk_class Qt5155QWindowOwnDCIcon", ObjBindMethod(Dubler2, "Init"), True)
 Standalone.RegisterOverlay("Dubler 2", Dubler2.CreateLoadingOverlay(AccessibilityOverlay()))
