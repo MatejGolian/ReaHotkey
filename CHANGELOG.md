@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2025-03-29
+
 ### Added
 
 -   Added option to disable the Raum help message.
@@ -361,7 +363,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.9...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.0...HEAD
+
+[0.7.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.9...0.7.0
 
 [0.6.9]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.8B...0.6.9
 
