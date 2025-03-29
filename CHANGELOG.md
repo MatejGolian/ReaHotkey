@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added option to disable the Raum help message.
+
 ## [0.6.9] - 2025-03-28
 
 ### Added

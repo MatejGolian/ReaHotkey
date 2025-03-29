@@ -18,6 +18,7 @@ Class ReaHotkey {
     Static RequiredWinVer := 10
     
     Static __New() {
+        Critical
         This.TurnPluginHotkeysOff()
         This.TurnStandaloneHotkeysOff()
         This.InitConfig()

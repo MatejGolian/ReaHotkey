@@ -17,10 +17,10 @@ Standalone.ChooserOverlay.AddCustomButton("Choose overlay",,, ActivateChooser).S
 #Include Overlays/Kontakt7.ahk
 #Include Overlays/Kontakt8.ahk
 #Include Overlays/KompleteKontrol.ahk
-#Include Overlays/Raum.ahk
 #Include Overlays/Repro.ahk
 #Include Overlays/Sforzando.ahk
 #Include Overlays/ZebraLegacy.ahk
 #Include Overlays/Engine2.ahk
+#Include Overlays/Raum.ahk
 #Include Overlays/Serum2.ahk
 #Include Overlays/Zampler.ahk
