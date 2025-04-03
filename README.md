@@ -2,7 +2,7 @@
 
 ## What's This And Who Is It For?
 
-This is an AutoHotkey scripth which aims to make certain virtual instruments/sample libraries  and related software at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although other programs/instruments are supported as well.
+This is an AutoHotkey script which aims to make certain virtual instruments/sample libraries  and related software at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although other programs/instruments are supported as well.
 
 ## What's new?
 
