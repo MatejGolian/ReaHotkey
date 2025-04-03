@@ -112,7 +112,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
-                If CurrentControl.ControlType = "checkbox" Or CurrentControl.ControlType = "ToggleButton" {
+                If CurrentControl.ControlType = "Checkbox" Or CurrentControl.ControlType = "ToggleButton" {
                     TruePrev := AccessibilityOverlay.PreviousControlID
                     AccessibilityOverlay.PreviousControlID := CurrentControl.ControlID
                     Speak := True
@@ -122,7 +122,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
                 If CurrentControl.HasMethod("Activate")
                 CurrentControl.Activate(Speak)
-                If CurrentControl.ControlType = "checkbox" Or CurrentControl.ControlType = "ToggleButton" {
+                If CurrentControl.ControlType = "Checkbox" Or CurrentControl.ControlType = "ToggleButton" {
                     AccessibilityOverlay.PreviousControlID := TruePrev
                 }
                 Return CurrentControl

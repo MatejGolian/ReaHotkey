@@ -33,7 +33,8 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
   - The Content Missing dialog may not be accessible when running Kontakt inside Komplete Kontrol.
 * Makes it possible to switch Between various mixes and microphone positions in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries. There is also support for toggling microphone positions in Cinematic Studio Strings, switching presets in the 'Juggernaut' library by Impact Soundworks and toggling the reverb on/off in a couple of Soundiron libraries.
   - Only works inside REAPER and Ableton Live 12.
-  * Adds basic support for the Xfer Records Serum 2 synthesizer inside REAPER and Ableton Live 12.
+* Adds ability to choose presets in Raum by Native instruments.
+* Adds basic support for the Xfer Records Serum 2 synthesizer inside REAPER and Ableton Live 12.
   - Currently supported Features include preset browsing/saving and accessing the vendor menu.
   - Serum version 2 or later is required, as the overlay won't work properly in Serum 1.X.
   - Note that the demo version of Serum does not support saving presets.

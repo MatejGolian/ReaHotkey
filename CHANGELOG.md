@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2025-04-02
+
+### Fixed
+
+-   Hopefully fix KK 3.4.1+ not being detected
+
+## [0.7.0] - 2025-03-29
+
+### Added
+
+-   Added option to disable the Raum help message.
+
+## [0.6.9] - 2025-03-28
+
+### Added
+
+-   Added ability to choose presets in Native instruments Raum
+
 ### Changed
 
 -   Add checker function to Dubler 2 MIDI Capture plug-in
@@ -351,7 +369,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.8B...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.1...HEAD
+
+[0.7.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.0...0.7.1
+
+[0.7.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.9...0.7.0
+
+[0.6.9]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.8B...0.6.9
 
 [0.6.8B]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.7...0.6.8B
 

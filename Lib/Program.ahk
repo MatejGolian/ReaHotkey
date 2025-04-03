@@ -61,6 +61,10 @@ Class Program {
         Return True
     }
     
+    GetHotkeyMode() {
+        Return %This.__Class%.GetHotkeyMode(This.Name)
+    }
+    
     GetHotkeys() {
         Return %This.__Class%.GetHotkeys(This.Name)
     }
@@ -91,8 +95,8 @@ Class Program {
     }
     
     SetHotkeyMode(Value) {
-        %This.Base.__Class%.SetHotkeyMode(This.Name, Value)
-        }
+        %This.__Class%.SetHotkeyMode(This.Name, Value)
+    }
     
     SetTimer(Function, Period := "", Priority := "") {
         %This.__Class%.SetTimer(This.Name, Function, Period, Priority)
@@ -150,6 +154,13 @@ Class Program {
         OnOff := "On"
         Options := {OnOff: OnOff, B: B, P: P, S: S, T: T, I: I, String: Trim(OnOff . " " . B . " " . P . " " . S . " " . T . " " . I)}
         Return Options
+    }
+    
+    Static GetHotkeyMode(ProgramName) {
+        ProgramNumber := This.FindName(ProgramName)
+        If ProgramNumber > 0
+        Return This.List[ProgramNumber]["HotkeyMode"]
+        Return 0
     }
     
     Static GetHotkeys(ProgramName) {
