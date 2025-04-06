@@ -470,18 +470,22 @@ Class KompleteKontrol {
             If Not KompleteKontrol.GetBrowser("Plugin") {
                 PluginControl := KompleteKontrol.GetPluginControl()
                 If PluginControl {
-                    LoadedPlugin := Plugin.GetByClass(PluginControl)
-                    If LoadedPlugin Is Plugin
-                    If Not LastFoundPlugin = LoadedPlugin Or Not ReaHotkey.FoundPlugin.Overlay.OverlayNumber = 1
-                    LastFoundPlugin := LoadPlugin(LoadedPlugin)
+                    PluginToLoad := Plugin.GetByClass(PluginControl)
+                    If PluginToLoad Is Plugin
+                    If Not LastFoundPlugin = PluginToLoad Or Not ReaHotkey.FoundPlugin.Overlay.OverlayNumber = 1 {
+                        If LastFoundPlugin Is Plugin And Not LastFoundPlugin = PluginToLoad
+                        LastFoundPlugin := UnloadPlugin(LastFoundPlugin)
+                        If Not LastFoundPlugin = PluginToLoad
+                        LastFoundPlugin := LoadPlugin(PluginToLoad)
+                    }
                 }
                 Else {
-                    If LastFoundPlugin
+                    If LastFoundPlugin Is Plugin
                     LastFoundPlugin := UnloadPlugin(LastFoundPlugin)
                 }
             }
             Else {
-                If LastFoundPlugin
+                If LastFoundPlugin Is Plugin
                 LastFoundPlugin := UnloadPlugin(LastFoundPlugin)
             }
             LoadPlugin(PluginToLoad) {
@@ -491,6 +495,8 @@ Class KompleteKontrol {
                 Return PluginToLoad
                 If PluginToLoad.Name = "Kontakt 8"
                 Return PluginToLoad
+                If PluginToLoad.Name = "Raum"
+                Return PluginToLoad
                 If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
                 Return PluginToLoad
                 ReaHotkey.FoundPlugin.Overlay := KompleteKontrol.PluginOverlays[1]
@@ -498,12 +504,12 @@ Class KompleteKontrol {
                 Return PluginToLoad
             }
             UnloadPlugin(PluginToUnload) {
-                Static NoProductOverlay := KompleteKontrol.PluginOverlays[1].Clone()
+                Static NoLibraryProductOverlay := KompleteKontrol.PluginOverlays[1].Clone()
                 If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
                 Return PluginToUnload
-                If NoProductOverlay.ChildControls[2].ChildControls.Length > 0
-                NoProductOverlay.ChildControls[2] := AccessibilityOverlay()
-                ReaHotkey.FoundPlugin.Overlay := NoProductOverlay
+                If NoLibraryProductOverlay.ChildControls[2].ChildControls.Length > 0
+                NoLibraryProductOverlay.ChildControls[2] := AccessibilityOverlay()
+                ReaHotkey.FoundPlugin.Overlay := NoLibraryProductOverlay
                 Return False
             }
         }
@@ -523,7 +529,7 @@ Class KompleteKontrol {
         }
     }
     
-    #IncludeAgain KontaktKompleteKontrol/NoProduct.ahk
+    #IncludeAgain KontaktKompleteKontrol/NoLibraryProduct.ahk
     #IncludeAgain KontaktKompleteKontrol/AudioImperia.ahk
     #IncludeAgain KontaktKompleteKontrol/CinematicStudioSeries.ahk
     #IncludeAgain KontaktKompleteKontrol/ImpactSoundworks.ahk

@@ -29,7 +29,7 @@ Class Raum {
     }
     
     Static ClickPresetMenu(HK) {
-        PluginControlPos := KompleteKontrol.GetPluginControlPos()
+        PluginControlPos := GetPluginControlPos()
         HotkeyWait(HK)
         Click PluginControlPos.X + 265, PluginControlPos.Y + 15
         AccessibilityOverlay.Speak("Preset menu clicked.")
@@ -113,7 +113,7 @@ Class Raum {
     }
     
     Static SayPresetName(HK) {
-        PluginControlPos := KompleteKontrol.GetPluginControlPos()
+        PluginControlPos := GetPluginControlPos()
         HotkeyWait(HK)
         AccessibilityOverlay.Speak("Preset " . AccessibilityOverlay.OCR("TesseractBest", PluginControlPos.X + 184, PluginControlPos.Y + 8, PluginControlPos.X + 364, PluginControlPos.Y + 28))
     }
