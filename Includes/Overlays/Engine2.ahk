@@ -8,6 +8,7 @@ Class Engine2 {
         Plugin.Register("Engine 2", "^Plugin[0-9A-F]{1,}$",, False, 1, False, ObjBindMethod(This, "CheckPlugin"))
         Engine2PluginOverlay := AccessibilityOverlay("Engine 2")
         Engine2PluginOverlay.Metadata := Map("Vendor", "Best Service", "Product", "Engine 2")
+        Engine2PluginOverlay.AddStaticText("Engine 2")
         Engine2PluginOverlay.AddHotspotButton("Load instrument", 162, 134, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates)
         Engine2PluginQuickEditTab := HotspotTab("Quick edit", 344, 21, KompleteKontrol.CompensatePluginCoordinates)
         Engine2PluginProEditTab := HotspotTab("Pro edit", 416, 21, KompleteKontrol.CompensatePluginCoordinates)

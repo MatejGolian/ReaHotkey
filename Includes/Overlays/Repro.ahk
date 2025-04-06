@@ -5,6 +5,7 @@ Class Repro {
     Static __New() {
         Plugin.Register("Repro", "^com.u-he.Repro1.vst.window1$")
         ReproOverlay := AccessibilityOverlay("Repro")
+        ReproOverlay.AddStaticText("Repro")
         ReproOverlay.AddHotspotButton("u-HE Logo Menu", 64, 44, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("^U", "Ctrl+U")
         ReproOverlay.AddActivatableCustom("", ObjBindMethod(This, "FocusOrActivateBrowserToggler",, "Focus"),, ObjBindMethod(This, "FocusOrActivateBrowserToggler",, "Activate")).SetHotkey("!B", "Alt+B")
         ReproOverlay.AddHotspotButton("Previous Preset", 440, 53, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!P", "Alt+P")

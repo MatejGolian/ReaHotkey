@@ -8,6 +8,7 @@ Class Zampler {
         Plugin.Register("Zampler", "^Plugin[0-9A-F]{1,}$", False, False, 1, False, ObjBindMethod(This, "Check"))
         
         ZamplerOverlay := AccessibilityOverlay("Zampler")
+        ZamplerOverlay.AddStaticText("Zampler")
         FilterBox := CustomComboBox("Filter", [ObjBindMethod(This, "MoveToFilter"), ObjBindMethod(This, "GetFilter")],, ObjBindMethod(This, "ChangeFilter"))
         ZamplerTabControl := ZamplerOverlay.AddTabControl()
         MainTab := HotspotTab("Main", 329, 210, KompleteKontrol.CompensatePluginCoordinates)

@@ -5,6 +5,7 @@ Class Hive2 {
     Static __New() {
         Plugin.Register("Hive 2", "^com.u-he.Hive.vst.window1$")
         Hive2Overlay := AccessibilityOverlay("Hive 2")
+        Hive2Overlay.AddStaticText("Hive 2")
         Hive2Overlay.AddHotspotButton("u-HE Logo Menu", 1174, 28, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("^U", "Ctrl+U")
         Hive2Overlay.AddControl(This.BrowserToggler("Preset Browser Toggle", 936, 25, "0xCCDFEC", "0x81878D", KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates)).SetHotkey("!B", "Alt+B")
         Hive2Overlay.AddHotspotButton("Previous Preset", 492, 28, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!P", "Alt+P")
