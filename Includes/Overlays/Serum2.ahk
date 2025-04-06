@@ -16,10 +16,14 @@ Class Serum2 {
     
     Static Check(PluginInstance) {
         Thread "NoTimers"
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Serum 2"
         Return True
-        If ReaHotkey.Config.Get("Serum2ImageSearch") = 1 And FindImage("Images/Serum2/Serum2.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 200, GetPluginYCoordinate() + 100) Is Object
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = KompleteKontrol.GetPluginControl()
+        If PluginInstance.Name = "Serum 2"
+        Return True
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
+        If ReaHotkey.Config.Get("Serum2ImageSearch") = 1 And FindImage("Images/Serum2/Serum2.png", PluginControlPos.X, PluginControlPos.Y, PluginControlPos.X + 200, PluginControlPos.Y + 100) Is Object
         Return True
         If ReaHotkey.AbletonPlugin {
             If RegExMatch(WinGetTitle("A"), "^Serum 2/[1-9][0-9]*-Serum 2$")
@@ -47,10 +51,11 @@ Class Serum2 {
     }
     
     Static ClickOrMoveToCoords(OverlayObj, Action, XCoord, YCoord) {
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
         If Action = "Click"
-        Send "{Click " . CompensatePluginXCoordinate(XCoord) . " " . CompensatePluginYCoordinate(YCoord) . "}"
+        Send "{Click " . PluginControlPos.X + XCoord . " " . PluginControlPos.Y + YCoord . "}"
         Else
-        MouseMove CompensatePluginXCoordinate(XCoord), CompensatePluginYCoordinate(YCoord)
+        MouseMove PluginControlPos.X + XCoord, PluginControlPos.Y + YCoord
     }
     
     Static InitConfig() {

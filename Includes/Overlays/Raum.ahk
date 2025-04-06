@@ -14,7 +14,10 @@ Class Raum {
     
     Static CheckInstance(Instance) {
         Thread "NoTimers"
-        If Instance Is Plugin And Instance.ControlClass = GetCurrentControlClass()
+        If Instance Is Plugin And Instance.ControlClass = ReaHotkey.GetPluginControl()
+        If Instance.Name = "Raum"
+        Return True
+        If Instance Is Plugin And Instance.ControlClass = KompleteKontrol.GetPluginControl()
         If Instance.Name = "Raum"
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative {
@@ -26,7 +29,7 @@ Class Raum {
     }
     
     Static ClickPresetMenu(HK) {
-        PluginControlPos := GetPluginControlPos()
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
         HotkeyWait(HK)
         Click PluginControlPos.X + 265, PluginControlPos.Y + 15
         AccessibilityOverlay.Speak("Preset menu clicked.")
@@ -90,9 +93,10 @@ Class Raum {
         If CheckElement(UIAElement)
         Return UIAElement
         Try
-        UIAElement := UIAElement.FindElement({ClassName:"ni::qt::QuickWindow"})
+        UIAElements := UIAElement.FindElements({ClassName:"ni::qt::QuickWindow"})
         Catch
         Return False
+        For UIAElement In UIAElements
         If CheckElement(UIAElement)
         Return UIAElement
         Return False
@@ -109,7 +113,7 @@ Class Raum {
     }
     
     Static SayPresetName(HK) {
-        PluginControlPos := GetPluginControlPos()
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
         HotkeyWait(HK)
         AccessibilityOverlay.Speak("Preset " . AccessibilityOverlay.OCR("TesseractBest", PluginControlPos.X + 184, PluginControlPos.Y + 8, PluginControlPos.X + 364, PluginControlPos.Y + 28))
     }

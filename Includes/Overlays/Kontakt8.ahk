@@ -165,7 +165,10 @@ Class Kontakt8 {
     
     Static CheckPlugin(PluginInstance) {
         Thread "NoTimers"
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
+        If PluginInstance.Name = "Kontakt 8"
+        Return True
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = KompleteKontrol.GetPluginControl()
         If PluginInstance.Name = "Kontakt 8"
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative {
@@ -202,7 +205,7 @@ Class Kontakt8 {
     
     Static CheckPluginContentMissing(PluginInstance) {
         Thread "NoTimers"
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Kontakt 8 Content Missing Dialog"
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative
@@ -253,9 +256,10 @@ Class Kontakt8 {
         If CheckElement(UIAElement)
         Return UIAElement
         Try
-        UIAElement := UIAElement.FindElement({ClassName:"ni::qt::QuickWindow"})
+        UIAElements := UIAElement.FindElements({ClassName:"ni::qt::QuickWindow"})
         Catch
         Return False
+        For UIAElement In UIAElements
         If CheckElement(UIAElement)
         Return UIAElement
         Return False

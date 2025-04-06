@@ -462,7 +462,7 @@ Class Dubler2MIDICapturePlugin {
     Static NoClipRecordedImg := LoadPicture(A_ScriptDir . "\Images\Dubler2\NoClipRecorded.png")
 
     Static DragFirstClip(*) {
-        MouseClickDrag("Left", CompensatePluginXCoordinate(291), CompensatePluginYCoordinate(522), CompensatePluginXCoordinate(804), CompensatePluginYCoordinate(576))
+        MouseClickDrag("Left", CompensatePluginXCoordinate(299), CompensatePluginYCoordinate(573), CompensatePluginXCoordinate(812), CompensatePluginYCoordinate(627))
     }
 
     Static SetOverlay() {
@@ -474,7 +474,7 @@ Class Dubler2MIDICapturePlugin {
         Local Ol := ""
         Local X, Y
         
-        If ImageSearch(&X, &Y, CompensatePluginXCoordinate(42), CompensatePluginYCoordinate(499), CompensatePluginXCoordinate(342), CompensatePluginYCoordinate(699), "*20 HBITMAP:*" . Dubler2MIDICapturePlugin.NoClipRecordedImg) {
+        If ImageSearch(&X, &Y, CompensatePluginXCoordinate(50), CompensatePluginYCoordinate(550), CompensatePluginXCoordinate(350), CompensatePluginYCoordinate(750), "*20 HBITMAP:*" . Dubler2MIDICapturePlugin.NoClipRecordedImg) {
             If Label != "Dubler 2 MIDI Capture Plugin No Clip Recorded" {
                 Ol := AccessibilityOverlay("Dubler 2 MIDI Capture Plugin No Clip Recorded")
                 Ol.AddStaticText("No clip was recorded, please press play and have Dubler pick up some notes to show up here.")
@@ -482,7 +482,7 @@ Class Dubler2MIDICapturePlugin {
         } Else If Label != "Dubler 2 MIDI Capture Plugin" {
             Ol := AccessibilityOverlay("Dubler 2 MIDI Capture Plugin")
             Ol.AddControl(CustomButton("Copy clip into REAPER", , , ObjBindMethod(Dubler2MIDICapturePlugin, "DragFirstClip")))
-            Ol.AddHotspotButton("Select key of exported clip", 104, 503, CompensatePluginCoordinates, , CompensatePluginCoordinates)
+            Ol.AddHotspotButton("Select key of exported clip", 112, 554, CompensatePluginCoordinates, , CompensatePluginCoordinates)
         }
 
         If Ol Is AccessibilityOverlay {
@@ -503,7 +503,10 @@ Class Dubler2MIDICapturePlugin {
 
     Static Check(Instance) {
         Thread "NoTimers"
-        If Instance Is Plugin And Instance.ControlClass = GetCurrentControlClass()
+        If Instance Is Plugin And Instance.ControlClass = ReaHotkey.GetPluginControl()
+        If Instance.Name = "Dubler 2 MIDI Capture"
+        Return True
+        If Instance Is Plugin And Instance.ControlClass = KompleteKontrol.GetPluginControl()
         If Instance.Name = "Dubler 2 MIDI Capture"
         Return True
         UIAElement := This.GetRootUIAElement()

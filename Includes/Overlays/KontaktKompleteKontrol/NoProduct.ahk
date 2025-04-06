@@ -8,6 +8,7 @@ Class NoProduct {
         NoProductOverlay := AccessibilityOverlay("None")
         NoProductOverlay.Metadata := Map("Product", "None")
         NoProductOverlay.AddAccessibilityOverlay()
+        NoProductOverlay.AddAccessibilityOverlay()
         %PluginClass%.PluginOverlays.Push(NoProductOverlay)
     }
     
