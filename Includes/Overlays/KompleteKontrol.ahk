@@ -498,9 +498,12 @@ Class KompleteKontrol {
                 Return PluginToLoad
             }
             UnloadPlugin(PluginToUnload) {
+                Static NoProductOverlay := KompleteKontrol.PluginOverlays[1].Clone()
                 If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
                 Return PluginToUnload
-                ReaHotkey.FoundPlugin.Overlay := KompleteKontrol.PluginOverlays[1]
+                If NoProductOverlay.ChildControls[2].ChildControls.Length > 0
+                NoProductOverlay.ChildControls[2] := AccessibilityOverlay()
+                ReaHotkey.FoundPlugin.Overlay := NoProductOverlay
                 Return False
             }
         }
