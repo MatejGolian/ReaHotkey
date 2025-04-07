@@ -13,9 +13,9 @@ Class KompleteKontrol {
         This.InitConfig()
         
         PluginSearchOverlay := AccessibilityOverlay("Search")
-        PluginSearchOverlay.AddCustomButton("Close library browser",,, ObjBindMethod(This, "ActivatePluginLibBrowserCloser")).SetHotkey("!L", "Alt+L")
+        PluginSearchOverlay.AddCustomButton("Close library browser",,,, ObjBindMethod(This, "ActivatePluginLibBrowserCloser")).SetHotkey("!L", "Alt+L")
         PluginSearchOverlay.AddCustomEdit("Search", ObjBindMethod(This, "FocusPluginSearchField")).SetHotkey("!S", "Alt+S")
-        PluginSearchOverlay.AddCustomButton("Clear search",,, ObjBindMethod(This, "ActivatePluginClearSearch")).SetHotkey("!X", "Alt+X")
+        PluginSearchOverlay.AddCustomButton("Clear search",,,, ObjBindMethod(This, "ActivatePluginClearSearch")).SetHotkey("!X", "Alt+X")
         This.PluginSearchOverlay := PluginSearchOverlay
         
         PluginNoSearchOverlay := AccessibilityOverlay("No Search")
@@ -46,7 +46,7 @@ Class KompleteKontrol {
         Plugin.SetTimer("Komplete Kontrol", This.CheckPluginConfig, -1)
         Plugin.SetTimer("Komplete Kontrol", This.CheckPluginMenu, 250)
         Plugin.SetTimer("Komplete Kontrol", This.TogglePluginSearchVisible, 500)
-        Plugin.SetTimer("Komplete Kontrol", This.ManageLoadedPlugin, 500)
+        Plugin.SetTimer("Komplete Kontrol", This.ManageLoadedPlugin, 250)
         
         Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, 1, True, ObjBindMethod(This, "CheckPluginPreferenceDialog"))
         
@@ -471,58 +471,62 @@ Class KompleteKontrol {
     Class ManageLoadedPlugin {
         Static Call() {
             Critical
-            Static LastFoundPlugin := False
+            Static ExemptPlugins := Array("Dubler 2 MIDI Capture", "Kontakt 7", "Kontakt 8", "Raum"), FirstRun := True, KKHotkeys := Array(), KKPluginNumber := 0, KKTimers := Array(), LastFoundPlugin := False
+            If FirstRun {
+                KKPluginNumber := Plugin.FindName("Komplete Kontrol")
+                KKHotkeys := Plugin.List[KKPluginNumber]["Hotkeys"]
+                KKTimers := Plugin.List[KKPluginNumber]["Timers"]
+                FirstRun := False
+            }
             If Not KompleteKontrol.GetBrowser("Plugin") {
                 PluginControl := KompleteKontrol.GetPluginControl()
                 If PluginControl {
                     PluginToLoad := Plugin.GetByClass(PluginControl)
-                    If PluginToLoad Is Plugin
+                    If PluginToLoad Is Plugin And Not InArray(PluginToLoad.Name, ExemptPlugins)
                     If Not LastFoundPlugin = PluginToLoad Or Not ReaHotkey.FoundPlugin.Overlay.OverlayNumber = 1 {
                         If LastFoundPlugin Is Plugin And Not LastFoundPlugin = PluginToLoad
-                        LastFoundPlugin := UnloadPlugin(LastFoundPlugin)
+                        LastFoundPlugin := UnloadPlugin(LastFoundPlugin, KKPluginNumber, KKHotkeys, KKTimers)
                         If Not LastFoundPlugin = PluginToLoad
-                        LastFoundPlugin := LoadPlugin(PluginToLoad)
+                        LastFoundPlugin := LoadPlugin(PluginToLoad, KKPluginNumber, KKHotkeys, KKTimers)
                     }
                 }
                 Else {
-                    If LastFoundPlugin Is Plugin
-                    LastFoundPlugin := UnloadPlugin(LastFoundPlugin)
+                    If LastFoundPlugin Is Plugin And Not InArray(LastFoundPlugin.Name, ExemptPlugins)
+                    LastFoundPlugin := UnloadPlugin(LastFoundPlugin, KKPluginNumber, KKHotkeys, KKTimers)
                 }
             }
             Else {
-                If LastFoundPlugin Is Plugin
-                LastFoundPlugin := UnloadPlugin(LastFoundPlugin)
+                If LastFoundPlugin Is Plugin And Not InArray(LastFoundPlugin.Name, ExemptPlugins)
+                LastFoundPlugin := UnloadPlugin(LastFoundPlugin, KKPluginNumber, KKHotkeys, KKTimers)
             }
-            LoadPlugin(PluginToLoad) {
-                If PluginToLoad.Name = "Dubler 2 MIDI Capture"
-                Return PluginToLoad
-                If PluginToLoad.Name = "Kontakt 7"
-                Return PluginToLoad
-                If PluginToLoad.Name = "Kontakt 8"
-                Return PluginToLoad
-                If PluginToLoad.Name = "Raum"
-                Return PluginToLoad
+            LoadPlugin(PluginToLoad, KKPluginNumber, KKHotkeys, KKTimers) {
                 If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
                 Return PluginToLoad
                 ReaHotkey.FoundPlugin.Overlay := KompleteKontrol.PluginOverlays[1]
                 ReaHotkey.FoundPlugin.Overlay.ChildControls[2] := PluginToLoad.Overlay
+                ReaHotkey.TurnPluginTimersOff("Komplete Kontrol")
+                ReaHotkey.TurnPluginHotkeysOff("Komplete Kontrol")
+                HotkeysToLoad := Plugin.List[PluginToLoad.PluginNumber]["Hotkeys"]
+                TimersToLoad := Plugin.List[PluginToLoad.PluginNumber]["Timers"]
+                Plugin.List[KKPluginNumber]["Hotkeys"] := MergeArrays(KKHotkeys, HotkeysToLoad)
+                Plugin.List[KKPluginNumber]["Timers"] := MergeArrays(KKTimers, TimersToLoad)
+                ReaHotkey.TurnPluginTimersOn("Komplete Kontrol")
+                ReaHotkey.TurnPluginHotkeysOn("Komplete Kontrol")
                 Return PluginToLoad
             }
-            UnloadPlugin(PluginToUnload) {
+            UnloadPlugin(PluginToUnload, KKPluginNumber, KKHotkeys, KKTimers) {
                 Static NoLibraryProductOverlay := KompleteKontrol.PluginOverlays[1].Clone()
-                If PluginToUnload.Name = "Dubler 2 MIDI Capture"
-                Return PluginToUnload
-                If PluginToUnload.Name = "Kontakt 7"
-                Return PluginToUnload
-                If PluginToUnload.Name = "Kontakt 8"
-                Return PluginToUnload
-                If PluginToUnload.Name = "Raum"
-                Return PluginToUnload
                 If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
                 Return PluginToUnload
                 If NoLibraryProductOverlay.ChildControls[2].ChildControls.Length > 0
                 NoLibraryProductOverlay.ChildControls[2] := AccessibilityOverlay()
                 ReaHotkey.FoundPlugin.Overlay := NoLibraryProductOverlay
+                ReaHotkey.TurnPluginTimersOff("Komplete Kontrol")
+                ReaHotkey.TurnPluginHotkeysOff("Komplete Kontrol")
+                Plugin.List[KKPluginNumber]["Hotkeys"] := KKHotkeys
+                Plugin.List[KKPluginNumber]["Timers"] := KKTimers
+                ReaHotkey.TurnPluginTimersOn("Komplete Kontrol")
+                ReaHotkey.TurnPluginHotkeysOn("Komplete Kontrol")
                 Return False
             }
         }

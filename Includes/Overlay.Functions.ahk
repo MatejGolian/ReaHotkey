@@ -581,8 +581,6 @@ MergeArrays(Params*) {
     If Param Is Array
     For Item In Param
     Merged.Push(Item)
-    Else
-    Merged.Push(Param)
     Return Merged
 }
 
