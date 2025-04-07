@@ -133,6 +133,7 @@ Class KompleteKontrol {
     
     Static ActivatePluginLibBrowserCloser(LibBrowserCloserButton) {
         This.ClosePluginBrowser()
+        This.TogglePluginSearchVisible()
     }
     
     Static CheckMenu(Type) {
