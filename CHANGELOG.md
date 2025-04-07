@@ -14,7 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Improve efficiency when calculating plug-in coordinates in several plug-ins
+-   Revert to not explicitly calling timer functions immediately
+-   Improve efficiency when calculating plug-in coordinates in most plug-ins
+-   Updated README
 
 ## [0.7.1] - 2025-04-02
 

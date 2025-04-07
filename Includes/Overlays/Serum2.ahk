@@ -9,9 +9,9 @@ Class Serum2 {
         Serum2Overlay.AddStaticText("Serum 2")
         Serum2Overlay.AddCustomButton("Main Menu", ObjBindMethod(This, "ClickOrMoveToCoords",, "Move", 1058, 4),,, ObjBindMethod(This, "ClickOrMoveToCoords",, "Click", 1058, 4)).SetHotkey("^M", "Ctrl+M")
         Serum2Overlay.AddCustomButton("Save Preset As...", ObjBindMethod(This, "ClickOrMoveToCoords",, "Move", 518, 4),,, ObjBindMethod(This, "ClickOrMoveToCoords",, "Click", 518, 4)).SetHotkey("^S", "Ctrl+S")
-        Serum2Overlay.AddOCRButton("Preset Menu, currently loaded", "Preset Menu, preset name not detected", "TesseractBest", 540, 13, 608, 23,,, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
-        Serum2Overlay.AddHotspotButton("Previous Preset", 938, 4, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!P", "Alt+P")
-        Serum2Overlay.AddHotspotButton("Next Preset", 968, 4, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!N", "Alt+N")
+        Serum2Overlay.AddOCRButton("Preset Menu, currently loaded", "Preset Menu, preset name not detected", "TesseractBest", 540, 13, 608, 23,,, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
+        Serum2Overlay.AddHotspotButton("Previous Preset", 938, 4, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!P", "Alt+P")
+        Serum2Overlay.AddHotspotButton("Next Preset", 968, 4, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!N", "Alt+N")
         Plugin.RegisterOverlay("Serum 2", Serum2Overlay)
     }
     

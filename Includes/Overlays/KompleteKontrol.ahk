@@ -445,13 +445,10 @@ Class KompleteKontrol {
         Static Call() {
             PluginControlX := 0
             PluginControlY := 0
-            Try {
-                ControlGetPos &PluginControlX, &PluginControlY,,, KompleteKontrol.GetPluginControl(), ReaHotkey.PluginWinCriteria
-            }
-            Catch {
-                PluginControlX := 0
-                PluginControlY := 0
-            }
+            Try
+            ControlGetPos &PluginControlX, &PluginControlY,,, KompleteKontrol.GetPluginControl(), ReaHotkey.PluginWinCriteria
+            Catch
+            Return GetPluginControlPos()
             Return {X: PluginControlX, Y: PluginControlY}
         }
     }
@@ -486,7 +483,7 @@ Class KompleteKontrol {
                     If Not LastFoundPlugin = PluginToLoad Or Not ReaHotkey.FoundPlugin.Overlay.OverlayNumber = 1 {
                         If LastFoundPlugin Is Plugin And Not LastFoundPlugin = PluginToLoad
                         LastFoundPlugin := UnloadPlugin(LastFoundPlugin, KKPluginNumber, KKHotkeys, KKTimers)
-                        If Not LastFoundPlugin = PluginToLoad
+                        If Not LastFoundPlugin = PluginToLoad Or Not ReaHotkey.FoundPlugin.Overlay.OverlayNumber = 1
                         LastFoundPlugin := LoadPlugin(PluginToLoad, KKPluginNumber, KKHotkeys, KKTimers)
                     }
                 }
