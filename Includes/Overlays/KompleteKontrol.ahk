@@ -276,11 +276,8 @@ Class KompleteKontrol {
         UIAElement := UIAElement.FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
         Catch
         UIAElement := False
-        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50018 {
-            If Type = "Plugin" And This.IsK8PluginBrowser(UIAElement)
-            Return False
-            Return UIAElement
-        }
+        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50018
+        Return UIAElement
         Return False
     }
     
@@ -340,25 +337,6 @@ Class KompleteKontrol {
             PluginInstance.Overlay.OverlayNumber := 1
         }
         Plugin.RegisterOverlayHotkeys("Komplete Kontrol", PluginInstance.Overlay)
-    }
-    
-    Static IsK8PluginBrowser(Browser) {
-        PluginControl := This.GetPluginControl()
-        If Not PluginControl
-        Return False
-        LoadedPlugin := Plugin.GetByClass(PluginControl)
-        If LoadedPlugin Is Plugin And LoadedPlugin.Name = "Kontakt 8" {
-            Window := GetUIAWindow()
-            If Not Window
-            Return False
-            BrowserPath := Window.GetNumericPath(Browser)
-            K8Path := Window.GetNumericPath(Kontakt8.GetPluginUIAElement())
-            If Not BrowserPath Or Not K8Path
-            Return False
-            If K8Path.Length < BrowserPath.Length
-            Return True
-        }
-        Return False
     }
     
     Static ManageStandalonePreferenceDialog(*) {
