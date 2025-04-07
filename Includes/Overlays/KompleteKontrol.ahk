@@ -290,7 +290,7 @@ Class KompleteKontrol {
         If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
         Return False
         Controls := WinGetControls(ReaHotkey.PluginWinCriteria)
-        If Controls.Length = 0 Or Controls[Controls.Length] = ReaHotkey.FoundPlugin.ControlClass
+        If Controls.Length = 0 Or Controls[Controls.Length] = ReaHotkey.GetPluginControl()
         Return False
         For PluginEntry In Plugin.List
         If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
@@ -490,7 +490,7 @@ Class KompleteKontrol {
     Class ManageLoadedPlugin {
         Static Call() {
             Critical
-            Static ExemptPlugins := Array("Dubler 2 MIDI Capture", "Kontakt 7", "Kontakt 8", "Raum"), FirstRun := True, KKHotkeys := Array(), KKPluginNumber := 0, KKTimers := Array(), LastFoundPlugin := False
+            Static ExemptPlugins := Array("Dubler 2 MIDI Capture", "Komplete Kontrol", "Kontakt 7", "Kontakt 8", "Raum"), FirstRun := True, KKHotkeys := Array(), KKPluginNumber := 0, KKTimers := Array(), LastFoundPlugin := False
             If FirstRun {
                 KKPluginNumber := Plugin.FindName("Komplete Kontrol")
                 KKHotkeys := Plugin.List[KKPluginNumber]["Hotkeys"]
@@ -504,11 +504,11 @@ Class KompleteKontrol {
                     If PluginToLoad Is Plugin And Not InArray(PluginToLoad.Name, ExemptPlugins)
                     If Not LastFoundPlugin = PluginToLoad {
                         If LastFoundPlugin Is Plugin
-                        LastFoundPlugin := UnloadPlugin(LastFoundPlugin, KKPluginNumber, KKHotkeys, KKTimers)
-                        If Not LastFoundPlugin = PluginToLoad Or Not ReaHotkey.FoundPlugin.Overlay.OverlayNumber = 1
+                        UnloadPlugin(LastFoundPlugin, KKPluginNumber, KKHotkeys, KKTimers)
                         LastFoundPlugin := LoadPlugin(PluginToLoad, KKPluginNumber, KKHotkeys, KKTimers)
                     }
                     Else {
+                        If LastFoundPlugin Is Plugin
                         If Not ReaHotkey.FoundPlugin.Overlay.OverlayNumber = 1
                         LastFoundPlugin := LoadPlugin(PluginToLoad, KKPluginNumber, KKHotkeys, KKTimers)
                     }
