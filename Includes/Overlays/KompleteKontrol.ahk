@@ -13,6 +13,7 @@ Class KompleteKontrol {
         This.InitConfig()
         
         PluginSearchOverlay := AccessibilityOverlay("Search")
+        PluginSearchOverlay.AddCustomButton("Close library browser",,, ObjBindMethod(This, "ActivatePluginLibBrowserCloser")).SetHotkey("!L", "Alt+L")
         PluginSearchOverlay.AddCustomEdit("Search", ObjBindMethod(This, "FocusPluginSearchField")).SetHotkey("!S", "Alt+S")
         PluginSearchOverlay.AddCustomButton("Clear search",,, ObjBindMethod(This, "ActivatePluginClearSearch")).SetHotkey("!X", "Alt+X")
         This.PluginSearchOverlay := PluginSearchOverlay
@@ -130,6 +131,10 @@ Class KompleteKontrol {
         ReaHotkey.FoundPlugin.Overlay.FocusPreviousControl()
     }
     
+    Static ActivatePluginLibBrowserCloser(LibBrowserCloserButton) {
+        This.ClosePluginBrowser()
+    }
+    
     Static CheckMenu(Type) {
         Thread "NoTimers"
         If Type = "Plugin"
@@ -205,7 +210,7 @@ Class KompleteKontrol {
         Return False
     }
     
-    Static closeBrowser(Type) {
+    Static CloseBrowser(Type) {
         Thread "NoTimers"
         UIAElement := This.GetBrowser(Type)
         If UIAElement Is UIA.IUIAutomationElement {
@@ -217,7 +222,7 @@ Class KompleteKontrol {
     }
     
     Static ClosePluginBrowser() {
-        This.closeBrowser("Plugin")
+        This.CloseBrowser("Plugin")
     }
     
     Static ClosePluginPreferenceDialog(*) {
@@ -230,7 +235,7 @@ Class KompleteKontrol {
     }
     
     Static CloseStandaloneBrowser() {
-        This.closeBrowser("Standalone")
+        This.CloseBrowser("Standalone")
     }
     
     Static CloseStandalonePreferenceDialog(*) {
@@ -505,6 +510,14 @@ Class KompleteKontrol {
             }
             UnloadPlugin(PluginToUnload) {
                 Static NoLibraryProductOverlay := KompleteKontrol.PluginOverlays[1].Clone()
+                If PluginToUnload.Name = "Dubler 2 MIDI Capture"
+                Return PluginToUnload
+                If PluginToUnload.Name = "Kontakt 7"
+                Return PluginToUnload
+                If PluginToUnload.Name = "Kontakt 8"
+                Return PluginToUnload
+                If PluginToUnload.Name = "Raum"
+                Return PluginToUnload
                 If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
                 Return PluginToUnload
                 If NoLibraryProductOverlay.ChildControls[2].ChildControls.Length > 0

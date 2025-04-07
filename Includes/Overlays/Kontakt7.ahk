@@ -201,7 +201,7 @@ Class Kontakt7 {
         Return False
     }
     
-    Static closeBrowser(Type) {
+    Static CloseBrowser(Type) {
         Thread "NoTimers"
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
@@ -220,7 +220,7 @@ Class Kontakt7 {
     }
     
     Static ClosePluginBrowser() {
-        This.closeBrowser("Plugin")
+        This.CloseBrowser("Plugin")
     }
     
     Static ClosePluginUpdateDialog() {
@@ -228,7 +228,7 @@ Class Kontakt7 {
     }
     
     Static CloseStandaloneBrowser() {
-        This.closeBrowser("Standalone")
+        This.CloseBrowser("Standalone")
     }
     
     Static CloseStandaloneUpdateDialog() {
