@@ -276,8 +276,11 @@ Class KompleteKontrol {
         UIAElement := UIAElement.FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
         Catch
         UIAElement := False
-        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50018
-        Return UIAElement
+        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50018 {
+            If Type = "Plugin" And This.IsK8PluginBrowser(UIAElement)
+            Return False
+            Return UIAElement
+        }
         Return False
     }
     
@@ -337,6 +340,25 @@ Class KompleteKontrol {
             PluginInstance.Overlay.OverlayNumber := 1
         }
         Plugin.RegisterOverlayHotkeys("Komplete Kontrol", PluginInstance.Overlay)
+    }
+    
+    Static IsK8PluginBrowser(Browser) {
+        PluginControl := This.GetPluginControl()
+        If Not PluginControl
+        Return False
+        LoadedPlugin := Plugin.GetByClass(PluginControl)
+        If LoadedPlugin Is Plugin And LoadedPlugin.Name = "Kontakt 8" {
+            Window := GetUIAWindow()
+            If Not Window
+            Return False
+            BrowserPath := Window.GetNumericPath(Browser)
+            K8Path := Window.GetNumericPath(Kontakt8.GetPluginUIAElement())
+            If Not BrowserPath Or Not K8Path
+            Return False
+            If K8Path.Length < BrowserPath.Length
+            Return True
+        }
+        Return False
     }
     
     Static ManageStandalonePreferenceDialog(*) {
@@ -480,10 +502,14 @@ Class KompleteKontrol {
                 If PluginControl {
                     PluginToLoad := Plugin.GetByClass(PluginControl)
                     If PluginToLoad Is Plugin And Not InArray(PluginToLoad.Name, ExemptPlugins)
-                    If Not LastFoundPlugin = PluginToLoad Or Not ReaHotkey.FoundPlugin.Overlay.OverlayNumber = 1 {
-                        If LastFoundPlugin Is Plugin And Not LastFoundPlugin = PluginToLoad
+                    If Not LastFoundPlugin = PluginToLoad {
+                        If LastFoundPlugin Is Plugin
                         LastFoundPlugin := UnloadPlugin(LastFoundPlugin, KKPluginNumber, KKHotkeys, KKTimers)
                         If Not LastFoundPlugin = PluginToLoad Or Not ReaHotkey.FoundPlugin.Overlay.OverlayNumber = 1
+                        LastFoundPlugin := LoadPlugin(PluginToLoad, KKPluginNumber, KKHotkeys, KKTimers)
+                    }
+                    Else {
+                        If Not ReaHotkey.FoundPlugin.Overlay.OverlayNumber = 1
                         LastFoundPlugin := LoadPlugin(PluginToLoad, KKPluginNumber, KKHotkeys, KKTimers)
                     }
                 }
@@ -531,7 +557,8 @@ Class KompleteKontrol {
     
     Class TogglePluginSearchVisible {
         Static Call() {
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+            If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+            Return
             If KompleteKontrol.GetBrowser("Plugin") {
                 If Not ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3].Label = "Search"
                 ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3] := KompleteKontrol.PluginSearchOverlay

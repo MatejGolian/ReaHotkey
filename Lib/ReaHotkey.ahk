@@ -493,7 +493,7 @@ Class ReaHotkey {
             For Timer In TimerEntry["Timers"]
             If Timer["Enabled"] = False {
                 Timer["Enabled"] := True
-                If Timer["Period"] > 0
+                If Not Timer["Period"] = 0
                 SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
             }
         }
@@ -501,7 +501,7 @@ Class ReaHotkey {
             For Timer In %Type%.GetTimers(Name)
             If Timer["Enabled"] = False {
                 Timer["Enabled"] := True
-                If Timer["Period"] > 0
+                If Not Timer["Period"] = 0
                 SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
             }
         }
