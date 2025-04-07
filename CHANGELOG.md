@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added ability to access plug-in overlays when these are loaded inside KK (the browser needs to be closed in most cases for this to work)
+-   Added button for closing the library browser in the plug-in version of KK
+
+### Changed
+
+-   Revert to not explicitly calling timer functions immediately
+-   Improve efficiency when calculating plug-in coordinates in most plug-ins
+-   Updated README
+
 ## [0.7.1] - 2025-04-02
 
 ### Fixed

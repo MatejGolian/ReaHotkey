@@ -5,19 +5,21 @@ Class Repro {
     Static __New() {
         Plugin.Register("Repro", "^com.u-he.Repro1.vst.window1$")
         ReproOverlay := AccessibilityOverlay("Repro")
-        ReproOverlay.AddHotspotButton("u-HE Logo Menu", 64, 44, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("^U", "Ctrl+U")
+        ReproOverlay.AddStaticText("Repro")
+        ReproOverlay.AddHotspotButton("u-HE Logo Menu", 64, 44, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("^U", "Ctrl+U")
         ReproOverlay.AddActivatableCustom("", ObjBindMethod(This, "FocusOrActivateBrowserToggler",, "Focus"),, ObjBindMethod(This, "FocusOrActivateBrowserToggler",, "Activate")).SetHotkey("!B", "Alt+B")
-        ReproOverlay.AddHotspotButton("Previous Preset", 440, 53, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!P", "Alt+P")
-        ReproOverlay.AddOCRButton("Preset Menu, currently loaded", "Preset Menu, preset name not detected", "TesseractBest", 460, 36, 670, 70,,, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
-        ReproOverlay.AddHotspotButton("Next Preset", 730, 53, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!N", "Alt+N")
-        ReproOverlay.AddHotspotButton("Save Preset", 808, 53, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("^S", "Ctrl+S")
+        ReproOverlay.AddHotspotButton("Previous Preset", 440, 53, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!P", "Alt+P")
+        ReproOverlay.AddOCRButton("Preset Menu, currently loaded", "Preset Menu, preset name not detected", "TesseractBest", 460, 36, 670, 70,,, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
+        ReproOverlay.AddHotspotButton("Next Preset", 730, 53, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!N", "Alt+N")
+        ReproOverlay.AddHotspotButton("Save Preset", 808, 53, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("^S", "Ctrl+S")
         Plugin.RegisterOverlay("Repro", ReproOverlay)
     }
     
     Static DetectWhich() {
-        If FindImage("Images/Repro/Repro1.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 800, GetPluginYCoordinate() + 400) Is Object
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
+        If FindImage("Images/Repro/Repro1.png", PluginControlPos.X, PluginControlPos.Y, PluginControlPos.X + 800, PluginControlPos.Y + 400) Is Object
         Return "Repro1"
-        Else If FindImage("Images/Repro/Repro5.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 800, GetPluginYCoordinate() + 400) Is Object
+        Else If FindImage("Images/Repro/Repro5.png", PluginControlPos.X, PluginControlPos.Y, PluginControlPos.X + 800, PluginControlPos.Y + 400) Is Object
         Return "Repro5"
         Else
         Return False
@@ -25,7 +27,7 @@ Class Repro {
     
     Static FocusOrActivateBrowserToggler(OverlayObj, Action) {
         If This.DetectWhich() = "Repro1" {
-            BrowserButton := This.BrowserToggler("Preset Browser Toggle", 310, 87, "0xB3584E", "0x998D80", CompensatePluginCoordinates,, CompensatePluginCoordinates)
+            BrowserButton := This.BrowserToggler("Preset Browser Toggle", 310, 87, "0xB3584E", "0x998D80", KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates)
             BrowserButton.SetHotkey("!B", "Alt+B")
             If Action = "Focus"
             BrowserButton.Focus()

@@ -176,7 +176,10 @@ Class Kontakt7 {
     
     Static CheckPlugin(PluginInstance) {
         Thread "NoTimers"
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
+        If PluginInstance.Name = "Kontakt 7"
+        Return True
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = KompleteKontrol.GetPluginControl()
         If PluginInstance.Name = "Kontakt 7"
         Return True
         UIAElement := This.GetPluginUIAElement()
@@ -187,7 +190,7 @@ Class Kontakt7 {
     
     Static CheckPluginContentMissing(PluginInstance) {
         Thread "NoTimers"
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Kontakt 7 Content Missing Dialog"
         Return True
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "content Missing" {
@@ -198,7 +201,7 @@ Class Kontakt7 {
         Return False
     }
     
-    Static closeBrowser(Type) {
+    Static CloseBrowser(Type) {
         Thread "NoTimers"
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
@@ -217,7 +220,7 @@ Class Kontakt7 {
     }
     
     Static ClosePluginBrowser() {
-        This.closeBrowser("Plugin")
+        This.CloseBrowser("Plugin")
     }
     
     Static ClosePluginUpdateDialog() {
@@ -225,7 +228,7 @@ Class Kontakt7 {
     }
     
     Static CloseStandaloneBrowser() {
-        This.closeBrowser("Standalone")
+        This.CloseBrowser("Standalone")
     }
     
     Static CloseStandaloneUpdateDialog() {
@@ -263,9 +266,10 @@ Class Kontakt7 {
         If CheckElement(UIAElement)
         Return UIAElement
         Try
-        UIAElement := UIAElement.FindElement({ClassName:"ni::qt::QuickWindow"})
+        UIAElements := UIAElement.FindElements({ClassName:"ni::qt::QuickWindow"})
         Catch
         Return False
+        For UIAElement In UIAElements
         If CheckElement(UIAElement)
         Return UIAElement
         Return False
@@ -421,7 +425,7 @@ Class Kontakt7 {
         }
     }
     
-    #IncludeAgain KontaktKompleteKontrol/NoProduct.ahk
+    #IncludeAgain KontaktKompleteKontrol/NoLibraryProduct.ahk
     #IncludeAgain KontaktKompleteKontrol/AudioImperia.ahk
     #IncludeAgain KontaktKompleteKontrol/CinematicStudioSeries.ahk
     #IncludeAgain KontaktKompleteKontrol/ImpactSoundworks.ahk

@@ -14,7 +14,10 @@ Class Raum {
     
     Static CheckInstance(Instance) {
         Thread "NoTimers"
-        If Instance Is Plugin And Instance.ControlClass = GetCurrentControlClass()
+        If Instance Is Plugin And Instance.ControlClass = ReaHotkey.GetPluginControl()
+        If Instance.Name = "Raum"
+        Return True
+        If Instance Is Plugin And Instance.ControlClass = KompleteKontrol.GetPluginControl()
         If Instance.Name = "Raum"
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative {
@@ -90,9 +93,10 @@ Class Raum {
         If CheckElement(UIAElement)
         Return UIAElement
         Try
-        UIAElement := UIAElement.FindElement({ClassName:"ni::qt::QuickWindow"})
+        UIAElements := UIAElement.FindElements({ClassName:"ni::qt::QuickWindow"})
         Catch
         Return False
+        For UIAElement In UIAElements
         If CheckElement(UIAElement)
         Return UIAElement
         Return False

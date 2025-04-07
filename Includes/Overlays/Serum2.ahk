@@ -6,20 +6,25 @@ Class Serum2 {
         This.InitConfig()
         Plugin.Register("Serum 2", "^VSTGUI[0-9A-F]+$", False, False, 1, False, ObjBindMethod(This, "Check"))
         Serum2Overlay := AccessibilityOverlay("Serum 2")
+        Serum2Overlay.AddStaticText("Serum 2")
         Serum2Overlay.AddCustomButton("Main Menu", ObjBindMethod(This, "ClickOrMoveToCoords",, "Move", 1058, 4),,, ObjBindMethod(This, "ClickOrMoveToCoords",, "Click", 1058, 4)).SetHotkey("^M", "Ctrl+M")
         Serum2Overlay.AddCustomButton("Save Preset As...", ObjBindMethod(This, "ClickOrMoveToCoords",, "Move", 518, 4),,, ObjBindMethod(This, "ClickOrMoveToCoords",, "Click", 518, 4)).SetHotkey("^S", "Ctrl+S")
-        Serum2Overlay.AddOCRButton("Preset Menu, currently loaded", "Preset Menu, preset name not detected", "TesseractBest", 540, 13, 608, 23,,, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
-        Serum2Overlay.AddHotspotButton("Previous Preset", 938, 4, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!P", "Alt+P")
-        Serum2Overlay.AddHotspotButton("Next Preset", 968, 4, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!N", "Alt+N")
+        Serum2Overlay.AddOCRButton("Preset Menu, currently loaded", "Preset Menu, preset name not detected", "TesseractBest", 540, 13, 608, 23,,, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
+        Serum2Overlay.AddHotspotButton("Previous Preset", 938, 4, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!P", "Alt+P")
+        Serum2Overlay.AddHotspotButton("Next Preset", 968, 4, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!N", "Alt+N")
         Plugin.RegisterOverlay("Serum 2", Serum2Overlay)
     }
     
     Static Check(PluginInstance) {
         Thread "NoTimers"
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Serum 2"
         Return True
-        If ReaHotkey.Config.Get("Serum2ImageSearch") = 1 And FindImage("Images/Serum2/Serum2.png", GetPluginXCoordinate(), GetPluginYCoordinate(), GetPluginXCoordinate() + 200, GetPluginYCoordinate() + 100) Is Object
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = KompleteKontrol.GetPluginControl()
+        If PluginInstance.Name = "Serum 2"
+        Return True
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
+        If ReaHotkey.Config.Get("Serum2ImageSearch") = 1 And FindImage("Images/Serum2/Serum2.png", PluginControlPos.X, PluginControlPos.Y, PluginControlPos.X + 200, PluginControlPos.Y + 100) Is Object
         Return True
         If ReaHotkey.AbletonPlugin {
             If RegExMatch(WinGetTitle("A"), "^Serum 2/[1-9][0-9]*-Serum 2$")
@@ -47,10 +52,11 @@ Class Serum2 {
     }
     
     Static ClickOrMoveToCoords(OverlayObj, Action, XCoord, YCoord) {
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
         If Action = "Click"
-        Send "{Click " . CompensatePluginXCoordinate(XCoord) . " " . CompensatePluginYCoordinate(YCoord) . "}"
+        Send "{Click " . PluginControlPos.X + XCoord . " " . PluginControlPos.Y + YCoord . "}"
         Else
-        MouseMove CompensatePluginXCoordinate(XCoord), CompensatePluginYCoordinate(YCoord)
+        MouseMove PluginControlPos.X + XCoord, PluginControlPos.Y + YCoord
     }
     
     Static InitConfig() {

@@ -8,20 +8,21 @@ Class Engine2 {
         Plugin.Register("Engine 2", "^Plugin[0-9A-F]{1,}$",, False, 1, False, ObjBindMethod(This, "CheckPlugin"))
         Engine2PluginOverlay := AccessibilityOverlay("Engine 2")
         Engine2PluginOverlay.Metadata := Map("Vendor", "Best Service", "Product", "Engine 2")
-        Engine2PluginOverlay.AddHotspotButton("Load instrument", 162, 134, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        Engine2PluginQuickEditTab := HotspotTab("Quick edit", 344, 21, CompensatePluginCoordinates)
-        Engine2PluginProEditTab := HotspotTab("Pro edit", 416, 21, CompensatePluginCoordinates)
-        Engine2PluginBrowserTab := HotspotTab("Browser", 480, 21, CompensatePluginCoordinates)
-        Engine2PluginMixerTab := HotspotTab("Mixer", 520, 21, CompensatePluginCoordinates)
-        Engine2PluginPreferencesTab := HotspotTab("Preferences", 572, 21, CompensatePluginCoordinates)
-        Engine2PluginHelpTab := HotspotTab("Help", 592, 21, CompensatePluginCoordinates)
+        Engine2PluginOverlay.AddStaticText("Engine 2")
+        Engine2PluginOverlay.AddHotspotButton("Load instrument", 162, 134, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates)
+        Engine2PluginQuickEditTab := HotspotTab("Quick edit", 344, 21, KompleteKontrol.CompensatePluginCoordinates)
+        Engine2PluginProEditTab := HotspotTab("Pro edit", 416, 21, KompleteKontrol.CompensatePluginCoordinates)
+        Engine2PluginBrowserTab := HotspotTab("Browser", 480, 21, KompleteKontrol.CompensatePluginCoordinates)
+        Engine2PluginMixerTab := HotspotTab("Mixer", 520, 21, KompleteKontrol.CompensatePluginCoordinates)
+        Engine2PluginPreferencesTab := HotspotTab("Preferences", 572, 21, KompleteKontrol.CompensatePluginCoordinates)
+        Engine2PluginHelpTab := HotspotTab("Help", 592, 21, KompleteKontrol.CompensatePluginCoordinates)
         Engine2PluginOverlay.AddTabControl(, Engine2PluginQuickEditTab, Engine2PluginProEditTab, Engine2PluginBrowserTab, Engine2PluginMixerTab, Engine2PluginPreferencesTab, Engine2PluginHelpTab)
-        Engine2PluginEngineTab := HotspotTab("Engine", 388, 61, CompensatePluginCoordinates)
-        Engine2PluginLibrariesTab := HotspotTab("Libraries", 416, 61, CompensatePluginCoordinates)
-        Engine2PluginLibrariesTab.AddHotspotButton("Add library", 428, 95, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "ActivatePluginAddLibraryButton")])
-        Engine2PluginUserFolderTab := HotspotTab("User folder", 480, 61, CompensatePluginCoordinates)
-        Engine2PluginOutputSurrTab := HotspotTab("Output/Surr", 564, 61, CompensatePluginCoordinates)
-        Engine2PluginMiscTab := HotspotTab("Misc.", 648, 61, CompensatePluginCoordinates)
+        Engine2PluginEngineTab := HotspotTab("Engine", 388, 61, KompleteKontrol.CompensatePluginCoordinates)
+        Engine2PluginLibrariesTab := HotspotTab("Libraries", 416, 61, KompleteKontrol.CompensatePluginCoordinates)
+        Engine2PluginLibrariesTab.AddHotspotButton("Add library", 428, 95, KompleteKontrol.CompensatePluginCoordinates,, [KompleteKontrol.CompensatePluginCoordinates, ObjBindMethod(This, "ActivatePluginAddLibraryButton")])
+        Engine2PluginUserFolderTab := HotspotTab("User folder", 480, 61, KompleteKontrol.CompensatePluginCoordinates)
+        Engine2PluginOutputSurrTab := HotspotTab("Output/Surr", 564, 61, KompleteKontrol.CompensatePluginCoordinates)
+        Engine2PluginMiscTab := HotspotTab("Misc.", 648, 61, KompleteKontrol.CompensatePluginCoordinates)
         Engine2PluginPreferencesTab.AddTabControl(, Engine2PluginEngineTab, Engine2PluginLibrariesTab, Engine2PluginUserFolderTab, Engine2PluginOutputSurrTab, Engine2PluginMiscTab)
         Plugin.RegisterOverlay("Engine 2", Engine2PluginOverlay)
         
@@ -77,10 +78,14 @@ Class Engine2 {
     
     Static CheckPlugin(PluginInstance) {
         Thread "NoTimers"
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Engine 2"
         Return True
-        If ReaHotkey.Config.Get("Engine2ImageSearch") = 1 And FindImage("Images/Engine2/Engine2.png", GetPluginXCoordinate() + 492, GetPluginYCoordinate(), GetPluginXCoordinate() + 892, GetPluginYCoordinate() + 100) Is Object
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = KompleteKontrol.GetPluginControl()
+        If PluginInstance.Name = "Engine 2"
+        Return True
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
+        If ReaHotkey.Config.Get("Engine2ImageSearch") = 1 And FindImage("Images/Engine2/Engine2.png", PluginControlPos.X + 492, PluginControlPos.Y, PluginControlPos.X + 892, PluginControlPos.Y + 100) Is Object
         Return True
         If ReaHotkey.AbletonPlugin {
             If RegExMatch(WinGetTitle("A"), "^Engine 2/[1-9][0-9]*-Engine 2$")

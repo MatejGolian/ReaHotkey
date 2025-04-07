@@ -9,7 +9,10 @@ Class Sforzando {
     
     Static CheckPlugin(PluginInstance) {
         Thread "NoTimers"
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
+        If PluginInstance.Name = "sforzando"
+        Return True
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = KompleteKontrol.GetPluginControl()
         If PluginInstance.Name = "sforzando"
         Return True
         UIAElement := This.GetPluginUIAElement()
@@ -46,9 +49,10 @@ Class Sforzando {
     
     Static InitPlugin(PluginInstance) {
         PluginHeader := AccessibilityOverlay()
-        PluginHeader.AddOCRButton("Instrument", "Instrument not detected", "TesseractBest", 90, 22, 200, 36,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        PluginHeader.AddOCRButton("Polyphony", "Polyphony not detected", "TesseractBest", 486, 40, 516, 70,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        PluginHeader.AddOCRButton("Pitchbend range", "Pitchbend range not detected", "TesseractBest", 576, 40, 602, 60,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        PluginHeader.AddStaticText("sforzando")
+        PluginHeader.AddOCRButton("Instrument", "Instrument not detected", "TesseractBest", 90, 22, 200, 36,,, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates)
+        PluginHeader.AddOCRButton("Polyphony", "Polyphony not detected", "TesseractBest", 486, 40, 516, 70,,, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates)
+        PluginHeader.AddOCRButton("Pitchbend range", "Pitchbend range not detected", "TesseractBest", 576, 40, 602, 60,,, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates)
         PluginInstance.Overlay.Label := "sforzando"
         If PluginInstance.Overlay.ChildControls.Length = 0
         PluginInstance.Overlay.AddAccessibilityOverlay()
