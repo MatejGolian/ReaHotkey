@@ -283,12 +283,14 @@ Class KompleteKontrol {
     }
     
     Static GetPluginControl() {
-        If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
+        MainPluginControl := ReaHotkey.GetPluginControl()
+        PluginWinCriteria := ReaHotkey.PluginWinCriteria
+        If Not PluginWinCriteria Or Not WinActive(PluginWinCriteria)
         Return False
         If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
         Return False
-        Controls := WinGetControls(ReaHotkey.PluginWinCriteria)
-        If Controls.Length = 0 Or Controls[Controls.Length] = ReaHotkey.GetPluginControl()
+        Controls := WinGetControls(PluginWinCriteria)
+        If Controls.Length = 0 Or Controls[Controls.Length] = MainPluginControl
         Return False
         For PluginEntry In Plugin.List
         If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
