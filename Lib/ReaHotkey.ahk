@@ -143,9 +143,10 @@ Class ReaHotkey {
     }
     
     Static GetPluginControl() {
-        If Not This.PluginWinCriteria Or Not WinActive(This.PluginWinCriteria)
+        PluginWinCriteria := This.PluginWinCriteria
+        If Not PluginWinCriteria Or Not WinActive(PluginWinCriteria)
         Return False
-        Controls := WinGetControls(This.PluginWinCriteria)
+        Controls := WinGetControls(PluginWinCriteria)
         If This.AbletonPlugin {
             If Controls.Length > 0
             For PluginEntry In Plugin.List

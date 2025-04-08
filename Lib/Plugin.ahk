@@ -47,6 +47,7 @@ Class Plugin Extends Program {
     }
     
     Static GetByCriteria(ControlClass, PropertyName, PropertyValue) {
+        Static TestPluginInstance := Plugin("", "", "")
         PluginNumbers := This.FindClass(ControlClass)
         If PluginNumbers.Length > 0 {
             WinTitle := WinGetTitle("A")
@@ -70,8 +71,7 @@ Class Plugin Extends Program {
                 }
             }
             For PluginNumber In PluginNumbers {
-                PluginInstance := Plugin("", "", "")
-                CheckResult := This.List[PluginNumber]["CheckerFunction"].Call(PluginInstance)
+                CheckResult := This.List[PluginNumber]["CheckerFunction"].Call(TestPluginInstance)
                 If CheckResult = True {
                     PluginInstance := Plugin(This.List[PluginNumber]["Name"], ControlClass, WinTitle)
                     PluginInstance.%PropertyName% := PropertyValue
