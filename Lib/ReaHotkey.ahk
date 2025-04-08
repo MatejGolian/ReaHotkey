@@ -143,22 +143,17 @@ Class ReaHotkey {
     }
     
     Static GetPluginControl() {
-        Static CachedControl := False
         PluginWinCriteria := This.PluginWinCriteria
         If Not PluginWinCriteria Or Not WinActive(PluginWinCriteria)
         Return False
         Controls := WinGetControls(PluginWinCriteria)
-        If InArray(CachedControl, Controls)
-        Return CachedControl
         If This.AbletonPlugin {
             If Controls.Length > 0
             For PluginEntry In Plugin.List
             If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
             For ControlClass In PluginEntry["ControlClasses"]
-            If RegExMatch(Controls[1], ControlClass) {
-                CachedControl := Controls[1]
-                Return Controls[1]
-            }
+            If RegExMatch(Controls[1], ControlClass)
+            Return Controls[1]
         }
         If This.ReaperPlugin {
             ReaperControlPatterns := ["^#327701$", "^Button[0-9]+$", "^ComboBox[0-9]+$", "^Edit[0-9]+$", "^REAPERknob[0-9]+$", "^reaperPluginHostWrapProc[0-9]+$", "^Static[0-9]+$", "^SysHeader321$", "^SysListView321$", "^SysTreeView321$"]
@@ -171,10 +166,8 @@ Class ReaHotkey {
                 For PluginEntry In Plugin.List
                 If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
                 For ControlClass In PluginEntry["ControlClasses"]
-                If RegExMatch(PluginControl, ControlClass) {
-                    CachedControl := PluginControl
-                    Return PluginControl
-                }
+                If RegExMatch(PluginControl, ControlClass)
+                Return PluginControl
                 Break
             }
             If Controls.Length > 0 {
@@ -184,10 +177,8 @@ Class ReaHotkey {
                 For PluginEntry In Plugin.List
                 If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
                 For ControlClass In PluginEntry["ControlClasses"]
-                If RegExMatch(Controls[1], ControlClass) {
-                    CachedControl := Controls[1]
-                    Return Controls[1]
-                }
+                If RegExMatch(Controls[1], ControlClass)
+                Return Controls[1]
             }
         }
         Return False
