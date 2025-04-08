@@ -171,8 +171,15 @@ Class KompleteKontrol {
     Static CheckPluginPreferenceDialog(PluginInstance) {
         Thread "NoTimers"
         Static PreviousWinID := ""
+        Try
         CurrentWinID := WinGetID("A")
-        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Preferences" {
+        Catch
+        Return False
+        Try
+        CurrentWinTitle := WinGetTitle("A")
+        Catch
+        Return False
+        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And CurrentWinTitle = "Preferences" {
             If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol Preference Dialog"
             If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
             PluginInstance.Overlay.Reset()
@@ -185,7 +192,10 @@ Class KompleteKontrol {
     Static CheckPluginSaveAsDialog(PluginInstance) {
         Thread "NoTimers"
         Static PreviousWinID := ""
+        Try
         CurrentWinID := WinGetID("A")
+        Catch
+        Return False
         If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
             If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol Save As Dialog"
             If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
@@ -199,7 +209,10 @@ Class KompleteKontrol {
     Static CheckStandaloneSaveAsDialog(StandaloneInstance) {
         Thread "NoTimers"
         Static PreviousWinID := ""
+        Try
         CurrentWinID := WinGetID("A")
+        Catch
+        Return False
         If StandaloneInstance Is Standalone And StandaloneInstance.Name = "Komplete Kontrol Save As Dialog" {
             If Not PreviousWinID = CurrentWinID
             Send "{Tab}"
@@ -283,20 +296,31 @@ Class KompleteKontrol {
     }
     
     Static GetPluginControl() {
-        MainPluginControl := ReaHotkey.GetPluginControl()
         PluginWinCriteria := ReaHotkey.PluginWinCriteria
         If Not PluginWinCriteria Or Not WinActive(PluginWinCriteria)
         Return False
+        MainPluginControl := False
         If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+        Return False
+        Else
+        MainPluginControl := ReaHotkey.FoundPlugin.ControlClass
+        If Not MainPluginControl
         Return False
         Controls := WinGetControls(PluginWinCriteria)
         If Controls.Length = 0 Or Controls[Controls.Length] = MainPluginControl
         Return False
-        For PluginEntry In Plugin.List
-        If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
-        For ControlClass In PluginEntry["ControlClasses"]
-        If RegExMatch(Controls[Controls.Length], ControlClass)
-        Return Controls[Controls.Length]
+        MainPluginControlPos := InArray(MainPluginControl, Controls)
+        LoopCount := Controls.Length - MainPluginControlPos
+        Index := Controls.Length
+        Loop LoopCount {
+            For PluginEntry In Plugin.List
+            If Not PluginEntry["Name"] = "Komplete Kontrol"
+            If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
+            For ControlClass In PluginEntry["ControlClasses"]
+            If RegExMatch(Controls[Index], ControlClass)
+            Return Controls[Index]
+            Index--
+        }
         Return False
     }
     
@@ -508,6 +532,7 @@ Class KompleteKontrol {
                 Return PluginToLoad
                 ReaHotkey.FoundPlugin.Overlay := KompleteKontrol.PluginOverlays[1]
                 ReaHotkey.FoundPlugin.Overlay.ChildControls[2] := PluginToLoad.Overlay
+                KompleteKontrol.TogglePluginSearchVisible()
                 ReaHotkey.TurnPluginTimersOff("Komplete Kontrol")
                 ReaHotkey.TurnPluginHotkeysOff("Komplete Kontrol")
                 HotkeysToLoad := Plugin.List[PluginToLoad.PluginNumber]["Hotkeys"]
@@ -525,6 +550,7 @@ Class KompleteKontrol {
                 If NoLibraryProductOverlay.ChildControls[2].ChildControls.Length > 0
                 NoLibraryProductOverlay.ChildControls[2] := AccessibilityOverlay()
                 ReaHotkey.FoundPlugin.Overlay := NoLibraryProductOverlay
+                KompleteKontrol.TogglePluginSearchVisible()
                 ReaHotkey.TurnPluginTimersOff("Komplete Kontrol")
                 ReaHotkey.TurnPluginHotkeysOff("Komplete Kontrol")
                 Plugin.List[KKPluginNumber]["Hotkeys"] := KKHotkeys
