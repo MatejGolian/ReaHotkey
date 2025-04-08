@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.4] - 2025-04-08
+
 ### Changed
 
 -   Revert plug-in control caching
@@ -392,7 +394,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.3...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.4...HEAD
+
+[0.7.4]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.3...0.7.4
 
 [0.7.3]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.2...0.7.3
 
