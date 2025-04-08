@@ -168,9 +168,6 @@ Class Kontakt8 {
         If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Kontakt 8"
         Return True
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = KompleteKontrol.GetPluginControl()
-        If PluginInstance.Name = "Kontakt 8"
-        Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative {
             UIAElement := This.GetPluginUIAElement()
             If UIAElement

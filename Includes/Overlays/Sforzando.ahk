@@ -12,9 +12,6 @@ Class Sforzando {
         If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "sforzando"
         Return True
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = KompleteKontrol.GetPluginControl()
-        If PluginInstance.Name = "sforzando"
-        Return True
         UIAElement := This.GetPluginUIAElement()
         If UIAElement
         Return True

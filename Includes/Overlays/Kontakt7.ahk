@@ -179,9 +179,6 @@ Class Kontakt7 {
         If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Kontakt 7"
         Return True
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = KompleteKontrol.GetPluginControl()
-        If PluginInstance.Name = "Kontakt 7"
-        Return True
         UIAElement := This.GetPluginUIAElement()
         If UIAElement
         Return True

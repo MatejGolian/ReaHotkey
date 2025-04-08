@@ -20,9 +20,6 @@ Class Serum2 {
         If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Serum 2"
         Return True
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = KompleteKontrol.GetPluginControl()
-        If PluginInstance.Name = "Serum 2"
-        Return True
         PluginControlPos := KompleteKontrol.GetPluginControlPos()
         If ReaHotkey.Config.Get("Serum2ImageSearch") = 1 And FindImage("Images/Serum2/Serum2.png", PluginControlPos.X, PluginControlPos.Y, PluginControlPos.X + 200, PluginControlPos.Y + 100) Is Object
         Return True

@@ -17,9 +17,6 @@ Class Raum {
         If Instance Is Plugin And Instance.ControlClass = ReaHotkey.GetPluginControl()
         If Instance.Name = "Raum"
         Return True
-        If Instance Is Plugin And Instance.ControlClass = KompleteKontrol.GetPluginControl()
-        If Instance.Name = "Raum"
-        Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative {
             UIAElement := This.GetUIAElement()
             If UIAElement

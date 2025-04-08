@@ -73,9 +73,6 @@ Class Zampler {
         If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Zampler"
         Return True
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = KompleteKontrol.GetPluginControl()
-        If PluginInstance.Name = "Zampler"
-        Return True
         PluginControlPos := KompleteKontrol.GetPluginControlPos()
         If ReaHotkey.Config.Get("ZamplerImageSearch") = 1 And FindImage("Images/Zampler/Zampler.png", PluginControlPos.X, PluginControlPos.Y + 140, PluginControlPos.X + 230, PluginControlPos.Y + 170) Is Object
         Return True

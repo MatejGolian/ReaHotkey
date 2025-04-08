@@ -506,9 +506,6 @@ Class Dubler2MIDICapturePlugin {
         If Instance Is Plugin And Instance.ControlClass = ReaHotkey.GetPluginControl()
         If Instance.Name = "Dubler 2 MIDI Capture"
         Return True
-        If Instance Is Plugin And Instance.ControlClass = KompleteKontrol.GetPluginControl()
-        If Instance.Name = "Dubler 2 MIDI Capture"
-        Return True
         UIAElement := This.GetRootUIAElement()
         If UIAElement
         Return True

@@ -81,9 +81,6 @@ Class Engine2 {
         If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Engine 2"
         Return True
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = KompleteKontrol.GetPluginControl()
-        If PluginInstance.Name = "Engine 2"
-        Return True
         PluginControlPos := KompleteKontrol.GetPluginControlPos()
         If ReaHotkey.Config.Get("Engine2ImageSearch") = 1 And FindImage("Images/Engine2/Engine2.png", PluginControlPos.X + 492, PluginControlPos.Y, PluginControlPos.X + 892, PluginControlPos.Y + 100) Is Object
         Return True

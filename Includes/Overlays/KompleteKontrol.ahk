@@ -297,33 +297,20 @@ Class KompleteKontrol {
     
     Static GetPluginControl() {
         Static CachedControl := False
-        Static NextRunEnabled := True
         Static TestPluginInstance := Plugin("", "", "")
-        If Not NextRunEnabled
-        Return False
-        NextRunEnabled := False
         PluginWinCriteria := ReaHotkey.PluginWinCriteria
-        If Not PluginWinCriteria Or Not WinActive(PluginWinCriteria) {
-            NextRunEnabled := True
-            Return False
-        }
+        If Not PluginWinCriteria Or Not WinActive(PluginWinCriteria)
+        Return False
         MainPluginControl := False
-        If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol" {
-            NextRunEnabled := True
-            Return False
-        }
-        Else {
-            MainPluginControl := ReaHotkey.FoundPlugin.ControlClass
-        }
-        If Not MainPluginControl {
-            NextRunEnabled := True
-            Return False
-        }
+        If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+        Return False
+        Else
+        MainPluginControl := ReaHotkey.FoundPlugin.ControlClass
+        If Not MainPluginControl
+        Return False
         Controls := WinGetControls(PluginWinCriteria)
-        If Controls.Length = 0 Or Controls[Controls.Length] = MainPluginControl {
-            NextRunEnabled := True
-            Return False
-        }
+        If Controls.Length = 0 Or Controls[Controls.Length] = MainPluginControl
+        Return False
         WinTitle := WinGetTitle("A")
         MainPluginControlPos := InArray(MainPluginControl, Controls)
         LoopCount := Controls.Length - MainPluginControlPos
@@ -334,21 +321,17 @@ Class KompleteKontrol {
             If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
             For ControlClass In PluginEntry["ControlClasses"]
             If RegExMatch(Controls[Index], ControlClass) {
-                If Controls[Index] = CachedControl {
-                    NextRunEnabled := True
-                    Return Controls[Index]
-                }
+                If Controls[Index] = CachedControl
+                Return Controls[Index]
                 CheckResult := PluginEntry["CheckerFunction"].Call(TestPluginInstance)
                 If CheckResult = True {
                     PluginInstance := Plugin(PluginEntry["Name"], Controls[Index], WinTitle)
                     CachedControl := Controls[Index]
-                    NextRunEnabled := True
                     Return Controls[Index]
                 }
             }
             Index--
         }
-        NextRunEnabled := True
         Return False
     }
     
