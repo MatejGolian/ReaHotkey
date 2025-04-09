@@ -126,12 +126,19 @@ Class KompleteKontrol {
         Standalone.RegisterOverlay("Komplete Kontrol Save As Dialog", StandaloneSaveAsOverlay)
     }
     
+    Static __Get(Name, Params) {
+        Try
+        Return This.Get%Name%()
+        Catch As ErrorMessage
+        Throw ErrorMessage
+    }
+    
     Static ActivatePluginClearSearch(ClearSearchButton) {
         SearchEditValue := ""
         UIAElement := This.GetPluginUIAElement()
         If UIAElement Is UIA.IUIAutomationElement {
             Try
-            UIAElement := UIAElement.FindElement({Type:"Edit"})
+            UIAElement := UIAElement.FindElement({Type: "Edit"})
             Catch
             Return
             If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50004
@@ -155,7 +162,7 @@ Class KompleteKontrol {
         UIAElement := GetUIAWindow()
         Found := False
         Try
-        UIAElement := UIAElement.FindElement({Type:"Menu"})
+        UIAElement := UIAElement.FindElement({Type: "Menu"})
         Catch
         UIAElement := False
         If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50009
@@ -273,7 +280,7 @@ Class KompleteKontrol {
         UIAElement := This.GetPluginUIAElement()
         If UIAElement Is UIA.IUIAutomationElement {
             Try
-            UIAElement := UIAElement.FindElement({Type:"Edit"})
+            UIAElement := UIAElement.FindElement({Type: "Edit"})
             Catch
             Return
             If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50004 {
@@ -291,16 +298,20 @@ Class KompleteKontrol {
     
     Static GetBrowser(Type) {
         Thread "NoTimers"
+        Static Criteria := [{ClassName: "FileTypeSelector", MatchMode: "Substring"}, {ClassName: "TagCloudAccordionWithBrands", MatchMode: "Substring"}]
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
         Else
         UIAElement := GetUIAWindow()
-        Try
-        UIAElement := UIAElement.FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
-        Catch
-        UIAElement := False
-        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50018
-        Return UIAElement
+        If UIAElement Is UIA.IUIAutomationElement
+        Loop Criteria.Length {
+            Try
+            UIAElement := UIAElement.FindElement(Criteria[A_Index])
+            Catch
+            UIAElement := False
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = (A_Index = 1 ? 50018 : 50033)
+            Return UIAElement
+        }
         Return False
     }
     
@@ -350,6 +361,7 @@ Class KompleteKontrol {
     
     Static GetPluginUIAElement() {
         Critical
+        Static Criteria := [{ClassName: "ni::qt::QuickWindow"}, {ClassName: "QWindowIcon", MatchMode: "Substring"}]
         If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
         Return False
         Try
@@ -360,15 +372,19 @@ Class KompleteKontrol {
         Return False
         If CheckElement(UIAElement)
         Return UIAElement
-        Try
-        UIAElement := UIAElement.FindElement({ClassName:"ni::qt::QuickWindow"})
-        Catch
-        Return False
-        If CheckElement(UIAElement)
-        Return UIAElement
+        Loop Criteria.Length {
+            Try
+            UIAElements := UIAElement.FindElements(Criteria[A_Index])
+            Catch
+            UIAElements := Array()
+            For UIAElement In UIAElements
+            If CheckElement(UIAElement)
+            Return UIAElement
+        }
         Return False
         CheckElement(UIAElement) {
-            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Name = "Komplete Kontrol" And UIAElement.Type = 50032
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Name = "Komplete Kontrol"
+            If UIAElement.Type = 50032 Or UIAElement.Type = 50033
             Return True
             Return False
         }
@@ -392,6 +408,31 @@ Class KompleteKontrol {
             PluginInstance.Overlay.OverlayNumber := 1
         }
         Plugin.RegisterOverlayHotkeys("Komplete Kontrol", PluginInstance.Overlay)
+    }
+    
+    Static IsK7OrK8PluginBrowser(Browser) {
+        If Not Browser Is UIA.IUIAutomationElement
+        Return False
+        PluginControl := This.GetPluginControl()
+        If Not PluginControl
+        Return False
+        LoadedPlugin := Plugin.GetByClass(PluginControl)
+        If LoadedPlugin Is Plugin
+        If LoadedPlugin.Name = "Kontakt 7" Or LoadedPlugin.Name = "Kontakt 8" {
+            Window := GetUIAWindow()
+            If Not Window
+            Return False
+            KClassName := "Kontakt7"
+            If LoadedPlugin.Name = "Kontakt 8"
+            KClassName := "Kontakt8"
+            BrowserPath := Window.GetNumericPath(Browser)
+            KPath := Window.GetNumericPath(%KClassName%.GetPluginUIAElement())
+            If Not BrowserPath Or Not KPath
+            Return False
+            If KPath.Length < BrowserPath.Length
+            Return True
+        }
+        Return False
     }
     
     Static ManageStandalonePreferenceDialog(*) {
@@ -496,6 +537,24 @@ Class KompleteKontrol {
         }
     }
     
+    Class GetFoundPlugin {
+        Static Call() {
+            If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+            Return False
+            PluginBrowser := KompleteKontrol.GetPluginBrowser()
+            IsK7OrK8PluginBrowser := KompleteKontrol.IsK7OrK8PluginBrowser(PluginBrowser)
+            If PluginBrowser And Not IsK7OrK8PluginBrowser
+            Return False
+            PluginControl := KompleteKontrol.GetPluginControl()
+            If Not PluginControl
+            Return False
+            FoundPlugin := Plugin.GetByClass(PluginControl)
+            If FoundPlugin Is Plugin
+            Return FoundPlugin
+            Return False
+        }
+    }
+    
     Class GetPluginControlPos {
         Static Call() {
             PluginControlX := 0
@@ -530,7 +589,9 @@ Class KompleteKontrol {
                 KKTimers := Plugin.List[KKPluginNumber]["Timers"]
                 FirstRun := False
             }
-            If Not KompleteKontrol.GetPluginBrowser() {
+            PluginBrowser := KompleteKontrol.GetPluginBrowser()
+            IsK7OrK8PluginBrowser := KompleteKontrol.IsK7OrK8PluginBrowser(PluginBrowser)
+            If Not PluginBrowser Or Not IsK7OrK8PluginBrowser {
                 PluginControl := KompleteKontrol.GetPluginControl()
                 If PluginControl {
                     PluginToLoad := Plugin.GetByClass(PluginControl)

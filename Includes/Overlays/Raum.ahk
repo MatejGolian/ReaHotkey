@@ -50,6 +50,37 @@ Class Raum {
         Return
     }
     
+    Static GetUIAElement() {
+        Critical
+        Static Criteria := [{ClassName: "ni::qt::QuickWindow"}, {ClassName: "QWindowIcon", MatchMode: "Substring"}]
+        If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
+        Return False
+        Try
+        UIAElement := GetUIAWindow()
+        Catch
+        Return False
+        If Not UIAElement Is UIA.IUIAutomationElement
+        Return False
+        If CheckElement(UIAElement)
+        Return UIAElement
+        Loop Criteria.Length {
+            Try
+            UIAElements := UIAElement.FindElements(Criteria[A_Index])
+            Catch
+            UIAElements := Array()
+            For UIAElement In UIAElements
+            If CheckElement(UIAElement)
+            Return UIAElement
+        }
+        Return False
+        CheckElement(UIAElement) {
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Name = "Raum"
+            If UIAElement.Type = 50032 Or UIAElement.Type = 50033
+            Return True
+            Return False
+        }
+    }
+    
     Static InitHKMessageCheckbox(OverlayObj) {
         Static FirstRun := True
         If FirstRun And ReaHotkey.Config.Get("ShowRaumHelpMessage") = 1
@@ -75,33 +106,6 @@ Class Raum {
     Static InitConfig() {
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "ShowRaumHelpMessage", 1, "Show help message in Raum", "Misc")
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "DetectLibsInKK", 1, "Automatically detect libraries in Komplete Kontrol plug-in")
-    }
-    
-    Static GetUIAElement() {
-        Critical
-        If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
-        Return False
-        Try
-        UIAElement := GetUIAWindow()
-        Catch
-        Return False
-        If Not UIAElement Is UIA.IUIAutomationElement
-        Return False
-        If CheckElement(UIAElement)
-        Return UIAElement
-        Try
-        UIAElements := UIAElement.FindElements({ClassName:"ni::qt::QuickWindow"})
-        Catch
-        Return False
-        For UIAElement In UIAElements
-        If CheckElement(UIAElement)
-        Return UIAElement
-        Return False
-        CheckElement(UIAElement) {
-            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Name = "Raum" And UIAElement.Type = 50032
-            Return True
-            Return False
-        }
     }
     
     Static SayHelpMessage(HK) {

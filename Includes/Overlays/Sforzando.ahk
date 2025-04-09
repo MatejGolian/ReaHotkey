@@ -31,7 +31,7 @@ Class Sforzando {
         If CheckElement(UIAElement)
         Return UIAElement
         Try
-        UIAElement := UIAElement.FindElement({Name:"PlogueXMLGUI"})
+        UIAElement := UIAElement.FindElement({Name: "PlogueXMLGUI"})
         Catch
         Return False
         If CheckElement(UIAElement)

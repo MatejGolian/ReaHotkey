@@ -525,10 +525,10 @@ Class Dubler2MIDICapturePlugin {
         If CheckElement(UIAElement)
         Return UIAElement
         Try
-        UIAElement := UIAElement.FindElement({Name:"Dubler Midi Capture"})
+        UIAElement := UIAElement.FindElement({Name: "Dubler Midi Capture"})
         Catch
         Return False
-        If CheckElement(UIAElement)
+        If UIAElement Is UIA.IUIAutomationElement
         Return UIAElement
         Return False
         CheckElement(UIAElement) {

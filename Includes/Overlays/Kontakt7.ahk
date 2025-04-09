@@ -71,13 +71,13 @@ Class Kontakt7 {
         If UIAElement
         Switch HeaderButton.Label {
             Case "FILE menu":
-            UIAElement := UIAElement.FindElement({Type:"Button", Name:"FILE"})
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: "FILE"})
             Case "LIBRARY On/Off":
-            UIAElement := UIAElement.FindElement({Type:"Button", Name:"LIBRARY"})
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: "LIBRARY"})
             Case "VIEW menu":
-            UIAElement := UIAElement.FindElement({Type:"Button", Name:"VIEW"})
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: "VIEW"})
             Case "SHOP (Opens in default web browser)":
-            UIAElement := UIAElement.FindElement({Type:"Button", Name:"SHOP"})
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: "SHOP"})
         }
         Catch
         UIAElement := False
@@ -163,7 +163,7 @@ Class Kontakt7 {
         UIAElement := GetUIAWindow()
         Found := False
         Try
-        UIAElement := UIAElement.FindElement({Type:"Menu"})
+        UIAElement := UIAElement.FindElement({Type: "Menu"})
         Catch
         UIAElement := False
         If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50009
@@ -205,7 +205,7 @@ Class Kontakt7 {
         Else
         UIAElement := GetUIAWindow()
         Try
-        UIAElement := UIAElement.FindElement({ClassName:"TagCloudAccordionWithBrands", matchmode:"Substring"})
+        UIAElement := UIAElement.FindElement({ClassName: "TagCloudAccordionWithBrands", MatchMode: "Substring"})
         Catch
         UIAElement := False
         If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50033 {
@@ -239,7 +239,7 @@ Class Kontakt7 {
         Else
         UIAElement := GetUIAWindow()
         Try
-        UIAElement := UIAElement.FindElement({ClassName:"UpdateDialog", matchmode:"Substring"})
+        UIAElement := UIAElement.FindElement({ClassName: "UpdateDialog", MatchMode: "Substring"})
         Catch
         UIAElement := False
         If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50033 {
@@ -252,6 +252,7 @@ Class Kontakt7 {
     
     Static GetPluginUIAElement() {
         Critical
+        Static Criteria := [{ClassName: "ni::qt::QuickWindow"}, {ClassName: "QWindowIcon", MatchMode: "Substring"}]
         If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
         Return False
         Try
@@ -262,16 +263,19 @@ Class Kontakt7 {
         Return False
         If CheckElement(UIAElement)
         Return UIAElement
-        Try
-        UIAElements := UIAElement.FindElements({ClassName:"ni::qt::QuickWindow"})
-        Catch
-        Return False
-        For UIAElement In UIAElements
-        If CheckElement(UIAElement)
-        Return UIAElement
+        Loop Criteria.Length {
+            Try
+            UIAElements := UIAElement.FindElements(Criteria[A_Index])
+            Catch
+            UIAElements := Array()
+            For UIAElement In UIAElements
+            If CheckElement(UIAElement)
+            Return UIAElement
+        }
         Return False
         CheckElement(UIAElement) {
-            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Name = "Kontakt 7" And UIAElement.Type = 50032
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Name = "Kontakt 7"
+            If UIAElement.Type = 50032 Or UIAElement.Type = 50033
             Return True
             Return False
         }
@@ -292,7 +296,7 @@ Class Kontakt7 {
         Else
         UIAElement := GetUIAWindow()
         Try
-        UIAElement := UIAElement.FindElement({Type:"Button", Name:"SHOP"})
+        UIAElement := UIAElement.FindElement({Type: "Button", Name: "SHOP"})
         Catch
         UIAElement := False
         If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50000 {
