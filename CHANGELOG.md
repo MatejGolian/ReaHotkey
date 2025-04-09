@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.5] - 2025-04-09
+
 ### Fixed/Changed
 
 -   Ensure that the correct plug-in or standalone is active when setting hotkeys
@@ -399,7 +401,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.4...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.5...HEAD
+
+[0.7.5]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.4...0.7.5
 
 [0.7.4]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.3...0.7.4
 
