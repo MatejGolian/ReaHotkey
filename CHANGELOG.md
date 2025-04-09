@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.6] - 2025-04-09
+
 ### Added
 
 -   Added KK property for returning the currently loaded plug-in
@@ -409,7 +411,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.5...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.6...HEAD
+
+[0.7.6]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.5...0.7.6
 
 [0.7.5]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.4...0.7.5
 
