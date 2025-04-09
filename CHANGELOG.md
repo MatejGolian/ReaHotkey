@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed/Changed
+
+-   Ensure that the correct plug-in or standalone is active when setting hotkeys
+-   Use UIA for clearing KK search field
+
 ## [0.7.4] - 2025-04-08
 
 ### Changed

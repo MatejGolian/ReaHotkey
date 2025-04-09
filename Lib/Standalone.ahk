@@ -67,16 +67,19 @@ Class Standalone Extends Program {
     }
     
     Static SetHotkey(StandaloneName, KeyName, Action := "", Options := "") {
+        PluginWinCriteria := ReaHotkey.PluginWinCriteria
+        StandaloneWinCriteria := ReaHotkey.StandaloneWinCriteria
         If Super.SetHotkey(StandaloneName, KeyName, Action, Options) = True {
             Options := Super.GetHotkeyOptions(Options)
-            If ReaHotkey.StandaloneWinCriteria
-            HotIfWinActive(ReaHotkey.StandaloneWinCriteria)
-            If ReaHotkey.FoundStandalone Is Standalone
-            Hotkey KeyName, Action, Options.String
-            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
-            HotIfWinActive(ReaHotkey.PluginWinCriteria)
-            Else If ReaHotkey.StandaloneWinCriteria And WinActive(ReaHotkey.StandaloneWinCriteria)
-            HotIfWinActive(ReaHotkey.StandaloneWinCriteria)
+            If StandaloneWinCriteria  And WinActive(StandaloneWinCriteria) {
+                HotIfWinActive(StandaloneWinCriteria)
+                If ReaHotkey.FoundStandalone Is Standalone And StandaloneName = ReaHotkey.FoundStandalone.Name
+                Hotkey KeyName, Action, Options.String
+            }
+            If PluginWinCriteria And WinActive(PluginWinCriteria)
+            HotIfWinActive(PluginWinCriteria)
+            Else If StandaloneWinCriteria And WinActive(StandaloneWinCriteria)
+            HotIfWinActive(StandaloneWinCriteria)
             Else
             HotIf
         }

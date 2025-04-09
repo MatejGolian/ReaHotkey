@@ -127,7 +127,18 @@ Class KompleteKontrol {
     }
     
     Static ActivatePluginClearSearch(ClearSearchButton) {
-        Click CompensatePluginXCoordinate(874), CompensatePluginYCoordinate(233)
+        SearchEditValue := ""
+        UIAElement := This.GetPluginUIAElement()
+        If UIAElement Is UIA.IUIAutomationElement {
+            Try
+            UIAElement := UIAElement.FindElement({Type:"Edit"})
+            Catch
+            Return
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50004
+            SearchEditValue := UIAElement.Value
+        }
+        If SearchEditValue
+        UIAElement.WalkTree(+1).Click("Left")
         ReaHotkey.FoundPlugin.Overlay.FocusPreviousControl()
     }
     
@@ -268,10 +279,8 @@ Class KompleteKontrol {
             If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50004 {
                 UIAElement.SetFocus()
                 SearchEdit.Value := UIAElement.Value
-                Return
             }
         }
-        Return
     }
     
     Static FocusStandalonePreferenceTab(KKInstance) {
@@ -335,6 +344,10 @@ Class KompleteKontrol {
         Return False
     }
     
+    Static GetPluginBrowser() {
+        Return This.GetBrowser("Plugin")
+    }
+    
     Static GetPluginUIAElement() {
         Critical
         If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
@@ -359,6 +372,10 @@ Class KompleteKontrol {
             Return True
             Return False
         }
+    }
+    
+    Static GetStandaloneBrowser() {
+        Return This.GetBrowser("Standalone")
     }
     
     Static InitConfig() {
@@ -513,7 +530,7 @@ Class KompleteKontrol {
                 KKTimers := Plugin.List[KKPluginNumber]["Timers"]
                 FirstRun := False
             }
-            If Not KompleteKontrol.GetBrowser("Plugin") {
+            If Not KompleteKontrol.GetPluginBrowser() {
                 PluginControl := KompleteKontrol.GetPluginControl()
                 If PluginControl {
                     PluginToLoad := Plugin.GetByClass(PluginControl)
@@ -577,7 +594,7 @@ Class KompleteKontrol {
         Static Call() {
             If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
             Return
-            If KompleteKontrol.GetBrowser("Plugin") {
+            If KompleteKontrol.GetPluginBrowser() {
                 If Not ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3].Label = "Search"
                 ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3] := KompleteKontrol.PluginSearchOverlay
             }
