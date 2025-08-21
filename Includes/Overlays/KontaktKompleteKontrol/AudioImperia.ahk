@@ -40,6 +40,14 @@ Class AudioImperia {
         ChorusOverlay.AddGraphicalToggleButton("Scott Smith Mix", This.%PluginClass%XOffset + 132, This.%PluginClass%YOffset + 299, This.%PluginClass%XOffset + 220, This.%PluginClass%YOffset + 319, "Images/KontaktKompleteKontrol/Chorus/ScottSmithMixOn.png", ["Images/KontaktKompleteKontrol/Chorus/ScottSmithMixOff1.png", "Images/KontaktKompleteKontrol/Chorus/ScottSmithMixOff2.png"], CompensatePluginCoordinates,, CompensatePluginCoordinates)
         %PluginClass%.PluginOverlays.Push(ChorusOverlay)
         
+        DolceOverlay := AccessibilityOverlay("Dolce")
+        DolceOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Dolce", "Image", Map("File", "Images/KontaktKompleteKontrol/Dolce/Product.png"))
+        DolceOverlay.AddAccessibilityOverlay()
+        DolceOverlay.AddStaticText("Dolce")
+        DolceOverlay.AddGraphicalToggleButton("Classic Mix", This.%PluginClass%XOffset + 92, This.%PluginClass%YOffset + 239, This.%PluginClass%XOffset + 192, This.%PluginClass%YOffset + 319, "Images/KontaktKompleteKontrol/Dolce/ClassicMixOn.png", "Images/KontaktKompleteKontrol/Dolce/ClassicMixOff.png", CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        DolceOverlay.AddGraphicalToggleButton("Modern Mix", This.%PluginClass%XOffset + 92, This.%PluginClass%YOffset + 269, This.%PluginClass%XOffset + 192, This.%PluginClass%YOffset + 319, "Images/KontaktKompleteKontrol/Dolce/ModernMixOn.png", "Images/KontaktKompleteKontrol/Dolce/ModernMixOff.png", CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        %PluginClass%.PluginOverlays.Push(DolceOverlay)
+        
         JaegerOverlay := AccessibilityOverlay("Jaeger")
         JaegerOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Jaeger", "Image", Map("File", "Images/KontaktKompleteKontrol/Jaeger/Product.png"))
         JaegerOverlay.AddAccessibilityOverlay()
