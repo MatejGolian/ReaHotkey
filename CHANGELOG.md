@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.7] - 2025-08-21
+
 ### Added
 
 -   Added mix switching support in Dolce by Audio Imperia
@@ -415,7 +417,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.6...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.7...HEAD
+
+[0.7.7]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.6...0.7.7
 
 [0.7.6]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.5...0.7.6
 
