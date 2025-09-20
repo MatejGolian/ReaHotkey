@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.8] - 2025-09-20
+
 ### Added/Changed
 
 -   Added support for opening menus in Kontakt 8.7.0 via fallback mouse coordinates due to accessibility regression (Special thanks to NI for making this possible)
@@ -426,7 +428,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.7...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.8...HEAD
+
+[0.7.8]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.7...0.7.8
 
 [0.7.7]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.6...0.7.7
 
