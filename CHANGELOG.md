@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added/Changed
+
+-   Added support for opening menus in Kontakt 8.7.0 via fallback mouse coordinates due to accessibility regression (Special thanks to NI for making this possible)
+-   Added a separate folder for Komplete Kontrol under images (delete the old Images folder for a clean install)
+
+### Fixed
+
+-   Fixed small menu detection bug in standalone versions of Kontakt
+
 ## [0.7.7] - 2025-08-21
 
 ### Added

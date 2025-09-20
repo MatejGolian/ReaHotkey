@@ -214,7 +214,7 @@ Class KompleteKontrol {
         CurrentWinID := WinGetID("A")
         Catch
         Return False
-        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
+        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KompleteKontrol/SavePreset.png") {
             If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol Save As Dialog"
             If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
             PluginInstance.Overlay.Reset()
@@ -237,7 +237,7 @@ Class KompleteKontrol {
             PreviousWinID := CurrentWinID
             Return True
         }
-        If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png")
+        If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KompleteKontrol/SavePreset.png")
         Return True
         Return False
     }

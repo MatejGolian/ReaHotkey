@@ -85,12 +85,12 @@ Class Kontakt7 {
         Switch HeaderButton.Label {
             Case "FILE menu":
             UIAElement.Click("Left")
-            This.CheckPluginMenu()
+            This.CheckMenu(Type)
             Case "LIBRARY On/Off":
             UIAElement.Click("Left")
             Case "VIEW menu":
             UIAElement.Click("Left")
-            This.CheckPluginMenu()
+            This.CheckMenu(Type)
             Case "SHOP (Opens in default web browser)":
             UIAElement.Click("Left")
         }
@@ -200,15 +200,8 @@ Class Kontakt7 {
     
     Static CloseBrowser(Type) {
         Thread "NoTimers"
-        If Type = "Plugin"
-        UIAElement := This.GetPluginUIAElement()
-        Else
-        UIAElement := GetUIAWindow()
-        Try
-        UIAElement := UIAElement.FindElement({ClassName: "TagCloudAccordionWithBrands", MatchMode: "Substring"})
-        Catch
-        UIAElement := False
-        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50033 {
+        UIAElement := This.GetBrowser(Type)
+        If UIAElement Is UIA.IUIAutomationElement {
             Try
             UIAElement.WalkTree(-1).Click("Left")
             AccessibilityOverlay.Speak("Library Browser closed.")
@@ -248,6 +241,20 @@ Class Kontakt7 {
             AccessibilityOverlay.Speak("Update dialog closed.")
             Sleep 1000
         }
+    }
+    
+    Static GetBrowser(Type) {
+        If Type = "Plugin"
+        UIAElement := This.GetPluginUIAElement()
+        Else
+        UIAElement := GetUIAWindow()
+        Try
+        UIAElement := UIAElement.FindElement({ClassName: "TagCloudAccordionWithBrands", MatchMode: "Substring"})
+        Catch
+        UIAElement := False
+        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50033
+        Return UIAElement
+        Return False
     }
     
     Static GetPluginUIAElement() {

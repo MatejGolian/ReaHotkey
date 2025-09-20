@@ -81,21 +81,68 @@ Class Kontakt8 {
         }
         Catch
         UIAElement := False
-        If Not UIAElement = False
-        Switch HeaderButton.Label {
-            Case "FILE menu":
-            UIAElement.Click("Left")
-            This.CheckPluginMenu()
-            Case "LIBRARY On/Off":
-            UIAElement.Click("Left")
-            Case "VIEW menu":
-            UIAElement.Click("Left")
-            This.CheckPluginMenu()
-            Case "SHOP (Opens in default web browser)":
-            UIAElement.Click("Left")
+        If Not UIAElement = False {
+            Switch HeaderButton.Label {
+                Case "FILE menu":
+                UIAElement.Click("Left")
+                This.CheckMenu(Type)
+                Case "LIBRARY On/Off":
+                UIAElement.Click("Left")
+                Case "VIEW menu":
+                UIAElement.Click("Left")
+                This.CheckMenu(Type)
+                Case "SHOP (Opens in default web browser)":
+                UIAElement.Click("Left")
+            }
         }
-        Else
-        AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
+        Else {
+            Switch HeaderButton.Label {
+                Case "FILE menu":
+                If This.GetBrowser(Type) {
+                    TargetX := 145
+                    TargetY := 17
+                }
+                Else {
+                    TargetX := 148
+                    TargetY := 15
+                }
+                Case "LIBRARY On/Off":
+                If This.GetBrowser(Type) {
+                    TargetX := 184
+                    TargetY := 15
+                }
+                Else {
+                    TargetX :=216
+                    TargetY := 13
+                }
+                Case "VIEW menu":
+                If This.GetBrowser(Type) {
+                    TargetX := 256
+                    TargetY := 18
+                }
+                Else {
+                    TargetX := 240
+                    TargetY := 17
+                }
+                Case "SHOP (Opens in default web browser)":
+                If This.GetBrowser(Type) {
+                    TargetX := 828
+                    TargetY := 19
+                }
+                Else {
+                    TargetX := 466
+                    TargetY := 17
+                }
+            }
+            If (Type = "Plugin") {
+                TargetX := CompensatePluginXCoordinate(TargetX)
+                TargetY := CompensatePluginYCoordinate(TargetY)
+            }
+            If TargetX And TargetY {
+                Click TargetX, TargetY
+                This.CheckMenu(Type)
+            }
+        }
     }
     
     Static ActivatePluginHeaderButton(HeaderButton) {
@@ -216,15 +263,8 @@ Class Kontakt8 {
     
     Static CloseBrowser(Type) {
         Thread "NoTimers"
-        If Type = "Plugin"
-        UIAElement := This.GetPluginUIAElement()
-        Else
-        UIAElement := GetUIAWindow()
-        Try
-        UIAElement := UIAElement.FindElement({ClassName: "FileTypeSelector", MatchMode: "Substring"})
-        Catch
-        UIAElement := False
-        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50018 {
+        UIAElement := This.GetBrowser(Type)
+        If UIAElement Is UIA.IUIAutomationElement {
             Try
             UIAElement.WalkTree(-1).Click("Left")
             AccessibilityOverlay.Speak("Library Browser closed.")
@@ -238,6 +278,20 @@ Class Kontakt8 {
     
     Static CloseStandaloneBrowser() {
         This.CloseBrowser("Standalone")
+    }
+    
+    Static GetBrowser(Type) {
+        If Type = "Plugin"
+        UIAElement := This.GetPluginUIAElement()
+        Else
+        UIAElement := GetUIAWindow()
+        Try
+        UIAElement := UIAElement.FindElement({ClassName: "FileTypeSelector", MatchMode: "Substring"})
+        Catch
+        Return False
+        If UIAElement.Type = 50018
+        Return UIAElement
+        Return False
     }
     
     Static GetPluginUIAElement() {
