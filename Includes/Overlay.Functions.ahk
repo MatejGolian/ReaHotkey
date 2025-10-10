@@ -488,32 +488,52 @@ GetImgSize(Img) {
 GetPluginControlPos() {
     PluginControlX := 0
     PluginControlY := 0
+    PluginControlW := 0
+    PluginControlH := 0
     Try
-    ControlGetPos &PluginControlX, &PluginControlY,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    ControlGetPos &PluginControlX, &PluginControlY, &PluginControlW, &PluginControlH, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
     Catch
     Try {
         If ReaHotkey.AbletonPlugin {
             PluginControlX := 0
             PluginControlY := 0
+            PluginControlW := 0
+            PluginControlH := 0
         }
         Else If ReaHotkey.ReaperPluginBridged {
             PluginControlX := 0
             PluginControlY := 0
+            PluginControlW := 0
+            PluginControlH := 0
         }
         Else If ReaHotkey.ReaperPluginNative {
             PluginControlX := 210
             PluginControlY := 53
+            PluginControlW := 0
+            PluginControlH := 0
         }
         Else {
             PluginControlX := 0
             PluginControlY := 0
+            PluginControlW := 0
+            PluginControlH := 0
         }
     }
     Catch {
         PluginControlX := 0
         PluginControlY := 0
+        PluginControlW := 0
+        PluginControlH := 0
     }
-    Return {X: PluginControlX, Y: PluginControlY}
+    Return {X: PluginControlX, Y: PluginControlY, W: PluginControlW, H: PluginControlH}
+}
+
+GetPluginHeight() {
+    Return GetPluginControlPos().H
+}
+
+GetPluginWidth() {
+    Return GetPluginControlPos().W
 }
 
 GetPluginXCoordinate() {
@@ -584,6 +604,35 @@ MergeArrays(Params*) {
     Return Merged
 }
 
+PluginPctClick(XPct, YPct) {
+    XPct := Floor(XPct)
+    YPct := Floor(YPct)
+    If XPct < 0 Or YPct < 0
+    Return
+    If XPct > 100 Or YPct > 100
+    Return
+    PluginControlPos := GetPluginControlPos()
+    X := PluginControlPos.X
+    Y := PluginControlPos.Y
+    W := PluginControlPos.W
+    H := PluginControlPos.H
+    If W = 0 Or H = 0
+    Return
+    If XPct = 0
+    XPx := X
+    Else If XPct = 100
+    XPx := X + W
+    Else
+    XPx := X + Floor(W / 100 * XPct)
+    If YPct = 0
+    YPx := Y
+    Else If YPct = 100
+    YPx := Y + H
+    Else
+    YPx := Y+ Floor(H / 100 * YPct)
+    Click(XPx, YPx)
+}
+
 StrJoin(obj,delimiter:="",OmitChars:=""){
     S := obj[1]
     Loop obj.Length - 1
@@ -598,4 +647,31 @@ Wait(Period) {
         If A_TickCount > PeriodEnd
         Break
     }
+}
+
+WinPctClick(XPct, YPct) {
+    XPct := Floor(XPct)
+    YPct := Floor(YPct)
+    If XPct < 0 Or YPct < 0
+    Return
+    If XPct > 100 Or YPct > 100
+    Return
+    WinPos := GetWinPos()
+    W := WinPos.W
+    H := WinPos.H
+    If W = 0 Or H = 0
+    Return
+    If XPct = 0
+    XPx := 0
+    Else If XPct = 100
+    XPx := W
+    Else
+    XPx := Floor(W / 100 * XPct)
+    If YPct = 0
+    YPx := 0
+    Else If YPct = 100
+    YPx := H
+    Else
+    YPx := Floor(H / 100 * YPct)
+    Click(XPx, YPx)
 }
