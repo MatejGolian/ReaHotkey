@@ -605,8 +605,6 @@ MergeArrays(Params*) {
 }
 
 PluginPctClick(XPct, YPct) {
-    XPct := Floor(XPct)
-    YPct := Floor(YPct)
     If XPct < 0 Or YPct < 0
     Return
     If XPct > 100 Or YPct > 100
@@ -650,8 +648,6 @@ Wait(Period) {
 }
 
 WinPctClick(XPct, YPct) {
-    XPct := Floor(XPct)
-    YPct := Floor(YPct)
     If XPct < 0 Or YPct < 0
     Return
     If XPct > 100 Or YPct > 100
