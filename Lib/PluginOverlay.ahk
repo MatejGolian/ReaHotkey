@@ -9,4 +9,10 @@ Class PluginOverlay Extends AccessibilityOverlay {
     This.PluginName := PluginName
   }
   
+  AddControl(Control) {
+    Control := Super.AddControl(Control)
+    Plugin.RegisterOverlayHotkeys(This.PluginName, This)
+    Return Control
+  }
+  
 }

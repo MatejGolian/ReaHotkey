@@ -9,4 +9,10 @@ Class StandaloneOverlay Extends AccessibilityOverlay {
     This.StandaloneName := StandaloneName
   }
   
+  AddControl(Control) {
+    Control := Super.AddControl(Control)
+    Standalone.RegisterOverlayHotkeys(This.StandaloneName, This)
+    Return Control
+  }
+  
 }
