@@ -770,7 +770,7 @@ Class FocusableControl Extends AccessibilityControl {
     States := Map()
     Value := ""
     
-    __New(Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+    __New(Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
         Super.__New()
         This.Label := Label
         If Not PreExecFocusFunctions = "" {
@@ -787,6 +787,8 @@ Class FocusableControl Extends AccessibilityControl {
             If FocusFunction Is Object And FocusFunction.HasMethod("Call")
             This.PostExecFocusFunctions.Push(FocusFunction)
         }
+        If Not HotkeyCommand = ""
+        This.SetHotkey(HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
     CheckFocus() {
@@ -878,8 +880,8 @@ Class ActivatableControl Extends FocusableControl {
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     
-    __New(Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not PreExecActivationFunctions = "" {
             If Not PreExecActivationFunctions Is Array
             PreExecActivationFunctions := Array(PreExecActivationFunctions)
@@ -972,8 +974,8 @@ Class FocusableGraphic Extends FocusableControl {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map()) {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map(), HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not StateParam = "State" {
             This.DeleteProp("State")
             This.%StateParam% := 1
@@ -1045,8 +1047,8 @@ Class ActivatableGraphic Extends FocusableGraphic {
     PreExecActivationFunctions := Array()
     States := Map(-1, "", 0, "", 1, "")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map()) {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, StateParam, ErrorState, Groups)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map(), HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, StateParam, ErrorState, Groups, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not PreExecActivationFunctions = "" {
             If Not PreExecActivationFunctions Is Array
             PreExecActivationFunctions := Array(PreExecActivationFunctions)
@@ -1113,8 +1115,8 @@ Class FocusableNative Extends FocusableControl {
     NativeControlID := ""
     States := Map(-1, "Can not focus control", 0, "not found", 1, "")
     
-    __New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.ControlTypeLabel := ControlTypeLabel
         This.NativeControlID := NativeControlID
     }
@@ -1169,8 +1171,8 @@ Class ActivatableNative Extends FocusableNative {
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     
-    __New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not PreExecActivationFunctions = "" {
             If Not PreExecActivationFunctions Is Array
             PreExecActivationFunctions := Array(PreExecActivationFunctions)
@@ -1246,8 +1248,8 @@ Class FocusableUIA Extends FocusableControl {
     States := Map("0", "not found", "1", "")
     Window := False
     
-    __New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.ControlTypeLabel := ControlTypeLabel
         This.SearchCriteria := SearchCriteria
     }
@@ -1322,8 +1324,8 @@ Class ActivatableUIA Extends FocusableUIA {
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     
-    __New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not PreExecActivationFunctions = "" {
             If Not PreExecActivationFunctions Is Array
             PreExecActivationFunctions := Array(PreExecActivationFunctions)
@@ -1397,8 +1399,8 @@ Class Button Extends ActivatableControl {
     ControlTypeLabel := "button"
     DefaultLabel := "unlabelled"
     
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
 }
@@ -1418,8 +1420,8 @@ Class Checkbox Extends ActivatableControl {
     DefaultLabel := "unlabelled"
     States := Map(-1, "unknown state", 0, "not checked", 1, "checked")
     
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.DeleteProp("State")
     }
     
@@ -1437,8 +1439,8 @@ Class ComboBox Extends FocusableControl {
     CurrentOption := 1
     Options := Array()
     
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not ChangeFunctions = "" {
             If Not ChangeFunctions Is Array
             ChangeFunctions := Array(ChangeFunctions)
@@ -1512,8 +1514,8 @@ Class Edit Extends FocusableControl {
     DefaultLabel := "unlabelled"
     DefaultValue := "blank"
     
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
 }
@@ -1532,7 +1534,7 @@ Class Tab Extends AccessibilityOverlay {
     State := 1
     States := Map(0, "not found", 1, "selected")
     
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
         Super.__New(Label)
         If Not PreExecFocusFunctions = "" {
             If Not PreExecFocusFunctions Is Array
@@ -1548,6 +1550,8 @@ Class Tab Extends AccessibilityOverlay {
             If FocusFunction Is Object And FocusFunction.HasMethod("Call")
             This.PostExecFocusFunctions.Push(FocusFunction)
         }
+        If Not HotkeyCommand = ""
+        This.SetHotkey(HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
     CheckFocus() {
@@ -1725,8 +1729,8 @@ Class CustomToggleButton Extends ToggleButton {
     
     CheckStateFunction := ""
     
-    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If CheckStateFunction Is Object And CheckStateFunction.HasMethod("Call")
         This.CheckStateFunction := CheckStateFunction
     }
@@ -1742,8 +1746,8 @@ Class CustomCheckbox Extends Checkbox {
     
     CheckStateFunction := ""
     
-    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If CheckStateFunction Is Object And CheckStateFunction.HasMethod("Call")
         This.CheckStateFunction := CheckStateFunction
     }
@@ -1772,8 +1776,8 @@ Class GraphicalButton Extends  ActivatableGraphic {
     DefaultLabel := "unlabelled"
     States := Map(0, "not found", 1, "")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "State", 0, Map(1, Images))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "State", 0, Map(1, Images), HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
     CheckFocus(*) {
@@ -1802,8 +1806,8 @@ Class GraphicalToggleButton Extends  ActivatableGraphic {
     DefaultLabel := "unlabelled"
     States := Map(-1, "not found", 0, "off", 1, "on")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImages, OffImages := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "State", -1, Map("On", OnImages, "Off", OffImages))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImages, OffImages := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "State", -1, Map("On", OnImages, "Off", OffImages), HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
     CheckFocus(*) {
@@ -1832,8 +1836,8 @@ Class GraphicalCheckbox Extends ActivatableGraphic {
     DefaultLabel := "unlabelled"
     States := Map(-1, "not found", 0, "not checked", 1, "checked")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, CheckedImages, UncheckedImages, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "Checked", -1, Map("Checked", CheckedImages, "Unchecked", UncheckedImages))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, CheckedImages, UncheckedImages, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "Checked", -1, Map("Checked", CheckedImages, "Unchecked", UncheckedImages), HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
     CheckFocus(*) {
@@ -1870,8 +1874,8 @@ Class GraphicalSlider Extends FocusableGraphic {
     States := Map(0, "not found", 1, "")
     Type := False
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, Start := "", End := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, "State", 0, Map(1, Images))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, Start := "", End := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, "State", 0, Map(1, Images), HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.Label := Label
         If Start = "" {
             If This.Type = "Horizontal"
@@ -2035,8 +2039,8 @@ Class GraphicalTab Extends Tab {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
@@ -2095,8 +2099,8 @@ Class HotspotButton Extends Button {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -2119,8 +2123,8 @@ Class HotspotToggleButton Extends ToggleButton {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, OnColors, OffColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, XCoordinate, YCoordinate, OnColors, OffColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not OnColors = "" {
             If Not OnColors Is Array
             OnColors := Array(OnColors)
@@ -2173,8 +2177,8 @@ Class HotspotCheckbox Extends Checkbox {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not CheckedColors = "" {
             If Not CheckedColors Is Array
             CheckedColors := Array(CheckedColors)
@@ -2225,8 +2229,8 @@ Class HotspotComboBox Extends ComboBox {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -2248,8 +2252,8 @@ Class HotspotEdit Extends Edit {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -2265,8 +2269,8 @@ Class HotspotTab Extends Tab {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -2289,8 +2293,8 @@ Class OCRButton Extends Button {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(LabelPrefix, DefaultLabel, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(LabelPrefix, DefaultLabel, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.DefaultLabel := DefaultLabel
         This.LabelPrefix := LabelPrefix
         This.OCRLanguage := OCRLanguage
@@ -2363,8 +2367,8 @@ Class OCRComboBox Extends ComboBox {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, DefaultValue, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions)
+    __New(Label, DefaultValue, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.DefaultValue := DefaultValue
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
@@ -2440,8 +2444,8 @@ Class OCREdit Extends Edit {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.OCRType := (OCRType = "Tesseract" Or OCRType = "TesseractBest" Or OCRType = "TesseractFast" Or OCRType = "TesseractLegacy" Or OCRType = "UWP" ? OCRType : This.OCRType)
@@ -2493,8 +2497,8 @@ Class OCRTab Extends Tab {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(DefaultLabel, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(DefaultLabel, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.DefaultLabel := DefaultLabel
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
@@ -2541,8 +2545,8 @@ Class OCRText Extends FocusableControl {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(DefaultValue, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(DefaultValue, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.DefaultValue := DefaultValue
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
@@ -2575,8 +2579,8 @@ Class StaticText Extends FocusableControl {
     
     ControlType := "Text"
     
-    __New(Value := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions := "")
+    __New(Value := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.Value := Value
     }
     
