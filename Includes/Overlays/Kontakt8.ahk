@@ -10,7 +10,7 @@ Class Kontakt8 {
     Static __New() {
         This.InitConfig()
         
-        PluginHeader := AccessibilityOverlay("Kontakt 8")
+        PluginHeader := PluginOverlay("Kontakt 8")
         PluginHeader.AddStaticText("Kontakt 8")
         PluginHeader.AddCustomButton("FILE menu",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!F", "Alt+F")
         PluginHeader.AddCustomButton("LIBRARY On/Off",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!L", "Alt+L")
@@ -26,7 +26,7 @@ Class Kontakt8 {
         PluginHeader.AddCustomButton("Choose library",,, ObjBindMethod(ChoosePluginOverlay,,,, "O")).SetHotkey("!C", "Alt+C")
         This.PluginHeader := PluginHeader
         
-        StandaloneHeader := AccessibilityOverlay("Kontakt 8")
+        StandaloneHeader := StandaloneOverlay("Kontakt 8")
         StandaloneHeader.AddCustomButton("FILE menu",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!F", "Alt+F")
         StandaloneHeader.AddCustomButton("LIBRARY On/Off",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!L", "Alt+L")
         StandaloneHeader.AddCustomButton("VIEW menu",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!V", "Alt+V")
@@ -35,9 +35,9 @@ Class Kontakt8 {
         
         Plugin.Register("Kontakt 8", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
         
-        For PluginOverlay In This.PluginOverlays {
-            PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
-            Plugin.RegisterOverlay("Kontakt 8", PluginOverlay)
+        For K8PluginOverlay In This.PluginOverlays {
+            K8PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
+            Plugin.RegisterOverlay("Kontakt 8", K8PluginOverlay)
         }
         
         Plugin.SetTimer("Kontakt 8", This.CheckPluginConfig, -1)
@@ -45,7 +45,7 @@ Class Kontakt8 {
         
         Plugin.Register("Kontakt 8 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, 1, True, ObjBindMethod(This, "CheckPluginContentMissing"))
         
-        PluginContentMissingOverlay := AccessibilityOverlay("Content Missing")
+        PluginContentMissingOverlay := PluginOverlay("Content Missing")
         PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")
         Plugin.RegisterOverlay("Kontakt 8 Content Missing Dialog", PluginContentMissingOverlay)
         
@@ -56,7 +56,7 @@ Class Kontakt8 {
         
         Standalone.Register("Kontakt 8 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 8.exe", False, False, 1)
         
-        StandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
+        StandaloneContentMissingOverlay := StandaloneOverlay("Content Missing")
         StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")
         Standalone.RegisterOverlay("Kontakt 8 Content Missing Dialog", StandaloneContentMissingOverlay)
     }

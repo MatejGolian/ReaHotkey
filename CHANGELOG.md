@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added/Changed
 
+-   Internal: Added new 'Plugin' and 'Standalone' overlay types
+-   Internal: Hotkey parameters can now be specified via object constructors as well
+
 ## [0.7.8] - 2025-09-20
 
 ### Added/Changed
