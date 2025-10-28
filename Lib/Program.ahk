@@ -219,6 +219,10 @@ Class Program {
         OverlayNumber := 0
         ProgramNumber := This.FindName(ProgramName)
         If ProgramNumber > 0 {
+            If ProgramOverlay.HasOwnProp("OverlayNumber")
+            For OverlayEntry In This.List[ProgramNumber]["Overlays"]
+            If OverlayEntry.HasOwnProp("OverlayNumber") And OverlayEntry.OverlayNumber = ProgramOverlay.OverlayNumber
+            Return ProgramOverlay.OverlayNumber
             OverlayNumber := This.List[ProgramNumber]["Overlays"].Length + 1
             ProgramOverlay.OverlayNumber := OverlayNumber
             This.List[ProgramNumber]["Overlays"].Push(ProgramOverlay.Clone())
