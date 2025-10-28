@@ -5,11 +5,10 @@ Class Raum {
     Static __New() {
         This.InitConfig()
         Plugin.Register("Raum", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitInstance"), False, 1, False, ObjBindMethod(This, "CheckInstance"))
-        RaumOverlay := AccessibilityOverlay("Raum")
+        RaumOverlay := PluginOverlay("Raum", "Raum", KompleteKontrol.CompensatePluginCoordinates)
         RaumOverlay.AddStaticText("Press Alt+P to open the preset menu. Press Alt+N to hear the name of the currently loaded preset. Press Alt+H to hear this message. Press OK below to dismiss  this dialog.")
         RaumOverlay.AddCustomCheckbox("Don't show this again",, ObjBindMethod(This, "InitHKMessageCheckbox"),, ObjBindMethod(This, "ToggleHKMessageCheckbox"))
         RaumOverlay.AddCustomButton("OK",,,, ObjBindMethod(This, "dismissHKMessage")).SetHotkey("!O", "Alt+O")
-        Plugin.RegisterOverlay("Raum", RaumOverlay)
     }
     
     Static CheckInstance(Instance) {
@@ -26,7 +25,7 @@ Class Raum {
     }
     
     Static ClickPresetMenu(HK) {
-        PluginControlPos := GetPluginControlPos()
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
         HotkeyWait(HK)
         Click PluginControlPos.X + 265, PluginControlPos.Y + 15
         AccessibilityOverlay.Speak("Preset menu clicked.")
@@ -114,7 +113,7 @@ Class Raum {
     }
     
     Static SayPresetName(HK) {
-        PluginControlPos := GetPluginControlPos()
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
         HotkeyWait(HK)
         AccessibilityOverlay.Speak("Preset " . AccessibilityOverlay.OCR("TesseractBest", PluginControlPos.X + 184, PluginControlPos.Y + 8, PluginControlPos.X + 364, PluginControlPos.Y + 28))
     }

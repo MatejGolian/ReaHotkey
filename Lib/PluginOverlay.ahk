@@ -35,7 +35,7 @@ Class PluginOverlay Extends AccessibilityOverlay {
                     Break
                 }
                 If Not Found
-                Control.PreExecFocusFunctions.Push(This.CompensationFunction)
+                Control.PreExecFocusFunctions.InsertAt(1, This.CompensationFunction)
             }
             If Control.HasOwnProp("PreExecActivationFunctions") {
                 Found := False
@@ -45,7 +45,7 @@ Class PluginOverlay Extends AccessibilityOverlay {
                     Break
                 }
                 If Not Found
-                Control.PreExecActivationFunctions.Push(This.CompensationFunction)
+                Control.PreExecActivationFunctions.InsertAt(1, This.CompensationFunction)
             }
         }
         For PluginInstance In Plugin.Instances
