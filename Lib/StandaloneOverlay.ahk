@@ -15,9 +15,6 @@ Class StandaloneOverlay Extends AccessibilityOverlay {
             OverlayNumber := Standalone.List[StandaloneNumber]["Overlays"].Length + 1
             This.OverlayNumber := OverlayNumber
             Standalone.List[StandaloneNumber]["Overlays"].Push(This)
-            For StandaloneInstance In Standalone.Instances
-            If StandaloneName = StandaloneInstance.Name
-            StandaloneInstance.Overlays.Push(This.Clone())
         }
     }
     

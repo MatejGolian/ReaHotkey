@@ -17,9 +17,6 @@ Class PluginOverlay Extends AccessibilityOverlay {
             OverlayNumber := Plugin.List[PluginNumber]["Overlays"].Length + 1
             This.OverlayNumber := OverlayNumber
             Plugin.List[PluginNumber]["Overlays"].Push(This)
-            For PluginInstance In Plugin.Instances
-            If PluginName = PluginInstance.Name
-            PluginInstance.Overlays.Push(This.Clone())
         }
     }
     
