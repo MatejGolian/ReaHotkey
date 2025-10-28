@@ -13,14 +13,14 @@ Class ImpactSoundworks {
         
         JuggernautBassOverlay := PluginOverlay("Juggernaut")
         JuggernautBassOverlay.Metadata := Map("Vendor", "Impact Soundworks", "Product", "Juggernaut", "Patch", "BASS Juggernaut.nki", "Image", Map("File", "Images/KontaktKompleteKontrol/Juggernaut/Bass.png"))
-        JuggernautBassOverlay.AddAccessibilityOverlay()
+        JuggernautBassOverlay.AddPluginOverlay()
         JuggernautBassOverlay.AddStaticText("Juggernaut Bass")
         JuggernautBassOverlay.AddOCRButton("Preset", "Unknown preset", "TesseractBest", %PluginClass%XOffset + 354, %PluginClass%YOffset + 125, %PluginClass%XOffset + 562, %PluginClass%YOffset + 175)
         %PluginClass%.PluginOverlays.Push(JuggernautBassOverlay)
         
         JuggernautDrumsAndFXOverlay := PluginOverlay("Juggernaut")
         JuggernautDrumsAndFXOverlay.Metadata := Map("Vendor", "Impact Soundworks", "Product", "Juggernaut", "Patch", "DRUMS & FX Juggernaut v1.15.nki", "Image", Map("File", "Images/KontaktKompleteKontrol/Juggernaut/DrumsAndFX.png"))
-        JuggernautDrumsAndFXOverlay.AddAccessibilityOverlay()
+        JuggernautDrumsAndFXOverlay.AddPluginOverlay()
         JuggernautDrumsAndFXOverlay.AddStaticText("Juggernaut Drums & FX")
         JuggernautDrumsAndFXOverlay.AddOCRButton("Preset", "Unknown preset", "TesseractBest", %PluginClass%XOffset + 150, %PluginClass%YOffset + 132, %PluginClass%XOffset + 360, %PluginClass%YOffset + 170)
         %PluginClass%.PluginOverlays.Push(JuggernautDrumsAndFXOverlay)

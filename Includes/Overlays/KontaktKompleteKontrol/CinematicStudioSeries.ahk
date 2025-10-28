@@ -13,7 +13,7 @@ Class CinematicStudioSeries {
         
         CinematicStudioStringsOverlay := PluginOverlay("Cinematic Studio Strings")
         CinematicStudioStringsOverlay.Metadata := Map("Vendor", "Cinematic Studio Series", "Product", "Cinematic Studio Strings", "Image", Map("File", "Images/KontaktKompleteKontrol/CinematicStudioStrings/Product.png"))
-        CinematicStudioStringsOverlay.AddAccessibilityOverlay()
+        CinematicStudioStringsOverlay.AddPluginOverlay()
         CinematicStudioStringsOverlay.AddStaticText("Cinematic Studio Strings")
         CinematicStudioStringsOverlay.AddHotspotButton("Spot 1", %PluginClass%XOffset + 32, %PluginClass%YOffset + 481)
         CinematicStudioStringsOverlay.AddHotspotButton("Spot 2", %PluginClass%XOffset + 72, %PluginClass%YOffset + 481)
