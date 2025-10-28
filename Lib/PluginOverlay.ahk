@@ -50,9 +50,9 @@ Class PluginOverlay Extends AccessibilityOverlay {
         }
         For PluginInstance In Plugin.Instances
         If This.PluginName = PluginInstance.Name
-        For PluginOverlay In PluginInstance.Overlays
-        If PluginOverlay.HasOwnProp("OverlayNumber") And PluginOverlay.OverlayNumber = This.OverlayNumber
-        PluginOverlay.AddControl(Control)
+        For InstanceOverlay In PluginInstance.Overlays
+        If InstanceOverlay.HasOwnProp("OverlayNumber") And InstanceOverlay.OverlayNumber = This.OverlayNumber
+        InstanceOverlay.ChildControls.Push(Control.Clone())
         Return Control
     }
     

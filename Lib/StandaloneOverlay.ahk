@@ -26,9 +26,9 @@ Class StandaloneOverlay Extends AccessibilityOverlay {
         Standalone.RegisterOverlayHotkeys(This.StandaloneName, This)
         For StandaloneInstance In Standalone.Instances
         If This.StandaloneName = StandaloneInstance.Name
-        For StandaloneOverlay In StandaloneInstance.Overlays
-        If StandaloneOverlay.HasOwnProp("OverlayNumber") And StandaloneOverlay.OverlayNumber = This.OverlayNumber
-        StandaloneOverlay.AddControl(Control)
+        For InstanceOverlay In StandaloneInstance.Overlays
+        If InstanceOverlay.HasOwnProp("OverlayNumber") And InstanceOverlay.OverlayNumber = This.OverlayNumber
+        InstanceOverlay.ChildControls.Push(Control.Clone())
         Return Control
     }
     
