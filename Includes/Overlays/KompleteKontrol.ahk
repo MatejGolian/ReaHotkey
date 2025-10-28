@@ -12,13 +12,13 @@ Class KompleteKontrol {
     Static __New() {
         This.InitConfig()
         
-        PluginSearchOverlay := AccessibilityOverlay("Search")
+        PluginSearchOverlay := PluginOverlay("Search")
         PluginSearchOverlay.AddCustomButton("Close library browser",,,, ObjBindMethod(This, "ActivatePluginLibBrowserCloser")).SetHotkey("!L", "Alt+L")
         PluginSearchOverlay.AddCustomEdit("Search", ObjBindMethod(This, "FocusPluginSearchField")).SetHotkey("!S", "Alt+S")
         PluginSearchOverlay.AddCustomButton("Clear search",,,, ObjBindMethod(This, "ActivatePluginClearSearch")).SetHotkey("!X", "Alt+X")
         This.PluginSearchOverlay := PluginSearchOverlay
         
-        PluginNoSearchOverlay := AccessibilityOverlay("No Search")
+        PluginNoSearchOverlay := PluginOverlay("No Search")
         This.PluginNoSearchOverlay := PluginNoSearchOverlay
         
         PluginHeader := PluginOverlay("Komplete Kontrol")

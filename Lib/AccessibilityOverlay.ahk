@@ -422,14 +422,16 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                     }
                 }
                 Default:
-                If CurrentControl Is AccessibilityOverlay
-                If CurrentControl.ChildControls.Length > 0 {
-                    CurrentControl.FocusableControlIDs := CurrentControl.GetFocusableControlIDs()
-                    For CurrentControlID In CurrentControl.FocusableControlIDs
-                    FocusableControlIDs.Push(CurrentControlID)
+                If CurrentControl Is AccessibilityOverlay {
+                    If CurrentControl.ChildControls.Length > 0 {
+                        CurrentControl.FocusableControlIDs := CurrentControl.GetFocusableControlIDs()
+                        For CurrentControlID In CurrentControl.FocusableControlIDs
+                        FocusableControlIDs.Push(CurrentControlID)
+                    }
                 }
-                Else
-                FocusableControlIDs.Push(CurrentControl.ControlID)
+                Else {
+                    FocusableControlIDs.Push(CurrentControl.ControlID)
+                }
             }
         }
         This.FocusableControlIDs := FocusableControlIDs
@@ -550,9 +552,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
             }
             Default:
-            If CurrentControl Is AccessibilityOverlay
-            If CurrentControl.ChildControls.Length > 0 {
-                CurrentControl.Reset()
+            If CurrentControl Is AccessibilityOverlay {
+                If CurrentControl.ChildControls.Length > 0 {
+                    CurrentControl.Reset()
+                }
             }
         }
     }
