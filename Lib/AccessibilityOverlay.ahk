@@ -156,6 +156,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Clone.%PropertyName% := PropertyValue
         For CurrentControl In This.ChildControls
         Switch(CurrentControl.__Class) {
+            Case "AccessibilityOverlay":
+            Clone.AddControl(CurrentControl.Clone())
             Case "TabControl":
             ClonedControl := TabControl()
             For CurrentTab In CurrentControl.Tabs
@@ -169,17 +171,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             ClonedControl.%PropertyName% := PropertyValue
             Clone.AddControl(ClonedControl)
             Default:
-            If CurrentControl Is AccessibilityOverlay {
-                Clone.AddControl(CurrentControl.Clone())
-            }
-            Else {
-                ClonedControl := AccessibilityControl()
-                ClonedControl.Base := CurrentControl.Base
-                For PropertyName, PropertyValue In CurrentControl.OwnProps()
-                If Not PropertyName = "ControlID" And Not PropertyName = "SuperordinateControlID"
-                ClonedControl.%PropertyName% := PropertyValue
-                Clone.AddControl(ClonedControl)
-            }
+            ClonedControl := AccessibilityControl()
+            ClonedControl.Base := CurrentControl.Base
+            For PropertyName, PropertyValue In CurrentControl.OwnProps()
+            If Not PropertyName = "ControlID" And Not PropertyName = "SuperordinateControlID"
+            ClonedControl.%PropertyName% := PropertyValue
+            Clone.AddControl(ClonedControl)
         }
         Return Clone
     }

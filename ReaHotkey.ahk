@@ -24,10 +24,8 @@ SetTitleMatchMode "RegEx"
 #Include <OCR>
 #Include <Program>
 #Include <Plugin>
-#Include <PluginOverlay>
 #Include <ReaHotkey>
 #Include <Standalone>
-#Include <StandaloneOverlay>
 #Include <Tesseract>
 #Include <UIA>
 
