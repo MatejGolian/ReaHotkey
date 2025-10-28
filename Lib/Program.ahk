@@ -216,15 +216,18 @@ Class Program {
     }
     
     Static RegisterOverlay(ProgramName, ProgramOverlay) {
+        OverlayNumber := 0
         ProgramNumber := This.FindName(ProgramName)
         If ProgramNumber > 0 {
-            ProgramOverlay.OverlayNumber := This.List[ProgramNumber]["Overlays"].Length + 1
+            OverlayNumber := This.List[ProgramNumber]["Overlays"].Length + 1
+            ProgramOverlay.OverlayNumber := OverlayNumber
             This.List[ProgramNumber]["Overlays"].Push(ProgramOverlay.Clone())
             For ProgramInstance In This.Instances
             If ProgramName = ProgramInstance.Name
             ProgramInstance.Overlays.Push(ProgramOverlay.Clone())
             This.RegisterOverlayHotkeys(ProgramName, ProgramOverlay)
         }
+        Return OverlayNumber
     }
     
     Static RegisterOverlayHotkeys(ProgramName, ProgramOverlay) {
