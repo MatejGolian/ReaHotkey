@@ -48,11 +48,6 @@ Class PluginOverlay Extends AccessibilityOverlay {
                 Control.PreExecActivationFunctions.InsertAt(1, This.CompensationFunction)
             }
         }
-        For PluginInstance In Plugin.Instances
-        If This.PluginName = PluginInstance.Name
-        For InstanceOverlay In PluginInstance.Overlays
-        If InstanceOverlay.HasOwnProp("OverlayNumber") And InstanceOverlay.OverlayNumber = This.OverlayNumber
-        InstanceOverlay.ChildControls.Push(Control.Clone())
         Return Control
     }
     
