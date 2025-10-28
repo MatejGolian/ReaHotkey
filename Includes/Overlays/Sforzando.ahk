@@ -28,12 +28,14 @@ Class Sforzando {
         Return False
         If Not UIAElement Is UIA.IUIAutomationElement
         Return False
+        Try
         If CheckElement(UIAElement)
         Return UIAElement
         Try
         UIAElement := UIAElement.FindElement({Name: "PlogueXMLGUI"})
         Catch
         Return False
+        Try
         If CheckElement(UIAElement)
         Return UIAElement
         Return False

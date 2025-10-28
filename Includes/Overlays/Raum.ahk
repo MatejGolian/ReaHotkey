@@ -60,6 +60,7 @@ Class Raum {
         Return False
         If Not UIAElement Is UIA.IUIAutomationElement
         Return False
+        Try
         If CheckElement(UIAElement)
         Return UIAElement
         Loop Criteria.Length {
@@ -67,6 +68,7 @@ Class Raum {
             UIAElements := UIAElement.FindElements(Criteria[A_Index])
             Catch
             UIAElements := Array()
+            Try
             For UIAElement In UIAElements
             If CheckElement(UIAElement)
             Return UIAElement

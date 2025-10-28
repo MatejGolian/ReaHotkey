@@ -522,6 +522,7 @@ Class Dubler2MIDICapturePlugin {
         Return False
         If Not UIAElement Is UIA.IUIAutomationElement
         Return False
+        Try
         If CheckElement(UIAElement)
         Return UIAElement
         Try
