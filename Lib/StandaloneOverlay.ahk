@@ -13,12 +13,20 @@ Class StandaloneOverlay Extends AccessibilityOverlay {
             OverlayNumber := This.List[StandaloneNumber]["Overlays"].Length + 1
             This.OverlayNumber := OverlayNumber
             Standalone.List[StandaloneNumber]["Overlays"].Push(This)
+            For StandaloneInstance In Standalone.Instances
+            If StandaloneName = StandaloneInstance.Name
+            StandaloneInstance.Overlays.Push(This.Clone())
         }
     }
     
     AddControl(Control) {
         Control := Super.AddControl(Control)
         Standalone.RegisterOverlayHotkeys(This.StandaloneName, This)
+        For StandaloneInstance In Standalone.Instances
+        If This.StandaloneName = StandaloneInstance.Name
+        For StandaloneOverlay In StandaloneInstance.Overlays
+        If StandaloneOverlay.HasOwnProp("OverlayNumber") And StandaloneOverlay.OverlayNumber = This.OverlayNumber
+        StandaloneOverlay.AddControl(Control)
         Return Control
     }
     

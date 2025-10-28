@@ -13,6 +13,9 @@ Class PluginOverlay Extends AccessibilityOverlay {
             OverlayNumber := This.List[PluginNumber]["Overlays"].Length + 1
             This.OverlayNumber := OverlayNumber
             Plugin.List[PluginNumber]["Overlays"].Push(This)
+            For PluginInstance In Plugin.Instances
+            If PluginName = PluginInstance.Name
+            PluginInstance.Overlays.Push(This.Clone())
         }
     }
     
@@ -39,6 +42,11 @@ Class PluginOverlay Extends AccessibilityOverlay {
             If Not Found
             Control.PreExecActivationFunctions.Push(CompensatePluginCoordinates)
         }
+        For PluginInstance In Plugin.Instances
+        If This.PluginName = PluginInstance.Name
+        For PluginOverlay In PluginInstance.Overlays
+        If PluginOverlay.HasOwnProp("OverlayNumber") And PluginOverlay.OverlayNumber = This.OverlayNumber
+        PluginOverlay.AddControl(Control)
         Return Control
     }
     
