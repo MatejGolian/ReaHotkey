@@ -559,11 +559,25 @@ Class KompleteKontrol {
         Static Call() {
             PluginControlX := 0
             PluginControlY := 0
+            PluginControlW := 0
+            PluginControlH := 0
             Try
-            ControlGetPos &PluginControlX, &PluginControlY,,, KompleteKontrol.GetPluginControl(), ReaHotkey.PluginWinCriteria
+            ControlGetPos &PluginControlX, &PluginControlY, &PluginControlW, &PluginControlH, KompleteKontrol.GetPluginControl(), ReaHotkey.PluginWinCriteria
             Catch
             Return GetPluginControlPos()
-            Return {X: PluginControlX, Y: PluginControlY}
+            Return {X: PluginControlX, Y: PluginControlY, W: PluginControlW, H: PluginControlH}
+        }
+    }
+    
+    Class GetPluginHeight {
+        Static Call() {
+            KompleteKontrol.Return GetPluginControlPos().H
+        }
+    }
+    
+    Class GetPluginWidth {
+        Static Call() {
+            Return KompleteKontrol.GetPluginControlPos().W
         }
     }
     
