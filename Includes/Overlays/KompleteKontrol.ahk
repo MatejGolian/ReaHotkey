@@ -403,7 +403,7 @@ Class KompleteKontrol {
     
     Static InitPlugin(PluginInstance) {
         If PluginInstance.Overlay.ChildControls.Length = 0
-        PluginInstance.Overlay.AddAccessibilityOverlay()
+        PluginInstance.Overlay.AddPluginOverlay()
         PluginInstance.Overlay.ChildControls[1] := This.PluginHeader.Clone()
         If Not HasProp(PluginInstance.Overlay, "Metadata") {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
@@ -653,7 +653,7 @@ Class KompleteKontrol {
                 If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
                 Return PluginToUnload
                 If NoLibraryProductOverlay.ChildControls[2].ChildControls.Length > 0
-                NoLibraryProductOverlay.ChildControls[2] := AccessibilityOverlay()
+                NoLibraryProductOverlay.ChildControls[2] := PluginOverlay()
                 ReaHotkey.FoundPlugin.Overlay := NoLibraryProductOverlay
                 KompleteKontrol.TogglePluginSearchVisible()
                 ReaHotkey.TurnPluginTimersOff("Komplete Kontrol")

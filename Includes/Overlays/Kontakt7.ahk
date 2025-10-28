@@ -330,7 +330,7 @@ Class Kontakt7 {
     
     Static InitPlugin(PluginInstance) {
         If PluginInstance.Overlay.ChildControls.Length = 0
-        PluginInstance.Overlay.AddAccessibilityOverlay()
+        PluginInstance.Overlay.AddPluginOverlay()
         PluginInstance.Overlay.ChildControls[1] := This.PluginHeader.Clone()
         If Not HasProp(PluginInstance.Overlay, "Metadata") {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
