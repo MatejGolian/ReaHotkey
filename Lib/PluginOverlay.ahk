@@ -5,8 +5,10 @@ Class PluginOverlay Extends AccessibilityOverlay {
     OverlayNumber := 0
     PluginName := ""
     
-    __New(PluginName, OverlayLabel := "") {
+    __New(OverlayLabel := "", PluginName := "") {
         Super.__New(OverlayLabel)
+        If PluginName = ""
+        PluginName := Plugin.UnnamedPluginName
         This.PluginName := PluginName
         PluginNumber := Plugin.FindName(PluginName)
         If PluginNumber > 0 {

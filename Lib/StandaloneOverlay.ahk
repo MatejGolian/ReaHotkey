@@ -5,8 +5,10 @@ Class StandaloneOverlay Extends AccessibilityOverlay {
     OverlayNumber := 0
     StandaloneName := ""
     
-    __New(StandaloneName, OverlayLabel := "") {
+    __New(OverlayLabel := "", StandaloneName := "") {
         Super.__New(OverlayLabel)
+        If StandaloneName = ""
+        StandaloneName := Standalone.UnnamedStandaloneName
         This.StandaloneName := StandaloneName
         StandaloneNumber := Standalone.FindName(StandaloneName)
         If StandaloneNumber > 0 {
