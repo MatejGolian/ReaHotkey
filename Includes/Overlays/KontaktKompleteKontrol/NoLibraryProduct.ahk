@@ -7,8 +7,8 @@ Class NoLibraryProduct {
         
         NoLibraryProductOverlay := PluginOverlay("None")
         NoLibraryProductOverlay.Metadata := Map("Product", "None")
-        NoLibraryProductOverlay.AddAccessibilityOverlay()
-        NoLibraryProductOverlay.AddAccessibilityOverlay()
+        NoLibraryProductOverlay.AddPluginOverlay()
+        NoLibraryProductOverlay.AddPluginOverlay()
         %PluginClass%.PluginOverlays.Push(NoLibraryProductOverlay)
     }
     
