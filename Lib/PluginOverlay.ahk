@@ -2,17 +2,19 @@
 
 Class PluginOverlay Extends AccessibilityOverlay {
     
+    CompensationFunction := ""
     OverlayNumber := 0
     PluginName := ""
     
-    __New(OverlayLabel := "", PluginName := "") {
+    __New(OverlayLabel := "", PluginName := "", CompensationFunction := CompensatePluginCoordinates) {
         Super.__New(OverlayLabel)
         If PluginName = ""
         PluginName := Plugin.UnnamedPluginName
         This.PluginName := PluginName
+        This.CompensationFunction := CompensationFunction
         PluginNumber := Plugin.FindName(PluginName)
         If PluginNumber > 0 {
-            OverlayNumber := This.List[PluginNumber]["Overlays"].Length + 1
+            OverlayNumber := Plugin.List[PluginNumber]["Overlays"].Length + 1
             This.OverlayNumber := OverlayNumber
             Plugin.List[PluginNumber]["Overlays"].Push(This)
             For PluginInstance In Plugin.Instances
@@ -24,25 +26,27 @@ Class PluginOverlay Extends AccessibilityOverlay {
     AddControl(Control) {
         Control := Super.AddControl(Control)
         Plugin.RegisterOverlayHotkeys(This.PluginName, This)
-        If Control.HasOwnProp("PreExecFocusFunctions") {
-            Found := False
-            For FocusFunction In Control.PreExecFocusFunctions
-            If FocusFunction == CompensatePluginCoordinates {
-                Found := True
-                Break
+        If This.CompensationFunction Is Object {
+            If Control.HasOwnProp("PreExecFocusFunctions") {
+                Found := False
+                For FocusFunction In Control.PreExecFocusFunctions
+                If FocusFunction == This.CompensationFunction {
+                    Found := True
+                    Break
+                }
+                If Not Found
+                Control.PreExecFocusFunctions.Push(This.CompensationFunction)
             }
-            If Not Found
-            Control.PreExecFocusFunctions.Push(CompensatePluginCoordinates)
-        }
-        If Control.HasOwnProp("PreExecActivationFunctions") {
-            Found := False
-            For ActivationFunction In Control.PreExecActivationFunctions
-            If ActivationFunction == CompensatePluginCoordinates {
-                Found := True
-                Break
+            If Control.HasOwnProp("PreExecActivationFunctions") {
+                Found := False
+                For ActivationFunction In Control.PreExecActivationFunctions
+                If ActivationFunction == This.CompensationFunction {
+                    Found := True
+                    Break
+                }
+                If Not Found
+                Control.PreExecActivationFunctions.Push(This.CompensationFunction)
             }
-            If Not Found
-            Control.PreExecActivationFunctions.Push(CompensatePluginCoordinates)
         }
         For PluginInstance In Plugin.Instances
         If This.PluginName = PluginInstance.Name

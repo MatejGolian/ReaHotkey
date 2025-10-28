@@ -12,7 +12,7 @@ Class StandaloneOverlay Extends AccessibilityOverlay {
         This.StandaloneName := StandaloneName
         StandaloneNumber := Standalone.FindName(StandaloneName)
         If StandaloneNumber > 0 {
-            OverlayNumber := This.List[StandaloneNumber]["Overlays"].Length + 1
+            OverlayNumber := Standalone.List[StandaloneNumber]["Overlays"].Length + 1
             This.OverlayNumber := OverlayNumber
             Standalone.List[StandaloneNumber]["Overlays"].Push(This)
             For StandaloneInstance In Standalone.Instances

@@ -4,15 +4,14 @@ Class Repro {
     
     Static __New() {
         Plugin.Register("Repro", "^com.u-he.Repro1.vst.window1$")
-        ReproOverlay := AccessibilityOverlay("Repro")
+        ReproOverlay := PluginOverlay("Repro", "Repro", KompleteKontrol.CompensatePluginCoordinates)
         ReproOverlay.AddStaticText("Repro")
-        ReproOverlay.AddHotspotButton("u-HE Logo Menu", 64, 44, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("^U", "Ctrl+U")
-        ReproOverlay.AddActivatableCustom("", ObjBindMethod(This, "FocusOrActivateBrowserToggler",, "Focus"),, ObjBindMethod(This, "FocusOrActivateBrowserToggler",, "Activate")).SetHotkey("!B", "Alt+B")
-        ReproOverlay.AddHotspotButton("Previous Preset", 440, 53, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!P", "Alt+P")
-        ReproOverlay.AddOCRButton("Preset Menu, currently loaded", "Preset Menu, preset name not detected", "TesseractBest", 460, 36, 670, 70,,, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
-        ReproOverlay.AddHotspotButton("Next Preset", 730, 53, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("!N", "Alt+N")
-        ReproOverlay.AddHotspotButton("Save Preset", 808, 53, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates).SetHotkey("^S", "Ctrl+S")
-        Plugin.RegisterOverlay("Repro", ReproOverlay)
+        ReproOverlay.AddHotspotButton("u-HE Logo Menu", 64, 44,,,,, "^U", "Ctrl+U")
+        ReproOverlay.AddActivatableCustom("", ObjBindMethod(This, "FocusOrActivateBrowserToggler",, "Focus"),, ObjBindMethod(This, "FocusOrActivateBrowserToggler",, "Activate"),, "!B", "Alt+B")
+        ReproOverlay.AddHotspotButton("Previous Preset", 440, 53,,,,, "!P", "Alt+P")
+        ReproOverlay.AddOCRButton("Preset Menu, currently loaded", "Preset Menu, preset name not detected", "TesseractBest", 460, 36, 670, 70,,,,,,, "!M", "Alt+M")
+        ReproOverlay.AddHotspotButton("Next Preset", 730, 53,,,,, "!N", "Alt+N")
+        ReproOverlay.AddHotspotButton("Save Preset", 808, 53,,,,, "^S", "Ctrl+S")
     }
     
     Static DetectWhich() {
