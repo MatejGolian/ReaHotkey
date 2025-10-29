@@ -219,16 +219,30 @@ Class Program {
         OverlayNumber := 0
         ProgramNumber := This.FindName(ProgramName)
         If ProgramNumber > 0 {
+            Found := False
             If ProgramOverlay.HasOwnProp("OverlayNumber")
             For OverlayEntry In This.List[ProgramNumber]["Overlays"]
-            If OverlayEntry.HasOwnProp("OverlayNumber") And OverlayEntry.OverlayNumber = ProgramOverlay.OverlayNumber
-            Return ProgramOverlay.OverlayNumber
+            If OverlayEntry.HasOwnProp("OverlayNumber") And OverlayEntry.OverlayNumber = ProgramOverlay.OverlayNumber {
+                Found := True
+                OverlayNumber := ProgramOverlay.OverlayNumber
+                Break
+            }
+            If Not Found
             OverlayNumber := This.List[ProgramNumber]["Overlays"].Length + 1
             ProgramOverlay.OverlayNumber := OverlayNumber
+            If Not Found
             This.List[ProgramNumber]["Overlays"].Push(ProgramOverlay.Clone())
             For ProgramInstance In This.Instances
-            If ProgramName = ProgramInstance.Name
-            ProgramInstance.Overlays.Push(ProgramOverlay.Clone())
+            If ProgramName = ProgramInstance.Name {
+                Found := False
+                For OverlayEntry In ProgramInstance.Overlays
+                If OverlayEntry.HasOwnProp("OverlayNumber") And OverlayEntry.OverlayNumber = OverlayNumber {
+                    Found := True
+                    Break
+                }
+                If Not Found
+                ProgramInstance.Overlays.Push(ProgramOverlay.Clone())
+            }
             This.RegisterOverlayHotkeys(ProgramName, ProgramOverlay)
         }
         Return OverlayNumber

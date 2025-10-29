@@ -84,7 +84,7 @@ Class AudioImperia {
     }
     
     Static SelectCerberusPatchType(TypeCombo, Speak := True) {
-        ParentOverlay := TypeCombo.GetSuperordinateControl()
+        ParentOverlay := TypeCombo.SuperordinateControl
         PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
         If TypeCombo.GetValue() = "Normal" {
             ChildOverlay := PluginOverlay()

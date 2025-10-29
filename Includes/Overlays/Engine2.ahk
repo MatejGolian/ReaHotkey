@@ -51,8 +51,8 @@ Class Engine2 {
     }
     
     Static ActivatePluginAddLibraryButton(Engine2AddLibraryButton) {
-        Engine2LibrariesTab := Engine2AddLibraryButton.GetSuperordinateControl()
-        Engine2PreferencesTab := Engine2LibrariesTab.GetSuperordinateControl()
+        Engine2LibrariesTab := Engine2AddLibraryButton.SuperordinateControl
+        Engine2PreferencesTab := Engine2LibrariesTab.SuperordinateControl
         Engine2PreferencesTab.Focus(False)
         Engine2LibrariesTab.Focus(False)
         Engine2AddLibraryButton.Focus(False)

@@ -36,7 +36,7 @@ Class Soundiron {
     
     Static ClickFXRack(ButtonObj) {
         PluginClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
-        OverlayObj := ButtonObj.GetMasterControl()
+        OverlayObj := ButtonObj.MasterControl
         Switch OverlayObj.Metadata["Product"] {
             Case "Mimi Page Light & Shadow":
             If PixelGetColor(This.%PluginClass%XOffset + CompensatePluginXCoordinate(162), This.%PluginClass%YOffset + CompensatePluginYCoordinate(652)) = "0x575757" {
