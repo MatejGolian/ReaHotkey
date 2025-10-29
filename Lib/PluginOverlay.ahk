@@ -22,7 +22,6 @@ Class PluginOverlay Extends AccessibilityOverlay {
     
     AddControl(Control) {
         Control := Super.AddControl(Control)
-        Plugin.RegisterOverlayHotkeys(This.PluginName, This)
         If This.CompensationFunction Is Object {
             If Control.HasOwnProp("PreExecFocusFunctions") {
                 Found := False
@@ -46,6 +45,10 @@ Class PluginOverlay Extends AccessibilityOverlay {
             }
         }
         Return Control
+    }
+    
+    RegisterHotkey(Command) {
+        Plugin.SetHotkey(This.PluginName, Command)
     }
     
 }

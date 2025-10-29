@@ -134,6 +134,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Control.SuperordinateControlID := This.ControlID
         This.ChildControls.Push(Control)
         This.GetFocusableControlIDs()
+        If Control.HasOwnProp("HotkeyCommand") And Not Control.HotkeyCommand = ""
+        This.RegisterHotkey(Control.HotkeyCommand)
         Return This.ChildControls[This.ChildControls.Length]
     }
     
@@ -143,6 +145,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Control.SuperordinateControlID := This.ControlID
         This.ChildControls.InsertAt(Index, Control)
         This.GetFocusableControlIDs()
+        If Control.HasOwnProp("HotkeyCommand") And Not Control.HotkeyCommand = ""
+        This.RegisterHotkey(Control.HotkeyCommand)
         Return This.ChildControls[Index]
     }
     
@@ -859,6 +863,12 @@ Class FocusableControl Extends AccessibilityControl {
             If HotkeyFunction Is Object And HotkeyFunction.HasMethod("Call")
             This.HotkeyFunctions.Push(HotkeyFunction)
         }
+        MasterControl := This.GetMasterControl()
+        If MasterControl Is AccessibilityOverlay
+        MasterControl.RegisterHotkey(HotkeyCommand)
+        Else
+        If This.HasMethod("RegisterHotkey")
+        This.RegisterHotkey(HotkeyCommand)
     }
     
     SetValue(Value) {
@@ -1608,6 +1618,11 @@ Class Tab Extends AccessibilityOverlay {
             If HotkeyFunction Is Object And HotkeyFunction.HasMethod("Call")
             This.HotkeyFunctions.Push(HotkeyFunction)
         }
+        MasterControl := This.GetMasterControl()
+        If MasterControl Is AccessibilityOverlay
+        MasterControl.RegisterHotkey(HotkeyCommand)
+        Else
+        This.RegisterHotkey(HotkeyCommand)
     }
     
     SpeakOnFocus(Speak := True) {
