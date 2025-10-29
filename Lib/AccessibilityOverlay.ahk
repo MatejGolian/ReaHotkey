@@ -561,11 +561,11 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                         CurrentTab.Reset()
                     }
                 }
-            }
-            Default:
-            If CurrentControl Is AccessibilityOverlay {
-                If CurrentControl.ChildControls.Length > 0 {
-                    CurrentControl.Reset()
+                Default:
+                If CurrentControl Is AccessibilityOverlay {
+                    If CurrentControl.ChildControls.Length > 0 {
+                        CurrentControl.Reset()
+                    }
                 }
             }
         }

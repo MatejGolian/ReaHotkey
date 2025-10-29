@@ -23,25 +23,34 @@ Class PluginOverlay Extends AccessibilityOverlay {
     AddControl(Control) {
         Control := Super.AddControl(Control)
         If This.CompensationFunction Is Object {
-            If Control.HasOwnProp("PreExecFocusFunctions") {
-                Found := False
-                For FocusFunction In Control.PreExecFocusFunctions
-                If FocusFunction == This.CompensationFunction {
-                    Found := True
-                    Break
-                }
-                If Not Found
-                Control.PreExecFocusFunctions.InsertAt(1, This.CompensationFunction)
+            If Control Is AccessibilityOverlay {
+                ControlList := Control.GetAllControls()
+                ControlList.InsertAt(1, Control)
             }
-            If Control.HasOwnProp("PreExecActivationFunctions") {
-                Found := False
-                For ActivationFunction In Control.PreExecActivationFunctions
-                If ActivationFunction == This.CompensationFunction {
-                    Found := True
-                    Break
+            Else {
+                ControlList := Array(Control)
+            }
+            For ListItem In ControlList {
+                If ListItem.HasOwnProp("PreExecFocusFunctions") {
+                    Found := False
+                    For FocusFunction In ListItem.PreExecFocusFunctions
+                    If FocusFunction == This.CompensationFunction {
+                        Found := True
+                        Break
+                    }
+                    If Not Found
+                    ListItem.PreExecFocusFunctions.InsertAt(1, This.CompensationFunction)
                 }
-                If Not Found
-                Control.PreExecActivationFunctions.InsertAt(1, This.CompensationFunction)
+                If ListItem.HasOwnProp("PreExecActivationFunctions") {
+                    Found := False
+                    For ActivationFunction In ListItem.PreExecActivationFunctions
+                    If ActivationFunction == This.CompensationFunction {
+                        Found := True
+                        Break
+                    }
+                    If Not Found
+                    ListItem.PreExecActivationFunctions.InsertAt(1, This.CompensationFunction)
+                }
             }
         }
         Return Control
