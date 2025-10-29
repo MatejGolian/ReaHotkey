@@ -27,6 +27,14 @@ Class PluginOverlay Extends AccessibilityOverlay {
                 ControlList := Control.GetAllControls()
                 ControlList.InsertAt(1, Control)
             }
+            Else If Control Is TabControl {
+                ControlList := Array(Control)
+                For TabObject In Control.Tabs {
+                    ControlList.Push(TabObject)
+                    For TabObjectControl In TabObject.GetAllControls()
+                    ControlList.Push(TabObjectControl)
+                }
+            }
             Else {
                 ControlList := Array(Control)
             }
@@ -50,6 +58,16 @@ Class PluginOverlay Extends AccessibilityOverlay {
                     }
                     If Not Found
                     ListItem.PreExecActivationFunctions.InsertAt(1, This.CompensationFunction)
+                }
+                If ListItem.HasOwnProp("ChangeFunctions") {
+                    Found := False
+                    For ChangeFunction In ListItem.ChangeFunctions
+                    If ChangeFunction == This.CompensationFunction {
+                        Found := True
+                        Break
+                    }
+                    If Not Found
+                    ListItem.ChangeFunctions.InsertAt(1, This.CompensationFunction)
                 }
             }
         }
