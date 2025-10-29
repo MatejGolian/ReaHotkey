@@ -14,7 +14,6 @@ Class Standalone Extends Program {
     HotkeyMode := 1
     Name := ""
     Overlay := StandaloneOverlay()
-    Overlays := Array()
     StandaloneNumber := 0
     WinID := ""
     

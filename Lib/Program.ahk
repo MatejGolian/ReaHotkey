@@ -14,7 +14,6 @@ Class Program {
     HotkeyMode := 1
     Name := ""
     Overlay := AccessibilityOverlay()
-    Overlays := Array()
     ProgramNumber := 0
     
     __New(Name) {
@@ -31,15 +30,14 @@ Class Program {
             This.Chooser := ProgramEntry["Chooser"]
             This.HotkeyMode := ProgramEntry["HotkeyMode"]
             This.CheckerFunction := ProgramEntry["CheckerFunction"]
-            For OverlayNumber, Overlay In ProgramEntry["Overlays"]
-            This.Overlays.Push(Overlay.Clone())
-            If This.Overlays.Length = 1 {
-                This.Overlay := This.Overlays[1].Clone()
+            ProgramOverlays := ProgramEntry["Overlays"]
+            If ProgramOverlays.Length = 1 {
+                This.Overlay := ProgramOverlays[1].Clone()
             }
-            Else If This.Overlays.Length > 1 And This.Chooser = False {
-                This.Overlay := This.Overlays[1].Clone()
+            Else If ProgramOverlays.Length > 1 And This.Chooser = False {
+                This.Overlay := ProgramOverlays[1].Clone()
             }
-            Else If This.Overlays.Length > 1 And This.Chooser = True {
+            Else If ProgramOverlays.Length > 1 And This.Chooser = True {
                 This.Overlay := %This.__Class%Ovellay()
                 This.Overlay.Add%This.__Class%Overlay()
                 This.Overlay.AddControl(%This.__Class%.ChooserOverlay.Clone())
@@ -53,6 +51,13 @@ Class Program {
             %This.__Class%.Instances.Push(This)
             This.Init()
         }
+    }
+    
+    __Get(Name, Params) {
+        Try
+        Return This.Get%Name%()
+        Catch As ErrorMessage
+        Throw ErrorMessage
     }
     
     Check() {
@@ -74,7 +79,7 @@ Class Program {
     }
     
     GetOverlays() {
-        Return This.Overlays
+        Return %This.__Class%.GetOverlays(This.Name)
     }
     
     Init() {
@@ -221,7 +226,7 @@ Class Program {
         If ProgramNumber > 0 {
             Found := False
             If ProgramOverlay.HasOwnProp("OverlayNumber")
-            For OverlayEntry In This.List[ProgramNumber]["Overlays"]
+            For OverlayIndex, OverlayEntry In This.List[ProgramNumber]["Overlays"]
             If OverlayEntry.HasOwnProp("OverlayNumber") And OverlayEntry.OverlayNumber = ProgramOverlay.OverlayNumber {
                 Found := True
                 OverlayNumber := ProgramOverlay.OverlayNumber
@@ -232,17 +237,8 @@ Class Program {
             ProgramOverlay.OverlayNumber := OverlayNumber
             If Not Found
             This.List[ProgramNumber]["Overlays"].Push(ProgramOverlay.Clone())
-            For ProgramInstance In This.Instances
-            If ProgramName = ProgramInstance.Name {
-                Found := False
-                For OverlayEntry In ProgramInstance.Overlays
-                If OverlayEntry.HasOwnProp("OverlayNumber") And OverlayEntry.OverlayNumber = OverlayNumber {
-                    Found := True
-                    Break
-                }
-                If Not Found
-                ProgramInstance.Overlays.Push(ProgramOverlay.Clone())
-            }
+            Else
+            This.List[ProgramNumber]["Overlays"][OverlayIndex] := ProgramOverlay.Clone()
             This.RegisterOverlayHotkeys(ProgramName, ProgramOverlay)
         }
         Return OverlayNumber

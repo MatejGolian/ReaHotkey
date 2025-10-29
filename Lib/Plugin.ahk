@@ -15,7 +15,6 @@ Class Plugin Extends Program {
     InstanceNumber := 0
     Name := ""
     Overlay := PluginOverlay()
-    Overlays := Array()
     PluginNumber := 0
     SingleInstance := False
     WinTitle := ""
