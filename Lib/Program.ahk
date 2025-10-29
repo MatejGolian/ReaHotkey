@@ -38,13 +38,13 @@ Class Program {
                 This.Overlay := ProgramOverlays[1].Clone()
             }
             Else If ProgramOverlays.Length > 1 And This.Chooser = True {
-                This.Overlay := %This.__Class%Ovellay()
+                This.Overlay := %This.__Class%Overlay()
                 This.Overlay.Add%This.__Class%Overlay()
                 This.Overlay.AddControl(%This.__Class%.ChooserOverlay.Clone())
                 This.Overlay.OverlayNumber := 0
             }
             Else {
-                This.Overlay := %This.__Class%Ovellay()
+                This.Overlay := %This.__Class%Overlay()
                 This.Overlay.AddControl(%This.__Class%.DefaultOverlay.Clone())
                 This.Overlay.OverlayNumber := 0
             }

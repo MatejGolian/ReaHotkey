@@ -47,25 +47,25 @@ Class Sforzando {
     }
     
     Static InitPlugin(PluginInstance) {
-        PluginHeader := AccessibilityOverlay()
+        PluginHeader := PluginOverlay(,, KompleteKontrol.CompensatePluginCoordinates)
         PluginHeader.AddStaticText("sforzando")
-        PluginHeader.AddOCRButton("Instrument", "Instrument not detected", "TesseractBest", 90, 22, 200, 36,,, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates)
-        PluginHeader.AddOCRButton("Polyphony", "Polyphony not detected", "TesseractBest", 486, 40, 516, 70,,, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates)
-        PluginHeader.AddOCRButton("Pitchbend range", "Pitchbend range not detected", "TesseractBest", 576, 40, 602, 60,,, KompleteKontrol.CompensatePluginCoordinates,, KompleteKontrol.CompensatePluginCoordinates)
+        PluginHeader.AddOCRButton("Instrument", "Instrument not detected", "TesseractBest", 90, 22, 200, 36)
+        PluginHeader.AddOCRButton("Polyphony", "Polyphony not detected", "TesseractBest", 486, 40, 516, 70)
+        PluginHeader.AddOCRButton("Pitchbend range", "Pitchbend range not detected", "TesseractBest", 576, 40, 602, 60)
         PluginInstance.Overlay.Label := "sforzando"
         If PluginInstance.Overlay.ChildControls.Length = 0
-        PluginInstance.Overlay.AddAccessibilityOverlay()
+        PluginInstance.Overlay.AddPluginOverlay()
         PluginInstance.Overlay.ChildControls[1] := PluginHeader
     }
     
     Static InitStandalone(StandaloneInstance) {
-        StandaloneHeader := AccessibilityOverlay()
+        StandaloneHeader := StandaloneOverlay()
         StandaloneHeader.AddOCRButton("Instrument", "Instrument not detected", "TesseractBest", 90, 22, 200, 36)
         StandaloneHeader.AddOCRButton("Polyphony", "Polyphony not detected", "TesseractBest", 486, 40, 516, 70)
         StandaloneHeader.AddOCRButton("Pitchbend range", "Pitchbend range not detected", "TesseractBest", 576, 40, 602, 60)
         StandaloneInstance.Overlay.Label := "sforzando"
         If StandaloneInstance.Overlay.ChildControls.Length = 0
-        StandaloneInstance.Overlay.AddAccessibilityOverlay()
+        StandaloneInstance.Overlay.AddStandaloneOverlay()
         StandaloneInstance.Overlay.ChildControls[1] := StandaloneHeader
     }
     
