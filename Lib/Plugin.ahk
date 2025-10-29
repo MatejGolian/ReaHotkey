@@ -2,6 +2,11 @@
 
 Class Plugin Extends Program {
     
+    Static UnnamedPluginName := "Unnamed Plugin"
+    Static ChooserOverlay := PluginOverlay()
+    Static DefaultOverlay := PluginOverlay()
+    Static Instances := Array()
+    Static List := Array()
     CheckerFunction := ""
     Chooser := True
     ControlClass := ""
@@ -9,16 +14,11 @@ Class Plugin Extends Program {
     InitFunction := ""
     InstanceNumber := 0
     Name := ""
-    Overlay := AccessibilityOverlay()
+    Overlay := PluginOverlay()
     Overlays := Array()
     PluginNumber := 0
     SingleInstance := False
     WinTitle := ""
-    Static ChooserOverlay := AccessibilityOverlay()
-    Static DefaultOverlay := AccessibilityOverlay()
-    Static Instances := Array()
-    Static List := Array()
-    Static UnnamedPluginName := "Unnamed Plugin"
     
     __New(Name, ControlClass, WinTitle) {
         Super.__New(Name)

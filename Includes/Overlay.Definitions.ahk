@@ -1,13 +1,13 @@
 #Requires AutoHotkey v2.0
 
-Plugin.DefaultOverlay := AccessibilityOverlay()
+Plugin.DefaultOverlay := PluginOverlay()
 Plugin.DefaultOverlay.AddStaticText("No overlay defined")
-Plugin.ChooserOverlay := AccessibilityOverlay()
+Plugin.ChooserOverlay := PluginOverlay()
 Plugin.ChooserOverlay.AddCustomButton("Choose overlay",,, ActivateChooser).SetHotkey("!C", "Alt+C")
 
-Standalone.DefaultOverlay := AccessibilityOverlay()
+Standalone.DefaultOverlay := StandaloneOverlay()
 Standalone.DefaultOverlay.AddStaticText("No overlay defined")
-Standalone.ChooserOverlay := AccessibilityOverlay()
+Standalone.ChooserOverlay := StandaloneOverlay()
 Standalone.ChooserOverlay.AddCustomButton("Choose overlay",,, ActivateChooser).SetHotkey("!C", "Alt+C")
 
 #Include Overlays/Kontakt7.ahk

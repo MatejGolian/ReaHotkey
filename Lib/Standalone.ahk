@@ -2,21 +2,21 @@
 
 Class Standalone Extends Program {
     
+    Static UnnamedStandaloneName := "Unnamed Program"
+    Static ChooserOverlay := StandaloneOverlay()
+    Static DefaultOverlay := StandaloneOverlay()
+    Static Instances := Array()
+    Static List := Array()
     CheckerFunction := ""
     Chooser := True
     InitFunction := ""
     InstanceNumber := 0
     HotkeyMode := 1
     Name := ""
-    Overlay := AccessibilityOverlay()
+    Overlay := StandaloneOverlay()
     Overlays := Array()
     StandaloneNumber := 0
     WinID := ""
-    Static ChooserOverlay := AccessibilityOverlay()
-    Static DefaultOverlay := AccessibilityOverlay()
-    Static Instances := Array()
-    Static List := Array()
-    Static UnnamedStandaloneName := "Unnamed Program"
     
     __New(Name, WinID) {
         Super.__New(Name)

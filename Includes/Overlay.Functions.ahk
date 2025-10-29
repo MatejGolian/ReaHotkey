@@ -50,7 +50,7 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                 ImageFound := 0
                 If ImageFound
                 If ReaHotkey.Found%Type%.Chooser {
-                    ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(OverlayEntry.Label)
+                    ReaHotkey.Found%Type%.Overlay := %Type%Overlay(OverlayEntry.Label)
                     ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
                     If OverlayEntry.HasProp("Metadata")
                     ReaHotkey.Found%Type%.Overlay.Metadata := OverlayEntry.Metadata
@@ -127,7 +127,7 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu, TypeToFocus := "C", Value
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemName]
     If Not ReaHotkey.Found%Type%.Overlay.OverlayNumber = OverlayNumber
     If ReaHotkey.Found%Type%.Chooser {
-        ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(ItemName)
+        ReaHotkey.Found%Type%.Overlay := %Type%Overlay(ItemName)
         ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
         If OverlayList[OverlayNumber].HasProp("Metadata")
         ReaHotkey.Found%Type%.Overlay.Metadata := OverlayList[OverlayNumber].Metadata

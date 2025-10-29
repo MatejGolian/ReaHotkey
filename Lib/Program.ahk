@@ -2,6 +2,11 @@
 
 Class Program {
     
+    Static UnnamedProgramName := "Unnamed Program"
+    Static ChooserOverlay := AccessibilityOverlay()
+    Static DefaultOverlay := AccessibilityOverlay()
+    Static Instances := Array()
+    Static List := Array()
     CheckerFunction := ""
     Chooser := True
     InitFunction := ""
@@ -11,11 +16,6 @@ Class Program {
     Overlay := AccessibilityOverlay()
     Overlays := Array()
     ProgramNumber := 0
-    Static ChooserOverlay := AccessibilityOverlay()
-    Static DefaultOverlay := AccessibilityOverlay()
-    Static Instances := Array()
-    Static List := Array()
-    Static UnnamedProgramName := "Unnamed Program"
     
     __New(Name) {
         ProgramNumber := %This.__Class%.FindName(Name)
@@ -40,13 +40,13 @@ Class Program {
                 This.Overlay := This.Overlays[1].Clone()
             }
             Else If This.Overlays.Length > 1 And This.Chooser = True {
-                This.Overlay := AccessibilityOverlay()
-                This.Overlay.AddAccessibilityOverlay()
+                This.Overlay := %This.__Class%Ovellay()
+                This.Overlay.Add%This.__Class%Overlay()
                 This.Overlay.AddControl(%This.__Class%.ChooserOverlay.Clone())
                 This.Overlay.OverlayNumber := 0
             }
             Else {
-                This.Overlay := AccessibilityOverlay()
+                This.Overlay := %This.__Class%Ovellay()
                 This.Overlay.AddControl(%This.__Class%.DefaultOverlay.Clone())
                 This.Overlay.OverlayNumber := 0
             }
