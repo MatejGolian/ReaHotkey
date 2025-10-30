@@ -24,14 +24,14 @@ Class PluginOverlay Extends AccessibilityOverlay {
         Control := Super.AddControl(Control)
         If This.CompensationFunction Is Object {
             If Control Is AccessibilityOverlay {
-                ControlList := Control.GetAllControls()
+                ControlList := Control.AllControls
                 ControlList.InsertAt(1, Control)
             }
             Else If Control Is TabControl {
                 ControlList := Array(Control)
                 For TabObject In Control.Tabs {
                     ControlList.Push(TabObject)
-                    For TabObjectControl In TabObject.GetAllControls()
+                    For TabObjectControl In TabObject.AllControls
                     ControlList.Push(TabObjectControl)
                 }
             }
