@@ -63,7 +63,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Control := %SubStr(Value, 4)%.Call(Properties*)
             Return This.AddControl(Control)
         }
-        Return False
+        Throw MethodError("This value of type `"" . This.__Class . "`" has no method named `"" . Value . "`".", -1)
     }
     
     ActivateChildNumber(ChildNumber) {
@@ -495,6 +495,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 CurrentControl.Increase()
             }
         }
+    }
+    
+    RegisterHotkey(Command) {
     }
     
     RemoveControl() {
