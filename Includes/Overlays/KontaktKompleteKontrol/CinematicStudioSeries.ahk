@@ -15,9 +15,9 @@ Class CinematicStudioSeries {
         CinematicStudioBrassOverlay.Metadata := Map("Vendor", "Cinematic Studio Series", "Product", "Cinematic Studio Brass", "Image", Map("File", "Images/KontaktKompleteKontrol/CinematicStudioBrass/Product.png"))
         CinematicStudioBrassOverlay.AddPluginOverlay()
         CinematicStudioBrassOverlay.AddStaticText("Cinematic Studio Brass")
-        CinematicStudioBrassOverlay.AddHotspotButton("Close", %PluginClass%XOffset + 46, %PluginClass%YOffset + 466)
-        CinematicStudioBrassOverlay.AddHotspotButton("Main", %PluginClass%XOffset + 96, %PluginClass%YOffset + 466)
-        CinematicStudioBrassOverlay.AddHotspotButton("Room", %PluginClass%XOffset + 146, %PluginClass%YOffset + 466)
+        CinematicStudioBrassOverlay.AddHotspotToggleButton("Close", %PluginClass%XOffset + 46, %PluginClass%YOffset + 465, "0xF6AFAC", "0x737170")
+        CinematicStudioBrassOverlay.AddHotspotToggleButton("Main", %PluginClass%XOffset + 96, %PluginClass%YOffset + 465, "0xF6AFAC", "0x747170")
+        CinematicStudioBrassOverlay.AddHotspotToggleButton("Room", %PluginClass%XOffset + 146, %PluginClass%YOffset + 465, "0xF6AFAC", "0x747170")
         CinematicStudioBrassOverlay.AddGraphicalToggleButton("Mix", %PluginClass%XOffset + 186, %PluginClass%YOffset + 476, %PluginClass%XOffset + 206, %PluginClass%YOffset + 488, "Images/KontaktKompleteKontrol/CinematicStudioBrass/MixOn.png", "Images/KontaktKompleteKontrol/CinematicStudioBrass/MixOff.png")
         %PluginClass%.PluginOverlays.Push(CinematicStudioBrassOverlay)
         
