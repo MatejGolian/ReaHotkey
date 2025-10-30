@@ -23,7 +23,7 @@ Class PluginOverlay Extends AccessibilityOverlay {
     AddControl(Control) {
         Control := Super.AddControl(Control)
         If This.CompensationFunction Is Object {
-            CompensationList := ["PreExecFocusFunctions", "PreExecActivationFunctions", "ChangeFunctions"]
+            CompensationList := Array("PreExecFocusFunctions", "PreExecActivationFunctions", "ChangeFunctions")
             If Control Is AccessibilityOverlay {
                 ControlList := Control.AllControls
                 ControlList.InsertAt(1, Control)

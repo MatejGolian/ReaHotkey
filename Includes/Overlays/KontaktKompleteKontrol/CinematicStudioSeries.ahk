@@ -11,6 +11,16 @@ Class CinematicStudioSeries {
         KompleteKontrolXOffset := 190
         KompleteKontrolYOffset := 111
         
+        CinematicStudioBrassOverlay := PluginOverlay("Cinematic Studio Brass")
+        CinematicStudioBrassOverlay.Metadata := Map("Vendor", "Cinematic Studio Series", "Product", "Cinematic Studio Brass", "Image", Map("File", "Images/KontaktKompleteKontrol/CinematicStudioBrass/Product.png"))
+        CinematicStudioBrassOverlay.AddPluginOverlay()
+        CinematicStudioBrassOverlay.AddStaticText("Cinematic Studio Brass")
+        CinematicStudioBrassOverlay.AddHotspotButton("Close", %PluginClass%XOffset + 46, %PluginClass%YOffset + 466)
+        CinematicStudioBrassOverlay.AddHotspotButton("Main", %PluginClass%XOffset + 96, %PluginClass%YOffset + 466)
+        CinematicStudioBrassOverlay.AddHotspotButton("Room", %PluginClass%XOffset + 146, %PluginClass%YOffset + 466)
+        CinematicStudioBrassOverlay.AddGraphicalToggleButton("Mix", %PluginClass%XOffset + 186, %PluginClass%YOffset + 476, %PluginClass%XOffset + 206, %PluginClass%YOffset + 488, "Images/KontaktKompleteKontrol/CinematicStudioBrass/MixOn.png", "Images/KontaktKompleteKontrol/CinematicStudioBrass/MixOff.png")
+        %PluginClass%.PluginOverlays.Push(CinematicStudioBrassOverlay)
+        
         CinematicStudioStringsOverlay := PluginOverlay("Cinematic Studio Strings")
         CinematicStudioStringsOverlay.Metadata := Map("Vendor", "Cinematic Studio Series", "Product", "Cinematic Studio Strings", "Image", Map("File", "Images/KontaktKompleteKontrol/CinematicStudioStrings/Product.png"))
         CinematicStudioStringsOverlay.AddPluginOverlay()
