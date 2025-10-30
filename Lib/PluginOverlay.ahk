@@ -23,6 +23,7 @@ Class PluginOverlay Extends AccessibilityOverlay {
     AddControl(Control) {
         Control := Super.AddControl(Control)
         If This.CompensationFunction Is Object {
+            CompensationList := ["PreExecFocusFunctions", "PreExecActivationFunctions", "ChangeFunctions"]
             If Control Is AccessibilityOverlay {
                 ControlList := Control.AllControls
                 ControlList.InsertAt(1, Control)
@@ -38,37 +39,17 @@ Class PluginOverlay Extends AccessibilityOverlay {
             Else {
                 ControlList := Array(Control)
             }
-            For ListItem In ControlList {
-                If ListItem.HasOwnProp("PreExecFocusFunctions") {
-                    Found := False
-                    For FocusFunction In ListItem.PreExecFocusFunctions
-                    If FocusFunction == This.CompensationFunction {
-                        Found := True
-                        Break
-                    }
-                    If Not Found
-                    ListItem.PreExecFocusFunctions.InsertAt(1, This.CompensationFunction)
+            For ControlItem In ControlList
+            For CompensationItem In CompensationList
+            If ControlItem.HasOwnProp(CompensationItem) {
+                Found := False
+                For ControlFunction In ControlItem.%CompensationItem%
+                If ControlFunction == This.CompensationFunction {
+                    Found := True
+                    Break
                 }
-                If ListItem.HasOwnProp("PreExecActivationFunctions") {
-                    Found := False
-                    For ActivationFunction In ListItem.PreExecActivationFunctions
-                    If ActivationFunction == This.CompensationFunction {
-                        Found := True
-                        Break
-                    }
-                    If Not Found
-                    ListItem.PreExecActivationFunctions.InsertAt(1, This.CompensationFunction)
-                }
-                If ListItem.HasOwnProp("ChangeFunctions") {
-                    Found := False
-                    For ChangeFunction In ListItem.ChangeFunctions
-                    If ChangeFunction == This.CompensationFunction {
-                        Found := True
-                        Break
-                    }
-                    If Not Found
-                    ListItem.ChangeFunctions.InsertAt(1, This.CompensationFunction)
-                }
+                If Not Found
+                ControlItem.%CompensationItem%.InsertAt(1, This.CompensationFunction)
             }
         }
         Return Control
