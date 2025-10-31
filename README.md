@@ -73,6 +73,7 @@ Just extract the downloaded archive and run one of the ReaHotkey executables dep
 * Using any other zoom value in Kontakt and Serum than 100% will result in ReaHotkey not operating as expected. Certain parts of the Kontakt overlays will still work, as not every single of its controls depends on mouse coordinates, that, however, is not the case in Serum.
 * At present library-specific overlays may not always behave correctly when used directly in the Kontakt 8 plug-in. In such case try using Kontakt 7 or open the given library from within Komplete Kontrol instead.
 * Due to OCR limitations, OCR-based elements may not report completely accurate information.
+* The state of the controls that work based on color detection, such as the checkboxes in Komplete Kontrol or the 'Close', 'Main' and 'Room' mic toggles in CSB, may not get identified correctly in all scenarios. With that in mind, as far as Komplete Kontrol goes, if ReaHotkey reports a particular checkbox as either  being "checked" or "not checked", the provided info is most likely correct.
 * In case several overlay elements use the same keyboard Shortcut, the given Shortcut will always trigger the first relevant element.
 
 ## <a name="dubler2"></a>Dubler 2 Accessibility
