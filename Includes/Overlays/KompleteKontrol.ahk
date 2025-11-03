@@ -170,7 +170,7 @@ Class KompleteKontrol {
         If Not Found
         %Type%.SetHotkeyMode("Komplete Kontrol", 1)
         Else
-        %Type%.SetHotkeyMode("Komplete Kontrol", 3)
+        %Type%.SetHotkeyMode("Komplete Kontrol", 0)
     }
     
     Static CheckPlugin(PluginInstance) {

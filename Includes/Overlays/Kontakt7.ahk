@@ -171,7 +171,7 @@ Class Kontakt7 {
         If Not Found
         %Type%.SetHotkeyMode("Kontakt 7", 1)
         Else
-        %Type%.SetHotkeyMode("Kontakt 7", 3)
+        %Type%.SetHotkeyMode("Kontakt 7", 0)
     }
     
     Static CheckPlugin(PluginInstance) {

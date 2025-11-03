@@ -114,7 +114,7 @@ Class ReaHotkey {
     }
     
     Static FocusPluginOverlay() {
-        If This.FoundPlugin Is Plugin And This.FoundPlugin.HotkeyMode = 1
+        If This.FoundPlugin Is Plugin And (This.FoundPlugin.HotkeyMode = 1 Or This.FoundPlugin.HotkeyMode = 3)
         If This.FoundPlugin.Overlay.ChildControls.Length > 0 And This.FoundPlugin.Overlay.GetFocusableControlIDs().Length > 0 {
             This.FoundPlugin.Overlay.Focus()
         }
@@ -129,7 +129,7 @@ Class ReaHotkey {
     }
     
     Static FocusStandaloneOverlay() {
-        If This.FoundStandalone Is Standalone And This.FoundStandalone.HotkeyMode = 1 {
+        If This.FoundStandalone Is Standalone And (This.FoundStandalone.HotkeyMode = 1 Or This.FoundStandalone.HotkeyMode = 3) {
             Wait(500)
             If This.FoundStandalone Is Standalone {
                 This.FoundStandalone.Overlay.Focus()
@@ -336,7 +336,7 @@ Class ReaHotkey {
                 HotIfWinActive(PluginWinCriteria)
                 TurnCommonOff()
                 TurnSpecificsOff(Type, Name)
-                Hotkey "F6", F6HK, "on"
+                TurnPluginOn()
             }
             If Type = "Standalone"
             For StandaloneWinCriteria In This.StandaloneWinCriteriaList {
@@ -363,6 +363,9 @@ Class ReaHotkey {
             Hotkey "Enter", "Off"
             Hotkey "Space", "Off"
         }
+        TurnPluginOn() {
+            Hotkey "F6", F6HK, "On"
+        }
         TurnSpecificsOff(Type, Name) {
             If Name = "" {
                 For HotkeyEntry In %Type%.GetList()
@@ -382,20 +385,20 @@ Class ReaHotkey {
         Thread "NoTimers"
         If Type = "Plugin" Or Type = "Standalone"
         If This.Found%Type% Is %Type%
-        If This.Found%Type%.HotkeyMode < 3 {
+        If This.Found%Type%.HotkeyMode > 0 And This.Found%Type%.HotkeyMode < 4 {
             If This.PluginWinCriteria And Type = "Plugin" {
                 HotIfWinActive(This.PluginWinCriteria)
                 TurnPluginOn()
-                If This.Found%Type%.HotkeyMode < 2
+                If This.Found%Type%.HotkeyMode = 1 Or This.Found%Type%.HotkeyMode = 3
                 TurnCommonOn()
-                If This.Found%Type%.HotkeyMode < 3
+                If This.Found%Type%.HotkeyMode < 4
                 TurnSpecificsOn(Type, Name)
             }
             If This.StandaloneWinCriteria And Type = "Standalone" {
                 HotIfWinActive(This.StandaloneWinCriteria)
-                If This.Found%Type%.HotkeyMode < 2
+                If This.Found%Type%.HotkeyMode = 1 Or This.Found%Type%.HotkeyMode = 3
                 TurnCommonOn()
-                If This.Found%Type%.HotkeyMode < 3
+                If This.Found%Type%.HotkeyMode < 4
                 TurnSpecificsOn(Type, Name)
             }
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added/Changed
+
+-   Internal: Added another hotkey mode option
+-   Internal: When detecting libraries, custom functions can now be specified via the 'DetectionFunction' metadata key
+-   Renamed the 'Images/KontaktKompleteKontrol' folder to 'SampleLibraries'
+
 ## [0.7.9] - 2025-10-31
 
 ### Added/Changed
