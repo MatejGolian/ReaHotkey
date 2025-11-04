@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2025-11-04
+
 ### Added/Changed
 
 -   Internal: Added another hotkey mode option
@@ -445,7 +447,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.9...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.0...HEAD
+
+[0.8.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.9...0.8.0
 
 [0.7.9]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.8...0.7.9
 
