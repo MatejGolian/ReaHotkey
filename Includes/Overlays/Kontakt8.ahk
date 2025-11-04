@@ -10,7 +10,7 @@ Class Kontakt8 {
     Static __New() {
         This.InitConfig()
         
-        PluginHeader := AccessibilityOverlay("Kontakt 8")
+        PluginHeader := PluginOverlay("Kontakt 8")
         PluginHeader.AddStaticText("Kontakt 8")
         PluginHeader.AddCustomButton("FILE menu",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!F", "Alt+F")
         PluginHeader.AddCustomButton("LIBRARY On/Off",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!L", "Alt+L")
@@ -26,7 +26,7 @@ Class Kontakt8 {
         PluginHeader.AddCustomButton("Choose library",,, ObjBindMethod(ChoosePluginOverlay,,,, "O")).SetHotkey("!C", "Alt+C")
         This.PluginHeader := PluginHeader
         
-        StandaloneHeader := AccessibilityOverlay("Kontakt 8")
+        StandaloneHeader := StandaloneOverlay("Kontakt 8")
         StandaloneHeader.AddCustomButton("FILE menu",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!F", "Alt+F")
         StandaloneHeader.AddCustomButton("LIBRARY On/Off",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!L", "Alt+L")
         StandaloneHeader.AddCustomButton("VIEW menu",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!V", "Alt+V")
@@ -35,9 +35,9 @@ Class Kontakt8 {
         
         Plugin.Register("Kontakt 8", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
         
-        For PluginOverlay In This.PluginOverlays {
-            PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
-            Plugin.RegisterOverlay("Kontakt 8", PluginOverlay)
+        For K8PluginOverlay In This.PluginOverlays {
+            K8PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
+            Plugin.RegisterOverlay("Kontakt 8", K8PluginOverlay)
         }
         
         Plugin.SetTimer("Kontakt 8", This.CheckPluginConfig, -1)
@@ -45,7 +45,7 @@ Class Kontakt8 {
         
         Plugin.Register("Kontakt 8 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, 1, True, ObjBindMethod(This, "CheckPluginContentMissing"))
         
-        PluginContentMissingOverlay := AccessibilityOverlay("Content Missing")
+        PluginContentMissingOverlay := PluginOverlay("Content Missing")
         PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")
         Plugin.RegisterOverlay("Kontakt 8 Content Missing Dialog", PluginContentMissingOverlay)
         
@@ -56,7 +56,7 @@ Class Kontakt8 {
         
         Standalone.Register("Kontakt 8 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 8.exe", False, False, 1)
         
-        StandaloneContentMissingOverlay := AccessibilityOverlay("Content Missing")
+        StandaloneContentMissingOverlay := StandaloneOverlay("Content Missing")
         StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")
         Standalone.RegisterOverlay("Kontakt 8 Content Missing Dialog", StandaloneContentMissingOverlay)
     }
@@ -71,31 +71,78 @@ Class Kontakt8 {
         If UIAElement
         Switch HeaderButton.Label {
             Case "FILE menu":
-            UIAElement := UIAElement.FindElement({Type:"Button", Name:"FILE"})
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: "FILE"})
             Case "LIBRARY On/Off":
-            UIAElement := UIAElement.FindElement({Type:"Button", Name:"LIBRARY"})
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: "LIBRARY"})
             Case "VIEW menu":
-            UIAElement := UIAElement.FindElement({Type:"Button", Name:"VIEW"})
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: "VIEW"})
             Case "SHOP (Opens in default web browser)":
-            UIAElement := UIAElement.FindElement({Type:"Button", Name:"SHOP"})
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: "SHOP"})
         }
         Catch
         UIAElement := False
-        If Not UIAElement = False
-        Switch HeaderButton.Label {
-            Case "FILE menu":
-            UIAElement.Click("Left")
-            This.CheckPluginMenu()
-            Case "LIBRARY On/Off":
-            UIAElement.Click("Left")
-            Case "VIEW menu":
-            UIAElement.Click("Left")
-            This.CheckPluginMenu()
-            Case "SHOP (Opens in default web browser)":
-            UIAElement.Click("Left")
+        If Not UIAElement = False {
+            Switch HeaderButton.Label {
+                Case "FILE menu":
+                UIAElement.Click("Left")
+                This.CheckMenu(Type)
+                Case "LIBRARY On/Off":
+                UIAElement.Click("Left")
+                Case "VIEW menu":
+                UIAElement.Click("Left")
+                This.CheckMenu(Type)
+                Case "SHOP (Opens in default web browser)":
+                UIAElement.Click("Left")
+            }
         }
-        Else
-        AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
+        Else {
+            Switch HeaderButton.Label {
+                Case "FILE menu":
+                If This.GetBrowser(Type) {
+                    TargetX := 145
+                    TargetY := 17
+                }
+                Else {
+                    TargetX := 148
+                    TargetY := 15
+                }
+                Case "LIBRARY On/Off":
+                If This.GetBrowser(Type) {
+                    TargetX := 184
+                    TargetY := 15
+                }
+                Else {
+                    TargetX :=216
+                    TargetY := 13
+                }
+                Case "VIEW menu":
+                If This.GetBrowser(Type) {
+                    TargetX := 256
+                    TargetY := 18
+                }
+                Else {
+                    TargetX := 240
+                    TargetY := 17
+                }
+                Case "SHOP (Opens in default web browser)":
+                If This.GetBrowser(Type) {
+                    TargetX := 828
+                    TargetY := 19
+                }
+                Else {
+                    TargetX := 466
+                    TargetY := 17
+                }
+            }
+            If (Type = "Plugin") {
+                TargetX := CompensatePluginXCoordinate(TargetX)
+                TargetY := CompensatePluginYCoordinate(TargetY)
+            }
+            If TargetX And TargetY {
+                Click TargetX, TargetY
+                This.CheckMenu(Type)
+            }
+        }
     }
     
     Static ActivatePluginHeaderButton(HeaderButton) {
@@ -152,7 +199,7 @@ Class Kontakt8 {
         UIAElement := GetUIAWindow()
         Found := False
         Try
-        UIAElement := UIAElement.FindElement({Type:"Menu"})
+        UIAElement := UIAElement.FindElement({Type: "Menu"})
         Catch
         UIAElement := False
         If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50009
@@ -160,12 +207,12 @@ Class Kontakt8 {
         If Not Found
         %Type%.SetHotkeyMode("Kontakt 8", 1)
         Else
-        %Type%.SetHotkeyMode("Kontakt 8", 3)
+        %Type%.SetHotkeyMode("Kontakt 8", 0)
     }
     
     Static CheckPlugin(PluginInstance) {
         Thread "NoTimers"
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Kontakt 8"
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative {
@@ -202,7 +249,7 @@ Class Kontakt8 {
     
     Static CheckPluginContentMissing(PluginInstance) {
         Thread "NoTimers"
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Kontakt 8 Content Missing Dialog"
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative
@@ -214,17 +261,10 @@ Class Kontakt8 {
         Return False
     }
     
-    Static closeBrowser(Type) {
+    Static CloseBrowser(Type) {
         Thread "NoTimers"
-        If Type = "Plugin"
-        UIAElement := This.GetPluginUIAElement()
-        Else
-        UIAElement := GetUIAWindow()
-        Try
-        UIAElement := UIAElement.FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
-        Catch
-        UIAElement := False
-        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50018 {
+        UIAElement := This.GetBrowser(Type)
+        If UIAElement Is UIA.IUIAutomationElement {
             Try
             UIAElement.WalkTree(-1).Click("Left")
             AccessibilityOverlay.Speak("Library Browser closed.")
@@ -233,15 +273,30 @@ Class Kontakt8 {
     }
     
     Static ClosePluginBrowser() {
-        This.closeBrowser("Plugin")
+        This.CloseBrowser("Plugin")
     }
     
     Static CloseStandaloneBrowser() {
-        This.closeBrowser("Standalone")
+        This.CloseBrowser("Standalone")
+    }
+    
+    Static GetBrowser(Type) {
+        If Type = "Plugin"
+        UIAElement := This.GetPluginUIAElement()
+        Else
+        UIAElement := GetUIAWindow()
+        Try
+        UIAElement := UIAElement.FindElement({ClassName: "FileTypeSelector", MatchMode: "Substring"})
+        Catch
+        Return False
+        If UIAElement.Type = 50018
+        Return UIAElement
+        Return False
     }
     
     Static GetPluginUIAElement() {
         Critical
+        Static Criteria := [{ClassName: "ni::qt::QuickWindow"}, {ClassName: "QWindowIcon", MatchMode: "Substring"}]
         If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
         Return False
         Try
@@ -250,17 +305,23 @@ Class Kontakt8 {
         Return False
         If Not UIAElement Is UIA.IUIAutomationElement
         Return False
-        If CheckElement(UIAElement)
-        Return UIAElement
         Try
-        UIAElement := UIAElement.FindElement({ClassName:"ni::qt::QuickWindow"})
-        Catch
-        Return False
         If CheckElement(UIAElement)
         Return UIAElement
+        Loop Criteria.Length {
+            Try
+            UIAElements := UIAElement.FindElements(Criteria[A_Index])
+            Catch
+            UIAElements := Array()
+            Try
+            For UIAElement In UIAElements
+            If CheckElement(UIAElement)
+            Return UIAElement
+        }
         Return False
         CheckElement(UIAElement) {
-            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Name = "Kontakt 8" And UIAElement.Type = 50032
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Name = "Kontakt 8"
+            If UIAElement.Type = 50032 Or UIAElement.Type = 50033
             Return True
             Return False
         }
@@ -273,7 +334,7 @@ Class Kontakt8 {
     
     Static InitPlugin(PluginInstance) {
         If PluginInstance.Overlay.ChildControls.Length = 0
-        PluginInstance.Overlay.AddAccessibilityOverlay()
+        PluginInstance.Overlay.AddPluginOverlay()
         PluginInstance.Overlay.ChildControls[1] := This.PluginHeader.Clone()
         If Not HasProp(PluginInstance.Overlay, "Metadata") {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
@@ -338,9 +399,10 @@ Class Kontakt8 {
     
     Class CheckPluginConfig {
         Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 8", True, True, "C", 2)
             If ReaHotkey.Config.Get("CloseK8Browser") = 1
-            Kontakt8.ClosePluginBrowser()
+            %ParentClass%.ClosePluginBrowser()
             If ReaHotkey.Config.Get("DetectLibsInK8") = 1
             Plugin.SetTimer("Kontakt 8", PluginAutoChangeFunction, 500)
             Else
@@ -350,25 +412,28 @@ Class Kontakt8 {
     
     Class CheckPluginMenu {
         Static Call(*) {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
-            Kontakt8.CheckMenu("Plugin")
+            %ParentClass%.CheckMenu("Plugin")
         }
     }
     
     Class CheckStandaloneConfig {
         Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             If ReaHotkey.Config.Get("CloseK8Browser") = 1
-            Kontakt8.CloseStandaloneBrowser()
+            %ParentClass%.CloseStandaloneBrowser()
         }
     }
     
     Class CheckStandaloneMenu {
         Static Call(*) {
-            Kontakt8.CheckMenu("Standalone")
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            %ParentClass%.CheckMenu("Standalone")
         }
     }
     
-    #IncludeAgain KontaktKompleteKontrol/NoProduct.ahk
+    #IncludeAgain KontaktKompleteKontrol/NoLibraryProduct.ahk
     #IncludeAgain KontaktKompleteKontrol/AudioImperia.ahk
     #IncludeAgain KontaktKompleteKontrol/CinematicStudioSeries.ahk
     #IncludeAgain KontaktKompleteKontrol/ImpactSoundworks.ahk

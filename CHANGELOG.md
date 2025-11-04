@@ -7,9 +7,99 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added/Changed
+
+-   Internal: Added another hotkey mode option
+-   Internal: When detecting libraries, custom functions can now be specified via the 'DetectionFunction' metadata key
+-   Renamed the 'Images/KontaktKompleteKontrol' folder to 'SampleLibraries'
+
+## [0.7.9] - 2025-10-31
+
+### Added/Changed
+
+-   Added basic support for microphone positions in Cinematic Studio Brass
+-   Internal: Added new 'Plugin' and 'Standalone' overlay types
+-   Internal: Hotkey parameters can now be specified via object constructors as well
+-   Internal: The Plugin and Standalone 'Overlays' property now just returns the overlays in the static definitions
+-   Internal: Trying to register overlays with taken numbers replaces previously registered overlays
+-   Various fixes and enhancements
+
+## [0.7.8] - 2025-09-20
+
+### Added/Changed
+
+-   Added support for opening menus in Kontakt 8.7.0 via fallback mouse coordinates due to accessibility regression (Special thanks to NI for making this possible)
+-   Added a separate folder for Komplete Kontrol under images (delete the old Images folder for a clean install)
+
+### Fixed
+
+-   Fixed small menu detection bug in standalone versions of Kontakt
+
+## [0.7.7] - 2025-08-21
+
 ### Added
 
--   Added the ability to focus the SINE Player plug-in
+-   Added mix switching support in Dolce by Audio Imperia
+
+## [0.7.6] - 2025-04-09
+
+### Added
+
+-   Added KK property for returning the currently loaded plug-in
+
+### Fixed
+
+-   Fixed Kontakt sometimes not being detected when loaded in KK
+
+## [0.7.5] - 2025-04-09
+
+### Fixed/Changed
+
+-   Ensure that the correct plug-in or standalone is active when setting hotkeys
+-   Use UIA for clearing KK search field
+
+## [0.7.4] - 2025-04-08
+
+### Changed
+
+-   Revert plug-in control caching
+
+## [0.7.3] - 2025-04-08
+
+### Changed
+
+-   Make detecting plug-ins in KK more flexible
+
+## [0.7.2] - 2025-04-07
+
+### Added
+
+-   Added ability to access plug-in overlays when these are loaded inside KK (the browser needs to be closed in most cases for this to work)
+-   Added button for closing the library browser in the plug-in version of KK
+
+### Changed
+
+-   Revert to not explicitly calling timer functions immediately
+-   Improve efficiency when calculating plug-in coordinates in most plug-ins
+-   Updated README
+
+## [0.7.1] - 2025-04-02
+
+### Fixed
+
+-   Hopefully fix KK 3.4.1+ not being detected
+
+## [0.7.0] - 2025-03-29
+
+### Added
+
+-   Added option to disable the Raum help message.
+
+## [0.6.9] - 2025-03-28
+
+### Added
+
+-   Added ability to choose presets in Native instruments Raum
 
 ### Changed
 
@@ -355,7 +445,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.8B...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.9...HEAD
+
+[0.7.9]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.8...0.7.9
+
+[0.7.8]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.7...0.7.8
+
+[0.7.7]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.6...0.7.7
+
+[0.7.6]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.5...0.7.6
+
+[0.7.5]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.4...0.7.5
+
+[0.7.4]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.3...0.7.4
+
+[0.7.3]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.2...0.7.3
+
+[0.7.2]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.1...0.7.2
+
+[0.7.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.0...0.7.1
+
+[0.7.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.9...0.7.0
+
+[0.6.9]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.8B...0.6.9
 
 [0.6.8B]: https://github.com/MatejGolian/ReaHotkey/compare/0.6.7...0.6.8B
 

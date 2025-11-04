@@ -2,7 +2,7 @@
 
 ## What's This And Who Is It For?
 
-This is an AutoHotkey scripth which aims to make certain virtual instruments/sample libraries  and related software at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although other programs/instruments are supported as well.
+This is an AutoHotkey script which aims to make certain virtual instruments/sample libraries  and related software at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although other programs/instruments are supported as well.
 
 ## What's new?
 
@@ -31,9 +31,10 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
   - Works inside REAPER and Ableton Live 12. Note that Kontakt version 7.10 or higher is required.
   - Switching Between instruments/multis/snapshots Only works inside REAPER and Ableton Live 12 - ReaHotkey does not support these features in the standalone versions of Kontakt.
   - The Content Missing dialog may not be accessible when running Kontakt inside Komplete Kontrol.
-* Makes it possible to switch Between various mixes and microphone positions in Audio Imperia's Areia, Cerberus, Chorus, Jaeger, Nucleus, Solo and Talos libraries. There is also support for toggling microphone positions in Cinematic Studio Strings, switching presets in the 'Juggernaut' library by Impact Soundworks and toggling the reverb on/off in a couple of Soundiron libraries.
+* Makes it possible to switch Between various mixes and microphone positions in Audio Imperia's Areia, Cerberus, Chorus, Dolce Jaeger, Nucleus, Solo and Talos libraries. There is also support for toggling microphone positions in Cinematic Studio Strings and Brass, switching presets in the 'Juggernaut' library by Impact Soundworks and toggling the reverb on/off in a couple of Soundiron libraries.
   - Only works inside REAPER and Ableton Live 12.
-  * Adds basic support for the Xfer Records Serum 2 synthesizer inside REAPER and Ableton Live 12.
+* Adds ability to choose presets in Raum by Native instruments.
+* Adds basic support for the Xfer Records Serum 2 synthesizer inside REAPER and Ableton Live 12.
   - Currently supported Features include preset browsing/saving and accessing the vendor menu.
   - Serum version 2 or later is required, as the overlay won't work properly in Serum 1.X.
   - Note that the demo version of Serum does not support saving presets.
@@ -43,7 +44,7 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
 
 ## Getting Started
 
-Just extract the downloaded archive and run one of the ReaHotkey executables depending on your OS architecture - 'ReaHotkey_x64.exe' if you're on a 64-bit version of Windows and 'ReaHotkey_x86.exe' if your build of Windows is 32-bit. If you than launch one of the supported plug-ins or applications, you will be able to interact with it simiilarly to how you would interact with any accessible application, like moving Between controls with Tab and Shift+Tab, switching tabs with the left or right arrows and so on. In case you want to use ReaHotkey together with one of the supported VST plug-ins in REAPER or Ableton, you can press the F6 key to move the focus inside the given plug-in's user interface. Note that for REAPER this is standard behavior - even without ReaHotkey being active.
+Just extract the downloaded archive and run one of the ReaHotkey executables depending on your OS architecture - 'ReaHotkey_x64.exe' if you're on a 64-bit version of Windows and 'ReaHotkey_x86.exe' if your build of Windows is 32-bit. If you then launch one of the supported plug-ins or applications, you will be able to interact with it simiilarly to how you would interact with any accessible application, like moving Between controls with Tab and Shift+Tab, switching tabs with the left or right arrows and so on. In case you want to use ReaHotkey together with one of the supported VST plug-ins in REAPER or Ableton, you can press the F6 key to move the focus inside the given plug-in's user interface. Note that for REAPER this is standard behavior - even without ReaHotkey being active.
 
 ## General Notes
 
@@ -72,6 +73,8 @@ Just extract the downloaded archive and run one of the ReaHotkey executables dep
 * Using any other zoom value in Kontakt and Serum than 100% will result in ReaHotkey not operating as expected. Certain parts of the Kontakt overlays will still work, as not every single of its controls depends on mouse coordinates, that, however, is not the case in Serum.
 * At present library-specific overlays may not always behave correctly when used directly in the Kontakt 8 plug-in. In such case try using Kontakt 7 or open the given library from within Komplete Kontrol instead.
 * Due to OCR limitations, OCR-based elements may not report completely accurate information.
+* The state of the controls that work based on color detection, such as the checkboxes in Komplete Kontrol or the 'Close', 'Main' and 'Room' mic toggles in CSB, may not get identified correctly in all scenarios. With that in mind, as far as Komplete Kontrol goes, if ReaHotkey reports a particular checkbox as either  being "checked" or "not checked", the provided info is most likely correct.
+* In case several overlay elements use the same keyboard Shortcut, the given Shortcut will always trigger the first relevant element.
 
 ## <a name="dubler2"></a>Dubler 2 Accessibility
 

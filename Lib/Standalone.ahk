@@ -2,21 +2,20 @@
 
 Class Standalone Extends Program {
     
+    Static UnnamedStandaloneName := "Unnamed Program"
+    Static ChooserOverlay := StandaloneOverlay()
+    Static DefaultOverlay := StandaloneOverlay()
+    Static Instances := Array()
+    Static List := Array()
     CheckerFunction := ""
     Chooser := True
     InitFunction := ""
     InstanceNumber := 0
     HotkeyMode := 1
     Name := ""
-    Overlay := AccessibilityOverlay()
-    Overlays := Array()
+    Overlay := StandaloneOverlay()
     StandaloneNumber := 0
     WinID := ""
-    Static ChooserOverlay := AccessibilityOverlay()
-    Static DefaultOverlay := AccessibilityOverlay()
-    Static Instances := Array()
-    Static List := Array()
-    Static UnnamedStandaloneName := "Unnamed Program"
     
     __New(Name, WinID) {
         Super.__New(Name)
@@ -67,16 +66,19 @@ Class Standalone Extends Program {
     }
     
     Static SetHotkey(StandaloneName, KeyName, Action := "", Options := "") {
+        PluginWinCriteria := ReaHotkey.PluginWinCriteria
+        StandaloneWinCriteria := ReaHotkey.StandaloneWinCriteria
         If Super.SetHotkey(StandaloneName, KeyName, Action, Options) = True {
             Options := Super.GetHotkeyOptions(Options)
-            If ReaHotkey.StandaloneWinCriteria
-            HotIfWinActive(ReaHotkey.StandaloneWinCriteria)
-            If ReaHotkey.FoundStandalone Is Standalone
-            Hotkey KeyName, Action, Options.String
-            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
-            HotIfWinActive(ReaHotkey.PluginWinCriteria)
-            Else If ReaHotkey.StandaloneWinCriteria And WinActive(ReaHotkey.StandaloneWinCriteria)
-            HotIfWinActive(ReaHotkey.StandaloneWinCriteria)
+            If StandaloneWinCriteria  And WinActive(StandaloneWinCriteria) {
+                HotIfWinActive(StandaloneWinCriteria)
+                If ReaHotkey.FoundStandalone Is Standalone And StandaloneName = ReaHotkey.FoundStandalone.Name
+                Hotkey KeyName, Action, Options.String
+            }
+            If PluginWinCriteria And WinActive(PluginWinCriteria)
+            HotIfWinActive(PluginWinCriteria)
+            Else If StandaloneWinCriteria And WinActive(StandaloneWinCriteria)
+            HotIfWinActive(StandaloneWinCriteria)
             Else
             HotIf
         }

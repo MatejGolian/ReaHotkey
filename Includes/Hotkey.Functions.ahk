@@ -163,7 +163,7 @@ FocusNextPreviousTab(Which, Overlay) {
         Else {
             If CurrentControl Is Object
             Loop AccessibilityOverlay.TotalNumberOfControls {
-                SuperordinateControl := CurrentControl.GetSuperordinateControl()
+                SuperordinateControl := CurrentControl.SuperordinateControl
                 If SuperordinateControl = 0
                 Break
                 If SuperordinateControl Is TabControl {

@@ -13,12 +13,19 @@ Class AccessibilityControl {
         AccessibilityOverlay.AllControls.Push(This)
     }
     
+    __Get(Name, Params) {
+        Try
+        Return This.Get%Name%()
+        Catch As ErrorMessage
+        Throw ErrorMessage
+    }
+    
     GetMasterControl() {
         CurrentControl := This
         Loop AccessibilityOverlay.TotalNumberOfControls {
             If CurrentControl.SuperordinateControlID = 0
             Return CurrentControl
-            CurrentControl := CurrentControl.GetSuperordinateControl()
+            CurrentControl := CurrentControl.SuperordinateControl
         }
         Return 0
     }
@@ -36,7 +43,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     ControlTypeLabel := "overlay"
     CurrentControlID := 0
     DefaultLabel := ""
-    FocusableControlIDs := Array()
     Label := ""
     PreviousControlID := 0
     Static AllControls := Array()
@@ -57,7 +63,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Control := %SubStr(Value, 4)%.Call(Properties*)
             Return This.AddControl(Control)
         }
-        Return False
+        Throw MethodError("This value of type `"" . This.__Class . "`" has no method named `"" . Value . "`".", -1)
     }
     
     ActivateChildNumber(ChildNumber) {
@@ -89,9 +95,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     ActivateControlNumber(ControlNumber) {
         If This.ChildControls.Length > 0 {
-            This.GetFocusableControlIDs()
-            If ControlNumber > 0 And This.FocusableControlIDs.Length >= ControlNumber {
-                ControlID := This.FocusableControlIDs[ControlNumber]
+            FocusableControlIDs := This.GetFocusableControlIDs()
+            If ControlNumber > 0 And FocusableControlIDs.Length >= ControlNumber {
+                ControlID := FocusableControlIDs[ControlNumber]
                 If ControlID = This.CurrentControlID {
                     Return This.ActivateCurrentControl()
                 }
@@ -112,7 +118,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
-                If CurrentControl.ControlType = "checkbox" Or CurrentControl.ControlType = "ToggleButton" {
+                If CurrentControl.ControlType = "Checkbox" Or CurrentControl.ControlType = "ToggleButton" {
                     TruePrev := AccessibilityOverlay.PreviousControlID
                     AccessibilityOverlay.PreviousControlID := CurrentControl.ControlID
                     Speak := True
@@ -122,7 +128,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
                 If CurrentControl.HasMethod("Activate")
                 CurrentControl.Activate(Speak)
-                If CurrentControl.ControlType = "checkbox" Or CurrentControl.ControlType = "ToggleButton" {
+                If CurrentControl.ControlType = "Checkbox" Or CurrentControl.ControlType = "ToggleButton" {
                     AccessibilityOverlay.PreviousControlID := TruePrev
                 }
                 Return CurrentControl
@@ -133,7 +139,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     AddControl(Control) {
         Control.SuperordinateControlID := This.ControlID
         This.ChildControls.Push(Control)
-        This.GetFocusableControlIDs()
+        If Control.HasOwnProp("HotkeyCommand") And Not Control.HotkeyCommand = ""
+        This.RegisterHotkey(Control.HotkeyCommand)
         Return This.ChildControls[This.ChildControls.Length]
     }
     
@@ -142,7 +149,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Index := This.ChildControls.Length + 1
         Control.SuperordinateControlID := This.ControlID
         This.ChildControls.InsertAt(Index, Control)
-        This.GetFocusableControlIDs()
+        If Control.HasOwnProp("HotkeyCommand") And Not Control.HotkeyCommand = ""
+        This.RegisterHotkey(Control.HotkeyCommand)
         Return This.ChildControls[Index]
     }
     
@@ -156,8 +164,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Clone.%PropertyName% := PropertyValue
         For CurrentControl In This.ChildControls
         Switch(CurrentControl.__Class) {
-            Case "AccessibilityOverlay":
-            Clone.AddControl(CurrentControl.Clone())
             Case "TabControl":
             ClonedControl := TabControl()
             For CurrentTab In CurrentControl.Tabs
@@ -171,21 +177,27 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             ClonedControl.%PropertyName% := PropertyValue
             Clone.AddControl(ClonedControl)
             Default:
-            ClonedControl := AccessibilityControl()
-            ClonedControl.Base := CurrentControl.Base
-            For PropertyName, PropertyValue In CurrentControl.OwnProps()
-            If Not PropertyName = "ControlID" And Not PropertyName = "SuperordinateControlID"
-            ClonedControl.%PropertyName% := PropertyValue
-            Clone.AddControl(ClonedControl)
+            If CurrentControl Is AccessibilityOverlay {
+                Clone.AddControl(CurrentControl.Clone())
+            }
+            Else {
+                ClonedControl := AccessibilityControl()
+                ClonedControl.Base := CurrentControl.Base
+                For PropertyName, PropertyValue In CurrentControl.OwnProps()
+                If Not PropertyName = "ControlID" And Not PropertyName = "SuperordinateControlID"
+                ClonedControl.%PropertyName% := PropertyValue
+                Clone.AddControl(ClonedControl)
+            }
         }
         Return Clone
     }
     
     DecreaseSlider() {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
+            FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
-                CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
+                CurrentControl := AccessibilityOverlay.GetControl(FocusableControlIDs[Found])
                 If CurrentControl Is GraphicalSlider
                 CurrentControl.Decrease()
             }
@@ -203,9 +215,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     Focus(Speak := True) {
         If This.ChildControls.Length > 0 {
+            FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
-            If Found = 0 And This.FocusableControlIDs.Length > 0
-            ControlID := This.FocusableControlIDs[1]
+            If Found = 0 And FocusableControlIDs.Length > 0
+            ControlID := FocusableControlIDs[1]
             Else
             ControlID := This.CurrentControlID
             If ControlID {
@@ -253,9 +266,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusControlNumber(ControlNumber) {
         If This.ChildControls.Length > 0 {
-            This.FocusableControlIDs :=This.GetFocusableControlIDs()
-            If ControlNumber > 0 And This.FocusableControlIDs.Length >= ControlNumber {
-                ControlID := This.FocusableControlIDs[ControlNumber]
+            FocusableControlIDs :=This.GetFocusableControlIDs()
+            If ControlNumber > 0 And FocusableControlIDs.Length >= ControlNumber {
+                ControlID := FocusableControlIDs[ControlNumber]
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
                 If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
@@ -281,13 +294,14 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusNextControl() {
         If This.ChildControls.Length > 0 {
+            FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
-            If This.FocusableControlIDs.Length = 0
+            If FocusableControlIDs.Length = 0
             ControlID := 0
-            Else If Found = 0 Or Found = This.FocusableControlIDs.Length
-            ControlID := This.FocusableControlIDs[1]
+            Else If Found = 0 Or Found = FocusableControlIDs.Length
+            ControlID := FocusableControlIDs[1]
             Else
-            ControlID := This.FocusableControlIDs[Found + 1]
+            ControlID := FocusableControlIDs[Found + 1]
             TargetControl := AccessibilityOverlay.GetControl(ControlID)
             If Not ControlID = This.CurrentControlID
             This.SetPreviousControlID(This.CurrentControlID)
@@ -300,13 +314,14 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusPreviousControl() {
         If This.ChildControls.Length > 0 {
+            FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
-            If This.FocusableControlIDs.Length = 0
+            If FocusableControlIDs.Length = 0
             ControlID := 0
             Else If Found <= 1
-            ControlID := This.FocusableControlIDs[This.FocusableControlIDs.Length]
+            ControlID := FocusableControlIDs[FocusableControlIDs.Length]
             Else
-            ControlID := This.FocusableControlIDs[Found - 1]
+            ControlID := FocusableControlIDs[Found - 1]
             TargetControl := AccessibilityOverlay.GetControl(ControlID)
             If Not ControlID = This.CurrentControlID
             This.SetPreviousControlID(This.CurrentControlID)
@@ -319,9 +334,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusNextTab() {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
+            FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
-                CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
+                CurrentControl := AccessibilityOverlay.GetControl(FocusableControlIDs[Found])
                 If CurrentControl Is TabControl {
                     This.SetPreviousControlID(This.CurrentControlID)
                     CurrentControl.FocusNextTab()
@@ -334,9 +350,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusPreviousTab() {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
+            FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
-                CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
+                CurrentControl := AccessibilityOverlay.GetControl(FocusableControlIDs[Found])
                 If CurrentControl Is TabControl {
                     This.SetPreviousControlID(This.CurrentControlID)
                     CurrentControl.FocusPreviousTab()
@@ -352,12 +369,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If This.ChildControls.Length > 0
         For CurrentControl In This.ChildControls {
             Switch(CurrentControl.__Class) {
-                Case "AccessibilityOverlay":
-                AllControls.Push(CurrentControl)
-                If CurrentControl.ChildControls.Length > 0 {
-                    For ChildControl In CurrentControl.GetAllControls()
-                    AllControls.Push(ChildControl)
-                }
                 Case "TabControl":
                 AllControls.Push(CurrentControl)
                 If CurrentControl.Tabs.Length > 0 {
@@ -370,7 +381,16 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                     }
                 }
                 Default:
-                AllControls.Push(CurrentControl)
+                If CurrentControl Is AccessibilityOverlay {
+                    AllControls.Push(CurrentControl)
+                    If CurrentControl.ChildControls.Length > 0 {
+                        For ChildControl In CurrentControl.GetAllControls()
+                        AllControls.Push(ChildControl)
+                    }
+                }
+                Else {
+                    AllControls.Push(CurrentControl)
+                }
             }
         }
         Return AllControls
@@ -405,34 +425,34 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If This.ChildControls.Length > 0
         For CurrentControl In This.ChildControls {
             Switch(CurrentControl.__Class) {
-                Case "AccessibilityOverlay":
-                If CurrentControl.ChildControls.Length > 0 {
-                    CurrentControl.FocusableControlIDs := CurrentControl.GetFocusableControlIDs()
-                    For CurrentControlID In CurrentControl.FocusableControlIDs
-                    FocusableControlIDs.Push(CurrentControlID)
-                }
                 Case "TabControl":
                 FocusableControlIDs.Push(CurrentControl.ControlID)
                 If CurrentControl.Tabs.Length > 0 {
                     CurrentTab := CurrentControl.Tabs[CurrentControl.CurrentTab]
                     If CurrentTab.ChildControls.Length > 0 {
-                        CurrentTab.FocusableControlIDs := CurrentTab.GetFocusableControlIDs()
                         For CurrentTabControlID In CurrentTab.FocusableControlIDs
                         FocusableControlIDs.Push(CurrentTabControlID)
                     }
                 }
                 Default:
-                FocusableControlIDs.Push(CurrentControl.ControlID)
+                If CurrentControl Is AccessibilityOverlay {
+                    If CurrentControl.ChildControls.Length > 0 {
+                        For CurrentControlID In CurrentControl.FocusableControlIDs
+                        FocusableControlIDs.Push(CurrentControlID)
+                    }
+                }
+                Else {
+                    FocusableControlIDs.Push(CurrentControl.ControlID)
+                }
             }
         }
-        This.FocusableControlIDs := FocusableControlIDs
-        Return This.FocusableControlIDs
+        Return FocusableControlIDs
     }
     
     GetFocusableControls() {
         FocusableControls := Array()
-        This.GetFocusableControlIDs()
-        For FocusableControlID In This.FocusableControlIDs
+        FocusableControlIDs := This.GetFocusableControlIDs()
+        For FocusableControlID In FocusableControlIDs
         FocusableControls.Push(AccessibilityOverlay.GetControl(FocusableControlID))
         Return FocusableControls
     }
@@ -467,13 +487,17 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     IncreaseSlider() {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
+            FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
-                CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
+                CurrentControl := AccessibilityOverlay.GetControl(FocusableControlIDs[Found])
                 If CurrentControl Is GraphicalSlider
                 CurrentControl.Increase()
             }
         }
+    }
+    
+    RegisterHotkey(Command) {
     }
     
     RemoveControl() {
@@ -533,10 +557,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If This.ChildControls.Length > 0 {
             For CurrentControl In This.ChildControls
             Switch(CurrentControl.__Class) {
-                Case "AccessibilityOverlay":
-                If CurrentControl.ChildControls.Length > 0 {
-                    CurrentControl.Reset()
-                }
                 Case "TabControl":
                 If CurrentControl.Tabs.Length > 0 {
                     CurrentControl.CurrentTab := 1
@@ -545,15 +565,22 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                         CurrentTab.Reset()
                     }
                 }
+                Default:
+                If CurrentControl Is AccessibilityOverlay {
+                    If CurrentControl.ChildControls.Length > 0 {
+                        CurrentControl.Reset()
+                    }
+                }
             }
         }
     }
     
     SelectNextOption() {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
+            FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
-                CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
+                CurrentControl := AccessibilityOverlay.GetControl(FocusableControlIDs[Found])
                 If CurrentControl.ControlType = "ComboBox" {
                     CurrentControl.SelectNextOption()
                     Return CurrentControl.GetValue()
@@ -564,9 +591,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     SelectPreviousOption() {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
+            FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
-                CurrentControl := AccessibilityOverlay.GetControl(This.FocusableControlIDs[Found])
+                CurrentControl := AccessibilityOverlay.GetControl(FocusableControlIDs[Found])
                 If CurrentControl.ControlType = "ComboBox" {
                     CurrentControl.SelectPreviousOption()
                     Return CurrentControl.GetValue()
@@ -592,7 +620,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             HotkeyFunctions := ReachableControl.HotkeyFunctions
             HotkeyTarget := ReachableControl
             If ReachableControl.ControlType = "Tab" {
-                ControlToTrigger := ReachableControl.GetSuperordinateControl()
+                ControlToTrigger := ReachableControl.SuperordinateControl
                 TabNumber := 1
                 For TabIndex, TabObject In ControlToTrigger.Tabs
                 If TabObject = ReachableControl {
@@ -770,7 +798,7 @@ Class FocusableControl Extends AccessibilityControl {
     States := Map()
     Value := ""
     
-    __New(Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+    __New(Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
         Super.__New()
         This.Label := Label
         If Not PreExecFocusFunctions = "" {
@@ -787,6 +815,8 @@ Class FocusableControl Extends AccessibilityControl {
             If FocusFunction Is Object And FocusFunction.HasMethod("Call")
             This.PostExecFocusFunctions.Push(FocusFunction)
         }
+        If Not HotkeyCommand = ""
+        This.SetHotkey(HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
     CheckFocus() {
@@ -846,6 +876,11 @@ Class FocusableControl Extends AccessibilityControl {
             If HotkeyFunction Is Object And HotkeyFunction.HasMethod("Call")
             This.HotkeyFunctions.Push(HotkeyFunction)
         }
+        If This.MasterControl Is AccessibilityOverlay
+        This.MasterControl.RegisterHotkey(HotkeyCommand)
+        Else
+        If This.HasMethod("RegisterHotkey")
+        This.RegisterHotkey(HotkeyCommand)
     }
     
     SetValue(Value) {
@@ -864,7 +899,7 @@ Class FocusableControl Extends AccessibilityControl {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
         Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
@@ -878,8 +913,8 @@ Class ActivatableControl Extends FocusableControl {
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     
-    __New(Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not PreExecActivationFunctions = "" {
             If Not PreExecActivationFunctions Is Array
             PreExecActivationFunctions := Array(PreExecActivationFunctions)
@@ -972,8 +1007,8 @@ Class FocusableGraphic Extends FocusableControl {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map()) {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map(), HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not StateParam = "State" {
             This.DeleteProp("State")
             This.%StateParam% := 1
@@ -1045,8 +1080,8 @@ Class ActivatableGraphic Extends FocusableGraphic {
     PreExecActivationFunctions := Array()
     States := Map(-1, "", 0, "", 1, "")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map()) {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, StateParam, ErrorState, Groups)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", StateParam := "State", ErrorState := 0, Groups := Map(), HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, StateParam, ErrorState, Groups, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not PreExecActivationFunctions = "" {
             If Not PreExecActivationFunctions Is Array
             PreExecActivationFunctions := Array(PreExecActivationFunctions)
@@ -1113,8 +1148,8 @@ Class FocusableNative Extends FocusableControl {
     NativeControlID := ""
     States := Map(-1, "Can not focus control", 0, "not found", 1, "")
     
-    __New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.ControlTypeLabel := ControlTypeLabel
         This.NativeControlID := NativeControlID
     }
@@ -1169,8 +1204,8 @@ Class ActivatableNative Extends FocusableNative {
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     
-    __New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, ControlTypeLabel, NativeControlID, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not PreExecActivationFunctions = "" {
             If Not PreExecActivationFunctions Is Array
             PreExecActivationFunctions := Array(PreExecActivationFunctions)
@@ -1246,8 +1281,8 @@ Class FocusableUIA Extends FocusableControl {
     States := Map("0", "not found", "1", "")
     Window := False
     
-    __New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.ControlTypeLabel := ControlTypeLabel
         This.SearchCriteria := SearchCriteria
     }
@@ -1322,8 +1357,8 @@ Class ActivatableUIA Extends FocusableUIA {
     PostExecActivationFunctions := Array()
     PreExecActivationFunctions := Array()
     
-    __New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not PreExecActivationFunctions = "" {
             If Not PreExecActivationFunctions Is Array
             PreExecActivationFunctions := Array(PreExecActivationFunctions)
@@ -1397,8 +1432,8 @@ Class Button Extends ActivatableControl {
     ControlTypeLabel := "button"
     DefaultLabel := "unlabelled"
     
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
 }
@@ -1418,8 +1453,8 @@ Class Checkbox Extends ActivatableControl {
     DefaultLabel := "unlabelled"
     States := Map(-1, "unknown state", 0, "not checked", 1, "checked")
     
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.DeleteProp("State")
     }
     
@@ -1437,8 +1472,8 @@ Class ComboBox Extends FocusableControl {
     CurrentOption := 1
     Options := Array()
     
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not ChangeFunctions = "" {
             If Not ChangeFunctions Is Array
             ChangeFunctions := Array(ChangeFunctions)
@@ -1512,8 +1547,8 @@ Class Edit Extends FocusableControl {
     DefaultLabel := "unlabelled"
     DefaultValue := "blank"
     
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
 }
@@ -1532,7 +1567,7 @@ Class Tab Extends AccessibilityOverlay {
     State := 1
     States := Map(0, "not found", 1, "selected")
     
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
         Super.__New(Label)
         If Not PreExecFocusFunctions = "" {
             If Not PreExecFocusFunctions Is Array
@@ -1548,6 +1583,8 @@ Class Tab Extends AccessibilityOverlay {
             If FocusFunction Is Object And FocusFunction.HasMethod("Call")
             This.PostExecFocusFunctions.Push(FocusFunction)
         }
+        If Not HotkeyCommand = ""
+        This.SetHotkey(HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
     CheckFocus() {
@@ -1593,6 +1630,10 @@ Class Tab Extends AccessibilityOverlay {
             If HotkeyFunction Is Object And HotkeyFunction.HasMethod("Call")
             This.HotkeyFunctions.Push(HotkeyFunction)
         }
+        If This.MasterControl Is AccessibilityOverlay
+        This.MasterControl.RegisterHotkey(HotkeyCommand)
+        Else
+        This.RegisterHotkey(HotkeyCommand)
     }
     
     SpeakOnFocus(Speak := True) {
@@ -1725,8 +1766,8 @@ Class CustomToggleButton Extends ToggleButton {
     
     CheckStateFunction := ""
     
-    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If CheckStateFunction Is Object And CheckStateFunction.HasMethod("Call")
         This.CheckStateFunction := CheckStateFunction
     }
@@ -1742,8 +1783,8 @@ Class CustomCheckbox Extends Checkbox {
     
     CheckStateFunction := ""
     
-    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, CheckStateFunction := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If CheckStateFunction Is Object And CheckStateFunction.HasMethod("Call")
         This.CheckStateFunction := CheckStateFunction
     }
@@ -1772,8 +1813,8 @@ Class GraphicalButton Extends  ActivatableGraphic {
     DefaultLabel := "unlabelled"
     States := Map(0, "not found", 1, "")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "State", 0, Map(1, Images))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "State", 0, Map(1, Images), HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
     CheckFocus(*) {
@@ -1802,8 +1843,8 @@ Class GraphicalToggleButton Extends  ActivatableGraphic {
     DefaultLabel := "unlabelled"
     States := Map(-1, "not found", 0, "off", 1, "on")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImages, OffImages := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "State", -1, Map("On", OnImages, "Off", OffImages))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OnImages, OffImages := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "State", -1, Map("On", OnImages, "Off", OffImages), HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
     CheckFocus(*) {
@@ -1832,8 +1873,8 @@ Class GraphicalCheckbox Extends ActivatableGraphic {
     DefaultLabel := "unlabelled"
     States := Map(-1, "not found", 0, "not checked", 1, "checked")
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, CheckedImages, UncheckedImages, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "Checked", -1, Map("Checked", CheckedImages, "Unchecked", UncheckedImages))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, CheckedImages, UncheckedImages, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, "Checked", -1, Map("Checked", CheckedImages, "Unchecked", UncheckedImages), HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
     CheckFocus(*) {
@@ -1870,8 +1911,8 @@ Class GraphicalSlider Extends FocusableGraphic {
     States := Map(0, "not found", 1, "")
     Type := False
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, Start := "", End := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, "State", 0, Map(1, Images))
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, Start := "", End := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, PreExecFocusFunctions, PostExecFocusFunctions, "State", 0, Map(1, Images), HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.Label := Label
         If Start = "" {
             If This.Type = "Horizontal"
@@ -2035,8 +2076,8 @@ Class GraphicalTab Extends Tab {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label)
+    __New(Label, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, Images, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
@@ -2095,8 +2136,8 @@ Class HotspotButton Extends Button {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -2119,8 +2160,8 @@ Class HotspotToggleButton Extends ToggleButton {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, OnColors, OffColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, XCoordinate, YCoordinate, OnColors, OffColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not OnColors = "" {
             If Not OnColors Is Array
             OnColors := Array(OnColors)
@@ -2173,8 +2214,8 @@ Class HotspotCheckbox Extends Checkbox {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(Label, XCoordinate, YCoordinate, CheckedColors, UncheckedColors, PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not CheckedColors = "" {
             If Not CheckedColors Is Array
             CheckedColors := Array(CheckedColors)
@@ -2225,8 +2266,8 @@ Class HotspotComboBox Extends ComboBox {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -2248,8 +2289,8 @@ Class HotspotEdit Extends Edit {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -2265,8 +2306,8 @@ Class HotspotTab Extends Tab {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -2289,8 +2330,8 @@ Class OCRButton Extends Button {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(LabelPrefix, DefaultLabel, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "") {
-        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions)
+    __New(LabelPrefix, DefaultLabel, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.DefaultLabel := DefaultLabel
         This.LabelPrefix := LabelPrefix
         This.OCRLanguage := OCRLanguage
@@ -2345,7 +2386,7 @@ Class OCRButton Extends Button {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
         Message := This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
@@ -2363,8 +2404,8 @@ Class OCRComboBox Extends ComboBox {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, DefaultValue, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions)
+    __New(Label, DefaultValue, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.DefaultValue := DefaultValue
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
@@ -2422,7 +2463,7 @@ Class OCRComboBox Extends ComboBox {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
         Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
@@ -2440,8 +2481,8 @@ Class OCREdit Extends Edit {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(Label, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.OCRType := (OCRType = "Tesseract" Or OCRType = "TesseractBest" Or OCRType = "TesseractFast" Or OCRType = "TesseractLegacy" Or OCRType = "UWP" ? OCRType : This.OCRType)
@@ -2474,7 +2515,7 @@ Class OCREdit Extends Edit {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
         Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
@@ -2493,8 +2534,8 @@ Class OCRTab Extends Tab {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(DefaultLabel, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(DefaultLabel, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.DefaultLabel := DefaultLabel
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
@@ -2521,7 +2562,7 @@ Class OCRTab Extends Tab {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
         Message := LabelString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
@@ -2541,8 +2582,8 @@ Class OCRText Extends FocusableControl {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(DefaultValue, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions)
+    __New(DefaultValue, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.DefaultValue := DefaultValue
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
@@ -2563,7 +2604,7 @@ Class OCRText Extends FocusableControl {
         If ValueString = ""
         ValueString := This.DefaultValue
         This.Value := ValueString
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
         Message := ValueString . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
@@ -2575,8 +2616,8 @@ Class StaticText Extends FocusableControl {
     
     ControlType := "Text"
     
-    __New(Value := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "") {
-        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions := "")
+    __New(Value := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.Value := Value
     }
     
@@ -2587,7 +2628,7 @@ Class StaticText Extends FocusableControl {
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
         ValueString := This.Value
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.GetMasterControl() Is AccessibilityOverlay And This.GetMasterControl().GetFocusableControlIDs().Length = 1)
+        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
         Message := ValueString . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)

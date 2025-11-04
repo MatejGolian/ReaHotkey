@@ -43,12 +43,14 @@
     To-do:
     - Better error handling
 */
-global IUIAutomationMaxVersion := 7, IUIAutomationActivateScreenReader := 1
+
 
 if !A_IsCompiled && A_LineFile = A_ScriptFullPath
     UIA.Viewer()
 
 class UIA {
+; Semantic version of the UIA library
+static Version => "1.1.1"
 /**
  * First use of UIA variable initiates UIA, UIA.IUIAutomationVersion, UIA.TrueCondition and
  * UIA.TreeWalkerTrue. Also enables screen reader with SPI_SETSCREENREADER.
@@ -56,7 +58,9 @@ class UIA {
  * variable, which by default is set to the latest available UIA version.
  */
 static __New() {
-    global IUIAutomationMaxVersion
+    global IUIAutomationMaxVersion := IUIAutomationMaxVersion ?? 7
+    , IUIAutomationActivateScreenReader := IUIAutomationActivateScreenReader ?? 1
+    , IUIAutomationDllPath := IUIAutomationDllPath ?? ""
     this.IUIAutomationVersion := IUIAutomationMaxVersion+1, this.ptr := 0
     ; The following is a partial head-way into making the UIA class name-agnostic (that is, making it possible to rename and reference UIA more easily, eg when wrapped inside inside another class).
     ; UIA static methods have been converted this way, but IUIAutomationElement runs into a problem: namely the syntax highlighter is unable to detect that IUIAutomationElement has been made to
@@ -70,20 +74,64 @@ static __New() {
         IUIAutomation4:"{1189c02a-05f8-4319-8e21-e817e3db2860}",
         IUIAutomation5:"{25f700c8-d816-4057-a9dc-3cbdee77e256}",
         IUIAutomation6:"{aae072da-29e3-413d-87a7-192dbf81ed10}",
-        IUIAutomation7:"{29de312e-83c6-4309-8808-e8dfcb46c3c2}"
+        IUIAutomation7:"{29de312e-83c6-4309-8808-e8dfcb46c3c2}",
+        IClassFactory:"{00000001-0000-0000-c000-000000000046}"
+    }, 
+    __CLSID := {
+        CUIAutomation:"{ff48dba4-60ef-4201-aa87-54103eef594e}",
+        CUIAutomation8:"{e22ad333-b25f-460c-83d0-0581107395c9}"
     }, __Cleanup := this.Cleanup()
 
-    while (--this.IUIAutomationVersion > 1) {
-        if !__IID.HasOwnProp("IUIAutomation" this.IUIAutomationVersion)
-            continue
-        try {
-            this.ptr := ComObjValue(this.__ := ComObject("{e22ad333-b25f-460c-83d0-0581107395c9}", __IID.IUIAutomation%(this.IUIAutomationVersion)%))
-            break
+    if (IUIAutomationDllPath != "") {
+        hModule := DllCall("LoadLibrary", "Str", IUIAutomationDllPath, "Ptr")
+        if !hModule
+            throw Error("Failed to load custom UIA DLL",, IUIAutomationDllPath)
+        pDllGetClassObject := DllCall("GetProcAddress", "Ptr", hModule, "AStr", "DllGetClassObject", "Ptr")
+        if !pDllGetClassObject
+            throw Error("Failed to get custom UIA DllGetClassObject")
+        DllCall("ole32\CLSIDFromString", "Str", __CLSID.CUIAutomation8, "Ptr", CLSID_CUIAutomation8 := Buffer(16))
+        DllCall("ole32\IIDFromString", "Str", __IID.IClassFactory, "Ptr", IID_IClassFactory := Buffer(16))
+
+        if DllCall(pDllGetClassObject, "Ptr", CLSID_CUIAutomation8, "Ptr", IID_IClassFactory, "Ptr*", ppFactory := ComValue(13, 0))
+            goto RegularCUI
+
+        while (--this.IUIAutomationVersion > 1) {
+            if !__IID.HasOwnProp("IUIAutomation" this.IUIAutomationVersion)
+                continue
+            try {
+                DllCall("ole32\IIDFromString", "Str", __IID.IUIAutomation%(this.IUIAutomationVersion)%, "Ptr", IID := Buffer(16))
+                ComCall(3, ppFactory, "Ptr", 0, "Ptr", IID, "Ptr*", &ppAutomation:=0)
+                if !ppAutomation
+                    continue
+                this.ptr := ppAutomation
+                break
+            }
         }
+        
+        RegularCUI:
+        if !this.HasOwnProp("ptr") || (this.HasOwnProp("ptr") && !this.ptr) {
+            DllCall("ole32\CLSIDFromString", "Str", __CLSID.CUIAutomation, "Ptr", CLSID_CUIAutomation := Buffer(16))
+            if DllCall(pDllGetClassObject, "Ptr", CLSID_CUIAutomation, "Ptr", IID_IClassFactory, "Ptr*", ppFactory := ComValue(13, 0))
+                throw Error("Failed to get CUIAutomation class factory")
+            DllCall("ole32\IIDFromString", "Str", __IID.IUIAutomation, "Ptr", IID := Buffer(16))
+            ComCall(3, ppFactory, "Ptr", 0, "Ptr", IID, "Ptr*", &ppAutomation:=0)
+            if !ppAutomation
+                throw Error("Failed to initialize UIA from custom DLL")
+            this.ptr := ppAutomation
+        }
+    } else {
+        while (--this.IUIAutomationVersion > 1) {
+            if !__IID.HasOwnProp("IUIAutomation" this.IUIAutomationVersion)
+                continue
+            try {
+                this.ptr := ComObjValue(this.__ := ComObject(__CLSID.CUIAutomation8, __IID.IUIAutomation%(this.IUIAutomationVersion)%))
+                break
+            }
+        }
+        ; If all else fails, try the first IUIAutomation version
+        if !this.HasOwnProp("ptr") || (this.HasOwnProp("ptr") && !this.ptr)
+            this.ptr := ComObjValue(this.__ := ComObject(__CLSID.CUIAutomation, __IID.IUIAutomation))
     }
-    ; If all else fails, try the first IUIAutomation version
-    if !this.HasOwnProp("ptr") || (this.HasOwnProp("ptr") && !this.ptr)
-        this.ptr := ComObjValue(this.__ := ComObject("{ff48dba4-60ef-4201-aa87-54103eef594e}", "{30cbe57d-d9d0-452a-ab13-7ac5ac4825ee}"))
     this.TrueCondition := this.CreateTrueCondition(), this.TreeWalkerTrue := this.CreateTreeWalker(this.TrueCondition)
     ; Define some properties that shouldn't be included in the value->name Map
     this.Property[30000], this.Property.T := 30003, this.Property.ControlType := 30003, this.Property.N := 30005, this.Property.CN := 30012, this.Property.A := 30011
@@ -98,7 +146,7 @@ class Cleanup {
     __Delete() {
         global IUIAutomationActivateScreenReader
         try this.__UIA.RemoveAllEventHandlers()
-        if IUIAutomationActivateScreenReader
+        if IUIAutomationActivateScreenReader && !this.ScreenReaderStartingState
             DllCall("user32.dll\SystemParametersInfo", "uint", 0x0047, "uint", this.ScreenReaderStartingState, "int", 0, "uint", 2) ; SPI_SETSCREENREADER
     }
 }
@@ -1482,7 +1530,7 @@ static SetScreenReader(state, fWinIni:=2) {
     DllCall("user32.dll\SystemParametersInfo", "uint", 0x0047, "uint", state, "uint", 0, "int", fWinIni) ; SPI_SETSCREENREADER
 }
 static GetScreenReader() {
-    A_PtrSize = 4 ? DllCall("user32.dll\SystemParametersInfo", "uint", 0x0046, "uint", 0, "ptr*", &screenreader:=0, "uint", 0) : DllCall("user32.dll\SystemParametersInfo", "uint", 0x0046, "uint", 0, "ptr*", &screenreader:=0) ; SPI_GETSCREENREADER
+    (A_PtrSize = 4) ? DllCall("user32.dll\SystemParametersInfo", "uint", 0x0046, "uint", 0, "ptr*", &screenreader:=0, "uint", 0) : DllCall("user32.dll\SystemParametersInfo", "uint", 0x0046, "uint", 0, "ptr*", &screenreader:=0) ; SPI_GETSCREENREADER
     return screenreader
 }
 
@@ -1641,7 +1689,7 @@ class ComVar {
             }
         }
     }
-    __Delete() => (this.owner ? DllCall("oleaut32\VariantClear", "ptr", this.var) : 0)
+    __Delete() => (this.owner && this.var ? DllCall("oleaut32\VariantClear", "ptr", this.var) : 0)
     __Item {
         get => this.ref[]
         set => this.ref[] := value
@@ -1752,8 +1800,8 @@ class TypeValidation {
             try return UIA.Type.%arg%
             try {
                 local match
-                RegExMatch(arg, "\d{5}", &match:="") && Integer(match[]) >= 50000
-                return Integer(match[])
+                if RegExMatch(arg, "\d{5}", &match:="") && Integer(match[]) >= 50000
+                    return Integer(match[])
             }
             throw ValueError("UIA.Type does not contain value for `"" arg "`"", -2)
         }
@@ -1999,15 +2047,35 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
         throw MethodError("Method " Name " not found in " this.__Class " Class.",-1,Name)
     }
     ; Returns all direct children of the element
-    Children => ((ComCall(6, this, "int", 2, "ptr", UIA.TrueCondition, "ptr*", &found := 0), found) ? UIA.IUIAutomationElementArray(found).ToArray() : [])
+    Children {
+        get { 
+            local found
+            return (ComCall(6, this, "int", 2, "ptr", UIA.TrueCondition, "ptr*", &found := 0), found) ? UIA.IUIAutomationElementArray(found).ToArray() : []
+        }
+    }
     ; Returns direct children in reverse order (also the index in the enumerator counts downwards)
-    ReversedChildren => ((ComCall(6, this, "int", 2, "ptr", UIA.TrueCondition, "ptr*", &found := 0), found) ? UIA.IUIAutomationElementArray(found).ToArray().DefineProp("__Enum", {call: (s, i) => (i = 1 ? (i := s.Length, (&v) => i > 0 ? (v := s[i], i--) : false) : (i := s.Length, (&k, &v) => (i > 0 ? (k := i, v := s[i], i--) : false)))}) : [])
+    ReversedChildren {
+        get { 
+            local found
+            return (ComCall(6, this, "int", 2, "ptr", UIA.TrueCondition, "ptr*", &found := 0), found) ? UIA.IUIAutomationElementArray(found).ToArray().DefineProp("__Enum", {call: (s, i) => (i = 1 ? (i := s.Length, (&v) => i > 0 ? (v := s[i], i--) : false) : (i := s.Length, (&k, &v) => (i > 0 ? (k := i, v := s[i], i--) : false)))}) : []
+        }
+    }
     ; Retrieves the cached child elements of this UI Automation element.
     ; The view of the returned collection is determined by the TreeFilter property of the IUIAutomationCacheRequest that was active when this element was obtained.
     ; Children are cached only if the scope of the cache request included TreeScope_Subtree, TreeScope_Children, or TreeScope_Descendants.
     ; If the cache request specified that children were to be cached at this level, but there are no children, the value of this property is 0. However, if no request was made to cache children at this level, an attempt to retrieve the property returns an error.
-    CachedChildren => (ComCall(19, this, "ptr*", &children := 0), children?UIA.IUIAutomationElementArray(children).ToArray():[])
-    ReversedCachedChildren => (ComCall(19, this, "ptr*", &children := 0), children?UIA.IUIAutomationElementArray(children).ToArray().DefineProp("__Enum", {call: (s, i) => (i = 1 ? (i := s.Length, (&v) => i > 0 ? (v := s[i], i--) : false) : (i := s.Length, (&k, &v) => (i > 0 ? (k := i, v := s[i], i--) : false)))}) : [])
+    CachedChildren {
+        get { 
+            local children
+            return (ComCall(19, this, "ptr*", &children := 0), children) ? UIA.IUIAutomationElementArray(children).ToArray() : []
+        }
+    } 
+    ReversedCachedChildren {
+        get {
+            local children
+            return (ComCall(19, this, "ptr*", &children := 0), children) ? UIA.IUIAutomationElementArray(children).ToArray().DefineProp("__Enum", {call: (s, i) => (i = 1 ? (i := s.Length, (&v) => i > 0 ? (v := s[i], i--) : false) : (i := s.Length, (&k, &v) => (i > 0 ? (k := i, v := s[i], i--) : false)))}) : []
+        }
+    }
 
     GetCachedChildren(scope:=2) {
         local children
@@ -2462,7 +2530,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
      * will be used (Invoke(), Toggle(), Select() etc.  
      * * If WhichButton is a number, then Sleep will be called afterwards with that number of milliseconds.  
      *     Eg. Element.Click(200) will sleep 200ms after "clicking".  
-     * * If WhichButton is "left" or "right", then the native Click() will be used to move the cursor to
+     * * If WhichButton is "left" or "right", then the AHK Click() will be used to move the cursor to
      * the center of the element and perform a click.  
      * @param ClickCount Is used if WhichButton isn't a number or left empty, that is if AHK Click()
      * will be used. In this case if ClickCount is a number <10, then that number of clicks will be performed.  
@@ -2471,11 +2539,11 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
      * Eg. Element.Click("left", 1000) will sleep 1000ms after clicking.  
      *     Element.Click("left", 2) will double-click the element  
      *     Element.Click("left", "2 1000") will double-click the element and then sleep for 1000ms  
-     * @param DownOrUp If AHK Click is used, then this will either press the mouse down, or release it.
+     * @param DownOrUp If AHK Click is used, then this is the same as AHK Click DownOrUp parameter.
      * @param Relative If Relative is "Rel" or "Relative" then X and Y coordinates are treated as offsets from the current mouse position.  
      * Otherwise it expects offset values for both X and Y (eg "-5 10" would offset X by -5 and Y by +10 from the center of the element).
      * @param NoActivate If AHK Click is used, then this will determine whether the window is activated
-     * before clicking if the clickable point isn't visible on the screen. Default is no activating.
+     * before clicking if the clickable point isn't visible on the screen. Default is activating.
      * @param MoveBack If set then the cursor will be moved back to its original location after sleeping for
      * the specified amount of ms. Specify 0 for no sleep.
      */
@@ -2940,7 +3008,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
         }
         throw TargetError("An element matching the condition was not found", -1)
         PreOrderRecursiveFind(el, depth:=0) {
-            local child, found, c
+            local child, found, c, i
             depth++
             for i, child in el.%ChildOrder% {
                 c := 0
@@ -2951,7 +3019,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
             }
         }
         PostOrderRecursiveFind(el, scope, i:=1, depth:=-1) {
-            local child, found, c := 0
+            local child, found, c := 0, j
             depth++
             for j, child in el.%ChildOrder% {
                 if IsObject(found := PostOrderRecursiveFind(child, (scope & ~2)|1, j, depth))
@@ -3094,7 +3162,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
         return foundElements
 
         PreOrderRecursiveFind(el, depth:=0) {
-            local child, c
+            local child, c, i
             depth++
             for i, child in el.%ChildOrder% {
                 c := 0
@@ -3105,7 +3173,7 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
             }
         }
         PostOrderRecursiveFind(el, scope, i:=1, depth:=-1) {
-            local child, c := 0
+            local child, c := 0, j
             depth++
             if scope > 1 {
                 for j, child in el.%ChildOrder% {
@@ -4311,8 +4379,8 @@ class IUIAutomationElement extends UIA.IUIAutomationBase {
     ; • Call the GetClickablePoint method to find a clickable point on the control.
     ; • Call the SendInput function to send a right-mouse-down, right-mouse-up sequence.
     GetClickablePoint() {
-        if (ComCall(84, this, "int64*", &clickable := 0, "int*", &gotClickable := 0), gotClickable)
-            return { x: clickable & 0xffff, y: clickable >> 32 }
+        if (ComCall(84, this, "ptr", clickable := Buffer(8), "int*", &gotClickable := 0), gotClickable)
+            return { x: NumGet(clickable, 0, 'int'), y: NumGet(clickable, 4, 'int') }
         throw TargetError('The element has no clickable point')
     }
 
@@ -7581,9 +7649,9 @@ class Viewer {
             return
         this.Stored.mwId := mwId, this.Stored.CapturedElement := CapturedElement, this.Stored.mX := mX, this.Stored.mY := mY, this.FoundTime := A_TickCount
         propsOrder := ["Title", "Text", "Id", "Location", "Class(NN)", "Process", "PID"]
-        props := Map("Title", WinGetTitle(mwId), "Text", WinGetText(mwId), "Id", mwId, "Location", "x: " mwX " y: " mwY " w: " mwW " h: " mwH, "Class(NN)", WinGetClass(mwId), "Process", WinGetProcessName(mwId), "PID", WinGetPID(mwId))
+        prop := Map("Title", WinGetTitle(mwId), "Text", WinGetText(mwId), "Id", mwId, "Location", "x: " mwX " y: " mwY " w: " mwW " h: " mwH, "Class(NN)", WinGetClass(mwId), "Process", WinGetProcessName(mwId), "PID", WinGetPID(mwId))
         for propName in propsOrder
-            this.LVWin.Add(,propName,props[propName])
+            this.LVWin.Add(,propName,prop[propName])
         this.PopulatePropsPatterns(CapturedElement)
     }
 

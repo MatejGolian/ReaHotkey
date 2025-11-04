@@ -503,7 +503,7 @@ Class Dubler2MIDICapturePlugin {
 
     Static Check(Instance) {
         Thread "NoTimers"
-        If Instance Is Plugin And Instance.ControlClass = GetCurrentControlClass()
+        If Instance Is Plugin And Instance.ControlClass = ReaHotkey.GetPluginControl()
         If Instance.Name = "Dubler 2 MIDI Capture"
         Return True
         UIAElement := This.GetRootUIAElement()
@@ -522,13 +522,14 @@ Class Dubler2MIDICapturePlugin {
         Return False
         If Not UIAElement Is UIA.IUIAutomationElement
         Return False
+        Try
         If CheckElement(UIAElement)
         Return UIAElement
         Try
-        UIAElement := UIAElement.FindElement({Name:"Dubler Midi Capture"})
+        UIAElement := UIAElement.FindElement({Name: "Dubler Midi Capture"})
         Catch
         Return False
-        If CheckElement(UIAElement)
+        If UIAElement Is UIA.IUIAutomationElement
         Return UIAElement
         Return False
         CheckElement(UIAElement) {

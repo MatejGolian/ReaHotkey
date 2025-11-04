@@ -7,33 +7,33 @@ Class Zampler {
         
         Plugin.Register("Zampler", "^Plugin[0-9A-F]{1,}$", False, False, 1, False, ObjBindMethod(This, "Check"))
         
-        ZamplerOverlay := AccessibilityOverlay("Zampler")
+        ZamplerOverlay := PluginOverlay("Zampler", "Zampler", KompleteKontrol.CompensatePluginCoordinates)
+        ZamplerOverlay.AddStaticText("Zampler")
         FilterBox := CustomComboBox("Filter", [ObjBindMethod(This, "MoveToFilter"), ObjBindMethod(This, "GetFilter")],, ObjBindMethod(This, "ChangeFilter"))
         ZamplerTabControl := ZamplerOverlay.AddTabControl()
-        MainTab := HotspotTab("Main", 329, 210, CompensatePluginCoordinates)
-        MainTab.AddOCRButton("Patch", "Patch not detected", "TesseractBest", 296, 264, 496, 277,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        MainTab.AddHotspotButton("Load bank", 312, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        MainTab.AddHotspotButton("Save bank", 352, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        MainTab.AddHotspotButton("Load patch", 399, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        MainTab.AddHotspotButton("Save patch", 440, 242, CompensatePluginCoordinates,, CompensatePluginCoordinates)
-        MainTab.AddHotspotButton("SFZ/REX", 499, 244, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetSFZREXInstrument")],, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel")])
-        MainTab.AddControl(This.PolyphonyBox("Polyphony", "not detected", "TesseractBest", 332, 364, 348, 380,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel"), ObjBindMethod(This, "FixPolyphony")]))
-        MainTab.AddOCRComboBox("Bend up", "not detected", "TesseractBest", 337, 392, 369, 408,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
-        MainTab.AddOCRComboBox("Bend down", "not detected", "TesseractBest", 428, 392, 460, 408,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
+        MainTab := HotspotTab("Main", 329, 210)
+        MainTab.AddOCRButton("Patch", "Patch not detected", "TesseractBest", 296, 264, 496, 277)
+        MainTab.AddHotspotButton("Load bank", 312, 242)
+        MainTab.AddHotspotButton("Save bank", 352, 242)
+        MainTab.AddHotspotButton("Load patch", 399, 242)
+        MainTab.AddHotspotButton("Save patch", 440, 242)
+        MainTab.AddHotspotButton("SFZ/REX", 499, 244, [ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetSFZREXInstrument")],, ObjBindMethod(This, "ResetLabel"))
+        MainTab.AddControl(This.PolyphonyBox("Polyphony", "not detected", "TesseractBest", 332, 364, 348, 380,,,,, [ObjBindMethod(This, "SendWheel"), ObjBindMethod(This, "FixPolyphony")]))
+        MainTab.AddOCRComboBox("Bend up", "not detected", "TesseractBest", 337, 392, 369, 408,,,,, ObjBindMethod(This, "SendWheel"))
+        MainTab.AddOCRComboBox("Bend down", "not detected", "TesseractBest", 428, 392, 460, 408,,,,, ObjBindMethod(This, "SendWheel"))
         MainTab.AddControl(FilterBox)
         ZamplerTabControl.AddTabs(MainTab)
-        ModMatrixTab := HotspotTab("Mod matrix", 415, 210, CompensatePluginCoordinates)
-        ModMatrixTab.AddHotspotButton("SOURCE", 344, 246, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetModSource")],, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel")])
-        ModMatrixTab.AddOCRComboBox("AMOUNT", "not detected", "TesseractBest", 400, 240, 440, 260,,, CompensatePluginCoordinates,, [CompensatePluginCoordinates, ObjBindMethod(This, "SendWheel")])
-        ModMatrixTab.AddHotspotButton("DESTINATION", 503, 246, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetModDestination")],, [CompensatePluginCoordinates, ObjBindMethod(This, "ResetLabel")])
+        ModMatrixTab := HotspotTab("Mod matrix", 415, 210)
+        ModMatrixTab.AddHotspotButton("SOURCE", 344, 246, [ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetModSource")],, ObjBindMethod(This, "ResetLabel"))
+        ModMatrixTab.AddOCRComboBox("AMOUNT", "not detected", "TesseractBest", 400, 240, 440, 260,,,,, ObjBindMethod(This, "SendWheel"))
+        ModMatrixTab.AddHotspotButton("DESTINATION", 503, 246, [ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetModDestination")],, ObjBindMethod(This, "ResetLabel"))
         ModMatrixTab.AddControl(FilterBox)
         ZamplerTabControl.AddTabs(ModMatrixTab)
-        ArpeggiatorTab := HotspotTab("Arpeggiator", 503, 210, CompensatePluginCoordinates)
-        ArpeggiatorTab.AddOCRButton("Pattern", "Pattern not detected", "TesseractBest", 500, 224, 580, 240,,, CompensatePluginCoordinates,, CompensatePluginCoordinates)
+        ArpeggiatorTab := HotspotTab("Arpeggiator", 503, 210)
+        ArpeggiatorTab.AddOCRButton("Pattern", "Pattern not detected", "TesseractBest", 500, 224, 580, 240)
         ArpeggiatorTab.AddControl(FilterBox)
         ZamplerTabControl.AddTabs(ArpeggiatorTab)
         
-        Plugin.RegisterOverlay("Zampler", ZamplerOverlay)
         Plugin.SetTimer("Zampler", ObjBindMethod(This, "ResetOverlay"), -1)
     }
     
@@ -56,22 +56,24 @@ Class Zampler {
         TargetOption := CurrentOption - 1
         Else
         TargetOption := CurrentOption + 1
-        Click CompensatePluginXCoordinate(707), CompensatePluginYCoordinate(102)
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
+        Click PluginControlPos.X + 707, PluginControlPos.Y + 102
         Sleep 250
-        Click CompensatePluginXCoordinate(OptionCoordinates[Options[CurrentOption]].X), CompensatePluginYCoordinate(OptionCoordinates[Options[CurrentOption]].Y)
+        Click PluginControlPos.X + OptionCoordinates[Options[CurrentOption]].X, PluginControlPos.Y + OptionCoordinates[Options[CurrentOption]].Y
         Sleep 250
-        Click CompensatePluginXCoordinate(OptionCoordinates[Options[TargetOption]].X), CompensatePluginYCoordinate(OptionCoordinates[Options[TargetOption]].Y)
+        Click PluginControlPos.X + OptionCoordinates[Options[TargetOption]].X, PluginControlPos.Y + OptionCoordinates[Options[TargetOption]].Y
         Sleep 250
-        MouseMove CompensatePluginXCoordinate(707), CompensatePluginYCoordinate(102)
+        MouseMove PluginControlPos.X + 707, PluginControlPos.Y + 102
         This.GetFilter(OverlayObj)
     }
     
     Static Check(PluginInstance) {
         Thread "NoTimers"
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Zampler"
         Return True
-        If ReaHotkey.Config.Get("ZamplerImageSearch") = 1 And FindImage("Images/Zampler/Zampler.png", GetPluginXCoordinate() + 0, GetPluginYCoordinate() + 140, GetPluginXCoordinate() + 230, GetPluginYCoordinate() + 170) Is Object
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
+        If ReaHotkey.Config.Get("ZamplerImageSearch") = 1 And FindImage("Images/Zampler/Zampler.png", PluginControlPos.X, PluginControlPos.Y + 140, PluginControlPos.X + 230, PluginControlPos.Y + 170) Is Object
         Return True
         If ReaHotkey.AbletonPlugin {
             If RegExMatch(WinGetTitle("A"), "^Zampler-RX/[1-9][0-9]*-Zampler-RX$")
@@ -104,29 +106,33 @@ Class Zampler {
     }
     
     Static GetFilter(OverlayObj) {
-        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(700), CompensatePluginYCoordinate(96), CompensatePluginXCoordinate(756), CompensatePluginYCoordinate(108)))
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
+        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", PluginControlPos.X + 700, PluginControlPos.Y + 96, PluginControlPos.X + 756, PluginControlPos.Y + 108))
         OverlayObj.Value := Result
     }
     
     Static GetModDestination(OverlayObj) {
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
         Static InitialLabel := OverlayObj.Label
-        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(466), CompensatePluginYCoordinate(240), CompensatePluginXCoordinate(536), CompensatePluginYCoordinate(260)))
+        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", PluginControlPos.X + 466, PluginControlPos.Y + 240, PluginControlPos.X + 536, PluginControlPos.Y + 260))
         If Result = ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
     }
     
     Static GetModSource(OverlayObj) {
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
         Static InitialLabel := OverlayObj.Label
-        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(310), CompensatePluginYCoordinate(240), CompensatePluginXCoordinate(370), CompensatePluginYCoordinate(260)))
+        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", PluginControlPos.X + 310, PluginControlPos.Y + 240, PluginControlPos.X + 370, PluginControlPos.Y + 260))
         If Result = ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
     }
     
     Static GetSFZREXInstrument(OverlayObj) {
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
         Static InitialLabel := OverlayObj.Label
-        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", CompensatePluginXCoordinate(448), CompensatePluginYCoordinate(226), CompensatePluginXCoordinate(648), CompensatePluginYCoordinate(236)))
+        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", PluginControlPos.X + 448, PluginControlPos.Y + 226, PluginControlPos.X + 648, PluginControlPos.Y + 236))
         If Result = ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
@@ -137,7 +143,8 @@ Class Zampler {
     }
     
     Static MoveToFilter(OverlayObj) {
-        MouseMove CompensatePluginXCoordinate(707), CompensatePluginYCoordinate(102)
+        PluginControlPos := KompleteKontrol.GetPluginControlPos()
+        MouseMove PluginControlPos.X + 707, PluginControlPos.Y + 102
     }
     
     Static ResetLabel(OverlayObj) {

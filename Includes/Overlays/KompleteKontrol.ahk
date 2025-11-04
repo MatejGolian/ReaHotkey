@@ -12,22 +12,23 @@ Class KompleteKontrol {
     Static __New() {
         This.InitConfig()
         
-        PluginSearchOverlay := AccessibilityOverlay("Search")
+        PluginSearchOverlay := PluginOverlay("Search")
+        PluginSearchOverlay.AddCustomButton("Close library browser",,,, ObjBindMethod(This, "ActivatePluginLibBrowserCloser")).SetHotkey("!L", "Alt+L")
         PluginSearchOverlay.AddCustomEdit("Search", ObjBindMethod(This, "FocusPluginSearchField")).SetHotkey("!S", "Alt+S")
-        PluginSearchOverlay.AddCustomButton("Clear search",,, ObjBindMethod(This, "ActivatePluginClearSearch")).SetHotkey("!X", "Alt+X")
+        PluginSearchOverlay.AddCustomButton("Clear search",,,, ObjBindMethod(This, "ActivatePluginClearSearch")).SetHotkey("!X", "Alt+X")
         This.PluginSearchOverlay := PluginSearchOverlay
         
-        PluginNoSearchOverlay := AccessibilityOverlay("No Search")
+        PluginNoSearchOverlay := PluginOverlay("No Search")
         This.PluginNoSearchOverlay := PluginNoSearchOverlay
         
-        PluginHeader := AccessibilityOverlay("Komplete Kontrol")
+        PluginHeader := PluginOverlay("Komplete Kontrol")
         PluginHeader.AddStaticText("Komplete Kontrol")
-        PluginHeader.AddHotspotButton("Menu", 297, 17, CompensatePluginCoordinates,, CompensatePluginCoordinates).SetHotkey("!M", "Alt+M")
+        PluginHeader.AddHotspotButton("Menu", 297, 17).SetHotkey("!M", "Alt+M")
         PluginHeader.AddControl(This.PluginSearchOverlay)
         PluginHeader.AddCustomButton("Choose library",,, ObjBindMethod(ChoosePluginOverlay,,,, "L", "Choose library")).SetHotkey("!C", "Alt+C")
         This.PluginHeader := PluginHeader
         
-        StandaloneHeader := AccessibilityOverlay("Komplete Kontrol")
+        StandaloneHeader := StandaloneOverlay("Komplete Kontrol")
         StandaloneHeader.AddHotspotButton("File menu", 16, -10).SetHotkey("!F", "Alt+F")
         StandaloneHeader.AddHotspotButton("Edit menu", 52, -10).SetHotkey("!E", "Alt+E")
         StandaloneHeader.AddHotspotButton("View menu", 83, -10).SetHotkey("!V", "Alt+V")
@@ -35,20 +36,21 @@ Class KompleteKontrol {
         StandaloneHeader.AddHotspotButton("Help menu", 194, -10).SetHotkey("!H", "Alt+H")
         This.StandaloneHeader := StandaloneHeader
         
-        Plugin.Register("Komplete Kontrol", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
+        Plugin.Register("Komplete Kontrol", ["^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", "^Qt6[0-9][0-9]NI_6_[0-9]_[0-9]_R[0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$"], ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
         
-        For PluginOverlay In This.PluginOverlays {
-            PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
-            Plugin.RegisterOverlay("Komplete Kontrol", PluginOverlay)
+        For KKPluginOverlay In This.PluginOverlays {
+            KKPluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
+            Plugin.RegisterOverlay("Komplete Kontrol", KKPluginOverlay)
         }
         
         Plugin.SetTimer("Komplete Kontrol", This.CheckPluginConfig, -1)
         Plugin.SetTimer("Komplete Kontrol", This.CheckPluginMenu, 250)
         Plugin.SetTimer("Komplete Kontrol", This.TogglePluginSearchVisible, 500)
+        Plugin.SetTimer("Komplete Kontrol", This.ManageLoadedPlugin, 250)
         
         Plugin.Register("Komplete Kontrol Preference Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, 1, True, ObjBindMethod(This, "CheckPluginPreferenceDialog"))
         
-        PluginPreferenceOverlay := AccessibilityOverlay()
+        PluginPreferenceOverlay := PluginOverlay()
         PluginPreferenceTabControl := PluginPreferenceOverlay.AddTabControl()
         PluginPreferenceMIDITab := HotspotTab("MIDI", 49, 62)
         PluginPreferenceMIDITab.AddCustomButton("Close",,, ObjBindMethod(This, "ClosePluginPreferenceDialog"))
@@ -75,7 +77,7 @@ Class KompleteKontrol {
         
         Plugin.Register("Komplete Kontrol Save As Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, 1, True, ObjBindMethod(This, "CheckPluginSaveAsDialog"))
         
-        PluginSaveAsOverlay := AccessibilityOverlay()
+        PluginSaveAsOverlay := PluginOverlay()
         PluginSaveAsOverlay.AddOCREdit("Save Preset, Name:", "UWP", 24, 72, 500, 88)
         PluginSaveAsOverlay.AddHotspotButton("Save", 219, 135)
         PluginSaveAsOverlay.AddHotspotButton("Cancel", 301, 135)
@@ -88,7 +90,7 @@ Class KompleteKontrol {
         Standalone.Register("Komplete Kontrol Preference Dialog", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(This, "FocusStandalonePreferenceTab"), False, False, 1)
         Standalone.SetHotkey("Komplete Kontrol Preference Dialog", "^,", ObjBindMethod(This, "ManageStandalonePreferenceDialog"))
         
-        StandalonePreferenceOverlay := AccessibilityOverlay()
+        StandalonePreferenceOverlay := StandaloneOverlay()
         StandalonePreferenceTabControl := StandalonePreferenceOverlay.AddTabControl()
         StandalonePreferenceAudioTab := HotspotTab("Audio", 49, 62)
         StandalonePreferenceAudioTab.AddCustomButton("Close",,, ObjBindMethod(This, "CloseStandalonePreferenceDialog"))
@@ -117,16 +119,39 @@ Class KompleteKontrol {
         
         Standalone.Register("Komplete Kontrol Save As Dialog", "ahk_class #32770 ahk_exe Komplete Kontrol.exe", False, False, 1, ObjBindMethod(This, "CheckStandaloneSaveAsDialog"))
         
-        StandaloneSaveAsOverlay := AccessibilityOverlay()
+        StandaloneSaveAsOverlay := StandaloneOverlay()
         StandaloneSaveAsOverlay.AddOCREdit("Save Preset, Name:", "UWP", 24, 72, 500, 88)
         StandaloneSaveAsOverlay.AddHotspotButton("Save", 219, 135)
         StandaloneSaveAsOverlay.AddHotspotButton("Cancel", 301, 135)
         Standalone.RegisterOverlay("Komplete Kontrol Save As Dialog", StandaloneSaveAsOverlay)
     }
     
+    Static __Get(Name, Params) {
+        Try
+        Return This.Get%Name%()
+        Catch As ErrorMessage
+        Throw ErrorMessage
+    }
+    
     Static ActivatePluginClearSearch(ClearSearchButton) {
-        Click CompensatePluginXCoordinate(874), CompensatePluginYCoordinate(233)
+        SearchEditValue := ""
+        UIAElement := This.GetPluginUIAElement()
+        If UIAElement Is UIA.IUIAutomationElement {
+            Try
+            UIAElement := UIAElement.FindElement({Type: "Edit"})
+            Catch
+            Return
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50004
+            SearchEditValue := UIAElement.Value
+        }
+        If SearchEditValue
+        UIAElement.WalkTree(+1).Click("Left")
         ReaHotkey.FoundPlugin.Overlay.FocusPreviousControl()
+    }
+    
+    Static ActivatePluginLibBrowserCloser(LibBrowserCloserButton) {
+        This.ClosePluginBrowser()
+        This.TogglePluginSearchVisible()
     }
     
     Static CheckMenu(Type) {
@@ -137,7 +162,7 @@ Class KompleteKontrol {
         UIAElement := GetUIAWindow()
         Found := False
         Try
-        UIAElement := UIAElement.FindElement({Type:"Menu"})
+        UIAElement := UIAElement.FindElement({Type: "Menu"})
         Catch
         UIAElement := False
         If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50009
@@ -145,12 +170,12 @@ Class KompleteKontrol {
         If Not Found
         %Type%.SetHotkeyMode("Komplete Kontrol", 1)
         Else
-        %Type%.SetHotkeyMode("Komplete Kontrol", 3)
+        %Type%.SetHotkeyMode("Komplete Kontrol", 0)
     }
     
     Static CheckPlugin(PluginInstance) {
         Thread "NoTimers"
-        If PluginInstance Is Plugin And PluginInstance.ControlClass = GetCurrentControlClass()
+        If PluginInstance Is Plugin And PluginInstance.ControlClass = ReaHotkey.GetPluginControl()
         If PluginInstance.Name = "Komplete Kontrol"
         Return True
         If ReaHotkey.AbletonPlugin Or ReaHotkey.ReaperPluginNative {
@@ -164,8 +189,15 @@ Class KompleteKontrol {
     Static CheckPluginPreferenceDialog(PluginInstance) {
         Thread "NoTimers"
         Static PreviousWinID := ""
+        Try
         CurrentWinID := WinGetID("A")
-        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And WinGetTitle("A") = "Preferences" {
+        Catch
+        Return False
+        Try
+        CurrentWinTitle := WinGetTitle("A")
+        Catch
+        Return False
+        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And CurrentWinTitle = "Preferences" {
             If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol Preference Dialog"
             If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
             PluginInstance.Overlay.Reset()
@@ -178,8 +210,11 @@ Class KompleteKontrol {
     Static CheckPluginSaveAsDialog(PluginInstance) {
         Thread "NoTimers"
         Static PreviousWinID := ""
+        Try
         CurrentWinID := WinGetID("A")
-        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png") {
+        Catch
+        Return False
+        If WinExist(ReaHotkey.PluginWinCriteria) And WinActive(ReaHotkey.PluginWinCriteria) And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KompleteKontrol/SavePreset.png") {
             If PluginInstance Is Plugin And PluginInstance.Name = "Komplete Kontrol Save As Dialog"
             If Not PreviousWinID = CurrentWinID And Not PreviousWinID = ""
             PluginInstance.Overlay.Reset()
@@ -192,19 +227,22 @@ Class KompleteKontrol {
     Static CheckStandaloneSaveAsDialog(StandaloneInstance) {
         Thread "NoTimers"
         Static PreviousWinID := ""
+        Try
         CurrentWinID := WinGetID("A")
+        Catch
+        Return False
         If StandaloneInstance Is Standalone And StandaloneInstance.Name = "Komplete Kontrol Save As Dialog" {
             If Not PreviousWinID = CurrentWinID
             Send "{Tab}"
             PreviousWinID := CurrentWinID
             Return True
         }
-        If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KontaktKompleteKontrol/SaveKKPreset.png")
+        If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KompleteKontrol/SavePreset.png")
         Return True
         Return False
     }
     
-    Static closeBrowser(Type) {
+    Static CloseBrowser(Type) {
         Thread "NoTimers"
         UIAElement := This.GetBrowser(Type)
         If UIAElement Is UIA.IUIAutomationElement {
@@ -216,7 +254,7 @@ Class KompleteKontrol {
     }
     
     Static ClosePluginBrowser() {
-        This.closeBrowser("Plugin")
+        This.CloseBrowser("Plugin")
     }
     
     Static ClosePluginPreferenceDialog(*) {
@@ -229,7 +267,7 @@ Class KompleteKontrol {
     }
     
     Static CloseStandaloneBrowser() {
-        This.closeBrowser("Standalone")
+        This.CloseBrowser("Standalone")
     }
     
     Static CloseStandalonePreferenceDialog(*) {
@@ -242,16 +280,14 @@ Class KompleteKontrol {
         UIAElement := This.GetPluginUIAElement()
         If UIAElement Is UIA.IUIAutomationElement {
             Try
-            UIAElement := UIAElement.FindElement({Type:"Edit"})
+            UIAElement := UIAElement.FindElement({Type: "Edit"})
             Catch
             Return
             If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50004 {
                 UIAElement.SetFocus()
                 SearchEdit.Value := UIAElement.Value
-                Return
             }
         }
-        Return
     }
     
     Static FocusStandalonePreferenceTab(KKInstance) {
@@ -262,21 +298,70 @@ Class KompleteKontrol {
     
     Static GetBrowser(Type) {
         Thread "NoTimers"
+        Static Criteria := [{ClassName: "FileTypeSelector", MatchMode: "Substring"}, {ClassName: "TagCloudAccordionWithBrands", MatchMode: "Substring"}]
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
         Else
         UIAElement := GetUIAWindow()
-        Try
-        UIAElement := UIAElement.FindElement({ClassName:"FileTypeSelector", matchmode:"Substring"})
-        Catch
-        UIAElement := False
-        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50018
-        Return UIAElement
+        If UIAElement Is UIA.IUIAutomationElement
+        Loop Criteria.Length {
+            Try
+            UIAElement := UIAElement.FindElement(Criteria[A_Index])
+            Catch
+            UIAElement := False
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = (A_Index = 1 ? 50018 : 50033)
+            Return UIAElement
+        }
         Return False
+    }
+    
+    Static GetPluginControl() {
+        Static CachedControl := False
+        Static TestPluginInstance := Plugin("", "", "")
+        PluginWinCriteria := ReaHotkey.PluginWinCriteria
+        If Not PluginWinCriteria Or Not WinActive(PluginWinCriteria)
+        Return False
+        MainPluginControl := False
+        If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+        Return False
+        Else
+        MainPluginControl := ReaHotkey.FoundPlugin.ControlClass
+        If Not MainPluginControl
+        Return False
+        Controls := WinGetControls(PluginWinCriteria)
+        If Controls.Length = 0 Or Controls[Controls.Length] = MainPluginControl
+        Return False
+        WinTitle := WinGetTitle("A")
+        MainPluginControlPos := InArray(MainPluginControl, Controls)
+        LoopCount := Controls.Length - MainPluginControlPos
+        Index := Controls.Length
+        Loop LoopCount {
+            For PluginEntry In Plugin.List
+            If Not PluginEntry["Name"] = "Komplete Kontrol"
+            If PluginEntry["ControlClasses"] Is Array And PluginEntry["ControlClasses"].Length > 0
+            For ControlClass In PluginEntry["ControlClasses"]
+            If RegExMatch(Controls[Index], ControlClass) {
+                If Controls[Index] = CachedControl
+                Return Controls[Index]
+                CheckResult := PluginEntry["CheckerFunction"].Call(TestPluginInstance)
+                If CheckResult = True {
+                    PluginInstance := Plugin(PluginEntry["Name"], Controls[Index], WinTitle)
+                    CachedControl := Controls[Index]
+                    Return Controls[Index]
+                }
+            }
+            Index--
+        }
+        Return False
+    }
+    
+    Static GetPluginBrowser() {
+        Return This.GetBrowser("Plugin")
     }
     
     Static GetPluginUIAElement() {
         Critical
+        Static Criteria := [{ClassName: "ni::qt::QuickWindow"}, {ClassName: "QWindowIcon", MatchMode: "Substring"}]
         If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
         Return False
         Try
@@ -285,20 +370,30 @@ Class KompleteKontrol {
         Return False
         If Not UIAElement Is UIA.IUIAutomationElement
         Return False
-        If CheckElement(UIAElement)
-        Return UIAElement
         Try
-        UIAElement := UIAElement.FindElement({ClassName:"ni::qt::QuickWindow"})
-        Catch
-        Return False
         If CheckElement(UIAElement)
         Return UIAElement
+        Loop Criteria.Length {
+            Try
+            UIAElements := UIAElement.FindElements(Criteria[A_Index])
+            Catch
+            UIAElements := Array()
+            Try
+            For UIAElement In UIAElements
+            If CheckElement(UIAElement)
+            Return UIAElement
+        }
         Return False
         CheckElement(UIAElement) {
-            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Name = "Komplete Kontrol" And UIAElement.Type = 50032
+            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Name = "Komplete Kontrol"
+            If UIAElement.Type = 50032 Or UIAElement.Type = 50033
             Return True
             Return False
         }
+    }
+    
+    Static GetStandaloneBrowser() {
+        Return This.GetBrowser("Standalone")
     }
     
     Static InitConfig() {
@@ -308,13 +403,38 @@ Class KompleteKontrol {
     
     Static InitPlugin(PluginInstance) {
         If PluginInstance.Overlay.ChildControls.Length = 0
-        PluginInstance.Overlay.AddAccessibilityOverlay()
+        PluginInstance.Overlay.AddPluginOverlay()
         PluginInstance.Overlay.ChildControls[1] := This.PluginHeader.Clone()
         If Not HasProp(PluginInstance.Overlay, "Metadata") {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
             PluginInstance.Overlay.OverlayNumber := 1
         }
         Plugin.RegisterOverlayHotkeys("Komplete Kontrol", PluginInstance.Overlay)
+    }
+    
+    Static IsK7OrK8PluginBrowser(Browser) {
+        If Not Browser Is UIA.IUIAutomationElement
+        Return False
+        PluginControl := This.GetPluginControl()
+        If Not PluginControl
+        Return False
+        LoadedPlugin := Plugin.GetByClass(PluginControl)
+        If LoadedPlugin Is Plugin
+        If LoadedPlugin.Name = "Kontakt 7" Or LoadedPlugin.Name = "Kontakt 8" {
+            Window := GetUIAWindow()
+            If Not Window
+            Return False
+            KClassName := "Kontakt7"
+            If LoadedPlugin.Name = "Kontakt 8"
+            KClassName := "Kontakt8"
+            BrowserPath := Window.GetNumericPath(Browser)
+            KPath := Window.GetNumericPath(%KClassName%.GetPluginUIAElement())
+            If Not BrowserPath Or Not KPath
+            Return False
+            If KPath.Length < BrowserPath.Length
+            Return True
+        }
+        Return False
     }
     
     Static ManageStandalonePreferenceDialog(*) {
@@ -333,9 +453,10 @@ Class KompleteKontrol {
     
     Class CheckPluginConfig {
         Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True, "C", 2)
             If ReaHotkey.Config.Get("CloseKKBrowser") = 1
-            KompleteKontrol.ClosePluginBrowser()
+            %ParentClass%.ClosePluginBrowser()
             If ReaHotkey.Config.Get("DetectLibsInKK") = 1
             Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 500)
             Else
@@ -345,33 +466,237 @@ Class KompleteKontrol {
     
     Class CheckPluginMenu {
         Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
-            KompleteKontrol.CheckMenu("Plugin")
+            %ParentClass%.CheckMenu("Plugin")
         }
     }
     
     Class CheckStandaloneConfig {
         Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             If ReaHotkey.Config.Get("CloseKKBrowser") = 1
-            KompleteKontrol.CloseStandaloneBrowser()
+            %ParentClass%.CloseStandaloneBrowser()
+        }
+    }
+    
+    Class CompensatePluginCoordinates {
+        Static Call(PluginControl) {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            PluginControl := CompensatePluginCoordinates(PluginControl)
+            If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+            Return PluginControl
+            PluginControlPos := %ParentClass%.GetPluginControlPos()
+            If PluginControlPos.X = 0 And PluginControlPos.Y = 0
+            Return PluginControl
+            If PluginControl Is GraphicalHorizontalSlider {
+                If PluginControl.HasProp("OriginalStart")
+                PluginControl.Start := PluginControlPos.X + PluginControl.OriginalStart
+                If PluginControl.HasProp("OriginalEnd")
+                PluginControl.End := PluginControlPos.X + PluginControl.OriginalEnd
+            }
+            If PluginControl Is GraphicalVerticalSlider {
+                If PluginControl.HasProp("OriginalStart")
+                PluginControl.Start := PluginControlPos.Y + PluginControl.OriginalStart
+                If PluginControl.HasProp("OriginalEnd")
+                PluginControl.End := PluginControlPos.Y + PluginControl.OriginalEnd
+            }
+            If PluginControl.HasProp("OriginalXCoordinate")
+            PluginControl.XCoordinate := PluginControlPos.X + PluginControl.OriginalXCoordinate
+            If PluginControl.HasProp("OriginalYCoordinate")
+            PluginControl.YCoordinate := PluginControlPos.Y + PluginControl.OriginalYCoordinate
+            If PluginControl.HasProp("OriginalX1Coordinate")
+            PluginControl.X1Coordinate := PluginControlPos.X + PluginControl.OriginalX1Coordinate
+            If PluginControl.HasProp("OriginalY1Coordinate")
+            PluginControl.Y1Coordinate := PluginControlPos.Y + PluginControl.OriginalY1Coordinate
+            If PluginControl.HasProp("OriginalX2Coordinate")
+            PluginControl.X2Coordinate := PluginControlPos.X + PluginControl.OriginalX2Coordinate
+            If PluginControl.HasProp("OriginalY2Coordinate")
+            PluginControl.Y2Coordinate := PluginControlPos.Y + PluginControl.OriginalY2Coordinate
+            Return PluginControl
+        }
+    }
+    
+    Class CompensatePluginXCoordinate {
+        Static Call(PluginXCoordinate) {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            PluginXCoordinate := CompensatePluginXCoordinate(PluginXCoordinate)
+            If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+            Return PluginXCoordinate
+            PluginControlPos := %ParentClass%.GetPluginControlPos()
+            If PluginControlPos.X = 0 And PluginControlPos.Y = 0
+            Return PluginXCoordinate
+            PluginXCoordinate := PluginControlPos.X + PluginXCoordinate
+            Return PluginXCoordinate
+        }
+    }
+    
+    Class CompensatePluginYCoordinate {
+        Static Call(PluginYCoordinate) {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            PluginYCoordinate := CompensatePluginYCoordinate(PluginYCoordinate)
+            If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+            Return PluginYCoordinate
+            PluginControlPos := %ParentClass%.GetPluginControlPos()
+            If PluginControlPos.X = 0 And PluginControlPos.Y = 0
+            Return PluginYCoordinate
+            PluginYCoordinate := PluginControlPos.Y + PluginYCoordinate
+            Return PluginYCoordinate
+        }
+    }
+    
+    Class GetFoundPlugin {
+        Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+            Return False
+            PluginBrowser := %ParentClass%.GetPluginBrowser()
+            IsK7OrK8PluginBrowser := %ParentClass%.IsK7OrK8PluginBrowser(PluginBrowser)
+            If PluginBrowser And Not IsK7OrK8PluginBrowser
+            Return False
+            PluginControl := %ParentClass%.GetPluginControl()
+            If Not PluginControl
+            Return False
+            FoundPlugin := Plugin.GetByClass(PluginControl)
+            If FoundPlugin Is Plugin
+            Return FoundPlugin
+            Return False
+        }
+    }
+    
+    Class GetPluginControlPos {
+        Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            PluginControlX := 0
+            PluginControlY := 0
+            PluginControlW := 0
+            PluginControlH := 0
+            Try
+            ControlGetPos &PluginControlX, &PluginControlY, &PluginControlW, &PluginControlH, %ParentClass%.GetPluginControl(), ReaHotkey.PluginWinCriteria
+            Catch
+            Return GetPluginControlPos()
+            Return {X: PluginControlX, Y: PluginControlY, W: PluginControlW, H: PluginControlH}
+        }
+    }
+    
+    Class GetPluginHeight {
+        Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            %ParentClass%.Return GetPluginControlPos().H
+        }
+    }
+    
+    Class GetPluginWidth {
+        Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            Return %ParentClass%.GetPluginControlPos().W
+        }
+    }
+    
+    Class GetPluginXCoordinate {
+        Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            Return %ParentClass%.GetPluginControlPos().X
+        }
+    }
+    
+    Class GetPluginYCoordinate {
+        Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            Return %ParentClass%.GetPluginControlPos().Y
+        }
+    }
+    
+    Class ManageLoadedPlugin {
+        Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            Critical
+            Static ExemptPlugins := Array("Dubler 2 MIDI Capture", "Komplete Kontrol", "Kontakt 7", "Kontakt 8", "Raum"), FirstRun := True, KKHotkeys := Array(), KKPluginNumber := 0, KKTimers := Array(), LastFoundPlugin := False
+            If FirstRun {
+                KKPluginNumber := Plugin.FindName("Komplete Kontrol")
+                KKHotkeys := Plugin.List[KKPluginNumber]["Hotkeys"]
+                KKTimers := Plugin.List[KKPluginNumber]["Timers"]
+                FirstRun := False
+            }
+            PluginBrowser := %ParentClass%.GetPluginBrowser()
+            IsK7OrK8PluginBrowser := %ParentClass%.IsK7OrK8PluginBrowser(PluginBrowser)
+            If Not PluginBrowser Or Not IsK7OrK8PluginBrowser {
+                PluginControl := %ParentClass%.GetPluginControl()
+                If PluginControl {
+                    PluginToLoad := Plugin.GetByClass(PluginControl)
+                    If PluginToLoad Is Plugin And Not InArray(PluginToLoad.Name, ExemptPlugins)
+                    If Not LastFoundPlugin = PluginToLoad {
+                        If LastFoundPlugin Is Plugin
+                        UnloadPlugin(LastFoundPlugin, KKPluginNumber, KKHotkeys, KKTimers)
+                        LastFoundPlugin := LoadPlugin(PluginToLoad, KKPluginNumber, KKHotkeys, KKTimers)
+                    }
+                    Else {
+                        If LastFoundPlugin Is Plugin
+                        If Not ReaHotkey.FoundPlugin.Overlay.OverlayNumber = 1
+                        LastFoundPlugin := LoadPlugin(PluginToLoad, KKPluginNumber, KKHotkeys, KKTimers)
+                    }
+                }
+                Else {
+                    If LastFoundPlugin Is Plugin And Not InArray(LastFoundPlugin.Name, ExemptPlugins)
+                    LastFoundPlugin := UnloadPlugin(LastFoundPlugin, KKPluginNumber, KKHotkeys, KKTimers)
+                }
+            }
+            Else {
+                If LastFoundPlugin Is Plugin And Not InArray(LastFoundPlugin.Name, ExemptPlugins)
+                LastFoundPlugin := UnloadPlugin(LastFoundPlugin, KKPluginNumber, KKHotkeys, KKTimers)
+            }
+            LoadPlugin(PluginToLoad, KKPluginNumber, KKHotkeys, KKTimers) {
+                If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+                Return PluginToLoad
+                ReaHotkey.FoundPlugin.Overlay := %ParentClass%.PluginOverlays[1]
+                ReaHotkey.FoundPlugin.Overlay.ChildControls[2] := PluginToLoad.Overlay
+                %ParentClass%.TogglePluginSearchVisible()
+                ReaHotkey.TurnPluginTimersOff("Komplete Kontrol")
+                ReaHotkey.TurnPluginHotkeysOff("Komplete Kontrol")
+                HotkeysToLoad := Plugin.List[PluginToLoad.PluginNumber]["Hotkeys"]
+                TimersToLoad := Plugin.List[PluginToLoad.PluginNumber]["Timers"]
+                Plugin.List[KKPluginNumber]["Hotkeys"] := MergeArrays(KKHotkeys, HotkeysToLoad)
+                Plugin.List[KKPluginNumber]["Timers"] := MergeArrays(KKTimers, TimersToLoad)
+                ReaHotkey.TurnPluginTimersOn("Komplete Kontrol")
+                ReaHotkey.TurnPluginHotkeysOn("Komplete Kontrol")
+                Return PluginToLoad
+            }
+            UnloadPlugin(PluginToUnload, KKPluginNumber, KKHotkeys, KKTimers) {
+                Static NoLibraryProductOverlay := %ParentClass%.PluginOverlays[1].Clone()
+                If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+                Return PluginToUnload
+                If NoLibraryProductOverlay.ChildControls[2].ChildControls.Length > 0
+                NoLibraryProductOverlay.ChildControls[2] := PluginOverlay()
+                ReaHotkey.FoundPlugin.Overlay := NoLibraryProductOverlay
+                %ParentClass%.TogglePluginSearchVisible()
+                ReaHotkey.TurnPluginTimersOff("Komplete Kontrol")
+                ReaHotkey.TurnPluginHotkeysOff("Komplete Kontrol")
+                Plugin.List[KKPluginNumber]["Hotkeys"] := KKHotkeys
+                Plugin.List[KKPluginNumber]["Timers"] := KKTimers
+                ReaHotkey.TurnPluginTimersOn("Komplete Kontrol")
+                ReaHotkey.TurnPluginHotkeysOn("Komplete Kontrol")
+                Return False
+            }
         }
     }
     
     Class TogglePluginSearchVisible {
         Static Call() {
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
-            If KompleteKontrol.GetBrowser("Plugin") {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
+            Return
+            If %ParentClass%.GetPluginBrowser() {
                 If Not ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3].Label = "Search"
-                ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3] := KompleteKontrol.PluginSearchOverlay
+                ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3] := %ParentClass%.PluginSearchOverlay
             }
             Else {
                 If Not ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3].Label = "No Search"
-                ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3] := KompleteKontrol.PluginNoSearchOverlay
+                ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3] := %ParentClass%.PluginNoSearchOverlay
             }
         }
     }
     
-    #IncludeAgain KontaktKompleteKontrol/NoProduct.ahk
+    #IncludeAgain KontaktKompleteKontrol/NoLibraryProduct.ahk
     #IncludeAgain KontaktKompleteKontrol/AudioImperia.ahk
     #IncludeAgain KontaktKompleteKontrol/CinematicStudioSeries.ahk
     #IncludeAgain KontaktKompleteKontrol/ImpactSoundworks.ahk

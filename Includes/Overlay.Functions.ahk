@@ -34,42 +34,52 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             UnknownProductCounter++
         }
         If ReaHotkey.Found%Type% Is %Type% And ReaHotkey.Found%Type%.Overlay.HasProp("OverlayNumber") And Not ReaHotkey.Found%Type%.Overlay.OverlayNumber = OverlayEntry.OverlayNumber {
-            ImageEntries := Array()
-            If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Image") And Not OverlayEntry.Metadata["Image"] = "" {
-                ImageEntries := OverlayEntry.Metadata["Image"].Clone()
-                If Not ImageEntries Is Array
-                ImageEntries := Array(ImageEntries)
-                For ImageIndex, ImageEntry In ImageEntries
-                ImageEntries[ImageIndex] := ProcessImageEntry(Type, CompensatePluginCoordinates, ImageEntry, WinWidth, WinHeight)
+            OverlayFound := 0
+            If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("DetectionFunction") And OverlayEntry.Metadata["DetectionFunction"] Is Object And OverlayEntry.Metadata["DetectionFunction"].HasMethod("Call")
+            OverlayFound := OverlayEntry.Metadata["DetectionFunction"].Call(OverlayEntry)
+            If Not OverlayFound
+            OverlayFound := FindOverlayImage(OverlayEntry)
+            If OverlayFound
+            If ReaHotkey.Found%Type%.Chooser {
+                ReaHotkey.Found%Type%.Overlay := %Type%Overlay(OverlayEntry.Label)
+                ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
+                If OverlayEntry.HasProp("Metadata")
+                ReaHotkey.Found%Type%.Overlay.Metadata := OverlayEntry.Metadata
+                ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
+                ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
+                If ReportChange
+                Report(Product)
+                FocusElement(Type, SourceNumber, TypeToFocus, ValueToFocus)
+                Break
             }
-            For ImageEntry In ImageEntries
-            If FileExist(ImageEntry["File"]) {
-                Try
-                ImageFound := ImageSearch(&FoundX, &FoundY, ImageEntry["X1Coordinate"], ImageEntry["Y1Coordinate"], ImageEntry["X2Coordinate"], ImageEntry["Y2Coordinate"], ImageEntry["File"])
-                Catch
-                ImageFound := 0
-                If ImageFound
-                If ReaHotkey.Found%Type%.Chooser {
-                    ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(OverlayEntry.Label)
-                    ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
-                    If OverlayEntry.HasProp("Metadata")
-                    ReaHotkey.Found%Type%.Overlay.Metadata := OverlayEntry.Metadata
-                    ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
-                    ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
-                    If ReportChange
-                    Report(Product)
-                    FocusElement(Type, SourceNumber, TypeToFocus, ValueToFocus)
-                    Break 2
-                }
-                Else {
-                    ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
-                    If ReportChange
-                    Report(Product)
-                    FocusElement(Type, SourceNumber, TypeToFocus, ValueToFocus)
-                    Break 2
-                }
+            Else {
+                ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
+                If ReportChange
+                Report(Product)
+                FocusElement(Type, SourceNumber, TypeToFocus, ValueToFocus)
+                Break
             }
         }
+    }
+    FindOverlayImage(OverlayEntry) {
+        ImageEntries := Array()
+        If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Image") And Not OverlayEntry.Metadata["Image"] = "" {
+            ImageEntries := OverlayEntry.Metadata["Image"].Clone()
+            If Not ImageEntries Is Array
+            ImageEntries := Array(ImageEntries)
+            For ImageIndex, ImageEntry In ImageEntries
+            ImageEntries[ImageIndex] := ProcessImageEntry(Type, CompensatePluginCoordinates, ImageEntry, WinWidth, WinHeight)
+        }
+        For ImageEntry In ImageEntries
+        If FileExist(ImageEntry["File"]) {
+            Try
+            ImageFound := ImageSearch(&FoundX, &FoundY, ImageEntry["X1Coordinate"], ImageEntry["Y1Coordinate"], ImageEntry["X2Coordinate"], ImageEntry["Y2Coordinate"], ImageEntry["File"])
+            Catch
+            ImageFound := 0
+            If ImageFound
+            Return 1
+        }
+        Return 0
     }
     ProcessImageEntry(Type, CompensatePluginCoordinates, ImageEntry, WinWidth, WinHeight) {
         If Not ImageEntry Is Map
@@ -127,7 +137,7 @@ ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu, TypeToFocus := "C", Value
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemName]
     If Not ReaHotkey.Found%Type%.Overlay.OverlayNumber = OverlayNumber
     If ReaHotkey.Found%Type%.Chooser {
-        ReaHotkey.Found%Type%.Overlay := AccessibilityOverlay(ItemName)
+        ReaHotkey.Found%Type%.Overlay := %Type%Overlay(ItemName)
         ReaHotkey.Found%Type%.Overlay.OverlayNumber := OverlayNumber
         If OverlayList[OverlayNumber].HasProp("Metadata")
         ReaHotkey.Found%Type%.Overlay.Metadata := OverlayList[OverlayNumber].Metadata
@@ -488,32 +498,52 @@ GetImgSize(Img) {
 GetPluginControlPos() {
     PluginControlX := 0
     PluginControlY := 0
+    PluginControlW := 0
+    PluginControlH := 0
     Try
-    ControlGetPos &PluginControlX, &PluginControlY,,, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
+    ControlGetPos &PluginControlX, &PluginControlY, &PluginControlW, &PluginControlH, ReaHotkey.GetPluginControl(), ReaHotkey.PluginWinCriteria
     Catch
     Try {
         If ReaHotkey.AbletonPlugin {
             PluginControlX := 0
             PluginControlY := 0
+            PluginControlW := 0
+            PluginControlH := 0
         }
         Else If ReaHotkey.ReaperPluginBridged {
             PluginControlX := 0
             PluginControlY := 0
+            PluginControlW := 0
+            PluginControlH := 0
         }
         Else If ReaHotkey.ReaperPluginNative {
             PluginControlX := 210
             PluginControlY := 53
+            PluginControlW := 0
+            PluginControlH := 0
         }
         Else {
             PluginControlX := 0
             PluginControlY := 0
+            PluginControlW := 0
+            PluginControlH := 0
         }
     }
     Catch {
         PluginControlX := 0
         PluginControlY := 0
+        PluginControlW := 0
+        PluginControlH := 0
     }
-    Return {X: PluginControlX, Y: PluginControlY}
+    Return {X: PluginControlX, Y: PluginControlY, W: PluginControlW, H: PluginControlH}
+}
+
+GetPluginHeight() {
+    Return GetPluginControlPos().H
+}
+
+GetPluginWidth() {
+    Return GetPluginControlPos().W
 }
 
 GetPluginXCoordinate() {
@@ -581,9 +611,34 @@ MergeArrays(Params*) {
     If Param Is Array
     For Item In Param
     Merged.Push(Item)
-    Else
-    Merged.Push(Param)
     Return Merged
+}
+
+PluginPctClick(XPct, YPct) {
+    If XPct < 0 Or YPct < 0
+    Return
+    If XPct > 100 Or YPct > 100
+    Return
+    PluginControlPos := GetPluginControlPos()
+    X := PluginControlPos.X
+    Y := PluginControlPos.Y
+    W := PluginControlPos.W
+    H := PluginControlPos.H
+    If W = 0 Or H = 0
+    Return
+    If XPct = 0
+    XPx := X
+    Else If XPct = 100
+    XPx := X + W
+    Else
+    XPx := X + Floor(W / 100 * XPct)
+    If YPct = 0
+    YPx := Y
+    Else If YPct = 100
+    YPx := Y + H
+    Else
+    YPx := Y+ Floor(H / 100 * YPct)
+    Click(XPx, YPx)
 }
 
 StrJoin(obj,delimiter:="",OmitChars:=""){
@@ -600,4 +655,29 @@ Wait(Period) {
         If A_TickCount > PeriodEnd
         Break
     }
+}
+
+WinPctClick(XPct, YPct) {
+    If XPct < 0 Or YPct < 0
+    Return
+    If XPct > 100 Or YPct > 100
+    Return
+    WinPos := GetWinPos()
+    W := WinPos.W
+    H := WinPos.H
+    If W = 0 Or H = 0
+    Return
+    If XPct = 0
+    XPx := 0
+    Else If XPct = 100
+    XPx := W
+    Else
+    XPx := Floor(W / 100 * XPct)
+    If YPct = 0
+    YPx := 0
+    Else If YPct = 100
+    YPx := H
+    Else
+    YPx := Floor(H / 100 * YPct)
+    Click(XPx, YPx)
 }

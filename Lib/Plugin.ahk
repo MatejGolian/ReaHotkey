@@ -2,6 +2,11 @@
 
 Class Plugin Extends Program {
     
+    Static UnnamedPluginName := "Unnamed Plugin"
+    Static ChooserOverlay := PluginOverlay()
+    Static DefaultOverlay := PluginOverlay()
+    Static Instances := Array()
+    Static List := Array()
     CheckerFunction := ""
     Chooser := True
     ControlClass := ""
@@ -9,16 +14,10 @@ Class Plugin Extends Program {
     InitFunction := ""
     InstanceNumber := 0
     Name := ""
-    Overlay := AccessibilityOverlay()
-    Overlays := Array()
+    Overlay := PluginOverlay()
     PluginNumber := 0
     SingleInstance := False
     WinTitle := ""
-    Static ChooserOverlay := AccessibilityOverlay()
-    Static DefaultOverlay := AccessibilityOverlay()
-    Static Instances := Array()
-    Static List := Array()
-    Static UnnamedPluginName := "Unnamed Plugin"
     
     __New(Name, ControlClass, WinTitle) {
         Super.__New(Name)
@@ -47,6 +46,7 @@ Class Plugin Extends Program {
     }
     
     Static GetByCriteria(ControlClass, PropertyName, PropertyValue) {
+        Static TestPluginInstance := Plugin("", "", "")
         PluginNumbers := This.FindClass(ControlClass)
         If PluginNumbers.Length > 0 {
             WinTitle := WinGetTitle("A")
@@ -70,8 +70,7 @@ Class Plugin Extends Program {
                 }
             }
             For PluginNumber In PluginNumbers {
-                PluginInstance := Plugin("", "", "")
-                CheckResult := This.List[PluginNumber]["CheckerFunction"].Call(PluginInstance)
+                CheckResult := This.List[PluginNumber]["CheckerFunction"].Call(TestPluginInstance)
                 If CheckResult = True {
                     PluginInstance := Plugin(This.List[PluginNumber]["Name"], ControlClass, WinTitle)
                     PluginInstance.%PropertyName% := PropertyValue
@@ -130,16 +129,19 @@ Class Plugin Extends Program {
     }
     
     Static SetHotkey(PluginName, KeyName, Action := "", Options := "") {
+        PluginWinCriteria := ReaHotkey.PluginWinCriteria
+        StandaloneWinCriteria := ReaHotkey.StandaloneWinCriteria
         If Super.SetHotkey(PluginName, KeyName, Action, Options) = True {
             Options := Super.GetHotkeyOptions(Options)
-            If ReaHotkey.PluginWinCriteria
-            HotIfWinActive(ReaHotkey.PluginWinCriteria)
-            If ReaHotkey.FoundPlugin Is Plugin
-            Hotkey KeyName, Action, Options.String
-            If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
-            HotIfWinActive(ReaHotkey.PluginWinCriteria)
-            Else If ReaHotkey.StandaloneWinCriteria And WinActive(ReaHotkey.StandaloneWinCriteria)
-            HotIfWinActive(ReaHotkey.StandaloneWinCriteria)
+            If PluginWinCriteria And WinActive(PluginWinCriteria) {
+                HotIfWinActive(PluginWinCriteria)
+                If ReaHotkey.FoundPlugin Is Plugin And PluginName = ReaHotkey.FoundPlugin.Name
+                Hotkey KeyName, Action, Options.String
+            }
+            If PluginWinCriteria And WinActive(PluginWinCriteria)
+            HotIfWinActive(PluginWinCriteria)
+            Else If StandaloneWinCriteria And WinActive(StandaloneWinCriteria)
+            HotIfWinActive(StandaloneWinCriteria)
             Else
             HotIf
         }
