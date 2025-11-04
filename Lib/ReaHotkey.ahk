@@ -627,14 +627,14 @@ Class ReaHotkey {
                 TurnPluginOn()
                 If This.Found%Type%.HotkeyMode = 1 Or This.Found%Type%.HotkeyMode = 3
                 TurnCommonOn()
-                If This.Found%Type%.HotkeyMode < 4
+                If This.Found%Type%.HotkeyMode < 3
                 TurnSpecificsOn(Type, Name)
             }
             If This.StandaloneWinCriteria And Type = "Standalone" {
                 HotIfWinActive(This.StandaloneWinCriteria)
                 If This.Found%Type%.HotkeyMode = 1 Or This.Found%Type%.HotkeyMode = 3
                 TurnCommonOn()
-                If This.Found%Type%.HotkeyMode < 4
+                If This.Found%Type%.HotkeyMode < 3
                 TurnSpecificsOn(Type, Name)
             }
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria)
