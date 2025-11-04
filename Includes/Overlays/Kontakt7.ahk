@@ -401,11 +401,12 @@ Class Kontakt7 {
     
     Class CheckPluginConfig {
         Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True, "C", 2)
-            Kontakt7.ClosePluginUpdateDialog()
+            %ParentClass%.ClosePluginUpdateDialog()
             Sleep 1000
             If ReaHotkey.Config.Get("CloseK7Browser") = 1
-            Kontakt7.ClosePluginBrowser()
+            %ParentClass%.ClosePluginBrowser()
             If ReaHotkey.Config.Get("DetectLibsInK7") = 1
             Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 500)
             Else
@@ -415,23 +416,26 @@ Class Kontakt7 {
     
     Class CheckPluginMenu {
         Static Call() {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
-            Kontakt7.CheckMenu("Plugin")
+            %ParentClass%.CheckMenu("Plugin")
         }
     }
     
     Class CheckStandaloneConfig {
         Static Call() {
-            Kontakt7.CloseStandaloneUpdateDialog()
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            %ParentClass%.CloseStandaloneUpdateDialog()
             Sleep 1000
             If ReaHotkey.Config.Get("CloseK7Browser") = 1
-            Kontakt7.CloseStandaloneBrowser()
+            %ParentClass%.CloseStandaloneBrowser()
         }
     }
     
     Class CheckStandaloneMenu {
         Static Call() {
-            Kontakt7.CheckMenu("Standalone")
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            %ParentClass%.CheckMenu("Standalone")
         }
     }
     
