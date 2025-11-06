@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 2025-11-06
+
 ### Added/Fixed
 
 -   Added support for mix switching in Audio Imperia Glade
@@ -452,7 +454,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.0...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.1...HEAD
+
+[0.8.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.0...0.8.1
 
 [0.8.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.7.9...0.8.0
 
