@@ -31,7 +31,7 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
   - Works inside REAPER and Ableton Live 12. Note that Kontakt version 7.10 or higher is required.
   - Switching Between instruments/multis/snapshots Only works inside REAPER and Ableton Live 12 - ReaHotkey does not support these features in the standalone versions of Kontakt.
   - The Content Missing dialog may not be accessible when running Kontakt inside Komplete Kontrol.
-* Makes it possible to switch Between various mixes and microphone positions in Audio Imperia's Areia, Cerberus, Chorus, Dolce Jaeger, Nucleus, Solo and Talos libraries. There is also support for toggling microphone positions in Cinematic Studio Strings and Brass, switching presets in the 'Juggernaut' library by Impact Soundworks and toggling the reverb on/off in a couple of Soundiron libraries.
+* Makes it possible to switch Between various mixes and microphone positions in Audio Imperia's Areia, Cerberus, Chorus, Dolce, Glade, Jaeger, Nucleus, Solo and Talos libraries. There is also support for toggling microphone positions in Cinematic Studio Strings and Brass, switching presets in the 'Juggernaut' library by Impact Soundworks and toggling the reverb on/off in a couple of Soundiron libraries.
   - Only works inside REAPER and Ableton Live 12.
 * Adds ability to choose presets in Raum by Native instruments.
 * Adds basic support for the Xfer Records Serum 2 synthesizer inside REAPER and Ableton Live 12.

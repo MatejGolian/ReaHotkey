@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added/Fixed
+
+-   Added support for mix switching in Audio Imperia Glade
+-   Fixed a bug with automatic library detection where matching images across several overlays would result in an endless overlay switching loop
+
 ## [0.8.0] - 2025-11-04
 
 ### Added/Changed

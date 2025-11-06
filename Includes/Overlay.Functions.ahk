@@ -20,9 +20,17 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
     WinWidth := A_ScreenWidth
     If WinHeight = 0
     WinHeight := A_ScreenHeight
+    If ReaHotkey.Found%Type% Is %Type% {
+        CurrentOverlay := ReaHotkey.Found%Type%.Overlay
+        OverlayFound := 0
+        If CurrentOverlay.HasProp("Metadata") And CurrentOverlay.Metadata.Has("DetectionFunction") And CurrentOverlay.Metadata["DetectionFunction"] Is Object And CurrentOverlay.Metadata["DetectionFunction"].HasMethod("Call")
+        OverlayFound := CurrentOverlay.Metadata["DetectionFunction"].Call(CurrentOverlay)
+        If Not OverlayFound
+        OverlayFound := FindOverlayImage(CurrentOverlay)
+        If OverlayFound
+        Return
+    }
     For OverlayNumber, OverlayEntry In OverlayList {
-        FoundX := ""
-        FoundY := ""
         If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Product") And Not OverlayEntry.Metadata["Product"] = "" {
             Product := OverlayEntry.Metadata["Product"]
         }
@@ -62,6 +70,8 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
         }
     }
     FindOverlayImage(OverlayEntry) {
+        FoundX := ""
+        FoundY := ""
         ImageEntries := Array()
         If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Image") And Not OverlayEntry.Metadata["Image"] = "" {
             ImageEntries := OverlayEntry.Metadata["Image"].Clone()

@@ -48,6 +48,40 @@ Class AudioImperia {
         DolceOverlay.AddGraphicalToggleButton("Modern Mix", This.%PluginClass%XOffset + 92, This.%PluginClass%YOffset + 269, This.%PluginClass%XOffset + 192, This.%PluginClass%YOffset + 319, "Images/SampleLibraries/Dolce/ModernMixOn.png", "Images/SampleLibraries/Dolce/ModernMixOff.png")
         %PluginClass%.PluginOverlays.Push(DolceOverlay)
         
+        GladeOverlay := PluginOverlay("Glade")
+        GladeOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Glade", "Patch", "Studio (Pyramid Instruments)", "Image", Map("File", "Images/SampleLibraries/Glade/Studio.png"))
+        GladeOverlay.AddPluginOverlay()
+        GladeOverlay.AddStaticText("Glade Studio")
+        Switch PluginClass {
+            Case "Kontakt7":
+            GladeOverlay.AddHotspotButton("Classic Mix", 120, 313)
+            GladeOverlay.AddHotspotButton("Modern Mix", 219, 313)
+            Case "Kontakt8":
+            GladeOverlay.AddHotspotButton("Classic Mix", 112, 240)
+            GladeOverlay.AddHotspotButton("Modern Mix", 211, 240)
+            Case "KompleteKontrol":
+            GladeOverlay.AddHotspotButton("Classic Mix", 138, 424)
+            GladeOverlay.AddHotspotButton("Modern Mix", 237, 424)
+        }
+        %PluginClass%.PluginOverlays.Push(GladeOverlay)
+        
+        GladeOverlay := PluginOverlay("Glade")
+        GladeOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Glade", "Patch", "Standard (Pyramid Instruments)", "Image", Map("File", "Images/SampleLibraries/Glade/Standard.png"))
+        GladeOverlay.AddPluginOverlay()
+        GladeOverlay.AddStaticText("Glade")
+        Switch PluginClass {
+            Case "Kontakt7":
+            GladeOverlay.AddHotspotButton("Classic Mix", 152, 262)
+            GladeOverlay.AddHotspotButton("Modern Mix", 152, 303)
+            Case "Kontakt8":
+            GladeOverlay.AddHotspotButton("Classic Mix", 144, 189)
+            GladeOverlay.AddHotspotButton("Modern Mix", 144, 230)
+            Case "KompleteKontrol":
+            GladeOverlay.AddHotspotButton("Classic Mix", 170, 382)
+            GladeOverlay.AddHotspotButton("Modern Mix", 170, 403)
+        }
+        %PluginClass%.PluginOverlays.Push(GladeOverlay)
+        
         JaegerOverlay := PluginOverlay("Jaeger")
         JaegerOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Jaeger", "Image", Map("File", "Images/SampleLibraries/Jaeger/Product.png"))
         JaegerOverlay.AddPluginOverlay()
