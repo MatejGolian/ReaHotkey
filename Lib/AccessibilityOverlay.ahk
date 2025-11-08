@@ -1278,7 +1278,7 @@ Class FocusableUIA Extends FocusableControl {
     ControlTypeLabel := ""
     element := False
     SearchCriteria := ""
-    States := Map("0", "not found", "1", "")
+    States := Map(0, "not found", 1, "")
     Window := False
     
     __New(Label, ControlTypeLabel, SearchCriteria, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
@@ -1349,6 +1349,11 @@ Class FocusableUIA Extends FocusableControl {
         Return Window
     }
     
+    SpeakOnFocus(Speak := True) {
+        If Not This.Label = "" Or Not This.ControlTypeLabel = ""
+        Super.SpeakOnFocus(Speak)
+    }
+    
 }
 
 Class ActivatableUIA Extends FocusableUIA {
@@ -1404,24 +1409,8 @@ Class ActivatableUIA Extends FocusableUIA {
     }
     
     SpeakOnActivation(Speak := True) {
-        Message := ""
-        CheckResult := This.GetState()
-        LabelString := This.Label
-        If LabelString = ""
-        LabelString := This.DefaultLabel
-        ValueString := This.Value
-        If ValueString = ""
-        ValueString := This.DefaultValue
-        StateString := ""
-        If This.States.Has(CheckResult)
-        StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID
-        Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString
-        Else
-        If This.States.Count > 1
-        Message := StateString
-        If Speak
-        AccessibilityOverlay.Speak(Message)
+        If Not This.Label = "" Or Not This.ControlTypeLabel = ""
+        Super.SpeakOnActivation(Speak)
     }
     
 }
