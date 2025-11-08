@@ -10,7 +10,6 @@ Class Plugin Extends Program {
     CheckerFunction := ""
     Chooser := True
     ControlClass := ""
-    HotkeyMode := 1
     InitFunction := ""
     InstanceNumber := 0
     Name := ""

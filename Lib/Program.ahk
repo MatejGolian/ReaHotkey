@@ -11,7 +11,6 @@ Class Program {
     Chooser := True
     InitFunction := ""
     InstanceNumber := 0
-    HotkeyMode := 1
     Name := ""
     Overlay := AccessibilityOverlay()
     ProgramNumber := 0
@@ -28,7 +27,6 @@ Class Program {
             ProgramEntry := %This.__Class%.List[ProgramNumber]
             This.InitFunction := ProgramEntry["InitFunction"]
             This.Chooser := ProgramEntry["Chooser"]
-            This.HotkeyMode := ProgramEntry["HotkeyMode"]
             This.CheckerFunction := ProgramEntry["CheckerFunction"]
             ProgramOverlays := ProgramEntry["Overlays"]
             If ProgramOverlays.Length = 1 {
@@ -284,9 +282,6 @@ Class Program {
     Static SetHotkeyMode(ProgramName, Value) {
         ProgramNumber := This.FindName(ProgramName)
         If ProgramNumber > 0 {
-            For ProgramInstance In This.Instances
-            If ProgramInstance.%This.Prototype.__Class%Number = ProgramNumber
-            ProgramInstance.HotkeyMode := Value
             This.List[ProgramNumber]["HotkeyMode"] := Value
             ReaHotkey.Turn%This.Prototype.__Class%HotkeysOff(ProgramName)
             ReaHotkey.Turn%This.Prototype.__Class%HotkeysOn(ProgramName)

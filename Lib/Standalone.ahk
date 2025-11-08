@@ -11,7 +11,6 @@ Class Standalone Extends Program {
     Chooser := True
     InitFunction := ""
     InstanceNumber := 0
-    HotkeyMode := 1
     Name := ""
     Overlay := StandaloneOverlay()
     StandaloneNumber := 0
