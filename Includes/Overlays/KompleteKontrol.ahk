@@ -480,6 +480,13 @@ Class KompleteKontrol {
         }
     }
     
+    Class ClickPluginCoordinates {
+        Static Call(XCoordinate, YCoordinate) {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            Click %ParentClass%.CompensatePluginXCoordinate(XCoordinate), %ParentClass%.CompensatePluginYCoordinate(YCoordinate)
+        }
+    }
+    
     Class CompensatePluginCoordinates {
         Static Call(PluginControl) {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)

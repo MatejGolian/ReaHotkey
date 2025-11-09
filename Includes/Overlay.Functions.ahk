@@ -181,6 +181,10 @@ ChooseStandaloneOverlay(OverlayControl, MenuHandler := False, HandlerParams*) {
     ChooseOverlay("Standalone", MenuHandler, HandlerParams*)
 }
 
+ClickPluginCoordinates(XCoordinate, YCoordinate) {
+    Click CompensatePluginXCoordinate(XCoordinate), CompensatePluginYCoordinate(YCoordinate)
+}
+
 CompensateFocusedControlXCoordinate(ControlXCoordinate) {
     Try
     ControlGetPos &FocusedControlXCoordinate, &FocusedControlYCoordinate,,, ControlGetClassNN(ControlGetFocus("A")), "A"
