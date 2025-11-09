@@ -687,6 +687,31 @@ Class KompleteKontrol {
         }
     }
     
+    Class PluginSerialClick {
+        Static Call(Coordinates*) {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            ClickFunc := Object()
+            ClickFunc.DefineProp("Coordinates", {Value: Coordinates})
+            ClickFunc.DefineProp("ParentClass", {Value: ParentClass})
+            ClickFunc.DefineProp("Call", {call: CallClickFunc})
+            Return ClickFunc
+            CallClickFunc(This, OverlayObj) {
+                Coordinates := This.Coordinates.Clone()
+                If Coordinates.Length < 2
+                Return
+                If Mod(Coordinates.Length, 2) > 0
+                Coordinates.Pop()
+                XIndex := 1
+                YIndex := 2
+                Loop Coordinates.Length / 2 {
+                    %This.ParentClass%.ClickPluginCoordinates(Coordinates[XIndex], Coordinates[YIndex])
+                    XIndex += 2
+                    YIndex += 2
+                }
+            }
+        }
+    }
+    
     Class TogglePluginSearchVisible {
         Static Call() {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)

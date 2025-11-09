@@ -655,6 +655,53 @@ PluginPctClick(XPct, YPct) {
     Click(XPx, YPx)
 }
 
+PluginSerialClick(Coordinates*) {
+    Return ProduceSerialClick("Plugin", Coordinates*)
+}
+
+ProduceSerialClick(Type, Coordinates*) {
+    ClickFunc := Object()
+    ClickFunc.DefineProp("Coordinates", {Value: Coordinates})
+    ClickFunc.DefineProp("Type", {Value: Type})
+    ClickFunc.DefineProp("Call", {call: CallClickFunc})
+    Return ClickFunc
+    CallClickFunc(This, OverlayObj) {
+        Coordinates := This.Coordinates.Clone()
+        If Coordinates.Length < 2
+        Return
+        If Mod(Coordinates.Length, 2) > 0
+        Coordinates.Pop()
+        XIndex := 1
+        YIndex := 2
+        Loop Coordinates.Length / 2 {
+            If This.Type = "Plugin"
+            ClickPluginCoordinates(Coordinates[XIndex], Coordinates[YIndex])
+            Else
+            Click(Coordinates[XIndex], Coordinates[YIndex])
+            XIndex += 2
+            YIndex += 2
+        }
+    }
+}
+
+ProduceSleep(Period) {
+    SleepFunc := Object()
+    SleepFunc.DefineProp("Period", {Value: Period})
+    SleepFunc.DefineProp("Call", {call: CallSleepFunc})
+    Return SleepFunc
+    CallSleepFunc(This, OverlayObj) {
+        Sleep This.Period
+    }
+}
+
+SerialClick(Coordinates*) {
+    Return ProduceSerialClick("Standalone", Coordinates*)
+}
+
+StandaloneSerialClick(Coordinates*) {
+    Return ProduceSerialClick("Standalone", Coordinates*)
+}
+
 StrJoin(obj,delimiter:="",OmitChars:=""){
     S := obj[1]
     Loop obj.Length - 1
