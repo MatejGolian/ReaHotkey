@@ -1196,6 +1196,11 @@ Class FocusableNative Extends FocusableControl {
         }
     }
     
+    SpeakOnFocus(Speak := True) {
+        If Not This.Label = "" Or Not This.ControlTypeLabel = ""
+        Super.SpeakOnFocus(Speak)
+    }
+    
 }
 
 Class ActivatableNative Extends FocusableNative {
@@ -1251,24 +1256,26 @@ Class ActivatableNative Extends FocusableNative {
     }
     
     SpeakOnActivation(Speak := True) {
-        Message := ""
-        CheckResult := This.GetState()
-        LabelString := This.Label
-        If LabelString = ""
-        LabelString := This.DefaultLabel
-        ValueString := This.Value
-        If ValueString = ""
-        ValueString := This.DefaultValue
-        StateString := ""
-        If This.States.Has(CheckResult)
-        StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID
-        Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString
-        Else
-        If This.States.Count > 1
-        Message := StateString
-        If Speak
-        AccessibilityOverlay.Speak(Message)
+        If Not This.Label = "" Or Not This.ControlTypeLabel = "" {
+            Message := ""
+            CheckResult := This.GetState()
+            LabelString := This.Label
+            If LabelString = ""
+            LabelString := This.DefaultLabel
+            ValueString := This.Value
+            If ValueString = ""
+            ValueString := This.DefaultValue
+            StateString := ""
+            If This.States.Has(CheckResult)
+            StateString := This.States[CheckResult]
+            If Not This.ControlID = AccessibilityOverlay.PreviousControlID
+            Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString
+            Else
+            If This.States.Count > 1
+            Message := StateString
+            If Speak
+            AccessibilityOverlay.Speak(Message)
+        }
     }
     
 }
@@ -1409,8 +1416,26 @@ Class ActivatableUIA Extends FocusableUIA {
     }
     
     SpeakOnActivation(Speak := True) {
-        If Not This.Label = "" Or Not This.ControlTypeLabel = ""
-        Super.SpeakOnActivation(Speak)
+        If Not This.Label = "" Or Not This.ControlTypeLabel = "" {
+            Message := ""
+            CheckResult := This.GetState()
+            LabelString := This.Label
+            If LabelString = ""
+            LabelString := This.DefaultLabel
+            ValueString := This.Value
+            If ValueString = ""
+            ValueString := This.DefaultValue
+            StateString := ""
+            If This.States.Has(CheckResult)
+            StateString := This.States[CheckResult]
+            If Not This.ControlID = AccessibilityOverlay.PreviousControlID
+            Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString
+            Else
+            If This.States.Count > 1
+            Message := StateString
+            If Speak
+            AccessibilityOverlay.Speak(Message)
+        }
     }
     
 }

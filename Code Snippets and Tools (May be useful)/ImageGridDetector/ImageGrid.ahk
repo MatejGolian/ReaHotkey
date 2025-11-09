@@ -240,6 +240,19 @@ Class ImageGrid {
         Return RowCount
     }
     
+    RemoveEmptyCells() {
+        Records := Array()
+        For Record In This.RawRecords {
+            Records.Push(Array())
+            For CellNumber, Cell In Record
+            If Not Cell.Value == {X: "", Y: "", File: ""}
+            Records[Records.Length].Push(Cell)
+        }
+        This.RawRecords := Records
+        This.ColumnCount := This.GetColumnCount()
+        This.__Item := This.Records
+    }
+    
     SetCellNames(NewCellNames*) {
         OldCellNames := This.CellNames
         TempCellNames := Array()
