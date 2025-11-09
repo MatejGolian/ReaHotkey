@@ -5,17 +5,36 @@
  * Based on the UWP OCR function for AHK v1 by malcev.
  * 
  * Ways of initiating OCR:
- * OCR(RandomAccessStreamOrSoftwareBitmap, lang:="FirstFromAvailableLanguages", transform:=1, decoder?)
- * OCR.FromDesktop(lang?, transform:=1)
- * OCR.FromRect(X, Y, W, H, lang?, transform:=1)
- * OCR.FromWindow(WinTitle?, lang?, transform:=1, onlyClientArea:=0, mode:=4)
- * OCR.FromFile(FileName, lang?, transform:=1)
- * OCR.FromBitmap(bitmap, lang?, transform:=1, hDC?)
- * OCR.FromPDF(FileName, lang?, transform:=1, start:=1, end?)   => returns an array of results for each PDF page
- * OCR.FromPDFPage(FileName, page:=1, lang?, transform:=1)
+ * OCR(RandomAccessStreamOrSoftwareBitmap, Options?)
+ * OCR.FromDesktop(Options?)
+ * OCR.FromMonitor(Monitor?, Options?)
+ * OCR.FromRect(X, Y, W, H, Options?)
+ * OCR.FromWindow(WinTitle:="", Options?, WinText:="", ExcludeTitle:="", ExcludeText:="")
+ *      Note: the result object coordinates will be in CoordMode "Pixel"
+ * OCR.FromFile(FileName, Options?)
+ * OCR.FromBitmap(bitmap, Options?, hDC?)
+ * OCR.FromPDF(FileName, Options?, Start:=1, End?, Password:="") => returns an array of results for each PDF page
+ * OCR.FromPDFPage(FileName, page, Options?)
+ *   Helper functions for PDF OCR:
+ *      OCR.GetPdfPageCount(FileName, Password:="")
+ *      OCR.GetPdfPageProperties(FileName, Page, Password:="")
  * 
- * Note: the first parameter of the OCR initiation methods may be an object mimicking named parameters.
- * Eg. OCR.FromDesktop({lang:"en-us", grayscale:1})
+ * Options can be an object containing none or all of these elements:
+ * {
+ *      lang: OCR language. Default is first from available languages. This can also be a function which evaluates to a language string.
+ *      scale: a Float scale factor to zoom the image in or out, which might improve detection. 
+ *             The resulting coordinates will be adjusted to scale. Default is 1.
+ *      grayscale: Boolean 0 | 1 whether to convert the image to black-and-white. Default is 0.
+ *      monochrome: 0-255, converts all pixels with luminosity less than the threshold to black, otherwise to white. Default is 0 (no conversion).
+ *      invertcolors: Boolean 0 | 1, whether to invert the colors of the image. Default is 0.
+ *      rotate: 0 | 90 | 180 | 270, can be used to rotate the image clock-wise by degrees. Default is 0.
+ *      flip: 0 | "x" | "y", can be used to flip the image on the x- or y-axis. Default is 0.
+ *      x, y, w, h: can be used to crop the image. This is applied before scaling. Default is no cropping.
+ *      decoder: gif | ico | jpeg | jpegxr | png | tiff | bmp. Optional bitmap codec name to decode RandomAccessStream. Default is automatic detection. 
+ * }
+ * 
+ * Note: Options also accepts any optional parameters after it like named parameters.
+ * Eg. OCR.FromMonitor({lang:"en-us", monitor:2})
  * 
  * Additional methods:
  * OCR.GetAvailableLanguages()
@@ -38,55 +57,60 @@
  * OCR.FlattenArray(arr)
  *      Returns a one-dimensional array from a multi-dimensional array
  * 
- * 
  * Properties:
  * OCR.MaxImageDimension
  * MinImageDimension is not documented, but appears to be 40 pixels (source: user FanaticGuru in AutoHotkey forums)
  * OCR.PerformanceMode
- *      Increases speed of OCR acquisition by about 20-50ms if set to 1, but also increases CPU usage. Default is 0. 
+ *      Increases speed of OCR acquisition by about 20-50ms if set to 1, but also increases CPU usage. Default is 0.
+ * OCR.DisplayImage
+ *      If set to True then the captured image is displayed on the screen before proceeding to OCR-ing the image.
  * 
- * OCR returns an OCR results object:
+ * OCR returns an OCR.Result object:
  * Result.Text         => All recognized text
  * Result.TextAngle    => Clockwise rotation of the recognized text 
- * Result.Lines        => Array of all Line objects
- * Result.Words        => Array of all Word objects
+ * Result.Lines        => Array of all OCR.Line objects
+ * Result.Words        => Array of all OCR.Word objects
  * Result.ImageWidth   => Used image width
  * Result.ImageHeight  => Used image height
  * 
- * Result.FindString(needle, i:=1, casesense:=False, wordCompareFunc?, searchArea?)
- *      Finds a string in the result
- * Result.FindStrings(needle, casesense:=False, wordCompareFunc?, searchArea?)
- *      Finds all strings in the result
- * Result.Click(Obj, WhichButton?, ClickCount?, DownOrUp?)
- *      Clicks an object (Word, FindString result etc)
- * Result.ControlClick(obj, WinTitle?, WinText?, WhichButton?, ClickCount?, Options?, ExcludeTitle?, ExcludeText?)
- *      ControlClicks an object (Word, FindString result etc)
- * Result.Highlight(obj?, showTime?, color:="Red", d:=2)
- *      Highlights a Word, Line, or object with {x,y,w,h} properties on the screen (default: 2 seconds), or removes the highlighting
+ * Result.FindString(Needle, Options?)
+ *      Finds a string in the result. Possible options (see descriptions at the function definition): 
+ *      {CaseSense: False, IgnoreLinebreaks: False, AllowOverlap: false, i: 1, x, y, w, h, SearchFunc}
+ * Result.FindStrings(Needle, Options?)
+ *      Finds all strings in the result. 
  * Result.Filter(callback)
  *      Returns a filtered result object that contains only words that satisfy the callback function
  * Result.Crop(x1, y1, x2, y2)
- *      Crops the result object to contain only results from an area defined by points (x1,y1) and (x2,y2).
+ *      Crops the result object to contain only results from an area defined by points (x1,y1) and (x2,y2). 
  * 
- * 
- * Line object:
+ * OCR.Line object:
  * Line.Text         => Recognized text of the line
  * Line.Words        => Array of Word objects for the Line
- * Line.x,y,w,h      => Size and location of the Line. Coordinates are relative to the original image.
+ * Line.x,y,w,h      => Size and location of the Line. 
  * 
- * Word object:
+ * OCR.Word object:
  * Word.Text         => Recognized text of the word
- * Word.x,y,w,h      => Size and location of the Word. Coordinates are relative to the original image.
- * Word.BoundingRect => Bounding rectangle of the Word in format {x,y,w,h}. Coordinates are relative to the original image.
+ * Word.x,y,w,h      => Size and location of the Word. 
+ * Word.BoundingRect => Bounding rectangle of the Word in format {x,y,w,h}. 
+ * 
+ * OCR.Result, OCR.Line, and OCR.Word also all have some common methods:
+ * 
+ * Result.Click(WhichButton?, ClickCount?, DownOrUp?)
+ *      Clicks an object (Word, FindString result etc)
+ * Result.ControlClick(WinTitle?, WinText?, WhichButton?, ClickCount?, Options?, ExcludeTitle?, ExcludeText?)
+ *      ControlClicks an object (Word, FindString result etc)
+ * Result.Highlight(showTime?, color:="Red", d:=2)
+ *      Highlights a Word, Line, or object with {x,y,w,h} properties on the screen (default: 2 seconds), or removes the highlighting
  * 
  * Additional notes:
- * Languages are recognized in BCP-47 language tags. Eg. OCR.FromFile("myfile.bmp", "en-AU")
+ * Languages are recognized in BCP-47 language tags. Eg. OCR.FromFile("myfile.bmp", {lang: "en-AU"})
  * Languages can be installed for example with PowerShell (run as admin): Install-Language <language-tag>
  *      or from Language settings in Settings.
  * Not all language packs support OCR though. A list of supported language can be gotten from 
  * Powershell (run as admin) with the following command: Get-WindowsCapability -Online | Where-Object { $_.Name -Like 'Language.OCR*' } 
  */
 class OCR {
+    static Version => "2.0.0"
     static IID_IRandomAccessStream := "{905A0FE1-BC53-11DF-8C49-001E4FC686DA}"
          , IID_IPicture            := "{7BF80980-BF32-101A-8BBB-00AA00300CAB}"
          , IID_IAsyncInfo          := "{00000036-0000-0000-C000-000000000046}"
@@ -102,19 +126,23 @@ class OCR {
          , DisplayImage := 0
 
     class IBase {
+        __OCR := OCR
         __New(ptr?) {
-            if IsSet(ptr) && !ptr
-                throw ValueError('Invalid IUnknown interface pointer', -2, this.__Class)
+            if IsSet(ptr) {
+                if !ptr
+                    throw ValueError('Invalid IUnknown interface pointer', -2, this.__Class)
+                else if IsObject(ptr) {
+                    if ptr.HasProp("Relative")
+                        this.DefineProp("Relative", {value: ptr.Relative})
+                    ptr := 0
+                }
+            }
             this.DefineProp("ptr", {Value:ptr ?? 0})
         }
         __Delete() => this.ptr ? ObjRelease(this.ptr) : 0
     }
 
     static __New() {
-        this.prototype.__OCR := this
-        this.IBase.prototype.__OCR := this
-        this.OCRLine.base := this.IBase, this.OCRLine.prototype.base := this.IBase.prototype ; OCRLine extends OCR.IBase
-        this.OCRWord.base := this.IBase, this.OCRWord.prototype.base := this.IBase.prototype ; OCRWord extends OCR.IBase
         this.LanguageFactory := this.CreateClass("Windows.Globalization.Language", ILanguageFactory := "{9B0252AC-0C27-44F8-B792-9793FB66C63E}")
         this.SoftwareBitmapFactory := this.CreateClass("Windows.Graphics.Imaging.SoftwareBitmap", "{c99feb69-2d62-4d47-a6b3-4fdb6a07fdf8}")
         this.BitmapTransform := this.CreateClass("Windows.Graphics.Imaging.BitmapTransform")
@@ -131,44 +159,66 @@ class OCR {
             {
                 unsigned int a, r, g, b, gray, ARGB;
                 unsigned int x, y, offset = Stride/4;
-                for (y = 0; y < h; ++y) {
+                for (y = 0; y < h * offset; y += offset) {
                     for (x = 0; x < w; ++x) {
-                        ARGB = bitmap[x+(y*offset)];
+                        ARGB = bitmap[x+y];
                         a = ARGB & 0xFF000000;
                         r = (ARGB & 0x00FF0000) >> 16;
                         g = (ARGB & 0x0000FF00) >> 8;
                         b = (ARGB & 0x000000FF);
                         gray = ((300 * r) + (590 * g) + (110 * b)) >> 10;
-                        bitmap[x+(y*offset)] = (gray << 16) | (gray << 8) | gray | a;
+                        bitmap[x+y] = (gray << 16) | (gray << 8) | gray | a;
                     }
                 }
                 return 0;
             }
          */
         this.GrayScaleMCode := this.MCode((A_PtrSize = 4) 
-        ? "2,x86:VVdWU4PsCIt0JCiLVCQki0QkIMHuAok0JIXSD4SDAAAAhcB0f408tQAAAAAx9ol8JASLfCQcjRyHMf+NdCYAkItEJByNDLiNtCYAAAAAZpCLEYPBBInQD7buwegQae1OAgAAD7bAacAsAQAAAegPtuqB4gAAAP9r7W4B6MHoConFCcLB4AjB5RAJ6gnQiUH8Odl1vIPGAQM8JANcJAQ5dCQkdZyDxAgxwFteX13D" 
-        : "2,x64:QVZVV1ZTRInOSYnLQYnSRYnGwe4CRYXAdHJFMclFMcCF0nRoDx9AAESJyg8fRAAAidCDwgFJjQyDizmJ+In7wegQD7bvD7bAae1OAgAAacAsAQAAAehAD7bvgecAAAD/a+1uAejB6AqJxQnHweAIweUQCe8Jx4k5RDnSdbNBg8ABQQHxQQHyRTnGdZwxwFteX11BXsM=")
+        ? "2,x86:VVdWU4PsCIt8JCiLdCQki0QkIMHvAg+v94k0JIX2dH+FwHR7jTS9AAAAAIl0JASLdCQcjRyGMfaNtCYAAAAAkItEJByNDLCNtCYAAAAAZpCLEYPBBInQD7buwegQae1OAgAAD7bAacAsAQAAAegPtuqB4gAAAP9r7W4B6MHoConFCcLB4AjB5RAJ6gnQiUH8Odl1vAH+A1wkBDs0JHKhg8QIMcBbXl9dww==" 
+        : "2,x64:V1ZTQcHpAkSJxkiJy0GJ00EPr/GF9nRnRTHAhdJ0YJBEicEPH0QAAInIg8EBTI0Ug0GLEonQD7b+wegQaf9OAgAAD7bAacAsAQAAAfgPtvqB4gAAAP9r/24B+MHoConHCcLB4AjB5xAJ+gnCQYkSRDnZdbRFAchFActBOfByoTHAW15fww==")
         /*
             unsigned int Invert_Colors(unsigned int bitmap[], unsigned int w, unsigned int h, unsigned int Stride)
             {
                 unsigned int a, r, g, b, gray, ARGB;
                 unsigned int x, y, offset = Stride/4;
-                for (y = 0; y < h; ++y) {
+                for (y = 0; y < h * offset; y += offset) {
                     for (x = 0; x < w; ++x) {
-                        ARGB = bitmap[x+(y*offset)];
+                        ARGB = bitmap[x+y];
                         a = ARGB & 0xFF000000;
                         r = (ARGB & 0x00FF0000) >> 16;
                         g = (ARGB & 0x0000FF00) >> 8;
                         b = (ARGB & 0x000000FF);
-                        bitmap[x+(y*offset)] = ((255-r) << 16) | ((255-g) << 8) | (255-b) | a;
+                        bitmap[x+y] = ((255-r) << 16) | ((255-g) << 8) | (255-b) | a;
                     }
                 }
                 return 0;
             }
         */
         this.InvertColorsMCode := this.MCode((A_PtrSize = 4)
-        ? "2,x86:VVdWU4PsCIt8JCiLVCQki0QkIMHvAok8JIXSdF+FwHRbwecCMe2JfCQEi3wkHI00hzH/jXQmAJCLRCQcjQyokIsRg8EEidCJ04Hi/wAA//fQ99OA8v8lAAD/AIHjAP8AAAnYCdCJQfw58XXUg8cBAywkA3QkBDl8JCR1vIPECDHAW15fXcM="
-        : "2,x64:VVdWU0SJz0iJy0GJ00SJxsHvAkWFwHRbRTHJRTHAhdJ0UWYPH0QAAESJyQ8fRAAAiciDwQFMjRSDQYsSidCJ1YHi/wAA//fQ99WA8v8lAAD/AIHlAP8AAAnoCdBBiQJBOct1zEGDwAFBAflBAftEOcZ1tTHAW15fXcM=")
+        ? "2,x86:VVdWU4PsCItsJCiLfCQki0QkIMHtAg+v/Yk8JIX/dGeFwHRjjTytAAAAAIl8JASLfCQcjTSHMf+NtCYAAAAAkItEJByNDLiNtCYAAAAAZpCLEYPBBInQidOB4v8AAP/30PfTgPL/JQAA/wCB4wD/AAAJ2AnQiUH8OfF11AHvA3QkBDs8JHK5g8QIMcBbXl9dww=="
+        : "2,x64:V1ZTQcHpAkSJx0iJzonTQQ+v+YX/dFNFMcCF0nRMZpBEicEPH0QAAInIg8EBTI0chkGLE4nQQYnSgeL/AAD/99BB99KA8v8lAAD/AEGB4gD/AABECdAJ0EGJAznLdclFAchEActBOfhytjHAW15fww==")
+        /*
+            unsigned int Convert_Monochrome(unsigned int bitmap[], unsigned int w, unsigned int h, unsigned int Stride, unsigned int threshold)
+            {
+                unsigned int a, r, g, b, ARGB;
+                unsigned int x, y, offset = Stride / 4;
+                for (y = 0; y < h * offset; y += offset) {
+                    for (x = 0; x < w; ++x) {
+                        ARGB = bitmap[x + y];
+                        a = ARGB & 0xFF000000;
+                        r = (ARGB & 0x00FF0000) >> 16;
+                        g = (ARGB & 0x0000FF00) >> 8;
+                        b = (ARGB & 0x000000FF);
+                        unsigned int luminance = (77 * r + 150 * g + 29 * b) >> 8;
+                        bitmap[x + y] = (luminance > threshold) ? 0xFFFFFFFF : 0xFF000000;
+                    }
+                }
+                return 0;
+            }
+        */
+        this.MonochromeMCode := this.MCode((A_PtrSize = 4)
+        ? "2,x86:VVdWU4PsDIt0JCyLTCQoi0QkJIt8JDDB7gIPr86JNCSJTCQEhcl0aYXAdGXB5gIx7Yl0JAiLdCQgjTSGjXQmAItEJCCNDKiNtCYAAAAAZpCLEYnTD7bGD7bSwesQacCWAAAAD7bba9Ida9tNAdgB0MHoCDn4dinHAf////+DwQQ58XXMAywkA3QkCDlsJAR3r4PEDDHAW15fXcONdCYAkMcBAAAA/4PBBDnxdaMDLCQDdCQIOWwkBHeG69U="
+        : "2,x64:VVdWU4t0JEhBwekCRInHSInLQYnTQQ+v+YX/dFyF0nRYRTHADx9AAESJwQ8fRAAAichMjRSDQYsSidUPtsYPttLB7RBpwJYAAABAD7bta9Ida+1NAegB0MHoCDnwdiGDwQFBxwL/////QTnLdcJFAchFActEOcd3rzHAW15fXcODwQFBxwIAAAD/RDnZdaFFAchFActEOcd3juvd")
     }
 
     /**
@@ -176,448 +226,333 @@ class OCR {
      * Images of other types should be first converted to this format (eg from file, from bitmap).
      * @param RandomAccessStreamOrSoftwareBitmap Pointer or an object containing a ptr to a RandomAccessStream or SoftwareBitmap
      * @param {String} lang OCR language. Default is first from available languages.
-     * @param {Integer|Object} transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
+     * @param {Integer|Object} transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, monochrome:0-255, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
      * @param {String} decoder Optional bitmap codec name to decode RandomAccessStream. Default is automatic detection.
      *  Possible values are gif, ico, jpeg, jpegxr, png, tiff, bmp.
-     * @returns {OCR.OcrResult} 
+     * @returns {OCR.Result} 
      */
-    __New(RandomAccessStreamOrSoftwareBitmap, lang := "FirstFromAvailableLanguages", transform := 1, decoder := "") {
-        local SoftwareBitmap := 0, RandomAccessStream := 0, width, height, x, y, w, h, __OCR := this.__OCR, scale, grayscale, invertcolors
-        __OCR.__ExtractTransformParameters(RandomAccessStreamOrSoftwareBitmap, &transform)
-        scale := transform.scale, grayscale := transform.grayscale, invertcolors := transform.invertcolors, rotate := transform.rotate, flip := transform.flip
-        __OCR.__ExtractNamedParameters(RandomAccessStreamOrSoftwareBitmap, "x", &x, "y", &y, "w", &w, "h", &h, "lang", &lang, "decoder", &decoder, "RandomAccessStream", &RandomAccessStreamOrSoftwareBitmap, "RAS", &RandomAccessStreamOrSoftwareBitmap, "SoftwareBitmap", &RandomAccessStreamOrSoftwareBitmap)
-        __OCR.LoadLanguage(lang)
+    static Call(RandomAccessStreamOrSoftwareBitmap, Options:=0) {
+        local SoftwareBitmap := 0, RandomAccessStream := 0, lang:="FirstFromAvailableLanguages", width, height, x := 0, y := 0, w := 0, h := 0, scale, grayscale, invertcolors, monochrome, OcrResult := this.Result(), Result, transform := 0, decoder := 0
+        this.__ExtractTransformParameters(Options, &transform)
+        scale := transform.scale, grayscale := transform.grayscale, invertcolors := transform.invertcolors, monochrome := transform.monochrome, rotate := transform.rotate, flip := transform.flip
+        this.__ExtractNamedParameters(Options, "x", &x, "y", &y, "w", &w, "h", &h, "language", &lang, "lang", &lang, "decoder", &decoder)
+        this.LoadLanguage(lang)
+        local customRegion := x || y || w || h
 
         try SoftwareBitmap := ComObjQuery(RandomAccessStreamOrSoftwareBitmap, "{689e0708-7eef-483f-963f-da938818e073}") ; ISoftwareBitmap
         if SoftwareBitmap {
             ComCall(8, SoftwareBitmap, "uint*", &width:=0)   ; get_PixelWidth
             ComCall(9, SoftwareBitmap, "uint*", &height:=0)   ; get_PixelHeight
             this.ImageWidth := width, this.ImageHeight := height
-            if (Floor(width*scale) > __OCR.MaxImageDimension) or (Floor(height*scale) > __OCR.MaxImageDimension)
-               throw ValueError("Image is too big - " width "x" height ".`nIt should be maximum - " __OCR.MaxImageDimension " pixels (with scale applied)")
-            if scale != 1 || IsSet(x) || rotate || flip
-                SoftwareBitmap := __OCR.TransformSoftwareBitmap(SoftwareBitmap, &width, &height, scale, rotate, flip, x?, y?, w?, h?)
+            if (Floor(width*scale) > this.MaxImageDimension) or (Floor(height*scale) > this.MaxImageDimension)
+               throw ValueError("Image is too big - " width "x" height ".`nIt should be maximum - " this.MaxImageDimension " pixels (with scale applied)")
+            if scale != 1 || customRegion || rotate || flip
+                SoftwareBitmap := this.TransformSoftwareBitmap(SoftwareBitmap, &width, &height, scale, rotate, flip, x?, y?, w?, h?)
             goto SoftwareBitmapCommon
         }
         RandomAccessStream := RandomAccessStreamOrSoftwareBitmap
 
         if decoder {
-            ComCall(__OCR.Vtbl_GetDecoder.%decoder%, __OCR.BitmapDecoderStatics, "ptr", DecoderGUID:=Buffer(16))
-            ComCall(15, __OCR.BitmapDecoderStatics, "ptr", DecoderGUID, "ptr", RandomAccessStream, "ptr*", BitmapDecoder:=ComValue(13,0))   ; CreateAsync
+            ComCall(this.Vtbl_GetDecoder.%decoder%, this.BitmapDecoderStatics, "ptr", DecoderGUID:=Buffer(16))
+            ComCall(15, this.BitmapDecoderStatics, "ptr", DecoderGUID, "ptr", RandomAccessStream, "ptr*", BitmapDecoder:=ComValue(13,0))   ; CreateAsync
         } else
-            ComCall(14, __OCR.BitmapDecoderStatics, "ptr", RandomAccessStream, "ptr*", BitmapDecoder:=ComValue(13,0))   ; CreateAsync
-        __OCR.WaitForAsync(&BitmapDecoder)
+            ComCall(14, this.BitmapDecoderStatics, "ptr", RandomAccessStream, "ptr*", BitmapDecoder:=ComValue(13,0))   ; CreateAsync
+            this.WaitForAsync(&BitmapDecoder)
 
         BitmapFrame := ComObjQuery(BitmapDecoder, IBitmapFrame := "{72A49A1C-8081-438D-91BC-94ECFC8185C6}")
         ComCall(12, BitmapFrame, "uint*", &width:=0)   ; get_PixelWidth
         ComCall(13, BitmapFrame, "uint*", &height:=0)   ; get_PixelHeight
-        if (width > __OCR.MaxImageDimension) or (height > __OCR.MaxImageDimension)
-           throw ValueError("Image is too big - " width "x" height ".`nIt should be maximum - " __OCR.MaxImageDimension " pixels")
+        if (width > this.MaxImageDimension) or (height > this.MaxImageDimension)
+           throw ValueError("Image is too big - " width "x" height ".`nIt should be maximum - " this.MaxImageDimension " pixels")
 
         BitmapFrameWithSoftwareBitmap := ComObjQuery(BitmapDecoder, IBitmapFrameWithSoftwareBitmap := "{FE287C9A-420C-4963-87AD-691436E08383}")
-       if !IsSet(x) && (width < 40 || height < 40 || scale != 1) {
-            scale := scale = 1 ? 40.0 / Min(width, height) : scale, this.ImageWidth := Floor(width*scale), this.ImageHeight := Floor(height*scale)
-            ComCall(7, __OCR.BitmapTransform, "int", this.ImageWidth) ; put_ScaledWidth
-            ComCall(9, __OCR.BitmapTransform, "int", this.ImageHeight) ; put_ScaledHeight
+        OcrResult.ImageWidth := width, OcrResult.ImageHeight := height
+        if !(customRegion || rotate || flip) && (width < 40 || height < 40 || scale != 1) {
+            scale := scale = 1 ? 40.0 / Min(width, height) : scale
+            ComCall(7, this.BitmapTransform, "int", width := Floor(width*scale)) ; put_ScaledWidth
+            ComCall(9, this.BitmapTransform, "int", height := Floor(height*scale)) ; put_ScaledHeight
             ComCall(8, BitmapFrame, "uint*", &BitmapPixelFormat:=0) ; get_BitmapPixelFormat
             ComCall(9, BitmapFrame, "uint*", &BitmapAlphaMode:=0) ; get_BitmapAlphaMode
-            ComCall(8, BitmapFrameWithSoftwareBitmap, "uint", BitmapPixelFormat, "uint", BitmapAlphaMode, "ptr", __OCR.BitmapTransform, "uint", IgnoreExifOrientation := 0, "uint", DoNotColorManage := 0, "ptr*", SoftwareBitmap:=ComValue(13,0)) ; GetSoftwareBitmapAsync
+            ComCall(8, BitmapFrameWithSoftwareBitmap, "uint", BitmapPixelFormat, "uint", BitmapAlphaMode, "ptr", this.BitmapTransform, "uint", IgnoreExifOrientation := 0, "uint", DoNotColorManage := 0, "ptr*", SoftwareBitmap:=this.IBase()) ; GetSoftwareBitmapAsync
         } else {
-            this.ImageWidth := width, this.ImageHeight := height
-            ComCall(6, BitmapFrameWithSoftwareBitmap, "ptr*", SoftwareBitmap:=ComValue(13,0))   ; GetSoftwareBitmapAsync
+            ComCall(6, BitmapFrameWithSoftwareBitmap, "ptr*", SoftwareBitmap:=this.IBase())   ; GetSoftwareBitmapAsync
         }
-        __OCR.WaitForAsync(&SoftwareBitmap)
-        if IsSet(x) || rotate || flip
-            SoftwareBitmap := __OCR.TransformSoftwareBitmap(SoftwareBitmap, &width, &height, scale, rotate, flip, x?, y?, w?, h?)
+        this.WaitForAsync(&SoftwareBitmap)
+        if customRegion || rotate || flip || scale != 1
+            SoftwareBitmap := this.TransformSoftwareBitmap(SoftwareBitmap, &width, &height, scale, rotate, flip, x?, y?, w?, h?)
 
         SoftwareBitmapCommon:
 
-        if (grayscale || invertcolors || __OCR.DisplayImage) {
-            ComCall(15, SoftwareBitmap, "int", 2, "ptr*", BitmapBuffer := ComValue(13,0)) ; LockBuffer
+        if (grayscale || invertcolors || monochrome || this.DisplayImage) {
+            ComCall(15, SoftwareBitmap, "int", 2, "ptr*", &BitmapBuffer := 0) ; LockBuffer
             MemoryBuffer := ComObjQuery(BitmapBuffer, "{fbc4dd2a-245b-11e4-af98-689423260cf8}")
-            ComCall(6, MemoryBuffer, "ptr*", MemoryBufferReference := ComValue(13,0)) ; CreateReference
+            ComCall(6, MemoryBuffer, "ptr*", &MemoryBufferReference := 0) ; CreateReference
             BufferByteAccess := ComObjQuery(MemoryBufferReference, "{5b0d3235-4dba-4d44-865e-8f1d0e4fd04d}")
             ComCall(3, BufferByteAccess, "ptr*", &SoftwareBitmapByteBuffer:=0, "uint*", &BufferSize:=0) ; GetBuffer
-
-            if invertcolors
-                DllCall(__OCR.InvertColorsMCode, "ptr", SoftwareBitmapByteBuffer, "uint", width, "uint", height, "uint", (width*4+3) // 4 * 4, "cdecl uint")
-            
+           
             if grayscale
-                DllCall(__OCR.GrayScaleMCode, "ptr", SoftwareBitmapByteBuffer, "uint", width, "uint", height, "uint", (width*4+3) // 4 * 4, "cdecl uint")
+                DllCall(this.GrayScaleMCode, "ptr", SoftwareBitmapByteBuffer, "uint", width, "uint", height, "uint", (width*4+3) // 4 * 4, "cdecl uint")
+
+            if monochrome
+                DllCall(this.MonochromeMCode, "ptr", SoftwareBitmapByteBuffer, "uint", width, "uint", height, "uint", (width*4+3) // 4 * 4, "uint", monochrome, "cdecl uint")
+            
+            if invertcolors
+                DllCall(this.InvertColorsMCode, "ptr", SoftwareBitmapByteBuffer, "uint", width, "uint", height, "uint", (width*4+3) // 4 * 4, "cdecl uint")
     
-            if __OCR.DisplayImage {
+            if this.DisplayImage {
                 local hdc := DllCall("GetDC", "ptr", 0, "ptr"), bi := Buffer(40, 0), hbm
                 NumPut("uint", 40, "int", width, "int", -height, "ushort", 1, "ushort", 32, bi)
                 hbm := DllCall("CreateDIBSection", "ptr", hdc, "ptr", bi, "uint", 0, "ptr*", &ppvBits:=0, "ptr", 0, "uint", 0, "ptr")
                 DllCall("ntdll\memcpy", "ptr", ppvBits, "ptr", SoftwareBitmapByteBuffer, "uint", BufferSize, "cdecl")
-                __OCR.DisplayHBitmap(hbm)
+                DllCall("ReleaseDC", "Ptr", 0, "Ptr", hdc, "Int")
+                this.DisplayHBitmap(hbm)
             }
             
-            BufferByteAccess := "", MemoryBufferReference := "", MemoryBuffer := "", BitmapBuffer := "" ; Release in correct order
+            BufferByteAccess := "", ObjRelease(MemoryBufferReference), MemoryBuffer := "", ObjRelease(BitmapBuffer) ; Release in correct order
         }
 
-        ComCall(6, __OCR.OcrEngine, "ptr", SoftwareBitmap, "ptr*", OcrResult:=ComValue(13,0))   ; RecognizeAsync
-        __OCR.WaitForAsync(&OcrResult)
-        this.ptr := OcrResult.ptr, ObjAddRef(OcrResult.ptr)
+        ComCall(6, this.OcrEngine, "ptr", SoftwareBitmap, "ptr*", Result:=ComValue(13,0))   ; RecognizeAsync
+        this.WaitForAsync(&Result)
+        OcrResult.Ptr := Result.Ptr, ObjAddRef(OcrResult.ptr)
 
         ; Cleanup
-        if RandomAccessStream is __OCR.IBase
-            __OCR.CloseIClosable(RandomAccessStream)
-        if SoftwareBitmap is __OCR.IBase
-            __OCR.CloseIClosable(SoftwareBitmap)
+        if RandomAccessStream is this.IBase
+            this.CloseIClosable(RandomAccessStream)
+        if SoftwareBitmap is this.IBase
+            this.CloseIClosable(SoftwareBitmap)
 
-        if scale != 1
-            __OCR.NormalizeCoordinates(this, scale)
+        if scale != 1 || x != 0 || y != 0
+            this.NormalizeCoordinates(OcrResult, scale, x, y)
+
+        return OcrResult
     }
 
-    __Delete() => this.ptr ? ObjRelease(this.ptr) : 0
+    static ClearAllHighlights() => this.Result.Prototype.Highlight("clearall")
 
-    ; Gets the recognized text.
-    Text {
-        get {
-            ComCall(8, this, "ptr*", &hAllText:=0)   ; get_Text
-            buf := DllCall("Combase.dll\WindowsGetStringRawBuffer", "ptr", hAllText, "uint*", &length:=0, "ptr")
-            this.DefineProp("Text", {Value:StrGet(buf, "UTF-16")})
-            this.__OCR.DeleteHString(hAllText)
-            return this.Text
-        }
-    }
-
-    ; Gets the clockwise rotation of the recognized text, in degrees, around the center of the image.
-    TextAngle {
-        get => (ComCall(7, this, "double*", &value:=0), value)
-    }
-
-    ; Returns all Line objects for the result.
-    Lines {
-        get {
-            ComCall(6, this, "ptr*", LinesList:=this.__OCR.IBase()) ; get_Lines
-            ComCall(7, LinesList, "int*", &count:=0) ; count
-            lines := []
-            loop count {
-                ComCall(6, LinesList, "int", A_Index-1, "ptr*", OcrLine:=this.__OCR.OCRLine())               
-                lines.Push(OcrLine)
+    class Result extends OCR.Common {
+        ; Gets the recognized text.
+        Text {
+            get {
+                ComCall(8, this, "ptr*", &hAllText:=0)   ; get_Text
+                buf := DllCall("Combase.dll\WindowsGetStringRawBuffer", "ptr", hAllText, "uint*", &length:=0, "ptr")
+                this.DefineProp("Text", {Value:StrGet(buf, "UTF-16")})
+                this.__OCR.DeleteHString(hAllText)
+                return this.Text
             }
-            this.DefineProp("Lines", {Value:lines})
-            return lines
         }
-    }
 
-    ; Returns all Word objects for the result. Equivalent to looping over all the Lines and getting the Words.
-    Words {
-        get {
-            local words := [], line, word
-            for line in this.Lines
-                for word in line.Words
-                    words.Push(word)
-            this.DefineProp("Words", {Value:words})
-            return words
+        ; Gets the clockwise rotation of the recognized text, in degrees, around the center of the image.
+        TextAngle {
+            get => (ComCall(7, this, "double*", &value:=0), value)
         }
-    }
 
-    /**
-     * Clicks an object
-     * @param Obj The object to click, which can be a OCR result object, Line, Word, or Object {x,y,w,h}
-     * If this object (the one Click is called from) contains a "Relative" property (this is
-     * added by default with OCR.FromWindow) containing a hWnd property, then that window will be activated,
-     * otherwise the Relative objects Window.xy/Client.xy properties values will be added to the x and y coordinates as offsets.
-     */
-    Click(Obj, WhichButton?, ClickCount?, DownOrUp?) {
-        if !obj.HasProp("x") && InStr(Type(obj), "OCR")
-            obj := this.__OCR.WordsBoundingRect(obj.Words)
-        local x := obj.x, y := obj.y, w := obj.w, h := obj.h, mode := "Screen", hwnd
-        if this.HasProp("Relative") {
-            if this.Relative.HasOwnProp("Window")
-                mode := "Window", hwnd := this.Relative.Window.Hwnd
-            else if this.Relative.HasOwnProp("Client")
-                mode := "Client", hwnd := this.Relative.Client.Hwnd
-            if IsSet(hwnd) && !WinActive(hwnd) {
-                WinActivate(hwnd)
-                WinWaitActive(hwnd,,1)
-            }
-            x += this.Relative.%mode%.x, y += this.Relative.%mode%.y
-        }
-        oldCoordMode := A_CoordModeMouse
-        CoordMode "Mouse", mode
-        Click(x+w//2, y+h//2, WhichButton?, ClickCount?, DownOrUp?)
-        CoordMode "Mouse", oldCoordMode
-    }
-
-    /**
-     * ControlClicks an object
-     * @param obj The object to click, which can be a OCR result object, Line, Word, or Object {x,y,w,h}
-     * If the result object originates from OCR.FromWindow which captured only the client area,
-     * then the result object will contain correct coordinates for the ControlClick. 
-     * If OCR.FromWindow captured the Window area, then the Relative property
-     * will contain Window property, and those coordinates will be adjusted to Client area.
-     * Otherwise, if additionally a WinTitle is provided then the coordinates are treated as Screen 
-     * coordinates and converted to Client coordinates.
-     * @param WinTitle If WinTitle is set, then the coordinates stored in Obj will be converted to
-     * client coordinates and ControlClicked.
-     */
-    ControlClick(obj, WinTitle?, WinText?, WhichButton?, ClickCount?, Options?, ExcludeTitle?, ExcludeText?) {
-        if !obj.HasProp("x") && InStr(Type(obj), "OCR")
-            obj := this.__OCR.WordsBoundingRect(obj.Words)
-        local x := obj.x, y := obj.y, w := obj.w, h := obj.h, hWnd
-        if this.HasProp("Relative") && (this.Relative.HasOwnProp("Client") || this.Relative.HasOwnProp("Window")) {
-            mode := this.Relative.HasOwnProp("Client") ? "Client" : "Window"
-            , obj := this.Relative.%mode%, x += obj.x, y += obj.y, hWnd := obj.hWnd
-            if mode = "Window" {
-                ; Window -> Client
-                RECT := Buffer(16, 0), pt := Buffer(8, 0)
-                DllCall("user32\GetWindowRect", "Ptr", hWnd, "Ptr", RECT)
-                winX := NumGet(RECT, 0, "Int"), winY := NumGet(RECT, 4, "Int")
-                NumPut("int", winX+x, "int", winY+y, pt)
-                DllCall("user32\ScreenToClient", "Ptr", hWnd, "Ptr", pt)
-                x := NumGet(pt,0,"int"), y := NumGet(pt,4,"int")
-            }
-        } else if IsSet(WinTitle) {
-            hWnd := WinExist(WinTitle, WinText?, ExcludeTitle?, ExcludeText?)
-            pt := Buffer(8), NumPut("int",x,pt), NumPut("int", y,pt,4)
-            DllCall("ScreenToClient", "Int", Hwnd, "Ptr", pt)
-            x := NumGet(pt,0,"int"), y := NumGet(pt,4,"int")
-        } else
-            throw TargetError("ControlClick needs to be called either after a OCR.FromWindow result or with a WinTitle argument")
-            
-        ControlClick("X" (x+w//2) " Y" (y+h//2), hWnd,, WhichButton?, ClickCount?, Options?)
-    }
-
-    /**
-     * Highlights an object on the screen with a red box
-     * @param obj The object to highlight. which can be a OCR result object, Line, Word, or Object {x,y,w,h}
-     * If this object (the one Highlight is called from) contains a "Relative" property (this is
-     * added by default with OCR.FromWindow), then its values will be added to the x and y coordinates as offsets.
-     * @param {number} showTime Default is 2 seconds.
-     * * Unset - if highlighting exists then removes the highlighting, otherwise pauses for 2 seconds
-     * * 0 - Indefinite highlighting
-     * * Positive integer (eg 2000) - will highlight and pause for the specified amount of time in ms
-     * * Negative integer - will highlight for the specified amount of time in ms, but script execution will continue
-     * * "clear" - removes the highlighting unconditionally
-     * * "clearall" - remove highlightings from all OCR objects
-     * @param {string} color The color of the highlighting. Default is red.
-     * @param {number} d The border thickness of the highlighting in pixels. Default is 2.
-     * @returns {OCR.OcrResult}
-     */
-    Highlight(obj?, showTime?, color:="Red", d:=2) {
-        static Guis := Map()
-        local x, y, w, h, key, resultObjs, key2, oObj, rect, ResultGuis, GuiObj, iw, ih
-        ; obj set & showTime unset => either highlights for 2s, or removes highlight
-        ; obj set & clear => removes highlight
-        ; obj unset => clears all highlights unconditionally
-        if IsSet(showTime) && showTime = "clearall" {
-            for key, resultObjs in Guis { ; enum all OCR result objects
-                for key2, oObj in resultObjs {
-                    try oObj.GuiObj.Destroy()
-                    SetTimer(oObj.TimerObj, 0)
+        ; Returns all Line objects for the result.
+        Lines {
+            get {
+                ComCall(6, this, "ptr*", LinesList:=ComValue(13, 0)) ; get_Lines
+                ComCall(7, LinesList, "int*", &count:=0) ; count
+                lines := []
+                loop count {
+                    ComCall(6, LinesList, "int", A_Index-1, "ptr*", Line:=this.__OCR.Line(this)) 
+                    lines.Push(Line)
                 }
+                this.DefineProp("Lines", {Value:lines})
+                return lines
             }
-            Guis := Map()
-            return this
         }
-        if !Guis.Has(this.ptr)
-            Guis[this.ptr] := Map()
 
-        if !IsSet(obj) {
-            for key, oObj in Guis[this.ptr] { ; enumerate all previously used obj arguments and remove GUIs
-                try oObj.GuiObj.Destroy()
-                SetTimer(oObj.TimerObj, 0)
+        ; Returns all Word objects for the result. Equivalent to looping over all the Lines and getting the Words.
+        Words {
+            get {
+                local words := [], line, word
+                for line in this.Lines
+                    for word in line.Words
+                        words.Push(word)
+                this.DefineProp("Words", {Value:words})
+                return words
             }
-            Guis.Delete(this.ptr)
-            return this
-        }
-        ; Otherwise obj is set
-        if !IsObject(obj)
-            throw ValueError("First argument 'obj' must be an object", -1)
-        ResultGuis := Guis[this.ptr]
-
-        if (!IsSet(showTime) && ResultGuis.Has(obj)) || (IsSet(showTime) && showTime = "clear") {
-                try ResultGuis[obj].GuiObj.Destroy()
-                SetTimer(ResultGuis[obj].TimerObj, 0)
-                ResultGuis.Delete(obj)
-                return this
-        } else if !IsSet(showTime)
-            showTime := 2000
-
-        if Type(obj) = this.__OCR.prototype.__Class ".OCRLine" || Type(obj) = this.__OCR.prototype.__Class
-            rect := this.__OCR.WordsBoundingRect(obj.Words*)
-        else 
-            rect := obj
-        x := rect.x, y := rect.y, w := rect.w, h := rect.h
-        if this.HasProp("Relative") {
-            if this.Relative.HasOwnProp("Client")
-                WinGetClientPos(&rX, &rY,,, this.Relative.Client.hWnd), x += rX + this.Relative.Client.x, y += rY + this.Relative.Client.y
-            else if this.Relative.HasOwnProp("Window")
-                WinGetPos(&rX, &rY,,, this.Relative.Window.hWnd), x += rX + this.Relative.Window.x, y += rY + this.Relative.Window.y
-            else if this.Relative.HasOwnProp("Screen")
-                x += this.Relative.Screen.X, y += this.Relative.Screen.Y
         }
 
-        if !ResultGuis.Has(obj) {
-            ResultGuis[obj] := {}
-            ResultGuis[obj].GuiObj := Gui("+AlwaysOnTop -Caption +ToolWindow -DPIScale +E0x08000000")
-            ResultGuis[obj].TimerObj := ObjBindMethod(this, "Highlight", obj, "clear")
+        BoundingRect {
+            get => this.DefineProp("BoundingRect", {Value:this.__OCR.WordsBoundingRect(this.Words*)}).BoundingRect
         }
-        GuiObj := ResultGuis[obj].GuiObj
-        GuiObj.BackColor := color
-        iw:= w+d, ih:= h+d, w:=w+d*2, h:=h+d*2, x:=x-d, y:=y-d
-        WinSetRegion("0-0 " w "-0 " w "-" h " 0-" h " 0-0 " d "-" d " " iw "-" d " " iw "-" ih " " d "-" ih " " d "-" d, GuiObj.Hwnd)
-        GuiObj.Show("NA x" . x . " y" . y . " w" . w . " h" . h)
 
-        if showTime > 0 {
-            Sleep(showTime)
-            this.Highlight(obj)
-        } else if showTime < 0
-            SetTimer(ResultGuis[obj].TimerObj, -Abs(showTime))
-        return this
-    }
-    ClearHighlight(obj) => this.Highlight(obj, "clear")
-    static ClearAllHighlights() => this.Prototype.Highlight(,"clearall")
+        /**
+         * Finds a string in the search results, and returns a new Result object.
+         * If the match is partial then the result will contain the whole word: in "hello world" searching "wo" will return "world".
+         * To force a full word search instead of a partial search, use IgnoreLinebreaks:True 
+         *  and add a space to the beginning and end: " hello "
+         * To search multi-line matches, set IgnoreLinebreaks:True and use a linebreak in the needle: "hello`nworld"
+         * @param Needle The string to find. 
+         * @param Options Extra search options object, which can contain the following properties:
+         *  CaseSense: False (this is ignored if a custom SearchFunc is used)
+         *  IgnoreLinebreaks: False (if this is True, then linebreaks are converted to whitespaces, otherwise remain `n)
+         *  AllowOverlap: False (if True then the needle can overlap itself)
+         *  i: 1 (which occurrence of the needle to find)
+         *  x, y, w, h: defines the search area inside the result object
+         *  SearchFunc: default is InStr, but if a custom function is provided then it needs to return
+         *      the needle location in the haystack, and accept arguments (Haystack, Needle, &FoundMatch)
+         *      This can used for example to perform a RegEx search by providing RegExMatch
+         * @returns {Object} 
+         */
+        FindString(Needle, Options := "") => this.__FindString(Needle, Options, 0)
 
-    /**
-     * Finds a string in the search results. Returns {x,y,w,h,Words} where Words contains an array of the matching Word objects.
-     * @param needle The string to find
-     * @param {number} i Which occurrence of needle to find
-     * @param {number} casesense Comparison case-sensitivity. Default is False/Off.
-     * @param wordCompareFunc Optionally a custom word comparison function. Accepts two arguments,
-     *     neither of which should contain spaces. 
-     *     When using RegExMatch as wordCompareFunc note that a "space" will split the RegEx into multiple parts.
-     *     Eg. "\w+   \d+" will actually match for a word satisfying "\w+" followed by a word satisfying "\d+"
-     * @param searchArea Optionally a {x1,y1,x2,y2} object defining the search area inside the result object
-     * @returns {Object} 
-     */
-    FindString(needle, i:=1, casesense:=False, wordCompareFunc?, searchArea?) {
-        local line, counter, found, x1, y1, x2, y2, splitNeedle, result, word
-        if !(needle is String)
-            throw TypeError("Needle is required to be a string, not type " Type(needle), -1)
-        if needle == ""
-            throw ValueError("Needle cannot be an empty string", -1)
-        splitNeedle := StrSplit(RegExReplace(needle, " +", " "), " "), needleLen := splitNeedle.Length
-        if !IsSet(wordCompareFunc)
-            wordCompareFunc := casesense ? ((arg1, arg2) => arg1 == arg2) : ((arg1, arg2) => arg1 = arg2)
-        If IsSet(searchArea) {
-            x1 := searchArea.HasOwnProp("x1") ? searchArea.x1 : -100000
-            y1 := searchArea.HasOwnProp("y1") ? searchArea.y1 : -100000
-            x2 := searchArea.HasOwnProp("x2") ? searchArea.x2 : 100000
-            y2 := searchArea.HasOwnProp("y2") ? searchArea.y2 : 100000
-        }
-        for line in this.Lines {
-            if IsSet(wordCompareFunc) || InStr(l := line.Text, needle, casesense) {
-                counter := 0, found := []
-                for word in line.Words {
-                    If IsSet(searchArea) && (word.x < x1 || word.y < y1 || word.x+word.w > x2 || word.y+word.h > y2)
+        /**
+         * Finds all strings matching the needle in the search results. Returns an array of Result objects.
+         * @param Needle The string to find. 
+         * @param Options See Result.FindString. {CaseSense: False, IgnoreLinebreaks: False, AllowOverlap: false, i: 1, x, y, w, h, SearchFunc}
+         *  If i is specified then the result object will contains matches starting from i.
+         * @returns {Array} 
+         */
+        FindStrings(Needle, Options := "") => this.__FindString(Needle, Options, true)
+
+        __FindString(Needle, Options, All) {
+            local CaseSense := false, IgnoreLinebreaks := false, AllowOverlap := false, i := 1, SearchFunc, x, y, w, h
+            local currentHaystack, fullHaystackLinebreaks := "`n", offset := 0, line, counter := 0, x1, y1, x2, y2, result, results := [], word
+
+            if !(Needle is String)
+                throw TypeError("Needle is required to be a string, not type " Type(Needle), -1)
+            if Trim(Needle, " `t`n`r") == ""
+                throw ValueError("Needle cannot be an empty string", -1)
+
+            this.__OCR.__ExtractNamedParameters(Options, "CaseSense", &CaseSense, "IgnoreLinebreaks", &IgnoreLinebreaks, "AllowOverlap", &AllowOverlap, "i", &i, "SearchFunc", &SearchFunc, "x", &x, "y", &y, "w", &w, "h", &h)
+
+            if !IsSet(SearchFunc)
+                SearchFunc := (haystack, needle, &foundstr) => (pos := InStr(haystack, needle, casesense), foundstr := SubStr(haystack, pos, StrLen(needle)), pos)
+
+            if (IsSet(x) || IsSet(y) || IsSet(w) || IsSet(h)) {
+                x1 := x ?? -100000, y1 := y ?? -100000, x2 := IsSet(w) ? x + w : 100000, y2 := IsSet(h) ? y + h : 100000 
+            }
+
+            tokenizedHaystack := [IgnoreLinebreaks ? " " : "`n"]
+            for Line in this.Lines {
+                fullHaystackLinebreaks .= line.Text "`n"
+                for Word in Line.Words
+                    tokenizedHaystack.Push(Word, " ")
+                tokenizedHaystack.Pop()
+                tokenizedHaystack.Push(IgnoreLinebreaks ? " " : "`n")
+            }
+
+            fullHaystackNoLinebreaks := StrReplace(fullHaystackLinebreaks, "`n", " ") ; Make sure the words are in the same order as the tokenized version
+            fullHaystack := IgnoreLinebreaks ? fullHaystackNoLinebreaks : fullHaystackLinebreaks
+
+            Needle := RegExReplace(StrReplace(Needle, "`t", " "), " +", " ")
+
+            fullFirst := SubStr(Needle, 1, 1) ~= "[ \n]", fullLast := SubStr(Needle, -1, 1) ~= "[ \n]"
+
+            currentHaystack := fullHaystack
+            Loop {
+                if !(loc := SearchFunc(currentHaystack, Needle, &foundNeedle))
+                    break
+
+                if IsObject(foundNeedle)
+                    foundNeedle := foundNeedle[]
+
+                foundLen := AllowOverlap ? 1 : StrLen(foundNeedle)
+                currentHaystack := SubStr(currentHaystack, loc + foundLen) ; Remove the match from the haystack, allowing overlap
+                offset += loc + foundLen - 1
+
+                if ++counter < i
+                    continue
+
+                tokenizedNeedle := []
+                ; Tokenize the needle
+                for wsNeedle in wsSplit := StrSplit(foundNeedle, " ") {
+                    for lbNeedle in lbSplit := StrSplit(wsNeedle, "`n") {
+                        tokenizedNeedle.Push(lbNeedle, "`n")
+                    }
+                    if lbSplit.Length
+                        tokenizedNeedle.Pop()
+                    tokenizedNeedle.Push(" ")
+                }
+                tokenizedNeedle.Pop()
+                
+                preceding := SubStr(fullHaystackNoLinebreaks, 1, offset - foundLen)
+                ; Find first Word location
+                StrReplace(preceding, " ",,, &startingWord:=0)
+                startingWord := startingWord*2 + fullFirst - 1 ; Substracted 1 to allow subsequent loop to just add A_Index
+
+                foundNeedle := "", foundWords := [], foundLines := [], line := this.__OCR.Line(this), line.DefineProp("Words", {value:[]}), line.DefineProp("Text", {value:""})
+                Loop tokenizedNeedle.Length {
+                    word := tokenizedHaystack[startingWord + A_Index]
+                    if (word == "`n") {
+                        foundNeedle .= line.Text
+                        line.Text := RTrim(line.Text), foundLines.Push(line)
+                        line := this.__OCR.Line(this), line.DefineProp("Words", {value:[]}), line.DefineProp("Text", {value:""})
+                    }
+                    if !IsObject(word)
                         continue
-                    t := word.Text, len := StrLen(t)
-                    if wordCompareFunc(t, splitNeedle[found.Length+1]) {
-                        found.Push(word)
-                        if found.Length == needleLen {
-                            if ++counter == i {
-                                result := this.__OCR.WordsBoundingRect(found*)
-                                result.Words := found
-                                return result
-                            } else
-                                found := []
-                        }
-                    } else
-                        found := []
+                    If IsSet(x1) && (word.x < x1 || word.y < y1 || word.x+word.w > x2 || word.y+word.h > y2) {
+                        counter--
+                        continue 2
+                    }
+                    line.Words.Push(word), line.Text .= word.Text " "
+                    foundWords.Push(word)
                 }
-            }
-        }
-        throw TargetError('The target string "' needle '" was not found', -1)
-    }
+                if line.Text {
+                    foundNeedle .= line.Text
+                    line.Text := RTrim(line.Text), foundLines.Push(line)
+                }
 
-    /**
-     * Finds all strings matching the needle in the search results. Returns an array of {x,y,w,h,Words} objects
-     * where Words contains an array of the matching Word objects.
-     * @param needle The string to find. 
-     * @param {number} casesense Comparison case-sensitivity. Default is False/Off.
-     * @param wordCompareFunc Optionally a custom word comparison function. Accepts two arguments,
-     *     neither of which should contain spaces. 
-     *     When using RegExMatch as wordCompareFunc note that a "space" will split the RegEx into multiple parts.
-     *     Eg. "\w+   \d+" will actually match for a word satisfying "\w+" followed by a word satisfying "\d+"
-     * @param searchArea Optionally a {x1,y1,x2,y2} object defining the search area inside the result object
-     * @returns {Array} 
-     */
-    FindStrings(needle, casesense:=False, wordCompareFunc?, searchArea?) {
-        local line, counter, found, x1, y1, x2, y2, splitNeedle, result, word
-        if !(needle is String)
-            throw TypeError("Needle is required to be a string, not type " Type(needle), -1)
-        if needle == ""
-            throw ValueError("Needle cannot be an empty string", -1)
-        splitNeedle := StrSplit(RegExReplace(needle, " +", " "), " "), needleLen := splitNeedle.Length
-        if !IsSet(wordCompareFunc)
-            wordCompareFunc := casesense ? ((arg1, arg2) => arg1 == arg2) : ((arg1, arg2) => arg1 = arg2)
-        If IsSet(searchArea) {
-            x1 := searchArea.HasOwnProp("x1") ? searchArea.x1 : -100000
-            y1 := searchArea.HasOwnProp("y1") ? searchArea.y1 : -100000
-            x2 := searchArea.HasOwnProp("x2") ? searchArea.x2 : 100000
-            y2 := searchArea.HasOwnProp("y2") ? searchArea.y2 : 100000
+                result := this.Clone(), ObjAddRef(this.ptr)
+                result.DefineProp("BoundingRect", {value: this.__OCR.WordsBoundingRect(foundWords*)})
+                result.DefineProp("Lines", {value: foundLines})
+                result.DefineProp("Words", {value: foundWords})
+                result.DefineProp("Text", {value: foundNeedle})
+                if All {
+                    results.Push(result)
+                } else
+                    return result
+            }
+            if All
+                return results
+
+            throw TargetError('The target string "' Needle '" was not found', -1)
         }
-        results := []
-        for line in this.Lines {
-            if IsSet(wordCompareFunc) || InStr(l := line.Text, needle, casesense) {
-                counter := 0, found := []
+    
+        /**
+         * Filters out all the words that do not satisfy the callback function and returns a new OCR.Result object
+         * @param {Object} callback The callback function that accepts a OCR.Word object.
+         * If the callback returns 0 then the word is filtered out (rejected), otherwise is kept.
+         * @returns {OCR.Result}
+         */
+        Filter(callback) {
+            if !HasMethod(callback)
+                throw ValueError("Filter callback must be a function", -1)
+            local result := this.Clone(), line, croppedLines := [], croppedText := "", croppedWords := [], lineText := "", word
+            ObjAddRef(result.ptr)
+            for line in result.Lines {
+                croppedWords := [], lineText := ""
                 for word in line.Words {
-                    If IsSet(searchArea) && (word.x < x1 || word.y < y1 || word.x+word.w > x2 || word.y+word.h > y2)
-                        continue
-                    t := word.Text, len := StrLen(t)
-                    if wordCompareFunc(t, splitNeedle[found.Length+1]) {
-                        found.Push(word)
-                        if found.Length == needleLen {
-                            result := this.__OCR.WordsBoundingRect(found*)
-                            result.Words := found
-                            results.Push(result)
-                            counter := 0, found := [], result := unset
-                        }
-                    } else
-                        found := []
+                    if callback(word)
+                        croppedWords.Push(word), lineText .= word.Text " "
+                }
+                if croppedWords.Length {
+                    line := this.__OCR.Line()
+                    line.DefineProp("Text", {value:Trim(lineText)})
+                    line.DefineProp("Words", {value:croppedWords})
+                    croppedLines.Push(line)
+                    croppedText .= lineText
                 }
             }
+            result.DefineProp("Lines", {Value:croppedLines})
+            result.DefineProp("Text", {Value:Trim(croppedText)})
+            result.DefineProp("Words", this.__OCR.Result.Prototype.GetOwnPropDesc("Words"))
+            return result
         }
-        return results
+    
+        /**
+         * Crops the result object to contain only results from an area defined by points (x1,y1) and (x2,y2).
+         * Note that these coordinates are relative to the result object, not to the screen.
+         * @param {Integer} x1 x coordinate of the top left corner of the search area
+         * @param {Integer} y1 y coordinate of the top left corner of the search area
+         * @param {Integer} x2 x coordinate of the bottom right corner of the search area
+         * @param {Integer} y2 y coordinate of the bottom right corner of the search area
+         * @returns {OCR.Result}
+         */
+        Crop(x1:=-100000, y1:=-100000, x2:=100000, y2:=100000) => this.Filter((word) => word.x >= x1 && word.y >= y1 && (word.x+word.w) <= x2 && (word.y+word.h) <= y2)
     }
-
-    /**
-     * Filters out all the words that do not satisfy the callback function and returns a new OCR.Result object
-     * @param {Object} callback The callback function that accepts a OCR.Word object.
-     * If the callback returns 0 then the word is filtered out (rejected), otherwise is kept.
-     * @returns {OCR.OcrResult}
-     */
-    Filter(callback) {
-        if !HasMethod(callback)
-            throw ValueError("Filter callback must be a function", -1)
-        local result := this.Clone(), line, croppedLines := [], croppedText := "", croppedWords := [], lineText := "", word
-        ObjAddRef(result.ptr)
-        for line in result.Lines {
-            croppedWords := [], lineText := ""
-            for word in line.Words {
-                if callback(word)
-                    croppedWords.Push(word), lineText .= word.Text " "
-            }
-            if croppedWords.Length {
-                line := {Text:Trim(lineText), Words:croppedWords}
-                line.base.__Class := this.__OCR.prototype.__Class ".OCRLine"
-                croppedLines.Push(line)
-                croppedText .= lineText
-            }
-        }
-        result.DefineProp("Lines", {Value:croppedLines})
-        result.DefineProp("Text", {Value:Trim(croppedText)})
-        result.DefineProp("Words", this.__OCR.Prototype.GetOwnPropDesc("Words"))
-        return result
-    }
-
-    /**
-     * Crops the result object to contain only results from an area defined by points (x1,y1) and (x2,y2).
-     * Note that these coordinates are relative to the result object, not to the screen.
-     * @param {Integer} x1 x coordinate of the top left corner of the search area
-     * @param {Integer} y1 y coordinate of the top left corner of the search area
-     * @param {Integer} x2 x coordinate of the bottom right corner of the search area
-     * @param {Integer} y2 y coordinate of the bottom right corner of the search area
-     * @returns {OCR.OcrResult}
-     */
-    Crop(x1:=-100000, y1:=-100000, x2:=100000, y2:=100000) => this.Filter((word) => word.x >= x1 && word.y >= y1 && (word.x+word.w) <= x2 && (word.y+word.h) <= y2)
-
-    class OCRLine {
+    class Line extends OCR.Common {
         ; Gets the recognized text for the line.
         Text {
             get {
@@ -633,12 +568,12 @@ class OCR {
         ; Gets the Word objects for the line
         Words {
             get {
-                ComCall(6, this, "ptr*", WordsList:=this.__OCR.IBase())   ; get_Words
+                ComCall(6, this, "ptr*", WordsList:=ComValue(13, 0))   ; get_Words
                 ComCall(7, WordsList, "int*", &WordsCount:=0)   ; Words count
                 words := []
                 loop WordsCount {
-                   ComCall(6, WordsList, "int", A_Index-1, "ptr*", OcrWord:=this.__OCR.OCRWord())
-                   words.Push(OcrWord)
+                   ComCall(6, WordsList, "int", A_Index-1, "ptr*", Word:=this.__OCR.Word(this))
+                   words.Push(Word)
                 }
                 this.DefineProp("Words", {Value:words})
                 return words
@@ -648,21 +583,9 @@ class OCR {
         BoundingRect {
             get => this.DefineProp("BoundingRect", {Value:this.__OCR.WordsBoundingRect(this.Words*)}).BoundingRect
         }
-        x {
-            get => this.BoundingRect.x
-        } 
-        y {
-            get => this.BoundingRect.y
-        }
-        w {
-            get => this.BoundingRect.w
-        }
-        h {
-            get => this.BoundingRect.h
-        }
     }
 
-    class OCRWord {
+    class Word extends OCR.Common {
         ; Gets the recognized text for the word
         Text {
             get {
@@ -679,7 +602,7 @@ class OCR {
          * Gets the bounding rectangle of the text in {x,y,w,h} format. 
          * The bounding rectangles coordinate system will be dependant on the image capture method.
          * For example, if the image was captured as a rectangle from the screen, then the coordinates
-         * will be relative to the left top corner of the rectangle.
+         * will be relative to the left top corner of the screen.
          */
         BoundingRect {
             get {
@@ -691,9 +614,12 @@ class OCR {
                 return this.DefineProp("BoundingRect", {Value:{x:this.x, y:this.y, w:this.w, h:this.h}}).BoundingRect
             }
         }
+    }
+
+    class Common extends OCR.IBase {
         x {
             get => this.BoundingRect.x
-        }
+        } 
         y {
             get => this.BoundingRect.y
         }
@@ -703,6 +629,166 @@ class OCR {
         h {
             get => this.BoundingRect.h
         }
+    
+        /**
+         * Highlights the object on the screen with a red box
+         * @param {number} showTime Default is 2 seconds.
+         * * Unset - if highlighting exists then removes the highlighting, otherwise pauses for 2 seconds
+         * * 0 - Indefinite highlighting
+         * * Positive integer (eg 2000) - will highlight and pause for the specified amount of time in ms
+         * * Negative integer - will highlight for the specified amount of time in ms, but script execution will continue
+         * * "clear" - removes the highlighting unconditionally
+         * * "clearall" - remove highlightings from all OCR objects
+         * @param {string} color The color of the highlighting. Default is red.
+         * @param {number} d The border thickness of the highlighting in pixels. Default is 2.
+         * @returns {OCR.Result}
+         */
+        Highlight(showTime?, color:="Red", d:=2) {
+            static Guis := Map()
+            local x, y, w, h, key, oObj, GuiObj, iw, ih
+            ; showTime unset => either highlights for 2s, or removes highlight
+            ; showTime clear => removes highlight
+            if IsSet(showTime) {
+                if showTime = "clearall" {
+                    for key, oObj in Guis { ; enum all OCR result objects
+                        try oObj.GuiObj.Destroy()
+                        SetTimer(oObj.TimerObj, 0)
+                    }
+                    Guis := Map()
+                    return this
+                } else if showTime = "clear" {
+                    if Guis.Has(this) {
+                        try Guis[this].GuiObj.Destroy()
+                        SetTimer(Guis[this].TimerObj, 0)
+                        Guis.Delete(this)
+                    }
+                    return this
+                }
+            }
+    
+            if !IsSet(showTime) {
+                if Guis.Has(this) {
+                    try Guis[this].GuiObj.Destroy()
+                    SetTimer(Guis[this].TimerObj, 0)
+                    Guis.Delete(this)
+                    return this
+                } else
+                    showTime := 2000
+            }
+    
+            x := this.x, y := this.y, w := this.w, h := this.h
+            if this.HasProp("Relative") {
+                if this.Relative.HasProp("CoordMode") {
+                    if this.Relative.CoordMode = "Client"
+                        WinGetClientPos(&rX, &rY,,, this.Relative.hWnd), x += rX, y += rY
+                    else if this.Relative.CoordMode = "Window"
+                        WinGetPos(&rX, &rY,,, this.Relative.hWnd), x += rX, y += rY
+                }
+                x += this.Relative.HasProp("x") ? this.Relative.x : 0
+                y += this.Relative.HasProp("y") ? this.Relative.y : 0
+            }
+    
+            if !Guis.Has(this) {
+                Guis[this] := {}
+                Guis[this].GuiObj := Gui("+AlwaysOnTop -Caption +ToolWindow -DPIScale +E0x08000000")
+                Guis[this].TimerObj := ObjBindMethod(this, "Highlight", "clear")
+            }
+            GuiObj := Guis[this].GuiObj
+            GuiObj.BackColor := color
+            iw:= w+d, ih:= h+d, w:=w+d*2, h:=h+d*2, x:=x-d, y:=y-d
+            WinSetRegion("0-0 " w "-0 " w "-" h " 0-" h " 0-0 " d "-" d " " iw "-" d " " iw "-" ih " " d "-" ih " " d "-" d, GuiObj.Hwnd)
+            GuiObj.Show("NA x" . x . " y" . y . " w" . w . " h" . h)
+    
+            if showTime > 0 {
+                Sleep(showTime)
+                this.Highlight()
+            } else if showTime < 0
+                SetTimer(Guis[this].TimerObj, -Abs(showTime))
+            return this
+        }
+        ClearHighlight() => this.Highlight("clear")
+    
+        /**
+         * Clicks an object
+         * If this object (the one Click is called from) contains a "Relative" property (this is
+         * added by default with OCR.FromWindow) containing a hWnd property, then that window will be activated,
+         * otherwise the Relative objects x/y properties values will be added to the x and y coordinates as offsets.
+         */
+        Click(WhichButton?, ClickCount?, DownOrUp?) {
+            local x := this.x, y := this.y, w := this.w, h := this.h, mode := "Screen", hwnd
+            if this.HasProp("Relative") {
+                if this.Relative.HasProp("CoordMode") {
+                    if this.Relative.CoordMode = "Window"
+                        mode := "Window", hwnd := this.Relative.Hwnd
+                    else if this.Relative.CoordMode = "Client"
+                        mode := "Client", hwnd := this.Relative.Hwnd
+                    if IsSet(hwnd) && !WinActive(hwnd) {
+                        WinActivate(hwnd)
+                        WinWaitActive(hwnd,,1)
+                    }
+                }
+                x += this.Relative.HasProp("x") ? this.Relative.x : 0
+                y += this.Relative.HasProp("y") ? this.Relative.y : 0
+            }
+            oldCoordMode := A_CoordModeMouse
+            CoordMode "Mouse", mode
+            Click(x+w//2, y+h//2, WhichButton?, ClickCount?, DownOrUp?)
+            CoordMode "Mouse", oldCoordMode
+        }
+    
+        /**
+         * ControlClicks an object.
+         * If the result object originates from OCR.FromWindow which captured only the client area,
+         * then the result object will contain correct coordinates for the ControlClick. 
+         * Coordinates will be adjusted to Client area from the CoordMode that the OCR happened in.
+         * Otherwise, if additionally a WinTitle is provided then the coordinates are treated as Screen 
+         * coordinates and converted to Client coordinates.
+         * @param WinTitle If WinTitle is set, then the coordinates stored in Obj will be converted to
+         * client coordinates and ControlClicked.
+         */
+        ControlClick(WinTitle?, WinText?, WhichButton?, ClickCount?, Options?, ExcludeTitle?, ExcludeText?) {
+            local x := this.x, y := this.y, w := this.w, h := this.h, hWnd
+            if this.HasProp("Relative") {
+                x += this.Relative.HasProp("x") ? this.Relative.x : 0
+                y += this.Relative.HasProp("y") ? this.Relative.y : 0
+            }
+            if this.HasProp("Relative") && this.Relative.HasProp("CoordMode") && (this.Relative.CoordMode = "Client" || this.Relative.CoordMode = "Window") {
+                mode := this.Relative.CoordMode, hWnd := this.Relative.hWnd
+                if mode = "Window" {
+                    ; Window -> Client
+                    RECT := Buffer(16, 0), pt := Buffer(8, 0)
+                    DllCall("user32\GetWindowRect", "Ptr", hWnd, "Ptr", RECT)
+                    winX := NumGet(RECT, 0, "Int"), winY := NumGet(RECT, 4, "Int")
+                    NumPut("int", winX+x, "int", winY+y, pt)
+                    DllCall("user32\ScreenToClient", "Ptr", hWnd, "Ptr", pt)
+                    x := NumGet(pt,0,"int"), y := NumGet(pt,4,"int")
+                }
+            } else if IsSet(WinTitle) {
+                hWnd := WinExist(WinTitle, WinText?, ExcludeTitle?, ExcludeText?)
+                pt := Buffer(8), NumPut("int",x,pt), NumPut("int", y,pt,4)
+                DllCall("ScreenToClient", "Int", Hwnd, "Ptr", pt)
+                x := NumGet(pt,0,"int"), y := NumGet(pt,4,"int")
+            } else
+                throw TargetError("ControlClick needs to be called either after a OCR.FromWindow result or with a WinTitle argument")
+                
+            ControlClick("X" (x+w//2) " Y" (y+h//2), hWnd,, WhichButton?, ClickCount?, Options?)
+        }
+    
+        OffsetCoordinates(offsetX?, offsetY?) {
+            if !IsSet(offsetX) || !IsSet(offsetY) {
+                if this.HasOwnProp("Relative") {
+                    offsetX := this.Relative.HasProp("x") ? this.Relative.X : 0
+                    offsetY := this.Relative.HasProp("y") ? this.Relative.Y : 0
+                } else
+                    throw Error("No Relative property found",, -1)
+            }
+            if offsetX = 0 && offsetY = 0
+                return this
+            local word
+            for word in this.Words
+                word.x += offsetX, word.y += offsetY, word.BoundingRect := {X:word.x, Y:word.y, W:word.w, H:word.h}
+            return this
+        }
     }
 
     /**
@@ -710,114 +796,153 @@ class OCR {
      * the top left corner of the image.
      * @param FileName Either full or relative (to A_WorkingDir) path to the file.
      * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
-     * @returns {OCR.OcrResult} 
+     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, monochrome:0-255, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
+     * @returns {OCR.Result} 
      */
-    static FromFile(FileName, lang?, transform:=1) {
-        this.__ExtractTransformParameters(FileName, &transform)
-        this.__ExtractNamedParameters(FileName, "lang", &lang, "FileName", &FileName)
+    static FromFile(FileName, Options:=0) {
         if !(fe := FileExist(FileName)) or InStr(fe, "D")
             throw TargetError("File `"" FileName "`" doesn't exist", -1)
         GUID := this.CLSIDFromString(this.IID_IRandomAccessStream)
         DllCall("ShCore\CreateRandomAccessStreamOnFile", "wstr", FileName, "uint", Read := 0, "ptr", GUID, "ptr*", IRandomAccessStream:=this.IBase())
-        return this(IRandomAccessStream, lang?, transform, this.Vtbl_GetDecoder.HasOwnProp(ext := StrSplit(FileName, ".")[-1]) ? ext : "")
+        if IsObject(Options) && !Options.HasProp("Decoder")
+            Options.Decoder := this.Vtbl_GetDecoder.HasOwnProp(ext := StrSplit(FileName, ".")[-1]) ? ext : ""
+        return this(IRandomAccessStream, Options)
     }
 
     /**
      * Returns an array of OCR results objects for a PDF file. Locations of the words will be relative to
      * the top left corner of the PDF page.
      * @param FileName Either full or relative (to A_WorkingDir) path to the file.
-     * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
-     * @param start Page number to start from. Default is first page.
-     * @param end Page number to end with (included). Default is last page.
-     * @returns {OCR.OcrResult} 
+     * @param Options Optional: OCR options {lang, scale, grayscale, invertcolors, rotate, flip, x, y, w, h, decoder}. 
+     * @param Start Optional: Page number to start from. Default is first page.
+     * @param End Optional: Page number to end with (included). Default is last page.
+     * @param Password Optional: PDF password.
+     * @returns {OCR.Result} 
      */
-    static FromPDF(FileName, lang?, transform:=1, start:=1, end?) {
-        this.__ExtractTransformParameters(FileName, &transform)
-        this.__ExtractNamedParameters(FileName, "lang", &lang, "start", &start, "end", &end, "FileName", &FileName)
+    static FromPDF(FileName, Options:=0, Start:=1, End?, Password:="") {
+        this.__ExtractNamedParameters(Options, "lang", &lang, "start", &Start, "end", &End, "password", &Password)
         if !(fe := FileExist(FileName)) or InStr(fe, "D")
             throw TargetError("File `"" FileName "`" doesn't exist", -1)
 
         DllCall("ShCore\CreateRandomAccessStreamOnFile", "wstr", FileName, "uint", Read := 0, "ptr", GUID := this.CLSIDFromString(this.IID_IRandomAccessStream), "ptr*", IRandomAccessStream:=ComValue(13,0))
-        PdfDocumentStatics := this.CreateClass("Windows.Data.Pdf.PdfDocument", this.IID_IPdfDocumentStatics) ; If this line is removed then the script throws an error for a second on script exist
-        ComCall(8, PdfDocumentStatics, "ptr", IRandomAccessStream, "ptr*", PdfDocument:=this.IBase()) ; LoadFromStreamAsync
-        this.WaitForAsync(&PdfDocument)
+        PdfDocument := this.__OpenPdfDocument(IRandomAccessStream, Password)
         this.CloseIClosable(IRandomAccessStream)
-        if !IsSet(end) {
-            ComCall(7, PdfDocument, "uint*", &end:=0) ; GetPageCount
-            if !end
+        if !IsSet(End) {
+            ComCall(7, PdfDocument, "uint*", &End:=0) ; GetPageCount
+            if !End
                 throw Error("Unable to get PDF page count", -1)
         }
         local results := []
-        Loop (end+1-start)
-            results.Push(this.FromPDFPage(PdfDocument, start+(A_Index-1), lang?, transform))
+        Loop (End+1-Start)
+            results.Push(this.FromPDFPage(PdfDocument, Start+(A_Index-1), Options))
         return results
+    }
+
+    static GetPdfPageCount(FileName, Password:="") {
+        DllCall("ShCore\CreateRandomAccessStreamOnFile", "wstr", FileName, "uint", Read := 0, "ptr", GUID := this.CLSIDFromString(this.IID_IRandomAccessStream), "ptr*", IRandomAccessStream:=ComValue(13,0))
+        PdfDocument := this.__OpenPdfDocument(IRandomAccessStream, Password)
+        this.CloseIClosable(IRandomAccessStream)
+        ComCall(7, PdfDocument, "uint*", &PageCount:=0) ; GetPageCount
+        if !PageCount
+            throw Error("Unable to get PDF page count", -1)
+        
+        return PageCount
+    }
+
+    ; Returns {Width, Height, Rotation, PreferredZoom}
+    static GetPdfPageProperties(FileName, Page, Password:="") {
+        DllCall("ShCore\CreateRandomAccessStreamOnFile", "wstr", FileName, "uint", Read := 0, "ptr", GUID := this.CLSIDFromString(this.IID_IRandomAccessStream), "ptr*", IRandomAccessStream:=ComValue(13,0))
+        PdfDocument := this.__OpenPdfDocument(IRandomAccessStream, Password)
+        this.CloseIClosable(IRandomAccessStream)
+        ComCall(6, PdfDocument, "uint", Page-1, "ptr*", PdfPage:=ComValue(13, 0)) ; GetPage
+        ComCall(10, PdfPage, "ptr*", Size:=Buffer(8, 0)) ; Size
+        ComCall(12, PdfPage, "uint*", &Rotation:=0)
+        ComCall(12, PdfPage, "float*", &PreferredZoom:=0)
+        return {Width: NumGet(Size, 0, "float"), Height: NumGet(size, 4, "float"), Rotation: Rotation*90, PreferredZoom:PreferredZoom}
     }
 
     /**
      * Returns an OCR result object for a PDF page. Locations of the words will be relative to
      * the top left corner of the PDF page.
      * @param FileName Either full or relative (to A_WorkingDir) path to the file.
-     * @param Page The page number to OCR. Default is 1.
-     * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
-     * @returns {OCR.OcrResult} 
+     * @param Page The page number to OCR.
+     * @param Options Optional: OCR options {lang, scale, grayscale, invertcolors, rotate, flip, x, y, w, h, decoder}. 
+     * @param Password Optional: PDF password.
+     * @returns {OCR.Result} 
      */
-    static FromPDFPage(FileName, page:=1, lang?, transform:=1) {
-        this.__ExtractTransformParameters(FileName, &transform)
-        this.__ExtractNamedParameters(FileName, "page", page, "lang", &lang, "FileName", &FileName)
+    static FromPDFPage(FileName, Page, Options:=0, Password:="") {
+        local scale := 1, x := 0, y := 0, w := 0, h := 0
+        if IsObject(Options)
+            Options := Options.Clone()
+        this.__ExtractNamedParameters(Options, "Password", &Password, "scale", &scale, "x", &x, "y", &y, "w", &w, "h", &h)
         if FileName is String {
             if !(fe := FileExist(FileName)) or InStr(fe, "D")
                 throw TargetError("File `"" FileName "`" doesn't exist", -1)
-            GUID := OCR.CLSIDFromString(OCR.IID_IRandomAccessStream)
-            DllCall("ShCore\CreateRandomAccessStreamOnFile", "wstr", FileName, "uint", Read := 0, "ptr", GUID, "ptr*", IRandomAccessStream:=OCR.IBase())
-            PdfDocumentStatics := this.CreateClass("Windows.Data.Pdf.PdfDocument", this.IID_IPdfDocumentStatics)
-            ComCall(8, PdfDocumentStatics, "ptr", IRandomAccessStream, "ptr*", PdfDocument:=this.IBase()) ; LoadFromStreamAsync
-            this.WaitForAsync(&PdfDocument)
+            GUID := this.CLSIDFromString(this.IID_IRandomAccessStream)
+            DllCall("ShCore\CreateRandomAccessStreamOnFile", "wstr", FileName, "uint", Read := 0, "ptr", GUID, "ptr*", IRandomAccessStream:=ComValue(13, 0))
+            PdfDocument := this.__OpenPdfDocument(IRandomAccessStream, Password)
         } else
             PdfDocument := FileName
-        ComCall(6, PdfDocument, "uint", page-1, "ptr*", PdfPage:=this.IBase()) ; GetPage
+        ComCall(6, PdfDocument, "uint", Page-1, "ptr*", PdfPage:=ComValue(13, 0)) ; GetPage
         InMemoryRandomAccessStream := this.CreateClass("Windows.Storage.Streams.InMemoryRandomAccessStream")
-        ComCall(6, PdfPage, "ptr", InMemoryRandomAccessStream, "ptr*", asyncInfo:=this.IBase())   ; RenderToStreamAsync
+        PdfPageRenderOptions := this.CreateClass("Windows.Data.Pdf.PdfPageRenderOptions")
+        ComCall(15, PdfPageRenderOptions, "uint", true) ; IsIgnoringHighContrast
+        if x || y || w || h {
+            rect := Buffer(16, 0), NumPut("float", x, "float", y, "float", w, "float", h, rect)
+            ComCall(7, PdfPageRenderOptions, "ptr", rect) ; put_SourceRect
+            Options.w := Options.w*scale, Options.h := Options.h*scale
+            Options.DeleteProp("x"), Options.DeleteProp("y"), Options.DeleteProp("w"), Options.DeleteProp("h")
+        }
+        if (scale != 1) {
+            ComCall(10, PdfPage, "ptr", Size:=Buffer(8, 0)) ; get_Size
+            ComCall(9, PdfPageRenderOptions, "uint", Floor((w || NumGet(size, 0, "float"))*scale)) ; put_DestinationWidth
+            ComCall(11, PdfPageRenderOptions, "uint", Floor((h || NumGet(size, 4, "float"))*scale)) ; put_DestinationHeight
+            Options.DeleteProp("scale")
+        }
+        ComCall(7, PdfPage, "ptr", InMemoryRandomAccessStream, "ptr", PdfPageRenderOptions, "ptr*", asyncInfo:=ComValue(13, 0)) ; RenderWithOptionsToStreamAsync
         this.WaitForAsync(&asyncInfo)
         if FileName is String
             this.CloseIClosable(IRandomAccessStream)
         PdfPage := "", PdfDocument := "", IRandomAccessStream := ""
-        return this(InMemoryRandomAccessStream, lang?, transform)    
+        OcrResult := this(InMemoryRandomAccessStream, Options)
+        if scale != 1
+            this.NormalizeCoordinates(OcrResult, scale)
+        return OcrResult
     }
 
     /**
-     * Returns an OCR results object for a given window. Locations of the words will be relative to the
-     * window or client area, so for interactions use CoordMode "Window" or "Client". If onlyClientArea
-     * contained relative coordinates then Result coordinates will also be relative to the captured area.
-     * In that case offsets for Window/Client area are stored in Result.Relative.Client.x and y or .Window.x and y.
-     * Additionally, Result.Relative.Screen.x and y are also stored. 
+     * Returns an OCR results object for a given window. Locations of the words will be relative
+     * using the CoordMode from A_CoordModePixel (default is Client). 
+     * The window from where the image was captured is stored in Result.Relative.hWnd
+     * Additionally, Result.Relative.CoordMode is stored (the A_CoordModePixel at the time of OCR).
      * @param WinTitle A window title or other criteria identifying the target window.
-     * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
-     * @param {Number, Object} onlyClientArea Whether only the client area or the whole window should be OCR-d. Default is 0.
-     *     This can also be an object which can contain {X,Y,W,H, onlyClientArea} (relative coordinates from where to OCR).
-     * @param {Number} mode Different methods of capturing the window. 
-     * 0 = uses GetDC with BitBlt
-     * 1 = same as 0 but window transparency is turned off beforehand with WinSetTransparent
-     * 2 = uses PrintWindow. 
-     * 3 = same as 1 but window transparency is turned off beforehand with WinSetTransparent
-     * 4 = uses PrintWindow with undocumented PW_RENDERFULLCONTENT flag, allowing capture of hardware-accelerated windows
-     * 5 = uses Direct3D11 from UWP Windows.Graphics.Capture (slowest option, but may work with games) 
-     *      This may draw a yellow border around the target window in older Windows versions.
-     * @returns {OCR.OcrResult} 
+     * @param Options Optional: OCR options {lang, scale, grayscale, invertcolors, rotate, flip, x, y, w, h, decoder}. 
+     * Additionally for FromWindow the options may include:
+     *      mode:  Different methods of capturing the window. 
+     *        0 = uses GetDC with BitBlt
+     *        1 = same as 0 but window transparency is turned off beforehand with WinSetTransparent
+     *        2 = uses PrintWindow. 
+     *        3 = same as 1 but window transparency is turned off beforehand with WinSetTransparent
+     *        4 = uses PrintWindow with undocumented PW_RENDERFULLCONTENT flag, allowing capture of hardware-accelerated windows
+     *        5 = uses Direct3D11 from UWP Windows.Graphics.Capture (slowest option, but may work with games) 
+     *             This may draw a yellow border around the target window in older Windows versions.
+     * @param WinText Additional window criteria.
+     * @param ExcludeTitle Additional window criteria.
+     * @param ExcludeText Additional window criteria.
+     * @returns {OCR.Result} 
      */
-    static FromWindow(WinTitle:="", lang?, transform:=1, onlyClientArea:=0, mode:=4) {
-        this.__ExtractTransformParameters(WinTitle, &transform)
-        local result, X := 0, Y := 0, W := 0, H := 0, sX, sY, hBitMap, hwnd, customRect := 0, scale := transform.scale
-        this.__ExtractNamedParameters(WinTitle, "x", &x, "y", &y, "w", &w, "h", &h, "onlyClientArea", &onlyClientArea, "mode", &mode, "lang", &lang, "WinTitle", &Wintitle)
-        this.__ExtractNamedParameters(onlyClientArea, "x", &x, "y", &y, "w", &w, "h", &h, "onlyClientArea", &onlyClientArea)
+    static FromWindow(WinTitle:="", Options:=0, WinText:="", ExcludeTitle:="", ExcludeText:="") {
+        local result, coordsmode := A_CoordModePixel, onlyClientArea := coordsMode = "Client", mode := 4, X := 0, Y := 0, W := 0, H := 0, sX, sY, hBitMap, hwnd, customRect := 0, transform := 0
+        if !Options && Type(WinTitle) = "Object"
+            Options := WinTitle, WinTitle := ""
+        if IsObject(Options)
+            Options := Options.Clone()
+        this.__ExtractTransformParameters(Options, &transform)
+        this.__ExtractNamedParameters(Options, "x", &x, "y", &y, "w", &w, "width", &w, "h", &h, "height", &h, "mode", &mode, "WinTitle", &WinTitle, "WinText", &WinText, "ExcludeTitle", &ExcludeTitle, "ExcludeText", &ExcludeText)
+        this.__DeleteProps(Options, "x", "y", "w", "width", "h", "height", "scale", "mode")
         if (x !=0 || y != 0 || w != 0 || h != 0)
             customRect := 1
-        if IsObject(WinTitle)
-            WinTitle := ""
-        if !(hWnd := WinExist(WinTitle))
+        if !(hWnd := WinExist(WinTitle, WinText, ExcludeTitle, ExcludeText))
             throw TargetError("Target window not found", -1)
         if DllCall("IsIconic", "uptr", hwnd)
             DllCall("ShowWindow", "uptr", hwnd, "int", 4)
@@ -829,7 +954,7 @@ class OCR {
         }
 
         WinGetPos(&wX, &wY, &wW, &wH, hWnd)
-        If onlyClientArea = 1 {
+        If onlyClientArea {
             WinGetClientPos(&cX, &cY, &cW, &cH, hWnd)
             W := W || cW, H := H || cH, sX := X + cX, sY := Y + cY  ; Calculate final X and Y screen coordinates
         } else {
@@ -849,9 +974,10 @@ class OCR {
             */
             SoftwareBitmap := this.CreateDirect3DSoftwareBitmapFromWindow(hWnd)
 
-            local offsetX := 0, offsetY := 0, sbW := SoftwareBitmap.W, sbH := SoftwareBitmap.H, sbX := SoftwareBitmap.X, sbY := SoftwareBitmap.Y
+            local sbW := SoftwareBitmap.W, sbH := SoftwareBitmap.H, sbX := SoftwareBitmap.X, sbY := SoftwareBitmap.Y
+            local offsetX := 0, offsetY := 0
 
-            if scale != 1 || transform.rotate || transform.flip || customRect || onlyClientArea {
+            if transform.scale != 1 || transform.rotate || transform.flip || customRect || onlyClientArea {
                 ; The bounds need to fit inside the SoftwareBitmap bounds, so possibly X,Y need to be adjusted along with W,H
                 local tX := X, tY := Y, tW := W, tH := H
                 if onlyClientArea
@@ -864,86 +990,100 @@ class OCR {
                     tH += tY, offsetY := -tY, tY := 0
                 tW := Min(sbW-tX, tW), tH := Min(sbH-tY, tH)
 
-                SoftwareBitmap := this.TransformSoftwareBitmap(SoftwareBitmap, &sbW, &sbH, scale, transform.rotate, transform.flip, tX, tY, tW, tH)
-                transform.scale := 1, transform.rotate := 0, transform.flip := 0
-            }
-            result := this(SoftwareBitmap, lang?, transform)
+                SoftwareBitmap := this.TransformSoftwareBitmap(SoftwareBitmap, &sbW, &sbH, transform.scale, transform.rotate, transform.flip, tX, tY, tW, tH)
+                this.__DeleteProps(Options, "scale", "rotate", "flip")
+            } else
+                offsetX := sbX-wX, offsetY := sbY-wY
+            result := this(SoftwareBitmap, Options)
         } else {
-            hBitMap := this.CreateHBitmap(X, Y, W, H, {hWnd:hWnd, onlyClientArea:onlyClientArea, mode:(mode//2)}, scale)
+            hBitMap := this.CreateHBitmap(X, Y, W, H, {hWnd:hWnd, onlyClientArea:onlyClientArea, mode:(mode//2)}, transform.scale)
             if mode&1
                 WinSetExStyle(oldStyle, hwnd)
-            result := this(this.HBitmapToSoftwareBitmap(hBitMap,, transform), lang?)
+            SoftwareBitmap := this.HBitmapToSoftwareBitmap(hBitMap,, transform)
+            this.__DeleteProps(Options, "invertcolors", "grayscale", "monochrome")
+            result := this(SoftwareBitmap, Options)
         }
 
-        result.Relative := {Screen:{X:sX, Y:sY, W:W, H:H}}
-        , result.Relative.%(onlyClientArea = 1 ? "Client" : "Window")% := {X:X, Y:Y, W:W, H:H, hWnd:hWnd}
-        this.NormalizeCoordinates(result, scale)
+        result.Relative := {CoordMode:coordsmode, hWnd:hWnd}
+        if coordsmode = "Screen"
+            x += sX, y += sY
+        this.NormalizeCoordinates(result, transform.scale, x, y)
         if mode = 5 && !onlyClientArea
             result.OffsetCoordinates(offsetX, offsetY)
         return result
     }
 
     /**
-     * Returns an OCR results object for the whole desktop. Locations of the words will be relative to
-     * the screen (CoordMode "Screen") in a single-monitor setup. If "monitor" argument is specified
-     * then coordinates might be relative to the monitor, whereas relative offsets will be stored in
-     * Result.Relative.Screen.x and y properties. 
-     * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
-     * @param monitor The monitor from which to get the desktop area. Default is primary monitor.
+     * Returns an OCR results object for the specified monitor. Locations of the words will be relative to
+     * the primary screen (CoordMode "Screen"), even if a secondary monitor is being captured.
+     * @param Monitor Optional: The monitor from which to get the desktop area. Default is primary monitor.
      *   If screen scaling between monitors differs, then use DllCall("SetThreadDpiAwarenessContext", "ptr", -3)
-     * @returns {OCR.OcrResult} 
+     * @param Options Optional: OCR options {lang, scale, grayscale, invertcolors, rotate, flip, x, y, w, h, decoder}. 
+     * @returns {OCR.Result} 
      */
-    static FromDesktop(lang?, transform:=1, monitor?) {
-        if IsSet(lang) && IsObject(lang) {
-            this.__ExtractTransformParameters(lang, &transform)
-            lang := lang.HasProp("lang") ? lang.lang : unset
-        }
+    static FromMonitor(Monitor?, Options:=0) {
+        if !Options && IsSet(Monitor) && IsObject(Monitor)
+            Options := Monitor, Monitor := unset
+        this.__ExtractNamedParameters(Options, "Monitor", &Monitor)
         MonitorGet(monitor?, &Left, &Top, &Right, &Bottom)
-        return this.FromRect(Left, Top, Right-Left, Bottom-Top, lang?, transform)
+        return this.FromRect(Left, Top, Right-Left, Bottom-Top, Options)
     }
 
     /**
+     * Returns an OCR results object for the whole virtual screen. Locations of the words will be relative to
+     * the primary screen (CoordMode "Screen").
+     * @param Options Optional: OCR options {lang, scale, grayscale, invertcolors, rotate, flip, x, y, w, h, decoder}. 
+     *   If screen scaling between monitors differs, then use DllCall("SetThreadDpiAwarenessContext", "ptr", -3)
+     * @returns {OCR.Result}
+     */
+    static FromDesktop(Options:=0) => this.FromRect(SysGet(76), SysGet(77), SysGet(78), SysGet(79), Options)
+
+    /**
      * Returns an OCR results object for a region of the screen. Locations of the words will be relative
-     * to the top left corner of the rectangle. The return object will contain Relative.Screen.x and y properties
-     * which are the original x and y that FromRect was called with.
+     * to the screen.
      * @param x Screen x coordinate
      * @param y Screen y coordinate
      * @param w Region width. Maximum is OCR.MaxImageDimension; minimum is 40 pixels (source: user FanaticGuru in AutoHotkey forums), smaller images will be scaled to at least 40 pixels.
      * @param h Region height. Maximum is OCR.MaxImageDimension; minimum is 40 pixels, smaller images will be scaled accordingly.
-     * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
-     * @returns {OCR.OcrResult} 
+     * @param Options OCR options {lang, scale, grayscale, invertcolors, rotate, flip, x, y, w, h, decoder}. 
+     * @returns {OCR.Result} 
      */
-    static FromRect(x, y?, w?, h?, lang?, transform:=1) {
-        this.__ExtractTransformParameters(x, &transform)
-        this.__ExtractNamedParameters(x, "y", &y, "w", &w, "h", &h, "lang", &lang, "x", &x)
+    static FromRect(x, y, w, h, Options:=0) {
+        local transform := 0, result
+        if IsObject(Options)
+            Options := Options.Clone()
+        this.__ExtractTransformParameters(Options, &transform)
+        this.__DeleteProps(Options, "scale", "invertcolors", "grayscale")
         local scale := transform.scale
             , hBitmap := this.CreateHBitmap(X, Y, W, H,, scale)
-            , result := this(this.HBitmapToSoftwareBitmap(hBitmap,, transform), lang?)
-        result.Relative := {Screen:{x:x, y:y, w:w, h:h}}
-        return this.NormalizeCoordinates(result, scale)
+            , SoftwareBitmap := this.HBitmapToSoftwareBitmap(hBitmap,, transform)
+            , result := this(SoftwareBitmap, Options)
+        return this.NormalizeCoordinates(result, scale, x, y)
     }
 
     /**
      * Returns an OCR results object from a bitmap. Locations of the words will be relative
      * to the top left corner of the bitmap.
-     * @param bitmap A pointer to a GDIP Bitmap object, or HBITMAP, or an object with a ptr property
+     * @param Bitmap A pointer to a GDIP Bitmap object, or HBITMAP, or an object with a ptr property
      *  set to one of the two.
-     * @param lang OCR language. Default is first from available languages.
-     * @param transform Either a scale factor number, or an object {scale:Float, grayscale:Boolean, invertcolors:Boolean, rotate: 0 | 90 | 180 | 270, flip: 0 | "x" | "y"}
+     * @param Options OCR options {lang, scale, grayscale, invertcolors, rotate, flip, x, y, w, h, decoder}. 
      * @param hDC Optional: a device context for the bitmap. If omitted then the screen DC is used.
-     * @returns {OCR.OcrResult} 
+     * @returns {OCR.Result} 
      */
-    static FromBitmap(bitmap, lang?, transform:=1, hDC?) {
-        this.__ExtractTransformParameters(bitmap, &transform)
-        local result, pDC, hBitmap, hBM2, oBM, oBM2, pBitmapInfo := Buffer(32, 0), W, H, scale := transform.scale
-        this.__ExtractNamedParameters(bitmap, "hDC", &hDC, "lang", &lang, "hBitmap", &bitmap, "pBitmap", &bitmap, "bitmap", &bitmap)
-        if !DllCall("GetObject", "ptr", bitmap, "int", pBitmapInfo.Size, "ptr", pBitmapInfo) {
-            DllCall("gdiplus\GdipCreateHBITMAPFromBitmap", "UPtr", bitmap, "UPtr*", &hBitmap:=0, "Int", 0xffffffff)
+    static FromBitmap(Bitmap, Options:=0, hDC?) {
+        local result, pDC, hBitmap, hBM2, oBM, oBM2, pBitmapInfo := Buffer(32, 0), W, H, scale, transform := 0
+        if IsObject(Options)
+            Options := Options.Clone()
+        this.__ExtractTransformParameters(Options, &transform)
+        scale := transform.scale
+        this.__ExtractNamedParameters(Options, "hDC", &hDC)
+        this.__DeleteProps(Options, "scale", "invertcolors", "grayscale")
+        if !DllCall("GetObject", "ptr", Bitmap, "int", pBitmapInfo.Size, "ptr", pBitmapInfo) {
+            DllCall("gdiplus\GdipCreateHBITMAPFromBitmap", "UPtr", Bitmap, "UPtr*", &hBitmap:=0, "Int", 0xffffffff)
             DllCall("GetObject", "ptr", hBitmap, "int", pBitmapInfo.Size, "ptr", pBitmapInfo)
+            Bitmap := 0 ; Marks hBitmap to be deleted afterwards
         } else
-            hBitmap := bitmap
+            hBitmap := Bitmap
 
         W := NumGet(pBitmapInfo, 4, "int"), H := NumGet(pBitmapInfo, 8, "int")
 
@@ -963,13 +1103,18 @@ class OCR {
             , DllCall("SelectObject", "Ptr", pDC, "Ptr", oBM2)
             , DllCall("SelectObject", "Ptr", hDC, "Ptr", oBM)
             , DllCall("DeleteDC", "Ptr", hDC)
-            result := this(this.HBitmapToSoftwareBitmap(hBM2, pDC, transform), lang?)
+            SoftwareBitmap := this.HBitmapToSoftwareBitmap(hBM2, pDC, transform)
+            result := this(SoftwareBitmap, Options)
             this.NormalizeCoordinates(result, scale)
             DllCall("DeleteDC", "Ptr", pDC)
             , DllCall("DeleteObject", "UPtr", hBM2)
-            return result
-        } 
-        return this(this.HBitmapToSoftwareBitmap(hBitmap, hDC?, transform), lang?)
+            goto End
+        }
+        result := this(this.HBitmapToSoftwareBitmap(hBitmap, hDC?, transform), Options)
+        End:
+        if !Bitmap
+            DllCall("DeleteObject", "UPtr", hBitmap)
+        return result
     } 
 
     /**
@@ -997,9 +1142,11 @@ class OCR {
      * @returns {void} 
      */
     static LoadLanguage(lang:="FirstFromAvailableLanguages") {
-        local hString, Language:=this.IBase(), OcrEngine:=this.IBase()
+        local hString, Language:=ComValue(13, 0), OcrEngine:=ComValue(13, 0)
         if this.HasOwnProp("CurrentLanguage") && this.HasOwnProp("OcrEngine") && this.CurrentLanguage = lang
             return
+        if HasMethod(lang)
+            lang := lang()
         if (lang = "FirstFromAvailableLanguages")
             ComCall(10, this.OcrEngineStatics, "ptr*", OcrEngine)   ; TryCreateFromUserProfileLanguages
         else {
@@ -1020,7 +1167,7 @@ class OCR {
      */
     static WordsBoundingRect(words*) {
         if !words.Length
-            throw ValueError("This function requires at least one argument")
+            throw ValueError("This function requires at least one argument", -1)
         local X1 := 100000000, Y1 := 100000000, X2 := -100000000, Y2 := -100000000, word
         for word in words {
             X1 := Min(word.x, X1), Y1 := Min(word.y, Y1), X2 := Max(word.x+word.w, X2), Y2 := Max(word.y+word.h, Y2)
@@ -1037,7 +1184,7 @@ class OCR {
      * @param casesense Text comparison case-sensitivity
      * @param comparefunc A custom string compare/search function, that accepts two arguments: haystack and needle.
      *      Default is InStr. If a custom function is used, then casesense is ignored.
-     * @returns {OCR.OcrResult} 
+     * @returns {OCR.Result} 
      */
     static WaitText(needle, timeout:=-1, func?, casesense:=False, comparefunc?) {
         local endTime := A_TickCount+timeout, result, line, total
@@ -1106,15 +1253,15 @@ class OCR {
 
         ; Sort clusters by x-coordinate, get cluster bounding rects, and concatenate word texts
         for cluster in C {
-            OCR.SortArray(cluster,,"x")
-            br := OCR.WordsBoundingRect(cluster*), br.Words := cluster, br.Text := ""
+            this.SortArray(cluster,,"x")
+            br := this.Common(), br.DefineProp("BoundingRect", {value:this.WordsBoundingRect(cluster*)}), br.DefineProp("Words", {value:cluster}), br.DefineProp("Text", {value: ""})
             for word in cluster
                 br.Text .= word.Text " "
             br.Text := RTrim(br.Text)
             clusters.Push(br)
         }
         ; Sort clusters/lines by y-coordinate
-        OCR.SortArray(clusters,,"y")
+        this.SortArray(clusters,,"y")
         return clusters
 
         ExpandCluster(P) {
@@ -1241,6 +1388,10 @@ class OCR {
 
         BitmapTransform := this.CreateClass("Windows.Graphics.Imaging.BitmapTransform")
 
+        if IsSet(W) && W
+            sbW := Min(sbW, W)
+        if IsSet(H) && H
+            sbH := Min(sbH, H)
         local sW := Floor(sbW*scale), sH := Floor(sbH*scale), intermediate
         if scale != 1 {
             ; First the bitmap is scaled, then cropped
@@ -1255,8 +1406,8 @@ class OCR {
         if flip
             ComCall(13, BitmapTransform, "uint", flip) ; put_Flip
 
-        if IsSet(X) {
-            bounds := Buffer(16,0), NumPut("int", Floor(X*scale), "int", Floor(Y*scale), "int", Floor(Min(sbW-X, W)*scale), "int", Floor(Min(sbH-Y, H)*scale), bounds)
+        if (IsSet(X) && X != 0) || (IsSet(Y) && Y != 0) || IsSet(W) || IsSet(H)  {
+            bounds := Buffer(16,0), NumPut("int", Floor(X*scale), "int", Floor(Y*scale), "int", Floor(sbW*scale), "int", Floor(sbH*scale), bounds)
             ComCall(17, BitmapTransform, "ptr", bounds) ; put_Bounds
         }
         ComCall(8, BitmapFrame, "uint*", &BitmapPixelFormat:=0) ; get_BitmapPixelFormat
@@ -1384,7 +1535,7 @@ class OCR {
         ComCall(6, Direct3D11CaptureFrame, "ptr*", Direct3DSurface:=ComValue(13, 0))   ; Direct3D11CaptureFrame.Surface
 
         ComCall(11, this.SoftwareBitmapStatics, "ptr", Direct3DSurface, "ptr*", SoftwareBitmap:=ComValue(13, 0)) ; SoftwareBitmap::CreateCopyFromSurfaceAsync
-        OCR.WaitForAsync(&SoftwareBitmap)
+        this.WaitForAsync(&SoftwareBitmap)
 
         this.CloseIClosable(Direct3D11CaptureFramePool)
         this.CloseIClosable(GraphicsCaptureSession)
@@ -1414,7 +1565,7 @@ class OCR {
         , DllCall("OleAut32\OleCreatePictureIndirect", "Ptr", PICTDESC, "Ptr", riid, "UInt", 0, "Ptr*", pIPicture:=ComValue(13,0), "UInt")
         , ComCall(15, pIPicture, "Ptr", pIStream, "UInt", true, "uint*", &size:=0, "UInt") ; IPicture::SaveAsFile
         , riid := this.CLSIDFromString(this.IID_IRandomAccessStream)
-        , DllCall("ShCore\CreateRandomAccessStreamOverStream", "Ptr", pIStream, "UInt", BSOS_DEFAULT, "Ptr", riid, "Ptr*", pIRandomAccessStream:=this.IBase(), "UInt")
+        , DllCall("ShCore\CreateRandomAccessStreamOverStream", "Ptr", pIStream, "UInt", BSOS_DEFAULT, "Ptr", riid, "Ptr*", pIRandomAccessStream:=ComValue(13, 0), "UInt")
         Return pIRandomAccessStream
     }
 
@@ -1429,9 +1580,9 @@ class OCR {
         W := NumGet(bi, 4, "int"), H := NumGet(bi, 8, "int")
 
         ComCall(7, this.SoftwareBitmapFactory, "int", 87, "int", W, "int", H, "int", 0, "ptr*", SoftwareBitmap := ComValue(13,0)) ; CreateWithAlpha: Bgra8 & Premultiplied
-        ComCall(15, SoftwareBitmap, "int", 2, "ptr*", BitmapBuffer := ComValue(13,0)) ; LockBuffer
+        ComCall(15, SoftwareBitmap, "int", 2, "ptr*", &BitmapBuffer := 0) ; LockBuffer
         MemoryBuffer := ComObjQuery(BitmapBuffer, "{fbc4dd2a-245b-11e4-af98-689423260cf8}")
-        ComCall(6, MemoryBuffer, "ptr*", MemoryBufferReference := ComValue(13,0)) ; CreateReference
+        ComCall(6, MemoryBuffer, "ptr*", &MemoryBufferReference := 0) ; CreateReference
         BufferByteAccess := ComObjQuery(MemoryBufferReference, "{5b0d3235-4dba-4d44-865e-8f1d0e4fd04d}")
         ComCall(3, BufferByteAccess, "ptr*", &SoftwareBitmapByteBuffer:=0, "uint*", &BufferSize:=0) ; GetBuffer
 
@@ -1440,13 +1591,19 @@ class OCR {
         if IsSet(transform) {
             if (transform.HasProp("grayscale") && transform.grayscale)
                 DllCall(this.GrayScaleMCode, "ptr", SoftwareBitmapByteBuffer, "uint", w, "uint", h, "uint", (w*4+3) // 4 * 4, "cdecl uint")
+            if (transform.HasProp("monochrome") && transform.monochrome)
+                DllCall(this.MonochromeMCode, "ptr", SoftwareBitmapByteBuffer, "uint", w, "uint", h, "uint", (w*4+3) // 4 * 4, "uint", transform.monochrome, "cdecl uint")
             if (transform.HasProp("invertcolors") && transform.invertcolors)
                 DllCall(this.InvertColorsMCode, "ptr", SoftwareBitmapByteBuffer, "uint", w, "uint", h, "uint", (w*4+3) // 4 * 4, "cdecl uint")
         }
         
         if IsSet(dhDC)
             DllCall("DeleteDC", "ptr", dhDC)
-        BufferByteAccess := "", MemoryBufferReference := "", MemoryBuffer := "", BitmapBuffer := "" ; Release in correct order
+        if BufferByteAccess.HasMethod("Dispose")
+            BufferByteAccess.Dispose()
+        if MemoryBuffer.HasMethod("Dispose")
+            MemoryBuffer.Dispose()
+        BufferByteAccess := "", ObjRelease(MemoryBufferReference), MemoryBuffer := "", ObjRelease(BitmapBuffer) ; Release in correct order
 
         return SoftwareBitmap
     }
@@ -1490,10 +1647,10 @@ class OCR {
     static CreateClass(str, interface?) {
         local hString := this.CreateHString(str), result
         if !IsSet(interface) {
-            result := DllCall("Combase.dll\RoActivateInstance", "ptr", hString, "ptr*", cls:=this.IBase(), "uint")
+            result := DllCall("Combase.dll\RoActivateInstance", "ptr", hString, "ptr*", cls:=ComValue(13, 0), "uint")
         } else {
             GUID := this.CLSIDFromString(interface)
-            result := DllCall("Combase.dll\RoGetActivationFactory", "ptr", hString, "ptr", GUID, "ptr*", cls:=this.IBase(), "uint")
+            result := DllCall("Combase.dll\RoGetActivationFactory", "ptr", hString, "ptr", GUID, "ptr*", cls:=ComValue(13, 0), "uint")
         }
         if (result != 0) {
             if (result = 0x80004002)
@@ -1522,7 +1679,7 @@ class OCR {
                 }
                 break
             }
-            Sleep this.PerformanceMode ? -1 : 1
+            Sleep this.PerformanceMode ? -1 : 0
         }
         ComCall(8, obj, "ptr*", ObjectResult:=this.IBase())   ; GetResults
         obj := ObjectResult
@@ -1541,13 +1698,20 @@ class OCR {
         Return CLSID
     }
 
-    static NormalizeCoordinates(result, scale) {
+    static NormalizeCoordinates(result, scale, x:=0, y:=0) {
         local word
-        if scale != 1 {
-            for word in result.Words
-                word.x := Integer(word.x / scale), word.y := Integer(word.y / scale), word.w := Integer(word.w / scale), word.h := Integer(word.h / scale), word.BoundingRect := {X:word.x, Y:word.y, W:word.w, H:word.h}
-        }
+        if (scale == 1 && x == 0 && y == 0)
+            return result
+        for word in result.Words
+            word.x := Integer(word.x / scale)+x, word.y := Integer(word.y / scale)+y, word.w := Integer(word.w / scale), word.h := Integer(word.h / scale), word.BoundingRect := {X:word.x, Y:word.y, W:word.w, H:word.h}
         return result
+    }
+    
+    static __OpenPdfDocument(IRandomAccessStream, Password:="") {
+        PdfDocumentStatics := this.CreateClass("Windows.Data.Pdf.PdfDocument", this.IID_IPdfDocumentStatics)
+        ComCall(8, PdfDocumentStatics, "ptr", IRandomAccessStream, "ptr*", PdfDocument:=ComValue(13, 0)) ; LoadFromStreamAsync
+        this.WaitForAsync(&PdfDocument)
+        return PdfDocument
     }
 
     static __ExtractNamedParameters(obj, params*) {
@@ -1563,38 +1727,24 @@ class OCR {
     }
 
     static __ExtractTransformParameters(obj, &transform) {
-        local scale := 1, grayscale := 0, invertcolors := 0, rotate := 0, flip := 0
+        local scale := 1, grayscale := 0, invertcolors := 0, monochrome := 0, rotate := 0, flip := 0
         if IsObject(obj)
-            this.__ExtractNamedParameters(obj, "scale", &scale, "grayscale", &grayscale, "invertcolors", &invertcolors, "rotate", &rotate, "flip", &flip, "transform", &transform)
+            this.__ExtractNamedParameters(obj, "scale", &scale, "grayscale", &grayscale, "invertcolors", &invertcolors, "monochrome", &monochrome, "rotate", &rotate, "flip", &flip, "transform", &transform)
 
-        if IsObject(transform) {
-            for prop in ["scale", "grayscale", "invertcolors", "rotate", "flip"]
+        if IsSet(transform) && IsObject(transform) {
+            for prop in ["scale", "grayscale", "invertcolors", "monochrome", "rotate", "flip"]
                 if !transform.HasProp(prop)
                     transform.%prop% := %prop%
         } else
-            transform := {scale:scale, grayscale:grayscale, invertcolors:invertcolors, rotate:rotate, flip:flip}
+            transform := {scale:scale, grayscale:grayscale, invertcolors:invertcolors, monochrome:monochrome, rotate:rotate, flip:flip}
     
         transform.flip := transform.flip = "y" ? 1 : transform.flip = "x" ? 2 : transform.flip
     }
 
-    OffsetCoordinates(offsetX?, offsetY?) {
-        if !IsSet(offsetX) || !IsSet(offsetY) {
-            if this.HasOwnProp("Relative") {
-                if this.Relative.HasOwnProp("Client")
-                    offsetX := this.Relative.Client.x, offsetY := this.Relative.Client.x
-                else if this.Relative.HasOwnProp("Window")
-                    offsetX := this.Relative.Window.x, offsetY := this.Relative.Window.y
-                else
-                    throw Error("No appropriate Relative property found",, -1)
-            } else
-                throw Error("No Relative property found",, -1)
-        }
-        if offsetX = 0 && offsetY = 0
-            return this
-        local word
-        for word in this.Words
-            word.x += offsetX, word.y += offsetY, word.BoundingRect := {X:word.x, Y:word.y, W:word.w, H:word.h}
-        return this
+    static __DeleteProps(obj, props*) {
+        if IsObject(obj)
+            for prop in props
+                obj.DeleteProp(prop)
     }
 
     /**

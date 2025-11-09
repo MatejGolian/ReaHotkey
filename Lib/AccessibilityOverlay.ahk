@@ -744,12 +744,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return ""
     }
     
-    Static UWPOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "") {
+    Static UWPOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1) {
         If IsSet(OCR) {
-            If A_CoordModeMouse := "Client"
-            ClientOnly := 1
-            Else
-            ClientOnly := 0
             AvailableLanguages := OCR.GetAvailableLanguages()
             FirstAvailableLanguage := False
             PreferredLanguage := False
@@ -761,15 +757,15 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                     Break
                 }
             }
+            If Not OCRScale Is Integer And Not OCRScale Is Number
+            OCRScale := 1
             If PreferredLanguage = False And Not FirstAvailableLanguage = False {
-                If Not OCRScale
-                OCRScale := 1
-                OCRResult := OCR.FromWindow("A", FirstAvailableLanguage, OCRScale, ClientOnly)
+                OCRResult := OCR.FromWindow("A", {lang: FirstAvailableLanguage, scale: OCRScale})
                 OCRResult := OCRResult.Crop(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate)
                 Return Trim(OCRResult.Text)
             }
             Else If PreferredLanguage = OCRLanguage{
-                OCRResult := OCR.FromWindow("A", PreferredLanguage, OCRScale, ClientOnly)
+                OCRResult := OCR.FromWindow("A", {lang: PreferredLanguage, scale: OCRScale})
                 OCRResult := OCRResult.Crop(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate)
                 Return Trim(OCRResult.Text)
             }

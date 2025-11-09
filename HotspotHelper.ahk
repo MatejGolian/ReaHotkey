@@ -633,7 +633,7 @@ GenerateHotspotsFromOCR() {
                     OCRLanguage := FirstOCRLanguage
                     Else
                     OCRLanguage := PreferredOCRLanguage
-                    OCRResult := OCR.FromWindow("A", OCRLanguage,, 1)
+                    OCRResult := OCR.FromWindow("A", {lang: OCRLanguage})
                     For OCRLine In OCRResult.Lines {
                         Hotspots.Push(Map("Label", "`"" . OCRLine.Text . "`" start", "XCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).X, "YCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).Y))
                         Hotspots.Push(Map("Label", "`"" . OCRLine.Text . "`" end", "XCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).X + OCR.WordsBoundingRect(OCRLine.Words*).W, "YCoordinate", OCR.WordsBoundingRect(OCRLine.Words*).Y + OCR.WordsBoundingRect(OCRLine.Words*).H))
@@ -899,7 +899,7 @@ PerformOCR() {
                 Else
                 OCRLanguage := PreferredOCRLanguage
                 OCRLines := Array()
-                OCRResult := OCR.FromWindow("A", OCRLanguage,, 1)
+                OCRResult := OCR.FromWindow("A", {lang: OCRLanguage})
                 For OCRLine In OCRResult.Lines {
                     OCRLines.Push(Map("Text", OCRLine.Text, "X1", OCR.WordsBoundingRect(OCRLine.Words*).X, "Y1", OCR.WordsBoundingRect(OCRLine.Words*).Y, "X2", OCR.WordsBoundingRect(OCRLine.Words*).X + OCR.WordsBoundingRect(OCRLine.Words*).W, "Y2", OCR.WordsBoundingRect(OCRLine.Words*).Y + OCR.WordsBoundingRect(OCRLine.Words*).H))
                 }
