@@ -30,6 +30,19 @@ Class AccessibilityControl {
         Return 0
     }
     
+    GetParentOverlay() {
+        Loop AccessibilityOverlay.TotalNumberOfControls {
+            SuperordinateControl := This.SuperordinateControl
+            If SuperordinateControl = 0
+            Break
+            If SuperordinateControl Is Tab
+            Continue
+            If SuperordinateControl Is AccessibilityOverlay
+            Return SuperordinateControl
+        }
+        Return 0
+    }
+    
     GetSuperordinateControl() {
         Return AccessibilityOverlay.GetControl(This.SuperordinateControlID)
     }
