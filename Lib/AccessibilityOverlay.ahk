@@ -241,6 +241,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
                 If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
+                This.SetCurrentControlID(ControlID)
                 If TargetControl.HasMethod("Focus") {
                     If Speak And TargetControl.ControlType = "TabControl" {
                         TruePrev := AccessibilityOverlay.PreviousControlID
@@ -251,7 +252,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                         AccessibilityOverlay.PreviousControlID := TruePrev
                     }
                 }
-                This.SetCurrentControlID(ControlID)
                 Return TargetControl
             }
         }
@@ -272,9 +272,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
                 If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
+                This.SetCurrentControlID(ControlID)
                 If TargetControl.HasMethod("Focus")
                 TargetControl.Focus()
-                This.SetCurrentControlID(ControlID)
                 Return TargetControl
             }
         }
@@ -288,9 +288,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
                 If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
+                This.SetCurrentControlID(TargetControl.ControlID)
                 If TargetControl.HasMethod("Focus")
                 TargetControl.Focus()
-                This.SetCurrentControlID(TargetControl.ControlID)
                 Return TargetControl
             }
         }
@@ -321,9 +321,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             TargetControl := AccessibilityOverlay.GetControl(ControlID)
             If Not ControlID = This.CurrentControlID
             This.SetPreviousControlID(This.CurrentControlID)
+            This.SetCurrentControlID(TargetControl.ControlID)
             If TargetControl Is Object And TargetControl.HasMethod("Focus")
             TargetControl.Focus()
-            This.SetCurrentControlID(TargetControl.ControlID)
             Return TargetControl
         }
     }
@@ -341,9 +341,9 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             TargetControl := AccessibilityOverlay.GetControl(ControlID)
             If Not ControlID = This.CurrentControlID
             This.SetPreviousControlID(This.CurrentControlID)
+            This.SetCurrentControlID(TargetControl.ControlID)
             If TargetControl Is Object And TargetControl.HasMethod("Focus")
             TargetControl.Focus()
-            This.SetCurrentControlID(TargetControl.ControlID)
             Return TargetControl
         }
     }
@@ -356,8 +356,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 CurrentControl := AccessibilityOverlay.GetControl(FocusableControlIDs[Found])
                 If CurrentControl Is TabControl {
                     This.SetPreviousControlID(This.CurrentControlID)
-                    CurrentControl.FocusNextTab()
                     This.SetCurrentControlID(CurrentControl.ControlID)
+                    CurrentControl.FocusNextTab()
                     Return CurrentControl.GetCurrentTab()
                 }
             }
@@ -372,8 +372,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 CurrentControl := AccessibilityOverlay.GetControl(FocusableControlIDs[Found])
                 If CurrentControl Is TabControl {
                     This.SetPreviousControlID(This.CurrentControlID)
-                    CurrentControl.FocusPreviousTab()
                     This.SetCurrentControlID(CurrentControl.ControlID)
+                    CurrentControl.FocusPreviousTab()
                     Return CurrentControl.GetCurrentTab()
                 }
             }
