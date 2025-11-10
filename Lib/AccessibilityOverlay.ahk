@@ -34,10 +34,10 @@ Class AccessibilityControl {
         CurrentControl := This
         Loop AccessibilityOverlay.TotalNumberOfControls {
             If CurrentControl.SuperordinateControlID = 0
-            Break
+            Return 0
             SuperordinateControl := CurrentControl.SuperordinateControl
             If SuperordinateControl = 0
-            Break
+            Return 0
             If SuperordinateControl Is Tab
             Continue
             If SuperordinateControl Is AccessibilityOverlay
