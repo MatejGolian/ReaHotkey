@@ -61,9 +61,9 @@ LeftRightHK(ThisHotkey) {
             ReaHotkey.Found%Context%.Overlay.IncreaseSlider()
             Case "TabControl":
             If ThisHotkey = "Left"
-            ReaHotkey.Found%Context%.Overlay.FocusPreviousTab()
+            ReaHotkey.Found%Context%.Overlay.FocusPreviousTab(False)
             Else
-            ReaHotkey.Found%Context%.Overlay.FocusNextTab()
+            ReaHotkey.Found%Context%.Overlay.FocusNextTab(False)
         }
         Return
     }
@@ -158,7 +158,7 @@ FocusNextPreviousTab(Which, Overlay) {
         CurrentControl := Overlay.GetCurrentControl()
         If CurrentControl Is TabControl {
             Sleep 200
-            Overlay.Focus%Which%Tab()
+            Overlay.Focus%Which%Tab(True)
         }
         Else {
             If CurrentControl Is Object
@@ -170,7 +170,7 @@ FocusNextPreviousTab(Which, Overlay) {
                     Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
                     Overlay.FocusControlID(SuperordinateControl.ControlID)
                     Sleep 200
-                    Overlay.Focus%Which%Tab()
+                    Overlay.Focus%Which%Tab(True)
                     Break
                 }
                 CurrentControl := SuperordinateControl

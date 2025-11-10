@@ -348,7 +348,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         }
     }
     
-    FocusNextTab() {
+    FocusNextTab(Wrap := True) {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
             FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
@@ -357,14 +357,14 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If CurrentControl Is TabControl {
                     This.SetPreviousControlID(This.CurrentControlID)
                     This.SetCurrentControlID(CurrentControl.ControlID)
-                    CurrentControl.FocusNextTab()
+                    CurrentControl.FocusNextTab(, Wrap)
                     Return CurrentControl.GetCurrentTab()
                 }
             }
         }
     }
     
-    FocusPreviousTab() {
+    FocusPreviousTab(Wrap := True) {
         If This.ChildControls.Length > 0 And This.CurrentControlID > 0 {
             FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
@@ -373,7 +373,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If CurrentControl Is TabControl {
                     This.SetPreviousControlID(This.CurrentControlID)
                     This.SetCurrentControlID(CurrentControl.ControlID)
-                    CurrentControl.FocusPreviousTab()
+                    CurrentControl.FocusPreviousTab(, Wrap)
                     Return CurrentControl.GetCurrentTab()
                 }
             }
@@ -1718,20 +1718,24 @@ Class TabControl Extends FocusableControl {
         This.PreviousTab := This.CurrentTab
     }
     
-    FocusNextTab(Speak := True) {
+    FocusNextTab(Speak := True, Wrap := True) {
+        TabNumber := This.CurrentTab
         If This.CurrentTab < This.Tabs.Length
         TabNumber := This.CurrentTab + 1
         Else
+        If Wrap
         TabNumber := 1
         This.CurrentTab := TabNumber
         This.Focus(Speak)
     }
     
-    FocusPreviousTab(Speak := True) {
-        If This.CurrentTab <= 1
-        TabNumber := This.Tabs.Length
-        Else
+    FocusPreviousTab(Speak := True, Wrap := True) {
+        TabNumber := This.CurrentTab
+        If This.CurrentTab > 1
         TabNumber := This.CurrentTab - 1
+        Else
+        If Wrap
+        TabNumber := This.Tabs.Length
         This.CurrentTab := TabNumber
         This.Focus(Speak)
     }
