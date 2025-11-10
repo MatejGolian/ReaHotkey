@@ -644,22 +644,33 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         JAWS := ComObject("FreedomSci.JawsApi")
         Catch
         JAWS := False
-        AccessibilityOverlay.JAWS := JAWS
+        This.JAWS := JAWS
         Try
         SAPI := ComObject("SAPI.SpVoice")
         Catch
         SAPI := False
-        AccessibilityOverlay.SAPI := SAPI
+        This.SAPI := SAPI
+    }
+    
+    Static __Get(Name, Params) {
+        Try
+        Return This.Get%Name%()
+        Catch As ErrorMessage
+        Throw ErrorMessage
     }
     
     Static GetAllControls() {
-        Return AccessibilityOverlay.AllControls
+        Return This.AllControls
     }
     
     Static GetControl(ControlID) {
-        If ControlID > 0 And AccessibilityOverlay.AllControls.Length > 0 And AccessibilityOverlay.AllControls.Length >= ControlID
-        Return AccessibilityOverlay.AllControls[ControlID]
+        If ControlID > 0 And This.AllControls.Length > 0 And This.AllControls.Length >= ControlID
+        Return This.AllControls[ControlID]
         Return 0
+    }
+    
+    Static GetCurrentControl() {
+        Return This.GetControl(This.CurrentControlID)
     }
     
     Static GetImgSize(Img) {
@@ -684,22 +695,22 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     Static OCR(OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "") {
         If OCRType = "Tesseract" Or OCRType = "TesseractLegacy"
-        Return AccessibilityOverlay.TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 3)
+        Return This.TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 3)
         Else If OCRType = "TesseractBest"
-        Return AccessibilityOverlay.TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 1)
+        Return This.TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 1)
         Else If OCRType = "TesseractFast"
-        Return AccessibilityOverlay.TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 2)
+        Return This.TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 2)
         Else
-        Return AccessibilityOverlay.UWPOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale)
+        Return This.UWPOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale)
     }
     
     Static Speak(Message) {
         Message := Trim(Message)
         If Not Message = "" {
-            AccessibilityOverlay.LastMessage := Message
-            If (Not AccessibilityOverlay.JAWS = False And ProcessExist("jfw.exe")) Or (FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And Not DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")) {
-                If Not AccessibilityOverlay.JAWS = False And ProcessExist("jfw.exe") {
-                    AccessibilityOverlay.JAWS.SayString(Message)
+            This.LastMessage := Message
+            If (Not This.JAWS = False And ProcessExist("jfw.exe")) Or (FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And Not DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")) {
+                If Not This.JAWS = False And ProcessExist("jfw.exe") {
+                    This.JAWS.SayString(Message)
                 }
                 If FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And Not DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning") {
                     DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_cancelSpeech")
@@ -707,18 +718,18 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
             }
             Else {
-                If Not AccessibilityOverlay.SAPI = False {
-                    AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
-                    AccessibilityOverlay.SAPI.Speak(Message, 0x1)
+                If Not This.SAPI = False {
+                    This.SAPI.Speak("", 0x1|0x2)
+                    This.SAPI.Speak(Message, 0x1)
                 }
             }
         }
     }
     
     Static StopSpeech() {
-        If (Not AccessibilityOverlay.JAWS = False Or Not ProcessExist("jfw.exe")) And (Not FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning"))
-        If Not AccessibilityOverlay.SAPI = False
-        AccessibilityOverlay.SAPI.Speak("", 0x1|0x2)
+        If (Not This.JAWS = False Or Not ProcessExist("jfw.exe")) And (Not FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") Or DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning"))
+        If Not This.SAPI = False
+        This.SAPI.Speak("", 0x1|0x2)
     }
     
     Static TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", OCRType := "") {
