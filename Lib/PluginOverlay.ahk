@@ -22,8 +22,9 @@ Class PluginOverlay Extends AccessibilityOverlay {
     
     AddControl(Control) {
         Control := Super.AddControl(Control)
+        CompensationList := Array("PreExecFocusFunctions", "PreExecActivationFunctions", "ChangeFunctions")
+        RequiredPropList := Array("Start", "End", "XCoordinate", "YCoordinate", "X1Coordinate", "Y1Coordinate", "X2Coordinate", "Y2Coordinate")
         If This.CompensationFunction Is Object {
-            CompensationList := Array("PreExecFocusFunctions", "PreExecActivationFunctions", "ChangeFunctions")
             If Control Is AccessibilityOverlay {
                 ControlList := Control.AllControls
                 ControlList.InsertAt(1, Control)
@@ -39,17 +40,25 @@ Class PluginOverlay Extends AccessibilityOverlay {
             Else {
                 ControlList := Array(Control)
             }
-            For ControlItem In ControlList
-            For CompensationItem In CompensationList
-            If ControlItem.HasOwnProp(CompensationItem) {
+            For ControlItem In ControlList {
                 Found := False
-                For ControlFunction In ControlItem.%CompensationItem%
-                If ControlFunction == This.CompensationFunction {
+                For RequiredProp In RequiredPropList
+                If ControlItem.HasOwnProp(RequiredProp) {
                     Found := True
                     Break
                 }
-                If Not Found
-                ControlItem.%CompensationItem%.InsertAt(1, This.CompensationFunction)
+                If Found
+                For CompensationItem In CompensationList
+                If ControlItem.HasOwnProp(CompensationItem) {
+                    Found := False
+                    For ControlFunction In ControlItem.%CompensationItem%
+                    If ControlFunction == This.CompensationFunction {
+                        Found := True
+                        Break
+                    }
+                    If Not Found
+                    ControlItem.%CompensationItem%.InsertAt(1, This.CompensationFunction)
+                }
             }
         }
         Return Control
