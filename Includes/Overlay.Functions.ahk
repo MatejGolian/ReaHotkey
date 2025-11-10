@@ -659,6 +659,37 @@ PluginSerialClick(Coordinates*) {
     Return ProduceSerialClick("Plugin", Coordinates*)
 }
 
+ProduceMenu(Items, Handler, Type := "Standard") {
+    MenuFunc := Object()
+    Switch Type {
+        Case "Plugin":
+        MenuToProduce := "AccessiblePluginMenu"
+        Case "Standalone":
+        MenuToProduce := "AccessibleStandaloneMenu"
+        Case "Standard":
+        MenuToProduce := "Menu"
+        Default:
+        MenuToProduce := "Menu"
+        Type := "Standard"
+    }
+    MenuObj := %MenuToProduce%()
+    For Item In Items
+    MenuObj.Add(Item, Handler)
+    MenuFunc.DefineProp("Handler", {Value: Handler})
+    MenuFunc.DefineProp("Items", {Value: Items})
+    MenuFunc.DefineProp("Menu", {Value: MenuObj})
+    MenuFunc.DefineProp("Type", {Value: Type})
+    MenuFunc.DefineProp("Call", {call: CallMenuFunc})
+    Return MenuFunc
+    CallMenuFunc(This, OverlayObj) {
+        This.Menu.Show()
+    }
+}
+
+ProducePluginMenu(Items, Handler) {
+    Return ProduceMenu(Items, Handler, "Plugin")
+}
+
 ProduceSerialClick(Type, Coordinates*) {
     ClickFunc := Object()
     ClickFunc.DefineProp("Coordinates", {Value: Coordinates})
@@ -692,6 +723,14 @@ ProduceSleep(Period) {
     CallSleepFunc(This, OverlayObj) {
         Sleep This.Period
     }
+}
+
+ProduceStandaloneMenu(Items, Handler) {
+    Return ProduceMenu(Items, Handler, "Standalone")
+}
+
+ProduceStandardMenu(Items, Handler) {
+    Return ProduceMenu(Items, Handler, "Standard")
 }
 
 SerialClick(Coordinates*) {
