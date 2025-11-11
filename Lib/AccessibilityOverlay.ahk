@@ -179,8 +179,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If Not PropertyName = "ChildControls" And Not PropertyName = "ControlID" And Not PropertyName = "CurrentControlID" And Not PropertyName = "SuperordinateControlID"
         Clone.%PropertyName% := PropertyValue
         For CurrentControl In This.ChildControls
-        Switch(CurrentControl.__Class) {
-            Case "TabControl":
+        If CurrentControl Is TabControl {
             ClonedControl := TabControl()
             For CurrentTab In CurrentControl.Tabs
             ClonedControl.AddTabs(CurrentTab.Clone())
@@ -192,18 +191,17 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             If Not ClonedControl.%PropertyName% = PropertyValue
             ClonedControl.%PropertyName% := PropertyValue
             Clone.AddControl(ClonedControl)
-            Default:
-            If CurrentControl Is AccessibilityOverlay {
-                Clone.AddControl(CurrentControl.Clone())
-            }
-            Else {
-                ClonedControl := AccessibilityControl()
-                ClonedControl.Base := CurrentControl.Base
-                For PropertyName, PropertyValue In CurrentControl.OwnProps()
-                If Not PropertyName = "ControlID" And Not PropertyName = "SuperordinateControlID"
-                ClonedControl.%PropertyName% := PropertyValue
-                Clone.AddControl(ClonedControl)
-            }
+        }
+        Else If CurrentControl Is AccessibilityOverlay {
+            Clone.AddControl(CurrentControl.Clone())
+        }
+        Else {
+            ClonedControl := AccessibilityControl()
+            ClonedControl.Base := CurrentControl.Base
+            For PropertyName, PropertyValue In CurrentControl.OwnProps()
+            If Not PropertyName = "ControlID" And Not PropertyName = "SuperordinateControlID"
+            ClonedControl.%PropertyName% := PropertyValue
+            Clone.AddControl(ClonedControl)
         }
         Return Clone
     }
@@ -239,7 +237,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             ControlID := This.CurrentControlID
             If ControlID {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
-                If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
                 This.SetCurrentControlID(ControlID)
                 If TargetControl.HasMethod("Focus") {
@@ -270,7 +267,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(ControlID)
             If Found > 0 {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
-                If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
                 This.SetCurrentControlID(ControlID)
                 If TargetControl.HasMethod("Focus")
@@ -286,7 +282,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             If ControlNumber > 0 And FocusableControlIDs.Length >= ControlNumber {
                 ControlID := FocusableControlIDs[ControlNumber]
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
-                If Not ControlID = This.CurrentControlID
                 This.SetPreviousControlID(This.CurrentControlID)
                 This.SetCurrentControlID(TargetControl.ControlID)
                 If TargetControl.HasMethod("Focus")
@@ -319,7 +314,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Else
             ControlID := FocusableControlIDs[Found + 1]
             TargetControl := AccessibilityOverlay.GetControl(ControlID)
-            If Not ControlID = This.CurrentControlID
             This.SetPreviousControlID(This.CurrentControlID)
             This.SetCurrentControlID(TargetControl.ControlID)
             If TargetControl Is Object And TargetControl.HasMethod("Focus")
@@ -330,6 +324,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     FocusPreviousControl() {
         If This.ChildControls.Length > 0 {
+            ControlID := 0
             FocusableControlIDs := This.GetFocusableControlIDs()
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If FocusableControlIDs.Length = 0
@@ -339,7 +334,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Else
             ControlID := FocusableControlIDs[Found - 1]
             TargetControl := AccessibilityOverlay.GetControl(ControlID)
-            If Not ControlID = This.CurrentControlID
             This.SetPreviousControlID(This.CurrentControlID)
             This.SetCurrentControlID(TargetControl.ControlID)
             If TargetControl Is Object And TargetControl.HasMethod("Focus")
@@ -384,8 +378,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         AllControls := Array()
         If This.ChildControls.Length > 0
         For CurrentControl In This.ChildControls {
-            Switch(CurrentControl.__Class) {
-                Case "TabControl":
+            If CurrentControl Is TabControl {
                 AllControls.Push(CurrentControl)
                 If CurrentControl.Tabs.Length > 0 {
                     For CurrentTab In CurrentControl.Tabs {
@@ -396,17 +389,16 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                         }
                     }
                 }
-                Default:
-                If CurrentControl Is AccessibilityOverlay {
-                    AllControls.Push(CurrentControl)
-                    If CurrentControl.ChildControls.Length > 0 {
-                        For ChildControl In CurrentControl.GetAllControls()
-                        AllControls.Push(ChildControl)
-                    }
+            }
+            Else If CurrentControl Is AccessibilityOverlay {
+                AllControls.Push(CurrentControl)
+                If CurrentControl.ChildControls.Length > 0 {
+                    For ChildControl In CurrentControl.GetAllControls()
+                    AllControls.Push(ChildControl)
                 }
-                Else {
-                    AllControls.Push(CurrentControl)
-                }
+            }
+            Else {
+                AllControls.Push(CurrentControl)
             }
         }
         Return AllControls
@@ -440,8 +432,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         FocusableControlIDs := Array()
         If This.ChildControls.Length > 0
         For CurrentControl In This.ChildControls {
-            Switch(CurrentControl.__Class) {
-                Case "TabControl":
+            If CurrentControl Is TabControl {
                 FocusableControlIDs.Push(CurrentControl.ControlID)
                 If CurrentControl.Tabs.Length > 0 {
                     CurrentTab := CurrentControl.Tabs[CurrentControl.CurrentTab]
@@ -450,18 +441,19 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                         FocusableControlIDs.Push(CurrentTabControlID)
                     }
                 }
-                Default:
-                If CurrentControl Is AccessibilityOverlay {
-                    If CurrentControl.ChildControls.Length > 0 {
-                        For CurrentControlID In CurrentControl.FocusableControlIDs
-                        FocusableControlIDs.Push(CurrentControlID)
-                    }
-                }
-                Else {
-                    FocusableControlIDs.Push(CurrentControl.ControlID)
+            }
+            Else If CurrentControl Is AccessibilityOverlay {
+                If CurrentControl.ChildControls.Length > 0 {
+                    For CurrentControlID In CurrentControl.FocusableControlIDs
+                    FocusableControlIDs.Push(CurrentControlID)
                 }
             }
+            Else {
+                If CurrentControl.HasMethod("Focus")
+                FocusableControlIDs.Push(CurrentControl.ControlID)
+            }
         }
+        For Item In FocusableControlIDs
         Return FocusableControlIDs
     }
     
@@ -572,8 +564,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         This.SetCurrentControlID(0)
         If This.ChildControls.Length > 0 {
             For CurrentControl In This.ChildControls
-            Switch(CurrentControl.__Class) {
-                Case "TabControl":
+            If CurrentControl Is TabControl {
                 If CurrentControl.Tabs.Length > 0 {
                     CurrentControl.CurrentTab := 1
                     For CurrentTab In CurrentControl.Tabs
@@ -581,7 +572,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                         CurrentTab.Reset()
                     }
                 }
-                Default:
+            }
+            Else {
                 If CurrentControl Is AccessibilityOverlay {
                     If CurrentControl.ChildControls.Length > 0 {
                         CurrentControl.Reset()
