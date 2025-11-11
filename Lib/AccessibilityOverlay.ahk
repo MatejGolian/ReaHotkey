@@ -843,7 +843,6 @@ Class FocusableControl Extends AccessibilityControl {
     }
     
     Focus(Speak := True) {
-        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
         For FocusFunction In This.PreExecFocusFunctions
         FocusFunction.Call(This)
         This.CheckFocus()
@@ -1625,7 +1624,6 @@ Class Tab Extends AccessibilityOverlay {
     }
     
     Focus(Speak := True) {
-        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
         For FocusFunction In This.PreExecFocusFunctions
         FocusFunction.Call(This)
         This.CheckFocus()
