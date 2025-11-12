@@ -217,8 +217,10 @@ PassThroughHotkey(ThisHotkey) {
         KeyName := SubStr(ThisHotkey, Match)
         If StrLen(KeyName) > 1
         KeyName := "{" . KeyName . "}"
+        Try
         Hotkey ThisHotkey, "Off"
         Send Modifiers . KeyName
+        Try
         Hotkey ThisHotkey, "On"
     }
 }
