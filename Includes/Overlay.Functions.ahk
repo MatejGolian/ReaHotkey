@@ -56,14 +56,14 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
                 ReaHotkey.Found%Type%.Overlay.AddControl(OverlayEntry.Clone())
                 ReaHotkey.Found%Type%.Overlay.AddControl(%Type%.ChooserOverlay.Clone())
                 If ReportChange
-                Report(Product)
+                AccessibilityOverlay.AddToSpeechQueue(Product . " overlay active,")
                 FocusElement(Type, SourceNumber, TypeToFocus, ValueToFocus)
                 Break
             }
             Else {
                 ReaHotkey.Found%Type%.Overlay := OverlayEntry.Clone()
                 If ReportChange
-                Report(Product)
+                AccessibilityOverlay.AddToSpeechQueue(Product . " overlay active,")
                 FocusElement(Type, SourceNumber, TypeToFocus, ValueToFocus)
                 Break
             }
@@ -125,10 +125,6 @@ AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange
             EntryData["Y2Coordinate"] := WinHeight
         }
         Return EntryData
-    }
-    Report(Product) {
-        AccessibilityOverlay.Speak(Product . " overlay active")
-        Wait(1250)
     }
 }
 

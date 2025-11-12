@@ -67,6 +67,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     Static LastMessage := ""
     Static PreviousControlID := 0
     Static SAPI := False
+    Static SpeechQueue := Array()
     Static TotalNumberOfControls := 0
     
     __New(Label := "") {
@@ -667,6 +668,14 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Throw ErrorMessage
     }
     
+    Static AddToSpeechQueue(Message) {
+        This.SpeechQueue.Push(Message)
+    }
+    
+    Static ClearSpeechQueue() {
+        This.SpeechQueue := Array()
+    }
+    
     Static GetAllControls() {
         Return This.AllControls
     }
@@ -712,8 +721,13 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return This.UWPOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale)
     }
     
-    Static Speak(Message) {
+    Static Speak(Message := "") {
+        This.AddToSpeechQueue(Message)
+        Message := ""
+        For QueuedMessage In This.SpeechQueue
+        Message .= Trim(QueuedMessage) . " "
         Message := Trim(Message)
+        This.ClearSpeechQueue()
         If Not Message = "" {
             This.LastMessage := Message
             If (Not This.JAWS = False And ProcessExist("jfw.exe")) Or (FileExist("NvdaControllerClient" . A_PtrSize * 8 . ".dll") And Not DllCall("NvdaControllerClient" . A_PtrSize * 8 . ".dll\nvdaController_testIfRunning")) {
