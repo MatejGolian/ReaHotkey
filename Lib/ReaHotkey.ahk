@@ -148,7 +148,9 @@ Class ReaHotkey {
     
     Static FocusStandaloneOverlay() {
         If This.FoundStandalone Is Standalone And (This.FoundStandalone.HotkeyMode = 1 Or This.FoundStandalone.HotkeyMode = 3) {
-            Wait(500)
+            WindowTitle := GetCurrentWindowTitle()
+            If WindowTitle
+            AccessibilityOverlay.AddToSpeechQueue(WindowTitle . ",")
             If This.FoundStandalone Is Standalone {
                 This.FoundStandalone.Overlay.Focus()
             }

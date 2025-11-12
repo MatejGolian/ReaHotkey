@@ -485,6 +485,14 @@ GetCurrentWindowID() {
     Return WindowID
 }
 
+GetCurrentWindowTitle() {
+    Try
+    WindowTitle := WinGetTitle("A")
+    Catch
+    WindowTitle := ""
+    Return WindowTitle
+}
+
 GetImgSize(Img) {
     BaseDir := A_WorkingDir
     If Not SubStr(BaseDir, 0, 1) = "\"
@@ -742,15 +750,6 @@ StrJoin(obj,delimiter:="",OmitChars:=""){
     Loop obj.Length - 1
     S .= delimiter Trim(obj[A_Index+1],OmitChars)
     return S
-}
-
-Wait(Period) {
-    If IsInteger(Period) And Period > 0 And Period <= 4294967295 {
-        PeriodEnd := A_TickCount + Period
-        Loop
-        If A_TickCount > PeriodEnd
-        Break
-    }
 }
 
 WinPctClick(XPct, YPct) {
