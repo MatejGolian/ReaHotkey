@@ -1771,7 +1771,7 @@ Class TabControl Extends FocusableControl {
     GetValue() {
         Value := ""
         CurrentTab := This.GetCurrentTab()
-        If CurrentTab Is Object And CurrentTab Is Tab {
+        If CurrentTab Is Tab {
             CurrentTab.Focus(False)
             Value := AccessibilityOverlay.LastMessage
         }
