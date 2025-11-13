@@ -135,7 +135,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
-                If CurrentControl.ControlType = "Checkbox" Or CurrentControl.ControlType = "ToggleButton" {
+                If CurrentControl Is Checkbox Or CurrentControl Is ToggleButton {
                     TruePrev := AccessibilityOverlay.PreviousControlID
                     AccessibilityOverlay.PreviousControlID := CurrentControl.ControlID
                     Speak := True
@@ -145,7 +145,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
                 If CurrentControl.HasMethod("Activate")
                 CurrentControl.Activate(Speak)
-                If CurrentControl.ControlType = "Checkbox" Or CurrentControl.ControlType = "ToggleButton" {
+                If CurrentControl Is Checkbox Or CurrentControl Is ToggleButton {
                     AccessibilityOverlay.PreviousControlID := TruePrev
                 }
                 Return CurrentControl
@@ -241,12 +241,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 This.SetPreviousControlID(This.CurrentControlID)
                 This.SetCurrentControlID(ControlID)
                 If TargetControl.HasMethod("Focus") {
-                    If Speak And TargetControl.ControlType = "TabControl" {
+                    If Speak And TargetControl Is TabControl {
                         TruePrev := AccessibilityOverlay.PreviousControlID
                         AccessibilityOverlay.PreviousControlID := 0
                     }
                     TargetControl.Focus(Speak)
-                    If Speak And TargetControl.ControlType = "TabControl" {
+                    If Speak And TargetControl Is TabControl {
                         AccessibilityOverlay.PreviousControlID := TruePrev
                     }
                 }
@@ -590,7 +590,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(FocusableControlIDs[Found])
-                If CurrentControl.ControlType = "ComboBox" {
+                If CurrentControl Is ComboBox {
                     CurrentControl.SelectNextOption()
                     Return CurrentControl.GetValue()
                 }
@@ -604,7 +604,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(FocusableControlIDs[Found])
-                If CurrentControl.ControlType = "ComboBox" {
+                If CurrentControl Is ComboBox {
                     CurrentControl.SelectPreviousOption()
                     Return CurrentControl.GetValue()
                 }
@@ -628,7 +628,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             ControlToTrigger := ReachableControl
             HotkeyFunctions := ReachableControl.HotkeyFunctions
             HotkeyTarget := ReachableControl
-            If ReachableControl.ControlType = "Tab" {
+            If ReachableControl Is Tab {
                 ControlToTrigger := ReachableControl.SuperordinateControl
                 TabNumber := 1
                 For TabIndex, TabObject In ControlToTrigger.Tabs
@@ -1771,7 +1771,7 @@ Class TabControl Extends FocusableControl {
     GetValue() {
         Value := ""
         CurrentTab := This.GetCurrentTab()
-        If CurrentTab Is Object And CurrentTab.ControlType = "Tab" {
+        If CurrentTab Is Object And CurrentTab Is Tab {
             CurrentTab.Focus(False)
             Value := AccessibilityOverlay.LastMessage
         }
