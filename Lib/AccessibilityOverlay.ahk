@@ -137,7 +137,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
                 If CurrentControl Is Checkbox Or CurrentControl Is ToggleButton Or CurrentControl Is GraphicalCheckbox Or CurrentControl Is GraphicalToggleButton {
                     TruePrev := AccessibilityOverlay.PreviousControlID
-                    AccessibilityOverlay.PreviousControlID := CurrentControl.ControlID
+                    This.SetPreviousControlID(CurrentControl.ControlID)
                     Speak := True
                 }
                 Else {
@@ -146,7 +146,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If CurrentControl.HasMethod("Activate")
                 CurrentControl.Activate(Speak)
                 If CurrentControl Is Checkbox Or CurrentControl Is ToggleButton Or CurrentControl Is GraphicalCheckbox Or CurrentControl Is GraphicalToggleButton {
-                    AccessibilityOverlay.PreviousControlID := TruePrev
+                    This.SetPreviousControlID(TruePrev)
                 }
                 Return CurrentControl
             }
@@ -243,11 +243,11 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 If TargetControl.HasMethod("Focus") {
                     If Speak {
                         TruePrev := AccessibilityOverlay.PreviousControlID
-                        AccessibilityOverlay.PreviousControlID := 0
+                        This.SetPreviousControlID(0)
                     }
                     TargetControl.Focus(Speak)
                     If Speak {
-                        AccessibilityOverlay.PreviousControlID := TruePrev
+                        This.SetPreviousControlID(TruePrev)
                     }
                 }
                 Return TargetControl
