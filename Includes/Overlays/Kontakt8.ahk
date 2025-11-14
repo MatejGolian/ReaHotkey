@@ -267,8 +267,11 @@ Class Kontakt8 {
         If UIAElement Is UIA.IUIAutomationElement {
             Try
             UIAElement.WalkTree(-1).Click("Left")
-            AccessibilityOverlay.Speak("Library Browser closed.")
-            Sleep 1000
+            LastMessage := AccessibilityOverlay.LastMessage
+            AccessibilityOverlay.AddToSpeechQueue("Library Browser closed.")
+            AccessibilityOverlay.AddToSpeechQueue(LastMessage)
+            AccessibilityOverlay.ClearLastMessage()
+            AccessibilityOverlay.Speak()
         }
     }
     

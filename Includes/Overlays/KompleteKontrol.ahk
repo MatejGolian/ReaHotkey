@@ -251,6 +251,7 @@ Class KompleteKontrol {
             LastMessage := AccessibilityOverlay.LastMessage
             AccessibilityOverlay.AddToSpeechQueue("Library Browser closed.")
             AccessibilityOverlay.AddToSpeechQueue(LastMessage)
+            AccessibilityOverlay.ClearLastMessage()
             AccessibilityOverlay.Speak()
         }
     }
