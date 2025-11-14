@@ -43,6 +43,7 @@ Class ReaHotkey {
         Else {
             AccessibilityOverlay.Speak("Reloaded ReaHotkey")
         }
+        AccessibilityOverlay.ClearLastMessage()
         This.StateManagementTimer := ObjBindMethod(This, "ManageState")
         This.WinCoveredTimer := ObjBindMethod(This, "CheckIfWinCovered")
         SetTimer This.StateManagementTimer, 200

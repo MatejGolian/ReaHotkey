@@ -672,6 +672,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         This.SpeechQueue.Push(Message)
     }
     
+    Static ClearLastMessage() {
+        This.LastMessage := ""
+    }
+    
     Static ClearSpeechQueue() {
         This.SpeechQueue := Array()
     }
