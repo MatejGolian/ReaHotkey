@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added/Changed
+
+-   Added various internal 'convenience' functions
+-   Pressing left/right while a tab control has focus no longer causes the tabs to wrap. Press Ctrl+Tab or Ctrl+Shift+Tab for the wrapping behavior.
+-   Feedback: Prevent various messages from being cut off by other messages.
+-   Various other fixes/improvements.
+
 ## [0.8.1] - 2025-11-06
 
 ### Added/Fixed
