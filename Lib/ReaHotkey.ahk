@@ -479,6 +479,7 @@ Class ReaHotkey {
             This.TurnStandaloneTimersOff()
             This.TurnStandaloneHotkeysOff()
             AccessibleMenu.CurrentMenu := False
+            AccessibilityOverlay.ClearSpeechQueue()
         }
     }
     
