@@ -126,6 +126,7 @@ ControlHK(ThisHotkey) {
 
 PauseHK(ThisHotkey) {
     ReaHotkey.TogglePause()
+    AccessibilityOverlay.ClearSpeechQueue()
     If A_IsSuspended = 1
     AccessibilityOverlay.Speak("Paused ReaHotkey")
     Else
@@ -133,6 +134,7 @@ PauseHK(ThisHotkey) {
 }
 
 QuitHK(ThisHotkey) {
+    AccessibilityOverlay.ClearSpeechQueue()
     AccessibilityOverlay.Speak("Quitting ReaHotkey")
     ReaHotkey.Quit()
 }
