@@ -12,10 +12,12 @@ Class Kontakt8 {
         
         PluginHeader := PluginOverlay("Kontakt 8")
         PluginHeader.AddStaticText("Kontakt 8")
-        PluginHeader.AddCustomButton("FILE menu",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!F", "Alt+F")
-        PluginHeader.AddCustomButton("LIBRARY On/Off",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!L", "Alt+L")
-        PluginHeader.AddCustomButton("VIEW menu",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!V", "Alt+V")
-        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!S", "Alt+S")
+        PluginHeader.AddCustomButton("Kontakt File Menu",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!F", "Alt+F")
+        PluginHeader.AddCustomButton("Play View",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!V", "Alt+V")
+        PluginHeader.AddCustomButton("Library",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!L", "Alt+L")
+        PluginHeader.AddCustomButton("Shop",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!S", "Alt+S")
+        PluginHeader.AddCustomButton("Restart: Forces a re-initialization of the audio engine in case of CPU overruns or hanging notes.",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!R", "Alt+R")
+        PluginHeader.AddCustomButton("About Kontakt",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!A", "Alt+A")
         PluginHeader.AddCustomButton("Previous instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^P", "Ctrl+P")
         PluginHeader.AddCustomButton("Next instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^N", "Ctrl+N")
         PluginHeader.AddCustomButton("Previous multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+P", "Ctrl+Shift+P")
@@ -27,10 +29,12 @@ Class Kontakt8 {
         This.PluginHeader := PluginHeader
         
         StandaloneHeader := StandaloneOverlay("Kontakt 8")
-        StandaloneHeader.AddCustomButton("FILE menu",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!F", "Alt+F")
-        StandaloneHeader.AddCustomButton("LIBRARY On/Off",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!L", "Alt+L")
-        StandaloneHeader.AddCustomButton("VIEW menu",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!V", "Alt+V")
-        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!S", "Alt+S")
+        StandaloneHeader.AddCustomButton("Kontakt File Menu",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!F", "Alt+F")
+        StandaloneHeader.AddCustomButton("Play View",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!V", "Alt+V")
+        StandaloneHeader.AddCustomButton("Library",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!L", "Alt+L")
+        StandaloneHeader.AddCustomButton("Shop",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!S", "Alt+S")
+        StandaloneHeader.AddCustomButton("Restart: Forces a re-initialization of the audio engine in case of CPU overruns or hanging notes.",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!R", "Alt+R")
+        StandaloneHeader.AddCustomButton("About Kontakt",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!A", "Alt+A")
         This.StandaloneHeader := StandaloneHeader
         
         Plugin.Register("Kontakt 8", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
@@ -66,82 +70,52 @@ Class Kontakt8 {
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
         Else
-        UIAElement := GetUIAWindow()
-        Try
-        If UIAElement
+        UIAElement := AccessibilityOverlay.GetUIAWindow()
+        If UIAElement {
+            Try
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: HeaderButton.Label})
+            Catch
+            UIAElement := False
+            If UIAElement {
+                Switch HeaderButton.Label {
+                    Case "Kontakt File Menu":
+                    UIAElement.Click("Left")
+                    This.Check%Type%Menu()
+                    Default:
+                    UIAElement.Click("Left")
+                }
+                Return
+            }
+        }
+        If Type = "Plugin"
+        ClickFunction := "ClickPluginCoordinates"
+        Else
+        ClikFunction := "Click"
         Switch HeaderButton.Label {
-            Case "FILE menu":
-            UIAElement := UIAElement.FindElement({Type: "Button", Name: "FILE"})
-            Case "LIBRARY On/Off":
-            UIAElement := UIAElement.FindElement({Type: "Button", Name: "LIBRARY"})
-            Case "VIEW menu":
-            UIAElement := UIAElement.FindElement({Type: "Button", Name: "VIEW"})
-            Case "SHOP (Opens in default web browser)":
-            UIAElement := UIAElement.FindElement({Type: "Button", Name: "SHOP"})
-        }
-        Catch
-        UIAElement := False
-        If Not UIAElement = False {
-            Switch HeaderButton.Label {
-                Case "FILE menu":
-                UIAElement.Click("Left")
-                This.CheckMenu(Type)
-                Case "LIBRARY On/Off":
-                UIAElement.Click("Left")
-                Case "VIEW menu":
-                UIAElement.Click("Left")
-                This.CheckMenu(Type)
-                Case "SHOP (Opens in default web browser)":
-                UIAElement.Click("Left")
-            }
-        }
-        Else {
-            Switch HeaderButton.Label {
-                Case "FILE menu":
-                If This.GetBrowser(Type) {
-                    TargetX := 145
-                    TargetY := 17
-                }
-                Else {
-                    TargetX := 148
-                    TargetY := 15
-                }
-                Case "LIBRARY On/Off":
-                If This.GetBrowser(Type) {
-                    TargetX := 184
-                    TargetY := 15
-                }
-                Else {
-                    TargetX :=216
-                    TargetY := 13
-                }
-                Case "VIEW menu":
-                If This.GetBrowser(Type) {
-                    TargetX := 256
-                    TargetY := 18
-                }
-                Else {
-                    TargetX := 240
-                    TargetY := 17
-                }
-                Case "SHOP (Opens in default web browser)":
-                If This.GetBrowser(Type) {
-                    TargetX := 828
-                    TargetY := 19
-                }
-                Else {
-                    TargetX := 466
-                    TargetY := 17
-                }
-            }
-            If (Type = "Plugin") {
-                TargetX := CompensatePluginXCoordinate(TargetX)
-                TargetY := CompensatePluginYCoordinate(TargetY)
-            }
-            If TargetX And TargetY {
-                Click TargetX, TargetY
-                This.CheckMenu(Type)
-            }
+            Case "Kontakt File Menu":
+            %ClickFunction%(93, 19)
+            This.Check%Type%Menu()
+            Case "Play View":
+            %ClickFunction%(199, 19)
+            Case "Library":
+            %ClickFunction%(227, 19)
+            Case "Shop":
+            If This.Get%Type%Browser()
+            %ClickFunction%(823, 19)
+            Else
+            %ClickFunction%(462, 19)
+            Case "Restart: Forces a re-initialization of the audio engine in case of CPU overruns or hanging notes.":
+            If This.Get%Type%Browser()
+            %ClickFunction%(963, 19)
+            Else
+            %ClickFunction%(602, 19)
+            Case "About Kontakt":
+            If This.Get%Type%Browser()
+            %ClickFunction%(986, 19)
+            Else
+            %ClickFunction%(625, 19)
+            Default:
+            AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
         }
     }
     
@@ -191,12 +165,12 @@ Class Kontakt8 {
         This.ActivateHeaderButton("Standalone", HeaderButton)
     }
     
-    Static CheckMenu(Type) {
+    Static CheckMenu(Type, OrigHKMode) {
         Thread "NoTimers"
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
         Else
-        UIAElement := GetUIAWindow()
+        UIAElement := AccessibilityOverlay.GetUIAWindow()
         Found := False
         Try
         UIAElement := UIAElement.FindElement({Type: "Menu"})
@@ -205,7 +179,7 @@ Class Kontakt8 {
         If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50009
         Found := True
         If Not Found
-        %Type%.SetHotkeyMode("Kontakt 8", 1)
+        %Type%.SetHotkeyMode("Kontakt 8", OrigHKMode)
         Else
         %Type%.SetHotkeyMode("Kontakt 8", 0)
     }
@@ -266,7 +240,7 @@ Class Kontakt8 {
         UIAElement := This.GetBrowser(Type)
         If UIAElement Is UIA.IUIAutomationElement {
             Try
-            UIAElement.WalkTree(-1).Click("Left")
+            UIAElement.Click("Left")
             LastMessage := AccessibilityOverlay.LastMessage
             AccessibilityOverlay.AddToSpeechQueue("Library Browser closed.")
             AccessibilityOverlay.AddToSpeechQueue(LastMessage)
@@ -287,14 +261,18 @@ Class Kontakt8 {
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
         Else
-        UIAElement := GetUIAWindow()
+        UIAElement := AccessibilityOverlay.GetUIAWindow()
         Try
-        UIAElement := UIAElement.FindElement({ClassName: "FileTypeSelector", MatchMode: "Substring"})
+        UIAElement := UIAElement.FindElement({Name: "Close Browser"})
         Catch
         Return False
-        If UIAElement.Type = 50018
+        If UIAElement.Type = 50000
         Return UIAElement
         Return False
+    }
+    
+    Static GetPluginBrowser() {
+        Return This.GetBrowser("Plugin")
     }
     
     Static GetPluginUIAElement() {
@@ -303,7 +281,7 @@ Class Kontakt8 {
         If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
         Return False
         Try
-        UIAElement := GetUIAWindow()
+        UIAElement := AccessibilityOverlay.GetUIAWindow()
         Catch
         Return False
         If Not UIAElement Is UIA.IUIAutomationElement
@@ -328,6 +306,10 @@ Class Kontakt8 {
             Return True
             Return False
         }
+    }
+    
+    Static GetStandaloneBrowser() {
+        Return This.GetBrowser("Standalone")
     }
     
     Static InitConfig() {
@@ -416,8 +398,9 @@ Class Kontakt8 {
     Class CheckPluginMenu {
         Static Call(*) {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            Static OrigHKMode := Plugin.GetHotkeyMode("Kontakt 8")
             If ReaHotkey.PluginWinCriteria And WinActive(ReaHotkey.PluginWinCriteria)
-            %ParentClass%.CheckMenu("Plugin")
+            %ParentClass%.CheckMenu("Plugin", OrigHKMode)
         }
     }
     
@@ -432,7 +415,8 @@ Class Kontakt8 {
     Class CheckStandaloneMenu {
         Static Call(*) {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
-            %ParentClass%.CheckMenu("Standalone")
+            Static OrigHKMode := Standalone.GetHotkeyMode("Kontakt 8")
+            %ParentClass%.CheckMenu("Standalone", OrigHKMode)
         }
     }
     

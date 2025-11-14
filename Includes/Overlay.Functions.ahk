@@ -572,20 +572,6 @@ GetPluginYCoordinate() {
     Return GetPluginControlPos().Y
 }
 
-GetUIAWindow() {
-    If Not IsSet(UIA)
-    Return False
-    Loop
-    CurrentWinID := GetCurrentWindowID()
-    Until CurrentWinID
-    CacheRequest := UIA.CreateCacheRequest(["Type", "LocalizedType", "AutomationId", "Name", "Value", "ClassName", "AcceleratorKey", "WindowCanMaximize"], ["Window"], "Subtree")
-    Try
-    Window := UIA.ElementFromHandle("ahk_id " . CurrentWinID, CacheRequest)
-    Catch
-    Return False
-    Return Window
-}
-
 GetWinPos() {
     WinX := 0
     WinY := 0

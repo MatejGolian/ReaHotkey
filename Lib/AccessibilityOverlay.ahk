@@ -714,6 +714,23 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return ReturnObject
     }
     
+    Static GetUIAWindow() {
+        If Not IsSet(UIA)
+        Return False
+        Loop
+        Try
+        WinID := WinGetID("A")
+        Catch
+        WinID := 0
+        Until WinID
+        CacheRequest := UIA.CreateCacheRequest(["Type", "LocalizedType", "AutomationId", "Name", "Value", "ClassName", "AcceleratorKey", "WindowCanMaximize"], ["Window"], "Subtree")
+        Try
+        UIAWindow := UIA.ElementFromHandle("ahk_id " . WinID, CacheRequest)
+        Catch
+        Return False
+        Return UIAWindow
+    }
+    
     Static OCR(OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "") {
         If OCRType = "Tesseract" Or OCRType = "TesseractLegacy"
         Return This.TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 3)
@@ -1365,7 +1382,9 @@ Class FocusableUIA Extends FocusableControl {
     }
     
     FindElement() {
-        Window := This.GetWindow()
+        Window := AccessibilityOverlay.GetUIAWindow()
+        If Window
+        This.Window := Window
         If Not Window
         Return False
         Try
@@ -1374,24 +1393,6 @@ Class FocusableUIA Extends FocusableControl {
         Return False
         This.element := element
         Return Element
-    }
-    
-    GetWindow() {
-        If Not IsSet(UIA)
-        Return False
-        Loop
-        Try
-        WinID := WinGetID("A")
-        Catch
-        WinID := 0
-        Until WinID
-        CacheRequest := UIA.CreateCacheRequest(["Type", "LocalizedType", "AutomationId", "Name", "Value", "ClassName", "AcceleratorKey", "WindowCanMaximize"], ["Window"], "Subtree")
-        Try
-        Window := UIA.ElementFromHandle("ahk_id " . WinID, CacheRequest)
-        Catch
-        Return False
-        This.Window := Window
-        Return Window
     }
     
     SpeakOnFocus(Speak := True) {
