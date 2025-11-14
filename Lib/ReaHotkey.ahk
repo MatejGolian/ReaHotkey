@@ -132,20 +132,21 @@ Class ReaHotkey {
     }
     
     Static FocusPluginOverlay() {
-        If This.FoundPlugin Is Plugin And (This.FoundPlugin.HotkeyMode = 1 Or This.FoundPlugin.HotkeyMode = 3)
-        WindowTitle := GetCurrentWindowTitle()
-        If WindowTitle
-        AccessibilityOverlay.AddToSpeechQueue(WindowTitle . ",")
-        If This.FoundPlugin.Overlay.ChildControls.Length > 0 And This.FoundPlugin.Overlay.GetFocusableControlIDs().Length > 0 {
-            This.FoundPlugin.Overlay.Focus()
-        }
-        Else {
-            If HasProp(This.FoundPlugin.Overlay, "Metadata") And This.FoundPlugin.Overlay.Metadata.Has("Product") And Not This.FoundPlugin.Overlay.Metadata["Product"] = ""
-            AccessibilityOverlay.Speak(This.FoundPlugin.Overlay.Metadata["Product"] . " overlay active")
-            Else If This.FoundPlugin.Overlay.Label = ""
-            AccessibilityOverlay.Speak(This.FoundPlugin.Name . " overlay active")
-            Else
-            AccessibilityOverlay.Speak(This.FoundPlugin.Overlay.Label . " overlay active")
+        If This.FoundPlugin Is Plugin And (This.FoundPlugin.HotkeyMode = 1 Or This.FoundPlugin.HotkeyMode = 3) {
+            WindowTitle := GetCurrentWindowTitle()
+            If WindowTitle
+            AccessibilityOverlay.AddToSpeechQueue(WindowTitle . ",")
+            If This.FoundPlugin.Overlay.ChildControls.Length > 0 And This.FoundPlugin.Overlay.GetFocusableControlIDs().Length > 0 {
+                This.FoundPlugin.Overlay.Focus()
+            }
+            Else {
+                If HasProp(This.FoundPlugin.Overlay, "Metadata") And This.FoundPlugin.Overlay.Metadata.Has("Product") And Not This.FoundPlugin.Overlay.Metadata["Product"] = ""
+                AccessibilityOverlay.Speak(This.FoundPlugin.Overlay.Metadata["Product"] . " overlay active")
+                Else If This.FoundPlugin.Overlay.Label = ""
+                AccessibilityOverlay.Speak(This.FoundPlugin.Name . " overlay active")
+                Else
+                AccessibilityOverlay.Speak(This.FoundPlugin.Overlay.Label . " overlay active")
+            }
         }
     }
     
