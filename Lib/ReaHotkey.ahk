@@ -133,6 +133,9 @@ Class ReaHotkey {
     
     Static FocusPluginOverlay() {
         If This.FoundPlugin Is Plugin And (This.FoundPlugin.HotkeyMode = 1 Or This.FoundPlugin.HotkeyMode = 3)
+        WindowTitle := GetCurrentWindowTitle()
+        If WindowTitle
+        AccessibilityOverlay.AddToSpeechQueue(WindowTitle . ",")
         If This.FoundPlugin.Overlay.ChildControls.Length > 0 And This.FoundPlugin.Overlay.GetFocusableControlIDs().Length > 0 {
             This.FoundPlugin.Overlay.Focus()
         }
@@ -349,6 +352,9 @@ Class ReaHotkey {
     Static ManageState() {
         Critical
         Try {
+            Loop
+            CurrentWinID := GetCurrentWindowID()
+            Until CurrentWinID
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria) {
                 This.AutoFocusStandaloneOverlay := True
                 This.FoundStandalone := False

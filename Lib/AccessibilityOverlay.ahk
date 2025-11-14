@@ -1375,9 +1375,15 @@ Class FocusableUIA Extends FocusableControl {
     GetWindow() {
         If Not IsSet(UIA)
         Return False
+        Loop
+        Try
+        WinID := WinGetID("A")
+        Catch
+        WinID := 0
+        Until WinID
         CacheRequest := UIA.CreateCacheRequest(["Type", "LocalizedType", "AutomationId", "Name", "Value", "ClassName", "AcceleratorKey", "WindowCanMaximize"], ["Window"], "Subtree")
         Try
-        Window := UIA.ElementFromHandle("ahk_id " . WinGetID("A"), CacheRequest)
+        Window := UIA.ElementFromHandle("ahk_id " . WinID, CacheRequest)
         Catch
         Return False
         This.Window := Window
