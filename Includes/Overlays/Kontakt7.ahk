@@ -204,11 +204,7 @@ Class Kontakt7 {
         If UIAElement Is UIA.IUIAutomationElement {
             Try
             UIAElement.WalkTree(-1).Click("Left")
-            LastMessage := AccessibilityOverlay.LastMessage
             AccessibilityOverlay.AddToSpeechQueue("Library Browser closed.")
-            AccessibilityOverlay.AddToSpeechQueue(LastMessage)
-            AccessibilityOverlay.ClearLastMessage()
-            AccessibilityOverlay.Speak()
         }
     }
     
@@ -241,8 +237,7 @@ Class Kontakt7 {
         If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50033 {
             Try
             UIAElement.WalkTree(1).Click("Left")
-            AccessibilityOverlay.Speak("Update dialog closed.")
-            Sleep 1000
+            AccessibilityOverlay.AddToSpeechQueue("Update dialog closed.")
         }
     }
     
@@ -406,10 +401,13 @@ Class Kontakt7 {
         Static Call() {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True, "C", 2)
+            LastMessage := AccessibilityOverlay.LastMessage
             %ParentClass%.ClosePluginUpdateDialog()
-            Sleep 1000
             If ReaHotkey.Config.Get("CloseK7Browser") = 1
             %ParentClass%.ClosePluginBrowser()
+            AccessibilityOverlay.AddToSpeechQueue(LastMessage)
+            AccessibilityOverlay.ClearLastMessage()
+            AccessibilityOverlay.Speak()
             If ReaHotkey.Config.Get("DetectLibsInK7") = 1
             Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 500)
             Else
@@ -428,10 +426,13 @@ Class Kontakt7 {
     Class CheckStandaloneConfig {
         Static Call() {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            LastMessage := AccessibilityOverlay.LastMessage
             %ParentClass%.CloseStandaloneUpdateDialog()
-            Sleep 1000
             If ReaHotkey.Config.Get("CloseK7Browser") = 1
             %ParentClass%.CloseStandaloneBrowser()
+            AccessibilityOverlay.AddToSpeechQueue(LastMessage)
+            AccessibilityOverlay.ClearLastMessage()
+            AccessibilityOverlay.Speak()
         }
     }
     
