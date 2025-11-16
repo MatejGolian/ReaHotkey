@@ -690,6 +690,13 @@ Class KompleteKontrol {
         }
     }
     
+    Class MoveToPluginCoordinates {
+        Static Call(XCoordinate, YCoordinate) {
+            ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            MouseMove %ParentClass%.CompensatePluginXCoordinate(XCoordinate), %ParentClass%.CompensatePluginYCoordinate(YCoordinate)
+        }
+    }
+    
     Class PluginSerialClick {
         Static Call(Coordinates*) {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)

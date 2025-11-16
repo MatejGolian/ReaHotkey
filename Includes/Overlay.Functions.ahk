@@ -621,6 +621,10 @@ MergeArrays(Params*) {
     Return Merged
 }
 
+MoveToPluginCoordinates(XCoordinate, YCoordinate) {
+    MouseMove CompensatePluginXCoordinate(XCoordinate), CompensatePluginYCoordinate(YCoordinate)
+}
+
 PluginPctClick(XPct, YPct) {
     If XPct < 0 Or YPct < 0
     Return
