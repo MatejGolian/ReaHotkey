@@ -294,8 +294,7 @@ Class KompleteKontrol {
     }
     
     Static FocusStandalonePreferenceTab(KKInstance) {
-        Sleep 1000
-        If KKInstance.Overlay.CurrentControlID = 0
+        AccessibilityOverlay.AddToSpeechQueue(GetCurrentWindowTitle() . ",")
         KKInstance.Overlay.Focus()
     }
     
