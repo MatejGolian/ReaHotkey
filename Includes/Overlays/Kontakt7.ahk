@@ -12,10 +12,10 @@ Class Kontakt7 {
         
         PluginHeader := PluginOverlay("Kontakt 7")
         PluginHeader.AddStaticText("Kontakt 7")
-        PluginHeader.AddCustomButton("FILE menu",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!F", "Alt+F")
-        PluginHeader.AddCustomButton("LIBRARY On/Off",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!L", "Alt+L")
-        PluginHeader.AddCustomButton("VIEW menu",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!V", "Alt+V")
-        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)",,, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!S", "Alt+S")
+        PluginHeader.AddCustomButton("FILE menu", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!F", "Alt+F")
+        PluginHeader.AddCustomButton("LIBRARY On/Off", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!L", "Alt+L")
+        PluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!V", "Alt+V")
+        PluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!S", "Alt+S")
         PluginHeader.AddCustomButton("Previous instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^P", "Ctrl+P")
         PluginHeader.AddCustomButton("Next instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^N", "Ctrl+N")
         PluginHeader.AddCustomButton("Previous multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+P", "Ctrl+Shift+P")
@@ -27,10 +27,10 @@ Class Kontakt7 {
         This.PluginHeader := PluginHeader
         
         StandaloneHeader := StandaloneOverlay("Kontakt 7")
-        StandaloneHeader.AddCustomButton("FILE menu",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!F", "Alt+F")
-        StandaloneHeader.AddCustomButton("LIBRARY On/Off",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!L", "Alt+L")
-        StandaloneHeader.AddCustomButton("VIEW menu",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!V", "Alt+V")
-        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)",,, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!S", "Alt+S")
+        StandaloneHeader.AddCustomButton("FILE menu", ObjBindMethod(This, "FocusStandaloneHeaderButton"),, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!F", "Alt+F")
+        StandaloneHeader.AddCustomButton("LIBRARY On/Off", ObjBindMethod(This, "FocusStandaloneHeaderButton"),, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!L", "Alt+L")
+        StandaloneHeader.AddCustomButton("VIEW menu", ObjBindMethod(This, "FocusStandaloneHeaderButton"),, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!V", "Alt+V")
+        StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(This, "FocusStandaloneHeaderButton"),, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!S", "Alt+S")
         This.StandaloneHeader := StandaloneHeader
         
         Plugin.Register("Kontakt 7", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
@@ -62,40 +62,7 @@ Class Kontakt7 {
     }
     
     Static ActivateHeaderButton(Type, HeaderButton) {
-        Critical
-        If Type = "Plugin"
-        UIAElement := This.GetPluginUIAElement()
-        Else
-        UIAElement := AccessibilityOverlay.GetUIAWindow()
-        Try
-        If UIAElement
-        Switch HeaderButton.Label {
-            Case "FILE menu":
-            UIAElement := UIAElement.FindElement({Type: "Button", Name: "FILE"})
-            Case "LIBRARY On/Off":
-            UIAElement := UIAElement.FindElement({Type: "Button", Name: "LIBRARY"})
-            Case "VIEW menu":
-            UIAElement := UIAElement.FindElement({Type: "Button", Name: "VIEW"})
-            Case "SHOP (Opens in default web browser)":
-            UIAElement := UIAElement.FindElement({Type: "Button", Name: "SHOP"})
-        }
-        Catch
-        UIAElement := False
-        If Not UIAElement = False
-        Switch HeaderButton.Label {
-            Case "FILE menu":
-            UIAElement.Click("Left")
-            This.CheckMenu(Type)
-            Case "LIBRARY On/Off":
-            UIAElement.Click("Left")
-            Case "VIEW menu":
-            UIAElement.Click("Left")
-            This.CheckMenu(Type)
-            Case "SHOP (Opens in default web browser)":
-            UIAElement.Click("Left")
-        }
-        Else
-        AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
+        This.FocusOrActivateHeaderButton("Activate", Type, HeaderButton)
     }
     
     Static ActivatePluginHeaderButton(HeaderButton) {
@@ -239,6 +206,93 @@ Class Kontakt7 {
             UIAElement.WalkTree(1).Click("Left")
             AccessibilityOverlay.AddToSpeechQueue("Update dialog closed.")
         }
+    }
+    
+    Static FocusHeaderButton(Type, HeaderButton) {
+        This.FocusOrActivateHeaderButton("Focus", Type, HeaderButton)
+    }
+    
+    Static FocusOrActivateHeaderButton(Action, Type, HeaderButton) {
+        Critical
+        If Not Action = "Focus" And Not Action = "Activate"
+        Action := "Focus"
+        If Type = "Plugin"
+        UIAElement := This.GetPluginUIAElement()
+        Else
+        UIAElement := AccessibilityOverlay.GetUIAWindow()
+        Try
+        If UIAElement
+        Switch HeaderButton.Label {
+            Case "FILE menu":
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: "FILE"})
+            Case "LIBRARY On/Off":
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: "LIBRARY"})
+            Case "VIEW menu":
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: "VIEW"})
+            Case "SHOP (Opens in default web browser)":
+            UIAElement := UIAElement.FindElement({Type: "Button", Name: "SHOP"})
+        }
+        Catch
+        UIAElement := False
+        If UIAElement {
+            Switch HeaderButton.Label {
+                Case "FILE menu":
+                If Action = "Focus"
+                UIAElement.SetFocus()
+                Else
+                UIAElement.Click("Left")
+                If Action = "Activate"
+                This.Check%Type%Menu()
+                Case "VIEW menu":
+                If Action = "Focus"
+                UIAElement.SetFocus()
+                Else
+                UIAElement.Click("Left")
+                If Action = "Activate"
+                This.Check%Type%Menu()
+                Default:
+                If Action = "Focus"
+                UIAElement.SetFocus()
+                Else
+                UIAElement.Click("Left")
+            }
+            Return
+        }
+        If Type = "Plugin" And Action = "Activate"
+        MouseFunction := "ClickPluginCoordinates"
+        Else If Type = "Plugin" And Action = "Focus"
+        MouseFunction := "MoveToPluginCoordinates"
+        Else If Type = "Standalone" And Action = "Activate"
+        MouseFunction := "Click"
+        Else
+        MouseFunction := "MouseMove"
+        Switch HeaderButton.Label {
+            Case "FILE menu":
+            %MouseFunction%(175, 19)
+            If Action = "Activate"
+            This.Check%Type%Menu()
+            Case "VIEW menu":
+            %MouseFunction%(288, 19)
+            If Action = "Activate"
+            This.Check%Type%Menu()
+            Case "LIBRARY On/Off":
+            %MouseFunction%(231, 19)
+            Case "SHOP (Opens in default web browser)":
+            If This.Get%Type%Browser()
+            %MouseFunction%(815, 19)
+            Else
+            %MouseFunction%(440, 19)
+            Default:
+            AccessibilityOverlay.Speak(HeaderButton.Label . " button not found")
+        }
+    }
+    
+    Static FocusPluginHeaderButton(HeaderButton) {
+        This.FocusHeaderButton("Plugin", HeaderButton)
+    }
+    
+    Static FocusStandaloneHeaderButton(HeaderButton) {
+        This.FocusHeaderButton("Standalone", HeaderButton)
     }
     
     Static GetBrowser(Type) {
