@@ -457,7 +457,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     GetFocusableControlIDs() {
         FocusableControlIDs := Array()
-        If This.ChildControls.Length > 0
         For CurrentControl In This.ChildControls {
             If CurrentControl Is TabControl {
                 FocusableControlIDs.Push(CurrentControl.ControlID)
@@ -480,7 +479,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 FocusableControlIDs.Push(CurrentControl.ControlID)
             }
         }
-        For Item In FocusableControlIDs
         Return FocusableControlIDs
     }
     
@@ -490,6 +488,42 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         For FocusableControlID In FocusableControlIDs
         FocusableControls.Push(AccessibilityOverlay.GetControl(FocusableControlID))
         Return FocusableControls
+    }
+    
+    GetHotkeyedControlIDs() {
+        HotkeyedControlIDs := Array()
+        For CurrentControl In This.ChildControls {
+            If CurrentControl Is TabControl {
+                If CurrentControl.Tabs.Length > 0 {
+                    CurrentTab := CurrentControl.Tabs[CurrentControl.CurrentTab]
+                    If CurrentTab.HasOwnProp("HotkeyCommand") And Not CurrentTab.HotkeyCommand = ""
+                    HotkeyedControlIDs.Push(CurrentTab.ControlID)
+                    If CurrentTab.ChildControls.Length > 0 {
+                        For CurrentTabControlID In CurrentTab.HotkeyedControlIDs
+                        HotkeyedControlIDs.Push(CurrentTabControlID)
+                    }
+                }
+            }
+            Else If CurrentControl Is AccessibilityOverlay {
+                If CurrentControl.ChildControls.Length > 0 {
+                    For CurrentControlID In CurrentControl.HotkeyedControlIDs
+                    HotkeyedControlIDs.Push(CurrentControlID)
+                }
+            }
+            Else {
+                If CurrentControl.HasOwnProp("HotkeyCommand") And Not CurrentControl.HotkeyCommand = ""
+                HotkeyedControlIDs.Push(CurrentControl.ControlID)
+            }
+        }
+        Return HotkeyedControlIDs
+    }
+    
+    GetHotkeyedControls() {
+        HotkeyedControls := Array()
+        HotkeyedControlIDs := This.GetHotkeyedControlIDs()
+        For HotkeyedControlID In HotkeyedControlIDs
+        HotkeyedControls.Push(AccessibilityOverlay.GetControl(HotkeyedControlID))
+        Return HotkeyedControls
     }
     
     GetHotkeys() {
@@ -513,6 +547,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     GetReachableControls() {
         ReachableControls := Array()
+        HotkeyedControls := This.GetHotkeyedControls()
         For Value In This.GetFocusableControls()
         If Value Is TabControl {
             For TabObject In Value.Tabs
@@ -521,7 +556,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Else {
             ReachableControls.Push(Value)
         }
-        Return ReachableControls
+        Return AccessibilityOverlay.MergeArrays(ReachableControls, HotkeyedControls)
     }
     
     IncreaseSlider() {
@@ -666,10 +701,13 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
                 ControlToTrigger.CurrentTab := TabNumber
             }
-            If ControlToTrigger.HasMethod("Activate")
-            This.ActivateControlID(ControlToTrigger.ControlID)
-            Else
-            This.FocusControlID(ControlToTrigger.ControlID)
+            If ControlToTrigger.HasMethod("Activate") {
+                This.ActivateControlID(ControlToTrigger.ControlID)
+            }
+            Else {
+                If ControlToTrigger.HasMethod("Focus")
+                This.FocusControlID(ControlToTrigger.ControlID)
+            }
             For HotkeyFunction In HotkeyFunctions
             HotkeyFunction.Call(HotkeyTarget)
             Break
@@ -764,6 +802,15 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If FoundValue == Needle
         Return FoundIndex
         Return False
+    }
+    
+    Static MergeArrays(Params*) {
+        Merged := Array()
+        For Param In Params
+        If Param Is Array
+        For Item In Param
+        Merged.Push(Item)
+        Return Merged
     }
     
     Static OCR(OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "") {
@@ -878,6 +925,28 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             }
         }
         Return ""
+    }
+    
+}
+
+Class ExtraHotkey Extends AccessibilityControl {
+    
+    ControlType := "Hotkey"
+    HotkeyCommand := ""
+    HotkeyFunctions := Array()
+    
+    __New(HotkeyCommand, HotkeyFunctions) {
+        This.HotkeyCommand := HotkeyCommand
+        If Not HotkeyFunctions Is Array
+        HotkeyFunctions := Array(HotkeyFunctions)
+        For HotkeyFunction In HotkeyFunctions
+        If HotkeyFunction Is Object And HotkeyFunction.HasMethod("Call")
+        This.HotkeyFunctions.Push(HotkeyFunction)
+        If This.MasterControl Is AccessibilityOverlay
+        This.MasterControl.RegisterHotkey(HotkeyCommand)
+        Else
+        If This.HasMethod("RegisterHotkey")
+        This.RegisterHotkey(HotkeyCommand)
     }
     
 }
