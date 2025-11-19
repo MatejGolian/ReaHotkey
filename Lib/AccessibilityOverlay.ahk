@@ -2933,6 +2933,7 @@ Class PassThrough Extends ActivatableControl {
             ItemFunction.Call(This)
         }
         Else {
+            If BackHK
             AccessibilityOverlay.PassThroughHotkey(A_ThisHotkey)
         }
     }
