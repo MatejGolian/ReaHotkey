@@ -3,7 +3,7 @@
 F6HK(ThisHotkey) {
     Thread "NoTimers"
     If Not ReaHotkey.FocusPluginControl()
-    PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
 }
 
 TabHK(ThisHotkey) {
@@ -13,7 +13,7 @@ TabHK(ThisHotkey) {
         ReaHotkey.Found%Context%.Overlay.FocusNextControl()
         Return
     }
-    PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
 }
 
 ShiftTabHK(ThisHotkey) {
@@ -23,34 +23,36 @@ ShiftTabHK(ThisHotkey) {
         ReaHotkey.Found%Context%.Overlay.FocusPreviousControl()
         Return
     }
-    PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
 }
 
 ControlTabHK(ThisHotkey) {
     Thread "NoTimers"
     Context := ReaHotkey.GetContext()
     If Context {
+        AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
         FocusNextPreviousTab("Next", ReaHotkey.Found%Context%.Overlay)
         Return
     }
-    PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
 }
 
 ControlShiftTabHK(ThisHotkey) {
     Thread "NoTimers"
     Context := ReaHotkey.GetContext()
     If Context {
+        AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
         FocusNextPreviousTab("Previous", ReaHotkey.Found%Context%.Overlay)
         Return
     }
-    PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
 }
 
 LeftRightHK(ThisHotkey) {
     Thread "NoTimers"
     Context := ReaHotkey.GetContext()
     If Context {
-        PassThroughHotkey(ThisHotkey)
+        AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
         Switch(ReaHotkey.Found%Context%.Overlay.GetCurrentControlType()) {
             Case "Custom":
             ReaHotkey.Found%Context%.Overlay.Focus(False)
@@ -67,14 +69,14 @@ LeftRightHK(ThisHotkey) {
         }
         Return
     }
-    PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
 }
 
 UpDownHK(ThisHotkey) {
     Thread "NoTimers"
     Context := ReaHotkey.GetContext()
     If Context {
-        PassThroughHotkey(ThisHotkey)
+        AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
         Switch(ReaHotkey.Found%Context%.Overlay.GetCurrentControlType()) {
             Case "ComboBox":
             If ThisHotkey = "Up"
@@ -91,7 +93,7 @@ UpDownHK(ThisHotkey) {
         }
         Return
     }
-    PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
 }
 
 EnterSpaceHK(ThisHotkey) {
@@ -100,15 +102,15 @@ EnterSpaceHK(ThisHotkey) {
     If Context {
         Switch(ReaHotkey.Found%Context%.Overlay.GetCurrentControlType()) {
             Case "Edit":
-            PassThroughHotkey(ThisHotkey)
+            AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
             Case "Focusable":
-            PassThroughHotkey(ThisHotkey)
+            AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
             Default:
             ReaHotkey.Found%Context%.Overlay.ActivateCurrentControl()
         }
         Return
     }
-    PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
 }
 
 AboutHK(ThisHotkey) {
@@ -210,19 +212,4 @@ HotkeyWait(ThisHotkey) {
         For K in Keys {
             KeyWait K
         }
-}
-
-PassThroughHotkey(ThisHotkey) {
-    Match := RegExMatch(ThisHotkey, "[a-zA-Z]")
-    If Match > 0 {
-        Modifiers := SubStr(ThisHotkey, 1, Match - 1)
-        KeyName := SubStr(ThisHotkey, Match)
-        If StrLen(KeyName) > 1
-        KeyName := "{" . KeyName . "}"
-        Try
-        Hotkey ThisHotkey, "Off"
-        Send Modifiers . KeyName
-        Try
-        Hotkey ThisHotkey, "On"
-    }
 }

@@ -326,7 +326,7 @@ Class Program {
     
     Class TriggerOverlayHotkey {
         Static Call(ThisHotkey) {
-            PassThroughHotkey(ThisHotkey)
+            AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
         }
     }
     
