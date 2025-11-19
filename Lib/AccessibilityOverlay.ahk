@@ -931,7 +931,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
 
 Class ExtraHotkey Extends AccessibilityControl {
     
-    ControlType := "Hotkey"
+    ControlType := "ExtraHotkey"
     HotkeyCommand := ""
     HotkeyFunctions := Array()
     
