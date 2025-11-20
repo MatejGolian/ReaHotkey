@@ -160,7 +160,7 @@ Class Zampler {
         If Not CurrentWinID = PreviousWinID And ReaHotkey.FoundPlugin Is Plugin {
             PreviousWinID := CurrentWinID
             ReaHotkey.FoundPlugin.Overlay.Reset()
-            ReaHotkey.FoundPlugin.Overlay.FocusControlNumber(1)
+            ReaHotkey.FoundPlugin.Overlay.FocusControlByNumber(1)
         }
     }
     

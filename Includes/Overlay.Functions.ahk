@@ -435,7 +435,7 @@ FocusElement(Type, SourceNumber, TypeToFocus := "C", ValueToFocus := 0) {
         NumberToFocus := SourceNumber + NumberToFocus
     }
     If TypeToFocus = "L" {
-        ReaHotkey.Found%Type%.Overlay.FocusControlLabel(LabelToFocus)
+        ReaHotkey.Found%Type%.Overlay.FocusControlByLabel(LabelToFocus)
         ReaHotkey.AutoFocus%Type%Overlay := True
     }
     Else {

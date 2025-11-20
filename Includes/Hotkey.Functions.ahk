@@ -172,7 +172,7 @@ FocusNextPreviousTab(Which, Overlay) {
                 Break
                 If SuperordinateControl Is TabControl {
                     Overlay.SetCurrentControlID(SuperordinateControl.ControlID)
-                    Overlay.FocusControlID(SuperordinateControl.ControlID)
+                    Overlay.FocusControlByID(SuperordinateControl.ControlID)
                     Sleep 200
                     Overlay.Focus%Which%Tab(True)
                     Break

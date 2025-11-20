@@ -90,12 +90,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return This.CurrentControl
         If ChildNumber > 0 And This.ChildControls.Length >= ChildNumber {
             ControlID := This.ChildControls[ChildNumber].ControlID
-            This.ActivateControlID(ControlID)
+            This.ActivateControlByID(ControlID)
         }
         Return This.CurrentControl
     }
     
-    ActivateControlID(ControlID) {
+    ActivateControlByID(ControlID) {
         If This.ChildControls.Length = 0
         Return This.CurrentControl
         If ControlID = This.CurrentControlID {
@@ -114,7 +114,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return This.CurrentControl
     }
     
-    ActivateControlLabel(Label) {
+    ActivateControlByLabel(Label) {
         If This.ChildControls.Length = 0
         Return This.CurrentControl
         FocusableControls := This.GetFocusableControls()
@@ -124,7 +124,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                     This.ActivateCurrentControl()
                 }
                 Else {
-                    This.ActivateControlID(FocusableControl.ControlID)
+                    This.ActivateControlByID(FocusableControl.ControlID)
                 }
                 Break
             }
@@ -132,7 +132,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return This.CurrentControl
     }
     
-    ActivateControlNumber(ControlNumber) {
+    ActivateControlByNumber(ControlNumber) {
         If This.ChildControls.Length = 0
         Return This.CurrentControl
         FocusableControlIDs := This.GetFocusableControlIDs()
@@ -143,7 +143,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             }
             Else {
                 TargetControl := AccessibilityOverlay.GetControl(ControlID)
-                This.ActivateControlID(TargetControl.ControlID)
+                This.ActivateControlByID(TargetControl.ControlID)
             }
         }
         Return This.CurrentControl
@@ -278,12 +278,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return This.CurrentControl
         If ChildNumber > 0 And This.ChildControls.Length >= ChildNumber {
             ControlID := This.ChildControls[ChildNumber].ControlID
-            This.FocusControlID(ControlID)
+            This.FocusControlByID(ControlID)
         }
         Return This.CurrentControl
     }
     
-    FocusControlID(ControlID) {
+    FocusControlByID(ControlID) {
         If This.ChildControls.Length = 0
         Return This.CurrentControl
         Found := This.FindFocusableControlID(ControlID)
@@ -297,7 +297,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return This.CurrentControl
     }
     
-    FocusControlLabel(Label) {
+    FocusControlByLabel(Label) {
         If This.ChildControls.Length = 0
         Return This.CurrentControl
         FocusableControls := This.GetFocusableControls()
@@ -307,7 +307,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                     This.FocusCurrentControl()
                 }
                 Else {
-                    This.FocusControlID(FocusableControl.ControlID)
+                    This.FocusControlByID(FocusableControl.ControlID)
                 }
                 Break
             }
@@ -315,14 +315,14 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return This.CurrentControl
     }
     
-    FocusControlNumber(ControlNumber) {
+    FocusControlByNumber(ControlNumber) {
         If This.ChildControls.Length = 0
         Return This.CurrentControl
         FocusableControlIDs :=This.GetFocusableControlIDs()
         If ControlNumber > 0 And FocusableControlIDs.Length >= ControlNumber {
             ControlID := FocusableControlIDs[ControlNumber]
             TargetControl := AccessibilityOverlay.GetControl(ControlID)
-            This.FocusControlID(TargetControl.ControlID)
+            This.FocusControlByID(TargetControl.ControlID)
         }
         Return This.CurrentControl
     }
@@ -735,11 +735,11 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 ControlToTrigger.CurrentTab := TabNumber
             }
             If ControlToTrigger.HasMethod("Activate") {
-                This.ActivateControlID(ControlToTrigger.ControlID)
+                This.ActivateControlByID(ControlToTrigger.ControlID)
             }
             Else {
                 If ControlToTrigger.HasMethod("Focus")
-                This.FocusControlID(ControlToTrigger.ControlID)
+                This.FocusControlByID(ControlToTrigger.ControlID)
             }
             For HotkeyFunction In HotkeyFunctions
             HotkeyFunction.Call(HotkeyTarget)
