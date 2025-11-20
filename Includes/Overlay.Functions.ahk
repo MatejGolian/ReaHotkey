@@ -435,13 +435,7 @@ FocusElement(Type, SourceNumber, TypeToFocus := "C", ValueToFocus := 0) {
         NumberToFocus := SourceNumber + NumberToFocus
     }
     If TypeToFocus = "L" {
-        OverlayControls := ReaHotkey.Found%Type%.Overlay.GetFocusableControls()
-        If OverlayControls.Length > 0
-        For OverlayControl In OverlayControls
-        If OverlayControl.Label = LabelToFocus {
-            ReaHotkey.Found%Type%.Overlay.FocusControlID(OverlayControl.ControlID)
-            Return
-        }
+        ReaHotkey.Found%Type%.Overlay.FocusControlLabel(LabelToFocus)
         ReaHotkey.AutoFocus%Type%Overlay := True
     }
     Else {
