@@ -159,7 +159,7 @@ Class KompleteKontrol {
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
         Else
-        UIAElement := AccessibilityOverlay.GetUIAWindow()
+        UIAElement := AccessibilityOverlay.Helpers.GetUIAWindow()
         Found := False
         Try
         UIAElement := UIAElement.FindElement({Type: "Menu"})
@@ -304,7 +304,7 @@ Class KompleteKontrol {
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
         Else
-        UIAElement := AccessibilityOverlay.GetUIAWindow()
+        UIAElement := AccessibilityOverlay.Helpers.GetUIAWindow()
         If UIAElement Is UIA.IUIAutomationElement
         Loop Criteria.Length {
             Try
@@ -367,7 +367,7 @@ Class KompleteKontrol {
         If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
         Return False
         Try
-        UIAElement := AccessibilityOverlay.GetUIAWindow()
+        UIAElement := AccessibilityOverlay.Helpers.GetUIAWindow()
         Catch
         Return False
         If Not UIAElement Is UIA.IUIAutomationElement
@@ -423,7 +423,7 @@ Class KompleteKontrol {
         LoadedPlugin := Plugin.GetByClass(PluginControl)
         If LoadedPlugin Is Plugin
         If LoadedPlugin.Name = "Kontakt 7" Or LoadedPlugin.Name = "Kontakt 8" {
-            Window := AccessibilityOverlay.GetUIAWindow()
+            Window := AccessibilityOverlay.Helpers.GetUIAWindow()
             If Not Window
             Return False
             KClassName := "Kontakt7"

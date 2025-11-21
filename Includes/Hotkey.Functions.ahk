@@ -3,7 +3,7 @@
 F6HK(ThisHotkey) {
     Thread "NoTimers"
     If Not ReaHotkey.FocusPluginControl()
-    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
 }
 
 TabHK(ThisHotkey) {
@@ -13,7 +13,7 @@ TabHK(ThisHotkey) {
         ReaHotkey.Found%Context%.Overlay.FocusNextControl()
         Return
     }
-    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
 }
 
 ShiftTabHK(ThisHotkey) {
@@ -23,36 +23,36 @@ ShiftTabHK(ThisHotkey) {
         ReaHotkey.Found%Context%.Overlay.FocusPreviousControl()
         Return
     }
-    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
 }
 
 ControlTabHK(ThisHotkey) {
     Thread "NoTimers"
     Context := ReaHotkey.GetContext()
     If Context {
-        AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+        AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
         FocusNextPreviousTab("Next", ReaHotkey.Found%Context%.Overlay)
         Return
     }
-    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
 }
 
 ControlShiftTabHK(ThisHotkey) {
     Thread "NoTimers"
     Context := ReaHotkey.GetContext()
     If Context {
-        AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+        AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
         FocusNextPreviousTab("Previous", ReaHotkey.Found%Context%.Overlay)
         Return
     }
-    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
 }
 
 LeftRightHK(ThisHotkey) {
     Thread "NoTimers"
     Context := ReaHotkey.GetContext()
     If Context {
-        AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+        AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
         Switch(ReaHotkey.Found%Context%.Overlay.GetCurrentControlType()) {
             Case "Custom":
             ReaHotkey.Found%Context%.Overlay.Focus(False)
@@ -69,14 +69,14 @@ LeftRightHK(ThisHotkey) {
         }
         Return
     }
-    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
 }
 
 UpDownHK(ThisHotkey) {
     Thread "NoTimers"
     Context := ReaHotkey.GetContext()
     If Context {
-        AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+        AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
         Switch(ReaHotkey.Found%Context%.Overlay.GetCurrentControlType()) {
             Case "ComboBox":
             If ThisHotkey = "Up"
@@ -93,7 +93,7 @@ UpDownHK(ThisHotkey) {
         }
         Return
     }
-    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
 }
 
 EnterSpaceHK(ThisHotkey) {
@@ -102,15 +102,15 @@ EnterSpaceHK(ThisHotkey) {
     If Context {
         Switch(ReaHotkey.Found%Context%.Overlay.GetCurrentControlType()) {
             Case "Edit":
-            AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+            AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
             Case "Focusable":
-            AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+            AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
             Default:
             ReaHotkey.Found%Context%.Overlay.ActivateCurrentControl()
         }
         Return
     }
-    AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+    AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
 }
 
 AboutHK(ThisHotkey) {

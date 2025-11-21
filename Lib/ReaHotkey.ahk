@@ -234,7 +234,7 @@ Class ReaHotkey {
     }
     
     Static GetPluginWinCriteriaList() {
-        Return AccessibilityOverlay.MergeArrays(This.AbletonPluginWinCriteriaList, This.reaperPluginWinCriteriaList)
+        Return AccessibilityOverlay.Helpers.MergeArrays(This.AbletonPluginWinCriteriaList, This.reaperPluginWinCriteriaList)
     }
     
     Static GetReaperPlugin() {

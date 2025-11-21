@@ -517,7 +517,7 @@ Class Dubler2MIDICapturePlugin {
         If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
         Return False
         Try
-        UIAElement := AccessibilityOverlay.GetUIAWindow()
+        UIAElement := AccessibilityOverlay.Helpers.GetUIAWindow()
         Catch
         Return False
         If Not UIAElement Is UIA.IUIAutomationElement

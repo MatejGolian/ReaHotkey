@@ -66,7 +66,7 @@ Class Kontakt8 {
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
         Else
-        UIAElement := AccessibilityOverlay.GetUIAWindow()
+        UIAElement := AccessibilityOverlay.Helpers.GetUIAWindow()
         Try
         If UIAElement
         Switch HeaderButton.Label {
@@ -196,7 +196,7 @@ Class Kontakt8 {
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
         Else
-        UIAElement := AccessibilityOverlay.GetUIAWindow()
+        UIAElement := AccessibilityOverlay.Helpers.GetUIAWindow()
         Found := False
         Try
         UIAElement := UIAElement.FindElement({Type: "Menu"})
@@ -287,7 +287,7 @@ Class Kontakt8 {
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
         Else
-        UIAElement := AccessibilityOverlay.GetUIAWindow()
+        UIAElement := AccessibilityOverlay.Helpers.GetUIAWindow()
         Try
         UIAElement := UIAElement.FindElement({ClassName: "FileTypeSelector", MatchMode: "Substring"})
         Catch
@@ -303,7 +303,7 @@ Class Kontakt8 {
         If Not ReaHotkey.PluginWinCriteria Or Not WinActive(ReaHotkey.PluginWinCriteria)
         Return False
         Try
-        UIAElement := AccessibilityOverlay.GetUIAWindow()
+        UIAElement := AccessibilityOverlay.Helpers.GetUIAWindow()
         Catch
         Return False
         If Not UIAElement Is UIA.IUIAutomationElement

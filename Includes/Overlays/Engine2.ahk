@@ -71,7 +71,7 @@ Class Engine2 {
         If TargetControl = "Button2"
         ControlClick TargetControl, "A"
         Else
-        AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+        AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
     }
     
     Static CheckPlugin(PluginInstance) {
@@ -116,7 +116,7 @@ Class Engine2 {
         If CurrentControl = "Button2"
         ControlClick CurrentControl, "A"
         Else
-        AccessibilityOverlay.PassThroughHotkey(ThisHotkey)
+        AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
     }
     
     Static InitConfig() {

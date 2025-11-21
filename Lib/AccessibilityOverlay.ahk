@@ -589,7 +589,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Else {
             ExtendedFocusableControls.Push(Value)
         }
-        Return AccessibilityOverlay.MergeArrays(ExtendedFocusableControls, HotkeyedControls)
+        Return AccessibilityOverlay.Helpers.MergeArrays(ExtendedFocusableControls, HotkeyedControls)
     }
     
     IncreaseSlider() {
@@ -793,59 +793,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return This.GetControl(This.CurrentControlID)
     }
     
-    Static GetImgSize(Img) {
-        BaseDir := A_WorkingDir
-        If Not SubStr(BaseDir, 0, 1) = "\"
-        BaseDir .= "\"
-        Img := StrReplace(Img, "/", "\")
-        If SubStr(Img, 2, 1) = ":" Or SubStr(Img, 2, 1) = "\"
-        SplitPath Img, &FileName, &Dir
-        Else
-        SplitPath BaseDir . Img, &FileName, &Dir
-        (Dir = "" && Dir := BaseDir)
-        ObjShell := ComObject("Shell.Application")
-        ObjFolder := objShell.NameSpace(Dir), ObjFolderItem := ObjFolder.ParseName(FileName)
-        Scale := StrSplit(RegExReplace(ObjFolder.GetDetailsOf(ObjFolderItem, 31), ".(.+).", "$1"), " x ")
-        Try
-        ReturnObject := {W: Scale[1], H: Scale[2]}
-        Catch
-        ReturnObject := {W: 0, H: 0}
-        Return ReturnObject
-    }
-    
-    Static GetUIAWindow() {
-        If Not IsSet(UIA)
-        Return False
-        Loop
-        Try
-        WinID := WinGetID("A")
-        Catch
-        WinID := 0
-        Until WinID
-        CacheRequest := UIA.CreateCacheRequest(["Type", "LocalizedType", "AutomationId", "Name", "Value", "ClassName", "AcceleratorKey", "WindowCanMaximize"], ["Window"], "Subtree")
-        Try
-        UIAWindow := UIA.ElementFromHandle("ahk_id " . WinID, CacheRequest)
-        Catch
-        Return False
-        Return UIAWindow
-    }
-    
-    Static InArray(Needle, Haystack) {
-        For FoundIndex, FoundValue In Haystack
-        If FoundValue == Needle
-        Return FoundIndex
-        Return False
-    }
-    
-    Static MergeArrays(Params*) {
-        Merged := Array()
-        For Param In Params
-        If Param Is Array
-        For Item In Param
-        Merged.Push(Item)
-        Return Merged
-    }
-    
     Static OCR(OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "") {
         If OCRType = "Tesseract" Or OCRType = "TesseractLegacy"
         Return This.TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 3)
@@ -855,21 +802,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return This.TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 2)
         Else
         Return This.UWPOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale)
-    }
-    
-    Static PassThroughHotkey(ThisHotkey) {
-        Match := RegExMatch(ThisHotkey, "[a-zA-Z]")
-        If Match > 0 {
-            Modifiers := SubStr(ThisHotkey, 1, Match - 1)
-            KeyName := SubStr(ThisHotkey, Match)
-            If StrLen(KeyName) > 1
-            KeyName := "{" . KeyName . "}"
-            Try
-            Hotkey ThisHotkey, "Off"
-            Send Modifiers . KeyName
-            Try
-            Hotkey ThisHotkey, "On"
-        }
     }
     
     Static Speak(Message := "") {
@@ -958,6 +890,127 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             }
         }
         Return ""
+    }
+    
+    Class Helpers {
+        
+        Static __Call(Value, Properties) {
+            If This.HasMethod("_" . Value) {
+                Return ObjBindMethod(This, "_" . Value).Call(Properties*)
+            }
+            Throw MethodError("This value of type `"" . This.__Class . "`" has no method named `"" . Value . "`".", -1)
+        }
+        
+        Static _FocusUIAElement(MainElement, Number) {
+            Critical
+            Try {
+                UIAElement := This._GetUIAElement(MainElement, Number)
+                UIAElement.SetFocus()
+            }
+            Catch {
+                Return False
+            }
+            Return UIAElement
+        }
+        
+        Static _GetFocusableUIAElements(MainElement) {
+            FocusableElements := Array()
+            If Not MainElement Is UIA.IUIAutomationElement
+            Return FocusableElements
+            Try
+            FocusableElements := MainElement.FindElements({IsKeyboardFocusable: True})
+            Catch
+            FocusableElements := Array()
+            Return FocusableElements
+        }
+        
+        Static _GetImgSize(Img) {
+            BaseDir := A_WorkingDir
+            If Not SubStr(BaseDir, 0, 1) = "\"
+            BaseDir .= "\"
+            Img := StrReplace(Img, "/", "\")
+            If SubStr(Img, 2, 1) = ":" Or SubStr(Img, 2, 1) = "\"
+            SplitPath Img, &FileName, &Dir
+            Else
+            SplitPath BaseDir . Img, &FileName, &Dir
+            (Dir = "" && Dir := BaseDir)
+            ObjShell := ComObject("Shell.Application")
+            ObjFolder := objShell.NameSpace(Dir), ObjFolderItem := ObjFolder.ParseName(FileName)
+            Scale := StrSplit(RegExReplace(ObjFolder.GetDetailsOf(ObjFolderItem, 31), ".(.+).", "$1"), " x ")
+            Try
+            ReturnObject := {W: Scale[1], H: Scale[2]}
+            Catch
+            ReturnObject := {W: 0, H: 0}
+            Return ReturnObject
+        }
+        
+        Static _GetUIAElement(MainElement, Number) {
+            If Not MainElement Is UIA.IUIAutomationElement
+            Return False
+            UIAElement := False
+            FocusableElements := This._GetFocusableUIAElements(MainElement)
+            If FocusableElements.Length > 0 {
+                If Number = 0 {
+                    UIAElement := FocusableElements[FocusableElements.Length]
+                }
+                Else {
+                    If Number <= FocusableElements.Length
+                    UIAElement := FocusableElements[Number]
+                    Else
+                    Return False
+                }
+            }
+            Return UIAElement
+        }
+        
+        Static _GetUIAWindow() {
+            If Not IsSet(UIA)
+            Return False
+            Loop
+            Try
+            WinID := WinGetID("A")
+            Catch
+            WinID := 0
+            Until WinID
+            CacheRequest := UIA.CreateCacheRequest(["Type", "LocalizedType", "AutomationId", "Name", "Value", "ClassName", "AcceleratorKey", "WindowCanMaximize"], ["Window"], "Subtree")
+            Try
+            UIAWindow := UIA.ElementFromHandle("ahk_id " . WinID, CacheRequest)
+            Catch
+            Return False
+            Return UIAWindow
+        }
+        
+        Static _InArray(Needle, Haystack) {
+            For FoundIndex, FoundValue In Haystack
+            If FoundValue == Needle
+            Return FoundIndex
+            Return False
+        }
+        
+        Static _MergeArrays(Params*) {
+            Merged := Array()
+            For Param In Params
+            If Param Is Array
+            For Item In Param
+            Merged.Push(Item)
+            Return Merged
+        }
+        
+        Static _PassThroughHotkey(ThisHotkey) {
+            Match := RegExMatch(ThisHotkey, "[a-zA-Z]")
+            If Match > 0 {
+                Modifiers := SubStr(ThisHotkey, 1, Match - 1)
+                KeyName := SubStr(ThisHotkey, Match)
+                If StrLen(KeyName) > 1
+                KeyName := "{" . KeyName . "}"
+                Try
+                Hotkey ThisHotkey, "Off"
+                Send Modifiers . KeyName
+                Try
+                Hotkey ThisHotkey, "On"
+            }
+        }
+        
     }
     
 }
@@ -1536,7 +1589,7 @@ Class FocusableUIA Extends FocusableControl {
     }
     
     FindElement() {
-        Window := AccessibilityOverlay.GetUIAWindow()
+        Window := AccessibilityOverlay.Helpers.GetUIAWindow()
         This.Window := Window
         If Not Window
         Return False
@@ -2111,12 +2164,12 @@ Class GraphicalButton Extends  ActivatableGraphic {
     }
     
     ExecuteOnActivationPreSpeech() {
-        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
+        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2)
         Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
-        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
+        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2)
     }
     
 }
@@ -2141,12 +2194,12 @@ Class GraphicalToggleButton Extends  ActivatableGraphic {
     }
     
     ExecuteOnActivationPreSpeech() {
-        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
+        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2)
         Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
-        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
+        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2)
     }
     
 }
@@ -2171,12 +2224,12 @@ Class GraphicalCheckbox Extends ActivatableGraphic {
     }
     
     ExecuteOnActivationPreSpeech() {
-        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
+        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2)
         Sleep 200
     }
     
     ExecuteOnFocusPreSpeech() {
-        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
+        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2)
     }
     
     GetState() {
@@ -2221,7 +2274,7 @@ Class GraphicalSlider Extends FocusableGraphic {
     }
     
     CenterMouse() {
-        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
+        MouseMove This.FoundXCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2)
     }
     
     Decrease() {
@@ -2241,7 +2294,7 @@ Class GraphicalSlider Extends FocusableGraphic {
                 Return 100
             }
             Else {
-                Position := Round((This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2) - This.Start) / (This.Size / 100), 0)
+                Position := Round((This.FoundXCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).W / 2) - This.Start) / (This.Size / 100), 0)
                 If Position > 100
                 Position := 100
                 Return Position
@@ -2255,7 +2308,7 @@ Class GraphicalSlider Extends FocusableGraphic {
                 Return 0
             }
             Else {
-                Position := Round((This.End - This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)) / (This.Size / 100), 0)
+                Position := Round((This.End - This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2)) / (This.Size / 100), 0)
                 If Position > 100
                 Position := 100
                 Return Position
@@ -2293,9 +2346,9 @@ Class GraphicalSlider Extends FocusableGraphic {
                 StartPosition := This.GetPosition()
                 CurrentPosition := StartPosition
                 If Coordinate = "X"
-                StartCoordinate := StartCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2)
+                StartCoordinate := StartCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).W / 2)
                 Else
-                StartCoordinate := StartCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
+                StartCoordinate := StartCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2)
                 OnePercent := Ceil(This.Size / 100)
                 If OnePercent < 1
                 OnePercent := 1
@@ -2328,9 +2381,9 @@ Class GraphicalSlider Extends FocusableGraphic {
         }
         Drag() {
             If Coordinate = "X"
-            MouseClickDrag "Left", This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2), TargetCoordinate, This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2), 0
+            MouseClickDrag "Left", This.FoundXCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2), TargetCoordinate, This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2), 0
             Else
-            MouseClickDrag "Left", This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2), TargetCoordinate, 0
+            MouseClickDrag "Left", This.FoundXCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2), TargetCoordinate, 0
             Sleep 25
             This.CheckState()
         }
@@ -2411,7 +2464,7 @@ Class GraphicalTab Extends Tab {
     }
     
     ExecuteOnFocusPreSpeech() {
-        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.GetImgSize(This.FoundImage).H / 2)
+        Click This.FoundXCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).W / 2), This.FoundYCoordinate + Floor(AccessibilityOverlay.Helpers.GetImgSize(This.FoundImage).H / 2)
     }
     
 }
@@ -2962,7 +3015,7 @@ Class PassThrough Extends ActivatableControl {
     }
     
     ExecuteOnActivationPreSpeech() {
-        AccessibilityOverlay.PassThroughHotkey(A_ThisHotkey)
+        AccessibilityOverlay.Helpers.PassThroughHotkey(A_ThisHotkey)
     }
     
     ExecuteOnFocusPreSpeech() {
@@ -2996,12 +3049,12 @@ Class PassThrough Extends ActivatableControl {
     GetHKState(&ForwardHK := False, &BackHK := False) {
         ForwardHk := False
         BackHK := False
-        If AccessibilityOverlay.InArray(A_ThisHotkey, This.ForwardHks) {
+        If AccessibilityOverlay.Helpers.InArray(A_ThisHotkey, This.ForwardHks) {
             ForwardHk := True
             This.LastDirection := 1
         }
         Else {
-            If AccessibilityOverlay.InArray(A_ThisHotkey, This.BackHKs) {
+            If AccessibilityOverlay.Helpers.InArray(A_ThisHotkey, This.BackHKs) {
                 BackHK := True
                 This.LastDirection := -1
             }
@@ -3030,7 +3083,7 @@ Class PassThrough Extends ActivatableControl {
             ItemFunction.Call(This)
         }
         Else If ForwardHk {
-            AccessibilityOverlay.PassThroughHotkey(A_ThisHotkey)
+            AccessibilityOverlay.Helpers.PassThroughHotkey(A_ThisHotkey)
         }
         Else If BackHK And This.CurrentItem = This.Size And This.LastItemFunctions.Length > 0 {
             For ItemFunction In This.LastItemFunctions
@@ -3038,7 +3091,7 @@ Class PassThrough Extends ActivatableControl {
         }
         Else {
             If BackHK
-            AccessibilityOverlay.PassThroughHotkey(A_ThisHotkey)
+            AccessibilityOverlay.Helpers.PassThroughHotkey(A_ThisHotkey)
         }
     }
     
