@@ -443,7 +443,7 @@ FocusElement(Type, SourceNumber, TypeToFocus := "C", ValueToFocus := 0) {
         MethodName := "FocusChildNumber"
         If TypeToFocus = "N" {
             PropertyName := "FocusableControlIDs"
-            MethodName := "FocusControlNumber"
+            MethodName := "FocusControlByNumber"
         }
         If Not NumberToFocus Or ReaHotkey.Found%Type%.Overlay.%PropertyName%.Length = 0 {
             ReaHotkey.AutoFocus%Type%Overlay := True
