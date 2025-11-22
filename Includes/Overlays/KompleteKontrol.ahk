@@ -738,6 +738,7 @@ Class KompleteKontrol {
     }
     
     #IncludeAgain KontaktKompleteKontrol/NoLibraryProduct.ahk
+    #IncludeAgain KontaktKompleteKontrol/Audiobro.ahk
     #IncludeAgain KontaktKompleteKontrol/AudioImperia.ahk
     #IncludeAgain KontaktKompleteKontrol/CinematicStudioSeries.ahk
     #IncludeAgain KontaktKompleteKontrol/ImpactSoundworks.ahk

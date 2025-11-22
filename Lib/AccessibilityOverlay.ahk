@@ -2915,17 +2915,19 @@ Class OCRText Extends FocusableControl {
     OCRLanguage := ""
     OCRScale := ""
     OCRType := "UWP"
+    ValuePrefix := ""
     X1Coordinate := 0
     Y1Coordinate := 0
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(DefaultValue, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+    __New(ValuePrefix, DefaultValue, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
         Super.__New("", PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.DefaultValue := DefaultValue
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale
         This.OCRType := (OCRType = "Tesseract" Or OCRType = "TesseractBest" Or OCRType = "TesseractFast" Or OCRType = "TesseractLegacy" Or OCRType = "UWP" ? OCRType : This.OCRType)
+        This.ValuePrefix := ValuePrefix
         This.X1Coordinate := X1Coordinate
         This.Y1Coordinate := Y1Coordinate
         This.X2Coordinate := X2Coordinate
@@ -2941,6 +2943,8 @@ Class OCRText Extends FocusableControl {
         ValueString := AccessibilityOverlay.OCR(This.OCRType, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
         If ValueString = ""
         ValueString := This.DefaultValue
+        Else
+        ValueString := This.ValuePrefix . " " . ValueString
         This.Value := ValueString
         If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
         Message := ValueString . " " . StateString . " " . This.HotkeyLabel
