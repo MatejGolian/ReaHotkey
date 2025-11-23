@@ -460,21 +460,6 @@ FocusElement(Type, SourceNumber, TypeToFocus := "C", ValueToFocus := 0) {
     }
 }
 
-FocusPluginUIAPassThroughElement(OverlayObj, MainElementCallback, ElementNumber) {
-    MainElement := MainElementCallback.Call()
-    If MainElement Is UIA.IUIAutomationElement
-    AccessibilityOverlay.Helpers.FocusUIAElement(MainElement, ElementNumber)
-}
-
-FocusStandaloneUIAPassThroughElement(OverlayObj, MainElementCallback, ElementNumber) {
-    Try
-    MainElement := MainElementCallback.Call().ElementFromPath(1)
-    Catch
-    MainElement := False
-    If MainElement Is UIA.IUIAutomationElement
-    AccessibilityOverlay.Helpers.FocusUIAElement(MainElement, ElementNumber)
-}
-
 GetCurrentControlClass() {
     Try
     If ControlGetFocus("A") = 0
@@ -777,34 +762,4 @@ WinPctClick(XPct, YPct) {
     Else
     YPx := Floor(H / 100 * YPct)
     Click(XPx, YPx)
-}
-
-WrapPluginUIAPassThroughEnd(OverlayObj, MainElementCallback, ElementNumber := 0) {
-    MainElement := MainElementCallback.Call()
-    If MainElement Is UIA.IUIAutomationElement
-    Return AccessibilityOverlay.Helpers.WrapUIAPassThrough(MainElement, ElementNumber)
-}
-
-WrapPluginUIAPassThroughStart(OverlayObj, MainElementCallback, ElementNumber := 1) {
-    MainElement := MainElementCallback.Call()
-    If MainElement Is UIA.IUIAutomationElement
-    Return AccessibilityOverlay.Helpers.WrapUIAPassThrough(MainElement, ElementNumber)
-}
-
-WrapStandaloneUIAPassThroughEnd(OverlayObj, MainElementCallback, ElementNumber := 0) {
-    Try
-    MainElement := MainElementCallback.Call().ElementFromPath(1)
-    Catch
-    MainElement := False
-    If MainElement Is UIA.IUIAutomationElement
-    Return AccessibilityOverlay.Helpers.WrapUIAPassThrough(MainElement, ElementNumber)
-}
-
-WrapStandaloneUIAPassThroughStart(OverlayObj, MainElementCallback, ElementNumber := 1) {
-    Try
-    MainElement := MainElementCallback.Call().ElementFromPath(1)
-    Catch
-    MainElement := False
-    If MainElement Is UIA.IUIAutomationElement
-    Return AccessibilityOverlay.Helpers.WrapUIAPassThrough(MainElement, ElementNumber)
 }
