@@ -1011,7 +1011,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             }
         }
         
-        Static _WrapUIAPassThroughEnd(MainElement, Number := 0) {
+        Static _WrapUIAPassThrough(MainElement, Number) {
             Critical
             If Not MainElement Is UIA.IUIAutomationElement
             Return False
@@ -1020,40 +1020,16 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Catch
             Return False
             Try
-            EndElement := This._GetUIAElement(MainElement, Number)
+            WrappingElement := This._GetUIAElement(MainElement, Number)
             Catch
             Return False
             Try
-            If FocusedElement Is UIA.IUIAutomationElement And EndElement Is UIA.IUIAutomationElement {
-                If MainElement.GetUIAPath(FocusedElement) = MainElement.GetUIAPath(EndElement)
+            If FocusedElement Is UIA.IUIAutomationElement And WrappingElement Is UIA.IUIAutomationElement {
+                If MainElement.GetUIAPath(FocusedElement) = MainElement.GetUIAPath(WrappingElement)
                 Return True
             }
             Else {
-                If Not EndElement Is UIA.IUIAutomationElement
-                Return True
-            }
-            Return False
-        }
-        
-        Static _WrapUIAPassThroughStart(MainElement, Number := 1) {
-            Critical
-            If Not MainElement Is UIA.IUIAutomationElement
-            Return False
-            Try
-            FocusedElement := UIA.GetFocusedElement()
-            Catch
-            Return False
-            Try
-            StartElement := This._GetUIAElement(MainElement, Number)
-            Catch
-            Return False
-            Try
-            If FocusedElement Is UIA.IUIAutomationElement And StartElement Is UIA.IUIAutomationElement {
-                If MainElement.GetUIAPath(FocusedElement) = MainElement.GetUIAPath(StartElement)
-                Return True
-            }
-            Else {
-                If Not StartElement Is UIA.IUIAutomationElement
+                If Not WrappingElement Is UIA.IUIAutomationElement
                 Return True
             }
             Return False
