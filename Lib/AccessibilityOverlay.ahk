@@ -901,6 +901,13 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Throw MethodError("This value of type `"" . This.__Class . "`" has no method named `"" . Value . "`".", -1)
         }
         
+        Static __Get(Value, Properties) {
+            If This.HasMethod("_" . Value) {
+                Return ObjBindMethod(This, "_" . Value, Properties*)
+            }
+            Throw PropertyError("This value of type `"" . This.__Class . "`" has no property named `"" . Value . "`".", -1)
+        }
+        
         Static _FocusUIAElement(MainElement, Number) {
             Critical
             Try {
