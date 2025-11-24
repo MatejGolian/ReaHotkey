@@ -15,7 +15,7 @@ Class AccessibilityControl {
     
     __Get(Name, Params) {
         Try
-        Return This.Get%Name%()
+        Return This.Get%Name%(Params*)
         Catch As ErrorMessage
         Throw ErrorMessage
     }
@@ -77,12 +77,12 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         This.Label := Label
     }
     
-    __Call(Value, Properties) {
-        If SubStr(Value, 1, 3) == "Add" And IsSet(%SubStr(Value, 4)%){
-            Control := %SubStr(Value, 4)%.Call(Properties*)
+    __Call(Name, Params) {
+        If SubStr(Name, 1, 3) == "Add" And IsSet(%SubStr(Name, 4)%){
+            Control := %SubStr(Name, 4)%.Call(Params*)
             Return This.AddControl(Control)
         }
-        Throw MethodError("This value of type `"" . This.__Class . "`" has no method named `"" . Value . "`".", -1)
+        Throw MethodError("This value of type `"" . This.__Class . "`" has no method named `"" . Name . "`".", -1)
     }
     
     ActivateChildNumber(ChildNumber) {
@@ -762,7 +762,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     Static __Get(Name, Params) {
         Try
-        Return This.Get%Name%()
+        Return This.Get%Name%(Params*)
         Catch As ErrorMessage
         Throw ErrorMessage
     }
@@ -894,18 +894,18 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     Class Helpers {
         
-        Static __Call(Value, Properties) {
-            If This.HasMethod("_" . Value) {
-                Return ObjBindMethod(This, "_" . Value).Call(Properties*)
+        Static __Call(Name, Params) {
+            If This.HasMethod("_" . Name) {
+                Return ObjBindMethod(This, "_" . Name).Call(Params*)
             }
-            Throw MethodError("This value of type `"" . This.__Class . "`" has no method named `"" . Value . "`".", -1)
+            Throw MethodError("This value of type `"" . This.__Class . "`" has no method named `"" . Name . "`".", -1)
         }
         
-        Static __Get(Value, Properties) {
-            If This.HasMethod("_" . Value) {
-                Return ObjBindMethod(This, "_" . Value, Properties*)
+        Static __Get(Name, Params) {
+            If This.HasMethod("_" . Name) {
+                Return ObjBindMethod(This, "_" . Name, Params*)
             }
-            Throw PropertyError("This value of type `"" . This.__Class . "`" has no property named `"" . Value . "`".", -1)
+            Throw PropertyError("This value of type `"" . This.__Class . "`" has no property named `"" . Name . "`".", -1)
         }
         
         Static _FocusUIAElement(MainElement, Number) {

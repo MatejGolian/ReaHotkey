@@ -53,7 +53,7 @@ Class ReaHotkey {
     
     Static __Get(Name, Params) {
         Try
-        Return This.Get%Name%()
+        Return This.Get%Name%(Params*)
         Catch As ErrorMessage
         Throw ErrorMessage
     }
