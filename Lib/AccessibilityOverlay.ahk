@@ -3067,6 +3067,7 @@ Class PassThrough Extends ActivatableControl {
     }
     
     Focus(Speak := False, Move := False) {
+        If Move
         This.Reset()
         For FocusFunction In This.PreExecFocusFunctions
         FocusFunction.Call(This)
