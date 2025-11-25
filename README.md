@@ -31,7 +31,7 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
   - Works inside REAPER and Ableton Live 12. Note that Kontakt version 7.10 or higher is required.
   - Switching Between instruments/multis/snapshots Only works inside REAPER and Ableton Live 12 - ReaHotkey does not support these features in the standalone versions of Kontakt.
   - The Content Missing dialog may not be accessible when running Kontakt inside Komplete Kontrol.
-* Makes it possible to switch Between various mixes and microphone positions in Audio Imperia's Areia, Cerberus, Chorus, Dolce, Glade, Jaeger, Nucleus, Solo and Talos libraries. There is also support for toggling microphone positions in Cinematic Studio Strings and Brass, switching presets in the 'Juggernaut' library by Impact Soundworks and toggling the reverb on/off in a couple of Soundiron libraries.
+* Includes support for interacting with various sample libraries for Kontakt. Reffer to the section below for the full list.
   - Only works inside REAPER and Ableton Live 12.
 * Adds ability to choose presets in Raum by Native instruments.
 * Adds basic support for the Xfer Records Serum 2 synthesizer inside REAPER and Ableton Live 12.
@@ -41,6 +41,19 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
 * Makes it possible to load instruments, set polyphony and pitchbend range in Plogue sforzando.
   - Works inside REAPER, Ableton Live 12 and in the standalone version of sforzando.
 * Makes it possible to use the Zampler plug-in by Synapse Audio in REAPER and Ableton Live 12.
+
+### List of Supported Kontakt Sample Libraries
+
+* Audio Imperia: Areia, Cerberus, Chorus, Dolce, Glade, Jaeger, Nucleus, Solo and Talos
+  - Switching between mixes / microphone positions
+* Audiobro: LA Scoring Strings 3
+  - Toggling the look ahead on/off and reporting the current look ahead value
+* Cinematic Studio Series: Cinematic Studio Strings and Cinematic Studio Brass
+  - Switching between mixes / microphone positions
+* Impact Soundworks: Juggernaut
+  - Switching presets
+* Soundiron: Mimi Page Light & Shadow, Voices Of Gaia and Voices of Wind Collection
+  - Toggling the reverb on/off
 
 ## Getting Started
 

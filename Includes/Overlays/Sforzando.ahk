@@ -53,9 +53,7 @@ Class Sforzando {
         PluginHeader.AddOCRButton("Polyphony", "Polyphony not detected", "TesseractBest", 486, 40, 516, 70)
         PluginHeader.AddOCRButton("Pitchbend range", "Pitchbend range not detected", "TesseractBest", 576, 40, 602, 60)
         PluginInstance.Overlay.Label := "sforzando"
-        If PluginInstance.Overlay.ChildControls.Length = 0
-        PluginInstance.Overlay.AddPluginOverlay()
-        PluginInstance.Overlay.ChildControls[1] := PluginHeader
+        PluginInstance.Overlay.ReplaceControlAt(1, PluginHeader)
     }
     
     Static InitStandalone(StandaloneInstance) {
@@ -64,9 +62,7 @@ Class Sforzando {
         StandaloneHeader.AddOCRButton("Polyphony", "Polyphony not detected", "TesseractBest", 486, 40, 516, 70)
         StandaloneHeader.AddOCRButton("Pitchbend range", "Pitchbend range not detected", "TesseractBest", 576, 40, 602, 60)
         StandaloneInstance.Overlay.Label := "sforzando"
-        If StandaloneInstance.Overlay.ChildControls.Length = 0
-        StandaloneInstance.Overlay.AddStandaloneOverlay()
-        StandaloneInstance.Overlay.ChildControls[1] := StandaloneHeader
+        StandaloneInstance.Overlay.ReplaceControlAt(1, StandaloneHeader)
     }
     
 }

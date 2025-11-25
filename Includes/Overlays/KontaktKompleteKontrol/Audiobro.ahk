@@ -14,7 +14,6 @@ Class Audiobro {
         
         LASS3Overlay := PluginOverlay("LA Scoring Strings 3")
         LASS3Overlay.Metadata := Map("Vendor", "Audiobro", "Product", "LA Scoring Strings 3", "Image", Map("File", "Images/SampleLibraries/LAScoringStrings3/Product.png"))
-        LASS3Overlay.AddPluginOverlay()
         LASS3Overlay.AddStaticText("LA Scoring Strings 3")
         LASS3Overlay.AddHotspotButton("Toggle Look Ahead On/Off", This.%PluginClass%XOffset + 42, This.%PluginClass%YOffset + 779)
         LASS3Overlay.AddOCRText("Look Ahead Readout", "Look Ahead Readout not detected", "TesseractBest", This.%PluginClass%XOffset + 130, This.%PluginClass%YOffset + 776, This.%PluginClass%XOffset + 286, This.%PluginClass%YOffset + 785)

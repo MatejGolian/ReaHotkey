@@ -36,7 +36,7 @@ Class Kontakt7 {
         Plugin.Register("Kontakt 7", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
         
         For K7PluginOverlay In This.PluginOverlays {
-            K7PluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
+            K7PluginOverlay.AddControlAt(1, This.PluginHeader)
             Plugin.RegisterOverlay("Kontakt 7", K7PluginOverlay)
         }
         
@@ -381,14 +381,10 @@ Class Kontakt7 {
     }
     
     Static InitPlugin(PluginInstance) {
-        If PluginInstance.Overlay.ChildControls.Length = 0
-        PluginInstance.Overlay.AddPluginOverlay()
-        PluginInstance.Overlay.ChildControls[1] := This.PluginHeader.Clone()
         If Not HasProp(PluginInstance.Overlay, "Metadata") {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
             PluginInstance.Overlay.OverlayNumber := 1
         }
-        Plugin.RegisterOverlayHotkeys("Kontakt 7", PluginInstance.Overlay)
     }
     
     Static MoveToPluginInstrumentButton(InstrumentButton) {

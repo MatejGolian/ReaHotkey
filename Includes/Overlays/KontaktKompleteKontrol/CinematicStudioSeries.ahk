@@ -13,7 +13,6 @@ Class CinematicStudioSeries {
         
         CinematicStudioBrassOverlay := PluginOverlay("Cinematic Studio Brass")
         CinematicStudioBrassOverlay.Metadata := Map("Vendor", "Cinematic Studio Series", "Product", "Cinematic Studio Brass", "Image", Map("File", "Images/SampleLibraries/CinematicStudioBrass/Product.png"))
-        CinematicStudioBrassOverlay.AddPluginOverlay()
         CinematicStudioBrassOverlay.AddStaticText("Cinematic Studio Brass")
         CinematicStudioBrassOverlay.AddHotspotToggleButton("Close Mic", %PluginClass%XOffset + 46, %PluginClass%YOffset + 465, "0xF6AFAC", "0x737170")
         CinematicStudioBrassOverlay.AddHotspotToggleButton("Main Mic", %PluginClass%XOffset + 96, %PluginClass%YOffset + 465, "0xF6AFAC", "0x747170")
@@ -23,7 +22,6 @@ Class CinematicStudioSeries {
         
         CinematicStudioStringsOverlay := PluginOverlay("Cinematic Studio Strings")
         CinematicStudioStringsOverlay.Metadata := Map("Vendor", "Cinematic Studio Series", "Product", "Cinematic Studio Strings", "Image", Map("File", "Images/SampleLibraries/CinematicStudioStrings/Product.png"))
-        CinematicStudioStringsOverlay.AddPluginOverlay()
         CinematicStudioStringsOverlay.AddStaticText("Cinematic Studio Strings")
         CinematicStudioStringsOverlay.AddHotspotButton("Spot 1 Mic", %PluginClass%XOffset + 35, %PluginClass%YOffset + 481)
         CinematicStudioStringsOverlay.AddHotspotButton("Spot 2 Mic", %PluginClass%XOffset + 75, %PluginClass%YOffset + 481)

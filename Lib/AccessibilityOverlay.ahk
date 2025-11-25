@@ -61,13 +61,13 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     ChildControls := Array()
     ControlType := "Overlay"
     ControlTypeLabel := "overlay"
+    CurrentControlID := 0
     DefaultLabel := ""
     Label := ""
+    PreviousControlID := 0
     Static AllControls := Array()
-    Static CurrentControlID := 0
     Static JAWS := False
     Static LastMessage := ""
-    Static PreviousControlID := 0
     Static SAPI := False
     Static SpeechQueue := Array()
     Static TotalNumberOfControls := 0
@@ -156,7 +156,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If Found > 0 {
             CurrentControl := AccessibilityOverlay.GetControl(This.CurrentControlID)
             If CurrentControl Is Checkbox Or CurrentControl Is ToggleButton Or CurrentControl Is GraphicalCheckbox Or CurrentControl Is GraphicalToggleButton {
-                TruePrev := AccessibilityOverlay.PreviousControlID
+                TruePrev := This.PreviousControlID
                 This.SetPreviousControlID(CurrentControl.ControlID)
                 Speak := True
             }
@@ -195,7 +195,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Clone.Base := This.Base
         Clone.ChildControls := Array()
         For PropertyName, PropertyValue In This.OwnProps()
-        If Not PropertyName = "ChildControls" And Not PropertyName = "ControlID" And Not PropertyName = "CurrentControlID" And Not PropertyName = "SuperordinateControlID"
+        If Not PropertyName = "ChildControls" And Not PropertyName = "ControlID" And Not PropertyName = "SuperordinateControlID"
         Clone.%PropertyName% := PropertyValue
         For CurrentControl In This.ChildControls
         If CurrentControl Is TabControl {
@@ -261,7 +261,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             This.SetCurrentControlID(ControlID)
             If TargetControl.HasMethod("Focus") {
                 If Speak {
-                    TruePrev := AccessibilityOverlay.PreviousControlID
+                    TruePrev := This.PreviousControlID
                     This.SetPreviousControlID(0)
                 }
                 TargetControl.Focus(Speak)
@@ -469,11 +469,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     GetCurrentControl() {
-        Return AccessibilityOverlay.GetControl(AccessibilityOverlay.CurrentControlID)
-    }
-    
-    GetCurrentControlID() {
-        Return AccessibilityOverlay.CurrentControlID
+        Return AccessibilityOverlay.GetControl(This.CurrentControlID)
     }
     
     GetCurrentControlNumber() {
@@ -571,11 +567,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     GetPreviousControl() {
-        Return AccessibilityOverlay.GetControl(AccessibilityOverlay.PreviousControlID)
-    }
-    
-    GetPreviousControlID() {
-        Return AccessibilityOverlay.PreviousControlID
+        Return AccessibilityOverlay.GetControl(This.PreviousControlID)
     }
     
     GetReachableControls() {
@@ -659,6 +651,13 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         }
     }
     
+    ReplaceControlAt(Index, Control) {
+        If Index <= 0 Or Index > This.ChildControls.Length
+        Index := This.ChildControls.Length
+        This.RemoveControlAt(Index)
+        Return This.AddControlAt(Index, Control)
+    }
+    
     Reset() {
         This.SetCurrentControlID(0)
         If This.ChildControls.Length = 0
@@ -711,11 +710,11 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     SetCurrentControlID(ControlID) {
-        AccessibilityOverlay.CurrentControlID := ControlID
+        This.CurrentControlID := ControlID
     }
     
     SetPreviousControlID(ControlID) {
-        AccessibilityOverlay.PreviousControlID := ControlID
+        This.PreviousControlID := ControlID
     }
     
     TriggerHotkey(HotkeyCommand) {
@@ -787,10 +786,6 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If ControlID > 0 And This.AllControls.Length > 0 And This.AllControls.Length >= ControlID
         Return This.AllControls[ControlID]
         Return 0
-    }
-    
-    Static GetCurrentControl() {
-        Return This.GetControl(This.CurrentControlID)
     }
     
     Static OCR(OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "") {
@@ -1186,7 +1181,7 @@ Class FocusableControl Extends AccessibilityControl {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
+        If This.MasterControl Is AccessibilityOverlay And (Not This.ControlID = This.MasterControl.PreviousControlID Or This.MasterControl.FocusableControlIDs.Length = 1)
         Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
@@ -1219,7 +1214,7 @@ Class ActivatableControl Extends FocusableControl {
     }
     
     Activate(Speak := True) {
-        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
+        If This.MasterControl Is AccessibilityOverlay And Not This.ControlID = This.MasterControl.CurrentControlID
         This.Focus(False)
         This.CheckFocus()
         If This.HasFocus() {
@@ -1251,7 +1246,7 @@ Class ActivatableControl Extends FocusableControl {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID
+        If This.MasterControl Is AccessibilityOverlay And Not This.ControlID = This.MasterControl.PreviousControlID
         Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString
         Else
         If This.States.Count > 1
@@ -1386,7 +1381,7 @@ Class ActivatableGraphic Extends FocusableGraphic {
     }
     
     Activate(Speak := True) {
-        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
+        If This.MasterControl Is AccessibilityOverlay And Not This.ControlID = This.MasterControl.CurrentControlID
         This.Focus(False)
         This.CheckFocus()
         If This.HasFocus() {
@@ -1418,7 +1413,7 @@ Class ActivatableGraphic Extends FocusableGraphic {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID
+        If This.MasterControl Is AccessibilityOverlay And Not This.ControlID = This.MasterControl.PreviousControlID
         Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString
         Else
         If This.States.Count > 1
@@ -1515,7 +1510,7 @@ Class ActivatableNative Extends FocusableNative {
     }
     
     Activate(Speak := True) {
-        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
+        If This.MasterControl Is AccessibilityOverlay And Not This.ControlID = This.MasterControl.CurrentControlID
         This.Focus(False)
         This.CheckFocus()
         If This.HasFocus() {
@@ -1555,7 +1550,7 @@ Class ActivatableNative Extends FocusableNative {
             StateString := ""
             If This.States.Has(CheckResult)
             StateString := This.States[CheckResult]
-            If Not This.ControlID = AccessibilityOverlay.PreviousControlID
+            If This.MasterControl Is AccessibilityOverlay And Not This.ControlID = This.MasterControl.PreviousControlID
             Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString
             Else
             If This.States.Count > 1
@@ -1664,7 +1659,7 @@ Class ActivatableUIA Extends FocusableUIA {
     }
     
     Activate(Speak := True) {
-        If Not This.ControlID = AccessibilityOverlay.CurrentControlID
+        If This.MasterControl Is AccessibilityOverlay And Not This.ControlID = This.MasterControl.CurrentControlID
         This.Focus(False)
         This.CheckFocus()
         If This.HasFocus() {
@@ -1704,7 +1699,7 @@ Class ActivatableUIA Extends FocusableUIA {
             StateString := ""
             If This.States.Has(CheckResult)
             StateString := This.States[CheckResult]
-            If Not This.ControlID = AccessibilityOverlay.PreviousControlID
+            If This.MasterControl Is AccessibilityOverlay And Not This.ControlID = This.MasterControl.PreviousControlID
             Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString
             Else
             If This.States.Count > 1
@@ -2036,13 +2031,13 @@ Class TabControl Extends FocusableControl {
         ValueString := This.Value
         If ValueString = ""
         ValueString := This.DefaultValue
-        If This.ControlID = AccessibilityOverlay.PreviousControlID
+        If This.MasterControl Is AccessibilityOverlay And This.ControlID = This.MasterControl.PreviousControlID
         If This.CurrentTab = This.PreviousTab And This.Tabs.Length > 1
         ValueString := ""
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID
+        If This.MasterControl Is AccessibilityOverlay And Not This.ControlID = This.MasterControl.PreviousControlID
         Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
         Else
         Message := ValueString
@@ -2157,7 +2152,7 @@ Class CustomPassThrough Extends PassThrough {
     
     Reset() {
         This.GetHKState(&ForwardHK, &BackHK)
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID
+        If This.MasterControl Is AccessibilityOverlay And Not This.ControlID = This.MasterControl.PreviousControlID
         If ForwardHK {
             This.CurrentItem := 0
             This.Size := 1
@@ -2735,7 +2730,7 @@ Class OCRButton Extends Button {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID
+        If This.MasterControl Is AccessibilityOverlay And Not This.ControlID = This.MasterControl.PreviousControlID
         Message := This.Label . " " . This.ControlTypeLabel . " " . StateString
         Else
         If This.States.Count > 1
@@ -2755,7 +2750,7 @@ Class OCRButton Extends Button {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
+        If This.MasterControl Is AccessibilityOverlay And (Not This.ControlID = This.MasterControl.PreviousControlID Or This.MasterControl.FocusableControlIDs.Length = 1)
         Message := This.Label . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
@@ -2832,7 +2827,7 @@ Class OCRComboBox Extends ComboBox {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
+        If This.MasterControl Is AccessibilityOverlay And (Not This.ControlID = This.MasterControl.PreviousControlID Or This.MasterControl.FocusableControlIDs.Length = 1)
         Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
@@ -2884,7 +2879,7 @@ Class OCREdit Extends Edit {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
+        If This.MasterControl Is AccessibilityOverlay And (Not This.ControlID = This.MasterControl.PreviousControlID Or This.MasterControl.FocusableControlIDs.Length = 1)
         Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
@@ -2931,7 +2926,7 @@ Class OCRTab Extends Tab {
         StateString := ""
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
+        If This.MasterControl Is AccessibilityOverlay And (Not This.ControlID = This.MasterControl.PreviousControlID Or This.MasterControl.FocusableControlIDs.Length = 1)
         Message := LabelString . " " . This.ControlTypeLabel . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
@@ -2977,7 +2972,7 @@ Class OCRText Extends FocusableControl {
         Else
         ValueString := This.ValuePrefix . " " . ValueString
         This.Value := ValueString
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
+        If This.MasterControl Is AccessibilityOverlay And (Not This.ControlID = This.MasterControl.PreviousControlID Or This.MasterControl.FocusableControlIDs.Length = 1)
         Message := ValueString . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)
@@ -3099,7 +3094,7 @@ Class PassThrough Extends ActivatableControl {
     
     Reset() {
         This.GetHKState(&ForwardHK, &BackHK)
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID
+        If This.MasterControl Is AccessibilityOverlay And Not This.ControlID = This.MasterControl.PreviousControlID
         This.CurrentItem := 0
         If ForwardHK And Not This.CheckState()
         This.CurrentItem := 0
@@ -3149,7 +3144,7 @@ Class StaticText Extends FocusableControl {
         If This.States.Has(CheckResult)
         StateString := This.States[CheckResult]
         ValueString := This.Value
-        If Not This.ControlID = AccessibilityOverlay.PreviousControlID Or (This.MasterControl Is AccessibilityOverlay And This.MasterControl.FocusableControlIDs.Length = 1)
+        If This.MasterControl Is AccessibilityOverlay And (Not This.ControlID = This.MasterControl.PreviousControlID Or This.MasterControl.FocusableControlIDs.Length = 1)
         Message := ValueString . " " . StateString . " " . This.HotkeyLabel
         If Speak
         AccessibilityOverlay.Speak(Message)

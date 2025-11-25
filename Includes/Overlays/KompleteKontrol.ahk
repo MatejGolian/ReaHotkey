@@ -39,7 +39,7 @@ Class KompleteKontrol {
         Plugin.Register("Komplete Kontrol", ["^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", "^Qt6[0-9][0-9]NI_6_[0-9]_[0-9]_R[0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$"], ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
         
         For KKPluginOverlay In This.PluginOverlays {
-            KKPluginOverlay.ChildControls[1] := This.PluginHeader.Clone()
+            KKPluginOverlay.AddControlAt(1, This.PluginHeader)
             Plugin.RegisterOverlay("Komplete Kontrol", KKPluginOverlay)
         }
         
@@ -404,14 +404,10 @@ Class KompleteKontrol {
     }
     
     Static InitPlugin(PluginInstance) {
-        If PluginInstance.Overlay.ChildControls.Length = 0
-        PluginInstance.Overlay.AddPluginOverlay()
-        PluginInstance.Overlay.ChildControls[1] := This.PluginHeader.Clone()
         If Not HasProp(PluginInstance.Overlay, "Metadata") {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
             PluginInstance.Overlay.OverlayNumber := 1
         }
-        Plugin.RegisterOverlayHotkeys("Komplete Kontrol", PluginInstance.Overlay)
     }
     
     Static IsK7OrK8PluginBrowser(Browser) {
@@ -658,7 +654,7 @@ Class KompleteKontrol {
                 If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
                 Return PluginToLoad
                 ReaHotkey.FoundPlugin.Overlay := %ParentClass%.PluginOverlays[1]
-                ReaHotkey.FoundPlugin.Overlay.ChildControls[2] := PluginToLoad.Overlay
+                ReaHotkey.FoundPlugin.Overlay.ReplaceControlAt(2, PluginToLoad.Overlay)
                 %ParentClass%.TogglePluginSearchVisible()
                 ReaHotkey.TurnPluginTimersOff("Komplete Kontrol")
                 ReaHotkey.TurnPluginHotkeysOff("Komplete Kontrol")
@@ -675,7 +671,7 @@ Class KompleteKontrol {
                 If Not ReaHotkey.FoundPlugin Is Plugin Or Not ReaHotkey.FoundPlugin.Name = "Komplete Kontrol"
                 Return PluginToUnload
                 If NoLibraryProductOverlay.ChildControls[2].ChildControls.Length > 0
-                NoLibraryProductOverlay.ChildControls[2] := PluginOverlay()
+                NoLibraryProductOverlay.ReplaceControlAt(2,  PluginOverlay())
                 ReaHotkey.FoundPlugin.Overlay := NoLibraryProductOverlay
                 %ParentClass%.TogglePluginSearchVisible()
                 ReaHotkey.TurnPluginTimersOff("Komplete Kontrol")
@@ -728,11 +724,11 @@ Class KompleteKontrol {
             Return
             If %ParentClass%.GetPluginBrowser() {
                 If Not ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3].Label = "Search"
-                ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3] := %ParentClass%.PluginSearchOverlay
+                ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ReplaceControlAt(3, %ParentClass%.PluginSearchOverlay)
             }
             Else {
                 If Not ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3].Label = "No Search"
-                ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ChildControls[3] := %ParentClass%.PluginNoSearchOverlay
+                ReaHotkey.FoundPlugin.Overlay.ChildControls[1].ReplaceControlAt(3, %ParentClass%.PluginNoSearchOverlay)
             }
         }
     }
