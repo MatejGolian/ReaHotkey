@@ -9,10 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added/Changed
 
--   Added overlay for LA Scoring Strings 3 (Look Ahead toggling/monitoring support)
 -   Added fallback mouse coordinates for Kontakt 7 header buttons
+-   Added overlay for LA Scoring Strings 3 with Look Ahead toggling/monitoring support
 -   Added various internal 'convenience' functions
 -   Pressing left/right while a tab control has focus no longer causes the tabs to wrap. Press Ctrl+Tab or Ctrl+Shift+Tab for the wrapping behavior.
+-   The script should now remember the last focused controls better.
 -   Feedback: Prevent various messages from being cut off by other messages
 -   Various other fixes/improvements.
 

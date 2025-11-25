@@ -626,6 +626,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     RemoveControlAt(Index) {
+        If Index <= 0 Or Index > This.ChildControls.Length
+        Index := This.ChildControls.Length
         If Index > 0 And Index <= This.ChildControls.Length {
             OldList := This.GetFocusableControlIDs()
             This.ChildControls.RemoveAt(Index)
