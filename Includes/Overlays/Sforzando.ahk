@@ -47,22 +47,20 @@ Class Sforzando {
     }
     
     Static InitPlugin(PluginInstance) {
-        PluginHeader := PluginOverlay(,, KompleteKontrol.CompensatePluginCoordinates)
+        PluginHeader := PluginOverlay("sforzando",, KompleteKontrol.CompensatePluginCoordinates)
         PluginHeader.AddStaticText("sforzando")
         PluginHeader.AddOCRButton("Instrument", "Instrument not detected", "TesseractBest", 90, 22, 200, 36)
         PluginHeader.AddOCRButton("Polyphony", "Polyphony not detected", "TesseractBest", 486, 40, 516, 70)
         PluginHeader.AddOCRButton("Pitchbend range", "Pitchbend range not detected", "TesseractBest", 576, 40, 602, 60)
-        PluginInstance.Overlay.Label := "sforzando"
-        PluginInstance.Overlay.AddControlAt(1, PluginHeader)
+        PluginInstance.Overlay := PluginHeader
     }
     
     Static InitStandalone(StandaloneInstance) {
-        StandaloneHeader := StandaloneOverlay()
+        StandaloneHeader := StandaloneOverlay("sforzando")
         StandaloneHeader.AddOCRButton("Instrument", "Instrument not detected", "TesseractBest", 90, 22, 200, 36)
         StandaloneHeader.AddOCRButton("Polyphony", "Polyphony not detected", "TesseractBest", 486, 40, 516, 70)
         StandaloneHeader.AddOCRButton("Pitchbend range", "Pitchbend range not detected", "TesseractBest", 576, 40, 602, 60)
-        StandaloneInstance.Overlay.Label := "sforzando"
-        StandaloneInstance.Overlay.AddControlAt(1, StandaloneHeader)
+        StandaloneInstance.Overlay := StandaloneHeader
     }
     
 }
