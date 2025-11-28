@@ -36,7 +36,7 @@ Class Kontakt8 {
         Plugin.Register("Kontakt 8", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
         
         For K8PluginOverlay In This.PluginOverlays {
-            K8PluginOverlay.AddControlAt(1, := This.PluginHeader)
+            K8PluginOverlay.AddControlAt(1, This.PluginHeader)
             Plugin.RegisterOverlay("Kontakt 8", K8PluginOverlay)
         }
         
