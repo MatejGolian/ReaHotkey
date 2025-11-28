@@ -385,7 +385,7 @@ Class Kontakt8 {
         Catch
         Return
         If SnapshotButton Is Object And InStr(SnapshotButton.Label, "Snapshot", True) And This.CheckPluginClassicViewColor("Snapshot") {
-            OCRResult := AccessibilityOverlay.Ocr("TesseractBest", ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
+            OCRResult := AccessibilityOverlay.Helpers.OCR("TesseractBest", ControlX + ControlWidth - 588, ControlY + 109, ControlX + ControlWidth - 588 + 200, ControlY + 129)
             If Not OCRResult = ""
             SnapshotButton.Label := "Snapshot " . OcrResult
         }

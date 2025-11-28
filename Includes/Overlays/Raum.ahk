@@ -117,7 +117,7 @@ Class Raum {
     Static SayPresetName(HK) {
         PluginControlPos := KompleteKontrol.GetPluginControlPos()
         HotkeyWait(HK)
-        AccessibilityOverlay.Speak("Preset " . AccessibilityOverlay.OCR("TesseractBest", PluginControlPos.X + 184, PluginControlPos.Y + 8, PluginControlPos.X + 364, PluginControlPos.Y + 28))
+        AccessibilityOverlay.Speak("Preset " . AccessibilityOverlay.Helpers.OCR("TesseractBest", PluginControlPos.X + 184, PluginControlPos.Y + 8, PluginControlPos.X + 364, PluginControlPos.Y + 28))
     }
     
     Static ToggleHKMessageCheckbox(OverlayObj) {

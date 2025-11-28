@@ -107,14 +107,14 @@ Class Zampler {
     
     Static GetFilter(OverlayObj) {
         PluginControlPos := KompleteKontrol.GetPluginControlPos()
-        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", PluginControlPos.X + 700, PluginControlPos.Y + 96, PluginControlPos.X + 756, PluginControlPos.Y + 108))
+        Result := Trim(AccessibilityOverlay.Helpers.OCR("TesseractBest", PluginControlPos.X + 700, PluginControlPos.Y + 96, PluginControlPos.X + 756, PluginControlPos.Y + 108))
         OverlayObj.Value := Result
     }
     
     Static GetModDestination(OverlayObj) {
         PluginControlPos := KompleteKontrol.GetPluginControlPos()
         Static InitialLabel := OverlayObj.Label
-        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", PluginControlPos.X + 466, PluginControlPos.Y + 240, PluginControlPos.X + 536, PluginControlPos.Y + 260))
+        Result := Trim(AccessibilityOverlay.Helpers.OCR("TesseractBest", PluginControlPos.X + 466, PluginControlPos.Y + 240, PluginControlPos.X + 536, PluginControlPos.Y + 260))
         If Result = ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
@@ -123,7 +123,7 @@ Class Zampler {
     Static GetModSource(OverlayObj) {
         PluginControlPos := KompleteKontrol.GetPluginControlPos()
         Static InitialLabel := OverlayObj.Label
-        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", PluginControlPos.X + 310, PluginControlPos.Y + 240, PluginControlPos.X + 370, PluginControlPos.Y + 260))
+        Result := Trim(AccessibilityOverlay.Helpers.OCR("TesseractBest", PluginControlPos.X + 310, PluginControlPos.Y + 240, PluginControlPos.X + 370, PluginControlPos.Y + 260))
         If Result = ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
@@ -132,7 +132,7 @@ Class Zampler {
     Static GetSFZREXInstrument(OverlayObj) {
         PluginControlPos := KompleteKontrol.GetPluginControlPos()
         Static InitialLabel := OverlayObj.Label
-        Result := Trim(AccessibilityOverlay.OCR("TesseractBest", PluginControlPos.X + 448, PluginControlPos.Y + 226, PluginControlPos.X + 648, PluginControlPos.Y + 236))
+        Result := Trim(AccessibilityOverlay.Helpers.OCR("TesseractBest", PluginControlPos.X + 448, PluginControlPos.Y + 226, PluginControlPos.X + 648, PluginControlPos.Y + 236))
         If Result = ""
         Result := "not detected"
         OverlayObj.Label := InitialLabel . " " . Result
