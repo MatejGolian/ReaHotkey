@@ -28,10 +28,10 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
   - Version 3.4 is highly recommended, although most of the above functionality may work in older versions as well. That being said, ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
   - The standalone version may provide a more stable and reliable user experience overall.
 * Makes it possible to interact with Kontakt menus, switch Between instruments, multis and snapshots. There's also support for the 'Browse' button in the Content Missing dialog.
-  - Works inside REAPER and Ableton Live 12. Note that Kontakt version 7.10 or higher is required.
+  - Works inside REAPER and Ableton Live 12. In case of Kontakt 7, version 7.10 or higher is required and in case of Kontakt 8, the current version of the script requires at least version 8.8 to be installed.
   - Switching Between instruments/multis/snapshots Only works inside REAPER and Ableton Live 12 - ReaHotkey does not support these features in the standalone versions of Kontakt.
   - The Content Missing dialog may not be accessible when running Kontakt inside Komplete Kontrol.
-* Includes support for interacting with various sample libraries for Kontakt. Reffer to the section below for the full list.
+* Includes support for interacting with various sample libraries for Kontakt. Reffer to the section below for the full list of supported libraries.
   - Only works inside REAPER and Ableton Live 12.
 * Adds ability to choose presets in Raum by Native instruments.
 * Adds basic support for the Xfer Records Serum 2 synthesizer inside REAPER and Ableton Live 12.
@@ -43,6 +43,8 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
 * Makes it possible to use the Zampler plug-in by Synapse Audio in REAPER and Ableton Live 12.
 
 ### List of Supported Kontakt Sample Libraries
+
+These are the sample libraries that ReaHotkey has some support for. Every attempt has been made to get the overlays to work regardless of whether one's using Kontakt 7, 8 or Komplete Kontrol, but in practice there may still be differences in how the individual overlays perform in each of these scenarios. Generally, the overlays tend to behave more reliable in Kontakt 7 and Komplete Kontrol as opposed to using them with Kontakt 8 directly.
 
 * Audio Imperia: Areia, Cerberus, Chorus, Dolce, Glade, Jaeger, Nucleus, Solo and Talos
   - Switching between mixes / microphone positions
