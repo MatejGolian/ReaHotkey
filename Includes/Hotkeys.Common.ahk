@@ -3,7 +3,7 @@
 Tab::TabHK(ThisHotkey)
 +Tab::ShiftTabHK(ThisHotkey)
 ^Tab::ControlTabHK(ThisHotkey)
-^+Tab::ControlShiftTabHK(ThisHotkey)
++^Tab::ControlShiftTabHK(ThisHotkey)
 Left::LeftRightHK(ThisHotkey)
 Right::LeftRightHK(ThisHotkey)
 Up::UpDownHK(ThisHotkey)

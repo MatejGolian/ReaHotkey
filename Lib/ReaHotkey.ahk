@@ -17,6 +17,7 @@ Class ReaHotkey {
     Static RequiredWinBuild := 10240
     Static RequiredWinVer := 10
     Static StateManagementTimer := False
+    Static SystemHotkeys := Array("#+^F1", "#+^F5", "#+^A", "#+^C", "#+^P", "#+^Q", "#+^R", "#+^U", "Ctrl", "Tab", "+Tab", "^Tab", "+^Tab", "Left", "Right", "Up", "Down", "Enter", "Space", "F6")
     Static WinCoveredTimer := False
     
     Static __New() {
@@ -33,21 +34,22 @@ Class ReaHotkey {
         }
         If Not ScriptReloaded {
             AccessibilityOverlay.Speak("ReaHotkey ready")
-            If This.Config.Get("CheckWinVer") = 1
+            If This.Config.Get("Config", "CheckWinVer") = 1
             This.CheckWinVer()
-            If This.Config.Get("CheckScreenResolution") = 1
+            If This.Config.Get("Config", "CheckScreenResolution") = 1
             This.CheckResolution()
-            If This.Config.Get("CheckUpdate") = 1
+            If This.Config.Get("Config", "CheckUpdate") = 1
             This.CheckForUpdates()
         }
         Else {
             AccessibilityOverlay.Speak("Reloaded ReaHotkey")
         }
         AccessibilityOverlay.ClearLastMessage()
+        This.ManageAppsKeyEmulation()
         This.StateManagementTimer := ObjBindMethod(This, "ManageState")
         This.WinCoveredTimer := ObjBindMethod(This, "CheckIfWinCovered")
         SetTimer This.StateManagementTimer, 200
-        If This.Config.Get("CheckIfWinCovered") = 1
+        If This.Config.Get("Config", "CheckIfWinCovered") = 1
         SetTimer This.WinCoveredTimer, 8000
     }
     
@@ -56,6 +58,13 @@ Class ReaHotkey {
         Return This.Get%Name%(Params*)
         Catch As ErrorMessage
         Throw ErrorMessage
+    }
+    
+    Static ChangeAppsKeyCombo(Control, Info) {
+        If Not Control.Value Or AccessibilityOverlay.Helpers.InArray(Control.Value, This.SystemHotkeys) {
+            Setting := This.Config.GetSetting("Config", "AppsKeyHK")
+            Control.Value := Setting.DefaultValue
+        }
     }
     
     Static CheckForUpdates(Params*) {
@@ -292,13 +301,22 @@ Class ReaHotkey {
         This.TurnStandaloneHotkeysOff()
     }
     
+    Static InitAppsKeyControl(Control) {
+        EmulatorEnabled := ReaHotkey.Config.Get("Config", "AppsKeyEmulator")
+        If Not EmulatorEnabled
+        Control.Opt("+Disabled")
+    }
+    
     Static InitConfig() {
         This.Config := Configuration("ReaHotkey Configuration")
         This.Config.Add("ReaHotkey.ini", "Config", "CheckWinVer", 1, "Check Windows version on startup")
         This.Config.Add("ReaHotkey.ini", "Config", "CheckScreenResolution", 1, "Check screen resolution on startup")
         This.Config.Add("ReaHotkey.ini", "Config", "CheckUpdate", 1, "Check for updates on startup")
-        This.Config.Add("ReaHotkey.ini", "Config", "CheckIfWinCovered", 1, "Warn if another window may be covering the interface in specific cases",, ObjBindMethod(This, "ManageWinCovered"))
-        This.Config.Add("ReaHotkey.ini", "Config", "PromptOnAbletonPlugin", 1, "Prompt if a compatible plug-in is detected but does not have focus", "Ableton Live", ObjBindMethod(This, "ManageAbletonPluginPrompt"))
+        This.Config.Add("ReaHotkey.ini", "Config", "CheckIfWinCovered", 1, "Warn if another window may be covering the interface in specific cases",,,,,, ObjBindMethod(This, "ManageWinCovered"))
+        This.Config.Add("ReaHotkey.ini", "Config", "PromptOnAbletonPlugin", 1, "Prompt if a compatible plug-in is detected in Ableton, but does not have focus",,,,,, ObjBindMethod(This, "ManageAbletonPluginPrompt"))
+        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyEmulator", 0, "Use the following key combination to emulate the Applications key", "AppsKey Emulator",,,, ObjBindMethod(This, "ToggleAppsKeyEmulatorOnOff"))
+        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyHK", "+^m", "Key combination",, "Hotkey",, ObjBindMethod(This, "InitAppsKeyControl"), ObjBindMethod(This, "ChangeAppsKeyCombo"))
+        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyWinMod", 1, "Add the Windows key as an extra modifier",,,, ObjBindMethod(This, "InitAppsKeyControl"),, ObjBindMethod(This, "ManageAppsKeyEmulation"))
     }
     
     Static InPluginControl(ControlToCheck) {
@@ -351,6 +369,46 @@ Class ReaHotkey {
         This.StopAbletonPluginTimer()
     }
     
+    Static ManageAppsKeyEmulation(*) {
+        Static LastHK := ""
+        EmulatorEnabled := ReaHotkey.Config.Get("Config", "AppsKeyEmulator")
+        AppsKeyHK := ReaHotkey.Config.Get("Config", "AppsKeyHK")
+        AppsKeyWinMod := ReaHotkey.Config.Get("Config", "AppsKeyWinMod")
+        If EmulatorEnabled And Not AppsKeyHK {
+            Setting := This.Config.GetSetting("Config", "AppsKeyHK")
+            This.Config.Set(Setting.SectionName, Setting.KeyName, Setting.DefaultValue)
+            AppsKeyHK := Setting.Value
+        }
+        If EmulatorEnabled And AppsKeyHK {
+            WinMod := ""
+            If AppsKeyWinMod
+            WinMod := "#"
+            KeyCombo := WinMod . AppsKeyHK
+            TurnOffLastHK()
+            If Not AccessibilityOverlay.Helpers.InArray(KeyCombo, This.SystemHotkeys) {
+                Try {
+                    HotIf
+                    Hotkey KeyCombo, SendAppsKey, "On S"
+                }
+                LastHK := KeyCombo
+            }
+        }
+        Else {
+            TurnOffLastHK()
+        }
+        SendAppsKey(ThisHotkey) {
+            Send "{AppsKey}"
+        }
+        TurnOffLastHK() {
+            Try {
+                HotIf
+                If Not LastHK = ""
+                Hotkey LastHK, "Off"
+            }
+            LastHK := ""
+        }
+    }
+    
     Static ManageState() {
         Critical
         Try {
@@ -368,7 +426,7 @@ Class ReaHotkey {
                 PluginControl := This.GetPluginControl()
                 Catch
                 PluginControl := 0
-                If This.Config.Get("PromptOnAbletonPlugin") = 1 And PluginControl And This.AbletonPlugin {
+                If This.Config.Get("Config", "PromptOnAbletonPlugin") = 1 And PluginControl And This.AbletonPlugin {
                     If Not CurrentControl = PluginControl And Not This.InPluginControl(CurrentControl)
                     This.StartAbletonPluginTimer()
                     Else
@@ -503,7 +561,7 @@ Class ReaHotkey {
     }
     
     Static ReportAbletonPlugin(Name := "") {
-        If This.Config.Get("PromptOnAbletonPlugin") = 1 {
+        If This.Config.Get("Config", "PromptOnAbletonPlugin") = 1 {
             If Name
             AccessibilityOverlay.Speak(Name . " detected. Press F6 to focus it.")
             Else
@@ -539,7 +597,7 @@ Class ReaHotkey {
     }
     
     Static StartAbletonPluginTimer() {
-        If This.Config.Get("PromptOnAbletonPlugin") = 1 And Not This.AbletonPluginTimer {
+        If This.Config.Get("Config", "PromptOnAbletonPlugin") = 1 And Not This.AbletonPluginTimer {
             TestPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
             If TestPlugin Is Plugin And Not TestPlugin.Name = "Unnamed Plugin" {
                 This.AbletonPluginTimer := ObjBindMethod(This, "ReportAbletonPlugin", TestPlugin.Name)
@@ -553,6 +611,17 @@ Class ReaHotkey {
         If This.AbletonPluginTimer {
             SetTimer This.AbletonPluginTimer, 0
             This.AbletonPluginTimer := False
+        }
+    }
+    
+    Static ToggleAppsKeyEmulatorOnOff(Control, Info) {
+        If Control.Value {
+            This.Config.GuiControls["Config`nAppsKeyHK"].Opt("-Disabled")
+            This.Config.GuiControls["Config`nAppsKeyWinMod"].Opt("-Disabled")
+        }
+        Else {
+            This.Config.GuiControls["Config`nAppsKeyHK"].Opt("+Disabled")
+            This.Config.GuiControls["Config`nAppsKeyWinMod"].Opt("+Disabled")
         }
     }
     
@@ -571,7 +640,7 @@ Class ReaHotkey {
         }
         Else {
             SetTimer This.StateManagementTimer, 200
-            If This.Config.Get("CheckIfWinCovered") = 1
+            If This.Config.Get("Config", "CheckIfWinCovered") = 1
             SetTimer This.WinCoveredTimer, 8000
         }
     }

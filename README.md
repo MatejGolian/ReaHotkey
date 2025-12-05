@@ -2,7 +2,7 @@
 
 ## What's This And Who Is It For?
 
-This is an AutoHotkey script which aims to make certain virtual instruments/sample libraries  and related software at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and is primarily designed to run in tandem with the REAPER digital audio workstation, although other programs/instruments are supported as well.
+This is an AutoHotkey script which aims to make certain virtual instruments/sample libraries  and related programs at least a little more accessible to blind users. It is based on the accessibilityOverlay script available [here](https://github.com/MatejGolian/accessibilityOverlay/) and has originally been designed to run in tandem with the REAPER digital audio workstation. While the primary focus still lies on making things work in REAPER, more recent versions provide the exact same amount of functionality in Ableton Live as well. Support for standalone  counterparts of the compatible plug-ins is also included. Apart from that, the script also supports other standalone pieces of software.
 
 ## What's new?
 
@@ -31,7 +31,7 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
   - Works inside REAPER and Ableton Live 12. In case of Kontakt 7, version 7.10 or higher is required and in case of Kontakt 8, the current version of the script requires at least version 8.8 to be installed.
   - Switching Between instruments/multis/snapshots Only works inside REAPER and Ableton Live 12 - ReaHotkey does not support these features in the standalone versions of Kontakt.
   - The Content Missing dialog may not be accessible when running Kontakt inside Komplete Kontrol.
-* Includes support for interacting with various sample libraries for Kontakt. Reffer to the section below for the full list of supported libraries.
+* Includes support for interacting with various sample libraries for Kontakt. Reffer to the [list of supported sample libraries](#kontakt-libraries) toward the end of this document for the full list.
   - Only works inside REAPER and Ableton Live 12.
 * Adds ability to choose presets in Raum by Native instruments.
 * Adds basic support for the Xfer Records Serum 2 synthesizer inside REAPER and Ableton Live 12.
@@ -41,21 +41,7 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
 * Makes it possible to load instruments, set polyphony and pitchbend range in Plogue sforzando.
   - Works inside REAPER, Ableton Live 12 and in the standalone version of sforzando.
 * Makes it possible to use the Zampler plug-in by Synapse Audio in REAPER and Ableton Live 12.
-
-### List of Supported Kontakt Sample Libraries
-
-These are the sample libraries that ReaHotkey has some support for. Every attempt has been made to get the overlays to work regardless of whether one's using Kontakt 7, 8 or Komplete Kontrol, but in practice there may still be differences in how the individual overlays perform in each of these scenarios. Generally, the overlays tend to behave more reliable in Kontakt 7 and Komplete Kontrol as opposed to using them with Kontakt 8 directly.
-
-* Audio Imperia: Areia, Cerberus, Chorus, Dolce, Glade, Jaeger, Nucleus, Solo and Talos
-  - Switching between mixes / microphone positions
-* Audiobro: LA Scoring Strings 3
-  - Toggling the look ahead on/off and reporting the current look ahead value
-* Cinematic Studio Series: Cinematic Studio Strings and Cinematic Studio Brass
-  - Switching between mixes / microphone positions
-* Impact Soundworks: Juggernaut
-  - Switching presets
-* Soundiron: Mimi Page Light & Shadow, Voices Of Gaia and Voices of Wind Collection
-  - Toggling the reverb on/off
+* Provides means to emulate pressing the Applications key via a custom keyboard shortcut
 
 ## Getting Started
 
@@ -127,6 +113,38 @@ ReaHotkey provides basic support for the Dubler 2 MIDI Capture Plugin. Please no
 
 * the copy clip to REAPER action will drag and drop a clip from the plugin UI into REAPER. That is currently the only way export clips from the plugin into REAPER and comes with the drawback that we cannot explicitly tell REAPER where to insert the clip within the project. If you've got too many tracks in a project (something about 8 tracks), the clip will start to show up at random places throughout the project. We therefore recommend you to use the plugin in projects that are as clean and small as possible. Maybe just have a project tab open which is only responsible for capturing ideas, you'll be able to copy clips around between REAPER instances as soon as they got copied into REAPER.
 * the Select key of clip action will focus the semi-accessible dropdown box with the two possible options, which are the key suggestion by Dubler and the Dubler 2 standalone setting you've chosen. To select either of those options, make sure to pull the mouse to the corresponding position and simulate a left mouse click to select it. We'll try to further improve the process in a future version.
+
+## <a name="kontakt-libraries"></a>List of Supported Kontakt Sample Libraries
+
+These are the sample libraries that ReaHotkey has some support for. Every attempt has been made to get the overlays to work regardless of whether one's using Kontakt 7, 8 or Komplete Kontrol, but in practice there may still be differences in how the individual overlays perform in each of these scenarios. Generally, the overlays tend to behave more reliable in Kontakt 7 and Komplete Kontrol as opposed to using them with Kontakt 8 directly.
+
+* Audio Imperia
+  - Areia - Switching between mixes / microphone positions
+  - Cerberus - Switching between mixes / microphone positions
+  - Chorus - Switching between the 3 available mixes
+  - Dolce - Switching between the classic and modern mix
+  - Glade - Switching between the classic and modern mix of 'Pyramid' instruments
+  - Jaeger - Switching between mixes / microphone positions
+  - Nucleus - Switching between the classic and modern mix
+  - Solo - Switching between the classic and modern mix
+  - Talos - Switching between mixes / microphone positions
+* Audiobro
+  - LA Scoring Strings 3 - Toggling the look ahead on/off and reporting the current look ahead value
+* Cinematic Studio Series
+  - Cinematic Studio Brass - Switching between mixes / microphone positions
+  - Cinematic Studio Strings - Switching between mixes / microphone positions
+* Impact Soundworks
+  - Juggernaut - Switching presets
+* Soundiron
+  - Mimi Page Light & Shadow - Toggling the reverb on/off
+  - Voices Of Gaia - Toggling the reverb on/off
+  - Voices of Wind Collection - Toggling the reverb on/off
+
+## Emulating the Applications Key
+
+If your keyboard does not have an Applications key, you can configure your own keyboard shortcut to use as an alternative.
+To set up this functionality, open the configuration dialog and navigate to the AppsKey Emulator tab. The first checkbox toggles the emulator on/off. Whenever that checkbox is enabled, the settings for customizing your keyboard shortcut will become active. The hotkey field after the first checkbox is for entering the desired key combination itself. The second checkbox controls whether the Windows key should be added to the entered hotkey as an extra modifier. In other words, when that checkbox is checked, you will also have to press the Windows key in addition to the key combination in the hotkey field to emulate the Applications key.
+Note that the shortcut configured here is considered global and will thus function in all windows and even when most other functions of the script are paused. Key presses that would result in a blank value cause the hotkey field to reset to its initial default value. Furthermore, in case the resulting shortcut collides with one of the main hotkeys used by the script, the emulator will not become active - not even if the first checkbox on the AppsKey Emulator tab is checked.
 
 ## About HotspotHelper
 

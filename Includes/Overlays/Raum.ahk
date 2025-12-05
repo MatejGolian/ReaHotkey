@@ -37,7 +37,7 @@ Class Raum {
         HelpSettingValue := 0
         Else
         HelpSettingValue := 1
-        ReaHotkey.Config.Set("ShowRaumHelpMessage", HelpSettingValue)
+        ReaHotkey.Config.Set("Config", "RaumHelpMessage", HelpSettingValue)
         Plugin.SetHotkeyMode("Raum", 2)
         Plugin.SetHotkey("Raum", "!H", ObjBindMethod(This, "SayHelpMessage"))
         Plugin.SetHotkey("Raum", "!N", ObjBindMethod(This, "SayPresetName"))
@@ -84,13 +84,13 @@ Class Raum {
     
     Static InitHKMessageCheckbox(OverlayObj) {
         Static FirstRun := True
-        If FirstRun And ReaHotkey.Config.Get("ShowRaumHelpMessage") = 1
+        If FirstRun And ReaHotkey.Config.Get("Config", "RaumHelpMessage") = 1
         OverlayObj.Checked := 0
         FirstRun := False
     }
     
     Static InitInstance(Instance) {
-        If ReaHotkey.Config.Get("ShowRaumHelpMessage") = 1 {
+        If ReaHotkey.Config.Get("Config", "RaumHelpMessage") = 1 {
             Plugin.SetHotkey("Raum", "!H", ObjBindMethod(This, "DoNothing"))
             Plugin.SetHotkey("Raum", "!N", ObjBindMethod(This, "DoNothing"))
             Plugin.SetHotkey("Raum", "!P", ObjBindMethod(This, "DoNothing"))
@@ -105,8 +105,7 @@ Class Raum {
     }
     
     Static InitConfig() {
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "ShowRaumHelpMessage", 1, "Show help message in Raum", "Misc")
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "DetectLibsInKK", 1, "Automatically detect libraries in Komplete Kontrol plug-in")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "RaumHelpMessage", 1, "Show help message in Raum", "Misc")
     }
     
     Static SayHelpMessage(HK) {

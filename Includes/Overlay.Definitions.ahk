@@ -21,6 +21,6 @@ Standalone.ChooserOverlay.AddCustomButton("Choose overlay",,, ActivateChooser).S
 #Include Overlays/Sforzando.ahk
 #Include Overlays/ZebraLegacy.ahk
 #Include Overlays/Engine2.ahk
-#Include Overlays/Raum.ahk
 #Include Overlays/Serum2.ahk
 #Include Overlays/Zampler.ahk
+#Include Overlays/Raum.ahk

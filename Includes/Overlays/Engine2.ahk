@@ -80,7 +80,7 @@ Class Engine2 {
         If PluginInstance.Name = "Engine 2"
         Return True
         PluginControlPos := KompleteKontrol.GetPluginControlPos()
-        If ReaHotkey.Config.Get("Engine2ImageSearch") = 1 And FindImage("Images/Engine2/Engine2.png", PluginControlPos.X + 492, PluginControlPos.Y, PluginControlPos.X + 892, PluginControlPos.Y + 100) Is Object
+        If ReaHotkey.Config.Get("Config", "Engine2ImageSearch") = 1 And FindImage("Images/Engine2/Engine2.png", PluginControlPos.X + 492, PluginControlPos.Y, PluginControlPos.X + 892, PluginControlPos.Y + 100) Is Object
         Return True
         If ReaHotkey.AbletonPlugin {
             If RegExMatch(WinGetTitle("A"), "^Engine 2/[1-9][0-9]*-Engine 2$")

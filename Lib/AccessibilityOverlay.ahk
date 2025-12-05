@@ -181,6 +181,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     AddControlAt(Index, Control) {
+        If Index < 0
+        Index := This.ChildControls.Length + Index
         If Index <= 0 Or Index > This.ChildControls.Length
         Index := This.ChildControls.Length + 1
         Control.SuperordinateControlID := This.ControlID
@@ -626,6 +628,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     RemoveControlAt(Index) {
+        If Index < 0
+        Index := This.ChildControls.Length + Index
         If Index <= 0 Or Index > This.ChildControls.Length
         Index := This.ChildControls.Length
         If Index > 0 And Index <= This.ChildControls.Length {
@@ -654,6 +658,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     ReplaceControlAt(Index, Control) {
+        If Index < 0
+        Index := This.ChildControls.Length + Index
         If Index <= 0 Or Index > This.ChildControls.Length
         Index := This.ChildControls.Length
         This.RemoveControlAt(Index)
@@ -918,10 +924,16 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Return UIAWindow
         }
         
-        Static _InArray(Needle, Haystack) {
+        Static _InArray(Needle, Haystack, CaseSensitive := False) {
             For FoundIndex, FoundValue In Haystack
-            If FoundValue == Needle
-            Return FoundIndex
+            If CaseSensitive {
+                If FoundValue == Needle
+                Return FoundIndex
+            }
+            Else {
+                If FoundValue = Needle
+                Return FoundIndex
+            }
             Return False
         }
         

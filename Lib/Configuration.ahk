@@ -2,7 +2,10 @@
 
 Class Configuration {
     
+    ConfigBox := False
+    ConfigBoxWinID := ""
     DefaultTab := ""
+    GuiControls := Map()
     PrevIousTab := False
     Settings := Array()
     Tabs := Array()
@@ -13,7 +16,7 @@ Class Configuration {
         This.DefaultTab := DefaultTab
     }
     
-    Add(FileName, SectionName, KeyName, DefaultValue, Label := False, Tab := False, FuncOnSet := False) {
+    Add(FileName, SectionName, KeyName, DefaultValue, Label := False, Tab := False, ControlType := False, ControlProperties := False, FuncOnInit := False, FuncOnChange := False, FuncOnSet := False) {
         For Index, Setting In This.Settings
         If Setting.FileName = FileName And Setting.SectionName = SectionName And Setting.KeyName = KeyName
         Return Index
@@ -23,7 +26,12 @@ Class Configuration {
         Tab := This.PrevIousTab
         Else
         This.PrevIousTab := Tab
-        Setting := {FileName: FileName, SectionName: SectionName, KeyName: KeyName, DefaultValue: DefaultValue, Label: Label, Tab: Tab, FuncOnSet: FuncOnSet}
+        If Not ControlType
+        ControlType := "CheckBox"
+        If Not ControlProperties
+        ControlProperties := ""
+        ControlProperties .= " "
+        Setting := {FileName: FileName, SectionName: SectionName, KeyName: KeyName, DefaultValue: DefaultValue, Label: Label, Tab: Tab, ControlType: ControlType, ControlProperties: ControlProperties, FuncOnInit: FuncOnInit, FuncOnChange: FuncOnChange, FuncOnSet: FuncOnSet}
         Setting.Value := IniRead(FileName, SectionName, KeyName, DefaultValue)
         IniWrite(Setting.Value, FileName, SectionName, KeyName)
         This.Settings.Push(Setting)
@@ -34,28 +42,47 @@ Class Configuration {
         Return This.Settings.Length
     }
     
-    Get(KeyNameOrNumber) {
-        If KeyNameOrNumber Is Integer And KeyNameOrNumber >= 1 And KeyNameOrNumber <= This.Settings.Length
-        Return This.Settings[KeyNameOrNumber].Value
-        If KeyNameOrNumber Is String
-        For Setting In This.Settings
-        If Setting.KeyName = KeyNameOrNumber
-        Return Setting.Value
+    CloseBox(*) {
+        This.ConfigBox.Destroy()
+        This.ConfigBox := False
+        This.ConfigBoxWinID := ""
     }
     
-    Set(KeyNameOrNumber, Value) {
-        If KeyNameOrNumber Is Integer And KeyNameOrNumber >= 1 And KeyNameOrNumber <= This.Settings.Length {
-            Setting := This.Settings[KeyNameOrNumber]
-            SetValue(Setting)
-            Return
+    Get(SectionName, KeyNameOrNumber) {
+        Setting := This.GetSetting(SectionName, KeyNameOrNumber)
+        If Setting
+        Return Setting.Value
+        Return False
+    }
+    
+    GetSetting(SectionName, KeyNameOrNumber) {
+        If KeyNameOrNumber Is Integer And KeyNameOrNumber >= 1 And KeyNameOrNumber <= This.Settings.Length
+        Return This.Settings[KeyNameOrNumber].Value
+        If KeyNameOrNumber Is String {
+            For Setting In This.Settings
+            If SectionName = "" {
+                If Setting.KeyName = KeyNameOrNumber
+                Return Setting
+            }
+            Else {
+                If Setting.SectionName = SectionName And Setting.KeyName = KeyNameOrNumber
+                Return Setting
+            }
         }
-        If KeyNameOrNumber Is String
+        Return False
+    }
+    
+    SaveConfig(*) {
         For Setting In This.Settings
-        If Setting.KeyName = KeyNameOrNumber {
-            SetValue(Setting)
-            Return
-        }
-        SetValue(Setting) {
+        This.set(Setting.SectionName, Setting.KeyName, This.GuiControls[Setting.SectionName . "`n" . Setting.KeyName].Value)
+        This.CloseBox()
+    }
+    
+    Set(SectionName, KeyNameOrNumber, Value) {
+        Setting := This.GetSetting(SectionName, KeyNameOrNumber)
+        If Setting
+        SetValue(Setting, Value)
+        SetValue(Setting, Value) {
             Setting.Value := Value
             IniWrite(Setting.Value, Setting.FileName, Setting.SectionName, Setting.KeyName)
             If Setting.FuncOnSet Is Object And Setting.FuncOnSet.HasMethod("Call")
@@ -64,11 +91,10 @@ Class Configuration {
     }
     
     ShowBox() {
-        Static ConfigBox := False, ConfigBoxWinID := ""
-        If ConfigBox = False {
-            ConfigBox := Gui(, This.Title)
+        If This.ConfigBox = False {
+            This.ConfigBox := Gui(, This.Title)
             LabelledSettings := Array()
-            SettingBoxes := Map()
+            This.GuiControls := Map()
             TabsUsed := Map()
             For Index, Setting In This.Settings {
                 If Setting.Label
@@ -76,46 +102,52 @@ Class Configuration {
                 TabsUsed.Set(Setting.Tab, False)
             }
             If LabelledSettings.Length = 0
-            ConfigBox.AddText("Section", "No settings available.")
+            This.ConfigBox.AddText("Section", "No settings available.")
             If LabelledSettings.Length > 0 And This.Tabs.Length > 1
-            TabBox := ConfigBox.AddTab3("Section", This.Tabs)
+            TabBox := This.ConfigBox.AddTab3("Section", This.Tabs)
             For Index, Setting In LabelledSettings {
-                Checked := ""
-                If Setting.Value = 1
-                Checked := "Checked"
+                Position := ""
                 If IsSet(TabBox)
                 TabBox.UseTab(Setting.Tab)
                 If Not TabsUsed[Setting.Tab]
                 FirstControl := True
-                Else
-                FirstControl := False
                 TabsUsed[Setting.Tab] := True
                 If FirstControl
-                SettingBoxes[Setting.KeyName] := ConfigBox.AddCheckBox("Section " . Checked, Setting.Label)
+                Position := "Section "
                 Else
-                SettingBoxes[Setting.KeyName] := ConfigBox.AddCheckBox("XS " . Checked, Setting.Label)
+                Position := "XS "
+                FirstControl := False
+                If Setting.ControlType = "Edit" Or Setting.ControlType = "Hotkey" {
+                    This.ConfigBox.AddText("Section XS", Setting.Label)
+                    This.GuiControls[Setting.SectionName . "`n" . Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%("YS", Setting.Value)
+                    FirstControl := True
+                }
+                Else {
+                    Properties := Setting.ControlProperties
+                    If Setting.ControlType = "CheckBox" And Setting.Value = 1
+                    Properties .= "Checked"
+                    This.GuiControls[Setting.SectionName . "`n" . Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%(Position . Properties, Setting.Label)
+                }
+                If Setting.FuncOnInit Is Object And Setting.FuncOnInit.HasMethod("Call")
+                Setting.FuncOnInit.Call(This.GuiControls[Setting.SectionName . "`n" . Setting.KeyName])
+                If Setting.FuncOnChange Is Object And Setting.FuncOnChange.HasMethod("Call") {
+                    If Setting.ControlType = "Edit" Or Setting.ControlType = "Hotkey"
+                    This.GuiControls[Setting.SectionName . "`n" . Setting.KeyName].OnEvent("Change", Setting.FuncOnChange)
+                    Else
+                    This.GuiControls[Setting.SectionName . "`n" . Setting.KeyName].OnEvent("Click", Setting.FuncOnChange)
+                }
             }
             If IsSet(TabBox)
             TabBox.UseTab()
-            ConfigBox.AddButton("Section XS Default", "OK").OnEvent("Click", SaveConfig)
-            ConfigBox.AddButton("YS", "Cancel").OnEvent("Click", CloseConfigBox)
-            ConfigBox.OnEvent("Close", CloseConfigBox)
-            ConfigBox.OnEvent("Escape", CloseConfigBox)
-            ConfigBox.Show()
-            ConfigBoxWinID := WinGetID("A")
+            This.ConfigBox.AddButton("Section XS Default", "OK").OnEvent("Click", ObjBindMethod(This, "SaveConfig"))
+            This.ConfigBox.AddButton("YS", "Cancel").OnEvent("Click", ObjBindMethod(This, "CloseBox"))
+            This.ConfigBox.OnEvent("Close", ObjBindMethod(This, "CloseBox"))
+            This.ConfigBox.OnEvent("Escape", ObjBindMethod(This, "CloseBox"))
+            This.ConfigBox.Show()
+            This.ConfigBoxWinID := WinGetID("A")
         }
         Else {
-            WinActivate(ConfigBoxWinID)
-        }
-        CloseConfigBox(*) {
-            ConfigBox.Destroy()
-            ConfigBox := False
-            ConfigBoxWinID := ""
-        }
-        SaveConfig(*) {
-            For KeyName, SettingBox In SettingBoxes
-            This.set(KeyName, SettingBox.Value)
-            CloseConfigBox()
+            WinActivate(This.ConfigBoxWinID)
         }
     }
     

@@ -453,9 +453,9 @@ Class KompleteKontrol {
         Static Call() {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Komplete Kontrol", True, True, "C", 2)
-            If ReaHotkey.Config.Get("CloseKKBrowser") = 1
+            If ReaHotkey.Config.Get("Config", "CloseKKBrowser") = 1
             %ParentClass%.ClosePluginBrowser()
-            If ReaHotkey.Config.Get("DetectLibsInKK") = 1
+            If ReaHotkey.Config.Get("Config", "DetectLibsInKK") = 1
             Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 500)
             Else
             Plugin.SetTimer("Komplete Kontrol", PluginAutoChangeFunction, 0)
@@ -473,7 +473,7 @@ Class KompleteKontrol {
     Class CheckStandaloneConfig {
         Static Call() {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
-            If ReaHotkey.Config.Get("CloseKKBrowser") = 1
+            If ReaHotkey.Config.Get("Config", "CloseKKBrowser") = 1
             %ParentClass%.CloseStandaloneBrowser()
         }
     }

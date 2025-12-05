@@ -9,14 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added/Changed
 
+-   Added support for Kontakt 8.8 (previous versions of Kontakt 8 don't work with this version of the script)
 -   Added fallback mouse coordinates for Kontakt 7 header buttons
--   Added overlay for LA Scoring Strings 3 with Look Ahead toggling/monitoring support
--   Added various internal 'convenience' functions
--   The library browsers in Kontakt 7 and 8 don't get closed by default for new 'installations' (delete the INI file for a fresh start)
+-   Added overlay for LA Scoring Strings 3 with Look Ahead toggling/monitoring
+-   Added functionality for emulating the Applications key (can be set up in the configuration dialog)
+-   The library browsers in Kontakt 7 and 8 now don't get closed by default for new 'installations' (delete the INI file for a fresh start)
 -   Pressing left/right while a tab control has focus no longer causes the tabs to wrap. Press Ctrl+Tab or Ctrl+Shift+Tab for the wrapping behavior.
 -   The script should now remember the last focused controls better.
--   Feedback: Prevent various messages from being cut off by other messages
--   Various other fixes/improvements.
+-   Feedback: Prevent various messages from being cut off by one another
+-   Several other fixes and improvements.
 
 ## [0.8.1] - 2025-11-06
 

@@ -614,10 +614,16 @@ GetWinYCoordinate() {
     Return GetWinPos().Y
 }
 
-InArray(Needle, Haystack) {
+InArray(Needle, Haystack, CaseSensitive := False) {
     For FoundIndex, FoundValue In Haystack
-    If FoundValue == Needle
-    Return FoundIndex
+    If CaseSensitive {
+        If FoundValue == Needle
+        Return FoundIndex
+    }
+    Else {
+        If FoundValue = Needle
+        Return FoundIndex
+    }
     Return False
 }
 
