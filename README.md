@@ -16,7 +16,7 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
   - Currently supported Features include preset browsing/saving and accessing the vendor menus.
 * Enables accessibility for Dubler 2.2 by Vochlea
   - standalone and MIDI capture plugin support
-  - not all features are supported, nor do we know if they ever will be (see [below](#dubler2))
+  - not all features are supported, nor do we know if they ever will be (see [below](#dubler-2-accessibility))
 * Makes it possible to load instruments and add libraries in Best Service Engine 2.
   - Works inside REAPER and Ableton Live 12. The standalone version of Engine 2 is also supported.
 * Allows to click the presets button in various FabFilter plugins
@@ -31,7 +31,7 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
   - Works inside REAPER and Ableton Live 12. In case of Kontakt 7, version 7.10 or higher is required and in case of Kontakt 8, the current version of the script requires at least version 8.8 to be installed.
   - Switching Between instruments/multis/snapshots Only works inside REAPER and Ableton Live 12 - ReaHotkey does not support these features in the standalone versions of Kontakt.
   - The Content Missing dialog may not be accessible when running Kontakt inside Komplete Kontrol.
-* Includes support for interacting with various sample libraries for Kontakt. Reffer to the [list of supported sample libraries](#kontakt-libraries) toward the end of this document for the full list.
+* Includes support for interacting with various sample libraries for Kontakt. Reffer to the [list of supported sample libraries](#list-of-supported-kontakt-sample-libraries) toward the end of this document for the full list.
   - Only works inside REAPER and Ableton Live 12.
 * Adds ability to choose presets in Raum by Native instruments.
 * Adds basic support for the Xfer Records Serum 2 synthesizer inside REAPER and Ableton Live 12.
@@ -114,7 +114,7 @@ ReaHotkey provides basic support for the Dubler 2 MIDI Capture Plugin. Please no
 * the copy clip to REAPER action will drag and drop a clip from the plugin UI into REAPER. That is currently the only way export clips from the plugin into REAPER and comes with the drawback that we cannot explicitly tell REAPER where to insert the clip within the project. If you've got too many tracks in a project (something about 8 tracks), the clip will start to show up at random places throughout the project. We therefore recommend you to use the plugin in projects that are as clean and small as possible. Maybe just have a project tab open which is only responsible for capturing ideas, you'll be able to copy clips around between REAPER instances as soon as they got copied into REAPER.
 * the Select key of clip action will focus the semi-accessible dropdown box with the two possible options, which are the key suggestion by Dubler and the Dubler 2 standalone setting you've chosen. To select either of those options, make sure to pull the mouse to the corresponding position and simulate a left mouse click to select it. We'll try to further improve the process in a future version.
 
-## <a name="kontakt-libraries"></a>List of Supported Kontakt Sample Libraries
+## <a name="list-of-supported-kontakt-sample-libraries"></a>List of Supported Kontakt Sample Libraries
 
 These are the sample libraries that ReaHotkey has some support for. Every attempt has been made to get the overlays to work regardless of whether one's using Kontakt 7, 8 or Komplete Kontrol, but in practice there may still be differences in how the individual overlays perform in each of these scenarios. Generally, the overlays tend to behave more reliable in Kontakt 7 and Komplete Kontrol as opposed to using them with Kontakt 8 directly.
 
