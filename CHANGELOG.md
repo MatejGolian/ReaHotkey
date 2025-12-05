@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.2] - 2025-12-05
+
 ### Added/Changed
 
 -   Added support for Kontakt 8.8 (previous versions of Kontakt 8 don't work with this version of the script)
@@ -466,7 +468,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.1...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.2...HEAD
+
+[0.8.2]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.1...0.8.2
 
 [0.8.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.0...0.8.1
 
