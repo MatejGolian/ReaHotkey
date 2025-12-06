@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.3] - 2025-12-06
+
 ### Added
 
 -   Kontakt 8: Skip things that shouldn't be focusable
@@ -472,7 +474,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.2...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.3...HEAD
+
+[0.8.3]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.2...0.8.3
 
 [0.8.2]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.1...0.8.2
 
