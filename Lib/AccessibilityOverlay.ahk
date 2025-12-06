@@ -958,17 +958,21 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         }
         
         Static _PassThroughHotkey(ThisHotkey) {
+            Try
+            Hotkey ThisHotkey, "Off"
+            This._SendHotkey(ThisHotkey)
+            Try
+            Hotkey ThisHotkey, "On"
+        }
+        
+        Static _SendHotkey(ThisHotkey) {
             Match := RegExMatch(ThisHotkey, "[a-zA-Z]")
             If Match > 0 {
                 Modifiers := SubStr(ThisHotkey, 1, Match - 1)
                 KeyName := SubStr(ThisHotkey, Match)
                 If StrLen(KeyName) > 1
                 KeyName := "{" . KeyName . "}"
-                Try
-                Hotkey ThisHotkey, "Off"
                 Send Modifiers . KeyName
-                Try
-                Hotkey ThisHotkey, "On"
             }
         }
         

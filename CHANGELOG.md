@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Kontakt 8: Skip things that shouldn't be focusable
+
 ## [0.8.2] - 2025-12-05
 
 ### Added/Changed

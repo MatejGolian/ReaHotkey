@@ -13,7 +13,7 @@ Class Kontakt8 {
         PluginHeader := PluginOverlay("Kontakt 8")
         PluginHeader.AddStaticText("Kontakt 8")
         PluginHeader.AddCustomButton("Kontakt File Menu", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!F", "Alt+F")
-        PluginHeader.AddCustomPassThrough("Plugin", "Tab", "+Tab", WrapPluginUIAPassThroughStart.Bind(, This.GetPluginUIAElement, 1), WrapPluginUIAPassThroughEnd.Bind(, This.GetPluginUIAElement, 0), FocusPluginUIAPassThroughElement.Bind(, This.GetPluginUIAElement, 1), FocusPluginUIAPassThroughElement.Bind(, This.GetPluginUIAElement, 0), ObjBindMethod(This, "CheckFocusableElements"))
+        PluginHeader.AddCustomPassThrough("Plugin", "Tab", "+Tab", WrapPluginUIAPassThroughStart.Bind(, This.GetPluginUIAElement, 1), WrapPluginUIAPassThroughEnd.Bind(, This.GetPluginUIAElement, 0), FocusPluginUIAPassThroughElement.Bind(, This.GetPluginUIAElement, 1), FocusPluginUIAPassThroughElement.Bind(, This.GetPluginUIAElement, 0),, ObjBindMethod(This, "CheckFocusableElements"))
         PluginHeader.AddCustomButton("Previous instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^P", "Ctrl+P")
         PluginHeader.AddCustomButton("Next instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^N", "Ctrl+N")
         PluginHeader.AddCustomButton("Previous multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+P", "Ctrl+Shift+P")
@@ -26,7 +26,7 @@ Class Kontakt8 {
         
         StandaloneHeader := StandaloneOverlay("Kontakt 8")
         StandaloneHeader.AddCustomButton("Kontakt File Menu", ObjBindMethod(This, "FocusStandaloneHeaderButton"),, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!F", "Alt+F")
-        StandaloneHeader.AddCustomPassThrough("Standalone", "Tab", "+Tab", WrapStandaloneUIAPassThroughStart.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1), WrapStandaloneUIAPassThroughEnd.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0), FocusStandaloneUIAPassThroughElement.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1), FocusStandaloneUIAPassThroughElement.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0), ObjBindMethod(This, "CheckFocusableElements"))
+        StandaloneHeader.AddCustomPassThrough("Standalone", "Tab", "+Tab", WrapStandaloneUIAPassThroughStart.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1), WrapStandaloneUIAPassThroughEnd.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0), FocusStandaloneUIAPassThroughElement.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1), FocusStandaloneUIAPassThroughElement.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0),, ObjBindMethod(This, "CheckFocusableElements"))
         This.StandaloneHeader := StandaloneHeader
         
         Plugin.Register("Kontakt 8", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
@@ -117,8 +117,22 @@ Class Kontakt8 {
             Return
         }
         FocusableElements := AccessibilityOverlay.Helpers.GetFocusableUIAElements(MainElement)
-        If FocusableElements.Length = 0
-        ReportError(OverlayObj.Label)
+        If FocusableElements.Length = 0 {
+            ReportError(OverlayObj.Label)
+            Return
+        }
+        Try
+        FocusedElement := UIA.GetFocusedElement()
+        Catch
+        FocusedElement := False
+        If FocusedElement Is UIA.IUIAutomationElement
+        While FocusedElement Is UIA.IUIAutomationElement And FocusedElement.Type = 50032 {
+            AccessibilityOverlay.Helpers.SendHotkey(A_ThisHotkey)
+            Try
+            FocusedElement := UIA.GetFocusedElement()
+            Catch
+            FocusedElement := False
+        }
         ReportError(Label) {
             If Label = "Plugin"
             AccessibilityOverlay.Speak("Error: The plug-in does not seem to be loaded correctly.")
