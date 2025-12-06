@@ -845,16 +845,19 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Throw PropertyError("This value of type `"" . This.__Class . "`" has no property named `"" . Name . "`".", -1)
         }
         
-        Static _FocusUIAElement(MainElement, Number) {
+        Static _FocusUIAElement(MainElement, ElementOrNumber) {
             Critical
             Try {
-                UIAElement := This._GetUIAElement(MainElement, Number)
-                UIAElement.SetFocus()
+                If ElementOrNumber Is Integer
+                Element := This._GetUIAElement(MainElement, ElementOrNumber)
+                Else
+                Element := ElementOrNumber
+                Element.SetFocus()
             }
             Catch {
                 Return False
             }
-            Return UIAElement
+            Return Element
         }
         
         Static _GetFocusableUIAElements(MainElement) {
@@ -866,6 +869,37 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Catch
             FocusableElements := Array()
             Return FocusableElements
+        }
+        
+        Static _GetFocusableUIAPaths(MainElement) {
+            UIAPaths := Array()
+            FocusableElements := This._GetFocusableUIAElements(MainElement)
+            For FocusableElement In FocusableElements {
+                Try
+                UIAPath := MainElement.GetUIAPath(FocusableElement)
+                Catch
+                UIAPath := False
+                If UIAPath
+                UIAPaths.Push(UIAPath)
+            }
+            Return UIAPaths
+        }
+        
+        Static _GetFocusedUIAElement() {
+            Try
+            Return UIA.GetFocusedElement()
+            Return False
+        }
+        
+        Static _GetFocusedUIAElementPath(MainElement) {
+            Try
+            FocusedElement := This._GetFocusedUIAElement()
+            Catch
+            Return False
+            If FocusedElement Is UIA.IUIAutomationElement
+            Try
+            Return MainElement.GetUIAPath(FocusedElement)
+            Return False
         }
         
         Static _GetImgSize(Img) {
@@ -891,20 +925,31 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Static _GetUIAElement(MainElement, Number) {
             If Not MainElement Is UIA.IUIAutomationElement
             Return False
-            UIAElement := False
+            Element := False
             FocusableElements := This._GetFocusableUIAElements(MainElement)
             If FocusableElements.Length > 0 {
                 If Number = 0 {
-                    UIAElement := FocusableElements[FocusableElements.Length]
+                    Element := FocusableElements[FocusableElements.Length]
                 }
                 Else {
                     If Number <= FocusableElements.Length
-                    UIAElement := FocusableElements[Number]
+                    Element := FocusableElements[Number]
                     Else
                     Return False
                 }
             }
-            Return UIAElement
+            Return Element
+        }
+        
+        Static _GetUIAElementPath(MainElement, ElementOrNumber) {
+            If ElementOrNumber Is Integer
+            Element := This._GetUIAElement(MainElement, ElementOrNumber)
+            Else
+            Element := ElementOrNumber
+            If Element Is UIA.IUIAutomationElement
+            Try
+            Return MainElement.GetUIAPath(Element)
+            Return False
         }
         
         Static _GetUIAWindow() {
@@ -918,10 +963,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Until WinID
             CacheRequest := UIA.CreateCacheRequest(["Type", "LocalizedType", "AutomationId", "Name", "Value", "ClassName", "AcceleratorKey", "WindowCanMaximize"], ["Window"], "Subtree")
             Try
-            UIAWindow := UIA.ElementFromHandle("ahk_id " . WinID, CacheRequest)
+            Window := UIA.ElementFromHandle("ahk_id " . WinID, CacheRequest)
             Catch
             Return False
-            Return UIAWindow
+            Return Window
         }
         
         Static _InArray(Needle, Haystack, CaseSensitive := False) {

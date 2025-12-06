@@ -121,17 +121,11 @@ Class Kontakt8 {
             ReportError(OverlayObj.Label)
             Return
         }
-        Try
-        FocusedElement := UIA.GetFocusedElement()
-        Catch
-        FocusedElement := False
+        FocusedElement := AccessibilityOverlay.Helpers.GetFocusedUIAElement()
         If FocusedElement Is UIA.IUIAutomationElement
         While FocusedElement Is UIA.IUIAutomationElement And FocusedElement.Type = 50032 {
             AccessibilityOverlay.Helpers.SendHotkey(A_ThisHotkey)
-            Try
-            FocusedElement := UIA.GetFocusedElement()
-            Catch
-            FocusedElement := False
+            FocusedElement := AccessibilityOverlay.Helpers.GetFocusedUIAElement()
         }
         ReportError(Label) {
             If Label = "Plugin"
