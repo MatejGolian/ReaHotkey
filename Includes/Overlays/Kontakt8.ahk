@@ -108,6 +108,7 @@ Class Kontakt8 {
     }
     
     Static CheckFocusableElements(OverlayObj) {
+        Static PreviousPath := False
         If OverlayObj.Label = "Plugin"
         MainElement := This.GetPluginUIAElement()
         Else
@@ -122,10 +123,46 @@ Class Kontakt8 {
             Return
         }
         FocusedElement := AccessibilityOverlay.Helpers.GetFocusedUIAElement()
-        If FocusedElement Is UIA.IUIAutomationElement
-        While FocusedElement Is UIA.IUIAutomationElement And FocusedElement.Type = 50032 {
-            AccessibilityOverlay.Helpers.SendHotkey(A_ThisHotkey)
-            FocusedElement := AccessibilityOverlay.Helpers.GetFocusedUIAElement()
+        If FocusedElement Is UIA.IUIAutomationElement {
+            If PreviousPath And AccessibilityOverlay.Helpers.GetFocusedUIAElementPath(MainElement) = 0 {
+                PreviousNumber := 0
+                TargetNumber := 0
+                For ElementNumber, Element In FocusableElements {
+                    TargetNumber := 0
+                    If PreviousPath = AccessibilityOverlay.Helpers.GetUIAElementPath(MainElement, Element) {
+                        PreviousNumber := ElementNumber
+                        TargetNumber := PreviousNumber
+                        Loop FocusableElements.Length {
+                            If OverlayObj.LastDirection = 1 {
+                                TargetNumber := TargetNumber + 1
+                                If TargetNumber > FocusableElements.Length {
+                                    TargetNumber := 1
+                                }
+                            }
+                            Else {
+                                TargetNumber := TargetNumber -1
+                                If TargetNumber < 1 {
+                                    TargetNumber := FocusableElements.Length
+                                }
+                            }
+                            TargetElement := AccessibilityOverlay.Helpers.GetUIAElement(MainElement, TargetNumber)
+                            If InStr(TargetElement.ClassName, "ProductTileGridItem_QMLTYPE_")
+                            Continue
+                            If InStr(TargetElement.ClassName, "LumenScrollBar_QMLTYPE_")
+                            Continue
+                            If TargetNumber
+                            Break 2
+                        }
+                    }
+                }
+                If TargetNumber {
+                    AccessibilityOverlay.Helpers.FocusUIAElement(MainElement, TargetNumber)
+                    PreviousPath := AccessibilityOverlay.Helpers.GetUIAElementPath(MainElement, TargetNumber)
+                }
+            }
+            Else {
+                PreviousPath := AccessibilityOverlay.Helpers.GetUIAElementPath(MainElement, FocusedElement)
+            }
         }
         ReportError(Label) {
             If Label = "Plugin"
