@@ -116,8 +116,8 @@ Class Kontakt8 {
             ReportError(OverlayObj.Label)
             Return
         }
-        FocusableElements := AccessibilityOverlay.Helpers.GetFocusableUIAElements(MainElement)
-        If FocusableElements.Length = 0 {
+        Elements := AccessibilityOverlay.Helpers.GetFocusableUIAElements(MainElement)
+        If Elements.Length = 0 {
             ReportError(OverlayObj.Label)
             Return
         }

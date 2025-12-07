@@ -895,22 +895,22 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         }
         
         Static _GetFocusableUIAElements(MainElement) {
-            FocusableElements := Array()
+            Elements := Array()
             If Not MainElement Is UIA.IUIAutomationElement
-            Return FocusableElements
+            Return Elements
             Try
-            FocusableElements := MainElement.FindElements({IsKeyboardFocusable: True})
+            Elements := MainElement.FindElements({IsKeyboardFocusable: True})
             Catch
-            FocusableElements := Array()
-            Return FocusableElements
+            Elements := Array()
+            Return Elements
         }
         
         Static _GetFocusableUIAPaths(MainElement) {
             UIAPaths := Array()
-            FocusableElements := This._GetFocusableUIAElements(MainElement)
-            For FocusableElement In FocusableElements {
+            Elements := This._GetFocusableUIAElements(MainElement)
+            For Element In Elements {
                 Try
-                UIAPath := MainElement.GetUIAPath(FocusableElement)
+                UIAPath := MainElement.GetUIAPath(Element)
                 Catch
                 UIAPath := False
                 If UIAPath
@@ -995,6 +995,20 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Catch
             Elements := Array()
             Return Elements
+        }
+        
+        Static _GetUIAPaths(MainElement) {
+            UIAPaths := Array()
+            Elements := This._GetUIAElements(MainElement)
+            For Element In Elements {
+                Try
+                UIAPath := MainElement.GetUIAPath(Element)
+                Catch
+                UIAPath := False
+                If UIAPath
+                UIAPaths.Push(UIAPath)
+            }
+            Return UIAPaths
         }
         
         Static _GetUIAWindow() {
