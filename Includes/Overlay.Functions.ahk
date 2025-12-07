@@ -460,13 +460,28 @@ FocusElement(Type, SourceNumber, TypeToFocus := "C", ValueToFocus := 0) {
     }
 }
 
-FocusPluginUIAPassThroughElement(OverlayObj, MainElementCallback, ElementNumber) {
+FocusFocusablePluginUIAElement(OverlayObj, MainElementCallback, ElementNumber) {
+    MainElement := MainElementCallback.Call()
+    If MainElement Is UIA.IUIAutomationElement
+    AccessibilityOverlay.Helpers.FocusFocusableUIAElement(MainElement, ElementNumber)
+}
+
+FocusFocusableStandaloneUIAElement(OverlayObj, MainElementCallback, ElementNumber) {
+    Try
+    MainElement := MainElementCallback.Call().ElementFromPath(1)
+    Catch
+    MainElement := False
+    If MainElement Is UIA.IUIAutomationElement
+    AccessibilityOverlay.Helpers.FocusFocusableUIAElement(MainElement, ElementNumber)
+}
+
+FocusPluginUIAElement(OverlayObj, MainElementCallback, ElementNumber) {
     MainElement := MainElementCallback.Call()
     If MainElement Is UIA.IUIAutomationElement
     AccessibilityOverlay.Helpers.FocusUIAElement(MainElement, ElementNumber)
 }
 
-FocusStandaloneUIAPassThroughElement(OverlayObj, MainElementCallback, ElementNumber) {
+FocusStandaloneUIAElement(OverlayObj, MainElementCallback, ElementNumber) {
     Try
     MainElement := MainElementCallback.Call().ElementFromPath(1)
     Catch
@@ -788,13 +803,13 @@ WinPctClick(XPct, YPct) {
 WrapPluginUIAPassThroughEnd(OverlayObj, MainElementCallback, ElementNumber := 0) {
     MainElement := MainElementCallback.Call()
     If MainElement Is UIA.IUIAutomationElement
-    Return AccessibilityOverlay.Helpers.WrapUIAPassThrough(MainElement, ElementNumber)
+    Return WrapUIAPassThrough(MainElement, ElementNumber)
 }
 
 WrapPluginUIAPassThroughStart(OverlayObj, MainElementCallback, ElementNumber := 1) {
     MainElement := MainElementCallback.Call()
     If MainElement Is UIA.IUIAutomationElement
-    Return AccessibilityOverlay.Helpers.WrapUIAPassThrough(MainElement, ElementNumber)
+    Return WrapUIAPassThrough(MainElement, ElementNumber)
 }
 
 WrapStandaloneUIAPassThroughEnd(OverlayObj, MainElementCallback, ElementNumber := 0) {
@@ -803,7 +818,7 @@ WrapStandaloneUIAPassThroughEnd(OverlayObj, MainElementCallback, ElementNumber :
     Catch
     MainElement := False
     If MainElement Is UIA.IUIAutomationElement
-    Return AccessibilityOverlay.Helpers.WrapUIAPassThrough(MainElement, ElementNumber)
+    Return WrapUIAPassThrough(MainElement, ElementNumber)
 }
 
 WrapStandaloneUIAPassThroughStart(OverlayObj, MainElementCallback, ElementNumber := 1) {
@@ -812,5 +827,28 @@ WrapStandaloneUIAPassThroughStart(OverlayObj, MainElementCallback, ElementNumber
     Catch
     MainElement := False
     If MainElement Is UIA.IUIAutomationElement
-    Return AccessibilityOverlay.Helpers.WrapUIAPassThrough(MainElement, ElementNumber)
+    Return WrapUIAPassThrough(MainElement, ElementNumber)
+}
+
+WrapUIAPassThrough(MainElement, Number) {
+    Critical
+    If Not MainElement Is UIA.IUIAutomationElement
+    Return False
+    FocusedElement := AccessibilityOverlay.Helpers.GetFocusedUIAElement()
+    If Not FocusedElement
+    Return False
+    Try
+    WrappingElement := AccessibilityOverlay.Helpers.GetFocusableUIAElement(MainElement, Number)
+    Catch
+    Return False
+    Try
+    If FocusedElement Is UIA.IUIAutomationElement And WrappingElement Is UIA.IUIAutomationElement {
+        If MainElement.GetUIAPath(FocusedElement) = MainElement.GetUIAPath(WrappingElement)
+        Return True
+    }
+    Else {
+        If Not WrappingElement Is UIA.IUIAutomationElement
+        Return True
+    }
+    Return False
 }

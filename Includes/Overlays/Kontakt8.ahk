@@ -13,7 +13,7 @@ Class Kontakt8 {
         PluginHeader := PluginOverlay("Kontakt 8")
         PluginHeader.AddStaticText("Kontakt 8")
         PluginHeader.AddCustomButton("Kontakt File Menu", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!F", "Alt+F")
-        PluginHeader.AddCustomPassThrough("Plugin", "Tab", "+Tab", WrapPluginUIAPassThroughStart.Bind(, This.GetPluginUIAElement, 1), WrapPluginUIAPassThroughEnd.Bind(, This.GetPluginUIAElement, 0), FocusPluginUIAPassThroughElement.Bind(, This.GetPluginUIAElement, 1), FocusPluginUIAPassThroughElement.Bind(, This.GetPluginUIAElement, 0),, ObjBindMethod(This, "CheckFocusableElements"))
+        PluginHeader.AddCustomPassThrough("Plugin", "Tab", "+Tab", WrapPluginUIAPassThroughStart.Bind(, This.GetPluginUIAElement, 1), WrapPluginUIAPassThroughEnd.Bind(, This.GetPluginUIAElement, 0), FocusFocusablePluginUIAElement.Bind(, This.GetPluginUIAElement, 1), FocusFocusablePluginUIAElement.Bind(, This.GetPluginUIAElement, 0),,, ObjBindMethod(This, "CheckFocusableElements"))
         PluginHeader.AddCustomButton("Previous instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^P", "Ctrl+P")
         PluginHeader.AddCustomButton("Next instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^N", "Ctrl+N")
         PluginHeader.AddCustomButton("Previous multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+P", "Ctrl+Shift+P")
@@ -26,7 +26,7 @@ Class Kontakt8 {
         
         StandaloneHeader := StandaloneOverlay("Kontakt 8")
         StandaloneHeader.AddCustomButton("Kontakt File Menu", ObjBindMethod(This, "FocusStandaloneHeaderButton"),, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!F", "Alt+F")
-        StandaloneHeader.AddCustomPassThrough("Standalone", "Tab", "+Tab", WrapStandaloneUIAPassThroughStart.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1), WrapStandaloneUIAPassThroughEnd.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0), FocusStandaloneUIAPassThroughElement.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1), FocusStandaloneUIAPassThroughElement.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0),, ObjBindMethod(This, "CheckFocusableElements"))
+        StandaloneHeader.AddCustomPassThrough("Standalone", "Tab", "+Tab", WrapStandaloneUIAPassThroughStart.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1), WrapStandaloneUIAPassThroughEnd.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0), FocusFocusableStandaloneUIAElement.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1), FocusFocusableStandaloneUIAElement.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0),,, ObjBindMethod(This, "CheckFocusableElements"))
         This.StandaloneHeader := StandaloneHeader
         
         Plugin.Register("Kontakt 8", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
@@ -108,7 +108,6 @@ Class Kontakt8 {
     }
     
     Static CheckFocusableElements(OverlayObj) {
-        Static PreviousPath := False
         If OverlayObj.Label = "Plugin"
         MainElement := This.GetPluginUIAElement()
         Else
@@ -121,48 +120,6 @@ Class Kontakt8 {
         If FocusableElements.Length = 0 {
             ReportError(OverlayObj.Label)
             Return
-        }
-        FocusedElement := AccessibilityOverlay.Helpers.GetFocusedUIAElement()
-        If FocusedElement Is UIA.IUIAutomationElement {
-            If PreviousPath And AccessibilityOverlay.Helpers.GetFocusedUIAElementPath(MainElement) = 0 {
-                PreviousNumber := 0
-                TargetNumber := 0
-                For ElementNumber, Element In FocusableElements {
-                    TargetNumber := 0
-                    If PreviousPath = AccessibilityOverlay.Helpers.GetUIAElementPath(MainElement, Element) {
-                        PreviousNumber := ElementNumber
-                        TargetNumber := PreviousNumber
-                        Loop FocusableElements.Length {
-                            If OverlayObj.LastDirection = 1 {
-                                TargetNumber := TargetNumber + 1
-                                If TargetNumber > FocusableElements.Length {
-                                    TargetNumber := 1
-                                }
-                            }
-                            Else {
-                                TargetNumber := TargetNumber -1
-                                If TargetNumber < 1 {
-                                    TargetNumber := FocusableElements.Length
-                                }
-                            }
-                            TargetElement := AccessibilityOverlay.Helpers.GetUIAElement(MainElement, TargetNumber)
-                            If InStr(TargetElement.ClassName, "ProductTileGridItem_QMLTYPE_")
-                            Continue
-                            If InStr(TargetElement.ClassName, "LumenScrollBar_QMLTYPE_")
-                            Continue
-                            If TargetNumber
-                            Break 2
-                        }
-                    }
-                }
-                If TargetNumber {
-                    AccessibilityOverlay.Helpers.FocusUIAElement(MainElement, TargetNumber)
-                    PreviousPath := AccessibilityOverlay.Helpers.GetUIAElementPath(MainElement, TargetNumber)
-                }
-            }
-            Else {
-                PreviousPath := AccessibilityOverlay.Helpers.GetUIAElementPath(MainElement, FocusedElement)
-            }
         }
         ReportError(Label) {
             If Label = "Plugin"
