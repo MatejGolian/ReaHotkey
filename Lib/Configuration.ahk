@@ -90,7 +90,7 @@ Class Configuration {
         }
     }
     
-    ShowBox() {
+    ShowBox(TabToSelect := 1) {
         If This.ConfigBox = False {
             This.ConfigBox := Gui(, This.Title)
             LabelledSettings := Array()
@@ -145,6 +145,8 @@ Class Configuration {
             This.ConfigBox.AddButton("YS", "Cancel").OnEvent("Click", ObjBindMethod(This, "CloseBox"))
             This.ConfigBox.OnEvent("Close", ObjBindMethod(This, "CloseBox"))
             This.ConfigBox.OnEvent("Escape", ObjBindMethod(This, "CloseBox"))
+            If IsSet(TabBox) And Not TabToSelect = 1
+            TabBox.Choose(TabToSelect)
             This.ConfigBox.Show()
             This.ConfigBoxWinID := WinGetID("A")
         }
