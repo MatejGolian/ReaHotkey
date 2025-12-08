@@ -16,28 +16,26 @@ Class Configuration {
         This.DefaultTab := DefaultTab
     }
     
-    Add(FileName, SectionName, KeyName, DefaultValue, Label := False, Tab := False, ControlType := False, ControlProperties := False, FuncOnInit := False, FuncOnChange := False, FuncOnSet := False) {
-        For Index, Setting In This.Settings
-        If Setting.FileName = FileName And Setting.SectionName = SectionName And Setting.KeyName = KeyName
-        Return Index
+    Add(FileName, SectionName, KeyName, DefaultValue, ControlData := {}) {
+        Control := {Label: False, Tab: False, Type: "CheckBox", Options: False, Parameters: False, FuncOnInit: False, FuncOnChange: False, FuncOnSet: False}
+        If ControlData Is Object
+        For PropName, PropValue In Control.OwnProps()
+        If ControlData.HasOwnProp(PropName)
+        Control.%PropName% := ControlData.%PropName%
         If Not This.PrevIousTab
         This.PrevIousTab := This.DefaultTab
-        If Not Tab
-        Tab := This.PrevIousTab
+        If Not Control.Tab
+        Control.Tab := This.PrevIousTab
         Else
-        This.PrevIousTab := Tab
-        If Not ControlType
-        ControlType := "CheckBox"
-        If Not ControlProperties
-        ControlProperties := {Options: "", Params: ""}
-        Setting := {FileName: FileName, SectionName: SectionName, KeyName: KeyName, DefaultValue: DefaultValue, Label: Label, Tab: Tab, ControlType: ControlType, ControlProperties: ControlProperties, FuncOnInit: FuncOnInit, FuncOnChange: FuncOnChange, FuncOnSet: FuncOnSet}
+        This.PrevIousTab := Control.Tab
+        Setting := {FileName: FileName, SectionName: SectionName, KeyName: KeyName, DefaultValue: DefaultValue, Control: Control}
         Setting.Value := IniRead(FileName, SectionName, KeyName, DefaultValue)
         IniWrite(Setting.Value, FileName, SectionName, KeyName)
         This.Settings.Push(Setting)
         For Value In This.Tabs
-        If Setting.Tab = Value
+        If Setting.Control.Tab = Value
         Return This.Settings.Length
-        This.Tabs.Push(Setting.Tab)
+        This.Tabs.Push(Setting.Control.Tab)
         Return This.Settings.Length
     }
     
@@ -84,8 +82,8 @@ Class Configuration {
         SetValue(Setting, Value) {
             Setting.Value := Value
             IniWrite(Setting.Value, Setting.FileName, Setting.SectionName, Setting.KeyName)
-            If Setting.FuncOnSet Is Object And Setting.FuncOnSet.HasMethod("Call")
-            Setting.FuncOnSet.Call(Setting)
+            If Setting.Control.FuncOnSet Is Object And Setting.Control.FuncOnSet.HasMethod("Call")
+            Setting.Control.FuncOnSet.Call(Setting)
         }
     }
     
@@ -96,9 +94,9 @@ Class Configuration {
             This.GuiControls := Map()
             TabsUsed := Map()
             For Index, Setting In This.Settings {
-                If Setting.Label
+                If Setting.Control.Label
                 LabelledSettings.Push(Setting)
-                TabsUsed.Set(Setting.Tab, False)
+                TabsUsed.Set(Setting.Control.Tab, False)
             }
             If LabelledSettings.Length = 0
             This.ConfigBox.AddText("Section", "No settings available.")
@@ -107,44 +105,44 @@ Class Configuration {
             For Index, Setting In LabelledSettings {
                 Position := ""
                 If IsSet(TabBox)
-                TabBox.UseTab(Setting.Tab)
-                If Not TabsUsed[Setting.Tab]
+                TabBox.UseTab(Setting.Control.Tab)
+                If Not TabsUsed[Setting.Control.Tab]
                 FirstControl := True
-                TabsUsed[Setting.Tab] := True
+                TabsUsed[Setting.Control.Tab] := True
                 If FirstControl
-                Position := "Section "
+                Position := "Section"
                 Else
-                Position := "XS "
+                Position := "XS"
                 FirstControl := False
                 If Not This.GuiControls.Has(Setting.SectionName)
                 This.GuiControls[Setting.SectionName] := Map()
                 Options := ""
-                Params := ""
-                If Setting.ControlProperties Is Object And Setting.ControlProperties.HasOwnProp("Options")
-                Options := Setting.ControlProperties.Options
-                If Setting.ControlProperties Is Object And Setting.ControlProperties.HasOwnProp("Params")
-                Params := Setting.ControlProperties.Params
-                If Setting.ControlType = "Edit" Or Setting.ControlType = "Hotkey" {
-                    This.ConfigBox.AddText("Section XS", Setting.Label)
-                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%("YS " . Options, Setting.Value)
+                Parameters := ""
+                If Setting.Control.Options
+                Options := Setting.Control.Options
+                If Setting.Control.Parameters
+                Parameters := Setting.Control.Parameters
+                If Setting.Control.Type = "Edit" Or Setting.Control.Type = "Hotkey" {
+                    This.ConfigBox.AddText(Position, Setting.Control.Label)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%("YS " . Options, Setting.Value)
                     FirstControl := True
                 }
-                Else If Setting.ControlType = "CheckBox" {
+                Else If Setting.Control.Type = "CheckBox" {
                     Checked := ""
                     If Setting.Value = 1
                     Checked := "Checked "
-                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%(Position . Checked . Options, Setting.Label)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%(Position . " " . Checked . " " . Options, Setting.Control.Label)
                 }
                 Else {
-                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%(Position . Options, Params)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%(Position . " " . Options, Parameters)
                 }
-                If Setting.FuncOnInit Is Object And Setting.FuncOnInit.HasMethod("Call")
-                Setting.FuncOnInit.Call(This.GuiControls[Setting.SectionName][Setting.KeyName])
-                If Setting.FuncOnChange Is Object And Setting.FuncOnChange.HasMethod("Call") {
-                    If Setting.ControlType = "Edit" Or Setting.ControlType = "Hotkey"
-                    This.GuiControls[Setting.SectionName][Setting.KeyName].OnEvent("Change", Setting.FuncOnChange)
+                If Setting.Control.FuncOnInit Is Object And Setting.Control.FuncOnInit.HasMethod("Call")
+                Setting.Control.FuncOnInit.Call(This.GuiControls[Setting.SectionName][Setting.KeyName])
+                If Setting.Control.FuncOnChange Is Object And Setting.Control.FuncOnChange.HasMethod("Call") {
+                    If Setting.Control.Type = "Edit" Or Setting.Control.Type = "Hotkey"
+                    This.GuiControls[Setting.SectionName][Setting.KeyName].OnEvent("Change", Setting.Control.FuncOnChange)
                     Else
-                    This.GuiControls[Setting.SectionName][Setting.KeyName].OnEvent("Click", Setting.FuncOnChange)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName].OnEvent("Click", Setting.Control.FuncOnChange)
                 }
             }
             If IsSet(TabBox)

@@ -105,7 +105,7 @@ Class Raum {
     }
     
     Static InitConfig() {
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "RaumHelpMessage", 1, "Show help message in Raum", "Misc")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "RaumHelpMessage", 1, {Label: "Show help message in Raum", Tab: "Misc"})
     }
     
     Static SayHelpMessage(HK) {

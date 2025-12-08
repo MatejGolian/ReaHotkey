@@ -120,7 +120,7 @@ Class Engine2 {
     }
     
     Static InitConfig() {
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "Engine2ImageSearch", 1, "Use image search for Engine 2 plug-in detection", "Misc")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "Engine2ImageSearch", 1, {Label: "Use image search for Engine 2 plug-in detection", Tab: "Misc"})
     }
     
 }

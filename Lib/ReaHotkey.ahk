@@ -309,14 +309,14 @@ Class ReaHotkey {
     
     Static InitConfig() {
         This.Config := Configuration("ReaHotkey Configuration")
-        This.Config.Add("ReaHotkey.ini", "Config", "CheckWinVer", 1, "Check Windows version on startup")
-        This.Config.Add("ReaHotkey.ini", "Config", "CheckScreenResolution", 1, "Check screen resolution on startup")
-        This.Config.Add("ReaHotkey.ini", "Config", "CheckUpdate", 1, "Check for updates on startup")
-        This.Config.Add("ReaHotkey.ini", "Config", "CheckIfWinCovered", 1, "Warn if another window may be covering the interface in specific cases",,,,,, ObjBindMethod(This, "ManageWinCovered"))
-        This.Config.Add("ReaHotkey.ini", "Config", "PromptOnAbletonPlugin", 1, "Prompt if a compatible plug-in is detected in Ableton, but does not have focus",,,,,, ObjBindMethod(This, "ManageAbletonPluginPrompt"))
-        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyEmulator", 0, "Use the following key combination to emulate the Applications key", "AppsKey Emulator",,,, ObjBindMethod(This, "ToggleAppsKeyEmulatorOnOff"))
-        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyHK", "+^m", "Key combination",, "Hotkey",, ObjBindMethod(This, "InitAppsKeyControl"), ObjBindMethod(This, "ChangeAppsKeyCombo"))
-        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyWinMod", 1, "Add the Windows key as an extra modifier",,,, ObjBindMethod(This, "InitAppsKeyControl"),, ObjBindMethod(This, "ManageAppsKeyEmulation"))
+        This.Config.Add("ReaHotkey.ini", "Config", "CheckWinVer", 1, {Label: "Check Windows version on startup"})
+        This.Config.Add("ReaHotkey.ini", "Config", "CheckScreenResolution", 1, {Label: "Check screen resolution on startup"})
+        This.Config.Add("ReaHotkey.ini", "Config", "CheckUpdate", 1, {Label: "Check for updates on startup"})
+        This.Config.Add("ReaHotkey.ini", "Config", "CheckIfWinCovered", 1, {Label: "Warn if another window may be covering the interface in specific cases", FuncOnSet: ObjBindMethod(This, "ManageWinCovered")})
+        This.Config.Add("ReaHotkey.ini", "Config", "PromptOnAbletonPlugin", 1, {Label: "Prompt if a compatible plug-in is detected in Ableton, but does not have focus", FuncOnSet: ObjBindMethod(This, "ManageAbletonPluginPrompt")})
+        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyEmulator", 0, {Label: "Use the following key combination to emulate the Applications key", Tab: "AppsKey Emulator", FuncOnChange: ObjBindMethod(This, "ToggleAppsKeyEmulatorOnOff")})
+        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyHK", "+^m", {Label: "Key combination", Type: "Hotkey", FuncOnInit: ObjBindMethod(This, "InitAppsKeyControl"), FuncOnChange: ObjBindMethod(This, "ChangeAppsKeyCombo")})
+        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyWinMod", 1, {Label: "Add the Windows key as an extra modifier", FuncOnInit: ObjBindMethod(This, "InitAppsKeyControl"), FuncOnSet: ObjBindMethod(This, "ManageAppsKeyEmulation")})
     }
     
     Static InPluginControl(ControlToCheck) {

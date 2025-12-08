@@ -139,7 +139,7 @@ Class Zampler {
     }
     
     Static InitConfig() {
-        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "ZamplerImageSearch", 1, "Use image search for Zampler plug-in detection", "Misc")
+        ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "ZamplerImageSearch", 1, {Label: "Use image search for Zampler plug-in detection", Tab: "Misc"})
     }
     
     Static MoveToFilter(OverlayObj) {
