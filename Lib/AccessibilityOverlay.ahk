@@ -2192,11 +2192,10 @@ Class CustomEdit Extends Edit {
 Class CustomPassThrough Extends PassThrough {
     
     EndWrapperFunctions := Array()
-    PassThroughFunctions := Array()
     StartWrapperFunctions := Array()
     
-    __New(Label, ForwardHks, BackHKs, StartWrapperFunctions := "", EndWrapperFunctions := "", FirstItemFunctions := "", LastItemFunctions := "", PassThroughFunctions := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
-        Super.__New(Label, ForwardHks, BackHKs, 1, FirstItemFunctions, LastItemFunctions, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
+    __New(Label, ForwardHks, BackHKs, StartWrapperFunctions := "", EndWrapperFunctions := "", PassThroughFunctions := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, ForwardHks, BackHKs, 1, PassThroughFunctions, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not StartWrapperFunctions = "" {
             If Not StartWrapperFunctions Is Array
             StartWrapperFunctions := Array(StartWrapperFunctions)
@@ -2210,13 +2209,6 @@ Class CustomPassThrough Extends PassThrough {
             For WrapperFunction In EndWrapperFunctions
             If WrapperFunction Is Object And WrapperFunction.HasMethod("Call")
             This.EndWrapperFunctions.Push(WrapperFunction)
-        }
-        If Not PassThroughFunctions = "" {
-            If Not PassThroughFunctions Is Array
-            PassThroughFunctions := Array(PassThroughFunctions)
-            For PassThroughFunction In PassThroughFunctions
-            If PassThroughFunction Is Object And PassThroughFunction.HasMethod("Call")
-            This.PassThroughFunctions.Push(PassThroughFunction)
         }
     }
     
@@ -2252,16 +2244,8 @@ Class CustomPassThrough Extends PassThrough {
         Critical
         This.GetHKState(&ForwardHK, &BackHK)
         This.CurrentItem++
-        This.TriggerItems(ForwardHK, BackHK)
+        This.HandlePassThrough()
         This.Size := This.CurrentItem + 2
-    }
-    
-    HandlePassThrough() {
-        If This.PassThroughFunctions.Length = 0
-        AccessibilityOverlay.Helpers.PassThroughHotkey(A_ThisHotkey)
-        Else
-        For PassThroughFunction In This.PassThroughFunctions
-        PassThroughFunction.Call(This)
     }
     
     Reset() {
@@ -3100,14 +3084,13 @@ Class PassThrough Extends ActivatableControl {
     ControlType := "PassThrough control"
     ControlTypeLabel := "pass through"
     CurrentItem := 0
-    FirstItemFunctions := Array()
     ForwardHks := Array()
     LastDirection := 0
-    LastItemFunctions := Array()
+    PassThroughFunctions := Array()
     Size := 1
     State := 1
     
-    __New(Label, ForwardHks, BackHKs, Size := 1, FirstItemFunctions := "", LastItemFunctions := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+    __New(Label, ForwardHks, BackHKs, Size := 1, PassThroughFunctions := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", PreExecActivationFunctions := "", PostExecActivationFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
         Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, PreExecActivationFunctions, PostExecActivationFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         If Not ForwardHks = "" {
             If Not ForwardHks Is Array
@@ -3125,19 +3108,12 @@ Class PassThrough Extends ActivatableControl {
         }
         If Size Is Integer And Size > 0
         This.Size := Size
-        If Not FirstItemFunctions = "" {
-            If Not FirstItemFunctions Is Array
-            FirstItemFunctions := Array(FirstItemFunctions)
-            For ItemFunction In FirstItemFunctions
-            If ItemFunction Is Object And ItemFunction.HasMethod("Call")
-            This.FirstItemFunctions.Push(ItemFunction)
-        }
-        If Not LastItemFunctions = "" {
-            If Not LastItemFunctions Is Array
-            LastItemFunctions := Array(LastItemFunctions)
-            For ItemFunction In LastItemFunctions
-            If ItemFunction Is Object And ItemFunction.HasMethod("Call")
-            This.LastItemFunctions.Push(ItemFunction)
+        If Not PassThroughFunctions = "" {
+            If Not PassThroughFunctions Is Array
+            PassThroughFunctions := Array(PassThroughFunctions)
+            For PassThroughFunction In PassThroughFunctions
+            If PassThroughFunction Is Object And PassThroughFunction.HasMethod("Call")
+            This.PassThroughFunctions.Push(PassThroughFunction)
         }
     }
     
@@ -3172,7 +3148,7 @@ Class PassThrough Extends ActivatableControl {
             If BackHK
             This.CurrentItem--
         }
-        This.TriggerItems(ForwardHK, BackHK)
+        This.HandlePassThrough()
     }
     
     Focus(Speak := False, Move := False) {
@@ -3207,6 +3183,18 @@ Class PassThrough Extends ActivatableControl {
     }
     
     HandlePassThrough() {
+        If This.PassThroughFunctions.Length = 0 {
+            AccessibilityOverlay.Helpers.PassThroughHotkey(A_ThisHotkey)
+        }
+        Else {
+            Result := False
+            For PassThroughFunction In This.PassThroughFunctions {
+                Result := PassThroughFunction.Call(This)
+                If Result
+                Break
+            }
+        }
+        If Result
         AccessibilityOverlay.Helpers.PassThroughHotkey(A_ThisHotkey)
     }
     
@@ -3222,26 +3210,6 @@ Class PassThrough Extends ActivatableControl {
     }
     
     SpeakOnActivation(*) {
-    }
-    
-    TriggerItems(ForwardHK, BackHK) {
-        If Not ForwardHK and Not BackHK
-        Return
-        If ForwardHk And This.CurrentItem = 1 And This.FirstItemFunctions.Length > 0 {
-            For ItemFunction In This.FirstItemFunctions
-            ItemFunction.Call(This)
-        }
-        Else If ForwardHk {
-            This.HandlePassThrough()
-        }
-        Else If BackHK And This.CurrentItem = This.Size And This.LastItemFunctions.Length > 0 {
-            For ItemFunction In This.LastItemFunctions
-            ItemFunction.Call(This)
-        }
-        Else {
-            If BackHK
-            This.HandlePassThrough()
-        }
     }
     
 }

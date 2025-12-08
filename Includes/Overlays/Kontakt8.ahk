@@ -13,7 +13,7 @@ Class Kontakt8 {
         PluginHeader := PluginOverlay("Kontakt 8")
         PluginHeader.AddStaticText("Kontakt 8")
         PluginHeader.AddCustomButton("Kontakt File Menu", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!F", "Alt+F")
-        PluginHeader.AddCustomPassThrough("Plugin", "Tab", "+Tab", WrapPluginUIAPassThroughStart.Bind(, This.GetPluginUIAElement, 1), WrapPluginUIAPassThroughEnd.Bind(, This.GetPluginUIAElement, 0), FocusFocusablePluginUIAElement.Bind(, This.GetPluginUIAElement, 1), FocusFocusablePluginUIAElement.Bind(, This.GetPluginUIAElement, 0),,, ObjBindMethod(This, "CheckFocusableElements"))
+        PluginHeader.AddCustomPassThrough("Plugin", "Tab", "+Tab", WrapPluginUIAPassThroughStart.Bind(, This.GetPluginUIAElement, 1), WrapPluginUIAPassThroughEnd.Bind(, This.GetPluginUIAElement, 0), ObjBindMethod(This, "HandlePassThrough"),, ObjBindMethod(This, "CheckFocusableElements"))
         PluginHeader.AddCustomButton("Previous instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^P", "Ctrl+P")
         PluginHeader.AddCustomButton("Next instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^N", "Ctrl+N")
         PluginHeader.AddCustomButton("Previous multi", ObjBindMethod(This, "MoveToPluginMultiButton"),,, ObjBindMethod(This, "ActivatePluginMultiButton")).SetHotkey("^+P", "Ctrl+Shift+P")
@@ -26,7 +26,7 @@ Class Kontakt8 {
         
         StandaloneHeader := StandaloneOverlay("Kontakt 8")
         StandaloneHeader.AddCustomButton("Kontakt File Menu", ObjBindMethod(This, "FocusStandaloneHeaderButton"),, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!F", "Alt+F")
-        StandaloneHeader.AddCustomPassThrough("Standalone", "Tab", "+Tab", WrapStandaloneUIAPassThroughStart.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1), WrapStandaloneUIAPassThroughEnd.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0), FocusFocusableStandaloneUIAElement.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1), FocusFocusableStandaloneUIAElement.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0),,, ObjBindMethod(This, "CheckFocusableElements"))
+        StandaloneHeader.AddCustomPassThrough("Standalone", "Tab", "+Tab", WrapStandaloneUIAPassThroughStart.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1), WrapStandaloneUIAPassThroughEnd.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0), ObjBindMethod(This, "HandlePassThrough"),, ObjBindMethod(This, "CheckFocusableElements"))
         This.StandaloneHeader := StandaloneHeader
         
         Plugin.Register("Kontakt 8", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
@@ -310,6 +310,34 @@ Class Kontakt8 {
     
     Static GetStandaloneBrowser() {
         Return This.GetBrowser("Standalone")
+    }
+    
+    Static HandlePassThrough(OverlayObj) {
+        If OverlayObj.Label = "Plugin" {
+            FirstItemFunction := FocusFocusablePluginUIAElement.Bind(, This.GetPluginUIAElement, 1)
+            LastItemFunction := FocusFocusablePluginUIAElement.Bind(, This.GetPluginUIAElement, 0)
+        }
+        Else {
+            FirstItemFunction := FocusFocusableStandaloneUIAElement.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1)
+            LastItemFunction := FocusFocusableStandaloneUIAElement.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0)
+        }
+        If OverlayObj.LastDirection = 1 And OverlayObj.CurrentItem = 1 {
+            FirstItemFunction.Call(OverlayObj)
+            Return False
+        }
+        Else If OverlayObj.LastDirection = 1 {
+            Return True
+        }
+        Else If OverlayObj.LastDirection = -1 And OverlayObj.CurrentItem = OverlayObj.Size {
+            LastItemFunction.Call(OverlayObj)
+            Return False
+        }
+        Else If OverlayObj.LastDirection = -1 {
+            Return True
+        }
+        Else {
+            Return False
+        }
     }
     
     Static InitConfig() {
