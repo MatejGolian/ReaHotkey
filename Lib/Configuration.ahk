@@ -112,7 +112,7 @@ Class Configuration {
                 If FirstControl
                 Position := "Section"
                 Else
-                Position := "XS"
+                Position := "Section XS"
                 FirstControl := False
                 If Not This.GuiControls.Has(Setting.SectionName)
                 This.GuiControls[Setting.SectionName] := Map()
@@ -122,16 +122,21 @@ Class Configuration {
                 Options := Setting.Control.Options
                 If Setting.Control.Parameters
                 Parameters := Setting.Control.Parameters
-                If Setting.Control.Type = "Edit" Or Setting.Control.Type = "Hotkey" {
-                    This.ConfigBox.AddText(Position, Setting.Control.Label)
-                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%("YS " . Options, Setting.Value)
-                    FirstControl := True
-                }
-                Else If Setting.Control.Type = "CheckBox" {
+                If Setting.Control.Type = "CheckBox" {
                     Checked := ""
                     If Setting.Value = 1
                     Checked := "Checked "
                     This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%(Position . " " . Checked . " " . Options, Setting.Control.Label)
+                }
+                Else If Setting.Control.Type = "ComboBox" Or Setting.Control.Type = "DDL" Or Setting.Control.Type = "DropDownList" {
+                    If Not Parameters Is Array
+                    Parameters := Array()
+                    This.ConfigBox.AddText(Position, Setting.Control.Label)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%("YP " . Options . " Choose" . Setting.Value, Parameters)
+                }
+                Else If Setting.Control.Type = "Edit" Or Setting.Control.Type = "Hotkey" {
+                    This.ConfigBox.AddText(Position, Setting.Control.Label)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%("YP " . Options, Setting.Value)
                 }
                 Else {
                     This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%(Position . " " . Options, Parameters)
@@ -139,7 +144,7 @@ Class Configuration {
                 If Setting.Control.FuncOnInit Is Object And Setting.Control.FuncOnInit.HasMethod("Call")
                 Setting.Control.FuncOnInit.Call(This.GuiControls[Setting.SectionName][Setting.KeyName])
                 If Setting.Control.FuncOnChange Is Object And Setting.Control.FuncOnChange.HasMethod("Call") {
-                    If Setting.Control.Type = "Edit" Or Setting.Control.Type = "Hotkey"
+                    If Setting.Control.Type = "ComboBox" Or Setting.Control.Type = "DDL" Or Setting.Control.Type = "DropDownList" Or Setting.Control.Type = "Edit" Or Setting.Control.Type = "Hotkey"
                     This.GuiControls[Setting.SectionName][Setting.KeyName].OnEvent("Change", Setting.Control.FuncOnChange)
                     Else
                     This.GuiControls[Setting.SectionName][Setting.KeyName].OnEvent("Click", Setting.Control.FuncOnChange)
@@ -148,7 +153,7 @@ Class Configuration {
             If IsSet(TabBox)
             TabBox.UseTab()
             This.ConfigBox.AddButton("Section XS Default", "OK").OnEvent("Click", ObjBindMethod(This, "SaveConfig"))
-            This.ConfigBox.AddButton("YS", "Cancel").OnEvent("Click", ObjBindMethod(This, "CloseBox"))
+            This.ConfigBox.AddButton("YP", "Cancel").OnEvent("Click", ObjBindMethod(This, "CloseBox"))
             This.ConfigBox.OnEvent("Close", ObjBindMethod(This, "CloseBox"))
             This.ConfigBox.OnEvent("Escape", ObjBindMethod(This, "CloseBox"))
             If IsSet(TabBox) And Not TabToSelect = 1
