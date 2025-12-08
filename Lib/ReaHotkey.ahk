@@ -616,12 +616,12 @@ Class ReaHotkey {
     
     Static ToggleAppsKeyEmulatorOnOff(Control, Info) {
         If Control.Value {
-            This.Config.GuiControls["Config`nAppsKeyHK"].Opt("-Disabled")
-            This.Config.GuiControls["Config`nAppsKeyWinMod"].Opt("-Disabled")
+            This.Config.GuiControls["Config"]["AppsKeyHK"].Opt("-Disabled")
+            This.Config.GuiControls["Config"]["AppsKeyWinMod"].Opt("-Disabled")
         }
         Else {
-            This.Config.GuiControls["Config`nAppsKeyHK"].Opt("+Disabled")
-            This.Config.GuiControls["Config`nAppsKeyWinMod"].Opt("+Disabled")
+            This.Config.GuiControls["Config"]["AppsKeyHK"].Opt("+Disabled")
+            This.Config.GuiControls["Config"]["AppsKeyWinMod"].Opt("+Disabled")
         }
     }
     

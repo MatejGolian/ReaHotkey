@@ -74,7 +74,7 @@ Class Configuration {
     
     SaveConfig(*) {
         For Setting In This.Settings
-        This.set(Setting.SectionName, Setting.KeyName, This.GuiControls[Setting.SectionName . "`n" . Setting.KeyName].Value)
+        This.set(Setting.SectionName, Setting.KeyName, This.GuiControls[Setting.SectionName][Setting.KeyName].Value)
         This.CloseBox()
     }
     
@@ -117,24 +117,26 @@ Class Configuration {
                 Else
                 Position := "XS "
                 FirstControl := False
+                If Not This.GuiControls.Has(Setting.SectionName)
+                This.GuiControls[Setting.SectionName] := Map()
                 If Setting.ControlType = "Edit" Or Setting.ControlType = "Hotkey" {
                     This.ConfigBox.AddText("Section XS", Setting.Label)
-                    This.GuiControls[Setting.SectionName . "`n" . Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%("YS", Setting.Value)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%("YS", Setting.Value)
                     FirstControl := True
                 }
                 Else {
                     Properties := Setting.ControlProperties
                     If Setting.ControlType = "CheckBox" And Setting.Value = 1
                     Properties .= "Checked"
-                    This.GuiControls[Setting.SectionName . "`n" . Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%(Position . Properties, Setting.Label)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%(Position . Properties, Setting.Label)
                 }
                 If Setting.FuncOnInit Is Object And Setting.FuncOnInit.HasMethod("Call")
-                Setting.FuncOnInit.Call(This.GuiControls[Setting.SectionName . "`n" . Setting.KeyName])
+                Setting.FuncOnInit.Call(This.GuiControls[Setting.SectionName][Setting.KeyName])
                 If Setting.FuncOnChange Is Object And Setting.FuncOnChange.HasMethod("Call") {
                     If Setting.ControlType = "Edit" Or Setting.ControlType = "Hotkey"
-                    This.GuiControls[Setting.SectionName . "`n" . Setting.KeyName].OnEvent("Change", Setting.FuncOnChange)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName].OnEvent("Change", Setting.FuncOnChange)
                     Else
-                    This.GuiControls[Setting.SectionName . "`n" . Setting.KeyName].OnEvent("Click", Setting.FuncOnChange)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName].OnEvent("Click", Setting.FuncOnChange)
                 }
             }
             If IsSet(TabBox)
