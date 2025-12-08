@@ -29,8 +29,7 @@ Class Configuration {
         If Not ControlType
         ControlType := "CheckBox"
         If Not ControlProperties
-        ControlProperties := ""
-        ControlProperties .= " "
+        ControlProperties := {Options: "", Params: ""}
         Setting := {FileName: FileName, SectionName: SectionName, KeyName: KeyName, DefaultValue: DefaultValue, Label: Label, Tab: Tab, ControlType: ControlType, ControlProperties: ControlProperties, FuncOnInit: FuncOnInit, FuncOnChange: FuncOnChange, FuncOnSet: FuncOnSet}
         Setting.Value := IniRead(FileName, SectionName, KeyName, DefaultValue)
         IniWrite(Setting.Value, FileName, SectionName, KeyName)
@@ -119,16 +118,25 @@ Class Configuration {
                 FirstControl := False
                 If Not This.GuiControls.Has(Setting.SectionName)
                 This.GuiControls[Setting.SectionName] := Map()
+                Options := ""
+                Params := ""
+                If Setting.ControlProperties Is Object And Setting.ControlProperties.HasOwnProp("Options")
+                Options := Setting.ControlProperties.Options
+                If Setting.ControlProperties Is Object And Setting.ControlProperties.HasOwnProp("Params")
+                Params := Setting.ControlProperties.Params
                 If Setting.ControlType = "Edit" Or Setting.ControlType = "Hotkey" {
                     This.ConfigBox.AddText("Section XS", Setting.Label)
-                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%("YS", Setting.Value)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%("YS " . Options, Setting.Value)
                     FirstControl := True
                 }
+                Else If Setting.ControlType = "CheckBox" {
+                    Checked := ""
+                    If Setting.Value = 1
+                    Checked := "Checked "
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%(Position . Checked . Options, Setting.Label)
+                }
                 Else {
-                    Properties := Setting.ControlProperties
-                    If Setting.ControlType = "CheckBox" And Setting.Value = 1
-                    Properties .= "Checked"
-                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%(Position . Properties, Setting.Label)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.ControlType%(Position . Options, Params)
                 }
                 If Setting.FuncOnInit Is Object And Setting.FuncOnInit.HasMethod("Call")
                 Setting.FuncOnInit.Call(This.GuiControls[Setting.SectionName][Setting.KeyName])
