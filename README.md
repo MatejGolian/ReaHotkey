@@ -58,13 +58,13 @@ Just extract the downloaded archive and run one of the ReaHotkey executables dep
 
 * f6 - focus plug-in window/interface
 * ctrl+shift+windows+a - about
-* ctrl+shift+windows+c - configuration
 * ctrl+shift+windows+p - pause
 * ctrl+shift+windows+q - quit
 * ctrl+shift+windows+r - open ReaHotkey menu
 * ctrl+shift+windows+u - check for updates
 * ctrl+shift+windows+f1 - view readme
 * ctrl+shift+windows+f5 - reload
+* ctrl+shift+windows+f12 - configuration
 
 ## Known Issues
 

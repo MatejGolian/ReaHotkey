@@ -17,7 +17,7 @@ Class ReaHotkey {
     Static RequiredWinBuild := 10240
     Static RequiredWinVer := 10
     Static StateManagementTimer := False
-    Static SystemHotkeys := Array("#+^F1", "#+^F5", "#+^A", "#+^C", "#+^P", "#+^Q", "#+^R", "#+^U", "Ctrl", "Tab", "+Tab", "^Tab", "+^Tab", "Left", "Right", "Up", "Down", "Enter", "Space", "F6")
+    Static SystemHotkeys := Array("#+^F1", "#+^F5", "#+^F12", "#+^A", "#+^P", "#+^Q", "#+^R", "#+^U", "Ctrl", "Tab", "+Tab", "^Tab", "+^Tab", "Left", "Right", "Up", "Down", "Enter", "Space", "F6")
     Static WinCoveredTimer := False
     
     Static __New() {
@@ -578,7 +578,7 @@ Class ReaHotkey {
             AboutBox := Gui(, "About ReaHotkey")
             AboutBox.AddEdit("ReadOnly", "Version " . GetVersion())
             AboutBox.AddLink("XS", 'ReaHotkey on <a href="https://github.com/MatejGolian/ReaHotkey">GitHub</a>')
-            AboutBox.AddButton("Default Section XS", "OK").OnEvent("Click", CloseAboutBox)
+            AboutBox.AddButton("Default Section", "OK").OnEvent("Click", CloseAboutBox)
             AboutBox.OnEvent("Close", CloseAboutBox)
             AboutBox.OnEvent("Escape", CloseAboutBox)
             AboutBox.Show()

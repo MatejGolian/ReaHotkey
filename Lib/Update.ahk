@@ -99,7 +99,7 @@ If ProcessText
 Text := ProcessNotificationText(Text)
 NotificationBox := Gui(, Title)
 NotificationBox.AddEdit("ReadOnly vText -WantReturn", Text)
-NotificationBox.AddButton("Section XS vProceedToDownload", "Proceed to download page").OnEvent("Click", ProceedToDownload)
+NotificationBox.AddButton("Section vProceedToDownload", "Proceed to download page").OnEvent("Click", ProceedToDownload)
 NotificationBox.AddButton("YP vClose", "Close").OnEvent("Click", CloseNotificationBox)
 NotificationBox.OnEvent("Close", CloseNotificationBox)
 NotificationBox.OnEvent("Escape", CloseNotificationBox)

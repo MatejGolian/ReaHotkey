@@ -70,6 +70,7 @@ Class Configuration {
     }
     
     SaveConfig(*) {
+        This.ConfigBox.Submit()
         For Setting In This.Settings
         This.set(Setting.SectionName, Setting.KeyName, This.GuiControls[Setting.SectionName][Setting.KeyName].Value)
         This.CloseBox()
@@ -122,10 +123,10 @@ Class Configuration {
                 Options := Setting.Control.Options
                 If Setting.Control.Parameters
                 Parameters := Setting.Control.Parameters
-                If Setting.Control.Type = "Button" Or Setting.Control.Type = "GroupBox" Or Setting.Control.Type = "Text" {
+                If Setting.Control.Type = "Button" Or Setting.Control.Type = "GroupBox" Or Setting.Control.Type = "Radio" Or Setting.Control.Type = "Text" {
                     This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%(Position . " " . Options, Setting.Control.Label)
                 }
-                Else If Setting.Control.Type = "CheckBox" Or Setting.Control.Type = "Radio" {
+                Else If Setting.Control.Type = "CheckBox" {
                     Checked := ""
                     If Setting.Value = 1
                     Checked := "Checked "
@@ -163,7 +164,7 @@ Class Configuration {
             }
             If IsSet(TabBox)
             TabBox.UseTab()
-            This.ConfigBox.AddButton("Section XS Default", "OK").OnEvent("Click", ObjBindMethod(This, "SaveConfig"))
+            This.ConfigBox.AddButton("Section Default", "OK").OnEvent("Click", ObjBindMethod(This, "SaveConfig"))
             This.ConfigBox.AddButton("YP", "Cancel").OnEvent("Click", ObjBindMethod(This, "CloseBox"))
             This.ConfigBox.OnEvent("Close", ObjBindMethod(This, "CloseBox"))
             This.ConfigBox.OnEvent("Escape", ObjBindMethod(This, "CloseBox"))
