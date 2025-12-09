@@ -122,32 +122,43 @@ Class Configuration {
                 Options := Setting.Control.Options
                 If Setting.Control.Parameters
                 Parameters := Setting.Control.Parameters
-                If Setting.Control.Type = "CheckBox" {
+                If Setting.Control.Type = "Button" Or Setting.Control.Type = "GroupBox" Or Setting.Control.Type = "Text" {
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%(Position . " " . Options, Setting.Control.Label)
+                }
+                Else If Setting.Control.Type = "CheckBox" Or Setting.Control.Type = "Radio" {
                     Checked := ""
                     If Setting.Value = 1
                     Checked := "Checked "
                     This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%(Position . " " . Checked . " " . Options, Setting.Control.Label)
                 }
-                Else If Setting.Control.Type = "ComboBox" Or Setting.Control.Type = "DDL" Or Setting.Control.Type = "DropDownList" {
+                Else If Setting.Control.Type = "ComboBox" Or Setting.Control.Type = "DDL" Or Setting.Control.Type = "DropDownList" Or Setting.Control.Type = "ListBox" Or Setting.Control.Type = "ListView" {
                     If Not Parameters Is Array
                     Parameters := Array()
                     This.ConfigBox.AddText(Position, Setting.Control.Label)
                     This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%("YP " . Options . " Choose" . Setting.Value, Parameters)
                 }
+                Else If Setting.Control.Type = "Custom" Or Setting.Control.Type = "MonthCal" Or Setting.Control.Type = "TreeView" {
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%(Position . " " . Options)
+                }
                 Else If Setting.Control.Type = "Edit" Or Setting.Control.Type = "Hotkey" {
                     This.ConfigBox.AddText(Position, Setting.Control.Label)
                     This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%("YP " . Options, Setting.Value)
+                }
+                Else If Setting.Control.Type = "Link" {
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%(Parameters)
                 }
                 Else {
                     This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%(Position . " " . Options, Parameters)
                 }
                 If Setting.Control.FuncOnInit Is Object And Setting.Control.FuncOnInit.HasMethod("Call")
                 Setting.Control.FuncOnInit.Call(This.GuiControls[Setting.SectionName][Setting.KeyName])
-                If Setting.Control.FuncOnChange Is Object And Setting.Control.FuncOnChange.HasMethod("Call") {
-                    If Setting.Control.Type = "ComboBox" Or Setting.Control.Type = "DDL" Or Setting.Control.Type = "DropDownList" Or Setting.Control.Type = "Edit" Or Setting.Control.Type = "Hotkey"
-                    This.GuiControls[Setting.SectionName][Setting.KeyName].OnEvent("Change", Setting.Control.FuncOnChange)
-                    Else
-                    This.GuiControls[Setting.SectionName][Setting.KeyName].OnEvent("Click", Setting.Control.FuncOnChange)
+                If Not Setting.Control.Type = "Custom" {
+                    If Setting.Control.FuncOnChange Is Object And Setting.Control.FuncOnChange.HasMethod("Call") {
+                        If Setting.Control.Type = "ComboBox" Or Setting.Control.Type = "DateTime" Or Setting.Control.Type = "DDL" Or Setting.Control.Type = "DropDownList" Or Setting.Control.Type = "Edit" Or Setting.Control.Type = "Hotkey" Or Setting.Control.Type = "ListBox" Or Setting.Control.Type = "Slider" Or Setting.Control.Type = "UpDown"
+                        This.GuiControls[Setting.SectionName][Setting.KeyName].OnEvent("Change", Setting.Control.FuncOnChange)
+                        Else
+                        This.GuiControls[Setting.SectionName][Setting.KeyName].OnEvent("Click", Setting.Control.FuncOnChange)
+                    }
                 }
             }
             If IsSet(TabBox)
