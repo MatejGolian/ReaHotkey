@@ -136,7 +136,7 @@ Class Configuration {
                     If Not Parameters Is Array
                     Parameters := Array()
                     This.ConfigBox.AddText(Position, Setting.Control.Label)
-                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%("YP " . Options . " Choose" . Setting.Value, Parameters)
+                    This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%("YP " . Options, Parameters)
                 }
                 Else If Setting.Control.Type = "Custom" Or Setting.Control.Type = "MonthCal" Or Setting.Control.Type = "TreeView" {
                     This.GuiControls[Setting.SectionName][Setting.KeyName] := This.ConfigBox.Add%Setting.Control.Type%(Position . " " . Options)
