@@ -58,6 +58,7 @@ Just extract the downloaded archive and run one of the ReaHotkey executables dep
 
 * f6 - focus plug-in window/interface
 * ctrl+shift+windows+a - about
+* ctrl+shift+windows+e - toggle AppsKey Emulator enabled/disabled
 * ctrl+shift+windows+p - pause
 * ctrl+shift+windows+q - quit
 * ctrl+shift+windows+r - open ReaHotkey menu

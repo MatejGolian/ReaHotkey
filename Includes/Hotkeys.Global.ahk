@@ -5,6 +5,7 @@
 #+^F5::ReloadHK(ThisHotkey)
 #+^F12::ConfigHK(ThisHotkey)
 #+^A::AboutHK(ThisHotkey)
+#+^E::AppsKeyEmulatorHK(ThisHotkey)
 #+^P::PauseHK(ThisHotkey)
 #+^Q::QuitHK(ThisHotkey)
 #+^R::ReaHotkeyMenuHK(ThisHotkey)

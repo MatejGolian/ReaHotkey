@@ -117,6 +117,15 @@ AboutHK(ThisHotkey) {
     ReaHotkey.ShowAboutBox()
 }
 
+AppsKeyEmulatorHK(ThisHotkey) {
+    ReaHotkey.ToggleAppsKeyEmulator()
+    AccessibilityOverlay.ClearSpeechQueue()
+    If ReaHotkey.Config.Get("Config", "AppsKeyEmulator")
+    AccessibilityOverlay.Speak("Enabled AppsKey Emulator")
+    Else
+    AccessibilityOverlay.Speak("Disabled AppsKey Emulator")
+}
+
 ConfigHK(ThisHotkey) {
     ReaHotkey.ShowConfigBox()
 }

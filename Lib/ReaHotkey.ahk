@@ -17,7 +17,7 @@ Class ReaHotkey {
     Static RequiredWinBuild := 10240
     Static RequiredWinVer := 10
     Static StateManagementTimer := False
-    Static SystemHotkeys := Array("#+^F1", "#+^F5", "#+^F12", "#+^A", "#+^P", "#+^Q", "#+^R", "#+^U", "Ctrl", "Tab", "+Tab", "^Tab", "+^Tab", "Left", "Right", "Up", "Down", "Enter", "Space", "F6")
+    Static SystemHotkeys := Array("#+^F1", "#+^F5", "#+^F12", "#+^A", "#+^E", "#+^P", "#+^Q", "#+^R", "#+^U", "Ctrl", "Tab", "+Tab", "^Tab", "+^Tab", "Left", "Right", "Up", "Down", "Enter", "Space", "F6")
     Static WinCoveredTimer := False
     
     Static __New() {
@@ -25,6 +25,18 @@ Class ReaHotkey {
         This.TurnPluginHotkeysOff()
         This.TurnStandaloneHotkeysOff()
         This.InitConfig()
+        A_IconTip := "ReaHotkey"
+        A_TrayMenu.Delete
+        A_TrayMenu.Add("&Configuration...", ObjBindMethod(This, "ShowConfigBox"))
+        A_TrayMenu.Add("&Pause", ObjBindMethod(This, "TogglePause"))
+        A_TrayMenu.Add("&Reload", ObjBindMethod(This, "Reload"))
+        A_TrayMenu.Add("&Enable AppsKey Emulator", ObjBindMethod(This, "ToggleAppsKeyEmulator"))
+        A_TrayMenu.Add("&View Readme", ObjBindMethod(This, "ViewReadme"))
+        A_TrayMenu.Add("Check for &updates...", ObjBindMethod(This, "CheckForUpdates"))
+        A_TrayMenu.Add("&About...", ObjBindMethod(This, "ShowAboutBox"))
+        A_TrayMenu.Add("&Quit", ObjBindMethod(This, "Quit"))
+        A_TrayMenu.Default := "&Configuration..."
+        This.ManageAppsKeyEmulator()
         OnError ObjBindMethod(This, "HandleError")
         ScriptReloaded := False
         For Arg In A_Args
@@ -45,7 +57,7 @@ Class ReaHotkey {
             AccessibilityOverlay.Speak("Reloaded ReaHotkey")
         }
         AccessibilityOverlay.ClearLastMessage()
-        This.ManageAppsKeyEmulation()
+        This.ManageAppsKeyEmulator()
         This.StateManagementTimer := ObjBindMethod(This, "ManageState")
         This.WinCoveredTimer := ObjBindMethod(This, "CheckIfWinCovered")
         SetTimer This.StateManagementTimer, 200
@@ -302,7 +314,7 @@ Class ReaHotkey {
     }
     
     Static InitAppsKeyControl(Control) {
-        EmulatorEnabled := ReaHotkey.Config.Get("Config", "AppsKeyEmulator")
+        EmulatorEnabled := This.Config.Get("Config", "AppsKeyEmulator")
         If Not EmulatorEnabled
         Control.Opt("+Disabled")
     }
@@ -314,9 +326,9 @@ Class ReaHotkey {
         This.Config.Add("ReaHotkey.ini", "Config", "CheckUpdate", 1, {Label: "Check for updates on startup"})
         This.Config.Add("ReaHotkey.ini", "Config", "CheckIfWinCovered", 1, {Label: "Warn if another window may be covering the interface in specific cases", FuncOnSet: ObjBindMethod(This, "ManageWinCovered")})
         This.Config.Add("ReaHotkey.ini", "Config", "PromptOnAbletonPlugin", 1, {Label: "Prompt if a compatible plug-in is detected in Ableton, but does not have focus", FuncOnSet: ObjBindMethod(This, "ManageAbletonPluginPrompt")})
-        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyEmulator", 0, {Label: "Use the following key combination to emulate the Applications key", Tab: "AppsKey Emulator", FuncOnChange: ObjBindMethod(This, "ToggleAppsKeyEmulatorOnOff")})
+        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyEmulator", 0, {Label: "Use the following key combination to emulate the Applications key", Tab: "AppsKey Emulator", FuncOnChange: ObjBindMethod(This, "ToggleAppsKeyEmulatorControlsEnabled")})
         This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyHK", "+^m", {Label: "Key combination", Type: "Hotkey", FuncOnInit: ObjBindMethod(This, "InitAppsKeyControl"), FuncOnChange: ObjBindMethod(This, "ChangeAppsKeyCombo")})
-        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyWinMod", 1, {Label: "Add the Windows key as an extra modifier", FuncOnInit: ObjBindMethod(This, "InitAppsKeyControl"), FuncOnSet: ObjBindMethod(This, "ManageAppsKeyEmulation")})
+        This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyWinMod", 1, {Label: "Add the Windows key as an extra modifier", FuncOnInit: ObjBindMethod(This, "InitAppsKeyControl"), FuncOnSet: ObjBindMethod(This, "ManageAppsKeyEmulator")})
     }
     
     Static InPluginControl(ControlToCheck) {
@@ -369,11 +381,11 @@ Class ReaHotkey {
         This.StopAbletonPluginTimer()
     }
     
-    Static ManageAppsKeyEmulation(*) {
+    Static ManageAppsKeyEmulator(*) {
         Static LastHK := ""
-        EmulatorEnabled := ReaHotkey.Config.Get("Config", "AppsKeyEmulator")
-        AppsKeyHK := ReaHotkey.Config.Get("Config", "AppsKeyHK")
-        AppsKeyWinMod := ReaHotkey.Config.Get("Config", "AppsKeyWinMod")
+        EmulatorEnabled := This.Config.Get("Config", "AppsKeyEmulator")
+        AppsKeyHK := This.Config.Get("Config", "AppsKeyHK")
+        AppsKeyWinMod := This.Config.Get("Config", "AppsKeyWinMod")
         If EmulatorEnabled And Not AppsKeyHK {
             Setting := This.Config.GetSetting("Config", "AppsKeyHK")
             This.Config.Set(Setting.SectionName, Setting.KeyName, Setting.DefaultValue)
@@ -399,6 +411,10 @@ Class ReaHotkey {
         SendAppsKey(ThisHotkey) {
             Send "{AppsKey}"
         }
+        If EmulatorEnabled
+        A_TrayMenu.Check("&Enable AppsKey Emulator")
+        Else
+        A_TrayMenu.Uncheck("&Enable AppsKey Emulator")
         TurnOffLastHK() {
             Try {
                 HotIf
@@ -614,7 +630,16 @@ Class ReaHotkey {
         }
     }
     
-    Static ToggleAppsKeyEmulatorOnOff(Control, Info) {
+    Static ToggleAppsKeyEmulator(*) {
+        EmulatorEnabled := This.Config.Get("Config", "AppsKeyEmulator")
+        If EmulatorEnabled
+        This.Config.Set("Config", "AppsKeyEmulator", 0)
+        Else
+        This.Config.Set("Config", "AppsKeyEmulator", 1)
+        This.ManageAppsKeyEmulator()
+    }
+    
+    Static ToggleAppsKeyEmulatorControlsEnabled(Control, Info) {
         If Control.Value {
             This.Config.GuiControls["Config"]["AppsKeyHK"].Opt("-Disabled")
             This.Config.GuiControls["Config"]["AppsKeyWinMod"].Opt("-Disabled")
