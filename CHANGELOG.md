@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.5] - 2025-12-09
+
 ### Added
 
 -   The AppsKey Emulator can now be enabled or disabled from the tray menu or by pressing Ctrl+Shift+Windows+E
@@ -489,7 +491,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.4...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.5...HEAD
+
+[0.8.5]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.4...0.8.5
 
 [0.8.4]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.3...0.8.4
 
