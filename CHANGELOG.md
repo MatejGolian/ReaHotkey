@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed small configuration dialog creation bug
+
 ## [0.8.6] - 2025-12-09
 
 ### Changed

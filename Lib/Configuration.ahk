@@ -103,6 +103,7 @@ Class Configuration {
             This.ConfigBox.AddText("Section", "No settings available.")
             If LabelledSettings.Length > 0 And This.Tabs.Length > 1
             TabBox := This.ConfigBox.AddTab3("Section", This.Tabs)
+            FirstControl := True
             For Index, Setting In LabelledSettings {
                 Position := ""
                 If IsSet(TabBox)
