@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.7] - 2025-12-10
+
 ### Fixed
 
 -   Fixed small configuration dialog creation bug
@@ -501,7 +503,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.6...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.7...HEAD
+
+[0.8.7]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.6...0.8.7
 
 [0.8.6]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.5...0.8.6
 
