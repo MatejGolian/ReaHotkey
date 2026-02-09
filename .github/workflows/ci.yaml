@@ -23,10 +23,10 @@ jobs:
           newString: 'Version := \"${{ github.ref_name }}\"'
           showFileContent: true
           path: ${{ github.workspace }}/Includes/Version.ahk
-      - name: Build with AHK v2.0.19
+      - name: Build with AHK v2.0.20
         uses: Timtam/autohotkey-build@master
         with:
-          version: v2.0.19
+          version: v2.0.20
           x64: true
           x86: true
           compression: none
