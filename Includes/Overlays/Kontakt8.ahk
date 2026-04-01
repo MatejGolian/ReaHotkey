@@ -165,11 +165,11 @@ Class Kontakt8 {
         MainElement := This.GetPluginUIAElement()
         If Not MainElement Is UIA.IUIAutomationElement
         Return False
-        FocusableElements := AccessibilityOverlay.Helpers.GetFocusableUIAElements(MainElement)
-        If FocusableElements.Length < 4
+        ChildElements := AccessibilityOverlay.Helpers.GetUIAElements(MainElement)
+        If ChildElements.Length < 6
         Return False
-        ElementToCheck := FocusableElements[4]
-        If ElementToCheck Is UIA.IUIAutomationElement And ElementToCheck.Name = "Shop"
+        ElementToCheck := ChildElements[6]
+        If ElementToCheck Is UIA.IUIAutomationElement And ElementToCheck.Name = "Restart: Forces a re-initialization of the audio engine in case of CPU overruns or hanging notes."
         If ElementToCheck.Type = 50000
         Return True
     }

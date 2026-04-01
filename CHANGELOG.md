@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed snapshot switching in Kontakt version 8.9 (breaks compatibility with older Kontakt versions)
+
 ## [0.8.7] - 2025-12-10
 
 ### Fixed

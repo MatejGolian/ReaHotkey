@@ -28,7 +28,7 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
   - Version 3.4 is highly recommended, although most of the above functionality may work in older versions as well. That being said, ReaHotkey may be unable to obtain and report the correct information in certain situations. Note that going forward, bacquard compatibility with older versions of the program may change and is not guaranteed.
   - The standalone version may provide a more stable and reliable user experience overall.
 * Makes it possible to interact with Kontakt menus, switch Between instruments, multis and snapshots. There's also support for the 'Browse' button in the Content Missing dialog.
-  - Works inside REAPER and Ableton Live 12. In case of Kontakt 7, version 7.10 or higher is required and in case of Kontakt 8, the current version of the script requires at least version 8.8 to be installed.
+  - Works inside REAPER and Ableton Live 12. In case of Kontakt 7, version 7.10 or higher is required and in case of Kontakt 8, the current version of the script requires at least version 8.9 to be installed.
   - Switching Between instruments/multis/snapshots Only works inside REAPER and Ableton Live 12 - ReaHotkey does not support these features in the standalone versions of Kontakt.
   - The Content Missing dialog may not be accessible when running Kontakt inside Komplete Kontrol.
 * Includes support for interacting with various sample libraries for Kontakt. Reffer to the [list of supported sample libraries](#kontakt-libraries) toward the end of this document for the full list.
