@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.9] - 2026-04-03
+
 ### Added/Updated
 
 -   Added buttons for quickly loading patches and resetting multis in Kontakt plug-ins
@@ -514,7 +516,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.8...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.9...HEAD
+
+[0.8.9]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.8...0.8.9
 
 [0.8.8]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.7...0.8.8
 
