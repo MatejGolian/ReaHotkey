@@ -13,6 +13,8 @@ Class Kontakt8 {
         PluginHeader := PluginOverlay("Kontakt 8")
         PluginHeader.AddStaticText("Kontakt 8")
         PluginHeader.AddCustomButton("Kontakt File Menu", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!F", "Alt+F")
+        PluginHeader.AddCustomButton("Load...",,,, This.InvokePluginMenuItem("Kontakt File Menu", "Load...")).SetHotkey("^L", "Ctrl+L")
+        PluginHeader.AddCustomButton("Reset multi",,,, This.InvokePluginMenuItem("Kontakt File Menu", "Reset multi")).SetHotkey("^R", "Ctrl+R")
         PluginHeader.AddCustomPassThrough("Plugin", "Tab", "+Tab", WrapPluginUIAPassThroughStart.Bind(, This.GetPluginUIAElement, 1), WrapPluginUIAPassThroughEnd.Bind(, This.GetPluginUIAElement, 0), ObjBindMethod(This, "HandlePassThrough"),, ObjBindMethod(This, "CheckFocusableElements"))
         PluginHeader.AddCustomButton("Previous instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^P", "Ctrl+P")
         PluginHeader.AddCustomButton("Next instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^N", "Ctrl+N")
@@ -350,6 +352,65 @@ Class Kontakt8 {
             PluginInstance.Overlay.Metadata := Map("Product", "None")
             PluginInstance.Overlay.OverlayNumber := 1
         }
+    }
+    
+    Static InvokeMenuItem(Type, MenuName, ItemName) {
+        InvocationFunc := Object()
+        InvocationFunc.DefineProp("MenuName", {Value: MenuName})
+        InvocationFunc.DefineProp("ItemName", {Value: ItemName})
+        InvocationFunc.DefineProp("Type", {Value: Type})
+        InvocationFunc.DefineProp("Call", {call: CallInvocationFunc})
+        Return InvocationFunc
+        CallInvocationFunc(This, OverlayObj) {
+            Critical
+            If This.Type = "Plugin"
+            MainElement := Kontakt8.GetPluginUIAElement()
+            Else
+            MainElement := AccessibilityOverlay.Helpers.GetUIAWindow()
+            If MainElement {
+                Try {
+                    ButtonElement := MainElement.FindElement({Type: "Button", Name: This.MenuName})
+                }
+                Catch {
+                    AccessibilityOverlay.Speak("Menu not found")
+                    Return
+                }
+                If ButtonElement {
+                    ButtonElement.Click("Left")
+                    Sleep 250
+                    Found := False
+                    Try
+                    MenuElement := MainElement.FindElement({Type: "Menu"})
+                    Catch
+                    MenuElement := False
+                    If MenuElement Is UIA.IUIAutomationElement And MenuElement.Type = 50009
+                    Found := True
+                    If Found {
+                        Found := False
+                        Try
+                        ItemElement := MenuElement.FindElement({Type: "MenuItem", Name: This.ItemName})
+                        Catch
+                        ItemElement := False
+                        If ItemElement Is UIA.IUIAutomationElement And ItemElement.Type = 50011
+                        Found := True
+                        If Found
+                        ItemElement.Click("Left")
+                        Else
+                        AccessibilityOverlay.Speak("Menu item not found")
+                        Return
+                    }
+                }
+            }
+            AccessibilityOverlay.Speak("Menu not found")
+        }
+    }
+    
+    Static InvokePluginMenuItem(MenuName, MenuItem) {
+        Return This.InvokeMenuItem("Plugin", MenuName, MenuItem)
+    }
+    
+    Static InvokeStandaloneMenuItem(MenuName, MenuItem) {
+        Return This.InvokeMenuItem("Standalone", MenuName, MenuItem)
     }
     
     Static MoveToPluginInstrumentButton(InstrumentButton) {

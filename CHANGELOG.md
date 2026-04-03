@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added buttons for quickly loading patches and resetting multis in Kontakt plug-ins
+
 ## [0.8.8] - 2026-04-01
 
 ### Fixed
