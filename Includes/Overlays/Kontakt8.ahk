@@ -257,13 +257,13 @@ Class Kontakt8 {
         MouseFunction := "MouseMove"
         Switch HeaderButton.Label {
             Case "Kontakt File Menu":
-            %MouseFunction%(93, 19)
+            %MouseFunction%(86, 19)
             If Action = "Activate"
             This.Check%Type%Menu()
             Case "Play View":
-            %MouseFunction%(199, 19)
+            %MouseFunction%(185, 19)
             Case "Library":
-            %MouseFunction%(227, 19)
+            %MouseFunction%(213, 19)
             Case "Shop":
             If This.Get%Type%Browser()
             %MouseFunction%(823, 19)
