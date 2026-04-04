@@ -13,7 +13,7 @@ Class Kontakt8 {
         PluginHeader := PluginOverlay("Kontakt 8")
         PluginHeader.AddStaticText("Kontakt 8")
         PluginHeader.AddCustomButton("Kontakt File Menu", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!F", "Alt+F")
-        PluginHeader.AddCustomButton("Load...",,,, This.InvokePluginMenuItem("Kontakt File Menu", "Load...")).SetHotkey("^L", "Ctrl+L")
+        PluginHeader.AddCustomButton("Load",,,, This.InvokePluginMenuItem("Kontakt File Menu", "Load...")).SetHotkey("^L", "Ctrl+L")
         PluginHeader.AddCustomButton("Reset multi",,,, This.InvokePluginMenuItem("Kontakt File Menu", "Reset multi")).SetHotkey("^R", "Ctrl+R")
         PluginHeader.AddCustomPassThrough("Plugin", "Tab", "+Tab", WrapPluginUIAPassThroughStart.Bind(, This.GetPluginUIAElement, 1), WrapPluginUIAPassThroughEnd.Bind(, This.GetPluginUIAElement, 0), ObjBindMethod(This, "HandlePassThrough"),, ObjBindMethod(This, "CheckFocusableElements"))
         PluginHeader.AddCustomButton("Previous instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^P", "Ctrl+P")
