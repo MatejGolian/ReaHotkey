@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-04-04
+
 ### Added/Updated
 
 -   Added buttons for quickly saving multis in Kontakt plug-ins
@@ -521,7 +523,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.9...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.0...HEAD
+
+[0.9.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.9...0.9.0
 
 [0.8.9]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.8...0.8.9
 
