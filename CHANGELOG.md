@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Updated
+### Added/Updated
 
+-   Added buttons for quickly saving multis in Kontakt plug-ins
 -   Updated UIA library to v1.1.3
 
 ## [0.8.9] - 2026-04-03

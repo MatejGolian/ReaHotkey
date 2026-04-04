@@ -17,6 +17,7 @@ Class Kontakt7 {
         PluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!V", "Alt+V")
         PluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!S", "Alt+S")
         PluginHeader.AddCustomButton("Load",,,, This.InvokePluginMenuItem("FILE", "Load...")).SetHotkey("^L", "Ctrl+L")
+        PluginHeader.AddCustomButton("Save multi as",,,, This.InvokePluginMenuItem("FILE", "Save multi as...")).SetHotkey("^S", "Ctrl+S")
         PluginHeader.AddCustomButton("Reset multi",,,, This.InvokePluginMenuItem("FILE", "Reset multi")).SetHotkey("^R", "Ctrl+R")
         PluginHeader.AddCustomButton("Previous instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^P", "Ctrl+P")
         PluginHeader.AddCustomButton("Next instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^N", "Ctrl+N")
