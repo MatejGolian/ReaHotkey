@@ -320,6 +320,7 @@ Class AccessibleMenu {
     
     Show() {
         AccessibilityOverlay.Speak(This.ContextMenuString)
+        This.CurrentItem := 0
         AccessibleMenu.CurrentMenu := This
         Loop {
             If Not AccessibleMenu.CurrentMenu Is AccessibleMenu

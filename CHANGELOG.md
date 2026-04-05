@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
+### Changed/Fixed
 
 -   Make the 'Save' button in Kontakt plug-ins save instruments instead
+-   Fixed a bug in AccessibleMenu where menus would not start from the first item on subsequent shows
 
 ## [0.9.0] - 2026-04-04
 

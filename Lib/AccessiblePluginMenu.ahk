@@ -8,6 +8,7 @@ Class AccessiblePluginMenu Extends AccessibleMenu {
         ReaHotkey.TurnPluginTimersOff()
         ReaHotkey.TurnPluginHotkeysOff()
         AccessibilityOverlay.Speak(This.ContextMenuString)
+        This.CurrentItem := 0
         AccessibleMenu.CurrentMenu := This
         Loop {
             If Not AccessibleMenu.CurrentMenu Is AccessiblePluginMenu {

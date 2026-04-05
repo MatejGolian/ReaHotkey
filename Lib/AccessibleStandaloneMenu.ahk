@@ -8,6 +8,7 @@ Class AccessibleStandaloneMenu Extends AccessibleMenu {
         ReaHotkey.TurnStandaloneTimersOff()
         ReaHotkey.TurnStandaloneHotkeysOff()
         AccessibilityOverlay.Speak(This.ContextMenuString)
+        This.CurrentItem := 0
         AccessibleMenu.CurrentMenu := This
         Loop {
             If Not AccessibleMenu.CurrentMenu Is AccessibleStandaloneMenu {
