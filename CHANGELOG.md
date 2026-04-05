@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-04-05
+
 ### Changed/Fixed
 
 -   Make the 'Save' button in Kontakt plug-ins save instruments instead
@@ -528,7 +530,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.0...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.1...HEAD
+
+[0.9.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.0...0.9.1
 
 [0.9.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.8.9...0.9.0
 
