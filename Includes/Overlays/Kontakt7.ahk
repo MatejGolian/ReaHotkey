@@ -17,7 +17,7 @@ Class Kontakt7 {
         PluginHeader.AddCustomButton("VIEW menu", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!V", "Alt+V")
         PluginHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(This, "FocusPluginHeaderButton"),, ObjBindMethod(This, "ActivatePluginHeaderButton")).SetHotkey("!S", "Alt+S")
         PluginHeader.AddCustomButton("Load",,,, This.InvokePluginMenuItem("FILE", "Load...")).SetHotkey("^L", "Ctrl+L")
-        PluginHeader.AddCustomButton("Save multi as",,,, This.InvokePluginMenuItem("FILE", "Save multi as...")).SetHotkey("^S", "Ctrl+S")
+        PluginHeader.AddCustomButton("Save as",,,, ProducePluginMenu(["Instrument #1", "Instrument #2", "Instrument #3", "Instrument #4", "Instrument #5", "Instrument #6", "Instrument #7", "Instrument #8", "Instrument #9", "Instrument #10", "Instrument #11", "Instrument #12", "Instrument #13", "Instrument #14", "Instrument #15", "Instrument #16"], ObjBindMethod(This, "HandlePluginSaveAsMenu"))).SetHotkey("^S", "Ctrl+S")
         PluginHeader.AddCustomButton("Reset multi",,,, This.InvokePluginMenuItem("FILE", "Reset multi")).SetHotkey("^R", "Ctrl+R")
         PluginHeader.AddCustomButton("Previous instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^P", "Ctrl+P")
         PluginHeader.AddCustomButton("Next instrument", ObjBindMethod(This, "MoveToPluginInstrumentButton"),,, ObjBindMethod(This, "ActivatePluginInstrumentButton")).SetHotkey("^N", "Ctrl+N")
@@ -378,6 +378,38 @@ Class Kontakt7 {
         Return False
     }
     
+    Static HandlePluginSaveAsMenu(ItemName, ItemNumber, SaveAsMenu) {
+        This.HandleSaveAsMenu("Plugin", ItemName, ItemNumber, SaveAsMenu)
+    }
+    
+    Static HandleSaveAsMenu(Type, ItemName, ItemNumber, SaveAsMenu) {
+        Critical
+        InvokedItem := This.InvokePluginMenuItem("FILE", "Save as", False).Call()
+        If InvokedItem {
+            If Type = "Plugin"
+            MainElement := This.GetPluginUIAElement()
+            Else
+            MainElement := AccessibilityOverlay.Helpers.GetUIAWindow()
+            Try
+            Instrument := MainElement.FindElement({Type: "MenuItem", Name: "Instrument #" . ItemNumber . " - ", MatchMode: "StartsWith"})
+            Catch
+            Instrument := False
+            If Instrument Is UIA.IUIAutomationElement {
+                Instrument.Click("Left")
+            }
+            Else {
+                AccessibilityOverlay.Helpers.PassThroughHotkey("Left")
+            }
+        }
+        Else {
+            AccessibilityOverlay.Speak("No instruments seem to be loaded.")
+        }
+    }
+    
+    Static HandleStandaloneSaveAsMenu(ItemName, ItemNumber, SaveAsMenu) {
+        This.HandleSaveAsMenu("Standalone", ItemName, ItemNumber, SaveAsMenu)
+    }
+    
     Static InitConfig() {
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "CloseK7Browser", 0, {Label: "Automatically close the library browser in Kontakt 7", Tab: "Kontakt / Komplete Kontrol"})
         ReaHotkey.Config.Add("ReaHotkey.ini", "Config", "DetectLibsInK7", 1, {Label: "Automatically detect libraries in the Kontakt 7 plug-in"})
@@ -390,14 +422,15 @@ Class Kontakt7 {
         }
     }
     
-    Static InvokeMenuItem(Type, MenuName, ItemName) {
+    Static InvokeMenuItem(Type, MenuName, ItemName, ReportErrors := True) {
         InvocationFunc := Object()
         InvocationFunc.DefineProp("MenuName", {Value: MenuName})
         InvocationFunc.DefineProp("ItemName", {Value: ItemName})
+        InvocationFunc.DefineProp("ReportErrors", {Value: ReportErrors})
         InvocationFunc.DefineProp("Type", {Value: Type})
         InvocationFunc.DefineProp("Call", {call: CallInvocationFunc})
         Return InvocationFunc
-        CallInvocationFunc(This, OverlayObj) {
+        CallInvocationFunc(This, OverlayObj := {}) {
             Critical
             If This.Type = "Plugin"
             MainElement := Kontakt7.GetPluginUIAElement()
@@ -408,8 +441,9 @@ Class Kontakt7 {
                     ButtonElement := MainElement.FindElement({Type: "Button", Name: This.MenuName})
                 }
                 Catch {
-                    AccessibilityOverlay.Speak("Menu not found")
-                    Return
+                    If This.ReportErrors
+                    ReportMenuNotFound()
+                    Return False
                 }
                 If ButtonElement {
                     ButtonElement.Click("Left")
@@ -429,24 +463,37 @@ Class Kontakt7 {
                         ItemElement := False
                         If ItemElement Is UIA.IUIAutomationElement And ItemElement.Type = 50011
                         Found := True
-                        If Found
-                        ItemElement.Click("Left")
-                        Else
-                        AccessibilityOverlay.Speak("Menu item not found")
-                        Return
+                        If Found {
+                            ItemElement.Click("Left")
+                            Return ItemElement
+                        }
+                        Else {
+                            AccessibilityOverlay.Helpers.PassThroughHotkey("Escape")
+                            If This.ReportErrors
+                            ReportItemNotFound()
+                            Return False
+                        }
                     }
                 }
             }
+            If This.ReportErrors
+            ReportMenuNotFound()
+            Return False
+        }
+        ReportItemNotFound() {
+            AccessibilityOverlay.Speak("Menu item not found")
+        }
+        ReportMenuNotFound() {
             AccessibilityOverlay.Speak("Menu not found")
         }
     }
     
-    Static InvokePluginMenuItem(MenuName, MenuItem) {
-        Return This.InvokeMenuItem("Plugin", MenuName, MenuItem)
+    Static InvokePluginMenuItem(MenuName, MenuItem, ReportErrors := True) {
+        Return This.InvokeMenuItem("Plugin", MenuName, MenuItem, ReportErrors)
     }
     
-    Static InvokeStandaloneMenuItem(MenuName, MenuItem) {
-        Return This.InvokeMenuItem("Standalone", MenuName, MenuItem)
+    Static InvokeStandaloneMenuItem(MenuName, MenuItem, ReportErrors := True) {
+        Return This.InvokeMenuItem("Standalone", MenuName, MenuItem, ReportErrors)
     }
     
     Static MoveToPluginInstrumentButton(InstrumentButton) {
