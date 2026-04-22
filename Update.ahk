@@ -52,8 +52,6 @@ If Parameter = "Download" Or Parameter = "Delete" {
             If MainPID And ProcessExist(MainPID)
             ProcessClose MainPID
         }
-        ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey.exe"
-        FileCopy A_ScriptFullPath, ExeToRun, 1
         Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`""
         ExitApp
     }
@@ -73,7 +71,7 @@ Else {
     StatusDialog := Update.DisplayStatusDialog("Updating files...")
     DirCopy A_ScriptDir, Parameter, 1
     StatusDialog.Destroy()
-    MsgBox "Update complete.`nPress OK to launch the updated version of the script.", "ReaHotkey"
+    MsgBox "Update complete.`nPress OK to launch the updated script.", "ReaHotkey"
     
     If A_PtrSize * 8 = 64
     ExeToRun := Parameter . "\ReaHotkey_x64.exe"
