@@ -4,6 +4,8 @@
 #SingleInstance Ignore
 #Warn All
 
+#Include <FileDownload>
+
 DisplayStatusDialog(Status) {
     DialogGUI := GUI(, "ReaHotkey Update")
     DialogGUI.OnEvent("Close", Cancel)
@@ -27,8 +29,6 @@ Extract(SourceFile, DestinationDir) {
     DisplayStatusDialog("Extracting files...")
     DirCopy SourceFile, DestinationDir, 1
 }
-
-#Include <FileDownload>
 
 Parameter := ""
 
@@ -97,12 +97,19 @@ Else If Parameter = "Cleanup" {
 }
 Else {
     
+    If SubStr(Parameter, -1) = "\"
+    Parameter := SubStr(Parameter, 1, -1)
+    
     If Not Parameter {
         MsgBox "No directory specified.", "Error"
         ExitApp
     }
     Else If Not FileExist(Parameter) Or Not InStr(FileExist(Parameter), "D") {
         MsgBox "`"" . Parameter . "`" is not a valid directory.", "Error"
+        ExitApp
+    }
+    Else If Parameter = A_ScriptDir {
+        MsgBox "The target directory can not be the same as the source directory.", "Error"
         ExitApp
     }
     
