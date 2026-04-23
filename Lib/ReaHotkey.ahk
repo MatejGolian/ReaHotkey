@@ -81,6 +81,10 @@ Class ReaHotkey {
     
     Static CheckForUpdates(Params*) {
         Static DialogOpen := False
+        If WinExist("ahk_pid " . This.Update.UpdaterPID) {
+            WinActivate("ahk_pid " . This.Update.UpdaterPID)
+            Return
+        }
         If Not DialogOpen {
             If Params.Length > 0
             This.Update.Check(True)

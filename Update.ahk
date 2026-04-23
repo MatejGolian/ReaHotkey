@@ -6,7 +6,13 @@
 
 #Include <FileDownload>
 
-DisplayStatusDialog(Status) {
+Extract(SourceFile, DestinationDir) {
+    DirCreate DestinationDir
+    ShowStatusDialog("Extracting files...")
+    DirCopy SourceFile, DestinationDir, 1
+}
+
+ShowStatusDialog(Status) {
     DialogGUI := GUI(, "ReaHotkey Update")
     DialogGUI.OnEvent("Close", Cancel)
     DialogGUI.OnEvent("Escape", Cancel)
@@ -22,12 +28,6 @@ DisplayStatusDialog(Status) {
         }
         DialogGUI.Show()
     }
-}
-
-Extract(SourceFile, DestinationDir) {
-    DirCreate DestinationDir
-    DisplayStatusDialog("Extracting files...")
-    DirCopy SourceFile, DestinationDir, 1
 }
 
 Parameter := ""
@@ -113,7 +113,7 @@ Else {
         ExitApp
     }
     
-    StatusDialog := DisplayStatusDialog("Updating files...")
+    StatusDialog := ShowStatusDialog("Updating files...")
     DirCopy A_ScriptDir, Parameter, 1
     StatusDialog.Destroy()
     MsgBox "Update complete.`nPress OK to launch the updated script.", "ReaHotkey"

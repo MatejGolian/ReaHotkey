@@ -41,22 +41,6 @@ Class FileDownload {
         }
     }
     
-    DisplayDialog() {
-        This.DialogGUI := GUI(, This.DialogTitle)
-        This.DialogGUI.OnEvent("Close", ObjBindMethod(This, "Cancel"))
-        This.DialogGUI.OnEvent("Escape", ObjBindMethod(This, "Cancel"))
-        This.DialogGUI.AddText("Section W550", "Downloading")
-        This.DialogGUI.AddProgress("Section vDownloadProgress")
-        This.DialogGUI.AddText("Section W100", "Downloaded")
-        This.DialogGUI.AddText("W450 YS vDownloadRatio", "0 B of " . This.FormatSize(This.Size))
-        This.DialogGUI.AddText("Section W100", "Speed")
-        This.DialogGUI.AddText("W450 YS vDownloadSpeed", "0 B/s")
-        This.DialogGUI.AddText("Section W100", "Time remaining")
-        This.DialogGUI.AddText("W450 YS vTimeRemaining", "∞")
-        This.DialogGUI.AddButton("Default Section XS", "Cancel").OnEvent("Click", ObjBindMethod(This, "Cancel"))
-        This.DialogGUI.Show()
-    }
-    
     FormatSize(Size, DecimalPlaces := 2) {
         Units := ["B", "KB", "MB", "GB", "TB"]
         Index := 1
@@ -114,6 +98,22 @@ Class FileDownload {
         Return This.Size
     }
     
+    ShowDialog() {
+        This.DialogGUI := GUI(, This.DialogTitle)
+        This.DialogGUI.OnEvent("Close", ObjBindMethod(This, "Cancel"))
+        This.DialogGUI.OnEvent("Escape", ObjBindMethod(This, "Cancel"))
+        This.DialogGUI.AddText("Section W550", "Downloading")
+        This.DialogGUI.AddProgress("Section vDownloadProgress")
+        This.DialogGUI.AddText("Section W100", "Downloaded")
+        This.DialogGUI.AddText("W450 YS vDownloadRatio", "0 B of " . This.FormatSize(This.Size))
+        This.DialogGUI.AddText("Section W100", "Speed")
+        This.DialogGUI.AddText("W450 YS vDownloadSpeed", "0 B/s")
+        This.DialogGUI.AddText("Section W100", "Time remaining")
+        This.DialogGUI.AddText("W450 YS vTimeRemaining", "∞")
+        This.DialogGUI.AddButton("Default Section XS", "Cancel").OnEvent("Click", ObjBindMethod(This, "Cancel"))
+        This.DialogGUI.Show()
+    }
+    
     Start(RunOnCancel := False) {
         This.RunOnCancel := RunOnCancel
         If Not This.URL {
@@ -127,7 +127,7 @@ Class FileDownload {
         This.CurrentSize := 0
         This.PercentComplete := 0
         If This.Available {
-            This.DisplayDialog()
+            This.ShowDialog()
             SetTimer ObjBindMethod(This, "UpdateStatus"), 200
         }
         SplitPath This.DestinationFile,, &DestinationDir
