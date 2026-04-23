@@ -29,7 +29,7 @@ If Parameter = "Download" Or Parameter = "Delete" {
     MainPID := ""
     
     For Arg In A_Args
-    If Arg = "PID"
+    If Arg = "ParentPID"
     If A_Args.Length >= A_Index + 1 {
         MainPID := A_Args[A_Index + 1]
         Break
