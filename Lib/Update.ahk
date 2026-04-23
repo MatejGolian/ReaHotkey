@@ -94,7 +94,7 @@ Class Update {
                 This.DeleteTempDir()
                 CurrentPID := DllCall("GetCurrentProcessId")
                 If A_IsCompiled = 0
-                Run A_AhkPath . " Update.ahk Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`" ParentPID " . CurrentPID,,, &OutputPID
+                Run A_AhkPath . " Includes/Update.ahk Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`" ParentPID " . CurrentPID,,, &OutputPID
                 Else
                 Run A_ScriptFullPath . " /script *UPDATE Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`" ParentPID " . CurrentPID,,, &OutputPID
                 This.UpdaterPID := OutputPID

@@ -3,8 +3,9 @@
 #NoTrayIcon
 #SingleInstance Ignore
 #Warn All
+DetectHiddenWindows True
 
-#Include <FileDownload>
+#Include ../Lib/FileDownload.ahk
 
 Extract(SourceFile, DestinationDir) {
     DirCreate DestinationDir
@@ -45,7 +46,7 @@ If Parameter = "Download" {
         UpdateDownload := FileDownload(URL, DestinationFile, "ReaHotkey Update")
         
         If A_IsCompiled = 0
-        RunOnCancel := A_AhkPath . " /restart Update.ahk Cleanup"
+        RunOnCancel := A_AhkPath . " /restart " . A_ScriptFullPath . " Cleanup"
         Else
         RunOnCancel := A_ScriptFullPath . " /restart /script *UPDATE Cleanup"
         
@@ -60,6 +61,8 @@ If Parameter = "Download" {
             Break
         }
         
+        ReaHotkeyAhkDir := Substr(A_ScriptDir, 1, -9)
+        
         If Not UpdateDownload.Complete {
             MsgBox "Failed to download update.", "ReaHotkey"
             ExitApp
@@ -71,8 +74,8 @@ If Parameter = "Download" {
             Else
             ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x86.exe"
             If A_IsCompiled = 0 {
-                If WinExist(A_ScriptDir . "\ReaHotkey.ahk ahk_class AutoHotkey")
-                WinClose A_ScriptDir . "\ReaHotkey.ahk ahk_class AutoHotkey"
+                If WinExist(ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey")
+                WinClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey"
             }
             Else {
                 If ParentPID And ProcessExist(ParentPID)
