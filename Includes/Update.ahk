@@ -100,7 +100,7 @@ Else If Parameter = "Cleanup" {
 }
 Else {
     
-    If SubStr(Parameter, -1) = "\"
+    If SubStr(Parameter, -1) = "/" Or SubStr(Parameter, -1) = "\"
     Parameter := SubStr(Parameter, 1, -1)
     
     If Not Parameter {
