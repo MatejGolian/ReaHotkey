@@ -566,12 +566,12 @@ Class ReaHotkey {
     }
     
     Static Quit(*) {
-        This.Update.Cleanup()
+        This.Update.Cancel()
         ExitApp
     }
     
     Static Reload(*) {
-        This.Update.Cleanup()
+        This.Update.Cancel()
         If A_IsCompiled = 0
         Run A_AhkPath . " /restart " . A_ScriptFullPath . " Reload"
         Else

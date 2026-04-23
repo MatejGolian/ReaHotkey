@@ -3,58 +3,96 @@
 #NoTrayIcon
 #SingleInstance Ignore
 #Warn All
-#Warn LocalSameAsGlobal, Off
-DetectHiddenWindows True
 
-#Include <AccessibilityOverlay>
-#Include <JXON>
-#Include <UIA>
-#Include <Update>
+DisplayStatusDialog(Status) {
+    DialogGUI := GUI(, "ReaHotkey Update")
+    DialogGUI.OnEvent("Close", Cancel)
+    DialogGUI.OnEvent("Escape", Cancel)
+    DialogGUI.AddText("Section W550 vStatus", Status)
+    DialogGUI.AddButton("Default Section XS", "Cancel").OnEvent("Click", Cancel)
+    DialogGUI.Show()
+    Return DialogGUI
+    Cancel(*) {
+        DialogGUI.Hide()
+        ConfirmationDialog := MsgBox("Are you sure you want to cancel?", "ReaHotkey Update", 4)
+        If ConfirmationDialog == "Yes" {
+            ExitApp
+        }
+        DialogGUI.Show()
+    }
+}
+
+Extract(SourceFile, DestinationDir) {
+    DirCreate DestinationDir
+    DisplayStatusDialog("Extracting files...")
+    DirCopy SourceFile, DestinationDir, 1
+}
+
+#Include <FileDownload>
 
 Parameter := ""
 
 If A_Args.Length > 0
 Parameter := A_Args[1]
 
-If Parameter = "Download" Or Parameter = "Delete" {
+If Parameter = "Download" {
     
-    UpdateDownload := Update.Download("ReaHotkey Update")
-    UpdateDownload.Start(False)
-    
-    If UpdateDownload.Operation = "Delete" {
-        Update.Cleanup()
-        ExitApp
-    }
-    
-    MainPID := ""
-    
-    For Arg In A_Args
-    If Arg = "ParentPID"
-    If A_Args.Length >= A_Index + 1 {
-        MainPID := A_Args[A_Index + 1]
-        Break
-    }
-    
-    If Not UpdateDownload.Complete {
-        MsgBox "Failed to download update.", "ReaHotkey"
-        ExitApp
-    }
-    Else {
-        Update.Extract(UpdateDownload.DestinationFile, A_Temp . "\ReaHotkey")
-        If A_PtrSize * 8 = 64
-        ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x64.exe"
+    If A_Args.Length >= 3 {
+        
+        URL := A_Args[2]
+        DestinationFile := A_Args[3]
+        
+        UpdateDownload := FileDownload(URL, DestinationFile, "ReaHotkey Update")
+        
+        If A_IsCompiled = 0
+        RunOnCancel := A_AhkPath . " /restart Update.ahk Cleanup"
         Else
-        ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x86.exe"
-        If A_IsCompiled = 0 {
-            WinClose A_ScriptDir . "\ReaHotkey.ahk ahk_class AutoHotkey"
+        RunOnCancel := A_ScriptFullPath . " /restart /script *UPDATE Cleanup"
+        
+        UpdateDownload.Start(RunOnCancel)
+        
+        ParentPID := ""
+        
+        For Arg In A_Args
+        If Arg = "ParentPID"
+        If A_Args.Length >= A_Index + 1 {
+            ParentPID := A_Args[A_Index + 1]
+            Break
+        }
+        
+        If Not UpdateDownload.Complete {
+            MsgBox "Failed to download update.", "ReaHotkey"
+            ExitApp
         }
         Else {
-            If MainPID And ProcessExist(MainPID)
-            ProcessClose MainPID
+            Extract(UpdateDownload.DestinationFile, A_Temp . "\ReaHotkey")
+            If A_PtrSize * 8 = 64
+            ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x64.exe"
+            Else
+            ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x86.exe"
+            If A_IsCompiled = 0 {
+                If WinExist(A_ScriptDir . "\ReaHotkey.ahk ahk_class AutoHotkey")
+                WinClose A_ScriptDir . "\ReaHotkey.ahk ahk_class AutoHotkey"
+            }
+            Else {
+                If ParentPID And ProcessExist(ParentPID)
+                ProcessClose ParentPID
+            }
+            Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`""
+            ExitApp
         }
-        Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`""
-        ExitApp
+        
     }
+    
+    ExitApp
+    
+}
+Else If Parameter = "Cleanup" {
+    
+    If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D")
+    DirDelete A_Temp . "\ReaHotkey", True
+    
+    ExitApp
     
 }
 Else {
@@ -68,7 +106,7 @@ Else {
         ExitApp
     }
     
-    StatusDialog := Update.DisplayStatusDialog("Updating files...")
+    StatusDialog := DisplayStatusDialog("Updating files...")
     DirCopy A_ScriptDir, Parameter, 1
     StatusDialog.Destroy()
     MsgBox "Update complete.`nPress OK to launch the updated script.", "ReaHotkey"
