@@ -118,13 +118,13 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If This.ChildControls.Length = 0
         Return This.CurrentControl
         FocusableControls := This.GetFocusableControls()
-        For FocusableControl In FocusableControls {
-            If FocusableControl.HasOwnProp("Label") And FocusableControl.Label = Label {
-                If FocusableControl.ControlID = This.CurrentControlID {
+        For FocusableControlObj In FocusableControls {
+            If FocusableControlObj.HasOwnProp("Label") And FocusableControlObj.Label = Label {
+                If FocusableControlObj.ControlID = This.CurrentControlID {
                     This.ActivateCurrentControl()
                 }
                 Else {
-                    This.ActivateControlByID(FocusableControl.ControlID)
+                    This.ActivateControlByID(FocusableControlObj.ControlID)
                 }
                 Break
             }
@@ -303,13 +303,13 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         If This.ChildControls.Length = 0
         Return This.CurrentControl
         FocusableControls := This.GetFocusableControls()
-        For FocusableControl In FocusableControls {
-            If FocusableControl.HasOwnProp("Label") And FocusableControl.Label = Label {
-                If FocusableControl.ControlID = This.CurrentControlID {
+        For FocusableControlObj In FocusableControls {
+            If FocusableControlObj.HasOwnProp("Label") And FocusableControlObj.Label = Label {
+                If FocusableControlObj.ControlID = This.CurrentControlID {
                     This.FocusCurrentControl()
                 }
                 Else {
-                    This.FocusControlByID(FocusableControl.ControlID)
+                    This.FocusControlByID(FocusableControlObj.ControlID)
                 }
                 Break
             }
