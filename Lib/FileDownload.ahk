@@ -140,7 +140,6 @@ Class FileDownload {
         This.PercentComplete := 0
         If This.Available {
             This.ShowDialog()
-            This.UpdateStatus()
             SetTimer ObjBindMethod(This, "UpdateStatus"), 200
         }
         SplitPath This.DestinationFile,, &DestinationDir
