@@ -39,8 +39,32 @@ Class ReaHotkey {
         This.ManageAppsKeyEmulator()
         OnError ObjBindMethod(This, "HandleError")
         ScriptReloaded := False
+        ScriptSwitches := ["/Update"]
+        If A_Args.Length > 0 {
+            FirstArg := A_Args[1]
+            For ScriptSwitch In ScriptSwitches
+            If FirstArg = ScriptSwitch {
+                Args := ""
+                For Arg In A_Args
+                Args .= Arg . " "
+                Args := SubStr(Args, StrLen(FirstArg) + 1)
+                If A_IsCompiled = 0 {
+                    ScriptArg := SubStr(ScriptSwitch, 2) . ".ahk"
+                    If Not FileExist(ScriptArg)
+                    ScriptArg := "Includes\" . ScriptArg
+                    ScriptPlusArgs := Trim(A_ScriptDir . "\" . ScriptArg . " " . Args)
+                    Run A_AhkPath . " /script " . ScriptPlusArgs
+                }
+                Else {
+                    ScriptArg := "*"  . StrUpper(SubStr(ScriptSwitch, 2))
+                    ScriptPlusArgs := Trim(ScriptArg . " " . Args)
+                    Run A_ScriptFullPath . " /script " . ScriptPlusArgs
+                }
+                Break
+            }
+        }
         For Arg In A_Args
-        If Arg = "Reload" {
+        If Arg = "/Reload" {
             ScriptReloaded := True
             Break
         }
@@ -577,9 +601,9 @@ Class ReaHotkey {
     Static Reload(*) {
         This.Update.Cancel()
         If A_IsCompiled = 0
-        Run A_AhkPath . " /restart " . A_ScriptFullPath . " Reload"
+        Run A_AhkPath . " /restart " . A_ScriptFullPath . " /Reload"
         Else
-        Run A_ScriptFullPath . " /restart Reload"
+        Run A_ScriptFullPath . " /restart /Reload"
     }
     
     Static ReportAbletonPlugin(Name := "") {

@@ -112,7 +112,7 @@ Else {
         ExitApp
     }
     Else If Parameter = A_ScriptDir {
-        MsgBox "The target directory can not be the same as the source directory.", "Error"
+        MsgBox "The destination directory can not be the same as the source directory.", "Error"
         ExitApp
     }
     
