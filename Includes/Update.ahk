@@ -13,12 +13,17 @@ Extract(SourceFile, DestinationDir) {
     DirCopy SourceFile, DestinationDir, 1
 }
 
-ShowStatusDialog(Status) {
+ShowStatusDialog(Status, DisableCancel := False) {
     DialogGUI := GUI(, "ReaHotkey Update")
-    DialogGUI.OnEvent("Close", Cancel)
-    DialogGUI.OnEvent("Escape", Cancel)
     DialogGUI.AddText("Section W550 vStatus", Status)
-    DialogGUI.AddButton("Default Section XS", "Cancel").OnEvent("Click", Cancel)
+    DialogGUI.AddButton("Default Section XS vCancelBtn", "Cancel").OnEvent("Click", Cancel)
+    If DisableCancel {
+        DialogGUI["CancelBtn"].Opt("+Disabled")
+    }
+    Else {
+        DialogGUI.OnEvent("Close", Cancel)
+        DialogGUI.OnEvent("Escape", Cancel)
+    }
     DialogGUI.Show()
     Return DialogGUI
     Cancel(*) {
@@ -90,8 +95,12 @@ If Parameter = "Download" {
 }
 Else If Parameter = "Cleanup" {
     
-    If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D")
-    DirDelete A_Temp . "\ReaHotkey", True
+    If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D") {
+        StatusDialog := ShowStatusDialog("Cleaning up files...", True)
+        Sleep 3000
+        DirDelete A_Temp . "\ReaHotkey", True
+        StatusDialog.Destroy()
+    }
     
     ExitApp
     
@@ -115,6 +124,7 @@ Else {
     }
     
     StatusDialog := ShowStatusDialog("Updating files...")
+    Sleep 3000
     DirCopy A_ScriptDir, Parameter, 1
     StatusDialog.Destroy()
     MsgBox "Update complete.", "ReaHotkey Update"

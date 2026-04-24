@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added/Fixed
+
+-   Added message indicating cleanup after cancelling download
+-   Hopefully fixed more update related corner cases
+
 ## [0.9.3] - 2026-04-24
 
 ### Fixed
