@@ -24,9 +24,8 @@ ShowStatusDialog(Status) {
     Cancel(*) {
         DialogGUI.Hide()
         ConfirmationDialog := MsgBox("Are you sure you want to cancel?", "ReaHotkey Update", 4)
-        If ConfirmationDialog == "Yes" {
-            ExitApp
-        }
+        If ConfirmationDialog == "Yes"
+        ExitApp
         DialogGUI.Show()
     }
 }
