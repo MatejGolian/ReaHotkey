@@ -77,12 +77,16 @@ If Parameter = "Download" {
             Else
             ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x86.exe"
             If A_IsCompiled = 0 {
-                If WinExist(ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey")
-                WinClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey"
+                If WinExist(ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey") {
+                    WinClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey"
+                    WinWaitClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey", 3000
+                }
             }
             Else {
-                If ParentPID And ProcessExist(ParentPID)
-                ProcessClose ParentPID
+                If ParentPID And ProcessExist(ParentPID) {
+                    ProcessClose ParentPID
+                    ProcessWaitClose ParentPID, 3000
+                }
             }
             Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`""
             ExitApp
@@ -97,7 +101,6 @@ Else If Parameter = "Cleanup" {
     
     If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D") {
         StatusDialog := ShowStatusDialog("Cleaning up files...", True)
-        Sleep 3000
         DirDelete A_Temp . "\ReaHotkey", True
         StatusDialog.Destroy()
     }
@@ -124,7 +127,6 @@ Else {
     }
     
     StatusDialog := ShowStatusDialog("Updating files...")
-    Sleep 3000
     DirCopy A_ScriptDir, Parameter, 1
     StatusDialog.Destroy()
     MsgBox "Update complete.", "ReaHotkey Update"

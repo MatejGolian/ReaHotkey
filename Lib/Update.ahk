@@ -9,11 +9,12 @@ Class Update {
     Static Cancel() {
         If ProcessExist(This.UpdaterPID) {
             ProcessClose This.UpdaterPID
+            ProcessWaitClose This.UpdaterPID, 3000
             This.DeleteTempDir()
         }
     }
     
-    Static check(NotifyOnNoUpdate := True) {
+    Static check(ForceUpdate := False, NotifyOnNoUpdate := True) {
         Static DialogOpen := False, DialogWinID := ""
         If Not DialogOpen {
             If NotifyOnNoUpdate
@@ -31,6 +32,8 @@ Class Update {
                 CurrentVersion := StrSplit(GetVersion(), "-")
                 If CurrentVersion Is Array
                 CurrentVersion := CurrentVersion[1]
+                If CurrentVersion = ""
+                CurrentVersion := "0.0.0"
                 CurrentVersionIndex := 0
                 For Key, Value In JsonData
                 If Value["tag_name"] = CurrentVersion {
@@ -50,20 +53,20 @@ Class Update {
                 CurrentVersionIndex := LatestVersionIndex
             }
             Catch {
-                DisplayErrorMessage()
+                ShowErrorMessage()
                 Return False
             }
             If NotifyOnNoUpdate And CurrentVersionIndex = LatestVersionIndex {
-                DisplayUpToDateMessage()
+                ShowUpToDateMessage()
                 Return False
             }
-            Else If CurrentVersionIndex > LatestVersionIndex {
-                DisplayUpdatePrompt()
+            Else If ForceUpdate Or CurrentVersionIndex > LatestVersionIndex {
+                ShowUpdatePrompt()
                 Return True
             }
             Else {
                 If NotifyOnNoUpdate {
-                    DisplayUpToDateMessage()
+                    ShowUpToDateMessage()
                     Return False
                 }
             }
@@ -75,15 +78,6 @@ Class Update {
             NotificationBox.Destroy()
             DialogOpen := False
             DialogWinID := ""
-        }
-        DisplayErrorMessage() {
-            ShowNotificationBox("Error checking for new version!", "There was an error checking for the latest version`nis an internet connection present?!", False, True)
-        }
-        DisplayUpdatePrompt() {
-            ShowNotificationBox("New version found!", "ReaHotkey " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, False)
-        }
-        DisplayUpToDateMessage() {
-            ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, True)
         }
         PerformUpdate(*) {
             CloseNotificationBox()
@@ -122,7 +116,10 @@ Class Update {
             }
             Return Text
         }
-        ShowNotificationBox(Title, Text, ProcessText := False, DisableUpdateButton := False) {
+        ShowErrorMessage() {
+            ShowNotificationBox("Error checking for new version!", "There was an error checking for the latest version`nis an internet connection present?!", False, True)
+        }
+        ShowNotificationBox(Title, Text, ProcessText := False, DisableActionButton := False) {
             If ProcessText
             Text := ProcessNotificationText(Text)
             NotificationBox := Gui(, Title)
@@ -134,7 +131,7 @@ Class Update {
             NotificationBox.AddButton("YP vClose", "Close").OnEvent("Click", CloseNotificationBox)
             NotificationBox.OnEvent("Close", CloseNotificationBox)
             NotificationBox.OnEvent("Escape", CloseNotificationBox)
-            If DisableUpdateButton {
+            If DisableActionButton {
                 If This.PerformUpdate {
                     NotificationBox["PerformUpdate"].Opt("+Disabled")
                 }
@@ -156,6 +153,12 @@ Class Update {
             NotificationBox.Show()
             DialogOpen := True
             DialogWinID := WinGetID("A")
+        }
+        ShowUpdatePrompt() {
+            ShowNotificationBox("New version found!", "ReaHotkey " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, False)
+        }
+        ShowUpToDateMessage() {
+            ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, True)
         }
     }
     

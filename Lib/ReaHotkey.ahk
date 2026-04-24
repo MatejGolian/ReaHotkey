@@ -38,6 +38,7 @@ Class ReaHotkey {
         A_TrayMenu.Default := "&Configuration..."
         This.ManageAppsKeyEmulator()
         OnError ObjBindMethod(This, "HandleError")
+        ForceUpdate := False
         ScriptReloaded := False
         ScriptSwitches := ["/Update"]
         If A_Args.Length > 0 {
@@ -63,19 +64,26 @@ Class ReaHotkey {
                 Break
             }
         }
-        For Arg In A_Args
-        If Arg = "/Reload" {
+        For Arg In A_Args {
+            If Arg = "/ForceUpdate"
+            ForceUpdate := True
+            If Arg = "/Reload"
             ScriptReloaded := True
-            Break
         }
         If Not ScriptReloaded {
             AccessibilityOverlay.Speak("ReaHotkey ready")
-            If This.Config.Get("Config", "CheckWinVer") = 1
-            This.CheckWinVer()
-            If This.Config.Get("Config", "CheckScreenResolution") = 1
-            This.CheckResolution()
-            If This.Config.Get("Config", "CheckUpdate") = 1
-            This.CheckForUpdates()
+            If This.Config.Get("Config", "CheckWinVer") = 1 {
+                This.CheckWinVer()
+            }
+            If This.Config.Get("Config", "CheckScreenResolution") = 1 {
+                This.CheckResolution()
+            }
+            If This.Config.Get("Config", "CheckUpdate") = 1 {
+                If ForceUpdate
+                This.Update.Check(True, False)
+                Else
+                This.Update.Check(False, False)
+            }
         }
         Else {
             AccessibilityOverlay.Speak("Reloaded ReaHotkey")
@@ -111,9 +119,9 @@ Class ReaHotkey {
         }
         If Not DialogOpen {
             If Params.Length > 0
-            This.Update.Check(True)
+            This.Update.Check(False, True)
             Else
-            This.Update.Check(False)
+            This.Update.Check(False, False)
         }
     }
     
