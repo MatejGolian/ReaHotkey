@@ -53,7 +53,7 @@ Class ReaHotkey {
                     If Not FileExist(ScriptArg)
                     ScriptArg := "Includes\" . ScriptArg
                     ScriptPlusArgs := Trim(A_ScriptDir . "\" . ScriptArg . " " . Args)
-                    Run A_AhkPath . " /script " . ScriptPlusArgs
+                    Run A_AhkPath . " " . ScriptPlusArgs
                 }
                 Else {
                     ScriptArg := "*"  . StrUpper(SubStr(ScriptSwitch, 2))
