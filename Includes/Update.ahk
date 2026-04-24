@@ -62,7 +62,7 @@ If Parameter = "Download" {
         ReaHotkeyAhkDir := Substr(A_ScriptDir, 1, -9)
         
         If Not UpdateDownload.Complete {
-            MsgBox "Failed to download update.", "ReaHotkey"
+            MsgBox "Download failed.", "ReaHotkey Update"
             ExitApp
         }
         Else {
@@ -102,22 +102,22 @@ Else {
     Parameter := SubStr(Parameter, 1, -1)
     
     If Not Parameter {
-        MsgBox "No directory specified.", "Error"
+        MsgBox "Error: No directory specified.", "ReaHotkey Update"
         ExitApp
     }
     Else If Not FileExist(Parameter) Or Not InStr(FileExist(Parameter), "D") {
-        MsgBox "`"" . Parameter . "`" is not a valid directory.", "Error"
+        MsgBox "Error: `"" . Parameter . "`" is not a valid directory.", "ReaHotkey Update"
         ExitApp
     }
     Else If Parameter = A_ScriptDir {
-        MsgBox "The destination directory can not be the same as the source directory.", "Error"
+        MsgBox "Error: The destination directory can not be the same as the source directory.", "ReaHotkey Update"
         ExitApp
     }
     
     StatusDialog := ShowStatusDialog("Updating files...")
     DirCopy A_ScriptDir, Parameter, 1
     StatusDialog.Destroy()
-    MsgBox "Update complete.`nPress OK to launch the updated script.", "ReaHotkey"
+    MsgBox "Update complete.", "ReaHotkey Update"
     
     If A_PtrSize * 8 = 64
     ExeToRun := Parameter . "\ReaHotkey_x64.exe"
