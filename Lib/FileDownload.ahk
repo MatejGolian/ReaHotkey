@@ -158,6 +158,8 @@ Class FileDownload {
     }
     
     UpdateStatus() {
+    If This.Complete
+    Return
         Static CurrentSizeTick := 0, DownloadSpeed := 0, FormattedSize := This.FormatSize(This.Size), FormattedTimeRemaining := "∞", PreviousSize := This.CurrentSize, PreviousSizeTick := 0
         TickCount := A_TickCount
         CurrentSizeTick := TickCount
