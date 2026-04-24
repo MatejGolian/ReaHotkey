@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.3] - 2026-04-24
+
 ### Fixed
 
 -   Hopefully fixed a bug where updating the download status would produce errors
@@ -540,7 +542,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.2...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.3...HEAD
+
+[0.9.3]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.2...0.9.3
 
 [0.9.2]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.1...0.9.2
 
