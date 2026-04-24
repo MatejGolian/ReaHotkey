@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.2] - 2026-04-24
+
 ### Added
 
 -   Added one-click update
@@ -534,7 +536,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.1...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.2...HEAD
+
+[0.9.2]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.1...0.9.2
 
 [0.9.1]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.0...0.9.1
 
