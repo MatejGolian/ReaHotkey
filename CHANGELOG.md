@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.9.6] - 2026-04-25
 
+### Changed
+
+-   Disable quitting the script while an update is in progress and show warning message
+
 ### Fixed
 
 -   Fixed lingering tray icon after update

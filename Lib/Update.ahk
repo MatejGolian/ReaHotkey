@@ -6,17 +6,6 @@ Class Update {
     Static PerformUpdate := True
     Static UpdaterPID := ""
     
-    Static Cancel() {
-        PrevDetectionSetting := A_DetectHiddenWindows
-        DetectHiddenWindows True
-        If ProcessExist(This.UpdaterPID) {
-            WinKill "ahk_pid " . This.UpdaterPID
-            ProcessWaitClose This.UpdaterPID, 3
-            This.DeleteTempDir()
-        }
-        DetectHiddenWindows PrevDetectionSetting
-    }
-    
     Static check(ForceUpdate := False, NotifyOnNoUpdate := True) {
         Static DialogOpen := False, DialogWinID := ""
         If Not DialogOpen {
@@ -175,6 +164,14 @@ Class Update {
     Static DeleteTempDir() {
         If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D")
         DirDelete A_Temp . "\ReaHotkey", True
+    }
+    
+    Static IsRunning() {
+        If ProcessExist(This.UpdaterPID) {
+            MsgBox "An update is currently in progress.`nPlease cancel it first or wait for it to finish.", "Quit ReaHotkey"
+            Return True
+        }
+        Return False
     }
     
 }

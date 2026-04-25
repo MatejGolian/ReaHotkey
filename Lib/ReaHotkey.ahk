@@ -606,16 +606,18 @@ Class ReaHotkey {
     }
     
     Static Quit(*) {
-        This.Update.Cancel()
-        ExitApp
+        If Not This.Update.IsRunning() {
+            ExitApp
+        }
     }
     
     Static Reload(*) {
-        This.Update.Cancel()
-        If A_IsCompiled = 0
-        Run A_AhkPath . " /restart " . A_ScriptFullPath . " /Reload"
-        Else
-        Run A_ScriptFullPath . " /restart /Reload"
+        If Not This.Update.IsRunning() {
+            If A_IsCompiled = 0
+            Run A_AhkPath . " /restart " . A_ScriptFullPath . " /Reload"
+            Else
+            Run A_ScriptFullPath . " /restart /Reload"
+        }
     }
     
     Static ReportAbletonPlugin(Name := "") {
