@@ -45,13 +45,14 @@ If Parameter = "Download" {
         
         URL := A_Args[2]
         DestinationFile := A_Args[3]
+        CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
         
         UpdateDownload := FileDownload(URL, DestinationFile, "ReaHotkey Update")
         
         If A_IsCompiled = 0
-        RunOnCancel := A_AhkPath . " /restart " . A_ScriptFullPath . " Cleanup"
+        RunOnCancel := A_AhkPath . " /restart " . A_ScriptFullPath . " Cleanup " . CurrentPID
         Else
-        RunOnCancel := A_ScriptFullPath . " /restart /script *UPDATE Cleanup"
+        RunOnCancel := A_ScriptFullPath . " /restart /script *UPDATE Cleanup " . CurrentPID
         
         UpdateDownload.Start(RunOnCancel)
         
@@ -98,6 +99,16 @@ If Parameter = "Download" {
     
 }
 Else If Parameter = "Cleanup" {
+    
+    UpdaterPID := ""
+    
+    If A_Args.Length >= 2
+    UpdaterPID := A_Args[2]
+    
+    If ProcessExist(UpdaterPID) {
+        ProcessClose UpdaterPID
+        ProcessWaitClose UpdaterPID, 3
+    }
     
     If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D") {
         StatusDialog := ShowStatusDialog("Cleaning up files...")
