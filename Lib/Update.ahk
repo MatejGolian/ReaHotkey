@@ -93,7 +93,10 @@ Class Update {
             }
             Else {
                 This.DeleteTempDir()
+                PrevDetectionSetting := A_DetectHiddenWindows
+                DetectHiddenWindows True
                 CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
+                DetectHiddenWindows PrevDetectionSetting
                 If A_IsCompiled = 0
                 Run A_AhkPath . " Includes/Update.ahk Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`" ParentPID " . CurrentPID,,, &OutputPID
                 Else
