@@ -84,6 +84,10 @@ Class ReaHotkey {
                 Else
                 This.Update.Check(False, False)
             }
+            Else {
+                If ForceUpdate
+                This.Update.Check(True, False)
+            }
         }
         Else {
             AccessibilityOverlay.Speak("Reloaded ReaHotkey")

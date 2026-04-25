@@ -7,11 +7,13 @@ Class Update {
     Static UpdaterPID := ""
     
     Static Cancel() {
+        PrevDetectionSetting := DetectHiddenWindows(True)
         If ProcessExist(This.UpdaterPID) {
-            ProcessClose This.UpdaterPID
+            WinKill "ahk_pid " . This.UpdaterPID
             ProcessWaitClose This.UpdaterPID, 3000
             This.DeleteTempDir()
         }
+        DetectHiddenWindows(PrevDetectionSetting)
     }
     
     Static check(ForceUpdate := False, NotifyOnNoUpdate := True) {
@@ -56,11 +58,15 @@ Class Update {
                 ShowErrorMessage()
                 Return False
             }
-            If NotifyOnNoUpdate And CurrentVersionIndex = LatestVersionIndex {
+            If ForceUpdate {
+                ShowUpdatePrompt()
+                Return True
+            }
+            Else If NotifyOnNoUpdate And CurrentVersionIndex = LatestVersionIndex {
                 ShowUpToDateMessage()
                 Return False
             }
-            Else If ForceUpdate Or CurrentVersionIndex > LatestVersionIndex {
+            Else If CurrentVersionIndex > LatestVersionIndex {
                 ShowUpdatePrompt()
                 Return True
             }

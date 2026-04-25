@@ -84,7 +84,7 @@ If Parameter = "Download" {
             }
             Else {
                 If ParentPID And ProcessExist(ParentPID) {
-                    ProcessClose ParentPID
+                    WinKill "ahk_pid " . ParentPID
                     ProcessWaitClose ParentPID, 3000
                 }
             }
@@ -100,7 +100,7 @@ If Parameter = "Download" {
 Else If Parameter = "Cleanup" {
     
     If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D") {
-        StatusDialog := ShowStatusDialog("Cleaning up files...", True)
+        StatusDialog := ShowStatusDialog("Cleaning up files...")
         DirDelete A_Temp . "\ReaHotkey", True
         StatusDialog.Destroy()
     }

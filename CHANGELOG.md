@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed lingering tray icon after update
+-   Fixed the '/ForceUpdate' command line switch
+
 ## [0.9.5] - 2026-04-24
 
 ### Added/Changed
