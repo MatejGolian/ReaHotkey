@@ -79,13 +79,13 @@ If Parameter = "Download" {
             If A_IsCompiled = 0 {
                 If WinExist(ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey") {
                     WinClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey"
-                    WinWaitClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey", 3000
+                    WinWaitClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey", 3
                 }
             }
             Else {
                 If ParentPID And ProcessExist(ParentPID) {
                     WinKill "ahk_pid " . ParentPID
-                    ProcessWaitClose ParentPID, 3000
+                    ProcessWaitClose ParentPID, 3
                 }
             }
             Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`""

@@ -7,13 +7,14 @@ Class Update {
     Static UpdaterPID := ""
     
     Static Cancel() {
-        PrevDetectionSetting := DetectHiddenWindows(True)
+        PrevDetectionSetting := A_DetectHiddenWindows
+        DetectHiddenWindows True
         If ProcessExist(This.UpdaterPID) {
             WinKill "ahk_pid " . This.UpdaterPID
-            ProcessWaitClose This.UpdaterPID, 3000
+            ProcessWaitClose This.UpdaterPID, 3
             This.DeleteTempDir()
         }
-        DetectHiddenWindows(PrevDetectionSetting)
+        DetectHiddenWindows PrevDetectionSetting
     }
     
     Static check(ForceUpdate := False, NotifyOnNoUpdate := True) {
@@ -92,7 +93,7 @@ Class Update {
             }
             Else {
                 This.DeleteTempDir()
-                CurrentPID := DllCall("GetCurrentProcessId")
+                CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
                 If A_IsCompiled = 0
                 Run A_AhkPath . " Includes/Update.ahk Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`" ParentPID " . CurrentPID,,, &OutputPID
                 Else
