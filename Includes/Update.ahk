@@ -7,10 +7,11 @@ DetectHiddenWindows True
 
 #Include ../Lib/FileDownload.ahk
 
-CloseUpdater(UpdaterPID) {
-    If ProcessExist(UpdaterPID) {
-        ProcessClose UpdaterPID
-        ProcessWaitClose UpdaterPID, 3
+CloseUpdater(TargetPID) {
+    If Not TargetPID = WinGetPID("ahk_id " . A_ScriptHWND)
+    If ProcessExist(TargetPID) {
+        ProcessClose TargetPID
+        ProcessWaitClose TargetPID, 3
     }
 }
 
@@ -59,10 +60,10 @@ PerformCleanup(CleanupOption := "All") {
 PrepareRunCMD(ExtraArgs := "") {
     ExtraArgs := Trim(ExtraArgs)
     If A_IsCompiled = 0
-    RunCMD := A_AhkPath . " /restart " . A_ScriptFullPath . " " . ExtraArgs
+    PreparedCMD := A_AhkPath . " /restart " . A_ScriptFullPath . " " . ExtraArgs
     Else
-    RunCMD := A_ScriptFullPath . " /restart /script *UPDATE " . ExtraArgs
-    Return Trim(RunCMD)
+    PreparedCMD := A_ScriptFullPath . " /restart /script *UPDATE " . ExtraArgs
+    Return Trim(PreparedCMD)
 }
 
 ModeSwitch := ""
@@ -83,18 +84,17 @@ If ModeSwitch = "Download" {
     
     URL := A_Args[2]
     DestinationFile := A_Args[3]
-    
     UpdateDownload := FileDownload(URL, DestinationFile, "ReaHotkey Update")
-    
-    RunOnCompletion := PrepareRunCMD("Extract " . DestinationFile . " ParentPID " . CurrentPID)
-    RunOnCancel := PrepareRunCMD("Cleanup ParentPID " . CurrentPID)
+    RunOnCompletion := PrepareRunCMD("Extract " . DestinationFile . " ParentPID " . ParentPID . " UpdaterPID " . CurrentPID)
+    RunOnCancel := PrepareRunCMD("CleanupDownload ParentPID " . ParentPID . " UpdaterPID " . CurrentPID)
     
     UpdateDownload.Start(RunOnCompletion, RunOnCancel)
     
     ReaHotkeyAhkDir := Substr(A_ScriptDir, 1, -9)
     
     If Not UpdateDownload.Complete {
-        MsgBox "Download failed.", "ReaHotkey Update"
+        RunCMD := PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID)
+        Run RunCMD
         ExitApp
     }
     
@@ -106,15 +106,19 @@ Else If ModeSwitch = "Extract" {
         ExitApp
     }
     
+    CloseUpdater(UpdaterPID)
+    
     FileToExtract := A_Args[2]
     
     StatusDialog := ShowStatusDialog("Extracting files...")
     DirCopy FileToExtract, A_Temp . "\ReaHotkey", 1
     StatusDialog.Destroy()
+    
     If A_PtrSize * 8 = 64
     ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x64.exe"
     Else
     ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x86.exe"
+    
     If A_IsCompiled = 0 {
         If WinExist(ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey") {
             WinClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey"
@@ -127,11 +131,26 @@ Else If ModeSwitch = "Extract" {
             ProcessWaitClose ParentPID, 3
         }
     }
-    Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`" ParentPID " . CurrentPID
+    Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`" ParentPID " . ParentPID . " UpdaterPID " . CurrentPID
     ExitApp
     
 }
-Else If ModeSwitch = "Cleanup" {
+Else If ModeSwitch = "DownloadFailed" {
+    
+    CloseUpdater(UpdaterPID)
+    
+    If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D") {
+        StatusDialog := ShowStatusDialog("Cleaning up files...")
+        PerformCleanup("All")
+        StatusDialog.Destroy()
+    }
+    
+    MsgBox "Download failed.", "ReaHotkey Update"
+    
+    ExitApp
+    
+}
+Else If ModeSwitch = "DownloadCleanup" {
     
     CloseUpdater(UpdaterPID)
     
@@ -144,12 +163,15 @@ Else If ModeSwitch = "Cleanup" {
     ExitApp
     
 }
-Else {
+Else If ModeSwitch = "Update" {
     
     If A_Args.Length < 2 {
         MsgBox "Not enough parameters.", "Error"
         ExitApp
     }
+    
+    CloseUpdater(ParentPID)
+    CloseUpdater(UpdaterPID)
     
     Destination := A_Args[2]
     
@@ -169,11 +191,24 @@ Else {
         ExitApp
     }
     
-    CloseUpdater(UpdaterPID)
-    
     StatusDialog := ShowStatusDialog("Updating files...")
     DirCopy A_ScriptDir, Destination, 1
     StatusDialog.Destroy()
+    
+    RunCMD := PrepareRunCMD("UpdateComplete ParentPID " . ParentPID . " UpdaterPID " . CurrentPID)
+    Run RunCMD
+    
+    ExitApp
+}
+Else If ModeSwitch = "UpdateComplete" {
+    
+    CloseUpdater(UpdaterPID)
+    
+    If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D") {
+        StatusDialog := ShowStatusDialog("Cleaning up files...")
+        PerformCleanup("All")
+        StatusDialog.Destroy()
+    }
     
     MsgBox "Update complete.", "ReaHotkey Update"
     
@@ -185,4 +220,8 @@ Else {
     Run ExeToRun
     ExitApp
     
+}
+Else {
+    
+    MsgBox "No parameters specified.", "Error"
 }

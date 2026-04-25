@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Updater: Make it possible to reinstall the script even without using the command line
+
 ## [0.9.9] - 2026-04-25
 
 ### Changed
