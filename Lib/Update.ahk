@@ -2,6 +2,7 @@
 
 Class Update {
     
+    Static AllowReinstall := True
     Static JsonUrl := "https://api.github.com/repos/MatejGolian/ReaHotkey/releases"
     Static PerformUpdate := True
     Static UpdaterPID := ""
@@ -116,48 +117,43 @@ Class Update {
             Return Text
         }
         ShowErrorMessage() {
-            ShowNotificationBox("Error checking for new version!", "There was an error checking for the latest version`nis an internet connection present?!", False, True)
+            ShowNotificationBox("Error checking for new version!", "There was an error checking for the latest version`nis an internet connection present?!", False, "Update", False, True)
         }
-        ShowNotificationBox(Title, Text, ProcessText := False, DisableActionButton := False) {
+        ShowNotificationBox(Title, Text, ProcessText := False, ActionButtonLabel := "Update", ActionButtonAction := False, DisableActionButton := False) {
             If ProcessText
             Text := ProcessNotificationText(Text)
             NotificationBox := Gui(, Title)
             NotificationBox.AddEdit("ReadOnly vText -WantReturn", Text)
-            If This.PerformUpdate
-            NotificationBox.AddButton("Section vPerformUpdate", "Update").OnEvent("Click", PerFormUpdate)
+            If ActionButtonAction
+            NotificationBox.AddButton("Section vActionButton", ActionButtonLabel).OnEvent("Click", ActionButtonAction)
             Else
-            NotificationBox.AddButton("Section vProceedToDownload", "Proceed to download page").OnEvent("Click", ProceedToDownload)
+            NotificationBox.AddButton("Section vActionButton", ActionButtonLabel)
             NotificationBox.AddButton("YP vClose", "Close").OnEvent("Click", CloseNotificationBox)
             NotificationBox.OnEvent("Close", CloseNotificationBox)
             NotificationBox.OnEvent("Escape", CloseNotificationBox)
             If DisableActionButton {
-                If This.PerformUpdate {
-                    NotificationBox["PerformUpdate"].Opt("+Disabled")
-                }
-                Else {
-                    NotificationBox["ProceedToDownload"].Opt("+Disabled")
-                }
+                NotificationBox["ActionButton"].Opt("+Disabled")
                 NotificationBox["Close"].Opt("+Default")
             }
             Else {
-                If This.PerformUpdate {
-                    NotificationBox["PerformUpdate"].Opt("-Disabled")
-                    NotificationBox["PerformUpdate"].Opt("+Default")
-                }
-                Else {
-                    NotificationBox["ProceedToDownload"].Opt("-Disabled")
-                    NotificationBox["ProceedToDownload"].Opt("+Default")
-                }
+                NotificationBox["ActionButton"].Opt("-Disabled")
+                NotificationBox["ActionButton"].Opt("+Default")
             }
             NotificationBox.Show()
             DialogOpen := True
             DialogWinID := WinGetID("A")
         }
         ShowUpdatePrompt() {
-            ShowNotificationBox("New version found!", "ReaHotkey " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, False)
+            If This.PerformUpdate
+            ShowNotificationBox("New version found!", "ReaHotkey " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, "Update", PerformUpdate, False)
+            Else
+            ShowNotificationBox("New version found!", "ReaHotkey " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, "Proceed to download page", ProceedToDownload, False)
         }
         ShowUpToDateMessage() {
-            ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, True)
+            If This.AllowReinstall
+            ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, "Reinstall", PerformUpdate, False)
+            Else
+            ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, "Update", False, True)
         }
     }
     

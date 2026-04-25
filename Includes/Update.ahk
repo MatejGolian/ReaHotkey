@@ -14,6 +14,14 @@ CloseUpdater(UpdaterPID) {
     }
 }
 
+GetArg(Name) {
+    For Arg In A_Args
+    If Arg = Name
+    If A_Args.Length >= A_Index + 1
+    Return A_Args[A_Index + 1]
+    Return ""
+}
+
 ShowStatusDialog(Status, DisableCancel := False) {
     DialogGUI := GUI(, "ReaHotkey Update")
     DialogGUI.AddText("Section W550 vStatus", Status)
@@ -48,78 +56,82 @@ PerformCleanup(CleanupOption := "All") {
     }
 }
 
-Parameter := ""
+PrepareRunCMD(ExtraArgs := "") {
+    ExtraArgs := Trim(ExtraArgs)
+    If A_IsCompiled = 0
+    RunCMD := A_AhkPath . " /restart " . A_ScriptFullPath . " " . ExtraArgs
+    Else
+    RunCMD := A_ScriptFullPath . " /restart /script *UPDATE " . ExtraArgs
+    Return Trim(RunCMD)
+}
+
+ModeSwitch := ""
 
 If A_Args.Length > 0
-Parameter := A_Args[1]
+ModeSwitch := A_Args[1]
 
-If Parameter = "Download" {
+CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
+ParentPID := GetArg("ParentPID")
+UpdaterPID := GetArg("UpdaterPID")
+
+If ModeSwitch = "Download" {
     
-    If A_Args.Length >= 3 {
-        
-        URL := A_Args[2]
-        DestinationFile := A_Args[3]
-        CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
-        
-        UpdateDownload := FileDownload(URL, DestinationFile, "ReaHotkey Update")
-        
-        If A_IsCompiled = 0
-        RunOnCancel := A_AhkPath . " /restart " . A_ScriptFullPath . " Cleanup " . CurrentPID
-        Else
-        RunOnCancel := A_ScriptFullPath . " /restart /script *UPDATE Cleanup " . CurrentPID
-        
-        UpdateDownload.Start(RunOnCancel)
-        
-        ParentPID := ""
-        
-        For Arg In A_Args
-        If Arg = "ParentPID"
-        If A_Args.Length >= A_Index + 1 {
-            ParentPID := A_Args[A_Index + 1]
-            Break
-        }
-        
-        ReaHotkeyAhkDir := Substr(A_ScriptDir, 1, -9)
-        
-        If Not UpdateDownload.Complete {
-            MsgBox "Download failed.", "ReaHotkey Update"
-            ExitApp
-        }
-        Else {
-            StatusDialog := ShowStatusDialog("Extracting files...")
-            DirCopy UpdateDownload.DestinationFile, A_Temp . "\ReaHotkey", 1
-            StatusDialog.Destroy()
-            If A_PtrSize * 8 = 64
-            ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x64.exe"
-            Else
-            ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x86.exe"
-            If A_IsCompiled = 0 {
-                If WinExist(ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey") {
-                    WinClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey"
-                    WinWaitClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey", 3
-                }
-            }
-            Else {
-                If ParentPID And ProcessExist(ParentPID) {
-                    WinKill "ahk_pid " . ParentPID
-                    ProcessWaitClose ParentPID, 3
-                }
-            }
-            Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`" " . CurrentPID
-            ExitApp
-        }
-        
+    If A_Args.Length < 3 {
+        MsgBox "Not enough parameters.", "Error"
+        ExitApp
     }
     
+    URL := A_Args[2]
+    DestinationFile := A_Args[3]
+    
+    UpdateDownload := FileDownload(URL, DestinationFile, "ReaHotkey Update")
+    
+    RunOnCompletion := PrepareRunCMD("Extract " . DestinationFile . " ParentPID " . CurrentPID)
+    RunOnCancel := PrepareRunCMD("Cleanup ParentPID " . CurrentPID)
+    
+    UpdateDownload.Start(RunOnCompletion, RunOnCancel)
+    
+    ReaHotkeyAhkDir := Substr(A_ScriptDir, 1, -9)
+    
+    If Not UpdateDownload.Complete {
+        MsgBox "Download failed.", "ReaHotkey Update"
+        ExitApp
+    }
+    
+}
+Else If ModeSwitch = "Extract" {
+    
+    If A_Args.Length < 2 {
+        MsgBox "Not enough parameters.", "Error"
+        ExitApp
+    }
+    
+    FileToExtract := A_Args[2]
+    
+    StatusDialog := ShowStatusDialog("Extracting files...")
+    DirCopy FileToExtract, A_Temp . "\ReaHotkey", 1
+    StatusDialog.Destroy()
+    If A_PtrSize * 8 = 64
+    ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x64.exe"
+    Else
+    ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x86.exe"
+    If A_IsCompiled = 0 {
+        If WinExist(ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey") {
+            WinClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey"
+            WinWaitClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey", 3
+        }
+    }
+    Else {
+        If ParentPID And ProcessExist(ParentPID) {
+            WinKill "ahk_pid " . ParentPID
+            ProcessWaitClose ParentPID, 3
+        }
+    }
+    Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`" ParentPID " . CurrentPID
     ExitApp
     
 }
-Else If Parameter = "Cleanup" {
-    
-    UpdaterPID := ""
-    
-    If A_Args.Length >= 2
-    UpdaterPID := A_Args[2]
+Else If ModeSwitch = "Cleanup" {
     
     CloseUpdater(UpdaterPID)
     
@@ -134,39 +146,41 @@ Else If Parameter = "Cleanup" {
 }
 Else {
     
-    If SubStr(Parameter, -1) = "/" Or SubStr(Parameter, -1) = "\"
-    Parameter := SubStr(Parameter, 1, -1)
+    If A_Args.Length < 2 {
+        MsgBox "Not enough parameters.", "Error"
+        ExitApp
+    }
     
-    If Not Parameter {
+    Destination := A_Args[2]
+    
+    If SubStr(Destination, -1) = "/" Or SubStr(Destination, -1) = "\"
+    Destination := SubStr(Destination, 1, -1)
+    
+    If Not Destination {
         MsgBox "Error: No directory specified.", "ReaHotkey Update"
         ExitApp
     }
-    Else If Not FileExist(Parameter) Or Not InStr(FileExist(Parameter), "D") {
-        MsgBox "Error: `"" . Parameter . "`" is not a valid directory.", "ReaHotkey Update"
+    Else If Not FileExist(Destination) Or Not InStr(FileExist(Destination), "D") {
+        MsgBox "Error: `"" . Destination . "`" is not a valid directory.", "ReaHotkey Update"
         ExitApp
     }
-    Else If Parameter = A_ScriptDir {
+    Else If Destination = A_ScriptDir {
         MsgBox "Error: The destination directory can not be the same as the source directory.", "ReaHotkey Update"
         ExitApp
     }
     
-    UpdaterPID := ""
-    
-    If A_Args.Length >= 2
-    UpdaterPID := A_Args[2]
-    
     CloseUpdater(UpdaterPID)
     
     StatusDialog := ShowStatusDialog("Updating files...")
-    DirCopy A_ScriptDir, Parameter, 1
+    DirCopy A_ScriptDir, Destination, 1
     StatusDialog.Destroy()
     
     MsgBox "Update complete.", "ReaHotkey Update"
     
     If A_PtrSize * 8 = 64
-    ExeToRun := Parameter . "\ReaHotkey_x64.exe"
+    ExeToRun := Destination . "\ReaHotkey_x64.exe"
     Else
-    ExeToRun := Parameter . "\ReaHotkey_x86.exe"
+    ExeToRun := Destination . "\ReaHotkey_x86.exe"
     
     Run ExeToRun
     ExitApp
