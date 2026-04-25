@@ -82,9 +82,6 @@ If Parameter = "Download" {
         ReaHotkeyAhkDir := Substr(A_ScriptDir, 1, -9)
         
         If Not UpdateDownload.Complete {
-            StatusDialog := ShowStatusDialog("Cleaning up files...")
-            PerformCleanup("All")
-            StatusDialog.Destroy()
             MsgBox "Download failed.", "ReaHotkey Update"
             ExitApp
         }
@@ -163,9 +160,7 @@ Else {
     StatusDialog := ShowStatusDialog("Updating files...")
     DirCopy A_ScriptDir, Parameter, 1
     StatusDialog.Destroy()
-    StatusDialog := ShowStatusDialog("Cleaning up files...")
-    PerformCleanup("All")
-    StatusDialog.Destroy()
+    
     MsgBox "Update complete.", "ReaHotkey Update"
     
     If A_PtrSize * 8 = 64
