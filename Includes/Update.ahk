@@ -7,10 +7,11 @@ DetectHiddenWindows True
 
 #Include ../Lib/FileDownload.ahk
 
-Extract(SourceFile, DestinationDir) {
-    DirCreate DestinationDir
-    ShowStatusDialog("Extracting files...")
-    DirCopy SourceFile, DestinationDir, 1
+CloseUpdater(UpdaterPID) {
+    If ProcessExist(UpdaterPID) {
+        ProcessClose UpdaterPID
+        ProcessWaitClose UpdaterPID, 3
+    }
 }
 
 ShowStatusDialog(Status, DisableCancel := False) {
@@ -29,8 +30,21 @@ ShowStatusDialog(Status, DisableCancel := False) {
     Cancel(*) {
         DialogGUI.Opt("+OwnDialogs")
         ConfirmationDialog := MsgBox("Are you sure you want to cancel?", "ReaHotkey Update", 4)
-        If ConfirmationDialog == "Yes"
-        ExitApp
+        If ConfirmationDialog == "Yes" {
+            ExitApp
+        }
+    }
+}
+
+PerformCleanup(CleanupOption := "All") {
+    If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D") {
+        If CleanupOption = "All" {
+            DirDelete A_Temp . "\ReaHotkey", True
+        }
+        Else If CleanupOption = "Extracted" {
+            If FileExist(A_Temp . "\ReaHotkey\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey\ReaHotkey"), "D")
+            DirDelete A_Temp . "\ReaHotkey\ReaHotkey", True
+        }
     }
 }
 
@@ -68,11 +82,16 @@ If Parameter = "Download" {
         ReaHotkeyAhkDir := Substr(A_ScriptDir, 1, -9)
         
         If Not UpdateDownload.Complete {
+            StatusDialog := ShowStatusDialog("Cleaning up files...")
+            PerformCleanup("All")
+            StatusDialog.Destroy()
             MsgBox "Download failed.", "ReaHotkey Update"
             ExitApp
         }
         Else {
-            Extract(UpdateDownload.DestinationFile, A_Temp . "\ReaHotkey")
+            StatusDialog := ShowStatusDialog("Extracting files...")
+            DirCopy UpdateDownload.DestinationFile, A_Temp . "\ReaHotkey", 1
+            StatusDialog.Destroy()
             If A_PtrSize * 8 = 64
             ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x64.exe"
             Else
@@ -89,7 +108,7 @@ If Parameter = "Download" {
                     ProcessWaitClose ParentPID, 3
                 }
             }
-            Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`""
+            Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`" " . CurrentPID
             ExitApp
         }
         
@@ -105,14 +124,11 @@ Else If Parameter = "Cleanup" {
     If A_Args.Length >= 2
     UpdaterPID := A_Args[2]
     
-    If ProcessExist(UpdaterPID) {
-        ProcessClose UpdaterPID
-        ProcessWaitClose UpdaterPID, 3
-    }
+    CloseUpdater(UpdaterPID)
     
     If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D") {
         StatusDialog := ShowStatusDialog("Cleaning up files...")
-        DirDelete A_Temp . "\ReaHotkey", True
+        PerformCleanup("All")
         StatusDialog.Destroy()
     }
     
@@ -137,8 +153,18 @@ Else {
         ExitApp
     }
     
+    UpdaterPID := ""
+    
+    If A_Args.Length >= 2
+    UpdaterPID := A_Args[2]
+    
+    CloseUpdater(UpdaterPID)
+    
     StatusDialog := ShowStatusDialog("Updating files...")
     DirCopy A_ScriptDir, Parameter, 1
+    StatusDialog.Destroy()
+    StatusDialog := ShowStatusDialog("Cleaning up files...")
+    PerformCleanup("All")
     StatusDialog.Destroy()
     MsgBox "Update complete.", "ReaHotkey Update"
     

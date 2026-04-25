@@ -606,13 +606,13 @@ Class ReaHotkey {
     }
     
     Static Quit(*) {
-        If Not This.Update.IsRunning() {
+        If Not This.Update.IsRunning("Quit ReaHotkey") {
             ExitApp
         }
     }
     
     Static Reload(*) {
-        If Not This.Update.IsRunning() {
+        If Not This.Update.IsRunning("Reload ReaHotkey") {
             If A_IsCompiled = 0
             Run A_AhkPath . " /restart " . A_ScriptFullPath . " /Reload"
             Else
