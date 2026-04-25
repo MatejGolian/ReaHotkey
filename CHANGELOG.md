@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.8] - 2026-04-25
+
 ### Changed
 
 -   Updater: Perform more checks before copying files
@@ -574,7 +576,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.7...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.8...HEAD
+
+[0.9.8]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.7...0.9.8
 
 [0.9.7]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.6...0.9.7
 
