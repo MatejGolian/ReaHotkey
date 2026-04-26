@@ -4,6 +4,7 @@
 #SingleInstance Force
 #Warn All
 DetectHiddenWindows True
+SetTitleMatchMode 2
 
 #Include ../Lib/FileDownload.ahk
 
@@ -26,6 +27,22 @@ GetArg(Name) {
         Return A_Args[ArgIndex + 1]
     }
     Return ""
+}
+
+GetParentPID() {
+    If A_IsCompiled = 0
+    ParentID := WinExist(GetReaHotkeyAhkDir() . "ReaHotkey.ahk - AutoHotkey v" . A_AhkVersion)
+    Else
+    ParentID := WinExist(A_ScriptFullPath)
+    If ParentID
+    Return WinGetPID("ahk_id " . ParentID)
+    Return 0
+}
+
+GetReaHotkeyAhkDir() {
+    If A_IsCompiled = 0
+    Return Substr(A_ScriptDir, 1, -9)
+    Return A_ScriptDir
 }
 
 ShowStatusDialog(Status, RunOnCancel := False, DisableCancel := False) {
@@ -79,7 +96,7 @@ If A_Args.Length > 0
 TaskSwitch := A_Args[1]
 
 CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
-ParentPID := GetArg("ParentPID")
+ParentPID := GetParentPID()
 UpdaterPID := GetArg("UpdaterPID")
 
 If TaskSwitch = "Download" {
@@ -93,9 +110,7 @@ If TaskSwitch = "Download" {
     DestinationFile := A_Args[3]
     UpdateDownload := FileDownload(URL, DestinationFile, "ReaHotkey Update")
     
-    UpdateDownload.Start(PrepareRunCMD("Extract " . DestinationFile . " ParentPID " . ParentPID . " UpdaterPID " . CurrentPID), PrepareRunCMD("DownloadCleanup ParentPID " . ParentPID . " UpdaterPID " . CurrentPID))
-    
-    ReaHotkeyAhkDir := Substr(A_ScriptDir, 1, -9)
+    UpdateDownload.Start(PrepareRunCMD("Extract `"" . DestinationFile . "`" UpdaterPID " . CurrentPID), PrepareRunCMD("DownloadCleanup UpdaterPID " . CurrentPID))
     
     If Not UpdateDownload.Complete {
         CMDToRun := PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID)
@@ -153,9 +168,9 @@ Else If TaskSwitch = "Extract" {
     ExeToRun := A_Temp . "\ReaHotkey\ReaHotkey\ReaHotkey_x86.exe"
     
     If A_IsCompiled = 0 {
-        If WinExist(ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey") {
-            WinClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey"
-            WinWaitClose ReaHotkeyAhkDir . "\ReaHotkey.ahk ahk_class AutoHotkey", 3
+        If WinExist(GetReaHotkeyAhkDir() . "\ReaHotkey.ahk ahk_class AutoHotkey") {
+            WinClose GetReaHotkeyAhkDir() . "\ReaHotkey.ahk ahk_class AutoHotkey"
+            WinWaitClose GetReaHotkeyAhkDir() . "\ReaHotkey.ahk ahk_class AutoHotkey", 3
         }
     }
     Else {
@@ -165,7 +180,7 @@ Else If TaskSwitch = "Extract" {
         }
     }
     
-    Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`" ParentPID " . ParentPID . " UpdaterPID " . CurrentPID
+    Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`" UpdaterPID " . CurrentPID
     ExitApp
     
 }
@@ -185,7 +200,6 @@ Else If TaskSwitch = "ExtractionCleanup" {
 Else If TaskSwitch = "UpdateFiles" {
     
     If A_Args.Length < 2 {
-        MsgBox "Not enough parameters.", "Error"
         ExitApp
     }
     
@@ -217,7 +231,7 @@ Else If TaskSwitch = "UpdateFiles" {
     Else
     ExeToRun := Destination . "\ReaHotkey_x86.exe"
     
-    Run ExeToRun . " /script *UPDATE UpdateCleanup ParentPID " . ParentPID . " UpdaterPID " . CurrentPID
+    Run ExeToRun . " /script *UPDATE UpdateCleanup UpdaterPID " . CurrentPID
     ExitApp
     
 }
@@ -236,7 +250,7 @@ Else If TaskSwitch = "UpdateCleanup" {
     Else
     ExeToRun := A_ScriptDir . "\ReaHotkey_x86.exe"
     
-    Run ExeToRun . " /script *UPDATE UpdateComplete ParentPID " . ParentPID . " UpdaterPID " . CurrentPID
+    Run ExeToRun . " /script *UPDATE UpdateComplete UpdaterPID " . CurrentPID
     ExitApp
     
 }
