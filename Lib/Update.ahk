@@ -5,7 +5,6 @@ Class Update {
     Static AllowReinstall := True
     Static JsonUrl := "https://api.github.com/repos/MatejGolian/ReaHotkey/releases"
     Static PerformUpdate := True
-    Static UpdaterPID := ""
     
     Static check(ForceUpdate := False, NotifyOnNoUpdate := True) {
         Static DialogOpen := False, DialogWinID := ""
@@ -78,8 +77,8 @@ Class Update {
         }
         PerformUpdate(*) {
             CloseNotificationBox()
-            If WinExist("ahk_pid " . This.UpdaterPID) {
-                WinActivate("ahk_pid " . This.UpdaterPID)
+            If This.IsRunning() {
+                WinActivate("ahk_id " . This.IsRunning())
             }
             Else {
                 This.DeleteTempDir()
@@ -91,7 +90,6 @@ Class Update {
                 Run A_AhkPath . " Includes/Updater.ahk Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`" ParentPID " . CurrentPID,,, &OutputPID
                 Else
                 Run A_ScriptFullPath . " /script *UPDATE Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`" ParentPID " . CurrentPID,,, &OutputPID
-                This.UpdaterPID := OutputPID
             }
         }
         ProceedToDownloadPage(*) {
@@ -168,6 +166,23 @@ Class Update {
     Static DeleteTempDir() {
         If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D")
         DirDelete A_Temp . "\ReaHotkey", True
+    }
+    
+    Static GetHiddenWinTitle() {
+                        If A_IsCompiled = 0
+                     Return A_ScriptDir . "\Includes\Updater.ahk - AutoHotkey v" A_AhkVersion
+                Return A_ScriptFullPath . " - *UPDATE"
+    }
+    
+    Static IsRunning() {
+                    PrevDetectionSetting := A_DetectHiddenWindows
+                DetectHiddenWindows True
+                PrevTitleSetting := A_TitleMatchMode
+                SetTitleMatchMode 2
+                     UpdateRunning := WinExist(This.GetHiddenWinTitle())
+                                    SetTitleMatchMode PrevTitleSetting
+                                                    DetectHiddenWindows PrevDetectionSetting
+        Return UpdateRunning
     }
     
 }

@@ -25,6 +25,7 @@ Class ReaHotkey {
         This.TurnPluginHotkeysOff()
         This.TurnStandaloneHotkeysOff()
         This.InitConfig()
+        This.InitUpdater()
         A_IconTip := "ReaHotkey"
         A_TrayMenu.Delete
         A_TrayMenu.Add("&Configuration...", ObjBindMethod(This, "ShowConfigBox"))
@@ -36,7 +37,10 @@ Class ReaHotkey {
         A_TrayMenu.Add("&About...", ObjBindMethod(This, "ShowAboutBox"))
         A_TrayMenu.Add("&Quit", ObjBindMethod(This, "Quit"))
         A_TrayMenu.Default := "&Configuration..."
-        This.InitUpdater()
+        If A_IsCompiled = 0
+        Run A_AhkPath . " Includes/Updater.ahk"
+        Else
+        Run A_ScriptFullPath . " /script *UPDATE"
         This.ManageAppsKeyEmulator()
         OnError ObjBindMethod(This, "HandleError")
         ForceUpdate := False
@@ -118,8 +122,8 @@ Class ReaHotkey {
     
     Static CheckForUpdates(Params*) {
         Static DialogOpen := False
-        If WinExist("ahk_pid " . This.Update.UpdaterPID) {
-            WinActivate("ahk_pid " . This.Update.UpdaterPID)
+        If This.Update.IsRunning() {
+            WinActivate("ahk_id " . This.Update.IsRunning())
             Return
         }
         If Not DialogOpen {
@@ -614,16 +618,24 @@ Class ReaHotkey {
     }
     
     Static Quit(*) {
-        This.InitUpdater()
-        ExitApp
+        If This.Update.IsRunning() {
+            MsgBox "An update is currently in progress.`nPlease cancel it first or wait for it to finish.", "Quit ReaHotkey"
+        }
+        Else {
+            ExitApp
+        }
     }
     
     Static Reload(*) {
-        This.InitUpdater()
-        If A_IsCompiled = 0
-        Run A_AhkPath . " /restart " . A_ScriptFullPath . " /Reload"
-        Else
-        Run A_ScriptFullPath . " /restart /Reload"
+        If This.Update.IsRunning() {
+            MsgBox "An update is currently in progress.`nPlease cancel it first or wait for it to finish.", "Reload ReaHotkey"
+        }
+        Else {
+            If A_IsCompiled = 0
+            Run A_AhkPath . " /restart " . A_ScriptFullPath . " /Reload"
+            Else
+            Run A_ScriptFullPath . " /restart /Reload"
+        }
     }
     
     Static ReportAbletonPlugin(Name := "") {
