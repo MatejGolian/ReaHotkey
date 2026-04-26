@@ -1,7 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 
 #NoTrayIcon
-#SingleInstance Ignore
+#SingleInstance Force
 #Warn All
 DetectHiddenWindows True
 
@@ -16,10 +16,15 @@ CloseUpdater(TargetPID) {
 }
 
 GetArg(Name) {
+    TaskList := ["Download", "Extract", "DownloadFailed", "DownloadCleanup", "Update", "UpdateComplete"]
     For Arg In A_Args
     If Arg = Name
-    If A_Args.Length >= A_Index + 1
-    Return A_Args[A_Index + 1]
+    If A_Args.Length >= A_Index + 1 {
+        For Task In TaskList
+        If Task = A_Args[A_Index + 1]
+        Return ""
+        Return A_Args[A_Index + 1]
+    }
     Return ""
 }
 
@@ -66,16 +71,16 @@ PrepareRunCMD(ExtraArgs := "") {
     Return Trim(PreparedCMD)
 }
 
-ModeSwitch := ""
+TaskSwitch := ""
 
 If A_Args.Length > 0
-ModeSwitch := A_Args[1]
+TaskSwitch := A_Args[1]
 
 CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
 ParentPID := GetArg("ParentPID")
 UpdaterPID := GetArg("UpdaterPID")
 
-If ModeSwitch = "Download" {
+If TaskSwitch = "Download" {
     
     If A_Args.Length < 3 {
         MsgBox "Not enough parameters.", "Error"
@@ -99,7 +104,7 @@ If ModeSwitch = "Download" {
     }
     
 }
-Else If ModeSwitch = "Extract" {
+Else If TaskSwitch = "Extract" {
     
     If A_Args.Length < 2 {
         MsgBox "Not enough parameters.", "Error"
@@ -135,7 +140,7 @@ Else If ModeSwitch = "Extract" {
     ExitApp
     
 }
-Else If ModeSwitch = "DownloadFailed" {
+Else If TaskSwitch = "DownloadFailed" {
     
     CloseUpdater(UpdaterPID)
     
@@ -150,7 +155,7 @@ Else If ModeSwitch = "DownloadFailed" {
     ExitApp
     
 }
-Else If ModeSwitch = "DownloadCleanup" {
+Else If TaskSwitch = "DownloadCleanup" {
     
     CloseUpdater(UpdaterPID)
     
@@ -163,7 +168,7 @@ Else If ModeSwitch = "DownloadCleanup" {
     ExitApp
     
 }
-Else If ModeSwitch = "Update" {
+Else If TaskSwitch = "Update" {
     
     If A_Args.Length < 2 {
         MsgBox "Not enough parameters.", "Error"
@@ -200,7 +205,7 @@ Else If ModeSwitch = "Update" {
     
     ExitApp
 }
-Else If ModeSwitch = "UpdateComplete" {
+Else If TaskSwitch = "UpdateComplete" {
     
     CloseUpdater(UpdaterPID)
     
@@ -223,5 +228,6 @@ Else If ModeSwitch = "UpdateComplete" {
 }
 Else {
     
-    MsgBox "No parameters specified.", "Error"
+    ExitApp
+    
 }

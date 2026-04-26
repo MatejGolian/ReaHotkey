@@ -88,13 +88,13 @@ Class Update {
                 CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
                 DetectHiddenWindows PrevDetectionSetting
                 If A_IsCompiled = 0
-                Run A_AhkPath . " Includes/Update.ahk Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`" ParentPID " . CurrentPID,,, &OutputPID
+                Run A_AhkPath . " Includes/Updater.ahk Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`" ParentPID " . CurrentPID,,, &OutputPID
                 Else
                 Run A_ScriptFullPath . " /script *UPDATE Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`" ParentPID " . CurrentPID,,, &OutputPID
                 This.UpdaterPID := OutputPID
             }
         }
-        ProceedToDownload(*) {
+        ProceedToDownloadPage(*) {
             CloseNotificationBox()
             Run LatestVersionUrl
         }
@@ -117,7 +117,10 @@ Class Update {
             Return Text
         }
         ShowErrorMessage() {
+            If This.PerformUpdate
             ShowNotificationBox("Error checking for new version!", "There was an error checking for the latest version`nis an internet connection present?!", False, "Update", False, True)
+            Else
+            ShowNotificationBox("Error checking for new version!", "There was an error checking for the latest version`nis an internet connection present?!", False, "Proceed to download page", False, True)
         }
         ShowNotificationBox(Title, Text, ProcessText := False, ActionButtonLabel := "Update", ActionButtonAction := False, DisableActionButton := False) {
             If ProcessText
@@ -147,13 +150,18 @@ Class Update {
             If This.PerformUpdate
             ShowNotificationBox("New version found!", "ReaHotkey " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, "Update", PerformUpdate, False)
             Else
-            ShowNotificationBox("New version found!", "ReaHotkey " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, "Proceed to download page", ProceedToDownload, False)
+            ShowNotificationBox("New version found!", "ReaHotkey " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, "Proceed to download page", ProceedToDownloadPage, False)
         }
         ShowUpToDateMessage() {
-            If This.AllowReinstall
-            ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, "Reinstall", PerformUpdate, False)
-            Else
-            ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, "Update", False, True)
+            If This.PerformUpdate {
+                If This.AllowReinstall
+                ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, "Reinstall", PerformUpdate, False)
+                Else
+                ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, "Update", False, True)
+            }
+            Else {
+                ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, "Proceed to download page", False, True)
+            }
         }
     }
     
