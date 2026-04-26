@@ -170,12 +170,4 @@ Class Update {
         DirDelete A_Temp . "\ReaHotkey", True
     }
     
-    Static IsRunning(WarningTitle := "ReaHotkey") {
-        If ProcessExist(This.UpdaterPID) {
-            MsgBox "An update is currently in progress.`nPlease cancel it first or wait for it to finish.", WarningTitle
-            Return True
-        }
-        Return False
-    }
-    
 }

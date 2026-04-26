@@ -93,7 +93,7 @@ If TaskSwitch = "Download" {
     DestinationFile := A_Args[3]
     UpdateDownload := FileDownload(URL, DestinationFile, "ReaHotkey Update")
     
-    UpdateDownload.Start(PrepareRunCMD("Extract " . DestinationFile . " ParentPID " . ParentPID . " UpdaterPID " . CurrentPID), PrepareRunCMD("CleanupDownload ParentPID " . ParentPID . " UpdaterPID " . CurrentPID))
+    UpdateDownload.Start(PrepareRunCMD("Extract " . DestinationFile . " ParentPID " . ParentPID . " UpdaterPID " . CurrentPID), PrepareRunCMD("DownloadCleanup ParentPID " . ParentPID . " UpdaterPID " . CurrentPID))
     
     ReaHotkeyAhkDir := Substr(A_ScriptDir, 1, -9)
     

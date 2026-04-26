@@ -36,10 +36,7 @@ Class ReaHotkey {
         A_TrayMenu.Add("&About...", ObjBindMethod(This, "ShowAboutBox"))
         A_TrayMenu.Add("&Quit", ObjBindMethod(This, "Quit"))
         A_TrayMenu.Default := "&Configuration..."
-        If A_IsCompiled = 0
-        Run A_AhkPath . " Includes/Updater.ahk"
-        Else
-        Run A_ScriptFullPath . " /script *UPDATE"
+        This.InitUpdater()
         This.ManageAppsKeyEmulator()
         OnError ObjBindMethod(This, "HandleError")
         ForceUpdate := False
@@ -375,6 +372,13 @@ Class ReaHotkey {
         This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyWinMod", 1, {Label: "Add the Windows key as an extra modifier", FuncOnInit: ObjBindMethod(This, "InitAppsKeyControl"), FuncOnSet: ObjBindMethod(This, "ManageAppsKeyEmulator")})
     }
     
+    Static InitUpdater() {
+        If A_IsCompiled = 0
+        Run A_AhkPath . " Includes/Updater.ahk"
+        Else
+        Run A_ScriptFullPath . " /script *UPDATE"
+    }
+    
     Static InPluginControl(ControlToCheck) {
         If This.PluginWinCriteria And WinActive(This.PluginWinCriteria) {
             PluginControl := This.GetPluginControl()
@@ -610,18 +614,16 @@ Class ReaHotkey {
     }
     
     Static Quit(*) {
-        If Not This.Update.IsRunning("Quit ReaHotkey") {
-            ExitApp
-        }
+        This.InitUpdater()
+        ExitApp
     }
     
     Static Reload(*) {
-        If Not This.Update.IsRunning("Reload ReaHotkey") {
-            If A_IsCompiled = 0
-            Run A_AhkPath . " /restart " . A_ScriptFullPath . " /Reload"
-            Else
-            Run A_ScriptFullPath . " /restart /Reload"
-        }
+        This.InitUpdater()
+        If A_IsCompiled = 0
+        Run A_AhkPath . " /restart " . A_ScriptFullPath . " /Reload"
+        Else
+        Run A_ScriptFullPath . " /restart /Reload"
     }
     
     Static ReportAbletonPlugin(Name := "") {
