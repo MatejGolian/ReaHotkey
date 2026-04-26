@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.9g] - 2026-04-26
+
 ### Changed
 
 -   Updater: Fail more gracefully after connection drop out
@@ -626,7 +628,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9f...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9g...HEAD
+
+[0.9.9g]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9f...0.9.9g
 
 [0.9.9f]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9e...0.9.9f
 
