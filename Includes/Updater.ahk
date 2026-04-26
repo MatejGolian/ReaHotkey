@@ -185,6 +185,7 @@ Else If TaskSwitch = "ExtractionCleanup" {
 Else If TaskSwitch = "UpdateFiles" {
     
     If A_Args.Length < 2 {
+        MsgBox "Not enough parameters.", "Error"
         ExitApp
     }
     
