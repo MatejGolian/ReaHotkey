@@ -6,6 +6,16 @@ Class Update {
     Static JsonUrl := "https://api.github.com/repos/MatejGolian/ReaHotkey/releases"
     Static PerformUpdate := True
     
+    Static ActivateWindow() {
+        RunningUpdate := This.IsRunning()
+        If RunningUpdate {
+            PrevDetectionSetting := A_DetectHiddenWindows
+            DetectHiddenWindows True
+            WinActivate("ahk_pid " . WinGetPID("ahk_id " . RunningUpdate))
+            DetectHiddenWindows PrevDetectionSetting
+        }
+    }
+    
     Static check(ForceUpdate := False, NotifyOnNoUpdate := True) {
         Static DialogOpen := False, DialogWinID := ""
         If Not DialogOpen {
@@ -78,7 +88,7 @@ Class Update {
         PerformUpdate(*) {
             CloseNotificationBox()
             If This.IsRunning() {
-                WinActivate("ahk_id " . This.IsRunning())
+                This.ActivateWindow()
             }
             Else {
                 This.DeleteTempDir()
@@ -169,20 +179,20 @@ Class Update {
     }
     
     Static GetHiddenWinTitle() {
-                        If A_IsCompiled = 0
-                     Return A_ScriptDir . "\Includes\Updater.ahk - AutoHotkey v" A_AhkVersion
-                Return A_ScriptFullPath . " - *UPDATE"
+        If A_IsCompiled = 0
+        Return A_ScriptDir . "\Includes\Updater.ahk - AutoHotkey v" A_AhkVersion
+        Return A_ScriptFullPath . " - *UPDATE"
     }
     
     Static IsRunning() {
-                    PrevDetectionSetting := A_DetectHiddenWindows
-                DetectHiddenWindows True
-                PrevTitleSetting := A_TitleMatchMode
-                SetTitleMatchMode 2
-                     UpdateRunning := WinExist(This.GetHiddenWinTitle())
-                                    SetTitleMatchMode PrevTitleSetting
-                                                    DetectHiddenWindows PrevDetectionSetting
-        Return UpdateRunning
+        PrevDetectionSetting := A_DetectHiddenWindows
+        DetectHiddenWindows True
+        PrevTitleSetting := A_TitleMatchMode
+        SetTitleMatchMode 2
+        RunningUpdate := WinExist(This.GetHiddenWinTitle())
+        SetTitleMatchMode PrevTitleSetting
+        DetectHiddenWindows PrevDetectionSetting
+        Return RunningUpdate
     }
     
 }

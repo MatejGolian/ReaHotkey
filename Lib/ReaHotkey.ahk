@@ -123,7 +123,7 @@ Class ReaHotkey {
     Static CheckForUpdates(Params*) {
         Static DialogOpen := False
         If This.Update.IsRunning() {
-            WinActivate("ahk_id " . This.Update.IsRunning())
+            This.Update.ActivateWindow()
             Return
         }
         If Not DialogOpen {
