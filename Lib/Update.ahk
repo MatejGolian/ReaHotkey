@@ -93,9 +93,9 @@ Class Update {
             Else {
                 This.DeleteTempDir()
                 If A_IsCompiled = 0
-                Run A_AhkPath . " Includes/Updater.ahk Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`"",,, &OutputPID
+                Run A_AhkPath . " Includes/Updater.ahk Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`""
                 Else
-                Run A_ScriptFullPath . " /script *UPDATE Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`"",,, &OutputPID
+                Run A_ScriptFullPath . " /script *UPDATE Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`""
             }
         }
         ProceedToDownloadPage(*) {

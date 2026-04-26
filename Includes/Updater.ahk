@@ -30,10 +30,13 @@ GetArg(Name) {
 }
 
 GetParentPID() {
+    PrevTitleSetting := A_TitleMatchMode
+    SetTitleMatchMode 3
     If A_IsCompiled = 0
     ParentID := WinExist(GetReaHotkeyAhkDir() . "ReaHotkey.ahk - AutoHotkey v" . A_AhkVersion)
     Else
     ParentID := WinExist(A_ScriptFullPath)
+    SetTitleMatchMode PrevTitleSetting
     If ParentID
     Return WinGetPID("ahk_id " . ParentID)
     Return 0

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed regression introduced in the previous release where the updater would close prematurely
+
 ## [0.9.9e] - 2026-04-26
 
 ### Changed
