@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.9d] - 2026-04-26
+
 ### Fixed
 
 -   Quit and reload should now work correctly during updates
@@ -608,7 +610,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9c...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9d...HEAD
+
+[0.9.9d]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9c...0.9.9d
 
 [0.9.9c]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9b...0.9.9c
 
