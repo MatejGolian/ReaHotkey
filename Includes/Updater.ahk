@@ -17,13 +17,13 @@ CloseUpdater(TargetPID) {
 
 GetArg(Name) {
     TaskList := ["Download", "Extract", "DownloadFailed", "DownloadCleanup", "Update", "UpdateComplete"]
-    For Arg In A_Args
+    For ArgIndex, Arg In A_Args
     If Arg = Name
-    If A_Args.Length >= A_Index + 1 {
+    If A_Args.Length >= ArgIndex + 1 {
         For Task In TaskList
-        If Task = A_Args[A_Index + 1]
+        If Task = A_Args[ArgIndex + 1]
         Return ""
-        Return A_Args[A_Index + 1]
+        Return A_Args[ArgIndex + 1]
     }
     Return ""
 }
