@@ -191,20 +191,19 @@ Else If TaskSwitch = "UpdateFiles" {
     CloseUpdater(UpdaterPID)
     
     Destination := A_Args[2]
-    
     If SubStr(Destination, -1) = "/" Or SubStr(Destination, -1) = "\"
     Destination := SubStr(Destination, 1, -1)
     
     If Not Destination {
-        MsgBox "Error: No directory specified.", "ReaHotkey Update"
+        MsgBox "No directory specified.", "Error"
         ExitApp
     }
     Else If Not FileExist(Destination) Or Not InStr(FileExist(Destination), "D") {
-        MsgBox "Error: `"" . Destination . "`" is not a valid directory.", "ReaHotkey Update"
+        MsgBox "`"" . Destination . "`" is not a valid directory.", "Error"
         ExitApp
     }
     Else If Destination = A_ScriptDir {
-        MsgBox "Error: The destination directory can not be the same as the source directory.", "ReaHotkey Update"
+        MsgBox "The destination directory can not be the same as the source directory.", "Error"
         ExitApp
     }
     
@@ -212,14 +211,36 @@ Else If TaskSwitch = "UpdateFiles" {
     DirCopy A_ScriptDir, Destination, 1
     StatusDialog.Destroy()
     
-    RunCMD := PrepareRunCMD("UpdateComplete ParentPID " . ParentPID . " UpdaterPID " . CurrentPID)
+    RunCMD := PrepareRunCMD("UpdateComplete `"" . Destination . "`" ParentPID " . ParentPID . " UpdaterPID " . CurrentPID)
     Run RunCMD
     
     ExitApp
 }
 Else If TaskSwitch = "UpdateComplete" {
     
+    If A_Args.Length < 2 {
+        MsgBox "Not enough parameters.", "Error"
+        ExitApp
+    }
+    
     CloseUpdater(UpdaterPID)
+    
+    Destination := A_Args[2]
+    If SubStr(Destination, -1) = "/" Or SubStr(Destination, -1) = "\"
+    Destination := SubStr(Destination, 1, -1)
+    
+    If Not Destination {
+        MsgBox "No directory specified.", "Error"
+        ExitApp
+    }
+    Else If Not FileExist(Destination) Or Not InStr(FileExist(Destination), "D") {
+        MsgBox "`"" . Destination . "`" is not a valid directory.", "Error"
+        ExitApp
+    }
+    Else If Destination = A_ScriptDir {
+        MsgBox "The destination directory can not be the same as the source directory.", "Error"
+        ExitApp
+    }
     
     If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D") {
         StatusDialog := ShowStatusDialog("Cleaning up files...")
