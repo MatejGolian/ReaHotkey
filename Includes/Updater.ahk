@@ -113,13 +113,8 @@ If TaskSwitch = "Download" {
     DestinationFile := A_Args[3]
     UpdateDownload := FileDownload(URL, DestinationFile, "ReaHotkey Update")
     
-    UpdateDownload.Start(PrepareRunCMD("Extract `"" . DestinationFile . "`" UpdaterPID " . CurrentPID), PrepareRunCMD("DownloadCleanup UpdaterPID " . CurrentPID))
-    
-    If Not UpdateDownload.Complete {
-        CMDToRun := PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID)
-        Run CMDToRun
-        ExitApp
-    }
+    UpdateDownload.Start(PrepareRunCMD("Extract `"" . DestinationFile . "`" UpdaterPID " . CurrentPID), PrepareRunCMD("DownloadCleanup UpdaterPID " . CurrentPID), PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID))
+    ExitApp
     
 }
 Else If TaskSwitch = "DownloadFailed" {

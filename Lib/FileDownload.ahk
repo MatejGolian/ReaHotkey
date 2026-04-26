@@ -11,6 +11,7 @@ Class FileDownload {
     PercentComplete := 0
     RunOnCancel := False
     RunOnCompletion := False
+    RunOnFailure := False
     Size := 0
     URL := ""
     
@@ -126,9 +127,10 @@ Class FileDownload {
         }
     }
     
-    Start(RunOnCompletion := False, RunOnCancel := False) {
+    Start(RunOnCompletion := False, RunOnCancel := False, RunOnFailure := False) {
         This.RunOnCancel := RunOnCancel
         This.RunOnCompletion := RunOnCompletion
+        This.RunOnFailure := RunOnFailure
         If Not This.URL {
             MsgBox "No URL specified.", This.DialogTitle
             ExitApp
@@ -146,7 +148,15 @@ Class FileDownload {
         }
         SplitPath This.DestinationFile,, &DestinationDir
         DirCreate DestinationDir
-        Download This.URL, This.DestinationFile
+        Try {
+            Download This.URL, This.DestinationFile
+        }
+        Catch {
+            SetTimer ObjBindMethod(This, "UpdateStatus"), 0
+            This.DestroyDialog()
+            If This.RunOnFailure
+            Run RunOnFailure
+        }
         This.CurrentSize := This.GetCurrentSize()
         If This.CurrentSize = This.Size {
             This.Complete := True
