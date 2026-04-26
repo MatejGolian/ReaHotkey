@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.9f] - 2026-04-26
+
 ### Fixed
 
 -   Fixed regression introduced in the previous release where the updater would close prematurely
@@ -620,7 +622,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9e...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9f...HEAD
+
+[0.9.9f]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9e...0.9.9f
 
 [0.9.9e]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9d...0.9.9e
 
