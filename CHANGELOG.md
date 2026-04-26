@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.9b] - 2026-04-26
+
 ### Fixed
 
 -   Updater: Fixed update completion step
@@ -596,7 +598,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9a...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9b...HEAD
+
+[0.9.9b]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9a...0.9.9b
 
 [0.9.9a]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9...0.9.9a
 
