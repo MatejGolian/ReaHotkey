@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.9a] - 2026-04-26
+
 ### Added
 
 -   Updater: Make it possible to reinstall the script even without using the command line
@@ -590,7 +592,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9a...HEAD
+
+[0.9.9a]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9...0.9.9a
 
 [0.9.9]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.8...0.9.9
 
