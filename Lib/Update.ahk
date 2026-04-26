@@ -195,4 +195,14 @@ Class Update {
         Return RunningUpdate
     }
     
+    Static Kill() {
+        RunningUpdate := This.IsRunning()
+        If RunningUpdate {
+            PrevDetectionSetting := A_DetectHiddenWindows
+            DetectHiddenWindows True
+            ProcessClose(WinGetPID("ahk_id " . RunningUpdate))
+            DetectHiddenWindows PrevDetectionSetting
+        }
+    }
+    
 }

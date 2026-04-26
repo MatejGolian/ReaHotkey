@@ -25,7 +25,7 @@ Class ReaHotkey {
         This.TurnPluginHotkeysOff()
         This.TurnStandaloneHotkeysOff()
         This.InitConfig()
-        This.InitUpdater()
+        This.Update.Kill()
         A_IconTip := "ReaHotkey"
         A_TrayMenu.Delete
         A_TrayMenu.Add("&Configuration...", ObjBindMethod(This, "ShowConfigBox"))
@@ -374,13 +374,6 @@ Class ReaHotkey {
         This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyEmulator", 0, {Label: "Use the following key combination to emulate the Applications key", Tab: "AppsKey Emulator", FuncOnChange: ObjBindMethod(This, "ToggleAppsKeyEmulatorControlsEnabled")})
         This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyHK", "+^m", {Label: "Key combination", Type: "Hotkey", FuncOnInit: ObjBindMethod(This, "InitAppsKeyControl"), FuncOnChange: ObjBindMethod(This, "ChangeAppsKeyCombo")})
         This.Config.Add("ReaHotkey.ini", "Config", "AppsKeyWinMod", 1, {Label: "Add the Windows key as an extra modifier", FuncOnInit: ObjBindMethod(This, "InitAppsKeyControl"), FuncOnSet: ObjBindMethod(This, "ManageAppsKeyEmulator")})
-    }
-    
-    Static InitUpdater() {
-        If A_IsCompiled = 0
-        Run A_AhkPath . " Includes/Updater.ahk"
-        Else
-        Run A_ScriptFullPath . " /script *UPDATE"
     }
     
     Static InPluginControl(ControlToCheck) {
