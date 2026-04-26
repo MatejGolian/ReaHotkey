@@ -16,7 +16,7 @@ CloseUpdater(TargetPID) {
 }
 
 GetArg(Name) {
-    TaskList := ["Download", "DownloadFailed", "DownloadCleanup", "Extract", "ExtractionCleanup", "UpdateFiles", "UpdateComplete"]
+    TaskList := ["Download", "DownloadFailed", "DownloadCleanup", "Extract", "ExtractionCleanup", "UpdateFiles", "UpdateCleanup", "UpdateComplete"]
     For ArgIndex, Arg In A_Args
     If Arg = Name
     If A_Args.Length >= ArgIndex + 1 {
@@ -98,8 +98,8 @@ If TaskSwitch = "Download" {
     ReaHotkeyAhkDir := Substr(A_ScriptDir, 1, -9)
     
     If Not UpdateDownload.Complete {
-        RunCMD := PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID)
-        Run RunCMD
+        CMDToRun := PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID)
+        Run CMDToRun
         ExitApp
     }
     
@@ -164,6 +164,7 @@ Else If TaskSwitch = "Extract" {
             ProcessWaitClose ParentPID, 3
         }
     }
+    
     Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`" ParentPID " . ParentPID . " UpdaterPID " . CurrentPID
     ExitApp
     
@@ -187,7 +188,6 @@ Else If TaskSwitch = "UpdateFiles" {
         ExitApp
     }
     
-    CloseUpdater(ParentPID)
     CloseUpdater(UpdaterPID)
     
     Destination := A_Args[2]
@@ -211,36 +211,37 @@ Else If TaskSwitch = "UpdateFiles" {
     DirCopy A_ScriptDir, Destination, 1
     StatusDialog.Destroy()
     
-    RunCMD := PrepareRunCMD("UpdateComplete `"" . Destination . "`" ParentPID " . ParentPID . " UpdaterPID " . CurrentPID)
-    Run RunCMD
+    If A_PtrSize * 8 = 64
+    ExeToRun := Destination . "\ReaHotkey_x64.exe"
+    Else
+    ExeToRun := Destination . "\ReaHotkey_x86.exe"
     
+    Run ExeToRun . " /script *UPDATE UpdateCleanup ParentPID " . ParentPID . " UpdaterPID " . CurrentPID
     ExitApp
-}
-Else If TaskSwitch = "UpdateComplete" {
     
-    If A_Args.Length < 2 {
-        MsgBox "Not enough parameters.", "Error"
-        ExitApp
-    }
+}
+Else If TaskSwitch = "UpdateCleanup" {
     
     CloseUpdater(UpdaterPID)
     
-    Destination := A_Args[2]
-    If SubStr(Destination, -1) = "/" Or SubStr(Destination, -1) = "\"
-    Destination := SubStr(Destination, 1, -1)
+    If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D") {
+        StatusDialog := ShowStatusDialog("Cleaning up files...")
+        PerformCleanup("All")
+        StatusDialog.Destroy()
+    }
     
-    If Not Destination {
-        MsgBox "No directory specified.", "Error"
-        ExitApp
-    }
-    Else If Not FileExist(Destination) Or Not InStr(FileExist(Destination), "D") {
-        MsgBox "`"" . Destination . "`" is not a valid directory.", "Error"
-        ExitApp
-    }
-    Else If Destination = A_ScriptDir {
-        MsgBox "The destination directory can not be the same as the source directory.", "Error"
-        ExitApp
-    }
+    If A_PtrSize * 8 = 64
+    ExeToRun := A_ScriptDir . "\ReaHotkey_x64.exe"
+    Else
+    ExeToRun := A_ScriptDir . "\ReaHotkey_x86.exe"
+    
+    Run ExeToRun . " /script *UPDATE UpdateComplete ParentPID " . ParentPID . " UpdaterPID " . CurrentPID
+    ExitApp
+    
+}
+Else If TaskSwitch = "UpdateComplete" {
+    
+    CloseUpdater(UpdaterPID)
     
     If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D") {
         StatusDialog := ShowStatusDialog("Cleaning up files...")
@@ -251,9 +252,9 @@ Else If TaskSwitch = "UpdateComplete" {
     MsgBox "Update complete.", "ReaHotkey Update"
     
     If A_PtrSize * 8 = 64
-    ExeToRun := Destination . "\ReaHotkey_x64.exe"
+    ExeToRun := A_ScriptDir . "\ReaHotkey_x64.exe"
     Else
-    ExeToRun := Destination . "\ReaHotkey_x86.exe"
+    ExeToRun := A_ScriptDir . "\ReaHotkey_x86.exe"
     
     Run ExeToRun
     ExitApp
@@ -265,8 +266,8 @@ Else {
     For CMDArg In A_Args
     CMDArgs .= CMDArg . " "
     
-    RunCMD := PrepareRunCMD("UpdateFiles " . CMDArgs)
-    Run RunCMD
+    CMDToRun := PrepareRunCMD("UpdateFiles " . CMDArgs)
+    Run CMDToRun
     ExitApp
     
 }
