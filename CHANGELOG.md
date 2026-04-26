@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.9c] - 2026-04-26
+
 ### Fixed
 
 -   Updater: Fixed files not getting cleaned up after update
@@ -602,7 +604,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9b...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9c...HEAD
+
+[0.9.9c]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9b...0.9.9c
 
 [0.9.9b]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9a...0.9.9b
 
