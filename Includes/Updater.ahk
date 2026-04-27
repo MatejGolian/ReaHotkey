@@ -252,6 +252,7 @@ Else If TaskSwitch = "ExtractionCleanup" {
 Else If TaskSwitch = "Update" {
     
     If A_Args.Length < 2 {
+        MsgBox "Not enough parameters.", "Error"
         ExitApp
     }
     
@@ -377,13 +378,17 @@ Else If TaskSwitch = "UpdateComplete" {
 }
 Else {
     
-    CMDArgs := ""
-    
-    For CMDArg In A_Args
-    CMDArgs .= CMDArg . " "
-    
-    CMDToRun := PrepareRunCMD("Update " . CMDArgs)
-    Run CMDToRun
-    ExitApp
+    If A_Args.Length > 0 {
+        
+        CMDArgs := ""
+        
+        For CMDArg In A_Args
+        CMDArgs .= "`"" . CMDArg . "`" "
+        
+        CMDToRun := PrepareRunCMD("Update " . CMDArgs)
+        Run CMDToRun
+        ExitApp
+        
+    }
     
 }

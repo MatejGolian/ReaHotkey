@@ -93,7 +93,7 @@ Class Update {
             If This.IsRunning() {
                 This.ActivateWindow()
             }
-            If DataError {
+            Else If DataError {
                 MsgBox "An error occurred.`nPlease try again later.", "ReaHotkey"
             }
             Else {
