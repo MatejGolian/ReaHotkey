@@ -159,7 +159,6 @@ Else If TaskSwitch = "DownloadFailed" {
     }
     
     MsgBox "Download failed.", UpdaterTitle
-    
     ExitApp
     
 }
@@ -184,7 +183,6 @@ Else If TaskSwitch = "Extract" {
     }
     
     CloseUpdater(UpdaterPID)
-    
     FileToExtract := A_Args[2]
     
     StatusDialog := ShowStatusDialog("Extracting files...", PrepareRunCMD("ExtractionCleanup UpdaterPID " . CurrentPID))
@@ -200,11 +198,6 @@ Else If TaskSwitch = "Extract" {
     
     StatusDialog := ShowStatusDialog("Preparing to update files...")
     
-    If A_PtrSize * 8 = 64
-    ExeToRun := A_Temp . "\" . ExtractionTempDir . "\" . X64Exe
-    Else
-    ExeToRun := A_Temp . "\" . ExtractionTempDir . "\" . X86Exe
-    
     If A_IsCompiled = 0 {
         If WinExist(ParentAhkDir . "\" . ParentAhkName . " ahk_class AutoHotkey") {
             WinKill ParentAhkDir . "\" . ParentAhkName . " ahk_class AutoHotkey"
@@ -217,6 +210,11 @@ Else If TaskSwitch = "Extract" {
             ProcessWaitClose ParentPID
         }
     }
+    
+    If A_PtrSize * 8 = 64
+    ExeToRun := A_Temp . "\" . ExtractionTempDir . "\" . X64Exe
+    Else
+    ExeToRun := A_Temp . "\" . ExtractionTempDir . "\" . X86Exe
     
     StatusDialog.Destroy()
     Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`" UpdaterPID " . CurrentPID
@@ -234,7 +232,6 @@ Else If TaskSwitch = "ExtractionFailed" {
     }
     
     MsgBox "Extraction failed.", UpdaterTitle
-    
     ExitApp
     
 }
@@ -258,8 +255,8 @@ Else If TaskSwitch = "Update" {
     }
     
     CloseUpdater(UpdaterPID)
-    
     Destination := A_Args[2]
+    
     If SubStr(Destination, -1) = "/" Or SubStr(Destination, -1) = "\"
     Destination := SubStr(Destination, 1, -1)
     
@@ -276,18 +273,23 @@ Else If TaskSwitch = "Update" {
         ExitApp
     }
     
-    StatusDialog := ShowStatusDialog("Updating files...")
+    If A_PtrSize * 8 = 64
+    ExeToRunOnCancel := Destination . "\" . X64Exe
+    Else
+    ExeToRunOnCancel := Destination . "\" . X86Exe
+    
+    StatusDialog := ShowStatusDialog("Updating files...", ExeToRunOnCancel)
     Try {
         DirCopy A_ScriptDir, Destination, 1
     }
     Catch {
         StatusDialog.Destroy()
-        Run PrepareRunCMD("UpdateFailed UpdaterPID " . CurrentPID)
+        Run PrepareRunCMD("UpdateFailed `"" . Destination . "`" UpdaterPID " . CurrentPID)
         Exit
     }
     StatusDialog.Destroy()
     
-    StatusDialog := ShowStatusDialog("Preparing to clean up files...")
+    StatusDialog := ShowStatusDialog("Preparing to clean up files...", ExeToRunOnCancel)
     
     If A_PtrSize * 8 = 64
     ExeToRun := Destination . "\" . X64Exe
@@ -301,9 +303,37 @@ Else If TaskSwitch = "Update" {
 }
 Else If TaskSwitch = "UpdateFailed" {
     
+    If A_Args.Length < 2 {
+        ExitApp
+    }
+    
     CloseUpdater(UpdaterPID)
+    Destination := A_Args[2]
+    
+    If SubStr(Destination, -1) = "/" Or SubStr(Destination, -1) = "\"
+    Destination := SubStr(Destination, 1, -1)
+    
+    If Not Destination {
+        MsgBox "No directory specified.", "Error"
+        ExitApp
+    }
+    Else If Not FileExist(Destination) Or Not InStr(FileExist(Destination), "D") {
+        MsgBox "`"" . Destination . "`" is not a valid directory.", "Error"
+        ExitApp
+    }
+    Else If Destination = A_ScriptDir {
+        MsgBox "The destination directory can not be the same as the source directory.", "Error"
+        ExitApp
+    }
+    
     MsgBox "Update failed.", UpdaterTitle
     
+    If A_PtrSize * 8 = 64
+    ExeToRun := Destination . "\" . X64Exe
+    Else
+    ExeToRun := Destination . "\" . X86Exe
+    
+    Run ExeToRun
     ExitApp
     
 }
@@ -311,18 +341,18 @@ Else If TaskSwitch = "UpdateCleanup" {
     
     CloseUpdater(UpdaterPID)
     
-    If FileExist(A_Temp . "\" . MainTempDir) And InStr(FileExist(A_Temp . "\" . MainTempDir), "D") {
-        StatusDialog := ShowStatusDialog("Cleaning up files...")
-        PerformCleanup("All")
-        StatusDialog.Destroy()
-    }
-    
-    StatusDialog := ShowStatusDialog("Preparing to complete update...")
-    
     If A_PtrSize * 8 = 64
     ExeToRun := A_ScriptDir . "\" . X64Exe
     Else
     ExeToRun := A_ScriptDir . "\" . X86Exe
+    
+    If FileExist(A_Temp . "\" . MainTempDir) And InStr(FileExist(A_Temp . "\" . MainTempDir), "D") {
+        StatusDialog := ShowStatusDialog("Cleaning up files...", ExeToRun)
+        PerformCleanup("All")
+        StatusDialog.Destroy()
+    }
+    
+    StatusDialog := ShowStatusDialog("Preparing to complete update...", ExeToRun)
     
     StatusDialog.Destroy()
     Run ExeToRun . " /script *UPDATE UpdateComplete UpdaterPID " . CurrentPID
@@ -332,15 +362,14 @@ Else If TaskSwitch = "UpdateCleanup" {
 Else If TaskSwitch = "UpdateComplete" {
     
     CloseUpdater(UpdaterPID)
-    
     MsgBox "Update complete.", UpdaterTitle
-    
-    StatusDialog := ShowStatusDialog("Launching " . AppName . "...")
     
     If A_PtrSize * 8 = 64
     ExeToRun := A_ScriptDir . "\" . X64Exe
     Else
     ExeToRun := A_ScriptDir . "\" . X86Exe
+    
+    StatusDialog := ShowStatusDialog("Launching " . AppName . "...", ExeToRun)
     
     StatusDialog.Destroy()
     Run ExeToRun
@@ -350,6 +379,7 @@ Else If TaskSwitch = "UpdateComplete" {
 Else {
     
     CMDArgs := ""
+    
     For CMDArg In A_Args
     CMDArgs .= CMDArg . " "
     
