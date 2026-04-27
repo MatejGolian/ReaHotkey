@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.9h] - 2026-04-27
+
 ### Changed
 
 -   Updater: Wait for running processes to close no matter how long it takes
@@ -632,7 +634,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9g...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9h...HEAD
+
+[0.9.9h]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9g...0.9.9h
 
 [0.9.9g]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9f...0.9.9g
 
