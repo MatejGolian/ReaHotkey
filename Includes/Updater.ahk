@@ -218,7 +218,7 @@ Else If TaskSwitch = "Extract" {
     ExeToRun := A_Temp . "\" . ExtractedTempDir . "\" . X86Exe
     
     StatusDialog.Destroy()
-    Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`" UpdaterPID " . CurrentPID
+    Run ExeToRun . " /script *UPDATE Update `"" . A_ScriptDir . "`" UpdaterPID " . CurrentPID
     ExitApp
     
 }
