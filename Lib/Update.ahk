@@ -5,6 +5,7 @@ Class Update {
     Static AllowReinstall := True
     Static JsonUrl := "https://api.github.com/repos/MatejGolian/ReaHotkey/releases"
     Static PerformUpdate := True
+    Static TempDirName := "ReaHotkey"
     
     Static ActivateWindow() {
         RunningUpdate := This.IsRunning()
@@ -23,6 +24,7 @@ Class Update {
             AccessibilityOverlay.Speak("Checking for updates...")
             NotificationBox := Object()
             Try {
+                DataError := False
                 WHR := ComObject("WinHttp.WinHttpRequest.5.1")
                 WHR.Open("GET", This.JsonUrl, True)
                 WHR.Send()
@@ -55,7 +57,8 @@ Class Update {
                 CurrentVersionIndex := LatestVersionIndex
             }
             Catch {
-                ShowErrorMessage()
+                DataError := True
+                ShowCheckingError()
                 Return False
             }
             If ForceUpdate {
@@ -90,17 +93,25 @@ Class Update {
             If This.IsRunning() {
                 This.ActivateWindow()
             }
+            If DataError {
+                MsgBox "An error occurred.`nPlease try again later.", "ReaHotkey"
+            }
             Else {
                 This.DeleteTempDir()
                 If A_IsCompiled = 0
-                Run A_AhkPath . " Includes/Updater.ahk Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`""
+                Run A_AhkPath . " Includes/Updater.ahk Download " . LatestAssetUrl . " `"" . A_Temp . "\" . This.TempDirName . "\" . LatestAssetName . "`""
                 Else
-                Run A_ScriptFullPath . " /script *UPDATE Download " . LatestAssetUrl . " `"" . A_Temp . "\ReaHotkey\" . LatestAssetName . "`""
+                Run A_ScriptFullPath . " /script *UPDATE Download " . LatestAssetUrl . " `"" . A_Temp . "\" . This.TempDirName . "\" . LatestAssetName . "`""
             }
         }
         ProceedToDownloadPage(*) {
             CloseNotificationBox()
-            Run LatestVersionUrl
+            If DataError {
+                MsgBox "An error occurred.`nPlease try again later.", "ReaHotkey"
+            }
+            Else {
+                Run LatestVersionUrl
+            }
         }
         ProcessNotificationText(Text) {
             Text := Trim(Text)
@@ -120,7 +131,7 @@ Class Update {
             }
             Return Text
         }
-        ShowErrorMessage() {
+        ShowCheckingError() {
             If This.PerformUpdate
             ShowNotificationBox("Error checking for new version!", "There was an error checking for the latest version`nis an internet connection present?!", False, "Update", False, True)
             Else
