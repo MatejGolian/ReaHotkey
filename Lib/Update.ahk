@@ -22,6 +22,11 @@ Class Update {
         If Not DialogOpen {
             If NotifyOnNoUpdate
             AccessibilityOverlay.Speak("Checking for updates...")
+            LatestAssetName := ""
+            LatestAssetUrl := ""
+            LatestVersion := ""
+            LatestVersionBody := ""
+            LatestVersionUrl := ""
             NotificationBox := Object()
             Try {
                 DataError := False
