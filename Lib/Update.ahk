@@ -169,6 +169,16 @@ Class Update {
         }
     }
     
+    Static Close() {
+        RunningUpdate := This.IsRunning()
+        If RunningUpdate {
+            PrevDetectionSetting := A_DetectHiddenWindows
+            DetectHiddenWindows True
+            ProcessClose(WinGetPID("ahk_id " . RunningUpdate))
+            DetectHiddenWindows PrevDetectionSetting
+        }
+    }
+    
     Static DeleteTempDir() {
         If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D")
         DirDelete A_Temp . "\ReaHotkey", True
@@ -189,16 +199,6 @@ Class Update {
         SetTitleMatchMode PrevTitleSetting
         DetectHiddenWindows PrevDetectionSetting
         Return RunningUpdate
-    }
-    
-    Static Kill() {
-        RunningUpdate := This.IsRunning()
-        If RunningUpdate {
-            PrevDetectionSetting := A_DetectHiddenWindows
-            DetectHiddenWindows True
-            ProcessClose(WinGetPID("ahk_id " . RunningUpdate))
-            DetectHiddenWindows PrevDetectionSetting
-        }
     }
     
 }

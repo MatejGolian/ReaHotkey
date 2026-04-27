@@ -25,7 +25,7 @@ Class ReaHotkey {
         This.TurnPluginHotkeysOff()
         This.TurnStandaloneHotkeysOff()
         This.InitConfig()
-        This.Update.Kill()
+        This.Update.Close()
         A_IconTip := "ReaHotkey"
         A_TrayMenu.Delete
         A_TrayMenu.Add("&Configuration...", ObjBindMethod(This, "ShowConfigBox"))

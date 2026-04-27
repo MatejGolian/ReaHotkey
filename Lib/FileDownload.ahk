@@ -131,40 +131,32 @@ Class FileDownload {
         This.RunOnCancel := RunOnCancel
         This.RunOnCompletion := RunOnCompletion
         This.RunOnFailure := RunOnFailure
-        If Not This.URL {
-            MsgBox "No URL specified.", This.DialogTitle
-            ExitApp
-        }
-        If Not This.DestinationFile {
-            MsgBox "No destination file specified.", This.DialogTitle
-            ExitApp
-        }
         This.Complete := False
         This.CurrentSize := 0
         This.PercentComplete := 0
         If This.Available {
             This.ShowDialog()
             SetTimer ObjBindMethod(This, "UpdateStatus"), 200
-        }
-        SplitPath This.DestinationFile,, &DestinationDir
-        DirCreate DestinationDir
-        Try {
-            Download This.URL, This.DestinationFile
-        }
-        Catch {
-            SetTimer ObjBindMethod(This, "UpdateStatus"), 0
-            This.DestroyDialog()
-            If This.RunOnFailure
-            Run RunOnFailure
-        }
-        This.CurrentSize := This.GetCurrentSize()
-        If This.CurrentSize = This.Size {
-            This.Complete := True
-            This.PercentComplete := 100
-            SetTimer ObjBindMethod(This, "UpdateStatus"), 0
-            This.DestroyDialog()
-            If This.RunOnCompletion
-            Run RunOnCompletion
+            SplitPath This.DestinationFile,, &DestinationDir
+            DirCreate DestinationDir
+            Try {
+                Download This.URL, This.DestinationFile
+            }
+            Catch {
+                SetTimer ObjBindMethod(This, "UpdateStatus"), 0
+                This.DestroyDialog()
+                If This.RunOnFailure
+                Run RunOnFailure
+            }
+            This.CurrentSize := This.GetCurrentSize()
+            If This.CurrentSize = This.Size {
+                This.Complete := True
+                This.PercentComplete := 100
+                SetTimer ObjBindMethod(This, "UpdateStatus"), 0
+                This.DestroyDialog()
+                If This.RunOnCompletion
+                Run RunOnCompletion
+            }
         }
     }
     
