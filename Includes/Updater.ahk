@@ -9,7 +9,8 @@ SetTitleMatchMode 2
 #Include ../Lib/FileDownload.ahk
 
 AppName := "ReaHotkey"
-ExtractionTempDir := "ReaHotkey\ReaHotkey"
+ExtractedTempDir := "ReaHotkey\ReaHotkey"
+ExtractionTempDir := "ReaHotkey"
 MainTempDir := "ReaHotkey"
 ParentAhkDir := GetParentAhkDir()
 ParentAhkName := "ReaHotkey.ahk"
@@ -84,14 +85,14 @@ ShowStatusDialog(Status, RunOnCancel := False, DisableCancel := False) {
 }
 
 PerformCleanup(CleanupOption := "All") {
-    Global ExtractionTempDir, MainTempDir
+    Global ExtractedTempDir, MainTempDir
     If FileExist(A_Temp . "\" . MainTempDir) And InStr(FileExist(A_Temp . "\" . MainTempDir), "D") {
         If CleanupOption = "All" {
             DirDelete A_Temp . "\" . MainTempDir, True
         }
         Else If CleanupOption = "Extracted" {
-            If FileExist(A_Temp . "\" . ExtractionTempDir) And InStr(FileExist(A_Temp . "\" . ExtractionTempDir), "D")
-            DirDelete A_Temp . "\" . ExtractionTempDir, True
+            If FileExist(A_Temp . "\" . ExtractedTempDir) And InStr(FileExist(A_Temp . "\" . ExtractedTempDir), "D")
+            DirDelete A_Temp . "\" . ExtractedTempDir, True
         }
     }
 }
@@ -187,7 +188,7 @@ Else If TaskSwitch = "Extract" {
     
     StatusDialog := ShowStatusDialog("Extracting files...", PrepareRunCMD("ExtractionCleanup UpdaterPID " . CurrentPID))
     Try {
-        DirCopy FileToExtract, A_Temp . "\" . MainTempDir, 1
+        DirCopy FileToExtract, A_Temp . "\" . ExtractionTempDir, 1
     }
     Catch {
         StatusDialog.Destroy()
@@ -212,9 +213,9 @@ Else If TaskSwitch = "Extract" {
     }
     
     If A_PtrSize * 8 = 64
-    ExeToRun := A_Temp . "\" . ExtractionTempDir . "\" . X64Exe
+    ExeToRun := A_Temp . "\" . ExtractedTempDir . "\" . X64Exe
     Else
-    ExeToRun := A_Temp . "\" . ExtractionTempDir . "\" . X86Exe
+    ExeToRun := A_Temp . "\" . ExtractedTempDir . "\" . X86Exe
     
     StatusDialog.Destroy()
     Run ExeToRun . " /script *UPDATE `"" . A_ScriptDir . "`" UpdaterPID " . CurrentPID
@@ -353,7 +354,6 @@ Else If TaskSwitch = "UpdateCleanup" {
     }
     
     StatusDialog := ShowStatusDialog("Preparing to complete update...", ExeToRun)
-    
     StatusDialog.Destroy()
     Run ExeToRun . " /script *UPDATE UpdateComplete UpdaterPID " . CurrentPID
     ExitApp
@@ -370,7 +370,6 @@ Else If TaskSwitch = "UpdateComplete" {
     ExeToRun := A_ScriptDir . "\" . X86Exe
     
     StatusDialog := ShowStatusDialog("Launching " . AppName . "...", ExeToRun)
-    
     StatusDialog.Destroy()
     Run ExeToRun
     ExitApp
