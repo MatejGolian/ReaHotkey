@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Updater: Wait for running processes to close no matter how long it takes
+
 ## [0.9.9g] - 2026-04-26
 
 ### Changed

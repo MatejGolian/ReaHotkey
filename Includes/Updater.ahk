@@ -12,7 +12,7 @@ CloseUpdater(TargetPID) {
     If Not TargetPID = WinGetPID("ahk_id " . A_ScriptHWND)
     If ProcessExist(TargetPID) {
         ProcessClose TargetPID
-        ProcessWaitClose TargetPID, 3
+        ProcessWaitClose TargetPID
     }
 }
 
@@ -168,13 +168,13 @@ Else If TaskSwitch = "Extract" {
     If A_IsCompiled = 0 {
         If WinExist(GetReaHotkeyAhkDir() . "\ReaHotkey.ahk ahk_class AutoHotkey") {
             WinClose GetReaHotkeyAhkDir() . "\ReaHotkey.ahk ahk_class AutoHotkey"
-            WinWaitClose GetReaHotkeyAhkDir() . "\ReaHotkey.ahk ahk_class AutoHotkey", 3
+            WinWaitClose GetReaHotkeyAhkDir() . "\ReaHotkey.ahk ahk_class AutoHotkey"
         }
     }
     Else {
         If ParentPID And ProcessExist(ParentPID) {
             WinKill "ahk_pid " . ParentPID
-            ProcessWaitClose ParentPID, 3
+            ProcessWaitClose ParentPID
         }
     }
     
