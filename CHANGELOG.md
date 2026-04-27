@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.9k] - 2026-04-27
+
 ### Changed
 
 -   Updater: Re-launch script upon cancel if needed
@@ -650,7 +652,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9j...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9k...HEAD
+
+[0.9.9k]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9j...0.9.9k
 
 [0.9.9j]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9i...0.9.9j
 
