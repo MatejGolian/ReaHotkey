@@ -130,15 +130,17 @@ If TaskSwitch = "Download" {
         
         UpdateDownload.Start(PrepareRunCMD("Extract `"" . DestinationFile . "`" UpdaterPID " . CurrentPID), PrepareRunCMD("DownloadCleanup UpdaterPID " . CurrentPID), PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID))
         
-    }
-    Else {
+        If Not UpdateDownload.Complete {
+            
+            Run PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID)
+            ExitApp
+            
+        }
         
-        Run PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID)
         ExitApp
         
     }
-    
-    If Not UpdateDownload.Complete {
+    Else {
         
         Run PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID)
         ExitApp
