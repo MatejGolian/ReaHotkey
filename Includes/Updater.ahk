@@ -6,17 +6,17 @@
 DetectHiddenWindows True
 SetTitleMatchMode 2
 
-#Include ../Lib/FileDownload.ahk
-
 AppName := "ReaHotkey"
 ExtractedTempDir := "ReaHotkey\ReaHotkey"
 ExtractionTempDir := "ReaHotkey"
 MainTempDir := "ReaHotkey"
-ParentAhkDir := GetParentAhkDir()
 ParentAhkName := "ReaHotkey.ahk"
+ThisFileSubdir := "Includes"
 UpdaterTitle := "ReaHotkey Update"
 X64Exe := "ReaHotkey_x64.exe"
 X86Exe := "ReaHotkey_x86.exe"
+
+#Include ../Lib/FileDownload.ahk
 
 CloseUpdater(TargetPID) {
     If Not TargetPID = WinGetPID("ahk_id " . A_ScriptHWND)
@@ -40,8 +40,10 @@ GetParam(Name) {
 }
 
 GetParentAhkDir() {
+    Global ThisFileSubdir
     If A_IsCompiled = 0
-    Return Substr(A_ScriptDir, 1, -9)
+    If Not ThisFileSubdir = ""
+    Return Substr(A_ScriptDir, 1, - (StrLen(ThisFileSubdir) + 1))
     Return A_ScriptDir
 }
 
@@ -106,14 +108,14 @@ PrepareRunCMD(ExtraArgs := "") {
     Return Trim(PreparedCMD)
 }
 
+CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
+ParentAhkDir := GetParentAhkDir()
+ParentPID := GetParentPID()
+PreviousPID := GetParam("PreviousPID")
 TaskSwitch := ""
 
 If A_Args.Length > 0
 TaskSwitch := A_Args[1]
-
-CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
-ParentPID := GetParentPID()
-PreviousPID := GetParam("PreviousPID")
 
 If TaskSwitch = "Download" {
     
