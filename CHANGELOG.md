@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.9m] - 2026-04-28
+
 ### Fixed
 
 -   Try to handle a rare bug when checking for updates (probably due to connection drop-outs)
@@ -663,7 +665,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9l...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9m...HEAD
+
+[0.9.9m]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9l...0.9.9m
 
 [0.9.9l]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9k...0.9.9l
 
