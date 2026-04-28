@@ -196,8 +196,8 @@ Class Update {
     }
     
     Static DeleteTempDir() {
-        If FileExist(A_Temp . "\ReaHotkey") And InStr(FileExist(A_Temp . "\ReaHotkey"), "D")
-        DirDelete A_Temp . "\ReaHotkey", True
+        If DirExist(A_Temp . "\" . This.TempDirName)
+        DirDelete A_Temp . "\" . This.TempDirName, True
     }
     
     Static GetHiddenWinTitle() {
