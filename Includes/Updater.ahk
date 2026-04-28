@@ -380,9 +380,17 @@ Else {
     
     If A_Args.Length > 0 {
         
+        DestDirIndex := 1
         CMDArgs := ""
         
         For CMDArg In A_Args
+        If DirExist(CMDArg) {
+            DestDirIndex := A_Index
+            Break
+        }
+        
+        For CMDArg In A_Args
+        If A_Index >= DestDirIndex
         CMDArgs .= "`"" . CMDArg . "`" "
         
         CMDToRun := PrepareRunCMD("Update " . CMDArgs)
