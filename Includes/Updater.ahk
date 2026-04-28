@@ -218,7 +218,12 @@ Else If TaskSwitch = "Extract" {
     ExeToRun := A_Temp . "\" . ExtractedTempDir . "\" . X86Exe
     
     StatusDialog.Destroy()
+    
+    If A_IsCompiled = 0
+    Run ExeToRun . " /script *UPDATE Update `"" . ParentAhkDir . "`" PreviousPID " . CurrentPID
+    Else
     Run ExeToRun . " /script *UPDATE Update `"" . A_ScriptDir . "`" PreviousPID " . CurrentPID
+    
     ExitApp
     
 }
