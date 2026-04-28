@@ -26,7 +26,7 @@ CloseUpdater(TargetPID) {
     }
 }
 
-GetArg(Name) {
+GetParam(Name) {
     TaskList := ["Download", "DownloadFailed", "DownloadCleanup", "Extract", "ExtractionFailed", "ExtractionCleanup", "Update", "UpdateFailed", "UpdateCleanup", "UpdateComplete"]
     For ArgIndex, Arg In A_Args
     If Arg = Name
@@ -113,7 +113,7 @@ TaskSwitch := A_Args[1]
 
 CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
 ParentPID := GetParentPID()
-UpdaterPID := GetArg("UpdaterPID")
+PreviousPID := GetParam("PreviousPID")
 
 If TaskSwitch = "Download" {
     
@@ -129,11 +129,11 @@ If TaskSwitch = "Download" {
     
     If UpdateDownload.Available {
         
-        UpdateDownload.Start(PrepareRunCMD("Extract `"" . DestinationFile . "`" UpdaterPID " . CurrentPID), PrepareRunCMD("DownloadCleanup UpdaterPID " . CurrentPID), PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID))
+        UpdateDownload.Start(PrepareRunCMD("Extract `"" . DestinationFile . "`" PreviousPID " . CurrentPID), PrepareRunCMD("DownloadCleanup PreviousPID " . CurrentPID), PrepareRunCMD("DownloadFailed PreviousPID " . CurrentPID))
         
         If Not UpdateDownload.Complete {
             
-            Run PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID)
+            Run PrepareRunCMD("DownloadFailed PreviousPID " . CurrentPID)
             ExitApp
             
         }
@@ -143,7 +143,7 @@ If TaskSwitch = "Download" {
     }
     Else {
         
-        Run PrepareRunCMD("DownloadFailed UpdaterPID " . CurrentPID)
+        Run PrepareRunCMD("DownloadFailed PreviousPID " . CurrentPID)
         ExitApp
         
     }
@@ -151,7 +151,7 @@ If TaskSwitch = "Download" {
 }
 Else If TaskSwitch = "DownloadFailed" {
     
-    CloseUpdater(UpdaterPID)
+    CloseUpdater(PreviousPID)
     
     If DirExist(A_Temp . "\" . MainTempDir) {
         StatusDialog := ShowStatusDialog("Cleaning up files...")
@@ -165,7 +165,7 @@ Else If TaskSwitch = "DownloadFailed" {
 }
 Else If TaskSwitch = "DownloadCleanup" {
     
-    CloseUpdater(UpdaterPID)
+    CloseUpdater(PreviousPID)
     
     If DirExist(A_Temp . "\" . MainTempDir) {
         StatusDialog := ShowStatusDialog("Cleaning up files...")
@@ -183,16 +183,16 @@ Else If TaskSwitch = "Extract" {
         ExitApp
     }
     
-    CloseUpdater(UpdaterPID)
+    CloseUpdater(PreviousPID)
     FileToExtract := A_Args[2]
     
-    StatusDialog := ShowStatusDialog("Extracting files...", PrepareRunCMD("ExtractionCleanup UpdaterPID " . CurrentPID))
+    StatusDialog := ShowStatusDialog("Extracting files...", PrepareRunCMD("ExtractionCleanup PreviousPID " . CurrentPID))
     Try {
         DirCopy FileToExtract, A_Temp . "\" . ExtractionTempDir, 1
     }
     Catch {
         StatusDialog.Destroy()
-        Run PrepareRunCMD("ExtractionFailed UpdaterPID " . CurrentPID)
+        Run PrepareRunCMD("ExtractionFailed PreviousPID " . CurrentPID)
         Exit
     }
     StatusDialog.Destroy()
@@ -218,13 +218,13 @@ Else If TaskSwitch = "Extract" {
     ExeToRun := A_Temp . "\" . ExtractedTempDir . "\" . X86Exe
     
     StatusDialog.Destroy()
-    Run ExeToRun . " /script *UPDATE Update `"" . A_ScriptDir . "`" UpdaterPID " . CurrentPID
+    Run ExeToRun . " /script *UPDATE Update `"" . A_ScriptDir . "`" PreviousPID " . CurrentPID
     ExitApp
     
 }
 Else If TaskSwitch = "ExtractionFailed" {
     
-    CloseUpdater(UpdaterPID)
+    CloseUpdater(PreviousPID)
     
     If DirExist(A_Temp . "\" . MainTempDir) {
         StatusDialog := ShowStatusDialog("Cleaning up files...")
@@ -238,7 +238,7 @@ Else If TaskSwitch = "ExtractionFailed" {
 }
 Else If TaskSwitch = "ExtractionCleanup" {
     
-    CloseUpdater(UpdaterPID)
+    CloseUpdater(PreviousPID)
     
     If DirExist(A_Temp . "\" . MainTempDir) {
         StatusDialog := ShowStatusDialog("Cleaning up files...")
@@ -256,7 +256,7 @@ Else If TaskSwitch = "Update" {
         ExitApp
     }
     
-    CloseUpdater(UpdaterPID)
+    CloseUpdater(PreviousPID)
     Destination := A_Args[2]
     
     If SubStr(Destination, -1) = "/" Or SubStr(Destination, -1) = "\"
@@ -286,7 +286,7 @@ Else If TaskSwitch = "Update" {
     }
     Catch {
         StatusDialog.Destroy()
-        Run PrepareRunCMD("UpdateFailed `"" . Destination . "`" UpdaterPID " . CurrentPID)
+        Run PrepareRunCMD("UpdateFailed `"" . Destination . "`" PreviousPID " . CurrentPID)
         Exit
     }
     StatusDialog.Destroy()
@@ -299,7 +299,7 @@ Else If TaskSwitch = "Update" {
     ExeToRun := Destination . "\" . X86Exe
     
     StatusDialog.Destroy()
-    Run ExeToRun . " /script *UPDATE UpdateCleanup UpdaterPID " . CurrentPID
+    Run ExeToRun . " /script *UPDATE UpdateCleanup PreviousPID " . CurrentPID
     ExitApp
     
 }
@@ -309,7 +309,7 @@ Else If TaskSwitch = "UpdateFailed" {
         ExitApp
     }
     
-    CloseUpdater(UpdaterPID)
+    CloseUpdater(PreviousPID)
     Destination := A_Args[2]
     
     If SubStr(Destination, -1) = "/" Or SubStr(Destination, -1) = "\"
@@ -341,7 +341,7 @@ Else If TaskSwitch = "UpdateFailed" {
 }
 Else If TaskSwitch = "UpdateCleanup" {
     
-    CloseUpdater(UpdaterPID)
+    CloseUpdater(PreviousPID)
     
     If A_PtrSize * 8 = 64
     ExeToRun := A_ScriptDir . "\" . X64Exe
@@ -356,13 +356,13 @@ Else If TaskSwitch = "UpdateCleanup" {
     
     StatusDialog := ShowStatusDialog("Preparing to complete update...", ExeToRun)
     StatusDialog.Destroy()
-    Run ExeToRun . " /script *UPDATE UpdateComplete UpdaterPID " . CurrentPID
+    Run ExeToRun . " /script *UPDATE UpdateComplete PreviousPID " . CurrentPID
     ExitApp
     
 }
 Else If TaskSwitch = "UpdateComplete" {
     
-    CloseUpdater(UpdaterPID)
+    CloseUpdater(PreviousPID)
     MsgBox "Update complete.", UpdaterTitle
     
     If A_PtrSize * 8 = 64
