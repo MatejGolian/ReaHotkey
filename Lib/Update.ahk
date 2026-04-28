@@ -3,6 +3,7 @@
 Class Update {
     
     Static AllowReinstall := True
+    Static AppName := "ReaHotkey"
     Static JsonUrl := "https://api.github.com/repos/MatejGolian/ReaHotkey/releases"
     Static PerformUpdate := True
     Static TempDirName := "ReaHotkey"
@@ -99,7 +100,7 @@ Class Update {
                 This.ActivateWindow()
             }
             Else If DataError {
-                MsgBox "An error occurred.`nPlease try again later.", "ReaHotkey"
+                MsgBox "An error occurred.`nPlease try again later.", This.AppName
             }
             Else {
                 This.DeleteTempDir()
@@ -112,7 +113,7 @@ Class Update {
         ProceedToDownloadPage(*) {
             CloseNotificationBox()
             If DataError {
-                MsgBox "An error occurred.`nPlease try again later.", "ReaHotkey"
+                MsgBox "An error occurred.`nPlease try again later.", This.AppName
             }
             Else {
                 Run LatestVersionUrl
@@ -168,19 +169,19 @@ Class Update {
         }
         ShowUpdatePrompt() {
             If This.PerformUpdate
-            ShowNotificationBox("New version found!", "ReaHotkey " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, "Update", PerformUpdate, False)
+            ShowNotificationBox("New version found!", This.AppName . " " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, "Update", PerformUpdate, False)
             Else
-            ShowNotificationBox("New version found!", "ReaHotkey " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, "Proceed to download page", ProceedToDownloadPage, False)
+            ShowNotificationBox("New version found!", This.AppName . " " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, "Proceed to download page", ProceedToDownloadPage, False)
         }
         ShowUpToDateMessage() {
             If This.PerformUpdate {
                 If This.AllowReinstall
-                ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, "Reinstall", PerformUpdate, False)
+                ShowNotificationBox(This.AppName . " is up to date!", This.AppName . " is up to date - the current version is the latest.", False, "Reinstall", PerformUpdate, False)
                 Else
-                ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, "Update", False, True)
+                ShowNotificationBox(This.AppName . " is up to date!", This.AppName . " is up to date - the current version is the latest.", False, "Update", False, True)
             }
             Else {
-                ShowNotificationBox("ReaHotkey is up to date!", "ReaHotkey is up to date - the current version is the latest.", False, "Proceed to download page", False, True)
+                ShowNotificationBox(This.AppName . " is up to date!", This.AppName . " is up to date - the current version is the latest.", False, "Proceed to download page", False, True)
             }
         }
     }
