@@ -86,12 +86,12 @@ ShowStatusDialog(Status, RunOnCancel := False, DisableCancel := False) {
 
 PerformCleanup(CleanupOption := "All") {
     Global ExtractedTempDir, MainTempDir
-    If FileExist(A_Temp . "\" . MainTempDir) And InStr(FileExist(A_Temp . "\" . MainTempDir), "D") {
+    If DirExist(A_Temp . "\" . MainTempDir) {
         If CleanupOption = "All" {
             DirDelete A_Temp . "\" . MainTempDir, True
         }
         Else If CleanupOption = "Extracted" {
-            If FileExist(A_Temp . "\" . ExtractedTempDir) And InStr(FileExist(A_Temp . "\" . ExtractedTempDir), "D")
+            If DirExist(A_Temp . "\" . ExtractedTempDir)
             DirDelete A_Temp . "\" . ExtractedTempDir, True
         }
     }
@@ -153,7 +153,7 @@ Else If TaskSwitch = "DownloadFailed" {
     
     CloseUpdater(UpdaterPID)
     
-    If FileExist(A_Temp . "\" . MainTempDir) And InStr(FileExist(A_Temp . "\" . MainTempDir), "D") {
+    If DirExist(A_Temp . "\" . MainTempDir) {
         StatusDialog := ShowStatusDialog("Cleaning up files...")
         PerformCleanup("All")
         StatusDialog.Destroy()
@@ -167,7 +167,7 @@ Else If TaskSwitch = "DownloadCleanup" {
     
     CloseUpdater(UpdaterPID)
     
-    If FileExist(A_Temp . "\" . MainTempDir) And InStr(FileExist(A_Temp . "\" . MainTempDir), "D") {
+    If DirExist(A_Temp . "\" . MainTempDir) {
         StatusDialog := ShowStatusDialog("Cleaning up files...")
         PerformCleanup("All")
         StatusDialog.Destroy()
@@ -226,7 +226,7 @@ Else If TaskSwitch = "ExtractionFailed" {
     
     CloseUpdater(UpdaterPID)
     
-    If FileExist(A_Temp . "\" . MainTempDir) And InStr(FileExist(A_Temp . "\" . MainTempDir), "D") {
+    If DirExist(A_Temp . "\" . MainTempDir) {
         StatusDialog := ShowStatusDialog("Cleaning up files...")
         PerformCleanup("Extracted")
         StatusDialog.Destroy()
@@ -240,7 +240,7 @@ Else If TaskSwitch = "ExtractionCleanup" {
     
     CloseUpdater(UpdaterPID)
     
-    If FileExist(A_Temp . "\" . MainTempDir) And InStr(FileExist(A_Temp . "\" . MainTempDir), "D") {
+    If DirExist(A_Temp . "\" . MainTempDir) {
         StatusDialog := ShowStatusDialog("Cleaning up files...")
         PerformCleanup("Extracted")
         StatusDialog.Destroy()
@@ -266,7 +266,7 @@ Else If TaskSwitch = "Update" {
         MsgBox "No directory specified.", "Error"
         ExitApp
     }
-    Else If Not FileExist(Destination) Or Not InStr(FileExist(Destination), "D") {
+    Else If Not DirExist(Destination) {
         MsgBox "`"" . Destination . "`" is not a valid directory.", "Error"
         ExitApp
     }
@@ -319,7 +319,7 @@ Else If TaskSwitch = "UpdateFailed" {
         MsgBox "No directory specified.", "Error"
         ExitApp
     }
-    Else If Not FileExist(Destination) Or Not InStr(FileExist(Destination), "D") {
+    Else If Not DirExist(Destination) {
         MsgBox "`"" . Destination . "`" is not a valid directory.", "Error"
         ExitApp
     }
@@ -348,7 +348,7 @@ Else If TaskSwitch = "UpdateCleanup" {
     Else
     ExeToRun := A_ScriptDir . "\" . X86Exe
     
-    If FileExist(A_Temp . "\" . MainTempDir) And InStr(FileExist(A_Temp . "\" . MainTempDir), "D") {
+    If DirExist(A_Temp . "\" . MainTempDir) {
         StatusDialog := ShowStatusDialog("Cleaning up files...", ExeToRun)
         PerformCleanup("All")
         StatusDialog.Destroy()
