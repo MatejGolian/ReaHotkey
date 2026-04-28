@@ -52,8 +52,8 @@ Class ReaHotkey {
             If FirstArg = ScriptSwitch {
                 Args := ""
                 For Arg In A_Args
-                Args .= Arg . " "
-                Args := SubStr(Args, StrLen(FirstArg) + 1)
+                Args .= "`"" . Arg . "`" "
+                Args := SubStr(Args, StrLen(FirstArg) + 3)
                 If A_IsCompiled = 0 {
                     ScriptArg := SubStr(ScriptSwitch, 2) . ".ahk"
                     If Not FileExist(ScriptArg)

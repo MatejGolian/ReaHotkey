@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Updater: Improved default parameter handling
 
+### Fixed
+
+-   Fixed custom command line argument parsing
+
 ## [0.9.9m] - 2026-04-28
 
 ### Fixed
