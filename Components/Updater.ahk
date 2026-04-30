@@ -16,7 +16,7 @@ UpdaterTitle := "ReaHotkey Update"
 X64Exe := "ReaHotkey_x64.exe"
 X86Exe := "ReaHotkey_x86.exe"
 
-#Include ../Lib/FileDownload.ahk
+#Include <FileDownload>
 
 CloseUpdater(TargetPID) {
     If Not TargetPID = WinGetPID("ahk_id " . A_ScriptHWND)
