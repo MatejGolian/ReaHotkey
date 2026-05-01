@@ -105,7 +105,7 @@ Class Update {
             Else {
                 This.DeleteTempDir()
                 If A_IsCompiled = 0
-                Run A_AhkPath . " `"Components/Updater.ahk`" Download " . LatestAssetUrl . " `"" . A_Temp . "\" . This.TempDirName . "\" . LatestAssetName . "`""
+                Run A_AhkPath . " `"Updater/Updater.ahk`" Download " . LatestAssetUrl . " `"" . A_Temp . "\" . This.TempDirName . "\" . LatestAssetName . "`""
                 Else
                 Run A_ScriptFullPath . " /script *UPDATE Download " . LatestAssetUrl . " `"" . A_Temp . "\" . This.TempDirName . "\" . LatestAssetName . "`""
             }

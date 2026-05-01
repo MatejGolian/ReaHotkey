@@ -7,7 +7,7 @@ BuildNumber := "0"
 ;@Ahk2Exe-SetProductName ReaHotkey
 ;@Ahk2Exe-SetProductVersion %U_Version%
 ;@Ahk2Exe-SetOrigFilename %U_OrigFilename%
-;@Ahk2Exe-AddResource Components/Updater.ahk, UPDATE
+;@Ahk2Exe-AddResource Updater/Updater.ahk, UPDATE
 
 GetVersion() {
     Global Version, BuildNumber
