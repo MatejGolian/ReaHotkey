@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.9n] - 2026-05-02
+
 ### Changed
 
 -   Updater: Improved default parameter handling
@@ -673,7 +675,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9m...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9n...HEAD
+
+[0.9.9n]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9m...0.9.9n
 
 [0.9.9m]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9l...0.9.9m
 
