@@ -203,7 +203,7 @@ Class Update {
     
     Static GetHiddenWinTitle() {
         If A_IsCompiled = 0
-        Return A_ScriptDir . "\Includes\Updater.ahk - AutoHotkey v" A_AhkVersion
+        Return A_ScriptDir . "\Updater\Updater.ahk - AutoHotkey v" . A_AhkVersion
         Return A_ScriptFullPath . " - *UPDATE"
     }
     

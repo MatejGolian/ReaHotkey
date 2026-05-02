@@ -202,9 +202,9 @@ Else If TaskSwitch = "Extract" {
     StatusDialog := ShowStatusDialog("Preparing to update files...")
     
     If A_IsCompiled = 0 {
-        If WinExist(ParentAhkDir . "\" . ParentAhkName . " ahk_class AutoHotkey") {
-            WinKill ParentAhkDir . "\" . ParentAhkName . " ahk_class AutoHotkey"
-            WinWaitClose ParentAhkDir . "\" . ParentAhkName . " ahk_class AutoHotkey"
+        If WinExist(ParentAhkDir . "\" . ParentAhkName . " - AutoHotkey v" . A_AhkVersion) {
+            WinKill ParentAhkDir . "\" . ParentAhkName . " - AutoHotkey v" . A_AhkVersion
+            WinWaitClose ParentAhkDir . "\" . ParentAhkName . " - AutoHotkey v" . A_AhkVersion
         }
     }
     Else {

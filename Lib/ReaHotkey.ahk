@@ -37,10 +37,6 @@ Class ReaHotkey {
         A_TrayMenu.Add("&About...", ObjBindMethod(This, "ShowAboutBox"))
         A_TrayMenu.Add("&Quit", ObjBindMethod(This, "Quit"))
         A_TrayMenu.Default := "&Configuration..."
-        If A_IsCompiled = 0
-        Run A_AhkPath . " `"Updater/Updater.ahk`""
-        Else
-        Run A_ScriptFullPath . " /script *UPDATE"
         This.ManageAppsKeyEmulator()
         OnError ObjBindMethod(This, "HandleError")
         ForceUpdate := False
