@@ -2122,6 +2122,14 @@ Class TabControl Extends FocusableControl {
         Return This.Value
     }
     
+    RemoveTab(TabNumber) {
+        If This.Tabs.Has(TabNumber) {
+            This.Tabs.RemoveAt(TabNumber)
+            If This.CurrentTab > This.Tabs.Length
+            This.CurrentTab := 1
+        }
+    }
+    
     SpeakOnFocus(Speak := True) {
         Message := ""
         CheckResult := This.GetState()
