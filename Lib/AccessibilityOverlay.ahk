@@ -2058,6 +2058,19 @@ Class TabControl Extends FocusableControl {
         }
     }
     
+    AddTabsAt(Index, Tabs*) {
+        If Tabs.Length > 0
+        For TabObject In Tabs {
+            TabObject.SuperordinateControlID := This.ControlID
+            If Index = 0
+            This.Tabs.Push(TabObject)
+            Else If Index > This.Tabs.Length
+            This.Tabs.Push(TabObject)
+            Else
+            This.Tabs.InsertAt(Index + (A_Index - 1), TabObject)
+        }
+    }
+    
     Focus(Speak := True) {
         Super.Focus(Speak)
         This.PreviousTab := This.CurrentTab
@@ -2122,7 +2135,15 @@ Class TabControl Extends FocusableControl {
         Return This.Value
     }
     
-    RemoveTab(TabNumber) {
+    RemoveTab() {
+        If This.Tabs.Length > 0 {
+            This.Tabs.Pop()
+            If This.CurrentTab > This.Tabs.Length
+            This.CurrentTab := 1
+        }
+    }
+    
+    RemoveTabAt(TabNumber) {
         If This.Tabs.Has(TabNumber) {
             This.Tabs.RemoveAt(TabNumber)
             If This.CurrentTab > This.Tabs.Length
