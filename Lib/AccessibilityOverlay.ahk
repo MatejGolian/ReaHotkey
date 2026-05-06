@@ -467,7 +467,20 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     GetChildControl(Index) {
-        Return This.ChildControls.Get(Index, 0)
+        If This.ChildControls.Has(Index)
+        Return This.ChildControls[Index]
+        Return 0
+    }
+    
+    GetControlByNumber(ControlNumber) {
+        If This.ChildControls.Length = 0
+        Return This.CurrentControl
+        FocusableControlIDs :=This.GetFocusableControlIDs()
+        If ControlNumber > 0 And FocusableControlIDs.Length >= ControlNumber {
+            ControlID := FocusableControlIDs[ControlNumber]
+            Return AccessibilityOverlay.GetControl(ControlID)
+        }
+        Return 0
     }
     
     GetCurrentControl() {
