@@ -5,11 +5,26 @@ Class ReaHotkey {
     Static AbletonPluginTimer := False
     Static AutoFocusPluginOverlay := True
     Static AutoFocusStandaloneOverlay := True
+    Static CommonHotkeys := Map(
+    "Tab", TabHK,
+    "+Tab", ShiftTabHK,
+    "^Tab", ControlTabHK,
+    "^+Tab", ControlShiftTabHK,
+    "Left", LeftRightHK,
+    "Right", LeftRightHK,
+    "Up", UpDownHK,
+    "Down", UpDownHK,
+    "Enter", EnterSpaceHK,
+    "Space", EnterSpaceHK,
+    )
     Static Context := False
     Static CurrentPluginName := False
     Static CurrentStandaloneName := False
     Static FoundPlugin := False
     Static FoundStandalone := False
+    Static PluginHotkeys := Map(
+    "F6", F6HK,
+    )
     Static PreviousPluginName := False
     Static PreviousStandaloneName := False
     Static RequiredScreenWidth := 1920
@@ -20,7 +35,7 @@ Class ReaHotkey {
     Static SystemHotkeys := Array("#+^F1", "#+^F5", "#+^F12", "#+^A", "#+^E", "#+^P", "#+^Q", "#+^R", "#+^U", "Ctrl", "Tab", "+Tab", "^Tab", "+^Tab", "Left", "Right", "Up", "Down", "Enter", "Space", "F6")
     Static WinCoveredTimer := False
     
-    Static __New() {
+    Static Init() {
         Critical
         This.TurnPluginHotkeysOff()
         This.TurnStandaloneHotkeysOff()
@@ -745,19 +760,12 @@ Class ReaHotkey {
             HotIf
         }
         TurnCommonOff() {
-            Hotkey "Tab", "Off"
-            Hotkey "+Tab", "Off"
-            Hotkey "^Tab", "Off"
-            Hotkey "^+Tab", "Off"
-            Hotkey "Left", "Off"
-            Hotkey "Right", "Off"
-            Hotkey "Up", "Off"
-            Hotkey "Down", "Off"
-            Hotkey "Enter", "Off"
-            Hotkey "Space", "Off"
+            For HotkeyCommand, HotkeyAction In This.CommonHotkeys
+            Hotkey HotkeyCommand, "Off"
         }
         TurnPluginOn() {
-            Hotkey "F6", F6HK, "On"
+            For HotkeyCommand, HotkeyAction In This.PluginHotkeys
+            Hotkey HotkeyCommand, "On"
         }
         TurnSpecificsOff(Type, Name) {
             If Name = "" {
@@ -802,19 +810,12 @@ Class ReaHotkey {
             HotIf
         }
         TurnCommonOn() {
-            Hotkey "Tab", TabHK, "On"
-            Hotkey "+Tab", ShiftTabHK, "On"
-            Hotkey "^Tab", ControlTabHK, "On"
-            Hotkey "^+Tab", ControlShiftTabHK, "On"
-            Hotkey "Left", LeftRightHK, "On"
-            Hotkey "Right", LeftRightHK, "On"
-            Hotkey "Up", UpDownHK, "On"
-            Hotkey "Down", UpDownHK, "On"
-            Hotkey "Enter", EnterSpaceHK, "On"
-            Hotkey "Space", EnterSpaceHK, "On"
+            For HotkeyCommand, HotkeyAction In This.CommonHotkeys
+            Hotkey HotkeyCommand, HotkeyAction, "On"
         }
         TurnPluginOn() {
-            Hotkey "F6", F6HK, "On"
+            For HotkeyCommand, HotkeyAction In This.PluginHotkeys
+            Hotkey HotkeyCommand, "On"
         }
         TurnSpecificsOn(Type, Name) {
             If Name = "" {
@@ -918,6 +919,6 @@ Class ReaHotkey {
         }
     }
     
-    #Include <Update>
+    #Include Update.ahk
     
 }

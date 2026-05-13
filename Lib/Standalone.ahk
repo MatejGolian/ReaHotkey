@@ -92,7 +92,7 @@ Class Standalone Extends Program {
     Class TriggerOverlayHotkey {
         Static Call(ThisHotkey) {
             If ReaHotkey.FoundStandalone Is Standalone And ReaHotkey.FoundStandalone.Overlay Is AccessibilityOverlay {
-                HotkeyWait(ThisHotkey)
+                AccessibilityOverlay.HotkeyWait(ThisHotkey)
                 ReaHotkey.FoundStandalone.Overlay.TriggerHotkey(ThisHotkey)
             }
         }

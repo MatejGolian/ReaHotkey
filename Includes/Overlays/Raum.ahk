@@ -26,7 +26,7 @@ Class Raum {
     
     Static ClickPresetMenu(HK) {
         PluginControlPos := KompleteKontrol.GetPluginControlPos()
-        HotkeyWait(HK)
+        AccessibilityOverlay.Helpers.HotkeyWait(HK)
         Click PluginControlPos.X + 265, PluginControlPos.Y + 15
         AccessibilityOverlay.Speak("Preset menu clicked.")
     }
@@ -109,13 +109,13 @@ Class Raum {
     }
     
     Static SayHelpMessage(HK) {
-        HotkeyWait(HK)
+        AccessibilityOverlay.Helpers.HotkeyWait(HK)
         AccessibilityOverlay.Speak("Press Alt+P to open the preset menu. Press Alt+N to hear the name of the currently loaded preset. Press Alt+H to hear this message.")
     }
     
     Static SayPresetName(HK) {
         PluginControlPos := KompleteKontrol.GetPluginControlPos()
-        HotkeyWait(HK)
+        AccessibilityOverlay.Helpers.HotkeyWait(HK)
         AccessibilityOverlay.Speak("Preset " . AccessibilityOverlay.Helpers.OCR("TesseractBest", PluginControlPos.X + 184, PluginControlPos.Y + 8, PluginControlPos.X + 364, PluginControlPos.Y + 28))
     }
     

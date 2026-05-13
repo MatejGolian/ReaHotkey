@@ -31,6 +31,8 @@ SetTitleMatchMode "RegEx"
 #Include <Tesseract>
 #Include <UIA>
 
+ReaHotkey.Init()
+
 #Include Includes/Hotkey.Contexts.ahk
 #Include Includes/Hotkey.Functions.ahk
 #Include Includes/Overlay.Definitions.ahk

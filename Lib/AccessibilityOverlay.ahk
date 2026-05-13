@@ -1041,6 +1041,37 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Return Window
         }
         
+        Static _HotkeyWait(ThisHotkey) {
+            Stripped := RegExReplace(ThisHotkey, "i)[$~*]{0,3}(.*)", "$1")
+            RegExMatch(Stripped, "i)(?:([<>!^#+]+)|(?:(\S+) +& +))?(\S+)", &M)
+            Keys := array()
+            If M[1] {
+                Index := 1
+                Loop StrLen(M[1]) {
+                    Str := SubStr(M[1], Index++, 1)
+                    LR := ""
+                    (Str = "<") && LR := "L"
+                    (Str = ">") && LR := "R"
+                    Switch LR ? SubStr(M[1], Index++, 1) : Str {
+                        Case "!":
+                        Keys.Push(LR "Alt")
+                        Case "^":
+                        Keys.Push(LR "Ctrl")
+                        Case "+":
+                        Keys.Push(LR "Shift")
+                        Case "#":
+                        Keys.Push((LR||"L") "Win")
+                    }
+                }
+                } Else If M[2] {
+                    Keys.Push(M[2])
+                }
+                Keys.Push(M[3])
+                For K in Keys {
+                    KeyWait K
+                }
+        }
+        
         Static _InArray(Needle, Haystack, CaseSensitive := False) {
             For FoundIndex, FoundValue In Haystack
             If CaseSensitive {
