@@ -43,15 +43,15 @@ Class ReaHotkey {
         This.Update.Close()
         A_IconTip := "ReaHotkey"
         A_TrayMenu.Delete
-        A_TrayMenu.Add("&Configuration...", ObjBindMethod(This, "ShowConfigBox"))
+        A_TrayMenu.Add("&Configuration…", ObjBindMethod(This, "ShowConfigBox"))
         A_TrayMenu.Add("&Pause", ObjBindMethod(This, "TogglePause"))
         A_TrayMenu.Add("&Reload", ObjBindMethod(This, "Reload"))
         A_TrayMenu.Add("&Enable AppsKey Emulator", ObjBindMethod(This, "ToggleAppsKeyEmulator"))
         A_TrayMenu.Add("&View Readme", ObjBindMethod(This, "ViewReadme"))
-        A_TrayMenu.Add("Check for &updates...", ObjBindMethod(This, "CheckForUpdates"))
-        A_TrayMenu.Add("&About...", ObjBindMethod(This, "ShowAboutBox"))
+        A_TrayMenu.Add("Check for &updates…", ObjBindMethod(This, "CheckForUpdates"))
+        A_TrayMenu.Add("&About…", ObjBindMethod(This, "ShowAboutBox"))
         A_TrayMenu.Add("&Quit", ObjBindMethod(This, "Quit"))
-        A_TrayMenu.Default := "&Configuration..."
+        A_TrayMenu.Default := "&Configuration…"
         This.ManageAppsKeyEmulator()
         OnError ObjBindMethod(This, "HandleError")
         ForceUpdate := False
