@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.9p] - 2026-05-15
+
 ### Changed/Fixed
 
 -   Various code fixes and improvements
@@ -685,7 +687,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9o...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9p...HEAD
+
+[0.9.9p]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9o...0.9.9p
 
 [0.9.9o]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9n...0.9.9o
 
