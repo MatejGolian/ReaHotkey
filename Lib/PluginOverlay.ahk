@@ -22,6 +22,17 @@ Class PluginOverlay Extends AccessibilityOverlay {
     
     AddControl(Control) {
         Control := Super.AddControl(Control)
+        This.CompensateCoordinates(Control)
+        Return Control
+    }
+    
+    AddControlAt(Index, Control) {
+        Control := Super.AddControlAt(Index, Control)
+        This.CompensateCoordinates(Control)
+        Return Control
+    }
+    
+    CompensateCoordinates(Control) {
         CompensationList := Array("PreExecFocusFunctions", "PreExecActivationFunctions", "ChangeFunctions")
         RequiredPropList := Array("Start", "End", "XCoordinate", "YCoordinate", "X1Coordinate", "Y1Coordinate", "X2Coordinate", "Y2Coordinate")
         If This.CompensationFunction Is Object {
@@ -61,7 +72,6 @@ Class PluginOverlay Extends AccessibilityOverlay {
                 }
             }
         }
-        Return Control
     }
     
     RegisterHotkey(Command) {

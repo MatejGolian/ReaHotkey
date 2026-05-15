@@ -18,11 +18,6 @@ Class StandaloneOverlay Extends AccessibilityOverlay {
         }
     }
     
-    AddControl(Control) {
-        Control := Super.AddControl(Control)
-        Return Control
-    }
-    
     RegisterHotkey(Command) {
         Standalone.SetHotkey(This.StandaloneName, Command)
     }
