@@ -119,7 +119,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return This.CurrentControl
         FocusableControls := This.GetFocusableControls()
         For FocusableControlObj In FocusableControls {
-            If FocusableControlObj.HasOwnProp("Label") And FocusableControlObj.Label = Label {
+            If FocusableControlObj.HasProp("Label") And FocusableControlObj.Label = Label {
                 If FocusableControlObj.ControlID = This.CurrentControlID {
                     This.ActivateCurrentControl()
                 }
@@ -175,7 +175,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     AddControl(Control) {
         Control.SuperordinateControlID := This.ControlID
         This.ChildControls.Push(Control)
-        If Control.HasOwnProp("HotkeyCommand") And Not Control.HotkeyCommand = ""
+        If Control.HasProp("HotkeyCommand") And Not Control.HotkeyCommand = ""
         This.RegisterHotkey(Control.HotkeyCommand)
         Return This.ChildControls[This.ChildControls.Length]
     }
@@ -187,7 +187,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Index := This.ChildControls.Length + 1
         Control.SuperordinateControlID := This.ControlID
         This.ChildControls.InsertAt(Index, Control)
-        If Control.HasOwnProp("HotkeyCommand") And Not Control.HotkeyCommand = ""
+        If Control.HasProp("HotkeyCommand") And Not Control.HotkeyCommand = ""
         This.RegisterHotkey(Control.HotkeyCommand)
         Return This.ChildControls[Index]
     }
@@ -304,7 +304,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         Return This.CurrentControl
         FocusableControls := This.GetFocusableControls()
         For FocusableControlObj In FocusableControls {
-            If FocusableControlObj.HasOwnProp("Label") And FocusableControlObj.Label = Label {
+            If FocusableControlObj.HasProp("Label") And FocusableControlObj.Label = Label {
                 If FocusableControlObj.ControlID = This.CurrentControlID {
                     This.FocusCurrentControl()
                 }
@@ -540,7 +540,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             If CurrentControl Is TabControl {
                 If CurrentControl.Tabs.Length > 0 {
                     CurrentTab := CurrentControl.Tabs[CurrentControl.CurrentTab]
-                    If CurrentTab.HasOwnProp("HotkeyCommand") And Not CurrentTab.HotkeyCommand = ""
+                    If CurrentTab.HasProp("HotkeyCommand") And Not CurrentTab.HotkeyCommand = ""
                     HotkeyedControlIDs.Push(CurrentTab.ControlID)
                     If CurrentTab.ChildControls.Length > 0 {
                         For CurrentTabControlID In CurrentTab.HotkeyedControlIDs
@@ -555,7 +555,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
             }
             Else {
-                If CurrentControl.HasOwnProp("HotkeyCommand") And Not CurrentControl.HotkeyCommand = ""
+                If CurrentControl.HasProp("HotkeyCommand") And Not CurrentControl.HotkeyCommand = ""
                 HotkeyedControlIDs.Push(CurrentControl.ControlID)
             }
         }
@@ -574,7 +574,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         OverlayHotkeys := Array()
         TempList := Map()
         For OverlayControl In This.GetAllControls()
-        If OverlayControl.HasOwnProp("HotkeyCommand") And Not OverlayControl.HotkeyCommand = ""
+        If OverlayControl.HasProp("HotkeyCommand") And Not OverlayControl.HotkeyCommand = ""
         TempList.Set(OverlayControl.HotkeyCommand, OverlayControl.HotkeyCommand)
         For OverlayHotkey In TempList
         OverlayHotkeys.Push(OverlayHotkey)
@@ -740,7 +740,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     
     TriggerHotkey(HotkeyCommand) {
         For ReachableControl In This.GetReachableControls()
-        If ReachableControl.HasOwnProp("HotkeyCommand") And ReachableControl.HotkeyCommand = HotkeyCommand {
+        If ReachableControl.HasProp("HotkeyCommand") And ReachableControl.HotkeyCommand = HotkeyCommand {
             ControlToTrigger := ReachableControl
             HotkeyFunctions := ReachableControl.HotkeyFunctions
             HotkeyTarget := ReachableControl

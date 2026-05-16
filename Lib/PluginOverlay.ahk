@@ -54,13 +54,13 @@ Class PluginOverlay Extends AccessibilityOverlay {
             For ControlItem In ControlList {
                 Found := False
                 For RequiredProp In RequiredPropList
-                If ControlItem.HasOwnProp(RequiredProp) {
+                If ControlItem.HasProp(RequiredProp) {
                     Found := True
                     Break
                 }
                 If Found
                 For CompensationItem In CompensationList
-                If ControlItem.HasOwnProp(CompensationItem) {
+                If ControlItem.HasProp(CompensationItem) {
                     Found := False
                     For ControlFunction In ControlItem.%CompensationItem%
                     If ControlFunction == This.CompensationFunction {

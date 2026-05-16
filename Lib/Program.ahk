@@ -223,9 +223,9 @@ Class Program {
         ProgramNumber := This.FindName(ProgramName)
         If ProgramNumber > 0 {
             Found := False
-            If ProgramOverlay.HasOwnProp("OverlayNumber")
+            If ProgramOverlay.HasProp("OverlayNumber")
             For OverlayIndex, OverlayEntry In This.List[ProgramNumber]["Overlays"]
-            If OverlayEntry.HasOwnProp("OverlayNumber") And OverlayEntry.OverlayNumber = ProgramOverlay.OverlayNumber {
+            If OverlayEntry.HasProp("OverlayNumber") And OverlayEntry.OverlayNumber = ProgramOverlay.OverlayNumber {
                 Found := True
                 OverlayNumber := ProgramOverlay.OverlayNumber
                 Break
@@ -309,7 +309,7 @@ Class Program {
                 This.List[ProgramNumber]["Timers"][TimerNumber]["Priority"] := Priority
             }
         }
-        If ReaHotkey.HasOwnProp("Found" . This.Prototype.__Class)
+        If ReaHotkey.HasProp("Found" . This.Prototype.__Class)
         If A_IsSuspended = 0 And TimerNumber > 0 And ReaHotkey.Found%This.Prototype.__Class% Is %This.Prototype.__Class% And ReaHotkey.Found%This.Prototype.__Class%.Name = ProgramName {
             This.List[ProgramNumber]["Timers"][TimerNumber]["Enabled"] := True
             SetTimer Function, Period, Priority

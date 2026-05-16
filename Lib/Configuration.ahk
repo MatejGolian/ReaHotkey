@@ -20,7 +20,7 @@ Class Configuration {
         Control := {Label: False, Tab: False, Type: "CheckBox", Options: False, Parameters: False, FuncOnInit: False, FuncOnChange: False, FuncOnSet: False}
         If ControlData Is Object
         For PropName, PropValue In Control.OwnProps()
-        If ControlData.HasOwnProp(PropName)
+        If ControlData.HasProp(PropName)
         Control.%PropName% := ControlData.%PropName%
         If Not This.PrevIousTab
         This.PrevIousTab := This.DefaultTab
