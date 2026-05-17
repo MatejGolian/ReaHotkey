@@ -132,17 +132,14 @@ Class ReaHotkey {
     }
     
     Static CheckForUpdates(Params*) {
-        Static DialogOpen := False
         If This.Update.IsRunning() {
             This.Update.ActivateWindow()
             Return
         }
-        If Not DialogOpen {
-            If Params.Length > 0
-            This.Update.Check(False, True)
-            Else
-            This.Update.Check(False, False)
-        }
+        If Params.Length > 0
+        This.Update.Check(False, True)
+        Else
+        This.Update.Check(False, False)
     }
     
     Static CheckIfWinCovered() {

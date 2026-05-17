@@ -5,6 +5,7 @@ Class Update {
     Static AllowReinstall := True
     Static AppName := "ReaHotkey"
     Static JsonUrl := "https://api.github.com/repos/MatejGolian/ReaHotkey/releases"
+    Static NotificationBox := False
     Static PerformUpdate := True
     Static TempDirName := "ReaHotkey"
     
@@ -19,8 +20,7 @@ Class Update {
     }
     
     Static check(ForceUpdate := False, NotifyOnNoUpdate := True) {
-        Static DialogOpen := False, DialogWinID := ""
-        If Not DialogOpen {
+        If Not This.NotificationBox {
             If NotifyOnNoUpdate
             AccessibilityOverlay.Speak("Checking for updates...")
             LatestAssetName := ""
@@ -28,7 +28,6 @@ Class Update {
             LatestVersion := ""
             LatestVersionBody := ""
             LatestVersionUrl := ""
-            NotificationBox := Object()
             Try {
                 DataError := False
                 WHR := ComObject("WinHttp.WinHttpRequest.5.1")
@@ -87,12 +86,11 @@ Class Update {
             }
         }
         Else {
-            WinActivate(DialogWinID)
+            This.NotificationBox.Show()
         }
         CloseNotificationBox(*) {
-            NotificationBox.Destroy()
-            DialogOpen := False
-            DialogWinID := ""
+            This.NotificationBox.Destroy()
+            This.NotificationBox := False
         }
         PerformUpdate(*) {
             CloseNotificationBox()
@@ -144,28 +142,32 @@ Class Update {
             ShowNotificationBox("Error checking for new version!", "There was an error checking for the latest version`nis an internet connection present?!", False, "Proceed to download page", False, True)
         }
         ShowNotificationBox(Title, Text, ProcessText := False, ActionButtonLabel := "Update", ActionButtonAction := False, DisableActionButton := False) {
-            If ProcessText
-            Text := ProcessNotificationText(Text)
-            NotificationBox := Gui(, Title)
-            NotificationBox.AddEdit("ReadOnly vText -WantReturn", Text)
-            If ActionButtonAction
-            NotificationBox.AddButton("Section vActionButton", ActionButtonLabel).OnEvent("Click", ActionButtonAction)
-            Else
-            NotificationBox.AddButton("Section vActionButton", ActionButtonLabel)
-            NotificationBox.AddButton("YP vClose", "Close").OnEvent("Click", CloseNotificationBox)
-            NotificationBox.OnEvent("Close", CloseNotificationBox)
-            NotificationBox.OnEvent("Escape", CloseNotificationBox)
-            If DisableActionButton {
-                NotificationBox["ActionButton"].Opt("+Disabled")
-                NotificationBox["Close"].Opt("+Default")
+            If This.NotificationBox = False {
+                If ProcessText
+                Text := ProcessNotificationText(Text)
+                NotificationBox := Gui(, Title)
+                NotificationBox.AddEdit("ReadOnly vText -WantReturn", Text)
+                If ActionButtonAction
+                NotificationBox.AddButton("Section vActionButton", ActionButtonLabel).OnEvent("Click", ActionButtonAction)
+                Else
+                NotificationBox.AddButton("Section vActionButton", ActionButtonLabel)
+                NotificationBox.AddButton("YP vClose", "Close").OnEvent("Click", CloseNotificationBox)
+                NotificationBox.OnEvent("Close", CloseNotificationBox)
+                NotificationBox.OnEvent("Escape", CloseNotificationBox)
+                If DisableActionButton {
+                    NotificationBox["ActionButton"].Opt("+Disabled")
+                    NotificationBox["Close"].Opt("+Default")
+                }
+                Else {
+                    NotificationBox["ActionButton"].Opt("-Disabled")
+                    NotificationBox["ActionButton"].Opt("+Default")
+                }
+                This.NotificationBox := NotificationBox
+                NotificationBox.Show()
             }
             Else {
-                NotificationBox["ActionButton"].Opt("-Disabled")
-                NotificationBox["ActionButton"].Opt("+Default")
+                This.NotificationBox.Show()
             }
-            NotificationBox.Show()
-            DialogOpen := True
-            DialogWinID := WinGetID("A")
         }
         ShowUpdatePrompt() {
             If This.PerformUpdate

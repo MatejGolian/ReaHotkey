@@ -3,7 +3,6 @@
 Class Configuration {
     
     ConfigBox := False
-    ConfigBoxWinID := ""
     DefaultTab := ""
     GuiControls := Map()
     PrevIousTab := False
@@ -42,7 +41,6 @@ Class Configuration {
     CloseBox(*) {
         This.ConfigBox.Destroy()
         This.ConfigBox := False
-        This.ConfigBoxWinID := ""
     }
     
     Get(SectionName, KeyNameOrNumber) {
@@ -172,10 +170,9 @@ Class Configuration {
             If IsSet(TabBox) And Not TabToSelect = 1
             TabBox.Choose(TabToSelect)
             This.ConfigBox.Show()
-            This.ConfigBoxWinID := WinGetID("A")
         }
         Else {
-            WinActivate(This.ConfigBoxWinID)
+            This.ConfigBox.Show()
         }
     }
     
