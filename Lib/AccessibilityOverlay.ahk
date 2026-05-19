@@ -1125,6 +1125,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         }
         
         Static _TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", OCRType := "") {
+            If Not X1Coordinate < X2Coordinate
+            Return ""
+            If Not Y1Coordinate < Y2Coordinate
+            Return ""
             If IsSet(Tesseract) {
                 Try {
                     If A_CoordModeMouse := "Client"
@@ -1148,6 +1152,10 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         }
         
         Static _UWPOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := 1) {
+            If Not X1Coordinate < X2Coordinate
+            Return ""
+            If Not Y1Coordinate < Y2Coordinate
+            Return ""
             If IsSet(OCR) {
                 AvailableLanguages := OCR.GetAvailableLanguages()
                 FirstAvailableLanguage := False
