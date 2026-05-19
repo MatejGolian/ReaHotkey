@@ -6,16 +6,16 @@ Class ReaHotkey {
     Static AutoFocusPluginOverlay := True
     Static AutoFocusStandaloneOverlay := True
     Static CommonHotkeys := Map(
-    "Tab", TabHK,
-    "+Tab", ShiftTabHK,
-    "^Tab", ControlTabHK,
     "^+Tab", ControlShiftTabHK,
-    "Left", LeftRightHK,
-    "Right", LeftRightHK,
-    "Up", UpDownHK,
-    "Down", UpDownHK,
+    "^Tab", ControlTabHK,
     "Enter", EnterSpaceHK,
     "Space", EnterSpaceHK,
+    "Left", LeftRightHK,
+    "Right", LeftRightHK,
+    "+Tab", ShiftTabHK,
+    "Tab", TabHK,
+    "Up", UpDownHK,
+    "Down", UpDownHK,
     )
     Static Context := False
     Static CurrentPluginName := False

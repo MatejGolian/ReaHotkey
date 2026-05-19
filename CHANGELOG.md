@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added new OverlayDesigner utility (supersedes the old HotspotHelper script)
+-   Added OverlayLoader for loading overlays made with the Designer directly in ReaHotkey
+
+### Fixed
+
+-   Fixed a bug where redefining hotkeys would fail
+
 ## [0.9.9p] - 2026-05-15
 
 ### Changed/Fixed

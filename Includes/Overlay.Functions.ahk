@@ -629,6 +629,33 @@ GetWinYCoordinate() {
     Return GetWinPos().Y
 }
 
+LoadRHKOverlay(ProjectFile) {
+    LoaderFunc := Object()
+    LoaderFunc.DefineProp("ProjectFile", {Value: ProjectFile})
+    LoaderFunc.DefineProp("Call", {call: CallLoaderFunc})
+    Return LoaderFunc
+    CallLoaderFunc(This, *) {
+        If IsSet(Editor)
+        CurrentProjectFile := Editor.ProjectFile
+        Else If IsSet(OverlayLoader)
+        CurrentProjectFile := OverlayLoader.ProjectFile
+        Else
+        CurrentProjectFile := ""
+        If  CurrentProjectFile
+        SplitPath CurrentProjectFile,, &CurrentDir
+        Else
+        CurrentDir := A_ScriptDir
+        ProjectFilePath := CurrentDir . "\" . This.ProjectFile
+        If IsSet(Editor) {
+            Editor.PerformOpen(ProjectFilePath)
+        }
+        Else {
+            If IsSet(OverlayLoader)
+            OverlayLoader.PerformLoad(ProjectFilePath)
+        }
+    }
+}
+
 InArray(Needle, Haystack, CaseSensitive := False) {
     For FoundIndex, FoundValue In Haystack
     If CaseSensitive {
@@ -711,6 +738,8 @@ ProduceMenu(Items, Handler, Type := "Standard") {
     CallMenuFunc(This, OverlayObj) {
         ReaHotkey.TurnPluginHotkeysOff()
         ReaHotkey.TurnStandaloneHotkeysOff()
+        If IsSet(Editor)
+        Editor.ToggleHKs("Off")
         This.Menu.Show()
     }
 }

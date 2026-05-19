@@ -46,7 +46,7 @@ Class Program {
                 This.Overlay.AddControl(%This.__Class%.DefaultOverlay.Clone())
                 This.Overlay.OverlayNumber := 0
             }
-            %This.__Class%.Instances.Push(This)
+            %This.__Class%.Instances.InsertAt(1, This)
             This.Init()
         }
     }
@@ -259,6 +259,7 @@ Class Program {
             If Not Action Is Object
             Action := This.TriggerOverlayHotkey
             This.List[ProgramNumber]["Hotkeys"].Push(Map("KeyName", KeyName, "Action", Action, "Options", Options.String, "State", Options.OnOff))
+            Return This.List[ProgramNumber]["Hotkeys"][This.List[ProgramNumber]["Hotkeys"].Length]
         }
         Else If HotkeyNumber > 0 {
             CurrentAction := This.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"]
@@ -272,11 +273,11 @@ Class Program {
             This.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Action"] := Action
             This.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["Options"] := Options.String
             This.List[ProgramNumber]["Hotkeys"][HotkeyNumber]["State"] := Options.OnOff
+            Return This.List[ProgramNumber]["Hotkeys"][HotkeyNumber]
         }
         Else {
             Return False
         }
-        Return True
     }
     
     Static SetHotkeyMode(ProgramName, Value) {

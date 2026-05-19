@@ -66,6 +66,9 @@ Just extract the downloaded archive and run one of the ReaHotkey executables dep
 * ctrl+shift+windows+f1 - view readme
 * ctrl+shift+windows+f5 - reload
 * ctrl+shift+windows+f12 - configuration
+* shift+windows+l - load custom overlay in the OverlayLoader (see the OverlayDesigner/Loader section [below](#overlaydesignerloader) for more details)
+* shift+windows+u - unload custom overlay
+* shift+windows+o - toggle OverlayLoader enabled/disabled
 
 ## Known Issues
 
@@ -147,9 +150,11 @@ If your keyboard does not have an Applications key, you can configure your own k
 To set up this functionality, open the configuration dialog and navigate to the AppsKey Emulator tab. The first checkbox toggles the emulator on/off. Whenever that checkbox is enabled, the settings for customizing your keyboard shortcut will become active. The hotkey field after the first checkbox is for entering the desired key combination itself. The second checkbox controls whether the Windows key should be added to the entered hotkey as an extra modifier. In other words, when that checkbox is checked, you will also have to press the Windows key in addition to the key combination in the hotkey field to emulate the Applications key.
 Note that the shortcut configured here is considered global and will thus function in all windows and even when most other functions of the script are paused. Key presses that would result in a blank value cause the hotkey field to reset to its initial default value. Furthermore, in case the resulting shortcut collides with one of the main hotkeys used by the script, the emulator will not become active - not even if the first checkbox on the AppsKey Emulator tab is checked.
 
-## About HotspotHelper
+## <a name="overlaydesignerloader"></a>About OverlayDesigner/Loader
 
-HotspotHelper is a special utility to make developing these kind of scripts a little easier. It retrieves window and control info and creates labelled hotspots that can be copied to clipboard for subsequent use.
+OverlayDesigner is a special utility that can create basic overlays in an interactive fashion and generate AutoHotkey code. It also assists with optaining various information that can come in handy when writing overlays, such as information about the active window or its controls. It can be used to create simple overlays for plug-ins or applications that ReaHotkey does not support out-of-the-box.
+The resulting files can be used directly in the designer, but they can also be loaded in ReaHotkey's OverlayLoader to make the user experience more hassle-free. Note that the OverlayLoader component included in ReaHotkey does not possess the editing capabilities of the full OverlayDesigner script.
+Also, at present the OverlayLoader script is only active in the Ableton and REAPER plug-in windows - using it in conjunction with standalone applications is not supported at this time.
 
 ## Roadmap
 

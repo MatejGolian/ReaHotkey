@@ -1,0 +1,48 @@
+#Requires AutoHotkey v2.0
+
+#SingleInstance Force
+#Warn
+#Warn LocalSameAsGlobal, Off
+CoordMode "Caret", "Client"
+CoordMode "Menu", "Client"
+CoordMode "Mouse", "Client"
+CoordMode "Pixel", "Client"
+CoordMode "ToolTip", "Client"
+SendMode "Input"
+SetTitleMatchMode "RegEx"
+
+#Include ../Lib/AccessibilityOverlay.ahk
+#Include ../Lib/AccessibleMenu.ahk
+#Include ../Lib/AccessiblePluginMenu.ahk
+#Include ../Lib/AccessibleStandaloneMenu.ahk
+#Include ../Lib/Configuration.ahk
+#Include ../Lib/ImagePut.ahk
+#Include ../Lib/JXON.ahk
+#Include ../Lib/OCR.ahk
+#Include ../Lib/Program.ahk
+#Include ../Lib/Plugin.ahk
+#Include ../Lib/PluginOverlay.ahk
+#Include ../Lib/ReaHotkey.ahk
+#Include ../Lib/Standalone.ahk
+#Include ../Lib/StandaloneOverlay.ahk
+#Include ../Lib/Tesseract.ahk
+#Include ../Lib/UIA.ahk
+
+#Include Lib/Editor.ahk
+#Include Lib/SpecialControls.ahk
+
+#Include ../Includes/Overlay.Functions.ahk
+#Include Includes/Helper.Functions.ahk
+#Include Includes/Hotkey.Functions.ahk
+#Include Includes/Menu.Handlers.ahk
+#Include Includes/Overlay.Functions.ahk
+#Include Includes/RHK.Hotkey.Contexts.ahk
+#Include Includes/ScreenArea2File.ahk
+
+#HotIf
+Editor.Init()
+
+#Include ../Includes/Version.ahk
+#Include *i ../Includes/CIVersion.ahk
+;@Ahk2Exe-SetDescription OverlayDesigner
+;@Ahk2Exe-SetProductName OverlayDesigner

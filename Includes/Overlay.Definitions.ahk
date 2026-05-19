@@ -10,6 +10,7 @@ Standalone.DefaultOverlay.AddStaticText("No overlay defined")
 Standalone.ChooserOverlay := StandaloneOverlay()
 Standalone.ChooserOverlay.AddCustomButton("Choose overlay",,, ActivateChooser).SetHotkey("!C", "Alt+C")
 
+#Include Overlays/OverlayLoader.ahk
 #Include Overlays/Kontakt7.ahk
 #Include Overlays/Kontakt8.ahk
 #Include Overlays/KompleteKontrol.ahk
