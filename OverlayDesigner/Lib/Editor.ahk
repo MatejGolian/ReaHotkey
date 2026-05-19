@@ -759,8 +759,13 @@ Class Editor {
             ReportError()
             Return
         }
-        If This.ProjectFile
-        This.PerformSave(This.ProjectFile, True)
+        If This.ProjectFile {
+            This.ToggleHKs("Off")
+            ConfirmationDialog := MsgBox("Save changes to " . This.ProjectFile . "?", This.AppName, 4)
+            If ConfirmationDialog == "Yes"
+            This.PerformSave(This.ProjectFile, True)
+            This.ToggleHKs("On")
+        }
         This.InitializeOverlay(ObjType)
         This.Overlay := This.AddFromJson(This.Overlay, JsonData, JsonData["RootID"])
         This.Overlay.Reset()
@@ -903,8 +908,13 @@ Class Editor {
             NewProjectBox := False
         }
         Create(*) {
-            If This.ProjectFile
-            This.PerformSave(This.ProjectFile, True)
+            If This.ProjectFile {
+                This.ToggleHKs("Off")
+                ConfirmationDialog := MsgBox("Save changes to " . This.ProjectFile . "?", This.AppName, 4)
+                If ConfirmationDialog == "Yes"
+                This.PerformSave(This.ProjectFile, True)
+                This.ToggleHKs("On")
+            }
             This.ProjectFile := ""
             This.InitializeOverlay(NewProjectBox["OverlayType"].Text)
             This.ClearClipboard()
