@@ -2,7 +2,7 @@
 
 AboutText := "
 (
-Press Shift+Windows+D to adtivate or deactivate the overlay editor.
+Press Shift+Windows+D to adtivate or deactivate the overlay designing/editing feature for the currently active window.
 Use standard commands to move through the overlay when the editor is active.
 Press the Applications key to open the editor context menu when a control has focus.
 Note that most project-related commands do not work when the editor feature is inactive. On the other hand, functions aimed at a more general purpose, such as those found in the script's Tools menu, remain accessible regardless of editor state.
