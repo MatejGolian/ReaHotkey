@@ -550,7 +550,6 @@ Class ReaHotkey {
                 This.PreviousPluginName := False
                 This.TurnPluginTimersOff()
                 This.TurnPluginHotkeysOff()
-                AccessibleMenu.CurrentMenu := False
             }
             Else {
                 This.CurrentPluginName := This.FoundPlugin.Name
@@ -578,7 +577,6 @@ Class ReaHotkey {
                 This.PreviousStandaloneName := False
                 This.TurnStandaloneTimersOff()
                 This.TurnStandaloneHotkeysOff()
-                AccessibleMenu.CurrentMenu := False
             }
             Else {
                 This.CurrentStandaloneName := This.FoundStandalone.Name
@@ -605,7 +603,6 @@ Class ReaHotkey {
             This.PreviousStandaloneName := False
             This.TurnStandaloneTimersOff()
             This.TurnStandaloneHotkeysOff()
-            AccessibleMenu.CurrentMenu := False
             AccessibilityOverlay.ClearLastMessage()
             AccessibilityOverlay.ClearSpeechQueue()
         }
@@ -724,7 +721,6 @@ Class ReaHotkey {
             This.TurnPluginHotkeysOff()
             This.TurnStandaloneTimersOff()
             This.TurnStandaloneHotkeysOff()
-            AccessibleMenu.CurrentMenu := False
         }
         Else {
             SetTimer This.StateManagementTimer, 200
