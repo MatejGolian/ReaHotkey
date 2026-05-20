@@ -11,6 +11,7 @@ Static AlwaysActiveHKs := Map(
 "#+Right", MoveMouseRightHK,
 "#+Up", MoveMouseUpHK,
 "#+Down", MoveMouseDownHK,
+"#+Enter", PerformMouseClickHK,
 "#+O", PerformOcrHK,
 "#+Q", QuitHK,
 "#+R", RepeatSearchForImageHK,

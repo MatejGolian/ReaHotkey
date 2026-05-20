@@ -38,6 +38,7 @@ Shift+Windows+Down - Move mouse down
 Shift+Windows+X - Set mouse X position
 Shift+Windows+Y - Set mouse Y position
 Shift+Windows+Z - Report mouse position
+Shift+Windows+Enter - Perform a mouse click at the current coordinates
 
 When The design editor Is Active:
 Applications - Open editor context menu

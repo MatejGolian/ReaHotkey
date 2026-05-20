@@ -231,6 +231,18 @@ PasteItemHK(ThisHotkey) {
     Editor.PasteItem()
 }
 
+PerformMouseClickHK(ThisHotkey) {
+    Try {
+        MouseGetPos &XPosition, &YPosition
+    }
+    Catch {
+        AccessibilityOverlay.Speak("Could not determine mouse position")
+        Return
+    }
+    Click XPosition, YPosition
+    AccessibilityOverlay.Speak("Mouse clicked at X " . XPosition . " Y " . YPosition)
+}
+
 PerformOcrHK(ThisHotkey) {
     PerformOCR(False)
 }
