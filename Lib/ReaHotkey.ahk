@@ -36,7 +36,6 @@ Class ReaHotkey {
     Static WinCoveredTimer := False
     
     Static Init() {
-        Critical
         This.TurnPluginHotkeysOff()
         This.TurnStandaloneHotkeysOff()
         This.InitConfig()
@@ -112,7 +111,7 @@ Class ReaHotkey {
         This.ManageAppsKeyEmulator()
         This.StateManagementTimer := ObjBindMethod(This, "ManageState")
         This.WinCoveredTimer := ObjBindMethod(This, "CheckIfWinCovered")
-        SetTimer This.StateManagementTimer, 200
+        SetTimer This.StateManagementTimer, 500
         If This.Config.Get("Config", "CheckIfWinCovered") = 1
         SetTimer This.WinCoveredTimer, 8000
     }
@@ -479,7 +478,6 @@ Class ReaHotkey {
     }
     
     Static ManageState() {
-        Critical
         Try {
             Loop
             CurrentWinID := GetCurrentWindowID()
@@ -723,7 +721,7 @@ Class ReaHotkey {
             This.TurnStandaloneHotkeysOff()
         }
         Else {
-            SetTimer This.StateManagementTimer, 200
+            SetTimer This.StateManagementTimer, 500
             If This.Config.Get("Config", "CheckIfWinCovered") = 1
             SetTimer This.WinCoveredTimer, 8000
         }
