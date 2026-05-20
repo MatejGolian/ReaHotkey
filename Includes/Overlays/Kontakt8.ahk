@@ -209,8 +209,33 @@ Class Kontakt8 {
         This.CloseBrowser("Plugin")
     }
     
+    Static ClosePluginWhatsNewDialog() {
+        This.CloseWhatsNewDialog("Plugin")
+    }
+    
     Static CloseStandaloneBrowser() {
         This.CloseBrowser("Standalone")
+    }
+    
+    Static CloseStandaloneWhatsNewDialog() {
+        This.CloseWhatsNewDialog("Standalone")
+    }
+    
+    Static CloseWhatsNewDialog(Type) {
+        Thread "NoTimers"
+        If Type = "Plugin"
+        UIAElement := This.GetPluginUIAElement()
+        Else
+        UIAElement := AccessibilityOverlay.Helpers.GetUIAWindow()
+        Try
+        UIAElement := UIAElement.FindElement({ClassName: "WhatsNewScreen", MatchMode: "Substring"})
+        Catch
+        UIAElement := False
+        If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = 50033 {
+            Try
+            UIAElement.WalkTree(2).Click()
+            AccessibilityOverlay.AddToSpeechQueue("What's new dialog closed.")
+        }
     }
     
     Static FocusHeaderButton(Type, HeaderButton) {
@@ -519,8 +544,13 @@ Class Kontakt8 {
         Static Call() {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 8", True, True, "C", 2)
+            LastMessage := AccessibilityOverlay.LastMessage
+            %ParentClass%.ClosePluginWhatsNewDialog()
             If ReaHotkey.Config.Get("Config", "CloseK8Browser") = 1
             %ParentClass%.ClosePluginBrowser()
+            AccessibilityOverlay.AddToSpeechQueue(LastMessage)
+            AccessibilityOverlay.ClearLastMessage()
+            AccessibilityOverlay.Speak()
             If ReaHotkey.Config.Get("Config", "DetectLibsInK8") = 1
             Plugin.SetTimer("Kontakt 8", PluginAutoChangeFunction, 500)
             Else
@@ -540,8 +570,13 @@ Class Kontakt8 {
     Class CheckStandaloneConfig {
         Static Call() {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
+            LastMessage := AccessibilityOverlay.LastMessage
+            %ParentClass%.CloseStandaloneWhatsNewDialog()
             If ReaHotkey.Config.Get("Config", "CloseK8Browser") = 1
             %ParentClass%.CloseStandaloneBrowser()
+            AccessibilityOverlay.AddToSpeechQueue(LastMessage)
+            AccessibilityOverlay.ClearLastMessage()
+            AccessibilityOverlay.Speak()
         }
     }
     
