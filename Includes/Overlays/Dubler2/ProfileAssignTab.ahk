@@ -1,7 +1,7 @@
 #Requires AutoHotkey v2.0
 
 ActivateChordsMidiChannelButton(ButtonObj, *) {
-    Local menu := AccessibleStandaloneMenu()
+    Local menu := StandaloneMenu()
 
     Loop 16 {
         menu.Add(A_Index, ClickChordsMidiChannel.Bind(A_Index, ButtonObj))
@@ -36,7 +36,7 @@ ClickChordsMidiChannel(Channel, ButtonObj, *) {
 }
 
 ActivatePitchMidiChannelButton(ButtonObj, *) {
-    Local menu := AccessibleStandaloneMenu()
+    Local menu := StandaloneMenu()
 
     Loop 16 {
         menu.Add(A_Index, ClickPitchMidiChannel.Bind(A_Index, ButtonObj))
@@ -71,7 +71,7 @@ ClickPitchMidiChannel(Channel, ButtonObj, *) {
 }
 
 ActivateTriggersMidiChannelButton(ButtonObj, *) {
-    Local menu := AccessibleStandaloneMenu()
+    Local menu := StandaloneMenu()
 
     Loop 16 {
         menu.Add(A_Index, ClickTriggersMidiChannel.Bind(A_Index, ButtonObj))

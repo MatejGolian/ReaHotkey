@@ -29,7 +29,7 @@ ClickTriggerButton(ButtonObj) {
 
     Click(ButtonObj.X, ButtonObj.Y)
 
-    TriggerMenu := AccessibleStandaloneMenu()
+    TriggerMenu := StandaloneMenu()
 
     TriggerMenu.Add("Start recording takes...", StartRecordingTakes)
     TriggerMenu.Add("Mute trigger", MuteTrigger.Bind(ButtonObj.Index))

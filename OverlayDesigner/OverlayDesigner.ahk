@@ -12,18 +12,18 @@ SendMode "Input"
 SetTitleMatchMode "RegEx"
 
 #Include ../Lib/AccessibilityOverlay.ahk
-#Include ../Lib/AccessibleMenu.ahk
-#Include ../Lib/AccessiblePluginMenu.ahk
-#Include ../Lib/AccessibleStandaloneMenu.ahk
 #Include ../Lib/Configuration.ahk
 #Include ../Lib/ImagePut.ahk
 #Include ../Lib/JXON.ahk
 #Include ../Lib/OCR.ahk
 #Include ../Lib/Program.ahk
 #Include ../Lib/Plugin.ahk
+#Include ../Lib/PluginMenu.ahk
 #Include ../Lib/PluginOverlay.ahk
 #Include ../Lib/ReaHotkey.ahk
+#Include ../Lib/ReaHotkeyMenu.ahk
 #Include ../Lib/Standalone.ahk
+#Include ../Lib/StandaloneMenu.ahk
 #Include ../Lib/StandaloneOverlay.ahk
 #Include ../Lib/Tesseract.ahk
 #Include ../Lib/UIA.ahk

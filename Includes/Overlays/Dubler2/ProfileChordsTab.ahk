@@ -2,7 +2,7 @@
 
 ActivateChordsOctaveShiftButton(ButtonObj) {
 
-    OctaveShiftMenu := AccessibleStandaloneMenu()
+    OctaveShiftMenu := StandaloneMenu()
 
     For Octave In [-3, -2, -1, 0, 1, 2, 3]
         OctaveShiftMenu.Add((Octave >= 0 ? "+" : "") . Octave, ClickChordsOctaveShiftButton.Bind(ButtonObj, Octave))

@@ -1,6 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 
-Class AccessiblePluginMenu Extends Menu {
+Class PluginMenu Extends Menu {
     
     Show() {
         ReaHotkey.TurnPluginTimersOff()

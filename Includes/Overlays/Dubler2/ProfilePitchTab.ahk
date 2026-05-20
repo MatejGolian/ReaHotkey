@@ -43,7 +43,7 @@ ActivatePitchInputGainButton(Button) {
 
 ActivatePitchOctaveShiftButton(ButtonObj) {
 
-    OctaveShiftMenu := AccessibleStandaloneMenu()
+    OctaveShiftMenu := StandaloneMenu()
 
     For Octave In [-3, -2, -1, 0, 1, 2, 3]
         OctaveShiftMenu.Add((Octave >= 0 ? "+" : "") . Octave, ClickPitchOctaveShiftButton.Bind(Button, Octave))
@@ -58,7 +58,7 @@ ActivateNotesButton(ButtonObj) {
     Notes := Dubler2.ProfileLoaded["Current"]["Scale"]["scaleNotes"]["data"]
     Enabled := Dubler2.ProfileLoaded["Current"]["Scale"]["toggleMask"]["data"]
 
-    NotesMenu := AccessibleStandaloneMenu()
+    NotesMenu := StandaloneMenu()
 
     If Notes != 4095 {
         NotesMenu.Add("You cannot add new notes to this scale without changing the key or scale. Please select a different key and/or scale instead.", ClickNotesButton)

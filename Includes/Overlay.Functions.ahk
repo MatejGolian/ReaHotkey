@@ -277,18 +277,18 @@ CreateOverlayMenu(Type, MenuHandler := False, HandlerParams*) {
     CurrentOverlay := Found.Overlay
     OverlayEntries := %Type%.GetOverlays(Found.Name)
     OverlayList := ""
-    OverlayMenu := Accessible%Type%Menu()
+    OverlayMenu := %Type%Menu()
     OverlayMenu.OverlayNumbers := Map()
     UnknownProductCounter := 1
     UnknownPatchCounter := 1
     If CurrentOverlay.HasProp("Metadata") And CurrentOverlay.Metadata.Has("Vendor") And Not CurrentOverlay.Metadata["Vendor"] = ""
-    CurrentVendor := CurrentOverlay.Metadata["Vendor"]
+    CurrentVendor := StrReplace(CurrentOverlay.Metadata["Vendor"], "&", "&&")
     Else
     CurrentVendor := ""
     ProductSubmenus := Map()
     For OverlayNumber, OverlayEntry In OverlayEntries {
         If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Vendor") And Not OverlayEntry.Metadata["Vendor"] = "" {
-            Vendor := OverlayEntry.Metadata["Vendor"]
+            Vendor := StrReplace(OverlayEntry.Metadata["Vendor"], "&", "&&")
         }
         Else {
             Vendor := ""
@@ -296,19 +296,19 @@ CreateOverlayMenu(Type, MenuHandler := False, HandlerParams*) {
         If Not ProductSubmenus.Has(Vendor)
         ProductSubmenus.Set(Vendor, Map())
         If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Product") And Not OverlayEntry.Metadata["Product"] = "" {
-            Product := OverlayEntry.Metadata["Product"]
+            Product := StrReplace(OverlayEntry.Metadata["Product"], "&", "&&")
         }
         Else If Not OverlayEntry.Label = "" {
-            Product := OverlayEntry.Label
+            Product := StrReplace(OverlayEntry.Label, "&", "&&")
         }
         Else {
             Product := "unknown product " . UnknownProductCounter
             UnknownProductCounter++
         }
         If OverlayEntry.HasProp("Metadata") And OverlayEntry.Metadata.Has("Patch") And Not OverlayEntry.Metadata["Patch"] = "" {
-            Patch  := OverlayEntry.Metadata["Patch"]
+            Patch  := StrReplace(OverlayEntry.Metadata["Patch"], "&", "&&")
             If Not ProductSubmenus[Vendor].Has(Product)
-            ProductSubmenus[Vendor].Set(Product, Accessible%Type%Menu())
+            ProductSubmenus[Vendor].Set(Product, %Type%Menu())
         }
         Else {
             Patch := "unknown patch " . UnknownPatchCounter
@@ -351,7 +351,7 @@ CreateOverlayMenu(Type, MenuHandler := False, HandlerParams*) {
         }
     }
     For Vendor, OverlayEntries In VendorSubmenus {
-        VendorSubmenu := Accessible%Type%Menu()
+        VendorSubmenu := %Type%Menu()
         VendorSubmenu.OverlayNumbers := Map()
         AddedProductSubmenus := Map()
         For ProductName, ProductSubmenu In ProductSubmenus[Vendor]
@@ -717,9 +717,11 @@ ProduceMenu(Items, Handler, Type := "Standard") {
     MenuFunc := Object()
     Switch Type {
         Case "Plugin":
-        MenuToProduce := "AccessiblePluginMenu"
+        MenuToProduce := "PluginMenu"
+        Case "ReaHotkey":
+        MenuToProduce := "ReaHotkeyMenu"
         Case "Standalone":
-        MenuToProduce := "AccessibleStandaloneMenu"
+        MenuToProduce := "StandaloneMenu"
         Case "Standard":
         MenuToProduce := "Menu"
         Default:
@@ -746,6 +748,10 @@ ProduceMenu(Items, Handler, Type := "Standard") {
 
 ProducePluginMenu(Items, Handler) {
     Return ProduceMenu(Items, Handler, "Plugin")
+}
+
+ProduceReaHotkeyMenu(Items, Handler) {
+    Return ProduceMenu(Items, Handler, "ReaHotkey")
 }
 
 ProduceSerialClick(Type, Coordinates*) {

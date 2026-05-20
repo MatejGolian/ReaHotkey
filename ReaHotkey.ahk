@@ -15,18 +15,18 @@ SetTitleMatchMode "RegEx"
 
 #Include Includes/Version.ahk
 #Include <AccessibilityOverlay>
-#Include <AccessibleMenu>
-#Include <AccessiblePluginMenu>
-#Include <AccessibleStandaloneMenu>
 #Include <Configuration>
 #Include <ImagePut>
 #Include <JXON>
 #Include <OCR>
 #Include <Program>
 #Include <Plugin>
+#Include <PluginMenu>
 #Include <PluginOverlay>
 #Include <ReaHotkey>
+#Include <ReaHotkeyMenu>
 #Include <Standalone>
+#Include <StandaloneMenu>
 #Include <StandaloneOverlay>
 #Include <Tesseract>
 #Include <UIA>

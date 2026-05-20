@@ -8,7 +8,7 @@ Class ProfileButton extends CustomButton {
 }
 
 Static ActivateProfileButton(ButtonObj) {
-    ActionsMenu := AccessibleStandaloneMenu()
+    ActionsMenu := StandaloneMenu()
     If ButtonObj.Index <= 5
         ActionsMenu.Add("Load Profile", ObjBindMethod(Dubler2, "LoadProfile", ButtonObj.Index, ButtonObj.ProfileFile))
     Else {
@@ -16,7 +16,7 @@ Static ActivateProfileButton(ButtonObj) {
         ActionsMenu.Disable("Only active profiles can be loaded")
     }
     If ButtonObj.Index > 5 {
-        MoveMenu := AccessibleStandaloneMenu()
+        MoveMenu := StandaloneMenu()
         MoveMenu.Add("Slot 1", ObjBindMethod(Dubler2, "MoveProfile", ButtonObj.ProfileFile, 1))
         MoveMenu.Add("Slot 2", ObjBindMethod(Dubler2, "MoveProfile", ButtonObj.ProfileFile, 2))
         MoveMenu.Add("Slot 3", ObjBindMethod(Dubler2, "MoveProfile", ButtonObj.ProfileFile, 3))
