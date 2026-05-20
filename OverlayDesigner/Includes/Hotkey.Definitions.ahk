@@ -30,7 +30,7 @@ Static AlwaysActiveHKs := Map(
 "#+W", ViewWindowInfo,
 )
 
-Static OnlyWhenActiveHKs := Map(
+Static OnlyWhenEditorActiveHKs := Map(
 "#+H", AddHotspotButtonHK,
 "AppsKey", ContextMenuHK,
 "+^Tab", ControlShiftTabHK,

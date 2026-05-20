@@ -6,7 +6,7 @@ ActionTriggerHK(ThisHotkey) {
         Return
     }
     If Editor.Active {
-        Editor.OnlyWhenActiveHKs[ThisHotkey].Call(ThisHotkey)
+        Editor.OnlyWhenEditorActiveHKs[ThisHotkey].Call(ThisHotkey)
         Return
     }
     AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)

@@ -29,7 +29,7 @@ Class Editor {
         Hotkey HKItem, HKAction
         For HKItem In This.HKsExemptFromPause
         Hotkey HKItem, This.AlwaysActiveHKs[HKItem], "S"
-        For HKItem In This.OnlyWhenActiveHKs {
+        For HKItem In This.OnlyWhenEditorActiveHKs {
             This.GeneralHKList.Push(HKItem)
             Hotkey HKItem, ActionTriggerHK
         }

@@ -3,17 +3,19 @@
 AboutText := "
 (
 Press Shift+Windows+D to adtivate or deactivate the overlay designing/editing feature for the currently active window.
-Use standard commands to move through the overlay when the editor is active.
+Use standard commands to move through the overlay when the design editor is active.
 Press the Applications key to open the editor context menu when a control has focus.
-Note that most project-related commands do not work when the editor feature is inactive. On the other hand, functions aimed at a more general purpose, such as those found in the script's Tools menu, remain accessible regardless of editor state.
+Note that most project-related commands do not work when the editor feature is inactive. On the other hand, functions aimed at a more general purpose, such as those found in the script's Tools menu, remain accessible regardless of editor state. They only become inactive when the script is paused.
 
 Keyboard Shortcuts
 
-Always active:
-Shift+Windows+D - Toggle editor active/inactive
-Shift+Windows+F1 - Open this window
+Always active, even when the script is paused:
 Shift+Windows+P - Toggle pause
+Shift+Windows+F1 - Open this window
 Shift+Windows+Q - Quit
+
+Always active, except when the script is paused:
+Shift+Windows+D - Toggle editor active/inactive
 Shift+Windows+Insert - Add marker at mouse cursor
 Shift+Windows+Del - Delete all markers
 Shift+Windows+F - Focus control
@@ -37,13 +39,13 @@ Shift+Windows+X - Set mouse X position
 Shift+Windows+Y - Set mouse Y position
 Shift+Windows+Z - Report mouse position
 
-When The Editor Is Active:
+When The design editor Is Active:
 Applications - Open editor context menu
 Ctrl+N - Create a new project
 Ctrl+O - Open an existing project
 Ctrl+S - Save project
 Ctrl+Alt+S - Save project as
-Shift+Windows+E - Generate AutoHotkey code for external use
+Shift+Windows+E - Generate AutoHotkey code for export
 Ctrl+Z - Undo
 Ctrl+X - Cut
 Ctrl+C - Copy
