@@ -9,7 +9,7 @@ CoordMode "Mouse", "Client"
 CoordMode "Pixel", "Client"
 CoordMode "ToolTip", "Client"
 SendMode "Input"
-SetTitleMatchMode "RegEx"
+SetTitleMatchMode 2
 
 #Include ../Lib/AccessibilityOverlay.ahk
 #Include ../Lib/Configuration.ahk
@@ -36,7 +36,6 @@ SetTitleMatchMode "RegEx"
 #Include Includes/Hotkey.Functions.ahk
 #Include Includes/Menu.Handlers.ahk
 #Include Includes/Overlay.Functions.ahk
-#Include Includes/RHK.Hotkey.Contexts.ahk
 #Include Includes/ScreenArea2File.ahk
 
 #HotIf

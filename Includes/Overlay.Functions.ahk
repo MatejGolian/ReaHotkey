@@ -738,10 +738,13 @@ ProduceMenu(Items, Handler, Type := "Standard") {
     MenuFunc.DefineProp("Call", {call: CallMenuFunc})
     Return MenuFunc
     CallMenuFunc(This, OverlayObj) {
-        ReaHotkey.TurnPluginHotkeysOff()
-        ReaHotkey.TurnStandaloneHotkeysOff()
-        If IsSet(Editor)
-        Editor.ToggleHKs("Off")
+        If IsSet(Editor) {
+            Editor.ToggleHKs("Off")
+        }
+        Else {
+            ReaHotkey.TurnPluginHotkeysOff()
+            ReaHotkey.TurnStandaloneHotkeysOff()
+        }
         This.Menu.Show()
     }
 }
