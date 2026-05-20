@@ -7,11 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Added/Updated
 
 -   Automatically close the What's New dialog in Kontakt 8
 -   Added new OverlayDesigner utility (supersedes the old HotspotHelper script)
 -   Added OverlayLoader for loading overlays made with the Designer directly in ReaHotkey
+-   Updated the Nucleus overlay
 
 ### Changed/Fixed
 

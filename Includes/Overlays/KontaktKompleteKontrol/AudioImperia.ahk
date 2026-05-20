@@ -87,8 +87,8 @@ Class AudioImperia {
         NucleusOverlay := PluginOverlay("Nucleus")
         NucleusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Nucleus", "Image", Map("File", "Images/SampleLibraries/Nucleus/Product.png"))
         NucleusOverlay.AddStaticText("Nucleus")
-        NucleusOverlay.AddGraphicalToggleButton("Classic Mix", This.%PluginClass%XOffset + 92, This.%PluginClass%YOffset + 239, This.%PluginClass%XOffset + 192, This.%PluginClass%YOffset + 319, "Images/SampleLibraries/Nucleus/ClassicMixOn.png", "Images/SampleLibraries/Nucleus/ClassicMixOff.png")
-        NucleusOverlay.AddGraphicalToggleButton("Modern Mix", This.%PluginClass%XOffset + 92, This.%PluginClass%YOffset + 269, This.%PluginClass%XOffset + 192, This.%PluginClass%YOffset + 319, "Images/SampleLibraries/Nucleus/ModernMixOn.png", "Images/SampleLibraries/Nucleus/ModernMixOff.png")
+        NucleusOverlay.AddHotspotButton("Classic Mix", This.%PluginClass%XOffset + 129, This.%PluginClass%YOffset + 263)
+        NucleusOverlay.AddHotspotButton("Modern Mix", This.%PluginClass%XOffset + 129, This.%PluginClass%YOffset + 297)
         %PluginClass%.PluginOverlays.Push(NucleusOverlay)
         
         SoloOverlay := PluginOverlay("Solo")
