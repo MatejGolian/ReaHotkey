@@ -14,11 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed/Fixed
 
--   Replace AccessibleMenus with derivations of the standard AHK Menu class
--   Various fixes and improvements
-
-### Fixed
-
+-   Replaced AccessibleMenus with derivations of the standard AHK Menu class
+-   Fixed Library Browser no longer closing in Kontakt 8.10.2
 -   Fixed a bug where redefining hotkeys would fail
 
 ## [0.9.9p] - 2026-05-15

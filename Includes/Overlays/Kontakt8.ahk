@@ -196,7 +196,7 @@ Class Kontakt8 {
         UIAElement := This.GetBrowser(Type)
         If UIAElement Is UIA.IUIAutomationElement {
             Try
-            UIAElement.Click("Left")
+            UIAElement.Click()
             LastMessage := AccessibilityOverlay.LastMessage
             AccessibilityOverlay.AddToSpeechQueue("Library Browser closed.")
             AccessibilityOverlay.AddToSpeechQueue(LastMessage)
