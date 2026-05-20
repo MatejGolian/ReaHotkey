@@ -560,12 +560,10 @@ Class Kontakt7 {
         Static Call() {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             Static PluginAutoChangeFunction := ObjBindMethod(AutoChangePluginOverlay,, "Kontakt 7", True, True, "C", 2)
-            LastMessage := AccessibilityOverlay.LastMessage
+            AccessibilityOverlay.ClearLastMessage()
             %ParentClass%.ClosePluginUpdateDialog()
             If ReaHotkey.Config.Get("Config", "CloseK7Browser") = 1
             %ParentClass%.ClosePluginBrowser()
-            AccessibilityOverlay.AddToSpeechQueue(LastMessage)
-            AccessibilityOverlay.ClearLastMessage()
             AccessibilityOverlay.Speak()
             If ReaHotkey.Config.Get("Config", "DetectLibsInK7") = 1
             Plugin.SetTimer("Kontakt 7", PluginAutoChangeFunction, 500)
@@ -585,12 +583,10 @@ Class Kontakt7 {
     Class CheckStandaloneConfig {
         Static Call() {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
-            LastMessage := AccessibilityOverlay.LastMessage
+            AccessibilityOverlay.ClearLastMessage()
             %ParentClass%.CloseStandaloneUpdateDialog()
             If ReaHotkey.Config.Get("Config", "CloseK7Browser") = 1
             %ParentClass%.CloseStandaloneBrowser()
-            AccessibilityOverlay.AddToSpeechQueue(LastMessage)
-            AccessibilityOverlay.ClearLastMessage()
             AccessibilityOverlay.Speak()
         }
     }
