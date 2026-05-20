@@ -11,7 +11,6 @@ Class Editor {
     Static Items := Map()
     Static Overlay := False
     Static OverlayHKList := Array()
-    Static PauseHK := "#+P"
     Static ProjectFile := ""
     Static Undo := {Json: False, ControlNumber: 0}
     
@@ -26,12 +25,10 @@ Class Editor {
         A_TrayMenu.Add("&Quit…", ObjBindMethod(This, "Quit"))
         This.Overlay := This.AddItem("AccessibilityOverlay", False).OverlayObj
         This.Overlay.CurrentControlID := This.Overlay.GetFocusableControlIDs()[1]
-        For HKItem, HKAction In This.AlwaysActiveHKs {
-            If HkItem = This.PauseHK
-            Hotkey HKItem, HKAction, "S"
-            Else
-            Hotkey HKItem, HKAction
-        }
+        For HKItem, HKAction In This.AlwaysActiveHKs
+        Hotkey HKItem, HKAction
+        For HKItem In This.HKsExemptFromPause
+        Hotkey HKItem, This.AlwaysActiveHKs[HKItem], "S"
         For HKItem In This.OnlyWhenActiveHKs {
             This.GeneralHKList.Push(HKItem)
             Hotkey HKItem, ActionTriggerHK

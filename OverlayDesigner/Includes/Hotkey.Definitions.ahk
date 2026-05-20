@@ -57,3 +57,5 @@ Static OnlyWhenActiveHKs := Map(
 "Up", UpDownHK,
 "Down", UpDownHK,
 )
+
+Static HKsExemptFromPause := ["#+Q", "#+F1", "#+P"]
