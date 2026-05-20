@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added new OverlayDesigner utility (supersedes the old HotspotHelper script)
 -   Added OverlayLoader for loading overlays made with the Designer directly in ReaHotkey
 
+### Changed/Fixed
+
+-   Replace AccessibleMenus with derivations of the standard AHK Menu class
+-   Various fixes and improvements
+
 ### Fixed
 
 -   Fixed a bug where redefining hotkeys would fail
