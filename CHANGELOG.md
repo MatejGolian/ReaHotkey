@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-05-20
+
 ### Added/Updated
 
 -   Automatically close the What's New dialog in Kontakt 8
@@ -700,7 +702,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9p...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.0...HEAD
+
+[1.0.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9p...1.0.0
 
 [0.9.9p]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9o...0.9.9p
 
