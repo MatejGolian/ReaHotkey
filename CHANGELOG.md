@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-05-21
+
 ### Changed
 
 -   Renamed 'combo boxes' to 'list boxes' as that feels more fitting
@@ -712,7 +714,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.1...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.2...HEAD
+
+[1.0.2]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.1...1.0.2
 
 [1.0.1]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.0...1.0.1
 
