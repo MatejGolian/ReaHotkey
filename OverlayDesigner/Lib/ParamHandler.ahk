@@ -330,6 +330,9 @@ Class ParamHandler {
     Static ValidateVarName(OverlayObj, Name, Value, Expression, Optional) {
         If Value = ""
         Return This.Error("You did not enter the variable name.")
+        For ItemType, ItemDefinition In Editor.ItemDefinitions
+        If Trim(Value) = ItemType
+        Return This.Error("You can't set `"" . ItemType . "`" as the variable name.")
         If Not RegExMatch(Value, "^([A-Za-z_][0-9A-Za-z_]+)$")
         Return This.Error("The variable name has an invalid format.")
         Return Value

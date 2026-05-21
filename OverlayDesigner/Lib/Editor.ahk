@@ -525,6 +525,8 @@ Class Editor {
             ControlIndex := 0
             For Param In This.GeneralParams {
                 ControlIndex++
+                If Not Item.HasProp(Param.Param)
+                Item.%Param.Param% := ""
                 Label := This.ParamHandler.GetFriendlyName(Param.Label) . ":"
                 If ControlIndex = 1
                 ParamBox.AddText(, Label)
@@ -544,7 +546,6 @@ Class Editor {
             If ItemDefinition.HasProp("RequiredParams")
             For Param In ItemDefinition.RequiredParams {
                 ControlIndex++
-                Label := This.ParamHandler.GetFriendlyName(Param.Name) . ":"
                 If Not Item.ObjParams.HasProp(Param.Name)
                 Item.ObjParams.%Param.Name% := ""
                 If Not Item.ExpressionParams.HasProp(Param.Name) {
@@ -554,6 +555,7 @@ Class Editor {
                     BoxExpression := 0
                     Item.ExpressionParams.%Param.Name% := BoxExpression
                 }
+                Label := This.ParamHandler.GetFriendlyName(Param.Name) . ":"
                 If ControlIndex = 1
                 ParamBox.AddText(, Label)
                 Else
@@ -645,7 +647,7 @@ Class Editor {
                     Try
                     Item.OverlayObj.%Key% := This.ParamHandler.MakeOverlayProp(Item.OverlayObj, Key, EditorBoxes[Key].Value, ExpressionBoxes[Key].Value, OptionalBoxes[Key])
                     Catch
-                    Item.OverlayObj.%Key% := EditorBoxes[Key].Value
+                    Item.OverlayObj.%Key% := Item.OverlayObj.%Key%
                 }
             }
             Close()
