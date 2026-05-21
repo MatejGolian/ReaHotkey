@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-05-21
+
 ### Changed
 
 -   OverlayDesigner: Improved error handling
@@ -706,7 +708,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.1...HEAD
+
+[1.0.1]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.0...1.0.1
 
 [1.0.0]: https://github.com/MatejGolian/ReaHotkey/compare/0.9.9p...1.0.0
 
