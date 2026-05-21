@@ -67,7 +67,7 @@ ChordsTab.AddControl(Dubler2.HotspotCheckbox("Root Note Bassline", 567, 535, Dub
 ChordsTab.AddControl(Dubler2.HotspotCheckbox("Follow Octaves", 798, 536, Dubler2.ProfileLoaded["Current"]["Chords"]["octaveFollow"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 ChordsTab.AddControl(CustomButton("Octave shift: " . (Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"] >= 0 ? "+" : "") . Dubler2.ProfileLoaded["Current"]["Chords"]["octaveShift"], ObjBindMethod(Dubler2, "FocusButton"), , ActivateChordsOctaveShiftButton))
 
-VoicingPresetCtrl := PopulatedComboBox("Voicing Preset", ObjBindMethod(Dubler2, "FocusComboBox"), , ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+VoicingPresetCtrl := PopulatedListBox("Voicing Preset", ObjBindMethod(Dubler2, "FocusListBox"), , ObjBindMethod(Dubler2, "SelectListBoxItem"))
 
 For Preset In ["Cluster", "Spread"] {
     VoicingPresetCtrl.AddItem(Preset, ClickVoicingPreset.Bind(Preset))
@@ -78,7 +78,7 @@ For Preset In ["Cluster", "Spread"] {
 
 ChordsTab.AddControl(VoicingPresetCtrl)
 
-ChordPresetCtrl := PopulatedComboBox("Chord Preset", ObjBindMethod(Dubler2, "FocusComboBox"), , ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+ChordPresetCtrl := PopulatedListBox("Chord Preset", ObjBindMethod(Dubler2, "FocusListBox"), , ObjBindMethod(Dubler2, "SelectListBoxItem"))
 
 Local Presets
     

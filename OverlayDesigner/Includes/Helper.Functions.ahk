@@ -186,7 +186,7 @@ ControlMenuHandler(ControlName, ControlNumber, ControlMenu) {
 
 NudgeCoordinates(*) {
     Static CoordinateBox := False
-    ItemTypeList := ["All controls", "Current control", "GraphicalButton", "GraphicalToggleButton", "HotspotButton", "HotspotToggleButton", "OCRButton", "GraphicalCheckbox", "HotspotCheckbox", "HotspotComboBox", "OCRComboBox", "HotspotEdit", "OCREdit", "GraphicalTab", "HotspotTab", "OCRTab", "OCRText"]
+    ItemTypeList := ["All controls", "Current control", "GraphicalButton", "GraphicalToggleButton", "HotspotButton", "HotspotToggleButton", "OCRButton", "GraphicalCheckbox", "HotspotCheckbox", "HotspotEdit", "OCREdit", "HotspotListBox", "OCRListBox", "GraphicalTab", "HotspotTab", "OCRTab", "OCRText"]
     If CoordinateBox = False {
         CoordinateBox := Gui("+OwnDialogs", "Nudge Item Coordinates")
         CoordinateBox.AddText(, "X offset:")

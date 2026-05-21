@@ -9,7 +9,7 @@ Class Zampler {
         
         ZamplerOverlay := PluginOverlay("Zampler", "Zampler", KompleteKontrol.CompensatePluginCoordinates)
         ZamplerOverlay.AddStaticText("Zampler")
-        FilterBox := CustomComboBox("Filter", [ObjBindMethod(This, "MoveToFilter"), ObjBindMethod(This, "GetFilter")],, ObjBindMethod(This, "ChangeFilter"))
+        FilterBox := CustomListBox("Filter", [ObjBindMethod(This, "MoveToFilter"), ObjBindMethod(This, "GetFilter")],, ObjBindMethod(This, "ChangeFilter"))
         ZamplerTabControl := ZamplerOverlay.AddTabControl()
         MainTab := HotspotTab("Main", 329, 210)
         MainTab.AddOCRButton("Patch", "Patch not detected", "TesseractBest", 296, 264, 496, 277)
@@ -19,13 +19,13 @@ Class Zampler {
         MainTab.AddHotspotButton("Save patch", 440, 242)
         MainTab.AddHotspotButton("SFZ/REX", 499, 244, [ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetSFZREXInstrument")],, ObjBindMethod(This, "ResetLabel"))
         MainTab.AddControl(This.PolyphonyBox("Polyphony", "not detected", "TesseractBest", 332, 364, 348, 380,,,,, [ObjBindMethod(This, "SendWheel"), ObjBindMethod(This, "FixPolyphony")]))
-        MainTab.AddOCRComboBox("Bend up", "not detected", "TesseractBest", 337, 392, 369, 408,,,,, ObjBindMethod(This, "SendWheel"))
-        MainTab.AddOCRComboBox("Bend down", "not detected", "TesseractBest", 428, 392, 460, 408,,,,, ObjBindMethod(This, "SendWheel"))
+        MainTab.AddOCRListBox("Bend up", "not detected", "TesseractBest", 337, 392, 369, 408,,,,, ObjBindMethod(This, "SendWheel"))
+        MainTab.AddOCRListBox("Bend down", "not detected", "TesseractBest", 428, 392, 460, 408,,,,, ObjBindMethod(This, "SendWheel"))
         MainTab.AddControl(FilterBox)
         ZamplerTabControl.AddTabs(MainTab)
         ModMatrixTab := HotspotTab("Mod matrix", 415, 210)
         ModMatrixTab.AddHotspotButton("SOURCE", 344, 246, [ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetModSource")],, ObjBindMethod(This, "ResetLabel"))
-        ModMatrixTab.AddOCRComboBox("AMOUNT", "not detected", "TesseractBest", 400, 240, 440, 260,,,,, ObjBindMethod(This, "SendWheel"))
+        ModMatrixTab.AddOCRListBox("AMOUNT", "not detected", "TesseractBest", 400, 240, 440, 260,,,,, ObjBindMethod(This, "SendWheel"))
         ModMatrixTab.AddHotspotButton("DESTINATION", 503, 246, [ObjBindMethod(This, "ResetLabel"), ObjBindMethod(This, "GetModDestination")],, ObjBindMethod(This, "ResetLabel"))
         ModMatrixTab.AddControl(FilterBox)
         ZamplerTabControl.AddTabs(ModMatrixTab)
@@ -176,7 +176,7 @@ Class Zampler {
         OverlayObj.Value := OverlayObj.GetValue()
     }
     
-    Class PolyphonyBox Extends OCRComboBox {
+    Class PolyphonyBox Extends OCRListBox {
         ExecuteOnFocusPreSpeech() {
             If This.Value And RegExMatch(This.Value, "\+|\-?[0-9]+") And This.Value < 8
             This.Value := 8

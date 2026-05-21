@@ -173,7 +173,7 @@ UpDownHK(ThisHotkey) {
     If Context {
         AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
         Switch(ReaHotkey.Found%Context%.Overlay.GetCurrentControlType()) {
-            Case "ComboBox":
+            Case "ListBox":
             If ThisHotkey = "Up"
             ReaHotkey.Found%Context%.Overlay.SelectPreviousOption()
             Else

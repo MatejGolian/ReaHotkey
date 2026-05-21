@@ -171,11 +171,11 @@ Static CreateAudioCalibrationOverlay(Overlay) {
 
     SelectInputChannel(Chan) {
         Dubler2.AudioSettings["audioDeviceInChans"] := ConvertBase(10, 2, 1 << (Chan - 1))
-        Dubler2.SelectComboBoxItem()
+        Dubler2.SelectListBoxItem()
     }
 
     SelectOutputChannels(Group, Amount) {
-        Dubler2.SelectComboBoxItem()
+        Dubler2.SelectListBoxItem()
 
         If Group == 1 {
             Dubler2.AudioSettings["audioDeviceOutChans"] := ""
@@ -229,13 +229,13 @@ Static CreateAudioCalibrationOverlay(Overlay) {
             Dubler2.AudioSettings["audioDeviceInChans"] := "1"
             Dubler2.AudioSettings["audioDeviceOutChans"] := ""
             ReadingGainButton.Label := "Read Gain"
-            Dubler2.SelectComboBoxItem()
+            Dubler2.SelectListBoxItem()
         }
     }
 
     CreateAudioDeviceControl() {
 
-        Ctrl := PopulatedComboBox("Audio Device", ObjBindMethod(Dubler2, "FocusComboBox"))
+        Ctrl := PopulatedListBox("Audio Device", ObjBindMethod(Dubler2, "FocusListBox"))
         
         For Dev In Dubler2.ASIODevices {
             Ctrl.AddItem(Dev["Name"], SelectDevice.Bind(Dev))
@@ -253,9 +253,9 @@ Static CreateAudioCalibrationOverlay(Overlay) {
 
     Overlay.AddControl(CustomButton("Back", ObjBindMethod(Dubler2, "FocusButton"), , ObjBindMethod(Dubler2, "CloseAudioCalibrationOverlay")))
 
-    AudioInputChannelCtrl := PopulatedComboBox("Input channel", ObjBindMethod(Dubler2, "FocusComboBox"))
+    AudioInputChannelCtrl := PopulatedListBox("Input channel", ObjBindMethod(Dubler2, "FocusListBox"))
     ReadingGainButton := CustomButton("Read Gain" . (CheckValid ? "" : "not available"), ObjBindMethod(Dubler2, "FocusButton"), , StartReadingGain)
-    AudioOutputChannelCtrl := PopulatedComboBox("Output Channel", ObjBindMethod(Dubler2, "FocusComboBox"))
+    AudioOutputChannelCtrl := PopulatedListBox("Output Channel", ObjBindMethod(Dubler2, "FocusListBox"))
     AudioDeviceCtrl := CreateAudioDeviceControl()
 
     Overlay.AddControl(AudioDeviceCtrl)

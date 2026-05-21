@@ -708,7 +708,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(FocusableControlIDs[Found])
-                If CurrentControl Is ComboBox {
+                If CurrentControl Is ListBox {
                     CurrentControl.SelectNextOption()
                     Return CurrentControl.GetValue()
                 }
@@ -722,7 +722,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Found := This.FindFocusableControlID(This.CurrentControlID)
             If Found > 0 {
                 CurrentControl := AccessibilityOverlay.GetControl(FocusableControlIDs[Found])
-                If CurrentControl Is ComboBox {
+                If CurrentControl Is ListBox {
                     CurrentControl.SelectPreviousOption()
                     Return CurrentControl.GetValue()
                 }
@@ -1899,11 +1899,24 @@ Class Checkbox Extends ActivatableControl {
     
 }
 
-Class ComboBox Extends FocusableControl {
+Class Edit Extends FocusableControl {
+    
+    ControlType := "Edit"
+    ControlTypeLabel := "edit"
+    DefaultLabel := "unlabelled"
+    DefaultValue := "blank"
+    
+    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
+    }
+    
+}
+
+Class ListBox Extends FocusableControl {
     
     ChangeFunctions := Array()
-    ControlType := "ComboBox"
-    ControlTypeLabel := "combo box"
+    ControlType := "ListBox"
+    ControlTypeLabel := "list box"
     CurrentOption := 1
     Options := Array()
     
@@ -1971,19 +1984,6 @@ Class ComboBox Extends FocusableControl {
         This.CurrentOption := 1
         Else
         This.CurrentOption := DefaultOption
-    }
-    
-}
-
-Class Edit Extends FocusableControl {
-    
-    ControlType := "Edit"
-    ControlTypeLabel := "edit"
-    DefaultLabel := "unlabelled"
-    DefaultValue := "blank"
-    
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
     }
     
 }
@@ -2266,10 +2266,10 @@ Class CustomCheckbox Extends Checkbox {
     
 }
 
-Class CustomComboBox Extends ComboBox {
+Class CustomEdit Extends Edit {
 }
 
-Class CustomEdit Extends Edit {
+Class CustomListBox Extends ListBox {
 }
 
 Class CustomPassThrough Extends PassThrough {
@@ -2806,7 +2806,24 @@ Class HotspotCheckbox Extends Checkbox {
     
 }
 
-Class HotspotComboBox Extends ComboBox {
+Class HotspotEdit Extends Edit {
+    
+    XCoordinate := 0
+    YCoordinate := 0
+    
+    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
+        This.XCoordinate := XCoordinate
+        This.YCoordinate := YCoordinate
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        Click This.XCoordinate, This.YCoordinate
+    }
+    
+}
+
+Class HotspotListBox Extends ListBox {
     
     XCoordinate := 0
     YCoordinate := 0
@@ -2825,23 +2842,6 @@ Class HotspotComboBox Extends ComboBox {
     SelectPreviousOption() {
         Click This.XCoordinate, This.YCoordinate
         Super.SelectPreviousOption()
-    }
-    
-}
-
-Class HotspotEdit Extends Edit {
-    
-    XCoordinate := 0
-    YCoordinate := 0
-    
-    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
-        This.XCoordinate := XCoordinate
-        This.YCoordinate := YCoordinate
-    }
-    
-    ExecuteOnFocusPreSpeech() {
-        Click This.XCoordinate, This.YCoordinate
     }
     
 }
@@ -2939,7 +2939,59 @@ Class OCRButton Extends Button {
     
 }
 
-Class OCRComboBox Extends ComboBox {
+Class OCREdit Extends Edit {
+    
+    OCRLanguage := ""
+    OCRScale := ""
+    OCRType := "UWP"
+    X1Coordinate := 0
+    Y1Coordinate := 0
+    X2Coordinate := 0
+    Y2Coordinate := 0
+    
+    __New(Label, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
+        This.OCRLanguage := OCRLanguage
+        This.OCRScale := OCRScale
+        This.OCRType := (OCRType = "Tesseract" Or OCRType = "TesseractBest" Or OCRType = "TesseractFast" Or OCRType = "TesseractLegacy" Or OCRType = "UWP" ? OCRType : This.OCRType)
+        This.X1Coordinate := X1Coordinate
+        This.Y1Coordinate := Y1Coordinate
+        This.X2Coordinate := X2Coordinate
+        This.Y2Coordinate := Y2Coordinate
+    }
+    
+    ExecuteOnFocusPreSpeech() {
+        XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
+        YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
+        Click XCoordinate, YCoordinate
+    }
+    
+    GetValue() {
+        This.Value := AccessibilityOverlay.Helpers.OCR(This.OCRType, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
+        Return This.Value
+    }
+    
+    SpeakOnFocus(Speak := True) {
+        Message := ""
+        CheckResult := This.GetState()
+        LabelString := This.Label
+        If LabelString = ""
+        LabelString := This.DefaultLabel
+        ValueString := This.Value
+        If ValueString = ""
+        ValueString := This.DefaultValue
+        StateString := ""
+        If This.States.Has(CheckResult)
+        StateString := This.States[CheckResult]
+        If This.MasterControl Is AccessibilityOverlay And (Not This.ControlID = This.MasterControl.PreviousControlID Or This.MasterControl.FocusableControlIDs.Length = 1)
+        Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
+        If Speak
+        AccessibilityOverlay.Speak(Message)
+    }
+    
+}
+
+Class OCRListBox Extends ListBox {
     
     OCRLanguage := ""
     OCRScale := ""
@@ -2994,58 +3046,6 @@ Class OCRComboBox Extends ComboBox {
             ChangeFunction.Call(This)
         }
         This.ReportValue()
-    }
-    
-    SpeakOnFocus(Speak := True) {
-        Message := ""
-        CheckResult := This.GetState()
-        LabelString := This.Label
-        If LabelString = ""
-        LabelString := This.DefaultLabel
-        ValueString := This.Value
-        If ValueString = ""
-        ValueString := This.DefaultValue
-        StateString := ""
-        If This.States.Has(CheckResult)
-        StateString := This.States[CheckResult]
-        If This.MasterControl Is AccessibilityOverlay And (Not This.ControlID = This.MasterControl.PreviousControlID Or This.MasterControl.FocusableControlIDs.Length = 1)
-        Message := LabelString . " " . This.ControlTypeLabel . " " . ValueString . " " . StateString . " " . This.HotkeyLabel
-        If Speak
-        AccessibilityOverlay.Speak(Message)
-    }
-    
-}
-
-Class OCREdit Extends Edit {
-    
-    OCRLanguage := ""
-    OCRScale := ""
-    OCRType := "UWP"
-    X1Coordinate := 0
-    Y1Coordinate := 0
-    X2Coordinate := 0
-    Y2Coordinate := 0
-    
-    __New(Label, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
-        This.OCRLanguage := OCRLanguage
-        This.OCRScale := OCRScale
-        This.OCRType := (OCRType = "Tesseract" Or OCRType = "TesseractBest" Or OCRType = "TesseractFast" Or OCRType = "TesseractLegacy" Or OCRType = "UWP" ? OCRType : This.OCRType)
-        This.X1Coordinate := X1Coordinate
-        This.Y1Coordinate := Y1Coordinate
-        This.X2Coordinate := X2Coordinate
-        This.Y2Coordinate := Y2Coordinate
-    }
-    
-    ExecuteOnFocusPreSpeech() {
-        XCoordinate := This.X1Coordinate + Floor((This.X2Coordinate - This.X1Coordinate)/2)
-        YCoordinate := This.Y1Coordinate + Floor((This.Y2Coordinate - This.Y1Coordinate)/2)
-        Click XCoordinate, YCoordinate
-    }
-    
-    GetValue() {
-        This.Value := AccessibilityOverlay.Helpers.OCR(This.OCRType, This.X1Coordinate, This.Y1Coordinate, This.X2Coordinate, This.Y2Coordinate, This.OCRLanguage, This.OCRScale)
-        Return This.Value
     }
     
     SpeakOnFocus(Speak := True) {

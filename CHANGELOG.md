@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Renamed 'combo boxes' to 'list boxes' as that feels more fitting
+
 ## [1.0.1] - 2026-05-21
 
 ### Changed

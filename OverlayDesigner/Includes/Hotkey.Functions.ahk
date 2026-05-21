@@ -375,7 +375,7 @@ TriggerOverlayHotkey(ThisHotkey) {
 UpDownHK(ThisHotkey) {
     AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
     Switch(Editor.Overlay.GetCurrentControlType()) {
-        Case "ComboBox":
+        Case "ListBox":
         If ThisHotkey = "Up"
         Editor.Overlay.SelectPreviousOption()
         Else

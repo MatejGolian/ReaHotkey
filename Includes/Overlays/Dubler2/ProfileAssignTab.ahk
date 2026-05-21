@@ -332,7 +332,7 @@ AssignTab.AddControl(Dubler2.HotspotCheckbox("Pitch bend enabled", 123, 415, Dub
 AssignTab.AddControl(CustomButton("Stickiness: " . Integer(Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchStickiness"] * 100) . "%", ObjBindMethod(Dubler2, "FocusButton"), , ActivatePitchStickinessButton))
 AssignTab.AddControl(CustomButton("Pitch Bend Range: " . Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchBendRange"] . " semitones", ObjBindMethod(Dubler2, "FocusButton"), , ActivatePitchBendRangeButton))
 
-PitchBendTypeCtrl := PopulatedComboBox("Pitch Bend Type", ObjBindMethod(Dubler2, "FocusComboBox"), , ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+PitchBendTypeCtrl := PopulatedListBox("Pitch Bend Type", ObjBindMethod(Dubler2, "FocusListBox"), , ObjBindMethod(Dubler2, "SelectListBoxItem"))
 
 For Preset In [0, 1] {
 
@@ -352,7 +352,7 @@ AssignTab.AddControl(CustomButton("Pitch MIDI Channel: " . Dubler2.ProfileLoaded
 AssignTab.AddControl(Dubler2.HotspotCheckbox("Chords bend enabled", 256, 415, Dubler2.ProfileLoaded["Current"]["PitchBendChords"], ObjBindMethod(Dubler2, "FocusCheckbox"), ObjBindMethod(Dubler2, "FocusCheckbox")))
 AssignTab.AddControl(CustomButton("Chords MIDI Channel: " . Dubler2.ProfileLoaded["Current"]["ChordsMidiChannel"], , ObjBindMethod(Dubler2, "FocusButton"), ActivateChordsMidiChannelButton))
 
-ChordsPresetCtrl := PopulatedComboBox("Chords Preset", ObjBindMethod(Dubler2, "FocusComboBox"), , ObjBindMethod(Dubler2, "SelectComboBoxItem"))
+ChordsPresetCtrl := PopulatedListBox("Chords Preset", ObjBindMethod(Dubler2, "FocusListBox"), , ObjBindMethod(Dubler2, "SelectListBoxItem"))
 
 For Preset In ["8 Bit Lead", "Bass Pluck", "Boards", "Pad", "Pure", "Trap Bass", "Trumpet Lead", "Wobble Bass"] {
     ChordsPresetCtrl.AddItem(Preset, ClickChordsPreset.Bind(Preset))

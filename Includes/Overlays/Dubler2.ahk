@@ -1,6 +1,6 @@
 #Requires AutoHotkey v2.0
 
-Class PopulatedComboBox extends CustomComboBox {
+Class PopulatedListBox extends CustomListBox {
 
     Values := Array()
     
@@ -290,12 +290,12 @@ Class Dubler2 {
             Dubler2.SoundPlay("CheckboxUnchecked.mp3")
     }
 
-    Static FocusComboBox(*) {
-        Dubler2.SoundPlay("FocusCombobox.mp3")
+    Static FocusListBox(*) {
+        Dubler2.SoundPlay("FocusListBox.mp3")
     }
 
-    Static SelectComboBoxItem(*) {
-        Dubler2.SoundPlay("ComboBoxSelected.mp3")
+    Static SelectListBoxItem(*) {
+        Dubler2.SoundPlay("ListBoxSelected.mp3")
     }
 
     Static FocusInput(*) {
