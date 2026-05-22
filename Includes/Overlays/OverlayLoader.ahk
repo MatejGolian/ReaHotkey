@@ -163,12 +163,19 @@ Class OverlayLoader {
             }
             Return ReturnValue
         }
-        If Name = "OnColors" Or Name = "OffColors" Or Name = "CheckedColors" Or Name = "UncheckedColors" {
+        If Name = "OnColors" Or Name = "OffColors" Or Name = "CheckedColors" Or Name = "UncheckedColors" Or Name = "Images" Or Name = "OnImages" Or Name = "OffImages" Or Name = "CheckedImages" Or Name = "UncheckedImages" Or Name = "Options" {
             If SubStr(Value, 1, 1) = "["
             Value := SubStr(Value, 2)
             If SubStr(Value, -1) = "]"
             Value := SubStr(Value, 1, -1)
             Value := StrSplit(Value, ",", A_Space)
+            For ArrayItem In Value {
+                If SubStr(Trim(ArrayItem), 1, 1) = "`""
+                ArrayItem := SubStr(Trim(ArrayItem), 2)
+                If SubStr(Trim(ArrayItem), -1) = "`""
+                ArrayItem  := SubStr(Trim(ArrayItem), 1, -1)
+                Value[A_Index] := Trim(ArrayItem)
+            }
             Return Value
         }
         If SubStr(Value, 1, 1) = "[" And SubStr(Value, -1) = "]" {
