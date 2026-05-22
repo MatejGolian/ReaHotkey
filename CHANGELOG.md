@@ -7,13 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.4] - 2026-05-22
+### Fixed
 
-## [1.0.3] - 2026-05-22
+-   Fixed changelog
+
+## [1.0.4] - 2026-05-22
 
 ### Fixed
 
 -   Fixed RHK OverlayLoader not processing list box options
+
+## [1.0.3] - 2026-05-22
 
 ### Changed/Fixed
 
