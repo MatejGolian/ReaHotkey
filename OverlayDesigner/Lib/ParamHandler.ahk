@@ -17,9 +17,12 @@ Class ParamHandler {
     
     Static ArrayToString(ArrayObj) {
         ReturnValue := ""
-        For ArrayItem In ArrayObj
-        If ArrayItem Is Number Or ArrayItem Is String
-        ReturnValue .= ArrayItem . ", "
+        For ArrayItem In ArrayObj {
+            If ArrayItem Is Number
+            ReturnValue .= ArrayItem . ", "
+            If ArrayItem Is String
+            ReturnValue .= "`"" . ArrayItem . "`", "
+        }
         While SubStr(ReturnValue, - -2) = ", "
         ReturnValue := SubStr(ReturnValue, 1, -2)
         Return ReturnValue
@@ -166,9 +169,9 @@ Class ParamHandler {
         If Value Is Number Or Value Is String
         Return Value
         If Value Is Array {
-            If Name = "PreExecFocusFunctions" Or Name = "PostExecFocusFunctions" Or Name = "PreExecActivationFunctions" Or Name = "PostExecActivationFunctions" Or Name = "ChangeFunctions"
+            If Name = "ChangeFunctions" Or Name = "PreExecFocusFunctions" Or Name = "PostExecFocusFunctions" Or Name = "PreExecActivationFunctions" Or Name = "PostExecActivationFunctions"
             Return This.FuncArrayToString(Value)
-            Else If Name = "OnColors" Or Name = "OffColors" Or Name = "CheckedColors" Or Name = "UncheckedColors" Or Name = "Images" Or Name = "OnImages" Or Name = "OffImages" Or Name = "CheckedImages" Or Name = "UncheckedImages"
+            Else If Name = "OnColors" Or Name = "OffColors" Or Name = "CheckedColors" Or Name = "UncheckedColors" Or Name = "Images" Or Name = "OnImages" Or Name = "OffImages" Or Name = "CheckedImages" Or Name = "UncheckedImages" Or Name = "Options"
             Return This.ArrayToString(Value)
         }
         If Value Is Func {
@@ -180,7 +183,7 @@ Class ParamHandler {
         Return ""
     }
     
-    Static MakeOverlayProp(OverlayObj, Name, Value, Expression, Optional := True) {
+    Static MakeObjProp(OverlayObj, Name, Value, Expression, Optional := True) {
         If Expression {
             If SubStr(Name, -8) = "Function" {
                 ReturnValue := ""
@@ -225,12 +228,19 @@ Class ParamHandler {
                 Return ReturnValue
             }
         }
-        If Name = "OnColors" Or Name = "OffColors" Or Name = "CheckedColors" Or Name = "UncheckedColors" {
+        If Name = "OnColors" Or Name = "OffColors" Or Name = "CheckedColors" Or Name = "UncheckedColors" Or Name = "Images" Or Name = "OnImages" Or Name = "OffImages" Or Name = "CheckedImages" Or Name = "UncheckedImages" Or Name = "Options" {
             If SubStr(Value, 1, 1) = "["
             Value := SubStr(Value, 2)
             If SubStr(Value, -1) = "]"
             Value := SubStr(Value, 1, -1)
             Value := StrSplit(Value, ",", A_Space)
+            For ArrayItem In Value {
+                If SubStr(Trim(ArrayItem), 1, 1) = "`""
+                ArrayItem := SubStr(Trim(ArrayItem), 2)
+                If SubStr(Trim(ArrayItem), -1) = "`""
+                ArrayItem  := SubStr(Trim(ArrayItem), 1, -1)
+                Value[A_Index] := Trim(ArrayItem)
+            }
             Return Value
         }
         If Expression {
@@ -332,7 +342,7 @@ Class ParamHandler {
         Return This.Error("You did not enter the variable name.")
         For ItemType, ItemDefinition In Editor.ItemDefinitions
         If Trim(Value) = ItemType
-        Return This.Error("You can't set `"" . ItemType . "`" as the variable name.")
+        Return This.Error("You can't set `"" . Trim(Value) . "`" as the variable name.")
         If Not RegExMatch(Value, "^([A-Za-z_][0-9A-Za-z_]+)$")
         Return This.Error("The variable name has an invalid format.")
         Return Value

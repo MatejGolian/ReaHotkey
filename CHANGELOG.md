@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed/Fixed
+
+-   List boxes now accept setting options via the constructor
+-   OverlayDesigner: Improved creation of object properties of type Array
+-   OverlayDesigner: Fixed a bug in the coordinate 'Nudge' dialog
+
 ## [1.0.2] - 2026-05-21
 
 ### Changed

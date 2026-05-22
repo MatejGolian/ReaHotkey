@@ -1920,8 +1920,13 @@ Class ListBox Extends FocusableControl {
     CurrentOption := 1
     Options := Array()
     
-    __New(Label, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+    __New(Label, Options := "", ChangeFunctions := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
         Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
+        If Not Options = "" {
+            If Not Options Is Array
+            Options := Array(Options)
+            This.Options := Options
+        }
         If Not ChangeFunctions = "" {
             If Not ChangeFunctions Is Array
             ChangeFunctions := Array(ChangeFunctions)
@@ -2828,8 +2833,8 @@ Class HotspotListBox Extends ListBox {
     XCoordinate := 0
     YCoordinate := 0
     
-    __New(Label, XCoordinate, YCoordinate, PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
+    __New(Label, XCoordinate, YCoordinate, Options := "", ChangeFunctions := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, Options, ChangeFunctions, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.XCoordinate := XCoordinate
         This.YCoordinate := YCoordinate
     }
@@ -3001,8 +3006,8 @@ Class OCRListBox Extends ListBox {
     X2Coordinate := 0
     Y2Coordinate := 0
     
-    __New(Label, DefaultValue, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", ChangeFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
-        Super.__New(Label, PreExecFocusFunctions, PostExecFocusFunctions, ChangeFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
+    __New(Label, DefaultValue, OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "", ChangeFunctions := "", PreExecFocusFunctions := "", PostExecFocusFunctions := "", HotkeyCommand := "", HotkeyLabel := "", HotkeyFunctions := "") {
+        Super.__New(Label, "", ChangeFunctions, PreExecFocusFunctions, PostExecFocusFunctions, HotkeyCommand, HotkeyLabel, HotkeyFunctions)
         This.DefaultValue := DefaultValue
         This.OCRLanguage := OCRLanguage
         This.OCRScale := OCRScale

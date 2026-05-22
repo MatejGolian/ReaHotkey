@@ -1,6 +1,6 @@
 #Requires AutoHotkey v2.0
 
-Class PopulatedListBox extends CustomListBox {
+Class PopulatedListBox extends ListBox {
 
     Values := Array()
     
@@ -13,7 +13,7 @@ Class PopulatedListBox extends CustomListBox {
 
         ChangeFunctions.Push(ObjBindMethod(This, "OnChange"))
 
-        Super.__New(Label, PreExecFocusFunction, PostExecFocusFunction, ChangeFunctions)
+        Super.__New(Label, "", ChangeFunctions, PreExecFocusFunction, PostExecFocusFunction)
     }
 
     AddItem(Label, Selector := "") {

@@ -186,7 +186,7 @@ ControlMenuHandler(ControlName, ControlNumber, ControlMenu) {
 
 NudgeCoordinates(*) {
     Static CoordinateBox := False
-    ItemTypeList := ["All controls", "Current control", "GraphicalButton", "GraphicalToggleButton", "HotspotButton", "HotspotToggleButton", "OCRButton", "GraphicalCheckbox", "HotspotCheckbox", "HotspotEdit", "OCREdit", "HotspotListBox", "OCRListBox", "GraphicalTab", "HotspotTab", "OCRTab", "OCRText"]
+    ItemTypeList := ["All controls", "Current control", "Every GraphicalButton", "Every GraphicalToggleButton", "Every HotspotButton", "Every HotspotToggleButton", "Every OCRButton", "Every GraphicalCheckbox", "Every HotspotCheckbox", "Every HotspotEdit", "Every OCREdit", "Every HotspotListBox", "Every OCRListBox", "Every GraphicalTab", "Every HotspotTab", "Every OCRTab", "Every OCRText"]
     If CoordinateBox = False {
         CoordinateBox := Gui("+OwnDialogs", "Nudge Item Coordinates")
         CoordinateBox.AddText(, "X offset:")
@@ -263,7 +263,11 @@ NudgeCoordinates(*) {
             CloseCoordinateBox()
         }
         Else {
+            If SubStr(ItemType, 1, 5) = "Every"
+            ItemType := SubStr(ItemType, 7)
             ItemTypeList.RemoveAt(1, 2)
+            For ItemTypeItem In ItemTypeList
+            ItemTypeList[A_Index] := SubStr(ItemTypeItem, 7)
             If ItemType = "All controls" {
                 For OverlayControl In Editor.Overlay.AllControls
                 For AvailableType In ItemTypeList
@@ -281,8 +285,8 @@ NudgeCoordinates(*) {
             Else If ItemType = "Current control" {
                 For AvailableType In ItemTypeList
                 If Type(CurrentControl) = AvailableType {
-                    If OverlayControl.HasProp("XCoordinate") And OverlayControl.HasProp("YCoordinate") {
-                        Editor.ParamHandler.SetControlCoords(OverlayControl, OverlayControl.XCoordinate + X, OverlayControl.YCoordinate + Y)
+                    If CurrentControl.HasProp("XCoordinate") And CurrentControl.HasProp("YCoordinate") {
+                        Editor.ParamHandler.SetControlCoords(CurrentControl, CurrentControl.XCoordinate + X, CurrentControl.YCoordinate + Y)
                     }
                     Else {
                         If CurrentControl.HasProp("X1Coordinate") And CurrentControl.HasProp("Y1Coordinate") And CurrentControl.HasProp("X2Coordinate") And CurrentControl.HasProp("Y2Coordinate")

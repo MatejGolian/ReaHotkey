@@ -23,7 +23,7 @@ Class AudioImperia {
         CerberusOverlay := PluginOverlay("Cerberus")
         CerberusOverlay.Metadata := Map("Vendor", "Audio Imperia", "Product", "Cerberus", "Image", Map("File", "Images/SampleLibraries/Cerberus/Product.png"))
         CerberusOverlay.AddStaticText("Cerberus")
-        CerberusListBox := CerberusOverlay.AddCustomListBox("Patch type:", ObjBindMethod(This, "SelectCerberusPatchType"),, ObjBindMethod(This, "SelectCerberusPatchType"))
+        CerberusListBox := CerberusOverlay.AddListBox("Patch type:", "", ObjBindMethod(This, "SelectCerberusPatchType"),, ObjBindMethod(This, "SelectCerberusPatchType"))
         CerberusListBox.SetOptions(["Normal", "Epic Mix"])
         CerberusOverlay.AddPluginOverlay()
         This.SelectCerberusPatchType(CerberusListBox)

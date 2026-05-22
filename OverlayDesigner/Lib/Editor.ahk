@@ -645,7 +645,7 @@ Class Editor {
                     Item.ObjParams.%Key% := EditorBoxes[Key].Value
                     Item.ExpressionParams.%Key% := ExpressionBoxes[Key].Value
                     Try
-                    Item.OverlayObj.%Key% := This.ParamHandler.MakeOverlayProp(Item.OverlayObj, Key, EditorBoxes[Key].Value, ExpressionBoxes[Key].Value, OptionalBoxes[Key])
+                    Item.OverlayObj.%Key% := This.ParamHandler.MakeObjProp(Item.OverlayObj, Key, EditorBoxes[Key].Value, ExpressionBoxes[Key].Value, OptionalBoxes[Key])
                     Catch
                     Item.OverlayObj.%Key% := Item.OverlayObj.%Key%
                 }
@@ -950,7 +950,7 @@ Class Editor {
             UpdatedItem.%Key% := Value
         }
         For Key, Value In UpdatedItem.ObjParams.OwnProps() {
-            UpdatedItem.OverlayObj.%Key% := This.ParamHandler.MakeOverlayProp(UpdatedItem.OverlayObj, Key, Value, UpdatedItem.ExpressionParams.%Key%)
+            UpdatedItem.OverlayObj.%Key% := This.ParamHandler.MakeObjProp(UpdatedItem.OverlayObj, Key, Value, UpdatedItem.ExpressionParams.%Key%)
         }
         Return UpdatedItem
     }
