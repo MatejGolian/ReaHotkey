@@ -1,4 +1,5 @@
 #Requires AutoHotkey v2.0
+#Requires AutoHotkey v2.0
 
 Class KompleteKontrol {
     
@@ -124,6 +125,13 @@ Class KompleteKontrol {
         StandaloneSaveAsOverlay.AddHotspotButton("Save", 219, 135)
         StandaloneSaveAsOverlay.AddHotspotButton("Cancel", 301, 135)
         Standalone.RegisterOverlay("Komplete Kontrol Save As Dialog", StandaloneSaveAsOverlay)
+        
+        Standalone.Register("Komplete Kontrol Scan In Progress Dialog", "ahk_class #32770 ahk_exe Komplete Kontrol.exe", False, False, 1, ObjBindMethod(This, "CheckStandaloneScanInProgressDialog"))
+        Standalone.SetTimer("Komplete Kontrol Scan In Progress Dialog", This.ReportScanInProgress, 2000)
+        
+        StandaloneScanInProgressOverlay := StandaloneOverlay()
+        StandaloneScanInProgressOverlay.AddStaticText("Scan in progress...")
+        Standalone.RegisterOverlay("Komplete Kontrol Scan In Progress Dialog", StandaloneScanInProgressOverlay)
     }
     
     Static __Get(Name, Params) {
@@ -238,6 +246,12 @@ Class KompleteKontrol {
             Return True
         }
         If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KompleteKontrol/SavePreset.png")
+        Return True
+        Return False
+    }
+    
+    Static CheckStandaloneScanInProgressDialog(StandaloneInstance) {
+        If WinExist("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
         Return True
         Return False
     }
@@ -714,6 +728,12 @@ Class KompleteKontrol {
                     YIndex += 2
                 }
             }
+        }
+    }
+    
+    Class ReportScanInProgress {
+        Static Call() {
+            AccessibilityOverlay.Speak("Scan in progress...")
         }
     }
     

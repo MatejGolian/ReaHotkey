@@ -22,12 +22,13 @@ Class Standalone Extends Program {
     }
     
     Static FindByActiveWindow() {
+        Found := Array()
         For StandaloneNumber, StandaloneEntry In This.List
         For WinCriterion In StandaloneEntry["WinCriteria"]
         If Not WinCriterion = ""
         If WinActive(WinCriterion)
-        Return StandaloneNumber
-        Return 0
+        Found.Push(StandaloneNumber)
+        Return Found
     }
     
     Static GetByWinID(WinID) {
@@ -35,8 +36,8 @@ Class Standalone Extends Program {
         If StandaloneInstance.WinID = WinID And StandaloneInstance.Check() = True
         Return StandaloneInstance
         WinID := WinGetID("A")
-        StandaloneNumber := This.FindByActiveWindow()
-        If Not StandaloneNumber = 0 {
+        Found := This.FindByActiveWindow()
+        For StandaloneNumber In Found {
             StandaloneInstance := Standalone("", "")
             CheckResult := This.List[StandaloneNumber]["CheckerFunction"].Call(StandaloneInstance)
             If CheckResult = True {

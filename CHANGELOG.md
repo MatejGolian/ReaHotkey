@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added scan in progress reporting in KK standalone
+
 ## [1.0.5] - 2026-05-22
 
 ### Fixed

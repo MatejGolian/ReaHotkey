@@ -281,7 +281,7 @@ Class Kontakt7 {
             Case "LIBRARY On/Off":
             %MouseFunction%(231, 19)
             Case "SHOP (Opens in default web browser)":
-            If This.Get%Type%Browser()
+            If This.GetBrowser(Type)
             %MouseFunction%(815, 19)
             Else
             %MouseFunction%(440, 19)
