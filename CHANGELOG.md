@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.6] - 2026-05-24
+
 ### Added
 
 -   Added plug-in scan in progress reporting in KK standalone
@@ -738,7 +740,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.5...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.6...HEAD
+
+[1.0.6]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.5...1.0.6
 
 [1.0.5]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.4...1.0.5
 
