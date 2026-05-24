@@ -251,7 +251,8 @@ Class KompleteKontrol {
     }
     
     Static CheckStandaloneScanInProgressDialog(StandaloneInstance) {
-        If WinExist("Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe")
+    Try
+        If WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And Not WinGetTitle("A") = "Preferences"
         Return True
         Return False
     }
