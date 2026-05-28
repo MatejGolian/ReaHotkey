@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed a bug in OverlayDesigner where editing compensated controls would not act as desired
+
 ## [1.0.8] - 2026-05-28
 
 ### Added

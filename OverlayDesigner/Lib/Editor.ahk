@@ -644,6 +644,8 @@ Class Editor {
                 Else If Item.ObjParams.HasProp(Key) {
                     Item.ObjParams.%Key% := EditorBoxes[Key].Value
                     Item.ExpressionParams.%Key% := ExpressionBoxes[Key].Value
+                    If Item.OverlayObj.HasProp("Original" . Key)
+                    Item.OverlayObj.DeleteProp("Original" . Key)
                     Try
                     Item.OverlayObj.%Key% := This.ParamHandler.MakeObjProp(Item.OverlayObj, Key, EditorBoxes[Key].Value, ExpressionBoxes[Key].Value, OptionalBoxes[Key])
                     Catch
