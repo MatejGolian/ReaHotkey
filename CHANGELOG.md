@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added support for the GTune plug-in by GVST (special thanks to Alexey Zhelezov for creating the original SIBIAC overlay)
+
 ## [1.0.7] - 2026-05-24
 
 ### Changed

@@ -21,6 +21,7 @@ The following list contains the gist of what ReaHotkey has to offer. There may b
   - Works inside REAPER and Ableton Live 12. The standalone version of Engine 2 is also supported.
 * Allows to click the presets button in various FabFilter plugins
   - The keyboard bindings only work with the unified interfaces of e.g. C-2, Q-3 etc, but not with the newer R-2 yet
+* Enables basic usage of the GTune plug-in by GVST
 * Makes it possible to  access the menus and save new presets in Komplete Kontrol. It's also possible to change a number of settings in Preferences and add new user library folders and perform library and plug-in rescans.
   - Works inside REAPER, Ableton Live 12 and in the standalone version of Komplete Kontrol.
   - The overlay for the plug-in also provides basic support for the search function in the library Browser as an extra Feature.

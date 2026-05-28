@@ -30,6 +30,7 @@ SetTitleMatchMode "RegEx"
 #Include <StandaloneOverlay>
 #Include <Tesseract>
 #Include <UIA>
+#Include OverlayDesigner/Lib/CodeParser.ahk
 
 ReaHotkey.Init()
 

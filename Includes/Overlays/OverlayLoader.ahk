@@ -1,7 +1,5 @@
 ﻿#Requires AutoHotkey v2.0
 
-#Include ../../OverlayDesigner/Lib/CodeParser.ahk
-
 Class OverlayLoader {
     
     Static DefaultOverlay := False
