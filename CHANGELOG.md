@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.10] - 2026-05-29
+
 ### Added
 
 -   OverlayDesigner: Added menu actions to quickly set top/bottom coordinates wherever applicable
@@ -766,7 +768,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.9...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.10...HEAD
+
+[1.0.10]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.9...1.0.10
 
 [1.0.9]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.8...1.0.9
 
