@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.12] - 2026-05-29
+
 ### Changed
 
 -   Updated TabControl code
@@ -779,7 +781,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.11...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.12...HEAD
+
+[1.0.12]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.11...1.0.12
 
 [1.0.11]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.10...1.0.11
 
