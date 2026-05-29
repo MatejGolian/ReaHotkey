@@ -28,7 +28,7 @@ Shift+Windows+G - Generate markers from OCR
 Shift+Windows+W - View info about the active window
 Shift+Windows+C - View info about the currently focused control
 Shift+Windows+L - View control list
-Shift+Windows+M - View mouse related info
+Shift+Windows+M - View mouse and caret related info
 Shift+Windows+V - View clipboard contents
 Shift+Windows+K - Report pixel color under the mouse
 Shift+Windows+Left - Move mouse left

@@ -521,25 +521,46 @@ ViewControlList(*) {
     Editor.ShowDlgBox("Control List", ControlList)
 }
 
-ViewMouseInfo(*) {
+ViewMouseAndCaretInfo(*) {
     Try {
         WinWaitActive("A")
         Try {
-            MouseGetPos &XPosition, &YPosition
-            MousePos := "X " . XPosition . ", Y " . YPosition
+            MouseGetPos &MouseXPosition, &MouseYPosition
+            MousePos := "X " . MouseXPosition . ", Y " . MouseYPosition
         }
         Catch {
-            AccessibilityOverlay.Speak("Could not determine mouse position")
-            Return
+            MousePos := "Unknown"
         }
-        PixelColor := PixelGetColor(XPosition, YPosition, "Slow")
+        Try {
+            MousePixelColor := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
+        }
+        Catch {
+            MousePixelColor := "Unknown"
+        }
+        Try {
+            CaretGetPos &CaretXPosition, &CaretYPosition
+        }
+        Catch {
+            CaretXPosition := ""
+            CaretYPosition := ""
+        }
+        If CaretXPosition = "" And CaretYPosition = ""
+        CaretPos := "Unknown"
+        Else
+        CaretPos := "X " . CaretXPosition . ", Y " . CaretYPosition
+        Try {
+            CaretPixelColor := PixelGetColor(CaretXPosition, CaretYPosition, "Slow")
+        }
+        Catch {
+            CaretPixelColor := "Unknown"
+        }
     }
     Catch {
         AccessibilityOverlay.Speak("Active window not found")
         Return
     }
-    MouseInfo := "Mouse Position:`t" . MousePos . "`nColor Under The Cursor:`t" . PixelColor
-    Editor.ShowDlgBox("Mouse Info", MouseInfo)
+    MouseAndCaretInfo := "Mouse Position:`t" . MousePos . "`nColor Under The Mouse:`t" . MousePixelColor . "`nCaret Position:`t" . CaretPos . "`nColor Under The Caret:`t" . CaretPixelColor
+    Editor.ShowDlgBox("Mouse And Caret Info", MouseAndCaretInfo)
 }
 
 ViewWindowInfo(*) {

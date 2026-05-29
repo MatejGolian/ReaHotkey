@@ -11,7 +11,7 @@ This.ToolsMenuList := Array(
 {Name: "View &window info…`tShift+Windows+W", Handler: ViewWindowInfo},
 {Name: "View &control info…`tShift+Windows+C", Handler: ViewControlInfo},
 {Name: "View control &list…`tShift+Windows+L", Handler: ViewControlList},
-{Name: "View &mouse info…`tShift+Windows+M", Handler: ViewMouseInfo},
+{Name: "View &mouse and caret info…`tShift+Windows+M", Handler: ViewMouseAndCaretInfo},
 {Name: "&View clipboard contents…`tShift+Windows+V", Handler: ViewClipboardContents},
 )
 

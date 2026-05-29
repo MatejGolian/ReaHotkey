@@ -27,7 +27,7 @@ This.AlwaysActiveHKs := Map(
 "#+V", ViewClipboardContents,
 "#+C", ViewControlInfo,
 "#+L", ViewControlList,
-"#+M", ViewMouseInfo,
+"#+M", ViewMouseAndCaretInfo,
 "#+W", ViewWindowInfo,
 )
 

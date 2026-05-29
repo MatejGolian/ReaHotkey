@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   OverlayDesigner: Added viewing info about the caret along with that of the mouse
+-   Update AccessibilityOverlay
+
 ## [1.0.10] - 2026-05-29
 
 ### Added

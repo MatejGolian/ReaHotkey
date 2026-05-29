@@ -2155,6 +2155,13 @@ Class TabControl Extends FocusableControl {
         This.Focus(Speak)
     }
     
+    FocusTab(TabNumber, Speak := True) {
+        If This.Tabs.Has(TabNumber) {
+            This.CurrentTab := TabNumber
+            This.Focus(Speak)
+        }
+    }
+    
     GetCurrentTab() {
         If This.Tabs.Has(This.CurrentTab)
         Return This.Tabs[This.CurrentTab]
@@ -2178,7 +2185,9 @@ Class TabControl Extends FocusableControl {
     }
     
     GetTab(TabNumber) {
-        Return This.Tabs.Get(TabNumber, 0)
+        If This.Tabs.Has(TabNumber)
+        Return This.Tabs[TabNumber]
+        Return 0
     }
     
     GetValue() {
