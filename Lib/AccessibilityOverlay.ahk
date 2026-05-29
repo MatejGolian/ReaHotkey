@@ -2173,7 +2173,9 @@ Class TabControl Extends FocusableControl {
         TabNumber := This.CurrentTab + 1
         Else
         TabNumber := 1
-        Return This.Tabs.Get(TabNumber, 0)
+        If This.Tabs.Has(TabNumber)
+        Return This.Tabs[TabNumber]
+        Return 0
     }
     
     GetPreviousTab() {
@@ -2181,7 +2183,9 @@ Class TabControl Extends FocusableControl {
         TabNumber := This.Tabs.Length
         Else
         TabNumber := This.CurrentTab - 1
-        Return This.Tabs.Get(TabNumber, 0)
+        If This.Tabs.Has(TabNumber)
+        Return This.Tabs[TabNumber]
+        Return 0
     }
     
     GetTab(TabNumber) {
