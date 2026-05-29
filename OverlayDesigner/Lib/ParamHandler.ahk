@@ -28,11 +28,7 @@ Class ParamHandler {
         Return ReturnValue
     }
     
-    Static CompensateCoords(OverlayObj, X1, Y1, X2 := "", Y2 := "") {
-        If X2 = ""
-        X2 := 0
-        If Y2 = ""
-        Y2 := 0
+    Static CompensateCoords(OverlayObj, X1 := "", Y1 := "", X2 := "", Y2 := "") {
         PluginControlPos := GetPluginControlPos()
         RequiredPropList := Array("Start", "End", "XCoordinate", "YCoordinate", "X1Coordinate", "Y1Coordinate", "X2Coordinate", "Y2Coordinate")
         If OverlayObj Is Object {
@@ -49,28 +45,40 @@ Class ParamHandler {
                 OverlayObj.DeleteProp("Original" . CurrentProp)
             }
             If OverlayObj.HasProp("XCoordinate") {
-                X1 := X1 - PluginControlPos.X
-                Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "XCoordinate", X1)
+                If Not X1 = "" {
+                    X1 := X1 - PluginControlPos.X
+                    Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "XCoordinate", X1)
+                }
             }
             If OverlayObj.HasProp("YCoordinate") {
-                Y1 := Y1 - PluginControlPos.Y
-                Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "YCoordinate", Y1)
+                If Not Y1 = "" {
+                    Y1 := Y1 - PluginControlPos.Y
+                    Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "YCoordinate", Y1)
+                }
             }
             If OverlayObj.HasProp("X1Coordinate") {
-                X1 := X1 - PluginControlPos.X
-                Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "X1Coordinate", X1)
+                If Not X1 = "" {
+                    X1 := X1 - PluginControlPos.X
+                    Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "X1Coordinate", X1)
+                }
             }
             If OverlayObj.HasProp("Y1Coordinate") {
-                Y1 := Y1 - PluginControlPos.Y
-                Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "Y1Coordinate", Y1)
+                If Not Y1 = "" {
+                    Y1 := Y1 - PluginControlPos.Y
+                    Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "Y1Coordinate", Y1)
+                }
             }
             If OverlayObj.HasProp("X2Coordinate") {
-                X2 := X2 - PluginControlPos.X
-                Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "X2Coordinate", X2)
+                If Not X2 = "" {
+                    X2 := X2 - PluginControlPos.X
+                    Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "X2Coordinate", X2)
+                }
             }
             If OverlayObj.HasProp("Y2Coordinate") {
-                Y2 := Y2 - PluginControlPos.Y
-                Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "Y2Coordinate", Y2)
+                If Not Y2 = "" {
+                    Y2 := Y2 - PluginControlPos.Y
+                    Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "Y2Coordinate", Y2)
+                }
             }
             Return True
         }
@@ -257,19 +265,27 @@ Class ParamHandler {
         Return ""
     }
     
-    Static SetControlCoords(OverlayObj, X1, Y1, X2 := "", Y2 := "") {
+    Static SetControlCoords(OverlayObj, X1 := "", Y1 := "", X2 := "", Y2 := "") {
         If This.HasCompensationFunc(OverlayObj) {
             This.CompensateCoords(OverlayObj, X1, Y1, X2, Y2)
         }
         Else {
-            If OverlayObj.HasProp("XCoordinate")
-            Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "XCoordinate", X1)
-            If OverlayObj.HasProp("YCoordinate")
-            Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "YCoordinate", Y1)
-            If OverlayObj.HasProp("X1Coordinate")
-            Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "X1Coordinate", X1)
-            If OverlayObj.HasProp("Y1Coordinate")
-            Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "Y1Coordinate", Y1)
+            If OverlayObj.HasProp("XCoordinate") {
+                If Not X1 = ""
+                Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "XCoordinate", X1)
+            }
+            If OverlayObj.HasProp("YCoordinate") {
+                If Not Y1 = ""
+                Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "YCoordinate", Y1)
+            }
+            If OverlayObj.HasProp("X1Coordinate") {
+                If Not X1 = ""
+                Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "X1Coordinate", X1)
+            }
+            If OverlayObj.HasProp("Y1Coordinate") {
+                If Not Y1 = ""
+                Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "Y1Coordinate", Y1)
+            }
             If OverlayObj.HasProp("X2Coordinate") {
                 If Not X2 = ""
                 Editor.SetItemParam(OverlayObj.ControlID, "ObjParams", "X2Coordinate", X2)

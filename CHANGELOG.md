@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   OverlayDesigner: Added menu actions to quickly set top/bottom coordinates wherever applicable
+
+### Fixed
+
+-   Fixed basic GraphicalButton
+
 ## [1.0.9] - 2026-05-28
 
 ### Fixed

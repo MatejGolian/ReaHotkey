@@ -30,7 +30,7 @@ Shift+Windows+C - View info about the currently focused control
 Shift+Windows+L - View control list
 Shift+Windows+M - View mouse related info
 Shift+Windows+V - View clipboard contents
-Shift+Windows+B - Report pixel color under the mouse
+Shift+Windows+K - Report pixel color under the mouse
 Shift+Windows+Left - Move mouse left
 Shift+Windows+Right - Move mouse right
 Shift+Windows+Up - Move mouse up
@@ -54,7 +54,9 @@ Ctrl+V - Paste
 Del - Delete item
 F2 - Item properties
 Shift+Windows+N - Nudge/Re-calculate item coordinates
-Shift+Windows+H - Add HotspotButton at mouse cursor
+Shift+Windows+H - Add HotspotButton
 Shift+Windows+S - Set Hotspot coordinates to current mouse position
+Shift+Windows+T - Set Top corner coordinates of graphical or OCR controls to current mouse position
+Shift+Windows+B - Set Bottom corner coordinates of graphical or OCR controls to current mouse position
 
 )"

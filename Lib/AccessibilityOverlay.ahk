@@ -1447,7 +1447,7 @@ Class FocusableGraphic Extends FocusableControl {
         }
         If Groups Is Map
         For GroupName, GroupImages In Groups {
-            If SubStr(GroupName, 1, 1) Is Number
+            If RegExMatch(SubStr(GroupName, 1, 1), "[0-9]")
             GroupName := ""
             This.%GroupName%Images := Array()
             If Not GroupImages Is Array

@@ -1,6 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 
-Static AlwaysActiveHKs := Map(
+This.AlwaysActiveHKs := Map(
 "Ctrl", ControlHK,
 "#+Insert", AddMarkerHK,
 "#+Del", DeleteMarkers,
@@ -16,7 +16,7 @@ Static AlwaysActiveHKs := Map(
 "#+Q", QuitHK,
 "#+R", RepeatSearchForImageHK,
 "#+Z", ReportMousePositionHK,
-"#+B", ReportPixelColorHK,
+"#+K", ReportPixelColorHK,
 "#+U", RouteMouseToFocusedControl,
 "#+I", SearchForImageHK,
 "#+X", SetMouseXCoordinateHK,
@@ -31,7 +31,7 @@ Static AlwaysActiveHKs := Map(
 "#+W", ViewWindowInfo,
 )
 
-Static OnlyWhenEditorActiveHKs := Map(
+This.OnlyWhenEditorActiveHKs := Map(
 "#+H", AddHotspotButtonHK,
 "AppsKey", ContextMenuHK,
 "+^Tab", ControlShiftTabHK,
@@ -51,7 +51,9 @@ Static OnlyWhenEditorActiveHKs := Map(
 "^V", PasteItemHK,
 "^!S", SaveProjectAsHK,
 "^S", SaveProjectHK,
-"#+S", SetCoordinatesToMouseCursor,
+"#+B", SetBottomCornerCoordinatesToMouseCursor,
+"#+S", SetHotspotCoordinatesToMouseCursor,
+"#+T", SetTopCornerCoordinatesToMouseCursor,
 "+Tab", ShiftTabHK,
 "Tab", TabHK,
 "^Z", UndoHK,
@@ -59,4 +61,4 @@ Static OnlyWhenEditorActiveHKs := Map(
 "Down", UpDownHK,
 )
 
-Static HKsExemptFromPause := ["#+Q", "#+F1", "#+P"]
+This.HKsExemptFromPause := ["#+Q", "#+F1", "#+P"]

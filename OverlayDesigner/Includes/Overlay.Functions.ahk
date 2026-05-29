@@ -49,7 +49,26 @@ GetMarkers() {
     Return MarkerList
 }
 
-SetCoordinatesToMouseCursor(*) {
+SetBottomCornerCoordinatesToMouseCursor(*) {
+    If Not Editor.Overlay.CurrentControl
+    Return
+    If Editor.Overlay.CurrentControl Is Separator
+    TargetControl := Editor.Overlay.CurrentControl.SuperordinateControl
+    Else
+    TargetControl := Editor.Overlay.CurrentControl
+    If Not TargetControl Is Object
+    Return
+    If TargetControl.HasProp("X2Coordinate") And TargetControl.HasProp("Y2Coordinate") {
+        MouseGetPos &XPosition, &YPosition
+        Editor.ParamHandler.SetControlCoords(TargetControl,,, XPosition, YPosition)
+        If Editor.ParamHandler.HasCompensationFunc(TargetControl)
+        AccessibilityOverlay.Speak(Type(TargetControl) . " bottom corner coordinates set compensated to X " . XPosition . " Y " . YPosition)
+        Else
+        AccessibilityOverlay.Speak(Type(TargetControl) . " bottom corner coordinates set to X " . XPosition . " Y " . YPosition)
+    }
+}
+
+SetHotspotCoordinatesToMouseCursor(*) {
     If Not Editor.Overlay.CurrentControl
     Return
     If Editor.Overlay.CurrentControl Is Separator
@@ -61,15 +80,38 @@ SetCoordinatesToMouseCursor(*) {
     If TargetControl.HasProp("XCoordinate") And TargetControl.HasProp("YCoordinate") {
         MouseGetPos &XPosition, &YPosition
         Editor.ParamHandler.SetControlCoords(TargetControl, XPosition, YPosition)
+        ReportAction()
     }
     Else {
         If TargetControl.HasProp("X1Coordinate") And TargetControl.HasProp("Y1Coordinate") {
             MouseGetPos &XPosition, &YPosition
             Editor.ParamHandler.SetControlCoords(TargetControl, XPosition, YPosition)
+            ReportAction()
         }
     }
-    If Editor.ParamHandler.HasCompensationFunc(TargetControl)
-    AccessibilityOverlay.Speak(Type(TargetControl) . " coordinates set compensated to X " . XPosition . " Y " . YPosition)
+    ReportAction() {
+        If Editor.ParamHandler.HasCompensationFunc(TargetControl)
+        AccessibilityOverlay.Speak(Type(TargetControl) . " coordinates set compensated to X " . XPosition . " Y " . YPosition)
+        Else
+        AccessibilityOverlay.Speak(Type(TargetControl) . " coordinates set to X " . XPosition . " Y " . YPosition)
+    }
+}
+
+SetTopCornerCoordinatesToMouseCursor(*) {
+    If Not Editor.Overlay.CurrentControl
+    Return
+    If Editor.Overlay.CurrentControl Is Separator
+    TargetControl := Editor.Overlay.CurrentControl.SuperordinateControl
     Else
-    AccessibilityOverlay.Speak(Type(TargetControl) . " coordinates set to X " . XPosition . " Y " . YPosition)
+    TargetControl := Editor.Overlay.CurrentControl
+    If Not TargetControl Is Object
+    Return
+    If TargetControl.HasProp("X1Coordinate") And TargetControl.HasProp("Y1Coordinate") {
+        MouseGetPos &XPosition, &YPosition
+        Editor.ParamHandler.SetControlCoords(TargetControl, XPosition, YPosition)
+        If Editor.ParamHandler.HasCompensationFunc(TargetControl)
+        AccessibilityOverlay.Speak(Type(TargetControl) . " top corner coordinates set compensated to X " . XPosition . " Y " . YPosition)
+        Else
+        AccessibilityOverlay.Speak(Type(TargetControl) . " top corner coordinates set to X " . XPosition . " Y " . YPosition)
+    }
 }

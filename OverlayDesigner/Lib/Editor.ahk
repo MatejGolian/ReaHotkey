@@ -14,10 +14,9 @@ Class Editor {
     Static ProjectFile := ""
     Static Undo := {Json: False, ControlNumber: 0}
     
-    #Include ../Includes/Hotkey.Definitions.ahk
-    #Include ../Includes/Item.Definitions.ahk
-    
     Static Init() {
+        #Include ../Includes/Hotkey.Definitions.ahk
+        #Include ../Includes/Item.Definitions.ahk
         A_IconTip := This.AppName
         A_TrayMenu.Delete
         A_TrayMenu.Add("&Pause", ObjBindMethod(This, "TogglePause"))
