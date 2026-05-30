@@ -68,7 +68,7 @@ SetBottomCornerCoordinatesToMouseCursor(*) {
     }
 }
 
-SetHotspotCoordinatesToMouseCursor(*) {
+SetCoordinatesToMouseCursor(*) {
     If Not Editor.Overlay.CurrentControl
     Return
     If Editor.Overlay.CurrentControl Is Separator

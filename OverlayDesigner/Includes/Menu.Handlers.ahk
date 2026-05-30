@@ -43,6 +43,9 @@ ItemActionMenuHandler(ItemName, ItemPos, MenuObj) {
     Else
     TargetControl := Editor.Overlay.CurrentControl
     FuncName := StrReplace(StrTitle(ItemName), " ", "")
+    FuncName := StrReplace(FuncName, "&", "")
+    If InStr(FuncName, "`t")
+    FuncName := SubStr(FuncName, 1, InStr(FuncName, "`t") - 1)
     %FuncName%.Call(TargetControl)
 }
 

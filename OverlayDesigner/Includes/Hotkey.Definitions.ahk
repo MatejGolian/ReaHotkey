@@ -52,7 +52,7 @@ This.OnlyWhenEditorActiveHKs := Map(
 "^!S", SaveProjectAsHK,
 "^S", SaveProjectHK,
 "#+B", SetBottomCornerCoordinatesToMouseCursor,
-"#+S", SetHotspotCoordinatesToMouseCursor,
+"#+S", SetCoordinatesToMouseCursor,
 "#+T", SetTopCornerCoordinatesToMouseCursor,
 "+Tab", ShiftTabHK,
 "Tab", TabHK,

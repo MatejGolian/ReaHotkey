@@ -297,13 +297,33 @@ Class ParamHandler {
         }
     }
     
+    Static ValidateDefaultLabel(OverlayObj, Name, Value, Expression, Optional) {
+        If Value = "" And Not Expression
+        Return Value
+        If Value = "" And Optional
+        Return Value
+        If Value = ""
+        Return This.Error("You did not enter the " . StrLower(This.GetFriendlyName(Name)) . ".")
+        Return Value
+    }
+    
+    Static ValidateDefaultValue(OverlayObj, Name, Value, Expression, Optional) {
+        If Value = "" And Not Expression
+        Return Value
+        If Value = "" And Optional
+        Return Value
+        If Value = ""
+        Return This.Error("You did not enter the " . StrLower(This.GetFriendlyName(Name)) . ".")
+        Return Value
+    }
+    
     Static ValidateHotkeyCommand(OverlayObj, Name, Value, Expression, Optional) {
         If Value = "" And Not Expression
         Return Value
         Return Value
     }
     
-    Static ValidateDefaultValue(OverlayObj, Name, Value, Expression, Optional) {
+    Static ValidateHotkeyLabel(OverlayObj, Name, Value, Expression, Optional) {
         If Value = "" And Not Expression
         Return Value
         If Value = "" And Optional
