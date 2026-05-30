@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed OverlayLoader not skipping special/undefined/Designer-only items, such as Markers
+
 ## [1.0.13] - 2026-05-30
 
 ### Changed

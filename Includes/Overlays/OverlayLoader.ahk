@@ -55,22 +55,26 @@ Class OverlayLoader {
         StartingID := JsonData["RootID"]
         If StartingID = JsonData["RootID"] {
             ObjType := JsonData["Items"][StartingID]["ObjType"]
-            ObjParams := JsonData["Items"][StartingID]["ObjParams"]
-            ConstructorParams := This.GetConstructorParams(StartingID, JsonData)
-            OverlayObj := %ObjType%(ConstructorParams*)
+            If This.ItemDefinitions.Has(ObjType) {
+                ObjParams := JsonData["Items"][StartingID]["ObjParams"]
+                ConstructorParams := This.GetConstructorParams(StartingID, JsonData)
+                OverlayObj := %ObjType%(ConstructorParams*)
+            }
         }
         StartingItem := JsonData["Items"][StartingID]
         If StartingItem.Has("Children")
         For ChildID In StartingItem["Children"] {
             ChildItem := JsonData["Items"][ChildID]
             ChildItemType := ChildItem["ObjType"]
-            ChildConstructorParams := This.GetConstructorParams(ChildID, JsonData)
-            ChildObj := %ChildItemType%(ChildConstructorParams*)
-            ChildObj := This.AddFromJson(ChildObj, JsonData, ChildID)
-            If OverlayObj Is AccessibilityOverlay
-            OverlayObj.AddControl(ChildObj)
-            Else If OverlayObj Is TabControl
-            OverlayObj.AddTabs(ChildObj)
+            If This.ItemDefinitions.Has(ChildItemType) {
+                ChildConstructorParams := This.GetConstructorParams(ChildID, JsonData)
+                ChildObj := %ChildItemType%(ChildConstructorParams*)
+                ChildObj := This.AddFromJson(ChildObj, JsonData, ChildID)
+                If OverlayObj Is AccessibilityOverlay
+                OverlayObj.AddControl(ChildObj)
+                Else If OverlayObj Is TabControl
+                OverlayObj.AddTabs(ChildObj)
+            }
         }
         Return OverlayObj
     }
