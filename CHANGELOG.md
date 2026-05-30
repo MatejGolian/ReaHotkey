@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.14] - 2026-05-30
+
 ### Fixed
 
 -   Fixed OverlayLoader not skipping special/undefined/Designer-only items, such as Markers
@@ -792,7 +794,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.13...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.14...HEAD
+
+[1.0.14]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.13...1.0.14
 
 [1.0.13]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.12...1.0.13
 
