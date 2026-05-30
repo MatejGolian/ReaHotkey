@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.13] - 2026-05-30
+
 ### Changed
 
 -   OverlayDesigner: Extend input validation
@@ -786,7 +788,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.12...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.13...HEAD
+
+[1.0.13]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.12...1.0.13
 
 [1.0.12]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.11...1.0.12
 
