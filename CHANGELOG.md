@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.0.15] - 2026-05-31
+
 ### Changed
 
 -   Display a confirmation dialog when trying to quit/reload the script while an update is in progress (replaces the previous notification message)
@@ -797,7 +800,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.14...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.15...HEAD
+
+[1.0.15]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.14...1.0.15
 
 [1.0.14]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.13...1.0.14
 
