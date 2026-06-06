@@ -157,6 +157,147 @@ OverlayDesigner is a special utility that can create basic overlays in an intera
 The resulting files can be used directly in the designer, but they can also be loaded in ReaHotkey's OverlayLoader to make the user experience more hassle-free. Note that the OverlayLoader component included in ReaHotkey does not possess the editing capabilities of the full OverlayDesigner script.
 Also, at present the OverlayLoader script is only active in the Ableton and REAPER plug-in windows - using it in conjunction with standalone applications is not supported at this time.
 
+### Getting Started with Designing Overlays
+
+Here are basic instructions how to use OverlayDesigner to create overlays.
+
+1. To activate the overlay designing/editing feature:
+   - Focus the window you want to create an overlay for.
+   - Press `Shift + Windows + D` to make the overlay designer/editor feature active in that particular window.
+   - The script will switch to designing/editing mode, allowing you to add/edit overlay elements and move between them using standard navigation commands like Tab and Shift + Tab.
+
+2. To add items:
+   - Use the Applications key to open the OverlayDesigner context menu. Note that the overlay designing/editing feature needs to be in an active state in order for this command to work.
+   - Select the control type you want to add from the Add submenu (e.g., HotspotButton, HotspotCheckbox, TabControl). The available choices depend on the currently focused control. This ensures that controls only get added to the parents they're supposed to. For instance, Tabs can only be added if a TabControl is currently focused. Likewise, you won't be able to add a HotspotButton when a TabControl object has focus.
+   - Items relying on mouse coordinates will be placed at the current mouse position.
+   - Hotspot objects have a single coordinate set; Graphical and OCR objects have two coordinate sets coresponding to the top-left and bottom-right corners respectively in order to define a region/rectangle.
+
+3. To edit items:
+   - Focus an item using `Tab` or `Shift + Tab`.
+   - Press `F2` to edit the selected item or choose 'Item properties…' from the Edit submenu.
+   - For mouse coordinate adjustments, you can:
+     - Move your mouse to the desired position.
+     - Use shortcuts:
+       - `Shift + Windows + S` — To set Hotspot coordinates to current mouse position.
+       - `Shift + Windows + T` — To set top-left corner coordinates for Graphical/OCR objects to current mouse position.
+       - `Shift + Windows + B` — To set bottom-right corner coordinates for Graphical/OCR objects to current mouse position.
+
+4. To save your work:
+   - To save your overlay to a file that you can reopen later, select 'Save' or 'Save as…' from OverlayDesigner's File submenu.
+
+#### Additional Notes
+
+To edit container objects (e.g., AccessibilityOverlays, PluginOverlays, Tabs), navigate to the start or end of the object in question and press `F2`.
+Opening Item properties while a TabControl has focus will edit the TabControl object itself and not the currently selected tab.
+After adding container objects, focus will move to the start of that newly added object so that you can start adding controls to it right away.
+
+### Available Overlay Types
+
+ReaHotkey/OverlayDesigner supports creating 3 overlay types:
+
+1. AccessibilityOverlay:
+   - Basic overlay type not geared towards anything specific.
+   - This is the overlay type created by default. To make the root item a different type than the default, create a new overlay (File > New…).
+
+2. PluginOverlay:
+   - Similar to the basic AccessibilityOverlay type, but it makes things easier when creating overlays for plug-ins.
+   - Simplifies hotkey management and automatically adds coordinate compensation to overlay elements.
+   - Allows specifying a plug-in name. This should be one of the plug-in names defined by ReaHotkey.
+
+3. StandaloneOverlay:
+   - Designed for overlays targeting standalone applications.
+   - Simplifies hotkey management.
+   - Allows specifying a standalone application name. This should be one of the standalone names defined by ReaHotkey.
+
+#### Additional Notes
+
+Technically you can create any kind of overlay using the basic AccessibilityOverlay type, but the other context specific overlay variants perform certain tasks automatically making it possible to use shorter and simpler code. Most notably they are able to link  overlays to particular ReaHotkey plug-ins or standalone programs and make their hotkeys work in their designated contexts. The plug-in or standalone names do however only serve their true purpose when writing a full ReaHotkey overlay in the form of AutoHotkey code. Even if you enter valid plug-in or standalone names in Item properties, these overlays won't be linked to the plug-in or standalone program you specified when just using OverlayDesigner or the overlay loader component that's part of the main ReaHotkey script. However, any hotkeys you define in your overlay will still work.
+
+### About PluginOverlays and Plug-in Coordinate Compensation
+
+Coordinate compensation adjusts overlay controls based on the current plug-in position in the active window. It does so by adding compensation functions to the properties of overlay elements that depend on mouse coordinates. The plug-in position can vary depending on how and in which DAW the given plug-in is loaded (REAPER vs. Ableton, REAPER native vs. bridged plug-in modes). Coordinate compensation functions determine the plugin control location dynamically during runtime and automatically update mouse coordinates of applicable controls, ensuring that the script performs actions at the right mouse coordinates in the end.
+When creating a full/proper ReaHotkey overlay it's not necessary to explicitly specify these compensation functions when adding elements to PluginOverlays as they get added automatically. So if your aim is to export AutoHotkey code, you can delete the compensation functions from the properties of your elements prior to export to make your code cleaner. That being said, if you want your elements to account for the location of the control containing the plug-in in REAPER or Ableton when using OverlayDesigner or OverlayLoader, you should keep the compensation functions in the properties of the items that can utilize them.
+
+### Functions and Control Actions
+
+Controls can optionally execute extra/custom functions in certain situations. Not all object types can execute functions in all scenarios, although most controls can trigger functions when they are focused.
+Here are the basic function types:
+  - `Pre-exec focus functions`: Executed after the control gets focused but before the control executes its own focus code.
+  - `Post-exec focus functions`: Executed if the control gains focus successfully and after it finishes executing all of its own focus code.
+  - `Pre-exec activation functions`: Executed after the control gets activated, but before the control executes its own activation code.
+  - `Post-exec activation functions`: Executed if the control gets activated successfully and after it finishes executing all of its own activation code.
+  - `Hotkey functions`: Executed whenever the given control is focused or activated via its associated hotkey.
+  - `Change functions`: For ListBoxes, triggered on value change via arrow keys.
+
+When Specifying functions in Item Properties:
+  - Use function names from `Includes/Overlay.Functions.ahk` found in the ReaHotkey source code. Not all the functions defined in that file can be used with overlay objects directly as that file contains other helper functions too, but generally that's the place where most functions that can be passed to overlay objects live.
+  - Enter multiple function names separated by commas (no quotes required) if you need to execute more than 1 function. The listed functions will be executed in the order you specify.
+  
+### Markers
+
+Markers are special objects recognized only by OverlayDesigner. They are ignored by the ReaHotkey overlay loader.
+They behave similar to HotspotButtons, they have X and Y coordinates and they perform mouse clicks once activated, but they don't offer all the functionality that normal HotspotButtons do. Their main purpose is to provide means to record mouse coordinates for later/temporary usage.
+
+### Keyboard Shortcuts
+
+Most keyboard shortcuts are disabled when the overlay designing/editing feature is inactive, although general functions (mostly the ones found in the script's Tools submenu) remain accessible unless the script is paused.
+
+#### Always Active (including when the script is paused):
+
+| Shortcut | Description |
+| --- | --- |
+| `Shift + Windows + P` | Toggle pause |
+| `Shift + Windows + F1` | Open the About window |
+| `Shift + Windows + Q` | Quit the script |
+
+#### Active when the script is not paused:
+
+| Shortcut | Description |
+| --- | --- |
+| `Shift + Windows + D` | Toggle the designing/editing feature active/inactive |
+| `Shift + Windows + Insert` | Add marker at mouse cursor |
+| `Shift + Windows + Del` | Delete all markers |
+| `Shift + Windows + F` | Focus window control |
+| `Shift + Windows + U` | Route mouse to focused control |
+| `Shift + Windows + PrintScreen` | Capture active window region to image |
+| `Shift + Windows + I` | Search for image on screen |
+| `Shift + Windows + R` | Repeat last image search |
+| `Shift + Windows + O` | Perform OCR on the active window |
+| `Shift + Windows + G` | Generate markers from OCR results |
+| `Shift + Windows + W` | Show info about the active window |
+| `Shift + Windows + C` | Show info about the focused control |
+| `Shift + Windows + L` | List all controls of the active window |
+| `Shift + Windows + M` | Show mouse and caret info |
+| `Shift + Windows + V` | Show clipboard contents |
+| `Shift + Windows + K` | Report pixel color under mouse |
+| `Shift + Windows + Arrow Keys` | Move mouse within the active window (Left, Right, Up, Down) |
+| `Shift + Windows + X` | Set mouse X position |
+| `Shift + Windows + Y` | Set mouse Y position |
+| `Shift + Windows + Z` | Report mouse position |
+| `Shift + Windows + Enter` | Perform a click at current mouse position |
+
+#### When the designer/editor is Active:
+
+| Shortcut | Description |
+| --- | --- |
+| `Applications` | Open editor context menu |
+| `Ctrl + N` | Create new project |
+| `Ctrl + O` | Open existing project |
+| `Ctrl + S` | Save project |
+| `Ctrl + Alt + S` | Save project as... |
+| `Shift + Windows + E` | Export overlay as AutoHotkey code |
+| `Ctrl + Z` | Undo last action |
+| `Ctrl + X` | Cut selected item |
+| `Ctrl + C` | Copy selected item |
+| `Ctrl + V` | Paste item |
+| `Del` | Delete selected item |
+| `F2` | Edit item properties |
+| `Shift + Windows + N` | Nudge/recalculate item coordinates |
+| `Shift + Windows + H` | Add HotspotButton at mouse position |
+| `Shift + Windows + S` | Set Hotspot object coordinates to mouse position |
+| `Shift + Windows + T` | Set top-left corner coordinates of Graphical/OCR objects to mouse position |
+| `Shift + Windows + B` | Set bottom-right corner coordinates of Graphical/OCR objects to mouse position |
+
 ## Roadmap
 
 This is an incomplete list of features we're planning to look into in the future or are currently developing. Noone can guarantee that they will ever become reality, but they might at some point, and you can always open an issue to either offer help or request a new entry on this list. This list doesn't necessarily include bugfixes or additional features for entries above, except if they require special treatment and time to investigate them.
