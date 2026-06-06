@@ -164,13 +164,13 @@ Here are basic instructions how to use OverlayDesigner to create overlays.
 1. To activate the overlay designing/editing feature:
    - Focus the window you want to create an overlay for.
    - Press `Shift + Windows + D` to make the overlay designer/editor feature active in that particular window.
-   - The script will switch to designing/editing mode, allowing you to add/edit overlay elements and move between them using standard navigation commands like Tab and Shift + Tab.
+   - The script will switch to designing/editing mode, allowing you to add/edit overlay elements and move between them using standard navigation commands such as Tab and Shift + Tab.
 
 2. To add items:
    - Use the Applications key to open the OverlayDesigner context menu. Note that the overlay designing/editing feature needs to be in an active state in order for this command to work.
    - Select the control type you want to add from the Add submenu (e.g., HotspotButton, HotspotCheckbox, TabControl). The available choices depend on the currently focused control. This ensures that controls only get added to the parents they're supposed to. For instance, Tabs can only be added if a TabControl is currently focused. Likewise, you won't be able to add a HotspotButton when a TabControl object has focus.
    - Items relying on mouse coordinates will be placed at the current mouse position.
-   - Hotspot objects have a single coordinate set; Graphical and OCR objects have two coordinate sets coresponding to the top-left and bottom-right corners respectively in order to define a region/rectangle.
+   - Hotspot objects have a single coordinate set; Graphical and OCR objects have two coordinate sets coresponding to the top-left and bottom-right corners respectively in order to define a region/rectangle on the screen.
 
 3. To edit items:
    - Focus an item using `Tab` or `Shift + Tab`.
@@ -178,9 +178,9 @@ Here are basic instructions how to use OverlayDesigner to create overlays.
    - For mouse coordinate adjustments, you can:
      - Move your mouse to the desired position.
      - Use shortcuts:
-       - `Shift + Windows + S` — To set Hotspot coordinates to current mouse position.
-       - `Shift + Windows + T` — To set top-left corner coordinates for Graphical/OCR objects to current mouse position.
-       - `Shift + Windows + B` — To set bottom-right corner coordinates for Graphical/OCR objects to current mouse position.
+       - `Shift + Windows + S` — To set Hotspot coordinates to the current mouse position.
+       - `Shift + Windows + T` — To set top-left corner coordinates for Graphical/OCR objects to the current mouse position.
+       - `Shift + Windows + B` — To set bottom-right corner coordinates for Graphical/OCR objects to the current mouse position.
 
 4. To save your work:
    - To save your overlay to a file that you can reopen later, select 'Save' or 'Save as…' from OverlayDesigner's File submenu.
@@ -189,7 +189,7 @@ Here are basic instructions how to use OverlayDesigner to create overlays.
 
 To edit container objects (e.g., AccessibilityOverlays, PluginOverlays, Tabs), navigate to the start or end of the object in question and press `F2`.
 Opening Item properties while a TabControl has focus will edit the TabControl object itself and not the currently selected tab.
-After adding container objects, focus will move to the start of that newly added object so that you can start adding controls to it right away.
+After adding container objects, focus will move to the start of that newly added object so that you can begin adding controls to it right away.
 
 ### Available Overlay Types
 
@@ -197,7 +197,7 @@ ReaHotkey/OverlayDesigner supports creating 3 overlay types:
 
 1. AccessibilityOverlay:
    - Basic overlay type not geared towards anything specific.
-   - This is the overlay type created by default. To make the root item a different type than the default, create a new overlay (File > New…).
+   - This is the overlay type created by default. To make the root item a different type, create a new overlay (File > New…).
 
 2. PluginOverlay:
    - Similar to the basic AccessibilityOverlay type, but it makes things easier when creating overlays for plug-ins.
@@ -240,7 +240,7 @@ They behave similar to HotspotButtons, they have X and Y coordinates and they pe
 
 ### Keyboard Shortcuts
 
-Most keyboard shortcuts are disabled when the overlay designing/editing feature is inactive, although general functions (mostly the ones found in the script's Tools submenu) remain accessible unless the script is paused.
+Many of the available keyboard shortcuts are disabled when the overlay designing/editing feature is inactive, although general functions (mostly the ones found in the script's Tools submenu) remain accessible unless the script is paused.
 
 #### Always Active (including when the script is paused):
 
