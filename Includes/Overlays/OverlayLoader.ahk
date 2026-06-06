@@ -100,12 +100,20 @@ Class OverlayLoader {
         For ParamName In This.ItemDefinitions[ObjType].RequiredParams {
             If Not ObjParams.Has(ParamName)
             ObjParams.Set(ParamName, "")
+            If ObjType = "PluginOverlay" And ParamName = "PluginName"
+            ObjParams[ParamName] := ""
+            If ObjType = "StandaloneOverlay" And ParamName = "StandaloneName"
+            ObjParams[ParamName] := ""
             ConstructorParams.Push(This.MakeObjProp(ObjType, ParamName, ObjParams[ParamName]))
         }
         If This.ItemDefinitions[ObjType].HasProp("OptionalParams")
         For ParamName In This.ItemDefinitions[ObjType].OptionalParams {
             If Not ObjParams.Has(ParamName)
             ObjParams.Set(ParamName, "")
+            If ObjType = "PluginOverlay" And ParamName = "PluginName"
+            ObjParams[ParamName] := ""
+            If ObjType = "StandaloneOverlay" And ParamName = "StandaloneName"
+            ObjParams[ParamName] := ""
             ConstructorParams.Push(This.MakeObjProp(ObjType, ParamName, ObjParams[ParamName]))
         }
         Return ConstructorParams

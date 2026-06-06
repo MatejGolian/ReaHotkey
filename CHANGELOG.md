@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   OverlayLoader: Ignore plugin/standalone names
+
 ## [1.0.15] - 2026-05-31
 
 ### Changed
