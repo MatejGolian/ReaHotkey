@@ -69,9 +69,9 @@ Just extract the downloaded archive and run one of the ReaHotkey executables dep
 | `Ctrl + Shift + Windows + F1` | View readme |
 | `Ctrl + Shift + Windows + F5` | Reload |
 | `Ctrl + Shift + Windows + F12` | Configuration |
-| `Shift + Windows + L | Load custom overlay in the OverlayLoader (see the OverlayDesigner/Loader section [below](#overlaydesignerloader) for more details) |
-| `Shift + Windows + U | Unload custom overlay |
-| `Shift + Windows + O | Toggle OverlayLoader enabled/disabled |
+| `Shift + Windows + L` | Load custom overlay in the OverlayLoader (see the OverlayDesigner/Loader section [below](#overlaydesignerloader) for more details) |
+| `Shift + Windows + U` | Unload custom overlay |
+| `Shift + Windows + O` | Toggle OverlayLoader enabled/disabled |
 
 ## Known Issues
 
