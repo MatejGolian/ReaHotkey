@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Readme: Display ReaHotkey shortcuts in a table
+
 ## [1.0.17] - 2026-06-06
 
 ### Changed

@@ -57,19 +57,21 @@ Just extract the downloaded archive and run one of the ReaHotkey executables dep
 
 ## Keyboard Shortcuts
 
-* f6 - focus plug-in window/interface
-* ctrl+shift+windows+a - about
-* ctrl+shift+windows+e - toggle AppsKey Emulator enabled/disabled
-* ctrl+shift+windows+p - pause
-* ctrl+shift+windows+q - quit
-* ctrl+shift+windows+r - open ReaHotkey menu
-* ctrl+shift+windows+u - check for updates
-* ctrl+shift+windows+f1 - view readme
-* ctrl+shift+windows+f5 - reload
-* ctrl+shift+windows+f12 - configuration
-* shift+windows+l - load custom overlay in the OverlayLoader (see the OverlayDesigner/Loader section [below](#overlaydesignerloader) for more details)
-* shift+windows+u - unload custom overlay
-* shift+windows+o - toggle OverlayLoader enabled/disabled
+| Shortcut | Description |
+| --- | --- |
+| `F6` | Focus plug-in window/interface |
+| `Ctrl + Shift + Windows + A` | About |
+| `Ctrl + Shift + Windows + E` | Toggle AppsKey Emulator enabled/disabled |
+| `Ctrl + Shift + Windows + P` | Pause |
+| `Ctrl + Shift + Windows + Q` | Quit |
+| `Ctrl + Shift + Windows + R` | Open ReaHotkey menu |
+| `Ctrl + Shift + Windows + U` | Check for updates |
+| `Ctrl + Shift + Windows + F1` | View readme |
+| `Ctrl + Shift + Windows + F5` | Reload |
+| `Ctrl + Shift + Windows + F12` | Configuration |
+| `Shift + Windows + L | Load custom overlay in the OverlayLoader (see the OverlayDesigner/Loader section [below](#overlaydesignerloader) for more details) |
+| `Shift + Windows + U | Unload custom overlay |
+| `Shift + Windows + O | Toggle OverlayLoader enabled/disabled |
 
 ## Known Issues
 
