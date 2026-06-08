@@ -169,7 +169,7 @@ Here are basic instructions how to use OverlayDesigner to create overlays.
    - The script will switch to designing/editing mode, allowing you to add/edit overlay elements and move between them using standard navigation commands such as Tab and Shift + Tab.
 
 2. To add items:
-   - Use the Applications key to open the OverlayDesigner context menu. Note that the overlay designing/editing feature needs to be in an active state in order for this command to work.
+   - Use the Applications key to open the OverlayDesigner context menu. Note that the overlay designing/editing feature needs to be active in order for this command to work.
    - Select the control type you want to add from the Add submenu (e.g., HotspotButton, HotspotCheckbox, TabControl). The available choices depend on the currently focused control. This ensures that controls only get added to the parents they're supposed to. For instance, Tabs can only be added if a TabControl is currently focused. Likewise, you won't be able to add a HotspotButton when a TabControl object has focus.
    - Items relying on mouse coordinates will be placed at the current mouse position.
    - Hotspot objects have a single coordinate set; Graphical and OCR objects have two coordinate sets coresponding to the top-left and bottom-right corners respectively in order to define a region/rectangle on the screen.
@@ -181,8 +181,8 @@ Here are basic instructions how to use OverlayDesigner to create overlays.
      - Move your mouse to the desired position.
      - Use shortcuts:
        - `Shift + Windows + S` — To set Hotspot coordinates to the current mouse position.
-       - `Shift + Windows + T` — To set top-left corner coordinates for Graphical/OCR objects to the current mouse position.
-       - `Shift + Windows + B` — To set bottom-right corner coordinates for Graphical/OCR objects to the current mouse position.
+       - `Shift + Windows + T` — To set top-left corner coordinates of Graphical/OCR objects to the current mouse position.
+       - `Shift + Windows + B` — To set bottom-right corner coordinates of Graphical/OCR objects to the current mouse position.
 
 4. To save your work:
    - To save your overlay to a file that you can reopen later, select 'Save' or 'Save as…' from OverlayDesigner's File submenu.
@@ -220,20 +220,49 @@ Technically you can create any kind of overlay using the basic AccessibilityOver
 Coordinate compensation adjusts overlay controls based on the current plug-in position in the active window. It does so by adding compensation functions to the properties of overlay elements that depend on mouse coordinates. The plug-in position can vary depending on how and in which DAW the given plug-in is loaded (REAPER vs. Ableton, REAPER native vs. bridged plug-in modes). Coordinate compensation functions determine the plugin control location dynamically during runtime and automatically update mouse coordinates of applicable controls, ensuring that the script performs actions at the right mouse coordinates in the end.
 When creating a full/proper ReaHotkey overlay it's not necessary to explicitly specify these compensation functions when adding elements to PluginOverlays as they get added automatically. So if your aim is to export AutoHotkey code, you can delete the compensation functions from the properties of your elements prior to export to make your code cleaner. That being said, if you want your elements to account for the location of the control containing the plug-in in REAPER or Ableton when using OverlayDesigner or OverlayLoader, you should keep the compensation functions in the properties of the items that can utilize them.
 
-### Functions and Control Actions
+### List of Item Properties
 
-Controls can optionally execute extra/custom functions in certain situations. Not all object types can execute functions in all scenarios, although most controls can trigger functions when they are focused.
-Here are the basic function types:
-  - `Pre-exec focus functions`: Executed after the control gets focused but before the control executes its own focus code.
-  - `Post-exec focus functions`: Executed if the control gains focus successfully and after it finishes executing all of its own focus code.
-  - `Pre-exec activation functions`: Executed after the control gets activated, but before the control executes its own activation code.
-  - `Post-exec activation functions`: Executed if the control gets activated successfully and after it finishes executing all of its own activation code.
-  - `Hotkey functions`: Executed whenever the given control is focused or activated via its associated hotkey.
-  - `Change functions`: For ListBoxes, triggered on value change via arrow keys.
+| Name | Description |
+| --- | --- |
+| `Variable Name` | Sets the variable name to use in generated AutoHotkey code. |
+| `Label` | Sets the control label to be reported when the control gains focus. |
+| `Pre-exec Focus Functions` | A comma separated list of unquoted function names: Executed after the control gets focused but before the control executes its own focus code. |
+| `Post-exec Focus Functions` | A comma separated list of unquoted function names: Executed if the control gains focus successfully and after it finishes executing its own focus code. |
+| `Pre-exec Activation Functions` | A comma separated list of unquoted function names: Executed after the control gets activated, but before the control executes its own activation code. |
+| `Post-exec Activation Functions` | A comma separated list of unquoted function names: Executed if the control gets activated successfully and after it finishes executing its own activation code. |
+| `Hotkey Command` | Sets a custom hotkey for triggering the control. |
+| `Hotkey Label` | Allows specifying a custom label to inform the user of the custom hotkey that triggers the control. |
+| `Hotkey Functions` | A comma separated list of unquoted function names: Executed whenever the control is focused or activated via its associated hotkey. |
+| `Check State Function` | An unquoted name of the function used to determine the state of CustomToggleButtons or CustomCheckboxes. |
+| `Colors when the control is on` | A comma separated list of quoted color values as reported by the script: Used by HotspotToggleButtons, if any of the specified colors is detected at the control coordinates, the control will be reported as being on. |
+| `Colors when the control is off` | A comma separated list of quoted color values as reported by the script: Used by HotspotToggleButtons, if any of the specified colors is detected at the control coordinates, the control will be reported as being off. |
+| `Image files when the control is on` | A comma separated list of quoted paths to image files: Used by graphical objects, if any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being on. |
+| `Image files when the control is off` | A comma separated list of quoted paths to image files: Used by graphical objects, if any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being off. |
+| `Colors when the control is checked` | A comma separated list of quoted color values as reported by the script: Used by HotspotCheckboxes, if any of the specified colors is detected at the control coordinates, the control will be reported as being checked. |
+| `Colors when the control is unchecked` | A comma separated list of quoted color values as reported by the script: Used by HotspotCheckboxes, if any of the specified colors is detected at the control coordinates, the control will be reported as being unchecked. |
+| `Image files when the control is checked` | A comma separated list of quoted paths to image files: Used by graphical objects, if any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being on. |
+| `Image files when the control is unchecked` | A comma separated list of quoted paths to image files: Used by graphical objects, if any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being off. |
+| `Functions when the value of the control changes` | A comma separated list of unquoted function names: Triggered when the value of ListBox elements is changed via arrow keys. |
+| `Label Prefix` | Sets the string to be spoken before reporting the OCR result within the control's screen region. |
+| `Default Label` | The string to be spoken when the OCR result is blank. |
+| `Value Prefix` | Sets the string to be spoken before reporting the OCR result within the control's screen region. |
+| `Default Value` | The string to be spoken when the OCR result is blank. |
+| `OCR Language` | The language to use when performing OCR. |
+| `OCR Scale` | Sets OCR scaling. |
+| `OCR Type` | Sets the OCR type to use. Possible values are "Tesseract", "TesseractBest", "TesseractFast", "TesseractLegacy" and "UWP". |
+| `X Coordinate` | Sets the X coordinate of Hotspot controls. |
+| `Y Coordinate` | Sets the Y coordinate of Hotspot controls. |
+| `X1 Coordinate` | Sets the top left corner X coordinate of Graphical and OCR objects. |
+| `Y1 Coordinate` | Sets the top left corner Y coordinate of Graphical and OCR objects. |
+| `X2 Coordinate` | Sets the bottom right corner X coordinate of Graphical and OCR objects. |
+| `Y2 Coordinate` | Sets the bottom right corner Y coordinate of Graphical and OCR objects. |
+| `Plug-in Name` | Specifies the name of the plug-in that the overlay is made for. |
+| `Compensation Function` | An unquoted name of the function used to compensate the coordinates of added controls. |
+| `Standalone Name` | Specifies the name of the standalone program that the overlay is made for. |
 
-When Specifying functions in Item Properties:
-  - Use function names from `Includes/Overlay.Functions.ahk` found in the ReaHotkey source code. Not all the functions defined in that file can be used with overlay objects directly as that file contains other helper functions too, but generally that's the place where most functions that can be passed to overlay objects live.
-  - Enter multiple function names separated by commas (no quotes required) if you need to execute more than 1 function. The listed functions will be executed in the order you specify.
+#### Additional Notes
+
+When Specifying functions in Item Properties, use function names from `Includes/Overlay.Functions.ahk` found in the ReaHotkey source code. Not all the functions defined in that file can be used with overlay objects directly as that file contains other helper functions too, but generally that's the place where most functions that can be passed to overlay objects live.
   
 ### Markers
 
