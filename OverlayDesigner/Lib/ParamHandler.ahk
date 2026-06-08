@@ -120,7 +120,7 @@ Class ParamHandler {
         "HotkeyCommand", "Hotkey Command",
         "HotkeyFunctions", "Hotkey Functions",
         "HotkeyLabel", "Hotkey Label",
-        "Images", "Image files",
+        "Images", "Image Files",
         "LabelPrefix", "Label Prefix",
         "OCRLanguage", "OCR Language",
         "OCRScale", "OCR Scale",

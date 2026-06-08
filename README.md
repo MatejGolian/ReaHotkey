@@ -234,8 +234,8 @@ When creating a full/proper ReaHotkey overlay it's not necessary to explicitly s
 | `Hotkey Command` | Button, ToggleButton, Checkbox, Edit, ListBox, Tab, CustomToggleButton, CustomCheckbox, CustomEdit, CustomListBox, GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText, StaticText, Marker | Sets a custom hotkey for triggering the control. |
 | `Hotkey Label` | Button, ToggleButton, Checkbox, Edit, ListBox, Tab, CustomToggleButton, CustomCheckbox, CustomEdit, CustomListBox, GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText, StaticText, Marker | Allows specifying a custom label to inform the user of the custom hotkey that triggers the control. |
 | `Hotkey Functions` | Button, ToggleButton, Checkbox, Edit, ListBox, Tab, CustomToggleButton, CustomCheckbox, CustomEdit, CustomListBox, GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText, StaticText | A comma separated list of unquoted function names: Executed whenever the control is focused or activated via its associated hotkey. |
-| `Image files` | GraphicalButton, GraphicalTab | A comma separated list of quoted paths to image files that the control will search for within its screen region. |
 | `Check State Function` | CustomToggleButton, CustomCheckbox | An unquoted function name: Used to determine the state of the control. |
+| `Image Files` | GraphicalButton, GraphicalTab | A comma separated list of quoted paths to image files that the control will search for within its screen region. |
 | `Colors when the control is on` | HotspotToggleButton | A comma separated list of quoted color values as reported by the script: If any of the specified colors is detected at the control coordinates, the control will be reported as being on. |
 | `Colors when the control is off` | HotspotToggleButton | A comma separated list of quoted color values as reported by the script: If any of the specified colors is detected at the control coordinates, the control will be reported as being off. |
 | `Image files when the control is on` | GraphicalToggleButton | A comma separated list of quoted paths to image files: If any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being on. |
@@ -253,8 +253,8 @@ When creating a full/proper ReaHotkey overlay it's not necessary to explicitly s
 | `OCR Type` | OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets the OCR type to use. Possible values are "Tesseract", "TesseractBest", "TesseractFast", "TesseractLegacy" and "UWP". |
 | `OCR Scale` | OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets OCR scaling. |
 | `OCR Language` | OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | The language to use when performing OCR. |
-| `X Coordinate` | HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, Marker | Sets the X. |
-| `Y Coordinate` | HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, Marker | Sets the Y coordinate. |
+| `X Coordinate` | HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, Marker | Sets the X coordinate of the control. |
+| `Y Coordinate` | HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, Marker | Sets the Y coordinate of the control. |
 | `X1 Coordinate` | GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets the top-left corner X coordinate. |
 | `Y1 Coordinate` | GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets the top-left corner Y coordinate. |
 | `X2 Coordinate` | GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets the bottom-right corner X coordinate. |
@@ -265,7 +265,7 @@ When creating a full/proper ReaHotkey overlay it's not necessary to explicitly s
 
 #### Additional Notes
 
-When Specifying functions in Item Properties, use function names from `Includes/Overlay.Functions.ahk` found in the ReaHotkey source code. Not all the functions defined in that file can be used with overlay objects directly as that file contains other helper functions too, but generally that's the place where most functions that can be passed to overlay objects live.
+When Specifying functions, use function names from `Includes/Overlay.Functions.ahk` found in the ReaHotkey source code. Not all the functions defined in that file can be used with overlay objects directly as that file contains other helper functions too, but generally that's the place where most functions that can be passed to overlay objects live.
   
 ### Markers
 
