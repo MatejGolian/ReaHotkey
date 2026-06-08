@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed small omission in OverlayDesigner documentation
+
 ## [1.0.20] - 2026-06-08
 
 ### Changed
