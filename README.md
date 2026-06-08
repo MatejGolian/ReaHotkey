@@ -251,8 +251,8 @@ When creating a full/proper ReaHotkey overlay it's not necessary to explicitly s
 | `Value Prefix` | OCRText | Sets the string to be spoken before reporting the OCR result within the control's screen region. |
 | `Default Value` | OCRListBox, OCRText | The string to be spoken when the OCR result is blank. |
 | `OCR Type` | OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets the OCR type to use. Possible values are "Tesseract", "TesseractBest", "TesseractFast", "TesseractLegacy" and "UWP". |
-| `OCR Scale` | OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets OCR scaling. |
 | `OCR Language` | OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | The language to use when performing OCR. |
+| `OCR Scale` | OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets OCR scaling. |
 | `X Coordinate` | HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, Marker | Sets the X coordinate of the control. |
 | `Y Coordinate` | HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, Marker | Sets the Y coordinate of the control. |
 | `X1 Coordinate` | GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets the top-left corner X coordinate. |
