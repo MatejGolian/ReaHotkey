@@ -222,43 +222,46 @@ When creating a full/proper ReaHotkey overlay it's not necessary to explicitly s
 
 ### List of Item Properties
 
-| Name | Description |
-| --- | --- |
-| `Variable Name` | Sets the variable name to use in generated AutoHotkey code. |
-| `Label` | Sets the control label to be reported when the control gains focus. |
-| `Pre-exec Focus Functions` | A comma separated list of unquoted function names: Executed after the control gets focused but before the control executes its own focus code. |
-| `Post-exec Focus Functions` | A comma separated list of unquoted function names: Executed if the control gains focus successfully and after it finishes executing its own focus code. |
-| `Pre-exec Activation Functions` | A comma separated list of unquoted function names: Executed after the control gets activated, but before the control executes its own activation code. |
-| `Post-exec Activation Functions` | A comma separated list of unquoted function names: Executed if the control gets activated successfully and after it finishes executing its own activation code. |
-| `Hotkey Command` | Sets a custom hotkey for triggering the control. |
-| `Hotkey Label` | Allows specifying a custom label to inform the user of the custom hotkey that triggers the control. |
-| `Hotkey Functions` | A comma separated list of unquoted function names: Executed whenever the control is focused or activated via its associated hotkey. |
-| `Check State Function` | An unquoted name of the function used to determine the state of CustomToggleButtons or CustomCheckboxes. |
-| `Colors when the control is on` | A comma separated list of quoted color values as reported by the script: Used by HotspotToggleButtons, if any of the specified colors is detected at the control coordinates, the control will be reported as being on. |
-| `Colors when the control is off` | A comma separated list of quoted color values as reported by the script: Used by HotspotToggleButtons, if any of the specified colors is detected at the control coordinates, the control will be reported as being off. |
-| `Image files when the control is on` | A comma separated list of quoted paths to image files: Used by graphical objects, if any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being on. |
-| `Image files when the control is off` | A comma separated list of quoted paths to image files: Used by graphical objects, if any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being off. |
-| `Colors when the control is checked` | A comma separated list of quoted color values as reported by the script: Used by HotspotCheckboxes, if any of the specified colors is detected at the control coordinates, the control will be reported as being checked. |
-| `Colors when the control is unchecked` | A comma separated list of quoted color values as reported by the script: Used by HotspotCheckboxes, if any of the specified colors is detected at the control coordinates, the control will be reported as being unchecked. |
-| `Image files when the control is checked` | A comma separated list of quoted paths to image files: Used by graphical objects, if any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being on. |
-| `Image files when the control is unchecked` | A comma separated list of quoted paths to image files: Used by graphical objects, if any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being off. |
-| `Functions when the value of the control changes` | A comma separated list of unquoted function names: Triggered when the value of ListBox elements is changed via arrow keys. |
-| `Label Prefix` | Sets the string to be spoken before reporting the OCR result within the control's screen region. |
-| `Default Label` | The string to be spoken when the OCR result is blank. |
-| `Value Prefix` | Sets the string to be spoken before reporting the OCR result within the control's screen region. |
-| `Default Value` | The string to be spoken when the OCR result is blank. |
-| `OCR Language` | The language to use when performing OCR. |
-| `OCR Scale` | Sets OCR scaling. |
-| `OCR Type` | Sets the OCR type to use. Possible values are "Tesseract", "TesseractBest", "TesseractFast", "TesseractLegacy" and "UWP". |
-| `X Coordinate` | Sets the X coordinate of Hotspot controls. |
-| `Y Coordinate` | Sets the Y coordinate of Hotspot controls. |
-| `X1 Coordinate` | Sets the top left corner X coordinate of Graphical and OCR objects. |
-| `Y1 Coordinate` | Sets the top left corner Y coordinate of Graphical and OCR objects. |
-| `X2 Coordinate` | Sets the bottom right corner X coordinate of Graphical and OCR objects. |
-| `Y2 Coordinate` | Sets the bottom right corner Y coordinate of Graphical and OCR objects. |
-| `Plug-in Name` | Specifies the name of the plug-in that the overlay is made for. |
-| `Compensation Function` | An unquoted name of the function used to compensate the coordinates of added controls. |
-| `Standalone Name` | Specifies the name of the standalone program that the overlay is made for. |
+| Name | Applies to | Description |
+| --- | --- | --- |
+| `Variable Name` | All | Sets the variable name to use in generated AutoHotkey code. |
+| `Label` | Button, ToggleButton, Checkbox, Edit, ListBox, Tab, TabControl, CustomToggleButton, CustomCheckbox, CustomEdit, CustomListBox, GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, OCREdit, OCRListBox, AccessibilityOverlay, PluginOverlay, StandaloneOverlay, Marker | Sets the control label, in case the control is focusable, the value will be reported on focus. |
+`Value` | StaticText | Sets the value that will be reported on focus. |
+| `Pre-exec Focus Functions` | Button, ToggleButton, Checkbox, Edit, ListBox, Tab, CustomToggleButton, CustomCheckbox, CustomEdit, CustomListBox, GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText, StaticText | A comma separated list of unquoted function names: Executed after the control gets focused but before the control executes its own focus code. |
+| `Post-exec Focus Functions` | Button, ToggleButton, Checkbox, Edit, ListBox, Tab, CustomToggleButton, CustomCheckbox, CustomEdit, CustomListBox, GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText, StaticText | A comma separated list of unquoted function names: Executed if the control gains focus successfully and after it finishes executing its own focus code. |
+| `Pre-exec Activation Functions` | Button, ToggleButton, Checkbox, CustomToggleButton, CustomCheckbox, GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, HotspotButton, HotspotToggleButton, HotspotCheckbox, OCRButton | A comma separated list of unquoted function names: Executed after the control gets activated, but before the control executes its own activation code. |
+| `Post-exec Activation Functions` | Button, ToggleButton, Checkbox, CustomToggleButton, CustomCheckbox, GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, HotspotButton, HotspotToggleButton, HotspotCheckbox, OCRButton | A comma separated list of unquoted function names: Executed if the control gets activated successfully and after it finishes executing its own activation code. |
+| `Hotkey Command` | Button, ToggleButton, Checkbox, Edit, ListBox, Tab, CustomToggleButton, CustomCheckbox, CustomEdit, CustomListBox, GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText, StaticText, Marker | Sets a custom hotkey for triggering the control. |
+| `Hotkey Label` | Button, ToggleButton, Checkbox, Edit, ListBox, Tab, CustomToggleButton, CustomCheckbox, CustomEdit, CustomListBox, GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText, StaticText, Marker | Allows specifying a custom label to inform the user of the custom hotkey that triggers the control. |
+| `Hotkey Functions` | Button, ToggleButton, Checkbox, Edit, ListBox, Tab, CustomToggleButton, CustomCheckbox, CustomEdit, CustomListBox, GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText, StaticText | A comma separated list of unquoted function names: Executed whenever the control is focused or activated via its associated hotkey. |
+| `Image files` | GraphicalButton, GraphicalTab | A comma separated list of quoted paths to image files that the control will search for within its screen region. |
+| `Check State Function` | CustomToggleButton, CustomCheckbox | An unquoted function name: Used to determine the state of the control. |
+| `Colors when the control is on` | HotspotToggleButton | A comma separated list of quoted color values as reported by the script: If any of the specified colors is detected at the control coordinates, the control will be reported as being on. |
+| `Colors when the control is off` | HotspotToggleButton | A comma separated list of quoted color values as reported by the script: If any of the specified colors is detected at the control coordinates, the control will be reported as being off. |
+| `Image files when the control is on` | GraphicalToggleButton | A comma separated list of quoted paths to image files: If any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being on. |
+| `Image files when the control is off` | GraphicalToggleButton | A comma separated list of quoted paths to image files: If any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being off. |
+| `Colors when the control is checked` | HotspotCheckbox | A comma separated list of quoted color values as reported by the script: If any of the specified colors is detected at the control coordinates, the control will be reported as being checked. |
+| `Colors when the control is unchecked` | HotspotCheckbox | A comma separated list of quoted color values as reported by the script: If any of the specified colors is detected at the control coordinates, the control will be reported as being unchecked. |
+| `Image files when the control is checked` | GraphicalCheckbox | A comma separated list of quoted paths to image files: If any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being on. |
+| `Image files when the control is unchecked` | GraphicalCheckbox | A comma separated list of quoted paths to image files: If any of the specified images is detected within the boundaries of the control's screen region, the control will be reported as being off. |
+| `Options` | ListBox, CustomListBox, HotspotListBox | A comma separated list of quoted values defining the available options of the control. |
+| `Functions when the value of the control changes` | ListBox, CustomListBox, HotspotListBox, OCRListBox | A comma separated list of unquoted function names: Triggered when the value of the control is changed via arrow keys. |
+| `Label Prefix` | OCRButton | Sets the string to be spoken before reporting the OCR result within the control's screen region. |
+| `Default Label` | OCRButton, OCRTab | The string to be spoken when the OCR result is blank. |
+| `Value Prefix` | OCRText | Sets the string to be spoken before reporting the OCR result within the control's screen region. |
+| `Default Value` | OCRListBox, OCRText | The string to be spoken when the OCR result is blank. |
+| `OCR Type` | OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets the OCR type to use. Possible values are "Tesseract", "TesseractBest", "TesseractFast", "TesseractLegacy" and "UWP". |
+| `OCR Scale` | OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets OCR scaling. |
+| `OCR Language` | OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | The language to use when performing OCR. |
+| `X Coordinate` | HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, Marker | Sets the X. |
+| `Y Coordinate` | HotspotButton, HotspotToggleButton, HotspotCheckbox, HotspotEdit, HotspotListBox, HotspotTab, Marker | Sets the Y coordinate. |
+| `X1 Coordinate` | GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets the top-left corner X coordinate. |
+| `Y1 Coordinate` | GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets the top-left corner Y coordinate. |
+| `X2 Coordinate` | GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets the bottom-right corner X coordinate. |
+| `Y2 Coordinate` | GraphicalButton, GraphicalToggleButton, GraphicalCheckbox, GraphicalTab, OCRButton, OCREdit, OCRListBox, OCRTab, OCRText | Sets the bottom-right corner Y coordinate. |
+| `Plug-in Name` | PluginOverlay | Specifies the name of the plug-in that the overlay is made for. |
+| `Compensation Function` | PluginOverlay | An unquoted function name: Used to compensate the coordinates of added controls. |
+| `Standalone Name` | StandaloneOverlay | Specifies the name of the standalone program that the overlay is made for. |
 
 #### Additional Notes
 
