@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Updated OverlayDesigner documentation
+-   Updated OverlayDesigner documentation to include info about specific item properties
 
 ## [1.0.19] - 2026-06-07
 
