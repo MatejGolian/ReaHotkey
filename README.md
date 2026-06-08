@@ -190,8 +190,9 @@ Here are basic instructions how to use OverlayDesigner to create overlays.
 #### Additional Notes
 
 To edit container objects (e.g., AccessibilityOverlays, PluginOverlays, Tabs), navigate to the start or end of the object in question and press `F2`.
-Opening Item properties while a TabControl has focus will edit the TabControl object itself and not the currently selected tab.
+Opening `Item properties` while a TabControl has focus will edit the TabControl object itself and not the currently selected tab.
 After adding container objects, focus will move to the start of that newly added object so that you can begin adding controls to it right away.
+When `Treat as expression` is checked next to a field in `Item properties`, OverlayDesigner will try to interpret parts of your input as AutoHotkey code. This feature is aimed at advanced use and therefore whenever you have the choice and you're unsure of what to select, keep that option unchecked to avoid potentially unexpected results.
 
 ### Available Overlay Types
 
