@@ -153,7 +153,7 @@ Class CodeParser {
                     Expression .= Segment . NextSegment
                     Break
                 }
-                Buffer := Array()
+                SegmentBuffer := Array()
                 TempBuffer := Array()
                 For Value In Segments
                 If A_Index >= SegmentIndex {
@@ -169,25 +169,25 @@ Class CodeParser {
                 Skip := TempBuffer.Length - 1
                 Loop TempBuffer.Length
                 If TempBuffer[A_Index] Is Number And Not This.IsOperator(SubStr(TempBuffer[A_Index], 1, 1)) {
-                    Buffer.Push("+" . TempBuffer[A_Index])
+                    SegmentBuffer.Push("+" . TempBuffer[A_Index])
                 }
                 Else If This.IsOperator(TempBuffer[A_Index]) {
                     If TempBuffer[A_Index + 1] Is Number And Not This.IsOperator(SubStr(TempBuffer[A_Index + 1], 1, 1)) {
-                        Buffer.Push(TempBuffer[A_Index] . TempBuffer[A_Index + 1])
+                        SegmentBuffer.Push(TempBuffer[A_Index] . TempBuffer[A_Index + 1])
                     }
                     Else {
-                        Buffer.Push(TempBuffer[A_Index + 1])
+                        SegmentBuffer.Push(TempBuffer[A_Index + 1])
                     }
                     A_Index := A_Index + 1
                 }
                 Else {
-                    Buffer.Push(TempBuffer[A_Index])
+                    SegmentBuffer.Push(TempBuffer[A_Index])
                 }
-                If Buffer.Length = 0
+                If SegmentBuffer.Length = 0
                 Result := Segment
                 Else
                 Result := 0
-                For Item In Buffer {
+                For Item In SegmentBuffer {
                     Operator := SubStr(Item, 1, 1)
                     NumberValue := SubStr(Item, 2)
                     If Operator = "+"

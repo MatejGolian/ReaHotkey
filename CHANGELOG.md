@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   OverlayDesigner: Updated the CodeParser class
+
 ## [1.0.23] - 2026-06-09
 
 ### Fixed
