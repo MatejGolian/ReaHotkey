@@ -223,7 +223,7 @@ Technically you can create any kind of overlay using the basic AccessibilityOver
 
 ### About Control Types
 
-OverlayDesigner supports adding `button`, `checkbox`, `edit field`, `list box`, `tab control`, `text` and `marker` elements. Many of them can come in several variants:
+OverlayDesigner supports adding button, checkbox, edit field, list box, tab control, text and marker elements. Many of them can come in several variants:
 
 1. Basic/Custom Objects:
    - Can create item announcements, but depend on user-supplied functions to tell them what more to do when focused or activated.
@@ -237,7 +237,7 @@ OverlayDesigner supports adding `button`, `checkbox`, `edit field`, `list box`, 
 4. OCR Objects:
 - Create item announcements based on OCR results and perform mouse clicks in their given screen regions when focused or activated.
 
-#### Markers VS. HotspotButtons
+#### Markers vs. HotspotButtons
 
 Markers are special objects recognized only by OverlayDesigner. They are ignored by the ReaHotkey overlay loader.
 They behave similar to HotspotButtons, they have X and Y coordinates and they perform mouse clicks once activated, but they don't offer all the functionality that normal HotspotButtons do. Their main purpose is to provide means to record mouse coordinates for later/temporary usage.
