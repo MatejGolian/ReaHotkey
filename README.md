@@ -212,14 +212,35 @@ ReaHotkey/OverlayDesigner supports creating 3 overlay types:
    - Simplifies hotkey management.
    - Allows specifying a standalone application name. This should be one of the standalone names defined by ReaHotkey.
 
+#### About PluginOverlays and Plug-in Coordinate Compensation
+
+Coordinate compensation adjusts overlay controls based on the current plug-in position in the active window. It does so by adding compensation functions to the properties of overlay elements that depend on mouse coordinates. The plug-in position can vary depending on how and in which DAW the given plug-in is loaded (REAPER vs. Ableton, REAPER native vs. bridged plug-in modes). Coordinate compensation functions determine the plugin control location dynamically during runtime and automatically update mouse coordinates of applicable controls, ensuring that the script performs actions at the right mouse coordinates in the end.
+When creating a full/proper ReaHotkey overlay it's not necessary to explicitly specify these compensation functions when adding elements to PluginOverlays as they get added automatically. So if your aim is to export AutoHotkey code, you can delete the compensation functions from the properties of your elements prior to export to make your code cleaner. That being said, if you want your elements to account for the location of the control containing the plug-in in REAPER or Ableton when using OverlayDesigner or OverlayLoader, you should keep the compensation functions in the properties of the items that can utilize them.
+
 #### Additional Notes
 
 Technically you can create any kind of overlay using the basic AccessibilityOverlay type, but the other context specific overlay variants perform certain tasks automatically making it possible to use shorter and simpler code. Most notably they are able to link  overlays to particular ReaHotkey plug-ins or standalone programs and make their hotkeys work in their designated contexts. The plug-in or standalone names do however only serve their true purpose when writing a full ReaHotkey overlay in the form of AutoHotkey code. Even if you enter valid plug-in or standalone names in Item properties, these overlays won't be linked to the plug-in or standalone program you specified when just using OverlayDesigner or the overlay loader component that's part of the main ReaHotkey script. However, any hotkeys you define in your overlay will still work.
 
-### About PluginOverlays and Plug-in Coordinate Compensation
+### About Control Types
 
-Coordinate compensation adjusts overlay controls based on the current plug-in position in the active window. It does so by adding compensation functions to the properties of overlay elements that depend on mouse coordinates. The plug-in position can vary depending on how and in which DAW the given plug-in is loaded (REAPER vs. Ableton, REAPER native vs. bridged plug-in modes). Coordinate compensation functions determine the plugin control location dynamically during runtime and automatically update mouse coordinates of applicable controls, ensuring that the script performs actions at the right mouse coordinates in the end.
-When creating a full/proper ReaHotkey overlay it's not necessary to explicitly specify these compensation functions when adding elements to PluginOverlays as they get added automatically. So if your aim is to export AutoHotkey code, you can delete the compensation functions from the properties of your elements prior to export to make your code cleaner. That being said, if you want your elements to account for the location of the control containing the plug-in in REAPER or Ableton when using OverlayDesigner or OverlayLoader, you should keep the compensation functions in the properties of the items that can utilize them.
+OverlayDesigner supports adding `button`, `checkbox`, `edit field`, `list box`, `tab control`, `text` and `marker` elements. Many of them can come in several variants:
+
+1. Basic/Custom Objects:
+   - Can create item announcements, but depend on user-supplied functions to tell them what more to do when focused or activated.
+
+2. Graphical Objects:
+   - Create item announcements, search for images within a given region of the screen and perform mouse clicks at the found image positions when focused or activated.
+
+3. Hotspot Objects:
+   - Create item announcements and perform mouse clicks at the coordinates specified when focused or activated.
+
+4. OCR Objects:
+- Create item announcements based on OCR results and perform mouse clicks in their given screen regions when focused or activated.
+
+#### Markers VS. HotspotButtons
+
+Markers are special objects recognized only by OverlayDesigner. They are ignored by the ReaHotkey overlay loader.
+They behave similar to HotspotButtons, they have X and Y coordinates and they perform mouse clicks once activated, but they don't offer all the functionality that normal HotspotButtons do. Their main purpose is to provide means to record mouse coordinates for later/temporary usage.
 
 ### List of Item Properties
 
@@ -268,11 +289,6 @@ When creating a full/proper ReaHotkey overlay it's not necessary to explicitly s
 
 When Specifying functions, use function names from `Includes/Overlay.Functions.ahk` found in the ReaHotkey source code. Not all the functions defined in that file can be used with overlay objects directly as that file contains other helper functions too, but generally that's the place where most functions that can be passed to overlay objects live.
   
-### Markers
-
-Markers are special objects recognized only by OverlayDesigner. They are ignored by the ReaHotkey overlay loader.
-They behave similar to HotspotButtons, they have X and Y coordinates and they perform mouse clicks once activated, but they don't offer all the functionality that normal HotspotButtons do. Their main purpose is to provide means to record mouse coordinates for later/temporary usage.
-
 ### Keyboard Shortcuts
 
 Many of the available keyboard shortcuts are disabled when the overlay designing/editing feature is inactive, although general functions (mostly the ones found in the script's Tools submenu) remain accessible unless the script is paused.

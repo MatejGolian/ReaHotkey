@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Updated OverlayDesigner documentation to include more info about control types
+
 ## [1.0.21] - 2026-06-08
 
 ### Fixed
