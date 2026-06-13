@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.26] - 2026-06-13
+
 ### Changed
 
 -   Internal: Plugins/Standalones can now execute functions on unload
@@ -876,7 +878,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.25...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.26...HEAD
+
+[1.0.26]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.25...1.0.26
 
 [1.0.25]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.24...1.0.25
 
