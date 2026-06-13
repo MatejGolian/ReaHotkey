@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.27] - 2026-06-13
+
 ### Changed
 
 -   Internal: Change parameter order when registering plug-ins/standalones
@@ -882,7 +884,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.26...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.27...HEAD
+
+[1.0.27]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.26...1.0.27
 
 [1.0.26]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.25...1.0.26
 
