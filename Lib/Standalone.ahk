@@ -14,6 +14,7 @@ Class Standalone Extends Program {
     Name := ""
     Overlay := StandaloneOverlay()
     StandaloneNumber := 0
+    UnloadFunction := ""
     WinID := ""
     
     __New(Name, WinID) {
@@ -55,8 +56,8 @@ Class Standalone Extends Program {
         Return False
     }
     
-    Static Register(StandaloneName, WinCriteria, InitFunction := False, Chooser := False, HotkeyMode := 1, CheckerFunction := False) {
-        If Super.Register(StandaloneName, InitFunction, Chooser, HotkeyMode, CheckerFunction) = True {
+    Static Register(StandaloneName, WinCriteria, InitFunction := False, UnloadFunction := False, Chooser := False, HotkeyMode := 1, CheckerFunction := False) {
+        If Super.Register(StandaloneName, InitFunction, UnloadFunction, Chooser, HotkeyMode, CheckerFunction) = True {
             StandaloneEntry := This.List[This.List.Length]
             If WinCriteria Is Array
             StandaloneEntry["WinCriteria"] := WinCriteria

@@ -5,7 +5,7 @@ Class Zampler {
     Static __New() {
         This.InitConfig()
         
-        Plugin.Register("Zampler", "^Plugin[0-9A-F]{1,}$", False, False, 1, False, ObjBindMethod(This, "Check"))
+        Plugin.Register("Zampler", "^Plugin[0-9A-F]{1,}$", False, False, False, 1, False, ObjBindMethod(This, "Check"))
         
         ZamplerOverlay := PluginOverlay("Zampler", "Zampler", KompleteKontrol.CompensatePluginCoordinates)
         ZamplerOverlay.AddStaticText("Zampler")

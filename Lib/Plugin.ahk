@@ -16,6 +16,7 @@ Class Plugin Extends Program {
     Overlay := PluginOverlay()
     PluginNumber := 0
     SingleInstance := False
+    UnloadFunction := ""
     WinTitle := ""
     
     __New(Name, ControlClass, WinTitle) {
@@ -114,8 +115,8 @@ Class Plugin Extends Program {
         Return False
     }
     
-    Static Register(PluginName, ControlClasses, InitFunction := False, Chooser := False, HotkeyMode := 1, SingleInstance := False, CheckerFunction := False) {
-        If Super.Register(PluginName, InitFunction, Chooser, HotkeyMode, CheckerFunction) = True {
+    Static Register(PluginName, ControlClasses, InitFunction := False, UnloadFunction := False, Chooser := False, HotkeyMode := 1, SingleInstance := False, CheckerFunction := False) {
+        If Super.Register(PluginName, InitFunction, UnloadFunction, Chooser, HotkeyMode, CheckerFunction) = True {
             PluginEntry := This.List[This.List.Length]
             If Not SingleInstance = True And Not SingleInstance = False
             SingleInstance := True

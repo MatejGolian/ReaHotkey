@@ -45,7 +45,7 @@ Class OverlayLoader {
         DefaultOverlay.AddStaticText("Press Shift+Windows+L to load an overlay")
         This.DefaultOverlay := DefaultOverlay
         This.Overlay := DefaultOverlay
-        Plugin.Register("OverlayLoader", ".*", False, False, 1, True, ObjBindMethod(This, "CheckState"))
+        Plugin.Register("OverlayLoader", ".*", False, False, False, 1, True, ObjBindMethod(This, "CheckState"))
         Plugin.RegisterOverlay("OverlayLoader", DefaultOverlay)
         Plugin.SetTimer("OverlayLoader", This.SetOverlay, -1)
     }

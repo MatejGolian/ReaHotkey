@@ -14,6 +14,7 @@ Class Program {
     Name := ""
     Overlay := AccessibilityOverlay()
     ProgramNumber := 0
+    UnloadFunction := ""
     
     __New(Name) {
         ProgramNumber := %This.__Class%.FindName(Name)
@@ -26,6 +27,7 @@ Class Program {
         If ProgramNumber > 0 {
             ProgramEntry := %This.__Class%.List[ProgramNumber]
             This.InitFunction := ProgramEntry["InitFunction"]
+            This.UnloadFunction := ProgramEntry["UnloadFunction"]
             This.Chooser := ProgramEntry["Chooser"]
             This.CheckerFunction := ProgramEntry["CheckerFunction"]
             ProgramOverlays := ProgramEntry["Overlays"]
@@ -103,6 +105,11 @@ Class Program {
     
     SetTimer(Function, Period := "", Priority := "") {
         %This.__Class%.SetTimer(This.Name, Function, Period, Priority)
+    }
+    
+    Unload() {
+        If This.UnloadFunction Is Object And This.UnloadFunction.HasMethod("Call")
+        This.UnloadFunction.Call(This)
     }
     
     Static FindHotkey(ProgramName, KeyName) {
@@ -191,12 +198,14 @@ Class Program {
         Return Array()
     }
     
-    Static Register(ProgramName, InitFunction := False, Chooser := False, HotkeyMode := 1, CheckerFunction := False) {
+    Static Register(ProgramName, InitFunction := False, UnloadFunction := False, Chooser := False, HotkeyMode := 1, CheckerFunction := False) {
         If This.FindName(ProgramName) = False {
             If ProgramName = ""
             ProgramName := %This.Prototype.__Class%.Unnamed%This.Prototype.__Class%Name
             If Not InitFunction Is Object Or Not InitFunction.HasMethod("Call")
             InitFunction := False
+            If Not UnloadFunction Is Object Or Not UnloadFunction.HasMethod("Call")
+            UnloadFunction := False
             If Not Chooser = True And Not Chooser = False
             Chooser := False
             If Not HotkeyMode Is Integer Or HotkeyMode < 1 Or HotkeyMode > 3
@@ -206,6 +215,7 @@ Class Program {
             ProgramEntry := Map()
             ProgramEntry["Name"] := ProgramName
             ProgramEntry["InitFunction"] := InitFunction
+            ProgramEntry["UnloadFunction"] := UnloadFunction
             ProgramEntry["Chooser"] := Chooser
             ProgramEntry["HotkeyMode"] := HotkeyMode
             ProgramEntry["CheckerFunction"] := CheckerFunction

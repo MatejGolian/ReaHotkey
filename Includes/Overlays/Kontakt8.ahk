@@ -32,7 +32,7 @@ Class Kontakt8 {
         StandaloneHeader.AddCustomPassThrough("Standalone", "Tab", "+Tab", WrapStandaloneUIAPassThroughStart.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 1), WrapStandaloneUIAPassThroughEnd.Bind(, AccessibilityOverlay.Helpers.GetUIAWindow, 0), ObjBindMethod(This, "HandlePassThrough"),, ObjBindMethod(This, "CheckFocusableElements"))
         This.StandaloneHeader := StandaloneHeader
         
-        Plugin.Register("Kontakt 8", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
+        Plugin.Register("Kontakt 8", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, False, 1, False, ObjBindMethod(This, "CheckPlugin"))
         
         For K8PluginOverlay In This.PluginOverlays {
             K8PluginOverlay.AddControlAt(1, This.PluginHeader)
@@ -42,18 +42,18 @@ Class Kontakt8 {
         Plugin.SetTimer("Kontakt 8", This.CheckPluginConfig, -1)
         Plugin.SetTimer("Kontakt 8", This.CheckPluginMenu, 250)
         
-        Plugin.Register("Kontakt 8 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, 1, True, ObjBindMethod(This, "CheckPluginContentMissing"))
+        Plugin.Register("Kontakt 8 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$", False, False, False, 1, True, ObjBindMethod(This, "CheckPluginContentMissing"))
         
         PluginContentMissingOverlay := PluginOverlay("Content Missing")
         PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")
         Plugin.RegisterOverlay("Kontakt 8 Content Missing Dialog", PluginContentMissingOverlay)
         
-        Standalone.Register("Kontakt 8", "Kontakt 8 ahk_class NINormalWindow* ahk_exe Kontakt 8.exe", False, False, 1)
+        Standalone.Register("Kontakt 8", "Kontakt 8 ahk_class NINormalWindow* ahk_exe Kontakt 8.exe", False, False, False, 1)
         Standalone.SetTimer("Kontakt 8", This.CheckStandaloneConfig, -1)
         Standalone.SetTimer("Kontakt 8", This.CheckStandaloneMenu, 250)
         Standalone.RegisterOverlay("Kontakt 8", StandaloneHeader)
         
-        Standalone.Register("Kontakt 8 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 8.exe", False, False, 1)
+        Standalone.Register("Kontakt 8 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 8.exe", False, False, False, 1)
         
         StandaloneContentMissingOverlay := StandaloneOverlay("Content Missing")
         StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")

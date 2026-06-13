@@ -4,7 +4,7 @@ Class Serum2 {
     
     Static __New() {
         This.InitConfig()
-        Plugin.Register("Serum 2", "^VSTGUI[0-9A-F]+$", False, False, 1, False, ObjBindMethod(This, "Check"))
+        Plugin.Register("Serum 2", "^VSTGUI[0-9A-F]+$", False, False, False, 1, False, ObjBindMethod(This, "Check"))
         Serum2Overlay := PluginOverlay("Serum 2", "Serum 2", KompleteKontrol.CompensatePluginCoordinates)
         Serum2Overlay.AddStaticText("Serum 2")
         Serum2Overlay.AddCustomButton("Main Menu", ObjBindMethod(This, "ClickOrMoveToCoords",, "Move", 1058, 4),,, ObjBindMethod(This, "ClickOrMoveToCoords",, "Click", 1058, 4)).SetHotkey("^M", "Ctrl+M")

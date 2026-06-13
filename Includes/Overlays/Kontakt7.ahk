@@ -36,7 +36,7 @@ Class Kontakt7 {
         StandaloneHeader.AddCustomButton("SHOP (Opens in default web browser)", ObjBindMethod(This, "FocusStandaloneHeaderButton"),, ObjBindMethod(This, "ActivateStandaloneHeaderButton")).SetHotkey("!S", "Alt+S")
         This.StandaloneHeader := StandaloneHeader
         
-        Plugin.Register("Kontakt 7", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, 1, False, ObjBindMethod(This, "CheckPlugin"))
+        Plugin.Register("Kontakt 7", "^Qt6[0-9][0-9]QWindowIcon\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}1$", ObjBindMethod(This, "InitPlugin"), False, False, 1, False, ObjBindMethod(This, "CheckPlugin"))
         
         For K7PluginOverlay In This.PluginOverlays {
             K7PluginOverlay.AddControlAt(1, This.PluginHeader)
@@ -46,18 +46,18 @@ Class Kontakt7 {
         Plugin.SetTimer("Kontakt 7", This.CheckPluginConfig, -1)
         Plugin.SetTimer("Kontakt 7", This.CheckPluginMenu, 250)
         
-        Plugin.Register("Kontakt 7 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$",, False, 1, True, ObjBindMethod(This, "CheckPluginContentMissing"))
+        Plugin.Register("Kontakt 7 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$", False, False, False, 1, True, ObjBindMethod(This, "CheckPluginContentMissing"))
         
         PluginContentMissingOverlay := PluginOverlay("Content Missing")
         PluginContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")
         Plugin.RegisterOverlay("Kontakt 7 Content Missing Dialog", PluginContentMissingOverlay)
         
-        Standalone.Register("Kontakt 7", "Kontakt 7 ahk_class NINormalWindow* ahk_exe Kontakt 7.exe", False, False, 1)
+        Standalone.Register("Kontakt 7", "Kontakt 7 ahk_class NINormalWindow* ahk_exe Kontakt 7.exe", False, False, False, 1)
         Standalone.SetTimer("Kontakt 7", This.CheckStandaloneConfig, -1)
         Standalone.SetTimer("Kontakt 7", This.CheckStandaloneMenu, 250)
         Standalone.RegisterOverlay("Kontakt 7", StandaloneHeader)
         
-        Standalone.Register("Kontakt 7 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe", False, False, 1)
+        Standalone.Register("Kontakt 7 Content Missing Dialog", "Content Missing ahk_class #32770 ahk_exe Kontakt 7.exe", False, False, False, 1)
         
         StandaloneContentMissingOverlay := StandaloneOverlay("Content Missing")
         StandaloneContentMissingOverlay.AddHotspotButton("Browse For Folder", 218, 341).SetHotkey("!B", "Alt+B")
