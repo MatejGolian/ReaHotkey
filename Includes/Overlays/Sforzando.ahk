@@ -3,8 +3,8 @@
 Class Sforzando {
     
     Static __New() {
-        Plugin.Register("sforzando", "^Plugin[0-9A-F]{1,}$", ObjBindMethod(This, "InitPlugin"), False, False, 1, False, ObjBindMethod(This, "CheckPlugin"))
-        Standalone.Register("sforzando", "Plogue Art et Technologie, Inc sforzando ahk_class PLGWindowClass ahk_exe sforzando( x64)?.exe", ObjBindMethod(This, "InitStandalone"), False, False, 1)
+        Plugin.Register("sforzando", "^Plugin[0-9A-F]{1,}$", ObjBindMethod(This, "CheckPlugin"), ObjBindMethod(This, "InitPlugin"), False, False, 1, False)
+        Standalone.Register("sforzando", "Plogue Art et Technologie, Inc sforzando ahk_class PLGWindowClass ahk_exe sforzando( x64)?.exe", False, ObjBindMethod(This, "InitStandalone"), False, False, 1)
     }
     
     Static CheckPlugin(PluginInstance) {

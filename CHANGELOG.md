@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Internal: Change parameter order when registering plug-ins/standalones
+
 ## [1.0.26] - 2026-06-13
 
 ### Changed

@@ -56,8 +56,8 @@ Class Standalone Extends Program {
         Return False
     }
     
-    Static Register(StandaloneName, WinCriteria, InitFunction := False, UnloadFunction := False, Chooser := False, HotkeyMode := 1, CheckerFunction := False) {
-        If Super.Register(StandaloneName, InitFunction, UnloadFunction, Chooser, HotkeyMode, CheckerFunction) = True {
+    Static Register(StandaloneName, WinCriteria, CheckerFunction := False, InitFunction := False, UnloadFunction := False, Chooser := False, HotkeyMode := 1) {
+        If Super.Register(StandaloneName, CheckerFunction, InitFunction, UnloadFunction, Chooser, HotkeyMode) = True {
             StandaloneEntry := This.List[This.List.Length]
             If WinCriteria Is Array
             StandaloneEntry["WinCriteria"] := WinCriteria

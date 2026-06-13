@@ -3,7 +3,7 @@
 Class FabFilter {
     
     Static __New() {
-        Plugin.Register("FabFilter", "^FF_UIWindow1$", ObjBindMethod(This, "CreateOverlay"))
+        Plugin.Register("FabFilter", "^FF_UIWindow1$", False, ObjBindMethod(This, "CreateOverlay"))
     }
     
     Static CreateOverlay(PluginInstance) {

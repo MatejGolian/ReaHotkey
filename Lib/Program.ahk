@@ -198,10 +198,12 @@ Class Program {
         Return Array()
     }
     
-    Static Register(ProgramName, InitFunction := False, UnloadFunction := False, Chooser := False, HotkeyMode := 1, CheckerFunction := False) {
+    Static Register(ProgramName, CheckerFunction := False, InitFunction := False, UnloadFunction := False, Chooser := False, HotkeyMode := 1) {
         If This.FindName(ProgramName) = False {
             If ProgramName = ""
             ProgramName := %This.Prototype.__Class%.Unnamed%This.Prototype.__Class%Name
+            If Not CheckerFunction Is Object Or Not CheckerFunction.HasMethod("Call")
+            CheckerFunction := %This.Prototype.__Class%.DefaultChecker
             If Not InitFunction Is Object Or Not InitFunction.HasMethod("Call")
             InitFunction := False
             If Not UnloadFunction Is Object Or Not UnloadFunction.HasMethod("Call")
@@ -210,15 +212,13 @@ Class Program {
             Chooser := False
             If Not HotkeyMode Is Integer Or HotkeyMode < 1 Or HotkeyMode > 3
             HotkeyMode := 1
-            If Not CheckerFunction Is Object Or Not CheckerFunction.HasMethod("Call")
-            CheckerFunction := %This.Prototype.__Class%.DefaultChecker
             ProgramEntry := Map()
             ProgramEntry["Name"] := ProgramName
+            ProgramEntry["CheckerFunction"] := CheckerFunction
             ProgramEntry["InitFunction"] := InitFunction
             ProgramEntry["UnloadFunction"] := UnloadFunction
             ProgramEntry["Chooser"] := Chooser
             ProgramEntry["HotkeyMode"] := HotkeyMode
-            ProgramEntry["CheckerFunction"] := CheckerFunction
             ProgramEntry["Hotkeys"] := Array()
             ProgramEntry["Overlays"] := Array()
             ProgramEntry["Timers"] := Array()

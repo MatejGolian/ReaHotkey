@@ -5,7 +5,7 @@ Class Engine2 {
     Static __New() {
         This.InitConfig()
         
-        Plugin.Register("Engine 2", "^Plugin[0-9A-F]{1,}$", False, False, False, 1, False, ObjBindMethod(This, "CheckPlugin"))
+        Plugin.Register("Engine 2", "^Plugin[0-9A-F]{1,}$", ObjBindMethod(This, "CheckPlugin"), False, False, False, 1, False)
         Engine2PluginOverlay := PluginOverlay("Engine 2", "Engine 2", KompleteKontrol.CompensatePluginCoordinates)
         Engine2PluginOverlay.Metadata := Map("Vendor", "Best Service", "Product", "Engine 2")
         Engine2PluginOverlay.AddStaticText("Engine 2")
@@ -25,7 +25,7 @@ Class Engine2 {
         Engine2PluginMiscTab := HotspotTab("Misc.", 648, 61)
         Engine2PluginPreferencesTab.AddTabControl(, Engine2PluginEngineTab, Engine2PluginLibrariesTab, Engine2PluginUserFolderTab, Engine2PluginOutputSurrTab, Engine2PluginMiscTab)
         
-        Standalone.Register("Engine 2", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe", False, False, False, 1)
+        Standalone.Register("Engine 2", "Best Service Engine ahk_class Engine ahk_exe Engine 2.exe", False, False, False, False, 1)
         Engine2StandaloneOverlay := StandaloneOverlay("Engine 2", "Engine 2")
         Engine2StandaloneOverlay.Metadata := Map("Vendor", "Best Service", "Product", "Engine 2")
         Engine2StandaloneOverlay.AddHotspotButton("Load instrument", 162, 134)
@@ -44,7 +44,7 @@ Class Engine2 {
         Engine2StandaloneMiscTab := HotspotTab("Misc.", 648, 61)
         Engine2StandalonePreferencesTab.AddTabControl(, Engine2StandaloneEngineTab, Engine2StandaloneLibrariesTab, Engine2StandaloneUserFolderTab, Engine2StandaloneOutputSurrTab, Engine2StandaloneMiscTab)
         
-        Standalone.Register("Engine 2 Add Library Dialog", "add library... ahk_class #32770 ahk_exe Engine 2.exe", false, False, False, 2)
+        Standalone.Register("Engine 2 Add Library Dialog", "add library... ahk_class #32770 ahk_exe Engine 2.exe", False, False, False, False, 2)
         Standalone.SetHotkey("Engine 2 Add Library Dialog", "Enter", ObjBindMethod(This, "EnterSpaceHK"))
         Standalone.SetHotkey("Engine 2 Add Library Dialog", "Space", ObjBindMethod(This, "EnterSpaceHK"))
         Standalone.SetHotkey("Engine 2 Add Library Dialog", "!O", ObjBindMethod(This, "AltOHK"))

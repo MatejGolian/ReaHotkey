@@ -3,7 +3,7 @@
 Class GTune {
     
     Static __New() {
-        Plugin.Register("GTune", "^GWinClass_[0-9A-F]{1,}$", False, False, False, 1, False, False)
+        Plugin.Register("GTune", "^GWinClass_[0-9A-F]{1,}$", False, False, False, False, 1, False)
         Plugin.SetTimer("GTune", This.AutoReport, 400)
         
         GTuneOverlay := PluginOverlay()
