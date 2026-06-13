@@ -810,6 +810,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     Static Speak(Message := "") {
+    CurrentWorkingDir := A_WorkingDir
+    A_WorkingDir := A_ScriptDir
         This.AddToSpeechQueue(Message)
         Message := ""
         For QueuedMessage In This.SpeechQueue
@@ -834,6 +836,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
                 }
             }
         }
+        A_WorkingDir := CurrentWorkingDir
     }
     
     Static StopSpeech() {

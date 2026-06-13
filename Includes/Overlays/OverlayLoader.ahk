@@ -227,6 +227,8 @@ Class OverlayLoader {
         }
         This.Overlay := This.AddFromJson(This.Overlay, JsonData)
         This.ProjectFile := ProjectFile
+        SplitPath This.ProjectFile,, &ProjectDir
+        A_WorkingDir := ProjectDir
         This.UpdateHotkeys()
         ReaHotkey.OverlayLoaderActive := True
         This.AddPluginInstance()
@@ -246,15 +248,20 @@ Class OverlayLoader {
             Return
         }
         If Not ReaHotkey.HasProp("OverlayLoaderActive") {
+            SplitPath This.ProjectFile,, &ProjectDir
+            A_WorkingDir := ProjectDir
             ReaHotkey.OverlayLoaderActive := True
             This.AddPluginInstance()
             AccessibilityOverlay.Speak("OverlayLoader enabled")
         }
         Else If ReaHotkey.OverlayLoaderActive {
+            A_WorkingDir := A_ScriptDir
             ReaHotkey.OverlayLoaderActive := False
             AccessibilityOverlay.Speak("Disabled OverlayLoader")
         }
         Else {
+            SplitPath This.ProjectFile,, &ProjectDir
+            A_WorkingDir := ProjectDir
             ReaHotkey.OverlayLoaderActive := True
             This.AddPluginInstance()
             AccessibilityOverlay.Speak("OverlayLoader enabled")
@@ -266,6 +273,7 @@ Class OverlayLoader {
         Return
         If ReaHotkey.HasProp("OverlayLoaderActive")
         If ReaHotkey.OverlayLoaderActive {
+            A_WorkingDir := A_ScriptDir
             ReaHotkey.DeleteProp("OverlayLoaderActive")
             This.Overlay := This.DefaultOverlay
             This.ProjectFile := False

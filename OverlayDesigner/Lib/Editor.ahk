@@ -775,6 +775,8 @@ Class Editor {
         MsgBox "File opened successfully.", This.AppName
         This.UpdateOverlayHKs()
         This.ProjectFile := NewProjectFile
+        SplitPath This.ProjectFile,, &ProjectDir
+        A_WorkingDir := ProjectDir
         ReportError() {
             MsgBox "Failed to open " . This.ProjectFile . ".", This.AppName
         }
@@ -788,6 +790,8 @@ Class Editor {
             MsgBox "An error occurred while saving file.`nPlease try again.", This.AppName
         }
         Else {
+            SplitPath This.ProjectFile,, &ProjectDir
+            A_WorkingDir := ProjectDir
             If Not SilenceOnSuccess
             MsgBox "File saved successfully.", This.AppName
         }
@@ -916,6 +920,7 @@ Class Editor {
                 This.ToggleHKs("On")
             }
             This.ProjectFile := ""
+            A_WorkingDir := A_ScriptDir
             This.InitializeOverlay(NewProjectBox["OverlayType"].Text)
             This.ClearClipboard()
             This.ClearUndo()
