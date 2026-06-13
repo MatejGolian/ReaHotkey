@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Internal: Plugins/Standalones can now execute functions on unload
+
 ## [1.0.25] - 2026-06-13
 
 ### Changed

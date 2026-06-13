@@ -484,6 +484,8 @@ Class ReaHotkey {
             Until CurrentWinID
             If This.PluginWinCriteria And WinActive(This.PluginWinCriteria) {
                 This.AutoFocusStandaloneOverlay := True
+                If This.FoundStandalone Is Standalone
+                This.FoundStandalone.Unload()
                 This.FoundStandalone := False
                 Try
                 CurrentControl := ControlGetClassNN(ControlGetFocus(This.PluginWinCriteria))
@@ -509,34 +511,57 @@ Class ReaHotkey {
                 }
                 If Not PluginControl {
                     This.AutoFocusPluginOverlay := True
+                    If This.FoundPlugin Is Plugin
+                    This.FoundPlugin.Unload()
                     This.FoundPlugin := False
                 }
                 Else If Not CurrentControl {
                     This.AutoFocusPluginOverlay := True
+                    If This.FoundPlugin Is Plugin
+                    This.FoundPlugin.Unload()
                     This.FoundPlugin := False
                 }
                 Else If Not This.InPluginControl(CurrentControl) {
                     This.AutoFocusPluginOverlay := True
+                    If This.FoundPlugin Is Plugin
+                    This.FoundPlugin.Unload()
                     This.FoundPlugin := False
                 }
                 Else {
+                    If Not This.CurrentPluginName = This.PreviousPluginName {
+                        If This.FoundPlugin Is Plugin
+                        This.FoundPlugin.Unload()
+                    }
                     This.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
                 }
             }
             Else {
                 This.AutoFocusPluginOverlay := True
+                If This.FoundPlugin Is Plugin
+                This.FoundPlugin.Unload()
                 This.FoundPlugin := False
-                This.FoundStandalone := False
-                If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria)
-                This.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
+                If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria) {
+                    If Not This.CurrentStandaloneName = This.PreviousStandaloneName {
+                        If This.FoundStandalone Is Standalone
+                        This.FoundStandalone.Unload()
+                    }
+                    This.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
+                }
+                Else {
+                    This.FoundStandalone := False
+                }
                 If This.FoundStandalone = False
                 This.AutoFocusStandaloneOverlay := True
             }
         }
         Catch {
             This.AutoFocusPluginOverlay := True
+            If This.FoundPlugin Is Plugin
+            This.FoundPlugin.Unload()
             This.FoundPlugin := False
             This.AutoFocusStandaloneOverlay := True
+            If This.FoundStandalone Is Standalone
+            This.FoundStandalone.Unload()
             This.FoundStandalone := False
         }
         If This.PluginWinCriteria And WinActive(This.PluginWinCriteria) {

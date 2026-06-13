@@ -45,7 +45,7 @@ Class OverlayLoader {
         DefaultOverlay.AddStaticText("Press Shift+Windows+L to load an overlay")
         This.DefaultOverlay := DefaultOverlay
         This.Overlay := DefaultOverlay
-        Plugin.Register("OverlayLoader", ".*", False, False, False, 1, True, ObjBindMethod(This, "CheckState"))
+        Plugin.Register("OverlayLoader", ".*", False, ObjBindMethod(This, "UnloadPlugin"), False, 1, True, ObjBindMethod(This, "CheckState"))
         Plugin.RegisterOverlay("OverlayLoader", DefaultOverlay)
         Plugin.SetTimer("OverlayLoader", This.SetOverlay, -1)
     }
@@ -281,6 +281,10 @@ Class OverlayLoader {
         }
     }
     
+    Static UnloadPlugin(Instance) {
+        A_WorkingDir := A_ScriptDir
+    }
+    
     Static UpdateHotkeys() {
         For PluginWinCriteria In ReaHotkey.PluginWinCriteriaList {
             HotIfWinActive(PluginWinCriteria)
@@ -297,8 +301,12 @@ Class OverlayLoader {
     Class SetOverlay {
         Static Call() {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
-            If ReaHotkey.FoundPlugin Is Plugin
-            ReaHotkey.FoundPlugin.Overlay := %ParentClass%.Overlay
+            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "OverlayLoader"
+            If ReaHotkey.OverlayLoaderActive {
+                SplitPath %ParentClass%.ProjectFile,, &ProjectDir
+                A_WorkingDir := ProjectDir
+                ReaHotkey.FoundPlugin.Overlay := %ParentClass%.Overlay
+            }
         }
     }
     
