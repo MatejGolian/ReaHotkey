@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Internal: Plugins/Standalones can now execute functions on unload
 
+### Fixed
+
+-   Fix working dir not being reverted to default when OverlayLoader was loaded, but not focused
+
 ## [1.0.25] - 2026-06-13
 
 ### Changed

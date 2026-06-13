@@ -2,6 +2,7 @@
 
 Class OverlayLoader {
     
+    Static Active := False
     Static DefaultOverlay := False
     Static ItemDefinitions := Map(
     "AccessibilityOverlay", {OptionalParams: ["Label"]},
@@ -87,9 +88,9 @@ Class OverlayLoader {
     }
     
     Static CheckState(*) {
-        If ReaHotkey.HasProp("OverlayLoaderActive")
-        If ReaHotkey.OverlayLoaderActive
+        If This.Active
         Return True
+        Return False
     }
     
     Static GetConstructorParams(ItemID, JsonData) {
@@ -230,7 +231,7 @@ Class OverlayLoader {
         SplitPath This.ProjectFile,, &ProjectDir
         A_WorkingDir := ProjectDir
         This.UpdateHotkeys()
-        ReaHotkey.OverlayLoaderActive := True
+        This.Active := True
         This.AddPluginInstance()
         If ReaHotkey.FoundPlugin Is Plugin {
             If ReaHotkey.FoundPlugin.Name = "OverlayLoader"
@@ -247,22 +248,22 @@ Class OverlayLoader {
             This.LoadOverlay()
             Return
         }
-        If Not ReaHotkey.HasProp("OverlayLoaderActive") {
+        If Not This.Active {
             SplitPath This.ProjectFile,, &ProjectDir
             A_WorkingDir := ProjectDir
-            ReaHotkey.OverlayLoaderActive := True
+            This.Active := True
             This.AddPluginInstance()
             AccessibilityOverlay.Speak("OverlayLoader enabled")
         }
-        Else If ReaHotkey.OverlayLoaderActive {
+        Else If This.Active {
             A_WorkingDir := A_ScriptDir
-            ReaHotkey.OverlayLoaderActive := False
+            This.Active := False
             AccessibilityOverlay.Speak("Disabled OverlayLoader")
         }
         Else {
             SplitPath This.ProjectFile,, &ProjectDir
             A_WorkingDir := ProjectDir
-            ReaHotkey.OverlayLoaderActive := True
+            This.Active := True
             This.AddPluginInstance()
             AccessibilityOverlay.Speak("OverlayLoader enabled")
         }
@@ -271,10 +272,9 @@ Class OverlayLoader {
     Static UnloadHK(ThisHotkey) {
         If Not This.ProjectFile
         Return
-        If ReaHotkey.HasProp("OverlayLoaderActive")
-        If ReaHotkey.OverlayLoaderActive {
+        If This.Active {
             A_WorkingDir := A_ScriptDir
-            ReaHotkey.DeleteProp("OverlayLoaderActive")
+            This.Active := False
             This.Overlay := This.DefaultOverlay
             This.ProjectFile := False
             AccessibilityOverlay.Speak("Overlay unloaded")
@@ -302,7 +302,7 @@ Class OverlayLoader {
         Static Call() {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "OverlayLoader"
-            If ReaHotkey.OverlayLoaderActive {
+            If %ParentClass%.Active {
                 SplitPath %ParentClass%.ProjectFile,, &ProjectDir
                 A_WorkingDir := ProjectDir
                 ReaHotkey.FoundPlugin.Overlay := %ParentClass%.Overlay
