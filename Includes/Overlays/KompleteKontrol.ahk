@@ -126,12 +126,12 @@ Class KompleteKontrol {
         StandaloneSaveAsOverlay.AddHotspotButton("Cancel", 301, 135)
         Standalone.RegisterOverlay("Komplete Kontrol Save As Dialog", StandaloneSaveAsOverlay)
         
-        Standalone.Register("Komplete Kontrol Scan In Progress Dialog", "ahk_class #32770 ahk_exe Komplete Kontrol.exe", ObjBindMethod(This, "CheckStandaloneScanInProgressDialog"), False, False, False, 1)
-        Standalone.SetTimer("Komplete Kontrol Scan In Progress Dialog", This.ReportScanInProgress, 2000)
+        Standalone.Register("Komplete Kontrol Scanning In Progress Dialog", "ahk_class #32770 ahk_exe Komplete Kontrol.exe", This.CheckStandaloneScanningInProgressDialog, False, This.ReportScanningStopped, False, 1)
+        Standalone.SetTimer("Komplete Kontrol Scanning In Progress Dialog", This.ReportScanningInProgress, 2000)
         
-        StandaloneScanInProgressOverlay := StandaloneOverlay()
-        StandaloneScanInProgressOverlay.AddStaticText("Scan in progress...")
-        Standalone.RegisterOverlay("Komplete Kontrol Scan In Progress Dialog", StandaloneScanInProgressOverlay)
+        StandaloneScanningInProgressOverlay := StandaloneOverlay()
+        StandaloneScanningInProgressOverlay.AddStaticText("Scanning in progress...")
+        Standalone.RegisterOverlay("Komplete Kontrol Scanning In Progress Dialog", StandaloneScanningInProgressOverlay)
     }
     
     Static __Get(Name, Params) {
@@ -246,13 +246,6 @@ Class KompleteKontrol {
             Return True
         }
         If WinExist("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And ImageSearch(&FoundX, &FoundY, 130, 14, 230, 31, "Images/KompleteKontrol/SavePreset.png")
-        Return True
-        Return False
-    }
-    
-    Static CheckStandaloneScanInProgressDialog(StandaloneInstance) {
-    Try
-        If WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And Not WinGetTitle("A") = "Preferences"
         Return True
         Return False
     }
@@ -490,6 +483,15 @@ Class KompleteKontrol {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
             If ReaHotkey.Config.Get("Config", "CloseKKBrowser") = 1
             %ParentClass%.CloseStandaloneBrowser()
+        }
+    }
+    
+    Class CheckStandaloneScanningInProgressDialog {
+        Static Call(StandaloneInstance) {
+            Try
+            If WinActive("ahk_class #32770 ahk_exe Komplete Kontrol.exe") And Not WinGetTitle("A") = "Preferences"
+            Return True
+            Return False
         }
     }
     
@@ -732,9 +734,15 @@ Class KompleteKontrol {
         }
     }
     
-    Class ReportScanInProgress {
+    Class ReportScanningInProgress {
         Static Call() {
-            AccessibilityOverlay.Speak("Scan in progress...")
+            AccessibilityOverlay.Speak("Scanning in progress...")
+        }
+    }
+    
+    Class ReportScanningStopped {
+        Static Call(StandaloneInstance) {
+            AccessibilityOverlay.Speak("Scanning stopped")
         }
     }
     

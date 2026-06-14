@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added scanning stopped indication to KK standalone startup scanning dialog
+
 ## [1.0.28] - 2026-06-14
 
 ### Fixed
