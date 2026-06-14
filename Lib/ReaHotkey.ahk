@@ -528,11 +528,12 @@ Class ReaHotkey {
                     This.FoundPlugin := False
                 }
                 Else {
-                    If Not This.CurrentPluginName = This.PreviousPluginName {
-                        If This.FoundPlugin Is Plugin
-                        This.FoundPlugin.Unload()
-                    }
-                    This.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
+                    PreviousPlugin := This.FoundPlugin
+                    CurrentPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
+                    If PreviousPlugin Is Plugin And CurrentPlugin Is Plugin
+                    If Not PreviousPlugin.Name = CurrentPlugin.Name
+                    PreviousPlugin.Unload()
+                    This.FoundPlugin := CurrentPlugin
                 }
             }
             Else {
@@ -541,11 +542,12 @@ Class ReaHotkey {
                 This.FoundPlugin.Unload()
                 This.FoundPlugin := False
                 If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria) {
-                    If Not This.CurrentStandaloneName = This.PreviousStandaloneName {
-                        If This.FoundStandalone Is Standalone
-                        This.FoundStandalone.Unload()
-                    }
-                    This.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
+                    PreviousStandalone := This.FoundStandalone
+                    CurrentStandalone := Standalone.GetByWinID(WinGetID("A"))
+                    If PreviousStandalone Is Standalone And CurrentStandalone Is Standalone
+                    If Not PreviousStandalone.Name = CurrentStandalone.Name
+                    PreviousStandalone.Unload()
+                    This.FoundStandalone := CurrentStandalone
                 }
                 Else {
                     This.FoundStandalone := False

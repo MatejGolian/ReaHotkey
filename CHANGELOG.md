@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fix unload functions not being run in some hypothetical cases
+
 ## [1.0.27] - 2026-06-13
 
 ### Changed
