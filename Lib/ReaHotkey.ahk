@@ -564,11 +564,11 @@ Class ReaHotkey {
             This.TurnStandaloneHotkeysOff()
             If Not This.FoundPlugin Is Plugin Or WinExist("ahk_class #32768") {
                 This.Context := False
+                This.TurnPluginTimersOff()
+                This.TurnPluginHotkeysOff()
                 If PreviousPlugin Is Plugin
                 PreviousPlugin.Unload()
                 PreviousPlugin := False
-                This.TurnPluginTimersOff()
-                This.TurnPluginHotkeysOff()
             }
             Else {
                 CurrentPlugin := This.FoundPlugin
@@ -594,11 +594,11 @@ Class ReaHotkey {
             This.TurnPluginHotkeysOff()
             If Not This.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
                 This.Context := False
+                This.TurnStandaloneTimersOff()
+                This.TurnStandaloneHotkeysOff()
                 If PreviousStandalone Is Standalone
                 PreviousStandalone.Unload()
                 PreviousStandalone := False
-                This.TurnStandaloneTimersOff()
-                This.TurnStandaloneHotkeysOff()
             }
             Else {
                 CurrentStandalone := This.FoundStandalone
@@ -619,17 +619,17 @@ Class ReaHotkey {
         }
         Else {
             This.Context := False
-            If PreviousPlugin Is Plugin
-            PreviousPlugin.Unload()
-            PreviousPlugin := False
             This.StopAbletonPluginTimer()
             This.TurnPluginTimersOff()
             This.TurnPluginHotkeysOff()
+            If PreviousPlugin Is Plugin
+            PreviousPlugin.Unload()
+            PreviousPlugin := False
+            This.TurnStandaloneTimersOff()
+            This.TurnStandaloneHotkeysOff()
             If PreviousStandalone Is Standalone
             PreviousStandalone.Unload()
             PreviousStandalone := False
-            This.TurnStandaloneTimersOff()
-            This.TurnStandaloneHotkeysOff()
             AccessibilityOverlay.ClearLastMessage()
             AccessibilityOverlay.ClearSpeechQueue()
         }
