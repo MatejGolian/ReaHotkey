@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.28] - 2026-06-14
+
 ### Fixed
 
 -   Fix unload functions not being run in some hypothetical cases
@@ -888,7 +890,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.27...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.28...HEAD
+
+[1.0.28]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.27...1.0.28
 
 [1.0.27]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.26...1.0.27
 
