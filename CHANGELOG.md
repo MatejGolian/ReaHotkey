@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.29] - 2026-06-14
+
 ### Added
 
 -   Added scanning stopped indication to KK standalone startup scanning dialog
@@ -894,7 +896,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.28...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.29...HEAD
+
+[1.0.29]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.28...1.0.29
 
 [1.0.28]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.27...1.0.28
 
