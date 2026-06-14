@@ -18,15 +18,11 @@ Class ReaHotkey {
     "Down", UpDownHK,
     )
     Static Context := False
-    Static CurrentPluginName := False
-    Static CurrentStandaloneName := False
     Static FoundPlugin := False
     Static FoundStandalone := False
     Static PluginHotkeys := Map(
     "F6", F6HK,
     )
-    Static PreviousPluginName := False
-    Static PreviousStandaloneName := False
     Static RequiredScreenWidth := 1920
     Static RequiredScreenHeight := 1080
     Static RequiredWinBuild := 10240
@@ -478,6 +474,10 @@ Class ReaHotkey {
     }
     
     Static ManageState() {
+        Static CurrentPlugin := False
+        Static CurrentStandalone := False
+        Static PreviousPlugin := False
+        Static PreviousStandalone := False
         Try {
             Loop
             CurrentWinID := GetCurrentWindowID()
@@ -528,11 +528,7 @@ Class ReaHotkey {
                     This.FoundPlugin := False
                 }
                 Else {
-                    PreviousPlugin := This.FoundPlugin
-                    CurrentPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
-                    If PreviousPlugin Is Plugin And Not PreviousPlugin =CurrentPlugin
-                    PreviousPlugin.Unload()
-                    This.FoundPlugin := CurrentPlugin
+                    This.FoundPlugin := Plugin.GetByWinTitle(WinGetTitle("A"))
                 }
             }
             Else {
@@ -541,11 +537,7 @@ Class ReaHotkey {
                 This.FoundPlugin.Unload()
                 This.FoundPlugin := False
                 If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria) {
-                    PreviousStandalone := This.FoundStandalone
-                    CurrentStandalone := Standalone.GetByWinID(WinGetID("A"))
-                    If PreviousStandalone Is Standalone And Not PreviousStandalone = CurrentStandalone
-                    PreviousStandalone.Unload()
-                    This.FoundStandalone := CurrentStandalone
+                    This.FoundStandalone := Standalone.GetByWinID(WinGetID("A"))
                 }
                 Else {
                     If This.FoundStandalone Is Standalone
@@ -572,16 +564,19 @@ Class ReaHotkey {
             This.TurnStandaloneHotkeysOff()
             If Not This.FoundPlugin Is Plugin Or WinExist("ahk_class #32768") {
                 This.Context := False
-                This.PreviousPluginName := False
+                If PreviousPlugin Is Plugin
+                PreviousPlugin.Unload()
+                PreviousPlugin := False
                 This.TurnPluginTimersOff()
                 This.TurnPluginHotkeysOff()
             }
             Else {
-                This.CurrentPluginName := This.FoundPlugin.Name
-                If Not This.CurrentPluginName = This.PreviousPluginName
-                If This.PreviousPluginName {
-                    This.TurnPluginTimersOff(This.PreviousPluginName)
-                    This.TurnPluginHotkeysOff(This.PreviousPluginName)
+                CurrentPlugin := This.FoundPlugin
+                If Not CurrentPlugin = PreviousPlugin
+                If PreviousPlugin {
+                    This.TurnPluginTimersOff(PreviousPlugin.Name)
+                    This.TurnPluginHotkeysOff(PreviousPlugin.Name)
+                    PreviousPlugin.Unload()
                 }
                 This.TurnPluginTimersOn(This.FoundPlugin.Name)
                 This.TurnPluginHotkeysOn(This.FoundPlugin.Name)
@@ -589,7 +584,7 @@ Class ReaHotkey {
                     This.FocusPluginOverlay()
                     This.AutoFocusPluginOverlay := False
                 }
-                This.PreviousPluginName := This.CurrentPluginName
+                PreviousPlugin := CurrentPlugin
             }
         }
         Else If This.StandaloneWinCriteria And WinActive(This.StandaloneWinCriteria) {
@@ -599,16 +594,19 @@ Class ReaHotkey {
             This.TurnPluginHotkeysOff()
             If Not This.FoundStandalone Is Standalone Or WinExist("ahk_class #32768") {
                 This.Context := False
-                This.PreviousStandaloneName := False
+                If PreviousStandalone Is Standalone
+                PreviousStandalone.Unload()
+                PreviousStandalone := False
                 This.TurnStandaloneTimersOff()
                 This.TurnStandaloneHotkeysOff()
             }
             Else {
-                This.CurrentStandaloneName := This.FoundStandalone.Name
-                If Not This.CurrentStandaloneName = This.PreviousStandaloneName
-                If This.PreviousStandaloneName {
-                    This.TurnStandaloneTimersOff(This.PreviousStandaloneName)
-                    This.TurnStandaloneHotkeysOff(This.PreviousStandaloneName)
+                CurrentStandalone := This.FoundStandalone
+                If Not CurrentStandalone = PreviousStandalone
+                If PreviousStandalone {
+                    This.TurnStandaloneTimersOff(PreviousStandalone.Name)
+                    This.TurnStandaloneHotkeysOff(PreviousStandalone.Name)
+                    PreviousStandalone.Unload()
                 }
                 This.TurnStandaloneTimersOn(This.FoundStandalone.Name)
                 This.TurnStandaloneHotkeysOn(This.FoundStandalone.Name)
@@ -616,16 +614,20 @@ Class ReaHotkey {
                     This.FocusStandaloneOverlay()
                     This.AutoFocusStandaloneOverlay := False
                 }
-                This.PreviousStandaloneName := This.CurrentStandaloneName
+                PreviousStandalone := CurrentStandalone
             }
         }
         Else {
             This.Context := False
-            This.PreviousPluginName := False
+            If PreviousPlugin Is Plugin
+            PreviousPlugin.Unload()
+            PreviousPlugin := False
             This.StopAbletonPluginTimer()
             This.TurnPluginTimersOff()
             This.TurnPluginHotkeysOff()
-            This.PreviousStandaloneName := False
+            If PreviousStandalone Is Standalone
+            PreviousStandalone.Unload()
+            PreviousStandalone := False
             This.TurnStandaloneTimersOff()
             This.TurnStandaloneHotkeysOff()
             AccessibilityOverlay.ClearLastMessage()
