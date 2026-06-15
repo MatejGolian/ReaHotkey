@@ -30,12 +30,26 @@ Class Update {
             UpdatePromptBody := ""
             Try {
                 DataError := False
-                WHR := ComObject("WinHttp.WinHttpRequest.5.1")
-                WHR.Open("GET", This.JsonUrl, True)
-                WHR.Send()
-                WHR.WaitForResponse()
-                JsonData := WHR.ResponseText
-                JsonData := Jxon_Load(&JsonData)
+                JsonData := Array()
+                Loop {
+                    Try {
+                        ResultData := ""
+                        WHR := ComObject("WinHttp.WinHttpRequest.5.1")
+                        WHR.Open("GET", This.JsonUrl . "?page=" . A_Index . "&per_page=100", True)
+                        WHR.Send()
+                        WHR.WaitForResponse()
+                        ResultData := WHR.ResponseText
+                        ResultData := Jxon_Load(&ResultData)
+                        If Not ResultData Is Array
+                        ResultData := Array()
+                        For Value In ResultData
+                        JsonData.Push(Value)
+                    }
+                    Catch {
+                        ResultData := Array()
+                    }
+                }
+                Until ResultData.Length = 0
                 CurrentVersion := ""
                 If IsSet(GetVersion) And GetVersion Is Func
                 CurrentVersion := StrSplit(GetVersion(), "-")
