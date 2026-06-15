@@ -26,8 +26,8 @@ Class Update {
             LatestAssetName := ""
             LatestAssetUrl := ""
             LatestVersion := ""
-            LatestVersionBody := ""
             LatestVersionUrl := ""
+            UpdatePromptBody := ""
             Try {
                 DataError := False
                 WHR := ComObject("WinHttp.WinHttpRequest.5.1")
@@ -54,12 +54,21 @@ Class Update {
                 If JsonData.Length >= LatestVersionIndex {
                     LatestAssetName := JsonData[LatestVersionIndex]["assets"][LatestVersionIndex]["name"]
                     LatestAssetUrl := JsonData[LatestVersionIndex]["assets"][LatestVersionIndex]["browser_download_url"]
-                    LatestVersionBody := JsonData[LatestVersionIndex]["body"]
                     LatestVersion := JsonData[LatestVersionIndex]["tag_name"]
                     LatestVersionUrl := JsonData[LatestVersionIndex]["html_url"]
                 }
                 If Not CurrentVersionIndex
                 CurrentVersionIndex := LatestVersionIndex
+                For Key, Value In JsonData
+                If Key = 1 {
+                    UpdatePromptBody := This.AppName . " " . Value["tag_name"] . " is available, with the following updates:`n" . ProcessNotificationText(Value["body"])
+                }
+                Else If Key >= CurrentVersionIndex{
+                    Break
+                }
+                Else {
+                    UpdatePromptBody .= "`n`n" . This.AppName . " " . Value["tag_name"] . ":`n" . ProcessNotificationText(Value["body"])
+                }
             }
             Catch {
                 DataError := True
@@ -119,15 +128,17 @@ Class Update {
         }
         ProcessNotificationText(Text) {
             Text := Trim(Text)
+            Text := StrReplace(Text, "`r`n", "`n")
             Lines := StrSplit(Text, "`n")
             If Lines Is Array And Lines.Length > 0 {
                 Text := ""
-                For Line In Lines {
+                For Line In Lines
+                If Not Line = "" {
                     Line := Trim(Line)
                     Line := RegExReplace(Line, "\s{2,}", " ")
                     Line := RegExReplace(Line, "^#+.*", "")
                     Line := RegExReplace(Line, "^-", "  +")
-                    Line := RTrim(Line)
+                    Line := Trim(Line)
                     If Not Line = ""
                     Text .= Line . "`n"
                 }
@@ -171,9 +182,9 @@ Class Update {
         }
         ShowUpdatePrompt() {
             If This.PerformUpdate
-            ShowNotificationBox("New version found!", This.AppName . " " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, "Update", PerformUpdate, False)
+            ShowNotificationBox("New version found!", UpdatePromptBody, False, "Update", PerformUpdate, False)
             Else
-            ShowNotificationBox("New version found!", This.AppName . " " . LatestVersion . " is available, with the following updates:`n" . LatestVersionBody, True, "Proceed to download page", ProceedToDownloadPage, False)
+            ShowNotificationBox("New version found!", UpdatePromptBody, False, "Proceed to download page", ProceedToDownloadPage, False)
         }
         ShowUpToDateMessage() {
             If This.PerformUpdate {
