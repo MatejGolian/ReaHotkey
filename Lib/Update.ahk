@@ -28,66 +28,62 @@ Class Update {
             LatestVersion := ""
             LatestVersionUrl := ""
             UpdatePromptBody := ""
-            Try {
-                DataError := False
-                JsonData := Array()
-                Loop {
-                    Try {
-                        ResultData := ""
-                        WHR := ComObject("WinHttp.WinHttpRequest.5.1")
-                        WHR.Open("GET", This.JsonUrl . "?page=" . A_Index . "&per_page=100", True)
-                        WHR.Send()
-                        WHR.WaitForResponse()
-                        ResultData := WHR.ResponseText
-                        ResultData := Jxon_Load(&ResultData)
-                        If Not ResultData Is Array
-                        ResultData := Array()
-                        For Value In ResultData
-                        JsonData.Push(Value)
-                    }
-                    Catch {
-                        ResultData := Array()
-                    }
+            DataError := False
+            JsonData := Array()
+            Loop {
+                Try {
+                    ResultData := ""
+                    WHR := ComObject("WinHttp.WinHttpRequest.5.1")
+                    WHR.Open("GET", This.JsonUrl . "?page=" . A_Index . "&per_page=100", True)
+                    WHR.Send()
+                    WHR.WaitForResponse()
+                    ResultData := WHR.ResponseText
+                    ResultData := Jxon_Load(&ResultData)
+                    If Not ResultData Is Array
+                    ResultData := Array()
+                    For Value In ResultData
+                    JsonData.Push(Value)
                 }
-                Until ResultData.Length = 0
-                CurrentVersion := ""
-                If IsSet(GetVersion) And GetVersion Is Func
-                CurrentVersion := StrSplit(GetVersion(), "-")
-                If CurrentVersion Is Array
-                CurrentVersion := CurrentVersion[1]
-                If CurrentVersion = ""
-                CurrentVersion := "0.0.0"
-                CurrentVersionIndex := 0
-                For Key, Value In JsonData
-                If Value["tag_name"] = CurrentVersion {
-                    CurrentVersionIndex := Key
-                    Break
-                }
-                LatestVersion := "0.0.0"
-                LatestVersionIndex := 1
-                If JsonData.Length >= LatestVersionIndex {
-                    LatestAssetName := JsonData[LatestVersionIndex]["assets"][LatestVersionIndex]["name"]
-                    LatestAssetUrl := JsonData[LatestVersionIndex]["assets"][LatestVersionIndex]["browser_download_url"]
-                    LatestVersion := JsonData[LatestVersionIndex]["tag_name"]
-                    LatestVersionUrl := JsonData[LatestVersionIndex]["html_url"]
-                }
-                If Not CurrentVersionIndex
-                CurrentVersionIndex := LatestVersionIndex
-                For Key, Value In JsonData
-                If Key = 1 {
-                    UpdatePromptBody := This.AppName . " " . Value["tag_name"] . " is available, with the following updates:`n" . ProcessNotificationText(Value["body"])
-                }
-                Else If Key >= CurrentVersionIndex{
-                    Break
-                }
-                Else {
-                    UpdatePromptBody .= "`n`n" . This.AppName . " " . Value["tag_name"] . ":`n" . ProcessNotificationText(Value["body"])
+                Catch {
+                    DataError := True
+                    ResultData := Array()
+                    ShowCheckingError()
+                    Return False
                 }
             }
-            Catch {
-                DataError := True
-                ShowCheckingError()
-                Return False
+            Until ResultData.Length = 0
+            CurrentVersion := ""
+            If IsSet(GetVersion) And GetVersion Is Func
+            CurrentVersion := StrSplit(GetVersion(), "-")
+            If CurrentVersion Is Array
+            CurrentVersion := CurrentVersion[1]
+            If CurrentVersion = ""
+            CurrentVersion := "0.0.0"
+            CurrentVersionIndex := 0
+            For Key, Value In JsonData
+            If Value["tag_name"] = CurrentVersion {
+                CurrentVersionIndex := Key
+                Break
+            }
+            LatestVersion := "0.0.0"
+            LatestVersionIndex := 1
+            If JsonData.Length >= LatestVersionIndex {
+                LatestAssetName := JsonData[LatestVersionIndex]["assets"][LatestVersionIndex]["name"]
+                LatestAssetUrl := JsonData[LatestVersionIndex]["assets"][LatestVersionIndex]["browser_download_url"]
+                LatestVersion := JsonData[LatestVersionIndex]["tag_name"]
+                LatestVersionUrl := JsonData[LatestVersionIndex]["html_url"]
+            }
+            If Not CurrentVersionIndex
+            CurrentVersionIndex := LatestVersionIndex
+            For Key, Value In JsonData
+            If Key = 1 {
+                UpdatePromptBody := This.AppName . " " . Value["tag_name"] . " is available, with the following updates:`n" . ProcessNotificationText(Value["body"])
+            }
+            Else If Key >= CurrentVersionIndex{
+                Break
+            }
+            Else {
+                UpdatePromptBody .= "`n`n" . This.AppName . " " . Value["tag_name"] . ":`n" . ProcessNotificationText(Value["body"])
             }
             If ForceUpdate {
                 ShowUpdatePrompt()
