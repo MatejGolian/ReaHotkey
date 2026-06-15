@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.32] - 2026-06-15
+
 ### Changed
 
 -   Update prompt text: Show all versions newer than the current
@@ -912,7 +914,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.31...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.32...HEAD
+
+[1.0.32]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.31...1.0.32
 
 [1.0.31]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.30...1.0.31
 
