@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.38] - 2026-06-16
+
 ### Added
 
 -   OverlayDesigner: Add Shift + F10 as an alternative to the Applications key
@@ -952,7 +954,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.37...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.38...HEAD
+
+[1.0.38]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.37...1.0.38
 
 [1.0.37]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.36...1.0.37
 
