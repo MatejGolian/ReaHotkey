@@ -34,6 +34,7 @@ This.AlwaysActiveHKs := Map(
 This.OnlyWhenEditorActiveHKs := Map(
 "#+H", AddHotspotButtonHK,
 "AppsKey", ContextMenuHK,
+"+F10", ContextMenuHK,
 "+^Tab", ControlShiftTabHK,
 "^Tab", ControlTabHK,
 "^C", CopyItemHK,

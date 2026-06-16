@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   OverlayDesigner: Add Shift + F10 as an alternative to the Applications key
+
 ## [1.0.37] - 2026-06-16
 
 ### Fixed

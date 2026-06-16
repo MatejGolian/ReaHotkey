@@ -170,7 +170,7 @@ Here are basic instructions how to use OverlayDesigner to create overlays.
    - The script will switch to designing/editing mode, allowing you to add/edit overlay elements and move between them using standard navigation commands such as Tab and Shift + Tab.
 
 2. To add items:
-   - Use the Applications key to open the OverlayDesigner context menu. Note that the overlay designing/editing feature needs to be active in order for this command to work.
+   - Press the Applications key or Shift + F10 to open the OverlayDesigner context menu. Note that the overlay designing/editing feature needs to be active in order for this command to work.
    - Select the control type you want to add from the Add submenu (e.g., HotspotButton, HotspotCheckbox, TabControl). The available choices depend on the currently focused control. This ensures that controls only get added to the parents they're supposed to. For instance, Tabs can only be added if a TabControl is currently focused. Likewise, you won't be able to add a HotspotButton when a TabControl object has focus.
    - Items relying on mouse coordinates will be placed at the current mouse position.
    - Hotspot objects have a single coordinate set; Graphical and OCR objects have two coordinate sets coresponding to the top-left and bottom-right corners respectively in order to define a region/rectangle on the screen.
@@ -337,7 +337,7 @@ Many of the available keyboard shortcuts are disabled when the overlay designing
 
 | Shortcut | Description |
 | --- | --- |
-| `Applications` | Open editor context menu |
+| `Applications` or `Shift + F10` | Open editor context menu |
 | `Ctrl + N` | Create new project |
 | `Ctrl + O` | Open existing project |
 | `Ctrl + S` | Save project |
