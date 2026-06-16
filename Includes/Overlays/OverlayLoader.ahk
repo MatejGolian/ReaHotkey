@@ -3,6 +3,7 @@
 Class OverlayLoader {
     
     Static Active := False
+    Static Context := False
     Static DefaultOverlay := False
     Static ItemDefinitions := Map(
     "AccessibilityOverlay", {OptionalParams: ["Label"]},
@@ -84,26 +85,34 @@ Class OverlayLoader {
     }
     
     Static AddInstance() {
-        For ItemType In ["Plugin", "Standalone"] {
-            If %ItemType%.Instances.Length > 0
-            If %ItemType%.Instances[1].Name = "OverlayLoader" {
-                If ItemType = "Standalone"
-                Standalone.Instances[1].WinID := WinGetID("A")
-                Continue
-            }
-            If ItemType = "Plugin"
-            Plugin.Instances.InsertAt(1, Plugin("OverlayLoader", ReaHotkey.GetPluginControl(), WinGetTitle("A")))
-            Else
-            Standalone.Instances.InsertAt(1, Standalone("OverlayLoader", WinGetID("A")))
+        If ReaHotkey.PluginWinCriteria {
+            This.Context := "Plugin"
+            If Plugin.Instances.Length > 0
+            If Plugin.Instances[1].Name = "OverlayLoader"
+            Return
         }
+        Else {
+            This.Context := "Standalone"
+            If Standalone.Instances.Length > 0
+            If Standalone.Instances[1].Name = "OverlayLoader" {
+                Standalone.Instances[1].WinID := WinGetID("A")
+                Return
+            }
+        }
+        If ReaHotkey.PluginWinCriteria
+        Plugin.Instances.InsertAt(1, Plugin("OverlayLoader", ReaHotkey.GetPluginControl(), WinGetTitle("A")))
+        Else
+        Standalone.Instances.InsertAt(1, Standalone("OverlayLoader", WinGetID("A")))
     }
     
     Static Check(Instance) {
         If This.Active
         If Instance Is Plugin {
+            If This.Context = "Plugin"
             Return True
         }
         Else {
+            If This.Context = "Standalone"
             If Instance.WinID = WinGetID("A")
             Return True
         }
@@ -313,6 +322,7 @@ Class OverlayLoader {
         If This.Active {
             A_WorkingDir := A_ScriptDir
             This.Active := False
+            This.Context := False
             This.Overlay := This.DefaultOverlay
             This.ProjectFile := False
             AccessibilityOverlay.Speak("Overlay unloaded")
