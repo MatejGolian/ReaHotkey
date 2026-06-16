@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed small element naming discrepancy in OverlayDesigner
+
 ## [1.0.36] - 2026-06-16
 
 ### Changed

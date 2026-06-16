@@ -83,7 +83,7 @@ Class Update {
                 Break
             }
             Else {
-                UpdatePromptBody .= "`n`n" . This.AppName . " " . Value["tag_name"] . ":`n" . ProcessNotificationText(Value["body"])
+                UpdatePromptBody .= "`n`nVersion " . Value["tag_name"] . ":`n" . ProcessNotificationText(Value["body"])
             }
             If ForceUpdate {
                 ShowUpdatePrompt()

@@ -344,14 +344,14 @@ Class Editor {
             If DefaultParams.Has(ParamNumber) {
                 InitialParamList.Push(DefaultParams[ParamNumber])
                 ObjParamList.Push(DefaultParams[ParamNumber])
-                If Param.Name = "Label" {
+                If Param.Name = "Label" Or Param.Name = "Value" {
                     InitialParamList[InitialParamList.Length] := ItemLabel
                     ObjParamList[ObjParamList.Length] := ItemLabel
                 }
             }
             Else {
                 ObjParamList.Push("")
-                If Param.Name = "Label" {
+                If Param.Name = "Label" Or Param.Name = "Value" {
                     ObjParamList[ObjParamList.Length] := ItemLabel
                 }
             }
@@ -362,14 +362,14 @@ Class Editor {
             If DefaultParams.Has(ParamNumber) {
                 InitialParamList.Push(DefaultParams[ParamNumber])
                 ObjParamList.Push(DefaultParams[ParamNumber])
-                If Param.Name = "Label" {
+                If Param.Name = "Label" Or Param.Name = "Value" {
                     InitialParamList[InitialParamList.Length] := ItemLabel
                     ObjParamList[ObjParamList.Length] := ItemLabel
                 }
             }
             Else {
                 ObjParamList.Push("")
-                If Param.Name = "Label" {
+                If Param.Name = "Label" Or Param.Name = "Value" {
                     ObjParamList[ObjParamList.Length] := ItemLabel
                 }
             }
