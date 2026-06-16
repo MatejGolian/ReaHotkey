@@ -46,9 +46,12 @@ Class OverlayLoader {
         DefaultOverlay.AddStaticText("Press Shift+Windows+L to load an overlay")
         This.DefaultOverlay := DefaultOverlay
         This.Overlay := DefaultOverlay
-        Plugin.Register("OverlayLoader", ".*", ObjBindMethod(This, "CheckState"), False, ObjBindMethod(This, "UnloadPlugin"), False, 1, True)
+        Plugin.Register("OverlayLoader", ".*", ObjBindMethod(This, "Check"), False, ObjBindMethod(This, "Unload"), False, 1, True)
         Plugin.RegisterOverlay("OverlayLoader", DefaultOverlay)
         Plugin.SetTimer("OverlayLoader", This.SetOverlay, -1)
+        Standalone.Register("OverlayLoader", "ahk_exe .+.exe", ObjBindMethod(This, "Check"), False, ObjBindMethod(This, "Unload"), False, 1)
+        Standalone.RegisterOverlay("OverlayLoader", DefaultOverlay)
+        Standalone.SetTimer("OverlayLoader", This.SetOverlay, -1)
     }
     
     Static AddFromJson(OverlayObj, JsonData, StartingID := False) {
@@ -80,16 +83,30 @@ Class OverlayLoader {
         Return OverlayObj
     }
     
-    Static AddPluginInstance() {
-        If Plugin.Instances.Length > 0
-        If Plugin.Instances[1].Name = "OverlayLoader"
-        Return
-        Plugin.Instances.InsertAt(1, Plugin("OverlayLoader", ReaHotkey.GetPluginControl(), WinGetTitle("A")))
+    Static AddInstance() {
+        For ItemType In ["Plugin", "Standalone"] {
+            If %ItemType%.Instances.Length > 0
+            If %ItemType%.Instances[1].Name = "OverlayLoader" {
+                If ItemType = "Standalone"
+                Standalone.Instances[1].WinID := WinGetID("A")
+                Continue
+            }
+            If ItemType = "Plugin"
+            Plugin.Instances.InsertAt(1, Plugin("OverlayLoader", ReaHotkey.GetPluginControl(), WinGetTitle("A")))
+            Else
+            Standalone.Instances.InsertAt(1, Standalone("OverlayLoader", WinGetID("A")))
+        }
     }
     
-    Static CheckState(*) {
+    Static Check(Instance) {
         If This.Active
-        Return True
+        If Instance Is Plugin {
+            Return True
+        }
+        Else {
+            If Instance.WinID = WinGetID("A")
+            Return True
+        }
         Return False
     }
     
@@ -128,7 +145,8 @@ Class OverlayLoader {
         ProjectFile := FileSelect("3", "", "Load overlay…", "OverlayDesigner Projects (*.RHK-Overlay)")
         If Not ProjectFile
         Return
-        This.PerformLoad(ProjectFile)
+        If This.PerformLoad(ProjectFile)
+        AccessibilityOverlay.Speak("Overlay loaded")
     }
     
     Static MakeObjProp(ObjType, Name, Value) {
@@ -199,21 +217,21 @@ Class OverlayLoader {
     Static PerformLoad(ProjectFile) {
         If Not FileExist(ProjectFile) Or InStr(FileExist(ProjectFile), "D") {
             MsgBox "An error occurred while opening " . ProjectFile . ".`nPlease try again.", "OverlayLoader"
-            Return
+            Return False
         }
         JsonData := FileRead(ProjectFile, "UTF-8")
         JsonData := jxon_load(&JsonData)
         If Not JsonData Is Map {
             ReportError()
-            Return
+            Return False
         }
         If Not JsonData.Has("RootID") {
             ReportError()
-            Return
+            Return False
         }
         If Not JsonData.Has("Items") {
             ReportError()
-            Return
+            Return False
         }
         RootID := 0
         For Key, Value In JsonData["Items"]
@@ -224,7 +242,7 @@ Class OverlayLoader {
         }
         If Not RootID Or Not ObjType {
             ReportError()
-            Return
+            Return False
         }
         This.Overlay := This.AddFromJson(This.Overlay, JsonData)
         This.ProjectFile := ProjectFile
@@ -232,14 +250,30 @@ Class OverlayLoader {
         A_WorkingDir := ProjectDir
         This.UpdateHotkeys()
         This.Active := True
-        This.AddPluginInstance()
-        If ReaHotkey.FoundPlugin Is Plugin {
-            If ReaHotkey.FoundPlugin.Name = "OverlayLoader"
-            ReaHotkey.FoundPlugin.Overlay := This.Overlay
+        This.AddInstance()
+        For ItemType In ["Plugin", "Standalone"] {
+            If ReaHotkey.Found%ItemType% Is %ItemType% {
+                If ReaHotkey.Found%ItemType%.Name = "OverlayLoader"
+                ReaHotkey.Found%ItemType%.Overlay := This.Overlay
+            }
         }
-        AccessibilityOverlay.Speak("Overlay loaded")
+        Return True
         ReportError() {
             MsgBox "Failed to open " . ProjectFile . ".", "OverlayLoader"
+        }
+    }
+    
+    Static ReloadHK(ThisHotkey) {
+        This.ReloadOverlay()
+    }
+    
+    Static ReloadOverlay() {
+        If This.ProjectFile {
+            If This.PerformLoad(This.ProjectFile)
+            AccessibilityOverlay.Speak("Overlay reloaded")
+        }
+        Else {
+            This.LoadOverlay()
         }
     }
     
@@ -252,7 +286,7 @@ Class OverlayLoader {
             SplitPath This.ProjectFile,, &ProjectDir
             A_WorkingDir := ProjectDir
             This.Active := True
-            This.AddPluginInstance()
+            This.AddInstance()
             AccessibilityOverlay.Speak("OverlayLoader enabled")
         }
         Else If This.Active {
@@ -264,9 +298,13 @@ Class OverlayLoader {
             SplitPath This.ProjectFile,, &ProjectDir
             A_WorkingDir := ProjectDir
             This.Active := True
-            This.AddPluginInstance()
+            This.AddInstance()
             AccessibilityOverlay.Speak("OverlayLoader enabled")
         }
+    }
+    
+    Static Unload(Instance) {
+        A_WorkingDir := A_ScriptDir
     }
     
     Static UnloadHK(ThisHotkey) {
@@ -281,10 +319,6 @@ Class OverlayLoader {
         }
     }
     
-    Static UnloadPlugin(Instance) {
-        A_WorkingDir := A_ScriptDir
-    }
-    
     Static UpdateHotkeys() {
         For PluginWinCriteria In ReaHotkey.PluginWinCriteriaList {
             HotIfWinActive(PluginWinCriteria)
@@ -296,16 +330,22 @@ Class OverlayLoader {
             HotIfWinActive(PluginWinCriteria)
             Plugin.RegisterOverlayHotkeys("OverlayLoader", This.Overlay)
         }
+        HotIfWinActive("ahk_exe .+.exe")
+        For HKItem In Standalone.GetHotkeys("OverlayLoader")
+        Standalone.SetHotkey("OverlayLoader", HKItem["KeyName"], "Off")
+        Standalone.List[Standalone.FindName("OverlayLoader")]["Hotkeys"] := Array()
+        Standalone.RegisterOverlayHotkeys("OverlayLoader", This.Overlay)
     }
     
     Class SetOverlay {
         Static Call() {
             ParentClass := SubStr(This.Prototype.__Class, 1, InStr(This.Prototype.__Class, ".") - 1)
-            If ReaHotkey.FoundPlugin Is Plugin And ReaHotkey.FoundPlugin.Name = "OverlayLoader"
+            For ItemType In ["Plugin", "Standalone"]
+            If ReaHotkey.Found%ItemType% Is %ItemType% And ReaHotkey.Found%ItemType%.Name = "OverlayLoader"
             If %ParentClass%.Active {
                 SplitPath %ParentClass%.ProjectFile,, &ProjectDir
                 A_WorkingDir := ProjectDir
-                ReaHotkey.FoundPlugin.Overlay := %ParentClass%.Overlay
+                ReaHotkey.Found%ItemType%.Overlay := %ParentClass%.Overlay
             }
         }
     }
@@ -314,5 +354,6 @@ Class OverlayLoader {
 
 #HotIf
 #+L::OverlayLoader.LoadHK(ThisHotkey)
+#+F5::OverlayLoader.ReloadHK(ThisHotkey)
 #+O::OverlayLoader.ToggleHK(ThisHotkey)
 #+U::OverlayLoader.UnloadHK(ThisHotkey)

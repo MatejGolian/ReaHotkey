@@ -72,6 +72,7 @@ Just extract the downloaded archive and run one of the ReaHotkey executables dep
 | `Shift + Windows + L` | Load custom overlay in the OverlayLoader (see the OverlayDesigner/Loader section [below](#overlaydesignerloader) for more details) |
 | `Shift + Windows + U` | Unload custom overlay |
 | `Shift + Windows + O` | Toggle OverlayLoader enabled/disabled |
+| `Shift + Windows + F5` | Reload current overlay from disk |
 
 ## Known Issues
 
@@ -156,7 +157,8 @@ Note that the shortcut configured here is considered global and will thus functi
 ## <a name="overlaydesignerloader"></a>About OverlayDesigner/Loader
 
 OverlayDesigner is a special utility that can create basic overlays in an interactive fashion and generate AutoHotkey code. It also assists with optaining various information that can come in handy when writing overlays, such as information about the active window or its controls. It can be used to create simple overlays for plug-ins or applications that ReaHotkey does not support out-of-the-box.
-The resulting files can be used directly in the designer, but they can also be loaded in ReaHotkey's OverlayLoader to make the user experience more hassle-free. Note that the OverlayLoader component included in ReaHotkey does not possess the editing capabilities of the full OverlayDesigner script. Also, at present the OverlayLoader component is only active in the Ableton and REAPER plug-in windows - using it in conjunction with standalone applications is not supported at this time. Apart from that, while the simplified OverlayLoader component only gets activated when the plug-in control gains focus, the OverlayDesigner editor becomes active whenever the target window itself becomes active. This difference is there to ensure consistency and predictability when using the editor, but it can also result in differences in behavior compared to when the ReaHotkey OverlayLoader component is used. Therefore it’s recommended to run finished overlays in the ReaHotkey OverlayLoader whenever possible.
+The resulting files can be used directly in the designer, but they can also be loaded in ReaHotkey's OverlayLoader to make the user experience more hassle-free. Note that the OverlayLoader component included in ReaHotkey does not possess the editing capabilities of the full OverlayDesigner script. Also, when using the ReaHotkey overlay loader in conjunction with a standalone application, the component gets tied to the window ID of that application. This means that the OverlayLoader component will appear inactive, should you close and reopen that particular window, even if the component is technically enabled. In such cases you can use the reload command (`Shift + Windows + F5`) to reload the last loaded overlay file from disk, or use the toggle command (`Shift + Windows + O`) to refresh the OverlayLoader component softly.
+Apart from that, while the simplified OverlayLoader component only gets activated when the plug-in control gains focus, the OverlayDesigner editor becomes active whenever the target window itself becomes active. This difference is there to ensure consistency and predictability when using the editor, but it can also result in differences in behavior compared to when the ReaHotkey OverlayLoader component is used in the Ableton and REAPER plug-in windows. Therefore it’s recommended to run finished overlays in the ReaHotkey OverlayLoader whenever possible.
 
 ### Getting Started with Designing Overlays
 
@@ -286,8 +288,13 @@ They behave similar to HotspotButtons, they have X and Y coordinates and they pe
 
 #### Additional Notes
 
+If a relative path is specified in Item properties, all files are assumed to be somewhere in the directory structure of the parent folder of the currently loaded overlay. If the overlay hasn't been saved to a file yet, the parent folder is considered to be the script's own parent folder.
 When Specifying functions, use function names from `Includes/Overlay.Functions.ahk` found in the ReaHotkey source code. Not all the functions defined in that file can be used with overlay objects directly as that file contains other helper functions too, but generally that's the place where most functions that can be passed to overlay objects live.
-  
+
+### Switching Overlays On The Fly
+
+To switch to a new overlay, for example after activating a button, specify the LoadRHKOverlay function along with the path to the desired overlay file in parentheses in Item properties. For example `LoadRHKOverlay("My Overlay.RHK-Overlay")`.
+
 ### Keyboard Shortcuts
 
 Many of the available keyboard shortcuts are disabled when the overlay designing/editing feature is inactive, although general functions (mostly the ones found in the script's Tools submenu) remain accessible unless the script is paused.

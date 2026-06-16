@@ -32,6 +32,9 @@
 #IncludeAgain Hotkeys.Plugin.ahk
 #IncludeAgain Hotkeys.Common.ahk
 
+#HotIf WinActive("ahk_exe .+.exe")
+#IncludeAgain Hotkeys.Common.ahk
+
 #HotIf WinActive("Vochlea\sDubler\s2\.2 ahk_class Qt5155QWindowOwnDCIcon")
 #IncludeAgain Hotkeys.Common.ahk
 
