@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.35] - 2026-06-16
+
 ### Added
 
 -   OverlayLoader: Support standalone applications
@@ -934,7 +936,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.34...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.35...HEAD
+
+[1.0.35]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.34...1.0.35
 
 [1.0.34]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.33...1.0.34
 
