@@ -3,7 +3,6 @@
 #MaxThreadsPerHotkey 1
 #SingleInstance Force
 #Warn All
-#Warn LocalSameAsGlobal, Off
 CoordMode "Caret", "Client"
 CoordMode "Menu", "Client"
 CoordMode "Mouse", "Client"

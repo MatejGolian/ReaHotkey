@@ -2,7 +2,6 @@
 
 #SingleInstance Force
 #Warn
-#Warn LocalSameAsGlobal, Off
 CoordMode "Caret", "Client"
 CoordMode "Menu", "Client"
 CoordMode "Mouse", "Client"
