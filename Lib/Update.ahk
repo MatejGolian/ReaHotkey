@@ -167,7 +167,7 @@ Class Update {
                 If ProcessText
                 Text := ProcessNotificationText(Text)
                 NotificationBox := Gui(, Title)
-                NotificationBox.AddEdit("ReadOnly vText -WantReturn", Text)
+                NotificationBox.AddEdit("ReadOnly vText +Multi -WantReturn", Text)
                 If ActionButtonAction
                 NotificationBox.AddButton("Section vActionButton", ActionButtonLabel).OnEvent("Click", ActionButtonAction)
                 Else
