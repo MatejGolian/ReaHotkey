@@ -45,7 +45,7 @@ Class CodeParser {
         Return This.InArray(Value, Operators)
     }
     
-    ParseSegment(Segment, ParentObj := False) {
+    ParseSegment(Segment) {
         Segment := Trim(Segment)
         SegmentIsNumber := False
         If Not Segment = "" And Not SubStr(Segment, 1, 1) = "`"" And Not SubStr(Segment, -1) = "`"" {
@@ -65,7 +65,7 @@ Class CodeParser {
         If RegExMatch(Segment, "^(\s*;.*)", &Match)
         Return This.ProcessComment(Match)
         If RegExMatch(Segment, "^([A-Za-z_][0-9A-Za-z_]+)\((.*)\)$", &Match)
-        Return This.ProcessFunc(Match, ParentObj)
+        Return This.ProcessFunc(Match)
         If RegExMatch(Segment, "^([A-Za-z_][0-9A-Za-z_]+)\.([A-Za-z_][0-9A-Za-z_]+)$", &Match)
         Return This.ProcessParamInvocation(Match)
         If RegExMatch(Segment, "^([A-Za-z_][0-9A-Za-z_]+)\.([A-Za-z_][0-9A-Za-z_]+.*)", &Match)
@@ -208,7 +208,7 @@ Class CodeParser {
         Return Expression
     }
     
-    ProcessFunc(Match, ParentObj := False) {
+    ProcessFunc(Match) {
         Name := Trim(Match[1])
         Params := Trim(Match[2])
         SplitParams := This.Split(Params, ",")
@@ -219,11 +219,7 @@ Class CodeParser {
             FuncParams.Push(Value)
         }
         FuncObj := False
-        If ParentObj And FuncParams.Length > 0
-        Return ObjBindMethod(ParentObj, Name, FuncParams*)
-        Else If ParentObj
-        Return ObjBindMethod(ParentObj, Name)
-        Else If FuncParams.Length > 0
+        If FuncParams.Length > 0
         Return ObjBindMethod(%Name%,, FuncParams*)
         Else
         Return %Name%
@@ -232,7 +228,13 @@ Class CodeParser {
     ProcessMethodInvocation(Match) {
         Param1 := Trim(Match[1])
         Param2 := Trim(Match[2])
-        Return This.ParseSegment(Param2, %Param1%)
+        RegExMatch(Param2, "^([A-Za-z_][0-9A-Za-z_]+)\((.*)\)$", &Match)
+        MethodName := Match[1]
+        MethodParams := Match[2]
+        MethodParams := This.Split(MethodParams, ",")
+        For MethodParam In MethodParams
+        MethodParams[A_Index] := This.ParseSegment(MethodParam)
+        Return ObjBindMethod(%Param1%, MethodName, MethodParams*)
     }
     
     ProcessNumber(Segment) {

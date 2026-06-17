@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+-   Improve code parser
+-   Improve some OverlayDesigner dialog boxes
+
+### Changed
+
 -   Minor internal updates
 
 ## [1.0.38] - 2026-06-16

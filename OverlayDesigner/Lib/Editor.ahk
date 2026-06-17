@@ -657,7 +657,6 @@ Class Editor {
     }
     
     Static GenerateCode(*) {
-        
         GeneratedCode := This.CodeGenerator.GenerateOverlay(This.Overlay)
         This.ShowDlgBox("Code For Export", GeneratedCode)
     }
@@ -870,15 +869,19 @@ Class Editor {
         This.ShowDlgBox("About OverlayDesigner", AboutText, True)
     }
     
-    Static ShowDlgBox(BoxTitle, BoxValue := "", ReadOnly := False) {
+    Static ShowDlgBox(BoxTitle, BoxValue := "", ReadOnly := False, OKButtonAction := False) {
         Static DlgBox := False
         If DlgBox = False {
             DlgBox := Gui(, BoxTitle)
             If ReadOnly
-            DlgBox.AddEdit("ReadOnly", BoxValue)
+            DlgBox.AddEdit("ReadOnly vEditField", BoxValue)
             Else
-            DlgBox.AddEdit(, BoxValue)
-            DlgBox.AddButton("Default Section", "OK").OnEvent("Click", CloseDlgBox)
+            DlgBox.AddEdit("vEditField", BoxValue)
+            OKButton := DlgBox.AddButton("Default Section", "OK")
+            If OKButtonAction
+            OKButton.OnEvent("Click", OKButtonAction)
+            Else
+            OKButton.OnEvent("Click", CloseDlgBox)
             DlgBox.OnEvent("Close", CloseDlgBox)
             DlgBox.OnEvent("Escape", CloseDlgBox)
             DlgBox.Show()
@@ -886,6 +889,7 @@ Class Editor {
         Else {
             DlgBox.Show()
         }
+        Return DlgBox
         CloseDlgBox(*) {
             DlgBox.Destroy()
             DlgBox := False
