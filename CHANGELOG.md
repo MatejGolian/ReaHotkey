@@ -7,12 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.39] - 2026-06-17
-
 ### Changed
 
--   Improve code parser
--   Improve some OverlayDesigner dialog boxes
+-   Various OverlayDesigner code updates
+
+## [1.0.39] - 2026-06-17
 
 ### Changed
 

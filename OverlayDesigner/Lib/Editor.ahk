@@ -385,7 +385,7 @@ Class Editor {
             ExpressionParams.%Param.Name% := 1
             Else
             ExpressionParams.%Param.Name% := 0
-            ObjParams.%Param.Name% := Editor.ParamHandler.MakeEditorProp(ItemType, Param.Name, ObjParams.%Param.Name%, ExpressionParams.%Param.Name%, False)
+            ObjParams.%Param.Name% := This.ParamHandler.MakeEditorProp(ItemType, Param.Name, ObjParams.%Param.Name%, ExpressionParams.%Param.Name%, False)
         }
         If ItemDefinition.HasProp("OptionalParams")
         For Param In ItemDefinition.OptionalParams {
@@ -395,7 +395,7 @@ Class Editor {
             ExpressionParams.%Param.Name% := 1
             Else
             ExpressionParams.%Param.Name% := 0
-            ObjParams.%Param.Name% := Editor.ParamHandler.MakeEditorProp(ItemType, Param.Name, ObjParams.%Param.Name%, ExpressionParams.%Param.Name%, True)
+            ObjParams.%Param.Name% := This.ParamHandler.MakeEditorProp(ItemType, Param.Name, ObjParams.%Param.Name%, ExpressionParams.%Param.Name%, True)
         }
         ItemEntry := {VarName: ItemType . This.ItemCounts[ItemType], ObjParams: ObjParams, ExpressionParams: ExpressionParams, OverlayObj: OverlayObj}
         If WithInitParamList
@@ -874,9 +874,9 @@ Class Editor {
         If DlgBox = False {
             DlgBox := Gui(, BoxTitle)
             If ReadOnly
-            DlgBox.AddEdit("ReadOnly vEditField", BoxValue)
+            DlgBox.AddEdit("ReadOnly vEditField +Multi", BoxValue)
             Else
-            DlgBox.AddEdit("vEditField", BoxValue)
+            DlgBox.AddEdit("vEditField +Multi", BoxValue)
             OKButton := DlgBox.AddButton("Default Section", "OK")
             If OKButtonAction
             OKButton.OnEvent("Click", OKButtonAction)
@@ -982,11 +982,11 @@ Class Editor {
         OptionalParams := False
         If RequiredParams
         For Param In RequiredParams {
-            ObjParams.%Param.Name% := Editor.ParamHandler.MakeEditorProp(Type(OverlayObj), Param.Name, OverlayObj.%Param.Name%, ExpressionParams.%Param.Name%, False)
+            ObjParams.%Param.Name% := This.ParamHandler.MakeEditorProp(Type(OverlayObj), Param.Name, OverlayObj.%Param.Name%, ExpressionParams.%Param.Name%, False)
         }
         If OptionalParams
         For Param In OptionalParams {
-            ObjParams.%Param.Name% := Editor.ParamHandler.MakeEditorProp(Type(OverlayObj), Param.Name, OverlayObj.%Param.Name%, ExpressionParams.%Param.Name%, True)
+            ObjParams.%Param.Name% := This.ParamHandler.MakeEditorProp(Type(OverlayObj), Param.Name, OverlayObj.%Param.Name%, ExpressionParams.%Param.Name%, True)
         }
         EditorItem.OverlayObj := OverlayObj
     }
