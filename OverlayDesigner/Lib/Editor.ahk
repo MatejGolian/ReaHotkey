@@ -22,8 +22,7 @@ Class Editor {
         A_TrayMenu.Add("&Pause", ObjBindMethod(This, "TogglePause"))
         A_TrayMenu.Add("&About…", ObjBindMethod(This, "ShowAboutBox"))
         A_TrayMenu.Add("&Quit…", ObjBindMethod(This, "Quit"))
-        This.Overlay := This.AddItem("AccessibilityOverlay", False).OverlayObj
-        This.Overlay.CurrentControlID := This.Overlay.GetFocusableControlIDs()[1]
+        This.InitializeOverlay(True, "AccessibilityOverlay")
         For HKItem, HKAction In This.AlwaysActiveHKs
         Hotkey HKItem, HKAction
         For HKItem In This.HKsExemptFromPause
@@ -683,14 +682,16 @@ Class Editor {
         This.ShowDlgBox("Code For Export", GeneratedCode)
     }
     
-    Static InitializeOverlay(OverlayType := "AccessibilityOverlay") {
+    Static InitializeOverlay(CreateOverlay := True, OverlayType := "AccessibilityOverlay") {
         This.Items := Map()
         This.ItemCounts := Map()
         AccessibilityOverlay.AllControls := Array()
         AccessibilityOverlay.TotalNumberOfControls := 0
         This.Overlay := False
-        This.Overlay := This.Additem(OverlayType, False).OverlayObj
-        This.Overlay.CurrentControlID := This.Overlay.GetFocusableControlIDs()[1]
+        If CreateOverlay {
+            This.Overlay := This.Additem(OverlayType, False).OverlayObj
+            This.Overlay.CurrentControlID := This.Overlay.GetFocusableControlIDs()[1]
+        }
         This.UpdateOverlayHKs()
     }
     
@@ -780,9 +781,7 @@ Class Editor {
                 }
             }
             This.CreateUndo()
-            This.InitializeOverlay()
-            This.Items := Map()
-            This.Overlay := False
+            This.InitializeOverlay(False)
             This.Overlay := This.AddFromJson(This.Overlay, JsonData)
             If CurrentControlNumber = This.Overlay.FocusableControls.Length -1
             This.Overlay.FocusControlByNumber(This.Overlay.FocusableControls.Length -1)
@@ -837,10 +836,7 @@ Class Editor {
             This.PerformSave(This.ProjectFile, True)
             This.ToggleHKs("On")
         }
-        This.InitializeOverlay()
-        This.Items := Map()
-        This.ItemCounts := Map()
-        This.Overlay := False
+        This.InitializeOverlay(False)
         This.Overlay := This.AddFromJson(This.Overlay, JsonData)
         This.Overlay.Reset()
         This.Overlay.CurrentControlID := This.Overlay.GetFocusableControlIDs()[1]
@@ -878,10 +874,7 @@ Class Editor {
         PreviousJson := This.Undo.Json.Clone()
         This.CreateUndo()
         ObjType := Type(This.Overlay)
-        This.InitializeOverlay(ObjType)
-        This.Items := Map()
-        This.ItemCounts := Map()
-        This.Overlay := False
+        This.InitializeOverlay(False)
         This.Overlay := This.AddFromJson(This.Overlay, PreviousJson, PreviousJson["RootID"])
         This.Overlay.FocusControlByNumber(PreviousControlNumber)
         This.UpdateOverlayHKs()
@@ -1003,7 +996,7 @@ Class Editor {
             }
             This.ProjectFile := ""
             A_WorkingDir := A_ScriptDir
-            This.InitializeOverlay(NewProjectBox["OverlayType"].Text)
+            This.InitializeOverlay(True, NewProjectBox["OverlayType"].Text)
             This.ClearClipboard()
             This.ClearUndo()
             Close()

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   OverlayDesigner: Small code purification
+
 ## [1.0.42] - 2026-06-18
 
 ### Fixed
