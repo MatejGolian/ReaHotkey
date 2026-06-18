@@ -679,11 +679,11 @@ Class Editor {
             ObjType := JsonData["Items"][StartingID]["ObjType"]
             If This.ItemDefinitions.Has(ObjType) {
                 VarName := JsonData["Items"][StartingID]["VarName"]
-                ObjParams := JsonData["Items"][StartingID]["ObjParams"]
-                ExpressionParams := JsonData["Items"][StartingID]["ExpressionParams"]
+                ObjParams := This.Helpers.MapToObj(JsonData["Items"][StartingID]["ObjParams"])
+                ExpressionParams := This.Helpers.MapToObj(JsonData["Items"][StartingID]["ExpressionParams"])
                 ConstructorParams := GetConstructorParams(StartingID, ObjType, ObjParams, ExpressionParams)
                 OverlayObj := %ObjType%(ConstructorParams*)
-                This.Items.Set(OverlayObj.ControlID, {VarName: VarName, ObjType: ObjType, ObjParams: This.Helpers.MapToObj(ObjParams), ExpressionParams: This.Helpers.MapToObj(ExpressionParams), OverlayObj: OverlayObj})
+                This.Items.Set(OverlayObj.ControlID, {VarName: VarName, ObjType: ObjType, ObjParams: ObjParams, ExpressionParams: ExpressionParams, OverlayObj: OverlayObj})
             }
         }
         If OverlayObj Is AccessibilityOverlay
@@ -695,8 +695,8 @@ Class Editor {
             ChildItemType := ChildItem["ObjType"]
             If This.ItemDefinitions.Has(ChildItemType) {
                 VarName := ChildItem["VarName"]
-                ObjParams := ChildItem["ObjParams"]
-                ExpressionParams := ChildItem["ExpressionParams"]
+                ObjParams := This.Helpers.MapToObj(ChildItem["ObjParams"])
+                ExpressionParams := This.Helpers.MapToObj(ChildItem["ExpressionParams"])
                 ChildConstructorParams := GetConstructorParams(ChildID, ChildItemType, ObjParams, ExpressionParams)
                 ChildObj := %ChildItemType%(ChildConstructorParams*)
                 ChildObj := This.LoadFromJson(ChildObj, JsonData, ChildID)
@@ -707,7 +707,7 @@ Class Editor {
                     OverlayObj.AddTabs(ChildObj)
                     ChildObj := OverlayObj.Tabs[OverlayObj.Tabs.Length]
                 }
-                This.Items.Set(ChildObj.ControlID, {VarName: VarName, ObjType: ChildItemType, ObjParams: This.Helpers.MapToObj(ObjParams), ExpressionParams: This.Helpers.MapToObj(ExpressionParams), OverlayObj: ChildObj})
+                This.Items.Set(ChildObj.ControlID, {VarName: VarName, ObjType: ChildItemType, ObjParams: ObjParams, ExpressionParams: ExpressionParams, OverlayObj: ChildObj})
             }
         }
         If OverlayObj Is AccessibilityOverlay
@@ -717,15 +717,15 @@ Class Editor {
             ConstructorParams := Array()
             If This.ItemDefinitions[ObjType].HasProp("RequiredParams")
             For Param In This.ItemDefinitions[ObjType].RequiredParams {
-                If Not ObjParams.Has(Param.Name)
-                ObjParams.Set(Param.Name, "")
-                ConstructorParams.Push(This.ParamHandler.MakeObjProp(ObjParams, Param.Name, ObjParams[Param.Name], ExpressionParams[Param.Name], False))
+                If Not ObjParams.HasProp(Param.Name)
+                ObjParams.DefineProp(Param.Name, {Value: ""})
+                ConstructorParams.Push(This.ParamHandler.MakeObjProp(ObjParams, Param.Name, ObjParams.%Param.Name%, ExpressionParams.%Param.Name%, False))
             }
             If This.ItemDefinitions[ObjType].HasProp("OptionalParams")
             For Param In This.ItemDefinitions[ObjType].OptionalParams {
-                If Not ObjParams.Has(Param.Name)
-                ObjParams.Set(Param.Name, "")
-                ConstructorParams.Push(This.ParamHandler.MakeObjProp(ObjParams, Param.Name, ObjParams[Param.Name], ExpressionParams[Param.Name], True))
+                If Not ObjParams.HasProp(Param.Name)
+                ObjParams.DefineProp(Param.Name, {Value: ""})
+                ConstructorParams.Push(This.ParamHandler.MakeObjProp(ObjParams, Param.Name, ObjParams.%Param.Name%, ExpressionParams.%Param.Name%, True))
             }
             Return ConstructorParams
         }
