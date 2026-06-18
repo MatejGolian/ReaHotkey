@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.42] - 2026-06-18
+
 ### Fixed
 
 -   Fixed undo point not being created when pasting in the Designer
@@ -976,7 +978,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.41...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.42...HEAD
+
+[1.0.42]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.41...1.0.42
 
 [1.0.41]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.40...1.0.41
 
