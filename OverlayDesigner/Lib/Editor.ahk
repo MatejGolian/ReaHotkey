@@ -672,6 +672,65 @@ Class Editor {
         This.UpdateOverlayHKs()
     }
     
+    Static LoadFromJson(OverlayObj, JsonData, StartingID := False) {
+        If Not StartingID
+        StartingID := JsonData["RootID"]
+        If StartingID = JsonData["RootID"] {
+            ObjType := JsonData["Items"][StartingID]["ObjType"]
+            If This.ItemDefinitions.Has(ObjType) {
+                VarName := JsonData["Items"][StartingID]["VarName"]
+                ObjParams := JsonData["Items"][StartingID]["ObjParams"]
+                ExpressionParams := JsonData["Items"][StartingID]["ExpressionParams"]
+                ConstructorParams := GetConstructorParams(StartingID, ObjType, ObjParams, ExpressionParams)
+                OverlayObj := %ObjType%(ConstructorParams*)
+                This.Items.Set(OverlayObj.ControlID, {VarName: VarName, ObjType: ObjType, ObjParams: This.Helpers.MapToObj(ObjParams), ExpressionParams: This.Helpers.MapToObj(ExpressionParams), OverlayObj: OverlayObj})
+            }
+        }
+        If OverlayObj Is AccessibilityOverlay
+        OverlayObj.AddStartSeparator()
+        StartingItem := JsonData["Items"][StartingID]
+        If StartingItem.Has("Children")
+        For ChildID In StartingItem["Children"] {
+            ChildItem := JsonData["Items"][ChildID]
+            ChildItemType := ChildItem["ObjType"]
+            If This.ItemDefinitions.Has(ChildItemType) {
+                VarName := ChildItem["VarName"]
+                ObjParams := ChildItem["ObjParams"]
+                ExpressionParams := ChildItem["ExpressionParams"]
+                ChildConstructorParams := GetConstructorParams(ChildID, ChildItemType, ObjParams, ExpressionParams)
+                ChildObj := %ChildItemType%(ChildConstructorParams*)
+                ChildObj := This.LoadFromJson(ChildObj, JsonData, ChildID)
+                If OverlayObj Is AccessibilityOverlay {
+                    ChildObj := OverlayObj.AddControl(ChildObj)
+                }
+                Else If OverlayObj Is TabControl {
+                    OverlayObj.AddTabs(ChildObj)
+                    ChildObj := OverlayObj.Tabs[OverlayObj.Tabs.Length]
+                }
+                This.Items.Set(ChildObj.ControlID, {VarName: VarName, ObjType: ChildItemType, ObjParams: This.Helpers.MapToObj(ObjParams), ExpressionParams: This.Helpers.MapToObj(ExpressionParams), OverlayObj: ChildObj})
+            }
+        }
+        If OverlayObj Is AccessibilityOverlay
+        OverlayObj.AddEndSeparator()
+        Return OverlayObj
+        GetConstructorParams(ItemID, ObjType, ObjParams, ExpressionParams) {
+            ConstructorParams := Array()
+            If This.ItemDefinitions[ObjType].HasProp("RequiredParams")
+            For Param In This.ItemDefinitions[ObjType].RequiredParams {
+                If Not ObjParams.Has(Param.Name)
+                ObjParams.Set(Param.Name, "")
+                ConstructorParams.Push(This.ParamHandler.MakeObjProp(ObjParams, Param.Name, ObjParams[Param.Name], ExpressionParams[Param.Name], False))
+            }
+            If This.ItemDefinitions[ObjType].HasProp("OptionalParams")
+            For Param In This.ItemDefinitions[ObjType].OptionalParams {
+                If Not ObjParams.Has(Param.Name)
+                ObjParams.Set(Param.Name, "")
+                ConstructorParams.Push(This.ParamHandler.MakeObjProp(ObjParams, Param.Name, ObjParams[Param.Name], ExpressionParams[Param.Name], True))
+            }
+            Return ConstructorParams
+        }
+    }
+    
     Static OpenProject(*) {
         This.ToggleHKs("Off")
         NewProjectFile := FileSelect("3", "", "Open…", "OverlayDesigner Projects (*.RHK-Overlay)")
@@ -765,8 +824,10 @@ Class Editor {
             This.PerformSave(This.ProjectFile, True)
             This.ToggleHKs("On")
         }
-        This.InitializeOverlay(ObjType)
-        This.Overlay := This.AddFromJson(This.Overlay, JsonData, JsonData["RootID"])
+        This.Items := Map()
+        This.ItemCounts := Map()
+        This.Overlay := False
+        This.Overlay := This.LoadFromJson(This.Overlay, JsonData)
         This.Overlay.Reset()
         This.Overlay.CurrentControlID := This.Overlay.GetFocusableControlIDs()[1]
         This.ClearClipboard()
