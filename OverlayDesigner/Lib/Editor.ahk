@@ -746,8 +746,6 @@ Class Editor {
                 ChildPos := CurrentControl.CurrentTab
                 If ChildPos = 0
                 ChildPos := 1
-                If Not JsonData["Items"]["EditorItem" . CurrentControl.ControlID].Has("Children")
-                JsonData["Items"]["EditorItem" . CurrentControl.ControlID].Set("Children", Array())
                 JsonData["Items"]["EditorItem" . CurrentControl.ControlID]["CurrentChild"] := ChildPos
                 JsonData["Items"]["EditorItem" . CurrentControl.ControlID]["Children"].InsertAt(ChildPos, This.Clipboard.Json["RootID"])
             }
