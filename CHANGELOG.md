@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed undo point not being created when pasting in the Designer
+
 ## [1.0.41] - 2026-06-18
 
 ### Changed

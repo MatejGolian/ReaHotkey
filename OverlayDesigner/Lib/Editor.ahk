@@ -779,6 +779,7 @@ Class Editor {
                     JsonData["Items"]["EditorItem" . ParentControl.ControlID]["Children"].InsertAt(ChildPos, This.Clipboard.Json["RootID"])
                 }
             }
+            This.CreateUndo()
             This.InitializeOverlay()
             This.Items := Map()
             This.Overlay := False
