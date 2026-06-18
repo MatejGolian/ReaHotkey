@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.43] - 2026-06-18
+
 ### Changed
 
 -   OverlayDesigner: Small code purification
@@ -982,7 +984,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.42...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.43...HEAD
+
+[1.0.43]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.42...1.0.43
 
 [1.0.42]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.41...1.0.42
 
