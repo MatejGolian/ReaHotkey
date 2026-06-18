@@ -683,6 +683,9 @@ Class Editor {
                 ExpressionParams := This.Helpers.MapToObj(JsonData["Items"][StartingID]["ExpressionParams"])
                 ConstructorParams := GetConstructorParams(StartingID, ObjType, ObjParams, ExpressionParams)
                 OverlayObj := %ObjType%(ConstructorParams*)
+                If Not This.ItemCounts.Has(ObjType)
+                This.ItemCounts.Set(ObjType, 0)
+                This.ItemCounts[ObjType] := This.ItemCounts[ObjType] + 1
                 This.Items.Set(OverlayObj.ControlID, {VarName: VarName, ObjType: ObjType, ObjParams: ObjParams, ExpressionParams: ExpressionParams, OverlayObj: OverlayObj})
             }
         }
@@ -691,14 +694,14 @@ Class Editor {
         StartingItem := JsonData["Items"][StartingID]
         If StartingItem.Has("Children")
         For ChildID In StartingItem["Children"] {
-            ChildItem := JsonData["Items"][ChildID]
-            ChildItemType := ChildItem["ObjType"]
-            If This.ItemDefinitions.Has(ChildItemType) {
-                VarName := ChildItem["VarName"]
-                ObjParams := This.Helpers.MapToObj(ChildItem["ObjParams"])
-                ExpressionParams := This.Helpers.MapToObj(ChildItem["ExpressionParams"])
-                ChildConstructorParams := GetConstructorParams(ChildID, ChildItemType, ObjParams, ExpressionParams)
-                ChildObj := %ChildItemType%(ChildConstructorParams*)
+            ChildObj := JsonData["Items"][ChildID]
+            ChildObjType := ChildObj["ObjType"]
+            If This.ItemDefinitions.Has(ChildObjType) {
+                VarName := ChildObj["VarName"]
+                ObjParams := This.Helpers.MapToObj(ChildObj["ObjParams"])
+                ExpressionParams := This.Helpers.MapToObj(ChildObj["ExpressionParams"])
+                ChildConstructorParams := GetConstructorParams(ChildID, ChildObjType, ObjParams, ExpressionParams)
+                ChildObj := %ChildObjType%(ChildConstructorParams*)
                 ChildObj := This.LoadFromJson(ChildObj, JsonData, ChildID)
                 If OverlayObj Is AccessibilityOverlay {
                     ChildObj := OverlayObj.AddControl(ChildObj)
@@ -707,7 +710,10 @@ Class Editor {
                     OverlayObj.AddTabs(ChildObj)
                     ChildObj := OverlayObj.Tabs[OverlayObj.Tabs.Length]
                 }
-                This.Items.Set(ChildObj.ControlID, {VarName: VarName, ObjType: ChildItemType, ObjParams: ObjParams, ExpressionParams: ExpressionParams, OverlayObj: ChildObj})
+                If Not This.ItemCounts.Has(ChildObjType)
+                This.ItemCounts.Set(ChildObjType, 0)
+                This.ItemCounts[ChildObjType] := This.ItemCounts[ChildObjType] + 1
+                This.Items.Set(ChildObj.ControlID, {VarName: VarName, ObjType: ChildObjType, ObjParams: ObjParams, ExpressionParams: ExpressionParams, OverlayObj: ChildObj})
             }
         }
         If OverlayObj Is AccessibilityOverlay
