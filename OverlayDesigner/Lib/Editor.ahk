@@ -824,6 +824,7 @@ Class Editor {
             This.PerformSave(This.ProjectFile, True)
             This.ToggleHKs("On")
         }
+        This.InitializeOverlay()
         This.Items := Map()
         This.ItemCounts := Map()
         This.Overlay := False
