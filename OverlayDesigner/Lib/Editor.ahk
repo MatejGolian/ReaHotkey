@@ -50,55 +50,74 @@ Class Editor {
         SetTimer This.CheckWindow, 200
     }
     
-    Static AddFromJson(ProjectOverlay, JsonData, StartingID, IDPrefix := "") {
-        If ProjectOverlay Is AccessibilityOverlay
-        If Not ProjectOverlay.CurrentControl {
-            ControlToFocus := ProjectOverlay.GetControlByNumber(1)
-            If ControlToFocus
-            ProjectOverlay.CurrentControlID := ControlToFocus.ControlID
-        }
-        If Not IDPrefix = "" {
-            If SubStr(StartingID, 1, StrLen(IDPrefix)) = IDPrefix
-            StartingIDNoPrefix := SubStr(StartingID, StrLen(IDPrefix) + 1)
-            Else
-            StartingIDNoPrefix := StartingID
-        }
-        Else {
-            StartingIDNoPrefix := StartingID
-        }
-        For Key, Value In JsonData["Items"]
-        If Key = IDPrefix . StartingIDNoPrefix {
-            StartingItem := Value
-            Break
-        }
-        If IDPrefix {
-            EditorItem := This.Additem(StartingItem["ObjType"], True, True)
-        }
-        Else If Not StartingIDNoPrefix = ProjectOverlay.ControlID {
-            EditorItem := This.Additem(StartingItem["ObjType"], True, True)
-        }
-        Else {
-            For Key, Value In This.Items
-            If Key = StartingIDNoPrefix {
-                EditorItem := This.Items[Key]
-                Break
+    Static AddFromJson(OverlayObj, JsonData, StartingID := False) {
+        If Not StartingID
+        StartingID := JsonData["RootID"]
+        If StartingID = JsonData["RootID"] {
+            ObjType := JsonData["Items"][StartingID]["ObjType"]
+            If This.ItemDefinitions.Has(ObjType) {
+                VarName := JsonData["Items"][StartingID]["VarName"]
+                ObjParams := This.Helpers.MapToObj(JsonData["Items"][StartingID]["ObjParams"])
+                ExpressionParams := This.Helpers.MapToObj(JsonData["Items"][StartingID]["ExpressionParams"])
+                ConstructorParams := GetConstructorParams(StartingID, ObjType, ObjParams, ExpressionParams)
+                OverlayObj := %ObjType%(ConstructorParams*)
+                If Not This.ItemCounts.Has(ObjType)
+                This.ItemCounts.Set(ObjType, 0)
+                This.ItemCounts[ObjType] := This.ItemCounts[ObjType] +1
+                This.Items.Set(OverlayObj.ControlID, {VarName: VarName, ObjType: ObjType, ObjParams: ObjParams, ExpressionParams: ExpressionParams, OverlayObj: OverlayObj})
             }
         }
-        EditorItem := This.UpdateFromJson(EditorItem, StartingItem)
+        If OverlayObj Is AccessibilityOverlay
+        OverlayObj.AddStartSeparator()
+        StartingItem := JsonData["Items"][StartingID]
         If StartingItem.Has("Children")
         For ChildID In StartingItem["Children"] {
-            If EditorItem.OverlayObj Is TabControl
-            ProjectOverlay.CurrentControlID := EditorItem.OverlayObj.ControlID
-            ProjectOverlay := This.AddFromJson(ProjectOverlay, JsonData, ChildID, IDPrefix)
+            ChildObj := JsonData["Items"][ChildID]
+            ChildObjType := ChildObj["ObjType"]
+            If This.ItemDefinitions.Has(ChildObjType) {
+                VarName := ChildObj["VarName"]
+                ObjParams := This.Helpers.MapToObj(ChildObj["ObjParams"])
+                ExpressionParams := This.Helpers.MapToObj(ChildObj["ExpressionParams"])
+                ChildConstructorParams := GetConstructorParams(ChildID, ChildObjType, ObjParams, ExpressionParams)
+                ChildObj := %ChildObjType%(ChildConstructorParams*)
+                ChildObj := This.AddFromJson(ChildObj, JsonData, ChildID)
+                If OverlayObj Is AccessibilityOverlay {
+                    ChildObj := OverlayObj.AddControl(ChildObj)
+                }
+                Else If OverlayObj Is TabControl {
+                    OverlayObj.AddTabs(ChildObj)
+                    ChildObj := OverlayObj.Tabs[OverlayObj.Tabs.Length]
+                }
+                If Not This.ItemCounts.Has(ChildObjType)
+                This.ItemCounts.Set(ChildObjType, 0)
+                This.ItemCounts[ChildObjType] := This.ItemCounts[ChildObjType] +1
+                This.Items.Set(ChildObj.ControlID, {VarName: VarName, ObjType: ChildObjType, ObjParams: ObjParams, ExpressionParams: ExpressionParams, OverlayObj: ChildObj})
+            }
         }
-        If EditorItem.OverlayObj Is AccessibilityOverlay {
-            FocusableControlIDs := ProjectOverlay.GetFocusableControlIDs()
-            ProjectOverlay.CurrentControlID := FocusableControlIDs[FocusableControlIDs.Length]
+        If OverlayObj Is AccessibilityOverlay {
+            OverlayObj.AddEndSeparator()
         }
-        If EditorItem.OverlayObj Is TabControl {
-            EditorItem.OverlayObj.CurrentTab := StartingItem["CurrentChild"]
+        If OverlayObj Is TabControl {
+            If StartingItem.Has("CurrentChild")
+            OverlayObj.CurrentTab := StartingItem["CurrentChild"]
         }
-        Return ProjectOverlay
+        Return OverlayObj
+        GetConstructorParams(ItemID, ObjType, ObjParams, ExpressionParams) {
+            ConstructorParams := Array()
+            If This.ItemDefinitions[ObjType].HasProp("RequiredParams")
+            For Param In This.ItemDefinitions[ObjType].RequiredParams {
+                If Not ObjParams.HasProp(Param.Name)
+                ObjParams.DefineProp(Param.Name, {Value: ""})
+                ConstructorParams.Push(This.ParamHandler.MakeObjProp(ObjParams, Param.Name, ObjParams.%Param.Name%, ExpressionParams.%Param.Name%, False))
+            }
+            If This.ItemDefinitions[ObjType].HasProp("OptionalParams")
+            For Param In This.ItemDefinitions[ObjType].OptionalParams {
+                If Not ObjParams.HasProp(Param.Name)
+                ObjParams.DefineProp(Param.Name, {Value: ""})
+                ConstructorParams.Push(This.ParamHandler.MakeObjProp(ObjParams, Param.Name, ObjParams.%Param.Name%, ExpressionParams.%Param.Name%, True))
+            }
+            Return ConstructorParams
+        }
     }
     
     Static AddItem(ItemType, OverlayObj := True, FakeFocus := False) {
@@ -120,7 +139,7 @@ Class Editor {
             If CurrentControl.Tabs.Length = 0
             NewTabNumber := 1
             Else
-            NewTabNumber := CurrentControl.CurrentTab + 1
+            NewTabNumber := CurrentControl.CurrentTab +1
             If CurrentControl.Tabs.Length = 0
             CurrentControl.AddTabs(NewItem)
             Else
@@ -158,7 +177,7 @@ Class Editor {
                 }
             }
             Else {
-                Position := CurrentChildNumber + 1
+                Position := CurrentChildNumber +1
                 NewItem := ParentControl.AddControlAt(Position, NewItem)
             }
         }
@@ -207,6 +226,9 @@ Class Editor {
                 JsonData["Items"][ParentID].Set("Children", Array())
                 JsonData["Items"][ParentID]["Children"].Push(IDPrefix . ObjToAdd.ControlID)
             }
+            If ObjToAdd Is AccessibilityOverlay Or ObjToAdd Is TabControl
+            If Not JsonData["Items"][IDPrefix . ObjToAdd.ControlID].Has("Children")
+            JsonData["Items"][IDPrefix . ObjToAdd.ControlID].Set("Children", Array())
             If ObjToAdd Is AccessibilityOverlay
             PropName := "ChildControls"
             Else If ObjToAdd Is TabControl
@@ -329,7 +351,7 @@ Class Editor {
     Static CreateItem(ItemType, OverlayObj := False, WithInitParamList := False) {
         If Not This.ItemCounts.Has(ItemType)
         This.ItemCounts.Set(ItemType, 0)
-        This.ItemCounts[ItemType] := This.ItemCounts[ItemType] + 1
+        This.ItemCounts[ItemType] := This.ItemCounts[ItemType] +1
         ItemDefinition := This.ItemDefinitions[ItemType]
         DefaultParams := Array()
         If ItemDefinition.HasProp("DefaultValues")
@@ -672,71 +694,6 @@ Class Editor {
         This.UpdateOverlayHKs()
     }
     
-    Static LoadFromJson(OverlayObj, JsonData, StartingID := False) {
-        If Not StartingID
-        StartingID := JsonData["RootID"]
-        If StartingID = JsonData["RootID"] {
-            ObjType := JsonData["Items"][StartingID]["ObjType"]
-            If This.ItemDefinitions.Has(ObjType) {
-                VarName := JsonData["Items"][StartingID]["VarName"]
-                ObjParams := This.Helpers.MapToObj(JsonData["Items"][StartingID]["ObjParams"])
-                ExpressionParams := This.Helpers.MapToObj(JsonData["Items"][StartingID]["ExpressionParams"])
-                ConstructorParams := GetConstructorParams(StartingID, ObjType, ObjParams, ExpressionParams)
-                OverlayObj := %ObjType%(ConstructorParams*)
-                If Not This.ItemCounts.Has(ObjType)
-                This.ItemCounts.Set(ObjType, 0)
-                This.ItemCounts[ObjType] := This.ItemCounts[ObjType] + 1
-                This.Items.Set(OverlayObj.ControlID, {VarName: VarName, ObjType: ObjType, ObjParams: ObjParams, ExpressionParams: ExpressionParams, OverlayObj: OverlayObj})
-            }
-        }
-        If OverlayObj Is AccessibilityOverlay
-        OverlayObj.AddStartSeparator()
-        StartingItem := JsonData["Items"][StartingID]
-        If StartingItem.Has("Children")
-        For ChildID In StartingItem["Children"] {
-            ChildObj := JsonData["Items"][ChildID]
-            ChildObjType := ChildObj["ObjType"]
-            If This.ItemDefinitions.Has(ChildObjType) {
-                VarName := ChildObj["VarName"]
-                ObjParams := This.Helpers.MapToObj(ChildObj["ObjParams"])
-                ExpressionParams := This.Helpers.MapToObj(ChildObj["ExpressionParams"])
-                ChildConstructorParams := GetConstructorParams(ChildID, ChildObjType, ObjParams, ExpressionParams)
-                ChildObj := %ChildObjType%(ChildConstructorParams*)
-                ChildObj := This.LoadFromJson(ChildObj, JsonData, ChildID)
-                If OverlayObj Is AccessibilityOverlay {
-                    ChildObj := OverlayObj.AddControl(ChildObj)
-                }
-                Else If OverlayObj Is TabControl {
-                    OverlayObj.AddTabs(ChildObj)
-                    ChildObj := OverlayObj.Tabs[OverlayObj.Tabs.Length]
-                }
-                If Not This.ItemCounts.Has(ChildObjType)
-                This.ItemCounts.Set(ChildObjType, 0)
-                This.ItemCounts[ChildObjType] := This.ItemCounts[ChildObjType] + 1
-                This.Items.Set(ChildObj.ControlID, {VarName: VarName, ObjType: ChildObjType, ObjParams: ObjParams, ExpressionParams: ExpressionParams, OverlayObj: ChildObj})
-            }
-        }
-        If OverlayObj Is AccessibilityOverlay
-        OverlayObj.AddEndSeparator()
-        Return OverlayObj
-        GetConstructorParams(ItemID, ObjType, ObjParams, ExpressionParams) {
-            ConstructorParams := Array()
-            If This.ItemDefinitions[ObjType].HasProp("RequiredParams")
-            For Param In This.ItemDefinitions[ObjType].RequiredParams {
-                If Not ObjParams.HasProp(Param.Name)
-                ObjParams.DefineProp(Param.Name, {Value: ""})
-                ConstructorParams.Push(This.ParamHandler.MakeObjProp(ObjParams, Param.Name, ObjParams.%Param.Name%, ExpressionParams.%Param.Name%, False))
-            }
-            If This.ItemDefinitions[ObjType].HasProp("OptionalParams")
-            For Param In This.ItemDefinitions[ObjType].OptionalParams {
-                If Not ObjParams.HasProp(Param.Name)
-                ObjParams.DefineProp(Param.Name, {Value: ""})
-                ConstructorParams.Push(This.ParamHandler.MakeObjProp(ObjParams, Param.Name, ObjParams.%Param.Name%, ExpressionParams.%Param.Name%, True))
-            }
-            Return ConstructorParams
-        }
-    }
-    
     Static OpenProject(*) {
         This.ToggleHKs("Off")
         NewProjectFile := FileSelect("3", "", "Open…", "OverlayDesigner Projects (*.RHK-Overlay)")
@@ -781,7 +738,58 @@ Class Editor {
             Return
         }
         If This.Clipboard.Operation = "Copy" Or This.Clipboard.Operation = "Cut" {
-            This.Overlay := This.AddFromJson(This.Overlay, This.Clipboard.Json, This.Clipboard.Json["RootID"], "ClipboardItem")
+            CurrentControlNumber := This.Overlay.GetCurrentControlNumber()
+            JsonData := This.ConvertToJson(This.Overlay, "EditorItem")
+            For Key, Value In This.Clipboard.Json["Items"]
+            JsonData["Items"].Set(Key, Value)
+            If CurrentControl Is TabControl {
+                ChildPos := CurrentControl.CurrentTab
+                If ChildPos = 0
+                ChildPos := 1
+                If Not JsonData["Items"]["EditorItem" . CurrentControl.ControlID].Has("Children")
+                JsonData["Items"]["EditorItem" . CurrentControl.ControlID].Set("Children", Array())
+                JsonData["Items"]["EditorItem" . CurrentControl.ControlID]["CurrentChild"] := ChildPos
+                JsonData["Items"]["EditorItem" . CurrentControl.ControlID]["Children"].InsertAt(ChildPos, This.Clipboard.Json["RootID"])
+            }
+            Else {
+                CurrentChildNumber := This.Helpers.GetControlChildNumber(CurrentControl.ControlID, ParentControl)
+                If CurrentControl Is StartSeparator {
+                    ChildPos := 1
+                    JsonData["Items"]["EditorItem" . ParentControl.ControlID]["Children"].InsertAt(ChildPos, This.Clipboard.Json["RootID"])
+                }
+                Else If CurrentControl Is EndSeparator And ParentControl = This.Overlay {
+                    ChildPos := ParentControl.ChildControls.Length -1
+                    JsonData["Items"]["EditorItem" . ParentControl.ControlID]["Children"].InsertAt(ChildPos, This.Clipboard.Json["RootID"])
+                }
+                Else If CurrentControl Is EndSeparator {
+                    ParentControl := CurrentControl.SuperordinateControl
+                    GrandparentControl := ParentControl.SuperordinateControl
+                    ParentChildNumber := This.Helpers.GetControlChildNumber(ParentControl.ControlID, GrandparentControl)
+                    If GrandparentControl Is TabControl {
+                        GreatGrandparentControl := GrandparentControl.SuperordinateControl
+                        GrandparentChildNumber := This.Helpers.GetControlChildNumber(GrandparentControl.ControlID, GreatGrandparentControl)
+                        ChildPos := GrandparentChildNumber
+                        JsonData["Items"]["EditorItem" . GreatGrandparentControl.ControlID]["Children"].InsertAt(ChildPos, This.Clipboard.Json["RootID"])
+                    }
+                    Else {
+                        ChildPos := ParentChildNumber
+                        JsonData["Items"]["EditorItem" . GrandparentControl.ControlID]["Children"].InsertAt(ChildPos, This.Clipboard.Json["RootID"])
+                    }
+                }
+                Else {
+                    ChildPos := CurrentChildNumber
+                    JsonData["Items"]["EditorItem" . ParentControl.ControlID]["Children"].InsertAt(ChildPos, This.Clipboard.Json["RootID"])
+                }
+            }
+            This.InitializeOverlay()
+            This.Items := Map()
+            This.Overlay := False
+            This.Overlay := This.AddFromJson(This.Overlay, JsonData)
+            If CurrentControlNumber = This.Overlay.FocusableControls.Length -1
+            This.Overlay.FocusControlByNumber(This.Overlay.FocusableControls.Length -1)
+            Else
+            This.Overlay.FocusControlByNumber(CurrentControlNumber +1)
+            This.UpdateOverlayHKs()
         }
         Else {
             AccessibilityOverlay.Speak("Unsupported clipboard operation")
@@ -834,7 +842,7 @@ Class Editor {
         This.Items := Map()
         This.ItemCounts := Map()
         This.Overlay := False
-        This.Overlay := This.LoadFromJson(This.Overlay, JsonData)
+        This.Overlay := This.AddFromJson(This.Overlay, JsonData)
         This.Overlay.Reset()
         This.Overlay.CurrentControlID := This.Overlay.GetFocusableControlIDs()[1]
         This.ClearClipboard()
@@ -872,6 +880,9 @@ Class Editor {
         This.CreateUndo()
         ObjType := Type(This.Overlay)
         This.InitializeOverlay(ObjType)
+        This.Items := Map()
+        This.ItemCounts := Map()
+        This.Overlay := False
         This.Overlay := This.AddFromJson(This.Overlay, PreviousJson, PreviousJson["RootID"])
         This.Overlay.FocusControlByNumber(PreviousControlNumber)
         This.UpdateOverlayHKs()

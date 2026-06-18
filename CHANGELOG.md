@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Update OverlayDesigner clipboard paste
+
 ## [1.0.40] - 2026-06-18
 
 ### Changed
