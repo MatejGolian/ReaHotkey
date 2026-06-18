@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.40] - 2026-06-18
+
 ### Changed
 
 -   Various OverlayDesigner code updates
@@ -964,7 +966,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.39...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.40...HEAD
+
+[1.0.40]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.39...1.0.40
 
 [1.0.39]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.38...1.0.39
 
