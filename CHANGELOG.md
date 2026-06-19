@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Changed
 
+-   Update dubler support from 2.2 to 2.4
 -   OverlayDesigner: Add more inport error prevention
 
 ## [1.0.44] - 2026-06-19
