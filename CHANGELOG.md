@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.45] - 2026-06-19
+
 ### Changed
 
 -   Update dubler support from 2.2 to 2.4
@@ -995,7 +997,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.44...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.45...HEAD
+
+[1.0.45]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.44...1.0.45
 
 [1.0.44]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.43...1.0.44
 
