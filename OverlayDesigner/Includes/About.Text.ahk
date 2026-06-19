@@ -46,7 +46,8 @@ Ctrl + N - Create a new project
 Ctrl + O - Open an existing project
 Ctrl + S - Save project
 Ctrl + Alt + S - Save project as
-Shift + Windows + E - Generate AutoHotkey code for export
+Ctrl + I - Inport overlay code
+Ctrl + E - Export overlay code
 Ctrl + Z - Undo
 Ctrl + X - Cut
 Ctrl + C - Copy

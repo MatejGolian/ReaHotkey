@@ -117,6 +117,10 @@ GenerateMarkersFromOcrHK(ThisHotkey) {
     PerformOCR(True)
 }
 
+InportCodeHK(ThisHotkey) {
+    Editor.InportCode()
+}
+
 LeftRightHK(ThisHotkey) {
     AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
     Switch(Editor.Overlay.GetCurrentControlType()) {

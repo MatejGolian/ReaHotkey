@@ -342,7 +342,8 @@ Many of the available keyboard shortcuts are disabled when the overlay designing
 | `Ctrl + O` | Open existing project |
 | `Ctrl + S` | Save project |
 | `Ctrl + Alt + S` | Save project as... |
-| `Shift + Windows + E` | Export overlay as AutoHotkey code |
+| `Ctrl + I` | Inport overlay code |
+| `Ctrl + E` | Export overlay code |
 | `Ctrl + Z` | Undo last action |
 | `Ctrl + X` | Cut selected item |
 | `Ctrl + C` | Copy selected item |

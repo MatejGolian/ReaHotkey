@@ -2,6 +2,7 @@
 
 Class CodeParser {
     
+    SandboxMode := False
     Segments := Array()
     SkipSequences := Array(
     "```"",
@@ -12,6 +13,12 @@ Class CodeParser {
     "[", "]",
     "{", "}",
     )
+    VarList := Array()
+    Vars := Map()
+    
+    __New(SandboxMode := False) {
+        This.SandboxMode := SandboxMode
+    }
     
     InArray(Needle, Haystack, CaseSensitive := False) {
         For FoundIndex, FoundValue In Haystack
@@ -103,6 +110,10 @@ Class CodeParser {
         Param1 := Trim(Match[1])
         Param2 := Trim(Match[2])
         Param2 := This.ParseSegment(Param2)
+        If Not This.InArray(Param1, This.VarList)
+        This.VarList.Push(Param1)
+        This.Vars[Param1] := Param2
+        If Not This.SandboxMode
         %Param1% := Param2
         Return Param2
     }
@@ -219,10 +230,15 @@ Class CodeParser {
             FuncParams.Push(Value)
         }
         FuncObj := False
-        If FuncParams.Length > 0
-        Return ObjBindMethod(%Name%,, FuncParams*)
-        Else
-        Return %Name%
+        If FuncParams.Length > 0 {
+            Try
+            Return %Name%.Call(FuncParams*)
+            Catch
+            Return ObjBindMethod(%Name%,, FuncParams*)
+        }
+        Else {
+            Return %Name%
+        }
     }
     
     ProcessMethodInvocation(Match) {
@@ -234,7 +250,12 @@ Class CodeParser {
         MethodParams := This.Split(MethodParams, ",")
         For MethodParam In MethodParams
         MethodParams[A_Index] := This.ParseSegment(MethodParam)
-        Return ObjBindMethod(%Param1%, MethodName, MethodParams*)
+        If Not This.SandboxMode
+        Return %Param1%.%MethodName%(MethodParams*)
+        Else
+        If This.Vars.Has(Param1)
+        Return This.Vars[Param1].%MethodName%(MethodParams*)
+        Return ""
     }
     
     ProcessNumber(Segment) {
@@ -269,7 +290,12 @@ Class CodeParser {
         Local Param1, Param2
         Param1 := Trim(Match[1])
         Param2 := Trim(Match[2])
+        If Not This.SandboxMode
         Return %Param1%.%Param2%
+        Else
+        If This.Vars.Has(Param1)
+        Return This.Vars[Param1].%Param2%
+        Return ""
     }
     
     ProcessString(Match) {
@@ -284,10 +310,20 @@ Class CodeParser {
         Global
         Local Name
         Name := Trim(Match[1])
-        Try
-        Return %Name% + 0
-        Catch
-        Return %Name%
+        If Not This.SandboxMode {
+            Try
+            Return %Name% + 0
+            Catch
+            Return %Name%
+        }
+        Else {
+            If Not This.Vars.Has(Name)
+            Return ""
+            Try
+            Return This.Vars[Name] + 0
+            Catch
+            Return This.Vars[Name]
+        }
     }
     
     Split(Segment, Subpattern) {

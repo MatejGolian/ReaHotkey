@@ -274,7 +274,8 @@ Class Editor {
         FileSubmenu.Add("Open…`tCtrl+O", ObjBindMethod(This, "OpenProject"))
         FileSubmenu.Add("Save`tCtrl+S", ObjBindMethod(This, "SaveProject"))
         FileSubmenu.Add("Save as…`tCtrl+Alt+S", ObjBindMethod(This, "SaveProjectAs"))
-        FileSubmenu.Add("Generate code for export…`tShift+Windows+E", ObjBindMethod(This, "GenerateCode"))
+        FileSubmenu.Add("Inport overlay code…`tCtrl+I", ObjBindMethod(This, "InportCode"))
+        FileSubmenu.Add("Export overlay code…`tCtrl+E", ObjBindMethod(This, "GenerateCode"))
         FileSubmenu.Add("Quit…`tShift+Windows+Q", ObjBindMethod(This, "Quit"))
         EditSubmenu := Menu()
         EditSubmenu.Add("Undo`tCtrl+Z", ObjBindMethod(This, "PerformUndo"))
@@ -679,7 +680,7 @@ Class Editor {
     
     Static GenerateCode(*) {
         GeneratedCode := This.CodeGenerator.GenerateOverlay(This.Overlay)
-        This.ShowDlgBox("Code For Export", GeneratedCode)
+        This.ShowDlgBox("Exported Code", GeneratedCode)
     }
     
     Static InitializeOverlay(CreateOverlay := True, OverlayType := "AccessibilityOverlay") {
@@ -693,6 +694,145 @@ Class Editor {
             This.Overlay.CurrentControlID := This.Overlay.GetFocusableControlIDs()[1]
         }
         This.UpdateOverlayHKs()
+    }
+    
+    Static InportCode(*) {
+        CodeBox := This.ShowDlgBox("Code To Inport", "", False, InportCode)
+        InportCode(*) {
+            CodeBox.Submit()
+            CodeLines := Array()
+            For CodeLine In StrSplit(CodeBox["EditField"].Value, "`n") {
+                CodeLine := Trim(CodeLine)
+                If Not CodeLine = ""
+                CodeLines.Push(CodeLine)
+            }
+            CodeParser := This.CodeParser(True)
+            ParsingResults := Map()
+            For CodeLine In CodeLines {
+                ParamList := CodeLine
+                If InStr(ParamList, ":=")
+                ParamList := SubStr(ParamList, InStr(ParamList, ":=") + StrLen(":="))
+                If InStr(ParamList, ".")
+                ParamList := SubStr(ParamList, InStr(ParamList, ".") + StrLen("."))
+                If InStr(ParamList, "(")
+                ParamList := SubStr(ParamList, InStr(ParamList, "(") + StrLen("("))
+                If SubStr(ParamList, -1) = ")"
+                ParamList := SubStr(ParamList, 1, -1)
+                ParamList := Trim(ParamList)
+                ParamList := CodeParser.Split(ParamList, ",")
+                For Index, Value In ParamList {
+                    Value := Trim(Value)
+                    ParamList[Index] := Value
+                }
+                ParsingResults.Set(CodeParser.ParseSegment(CodeLine), {CodeLine: CodeLine, ParamList: ParamList})
+            }
+            If CodeParser.VarList.Length = 0 {
+                MsgBox "Nothing to inport.", This.AppName
+                CodeBox.Close()
+                Return
+            }
+            FirstVar := CodeParser.Vars[CodeParser.VarList[1]]
+            If Not FirstVar Is AccessibilityOverlay {
+                MsgBox "No overlay to inport.", This.AppName
+                CodeBox.Close()
+                Return
+            }
+            If This.ProjectFile {
+                ConfirmationDialog := MsgBox("Save changes to " . This.ProjectFile . "?", This.AppName, 4)
+                If ConfirmationDialog == "Yes"
+                This.PerformSave(This.ProjectFile, True)
+            }
+            This.InitializeOverlay(False)
+            OverlayControls := FirstVar.AllControls
+            FirstVar.ControlID := 1
+            OverlayControls.InsertAt(1, FirstVar)
+            Items := Map()
+            For OverlayObj In OverlayControls {
+                ObjType := Type(OverlayObj)
+                If Not This.ItemCounts.Has(ObjType)
+                This.ItemCounts.Set(ObjType, 0)
+                This.ItemCounts[ObjType] := This.ItemCounts[ObjType] +1
+                VarName := ObjType . This.ItemCounts[ObjType]
+                ObjParams := Object()
+                ExpressionParams := Object()
+                ParamList := Array()
+                If ParsingResults.Has(OverlayObj)
+                ParamList := ParsingResults[OverlayObj].ParamList
+                ItemDefinition := This.ItemDefinitions[ObjType]
+                If ItemDefinition.HasProp("RequiredParams")
+                RequiredParams := ItemDefinition.RequiredParams
+                Else
+                RequiredParams := False
+                If ItemDefinition.HasProp("OptionalParams")
+                OptionalParams := ItemDefinition.OptionalParams
+                Else
+                OptionalParams := False
+                If RequiredParams
+                For Param In RequiredParams {
+                    If Param.Expression > 2
+                    ExpressionParams.%Param.Name% := 1
+                    Else
+                    ExpressionParams.%Param.Name% := 0
+                }
+                If OptionalParams
+                For Param In OptionalParams {
+                    If Param.Expression > 2
+                    ExpressionParams.%Param.Name% := 1
+                    Else
+                    ExpressionParams.%Param.Name% := 0
+                }
+                ParamNumber := 0
+                If RequiredParams
+                For Param In RequiredParams {
+                    ParamNumber++
+                    If ParamList.Has(ParamNumber)
+                    ObjParams.%Param.Name% := This.ParamHandler.MakeEditorProp(ObjType, Param.Name, ManageParamQuotes(ParamList[ParamNumber], ExpressionParams.%Param.Name%), ExpressionParams.%Param.Name%, False)
+                    Else
+                    ObjParams.%Param.Name% := This.ParamHandler.MakeEditorProp(ObjType, Param.Name, OverlayObj.%Param.Name%, ExpressionParams.%Param.Name%, False)
+                }
+                If OptionalParams
+                For Param In OptionalParams {
+                    ParamNumber++
+                    If ParamList.Has(ParamNumber)
+                    ObjParams.%Param.Name% := This.ParamHandler.MakeEditorProp(ObjType, Param.Name, ManageParamQuotes(ParamList[ParamNumber], ExpressionParams.%Param.Name%), ExpressionParams.%Param.Name%, True)
+                    Else
+                    ObjParams.%Param.Name% := This.ParamHandler.MakeEditorProp(ObjType, Param.Name, OverlayObj.%Param.Name%, ExpressionParams.%Param.Name%, True)
+                }
+                ObjParams := This.Helpers.ObjToMap(ObjParams)
+                ExpressionParams := This.Helpers.ObjToMap(ExpressionParams)
+                Items.Set(OverlayObj.ControlID, Map("VarName", VarName, "ObjType", ObjType, "ObjParams", ObjParams, "ExpressionParams", ExpressionParams))
+                If OverlayObj Is AccessibilityOverlay
+                PropName := "ChildControls"
+                Else If OverlayObj Is TabControl
+                PropName := "Tabs"
+                Else
+                PropName := False
+                If PropName {
+                    Items[OverlayObj.ControlID].Set("Children", Array())
+                    For Child In OverlayObj.%PropName%
+                    Items[OverlayObj.ControlID]["Children"].Push(Child.ControlID)
+                }
+            }
+            JsonData := Map("Items", Items, "RootID", FirstVar.ControlID)
+            This.Overlay := This.AddFromJson(This.Overlay, JsonData)
+            This.Overlay.Reset()
+            This.Overlay.CurrentControlID := This.Overlay.GetFocusableControlIDs()[1]
+            This.ClearClipboard()
+            This.ClearUndo()
+            CodeBox.Close()
+            MsgBox "Code inported successfully.", This.AppName
+            This.UpdateOverlayHKs()
+        }
+        ManageParamQuotes(Value, Expression) {
+            If Expression
+            Return Value
+            If SubStr(Value, 1, 1) = "`""
+            Value := SubStr(Value, 2)
+            If SubStr(Value, -1) = "`""
+            Value := SubStr(Value, 1, -1)
+            Value := Trim(Value)
+            Return Value
+        }
     }
     
     Static OpenProject(*) {
@@ -944,10 +1084,14 @@ Class Editor {
         Static DlgBox := False
         If DlgBox = False {
             DlgBox := Gui(, BoxTitle)
-            If ReadOnly
-            DlgBox.AddEdit("ReadOnly vEditField +Multi", BoxValue)
+            If BoxValue = ""
+            EditWidth := "w600"
             Else
-            DlgBox.AddEdit("vEditField +Multi", BoxValue)
+            EditWidth := ""
+            If ReadOnly
+            DlgBox.AddEdit("ReadOnly vEditField +Multi " . EditWidth, BoxValue)
+            Else
+            DlgBox.AddEdit("vEditField +Multi " . EditWidth, BoxValue)
             OKButton := DlgBox.AddButton("Default Section", "OK")
             If OKButtonAction
             OKButton.OnEvent("Click", OKButtonAction)
@@ -955,6 +1099,7 @@ Class Editor {
             OKButton.OnEvent("Click", CloseDlgBox)
             DlgBox.OnEvent("Close", CloseDlgBox)
             DlgBox.OnEvent("Escape", CloseDlgBox)
+            DlgBox.DefineProp("Close", {Call: ObjBindMethod(CloseDlgBox)})
             DlgBox.Show()
         }
         Else {
