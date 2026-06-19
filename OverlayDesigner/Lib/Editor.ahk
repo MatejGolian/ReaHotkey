@@ -727,17 +727,24 @@ Class Editor {
                     Value := Trim(Value)
                     ParamList[Index] := Value
                 }
-                ParsingResults.Set(CodeParser.ParseSegment(CodeLine), {CodeLine: CodeLine, VarName: VarName, ParamList: ParamList})
+                Try {
+                    ParsingResults.Set(CodeParser.ParseSegment(CodeLine), {CodeLine: CodeLine, VarName: VarName, ParamList: ParamList})
+                }
+                Catch {
+                    CodeBox.Close()
+                    MsgBox "Inport failed.", This.AppName
+                    Return
+                }
             }
             If CodeParser.VarList.Length = 0 {
-                MsgBox "Nothing to inport.", This.AppName
                 CodeBox.Close()
+                MsgBox "Nothing to inport.", This.AppName
                 Return
             }
             FirstVar := CodeParser.Vars[CodeParser.VarList[1]]
             If Not FirstVar Is AccessibilityOverlay {
-                MsgBox "No overlay to inport.", This.AppName
                 CodeBox.Close()
+                MsgBox "No overlay to inport.", This.AppName
                 Return
             }
             If This.ProjectFile {
