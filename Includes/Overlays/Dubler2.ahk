@@ -542,5 +542,5 @@ Class Dubler2MIDICapturePlugin {
 }
 
 Plugin.Register("Dubler 2 MIDI Capture", "JUCE_[0-9a-f]{12}", ObjBindMethod(Dubler2MIDICapturePlugin, "Check"), ObjBindMethod(Dubler2MIDICapturePlugin, "Init"), False, False, 1, False)
-Standalone.Register("Dubler 2", "Vochlea\sDubler\s2\.4 ahk_class Qt5155QWindowOwnDCIcon", False, ObjBindMethod(Dubler2, "Init"), False, False)
+Standalone.Register("Dubler 2", "Vochlea\sDubler\s2\.4\.\d ahk_class Qt51519QWindowOwnDCIcon", False, ObjBindMethod(Dubler2, "Init"), False, False)
 Standalone.RegisterOverlay("Dubler 2", Dubler2.CreateLoadingOverlay(AccessibilityOverlay()))

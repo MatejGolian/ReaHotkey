@@ -35,7 +35,7 @@
 #HotIf WinActive("ahk_exe .+.exe")
 #IncludeAgain Hotkeys.Common.ahk
 
-#HotIf WinActive("Vochlea\sDubler\s2\.4 ahk_class Qt5155QWindowOwnDCIcon")
+#HotIf WinActive("Vochlea\sDubler\s2\.4\.\d ahk_class Qt51519QWindowOwnDCIcon")
 #IncludeAgain Hotkeys.Common.ahk
 
 #HotIf WinActive("Best Service Engine ahk_class Engine ahk_exe Engine 2.exe")
