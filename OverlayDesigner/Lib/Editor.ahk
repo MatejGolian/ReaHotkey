@@ -700,15 +700,9 @@ Class Editor {
         CodeBox := This.ShowDlgBox("Code To Inport", "", False, InportCode)
         InportCode(*) {
             CodeBox.Submit()
-            CodeLines := Array()
-            For CodeLine In StrSplit(CodeBox["EditField"].Value, "`n") {
-                CodeLine := Trim(CodeLine)
-                If Not CodeLine = ""
-                CodeLines.Push(CodeLine)
-            }
             CodeParser := This.CodeParser(True)
             ParsingResults := Map()
-            For CodeLine In CodeLines {
+            For CodeLine In CodeParser.GetLines(CodeBox["EditField"].Value) {
                 VarName := ""
                 ParamList := CodeLine
                 If InStr(ParamList, ":=")
@@ -736,12 +730,13 @@ Class Editor {
                     Return
                 }
             }
-            If CodeParser.VarList.Length = 0 {
+            VarList := CodeParser.ExportVars()
+            If VarList.Length = 0 {
                 CodeBox.Close()
                 MsgBox "Nothing to inport.", This.AppName
                 Return
             }
-            FirstVar := CodeParser.Vars[CodeParser.VarList[1]]
+            FirstVar := VarList[1]
             If Not FirstVar Is AccessibilityOverlay {
                 CodeBox.Close()
                 MsgBox "No overlay to inport.", This.AppName

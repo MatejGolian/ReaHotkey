@@ -2,6 +2,7 @@
 
 Class CodeParser {
     
+    Lines := Array()
     SandboxMode := False
     Segments := Array()
     SkipSequences := Array(
@@ -18,6 +19,26 @@ Class CodeParser {
     
     __New(SandboxMode := False) {
         This.SandboxMode := SandboxMode
+    }
+    
+    ExportVars() {
+        Vars := Array()
+        For Var In This.VarList
+        Vars.Push(This.Vars[Var])
+        Return Vars
+    }
+    
+    GetLines(Value) {
+        Value := StrReplace(Value, "`r", "`n")
+        Value := StrReplace(Value, "`n`n", "`n")
+        Lines := Array()
+        For Line In StrSplit(Value, "`n") {
+            Line := Trim(Line)
+            If Not Line = ""
+            Lines.Push(Line)
+        }
+        This.Lines := Lines
+        Return Lines
     }
     
     InArray(Needle, Haystack, CaseSensitive := False) {
@@ -50,6 +71,12 @@ Class CodeParser {
     IsOperator(Value) {
         Operators := ["+", "-", "*", "/"]
         Return This.InArray(Value, Operators)
+    }
+    
+    ParseString(Value) {
+        This.GetLines(Value)
+        For Line In This.Lines
+        This.ParseSegment(Line)
     }
     
     ParseSegment(Segment) {
