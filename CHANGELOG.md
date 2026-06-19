@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed Dubler 2 win criteria update omission
+
 ## [1.0.45] - 2026-06-19
 
 ### Changed
