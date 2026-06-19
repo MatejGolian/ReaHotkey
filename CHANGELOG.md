@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.44] - 2026-06-19
+
 ### Added
 
 -   OverlayDesigner: Add overlay inport feature
@@ -988,7 +990,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.43...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.44...HEAD
+
+[1.0.44]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.43...1.0.44
 
 [1.0.43]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.42...1.0.43
 
