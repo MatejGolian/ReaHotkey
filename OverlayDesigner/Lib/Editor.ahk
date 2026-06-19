@@ -680,7 +680,7 @@ Class Editor {
     
     Static GenerateCode(*) {
         GeneratedCode := This.CodeGenerator.GenerateOverlay(This.Overlay)
-        This.ShowDlgBox("Exported Code", GeneratedCode)
+        This.ShowDlgBox("Overlay Code", GeneratedCode)
     }
     
     Static InitializeOverlay(CreateOverlay := True, OverlayType := "AccessibilityOverlay") {
@@ -709,7 +709,10 @@ Class Editor {
             CodeParser := This.CodeParser(True)
             ParsingResults := Map()
             For CodeLine In CodeLines {
+                VarName := ""
                 ParamList := CodeLine
+                If InStr(ParamList, ":=")
+                Varname := Trim(SubStr(ParamList, 1, InStr(ParamList, ":=") -1))
                 If InStr(ParamList, ":=")
                 ParamList := SubStr(ParamList, InStr(ParamList, ":=") + StrLen(":="))
                 If InStr(ParamList, ".")
@@ -724,7 +727,7 @@ Class Editor {
                     Value := Trim(Value)
                     ParamList[Index] := Value
                 }
-                ParsingResults.Set(CodeParser.ParseSegment(CodeLine), {CodeLine: CodeLine, ParamList: ParamList})
+                ParsingResults.Set(CodeParser.ParseSegment(CodeLine), {CodeLine: CodeLine, VarName: VarName, ParamList: ParamList})
             }
             If CodeParser.VarList.Length = 0 {
                 MsgBox "Nothing to inport.", This.AppName
@@ -752,12 +755,16 @@ Class Editor {
                 If Not This.ItemCounts.Has(ObjType)
                 This.ItemCounts.Set(ObjType, 0)
                 This.ItemCounts[ObjType] := This.ItemCounts[ObjType] +1
-                VarName := ObjType . This.ItemCounts[ObjType]
                 ObjParams := Object()
                 ExpressionParams := Object()
                 ParamList := Array()
-                If ParsingResults.Has(OverlayObj)
-                ParamList := ParsingResults[OverlayObj].ParamList
+                VarName := ""
+                If ParsingResults.Has(OverlayObj) {
+                    ParamList := ParsingResults[OverlayObj].ParamList
+                    VarName := ParsingResults[OverlayObj].VarName
+                }
+                If VarName = ""
+                VarName := ObjType . This.ItemCounts[ObjType]
                 ItemDefinition := This.ItemDefinitions[ObjType]
                 If ItemDefinition.HasProp("RequiredParams")
                 RequiredParams := ItemDefinition.RequiredParams
