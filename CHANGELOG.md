@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   OverlayDesigner: Add more inport error prevention
+
 ## [1.0.44] - 2026-06-19
 
 ### Added

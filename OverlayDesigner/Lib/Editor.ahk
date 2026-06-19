@@ -742,6 +742,7 @@ Class Editor {
                 MsgBox "No overlay to inport.", This.AppName
                 Return
             }
+            CodeBox.Close()
             If This.ProjectFile {
                 ConfirmationDialog := MsgBox("Save changes to " . This.ProjectFile . "?", This.AppName, 4)
                 If ConfirmationDialog == "Yes"
@@ -823,13 +824,18 @@ Class Editor {
                 }
             }
             JsonData := Map("Items", Items, "RootID", FirstVar.ControlID)
-            This.Overlay := This.AddFromJson(This.Overlay, JsonData)
+            Try {
+                This.Overlay := This.AddFromJson(This.Overlay, JsonData)
+                MsgBox "Code inported successfully.", This.AppName
+            }
+            Catch {
+                This.InitializeOverlay(True, "AccessibilityOverlay")
+                MsgBox "Inport failed.", This.AppName
+            }
             This.Overlay.Reset()
             This.Overlay.CurrentControlID := This.Overlay.GetFocusableControlIDs()[1]
             This.ClearClipboard()
             This.ClearUndo()
-            CodeBox.Close()
-            MsgBox "Code inported successfully.", This.AppName
             This.UpdateOverlayHKs()
         }
         ManageParamQuotes(Value, Expression) {
