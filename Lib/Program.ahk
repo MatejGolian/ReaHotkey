@@ -112,6 +112,25 @@ Class Program {
         This.UnloadFunction.Call(This)
     }
     
+    Static CreateTimerFunc(Type, Name, Function) {
+        TimerFunc := Object()
+        TimerFunc.DefineProp("Type", {Value: Type})
+        TimerFunc.DefineProp("Name", {Value: Name})
+        TimerFunc.DefineProp("Function", {Value: Function})
+        TimerFunc.DefineProp("Call", {call: CallTimerFunc})
+        Return TimerFunc
+        CallTimerFunc(This) {
+            Type := This.Type
+            Name := This.Name
+            Function := This.Function
+            If Not ReaHotkey.Found%Type% Is %Type%
+            Return
+            If Not ReaHotkey.Found%Type%.Name = Name
+            Return
+            Function.Call()
+        }
+    }
+    
     Static FindHotkey(ProgramName, KeyName) {
         ProgramNumber := This.FindName(ProgramName)
         If ProgramNumber > 0
@@ -132,7 +151,7 @@ Class Program {
         ProgramNumber := This.FindName(ProgramName)
         If ProgramNumber > 0
         For TimerNumber, TimerParams In This.List[ProgramNumber]["Timers"]
-        If TimerParams["Function"] = Function
+        If TimerParams["Function"].Function = Function
         Return TimerNumber
         Return 0
     }
@@ -307,7 +326,7 @@ Class Program {
             Period := 250
             If Priority = ""
             Priority := 0
-            This.List[ProgramNumber]["Timers"].Push(Map("Function", Function, "Period", Period, "Priority", Priority, "Enabled", False))
+            This.List[ProgramNumber]["Timers"].Push(Map("Function", This.CreateTimerFunc(This.Prototype.__Class, This.List[ProgramNumber]["Name"], Function), "Period", Period, "Priority", Priority, "Enabled", False))
             TimerNumber := This.List[ProgramNumber]["Timers"].Length
         }
         Else {
