@@ -2,13 +2,13 @@
 
 ActivateRenameProfileButton(ButtonObj) {
 
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
     Name := InputBox("Name of the profile:", "ReaHotkey", , Dubler2.ProfileLoaded["Current"]["profileName"])
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 

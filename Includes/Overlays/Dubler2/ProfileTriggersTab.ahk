@@ -79,13 +79,13 @@ ToggleTriggerVelocityResponse(Index, *) {
 
 ChangeTriggerMidiNote(Index, *) {
 
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
     MidiNote := InputBox("Midi Note (either note or numeric value):", "ReaHotkey", , Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][Index]["midiNote"])
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
@@ -149,13 +149,13 @@ ClearAllTriggerTakes(Index, *) {
 
 RenameTrigger(ButtonObj, *) {
 
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
     Name := InputBox("Trigger Name: ", "ReaHotkey", , Dubler2.ProfileLoaded["Current"]["triggers"]["triggersInfo"][ButtonObj.Index]["name"])
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
@@ -185,7 +185,7 @@ DeleteTrigger(Index, *) {
 
     Criteria := ReaHotkey.StandaloneWinCriteria
 
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
 
@@ -193,7 +193,7 @@ DeleteTrigger(Index, *) {
 
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
@@ -225,13 +225,13 @@ DeleteTrigger(Index, *) {
 
 ActivateTriggerSensitivityButton(ButtonObj) {
 
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
     Sensitivity := InputBox("Trigger Sensitivity in % (from 0 to 100):", "ReaHotkey", , Integer(Dubler2.ProfileLoaded["Current"]["DublerModel"]["triggerSensitivity"] * 100))
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 

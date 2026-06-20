@@ -2,13 +2,13 @@
 
 ActivatePitchInputGainButton(Button) {
 
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
     Gain := InputBox("Pitch Input Gain in % (from 0 to 100):", "ReaHotkey", , Integer(Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchInputGain"] * 100))
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 

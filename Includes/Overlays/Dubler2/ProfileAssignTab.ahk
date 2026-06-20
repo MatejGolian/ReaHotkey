@@ -107,13 +107,13 @@ ClickTriggersMidiChannel(Channel, ButtonObj, *) {
 
 ActivatePitchStickinessButton(ButtonObj) {
 
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
     Stickiness := InputBox("Pitch Bend Stickiness in % (from 0 to 100):", "ReaHotkey", , Integer(Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchStickiness"] * 100))
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
@@ -148,13 +148,13 @@ ActivatePitchStickinessButton(ButtonObj) {
 
 ActivatePitchBendRangeButton(ButtonObj) {
 
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
     Range := InputBox("Pitch Bend Range (From 1 to 48 semitones):", "ReaHotkey", , Dubler2.ProfileLoaded["Current"]["Pitch"]["pitchBendRange"])
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
@@ -207,13 +207,13 @@ ActivateThresholdButton(ENV, Input, MinMax, ButtonObj) {
         Min := Float(Dubler2.ProfileLoaded["Current"][Key]["min"])
     }
 
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
     Th := InputBox(ENV . " " . MinMaxText . " threshold (from " . Min . " to " . Max . "):", "ReaHotkey", , Float(Dubler2.ProfileLoaded["Current"][Key][MinMax]))
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
@@ -249,13 +249,13 @@ ActivateThresholdButton(ENV, Input, MinMax, ButtonObj) {
 
 ActivateCCButton(ENV, ButtonObj) {
 
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
     Th := InputBox(ENV . " CC value (from 0 to 127):", "ReaHotkey", , Integer(Dubler2.ProfileLoaded["Current"][ENV . "ccNum"]))
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 

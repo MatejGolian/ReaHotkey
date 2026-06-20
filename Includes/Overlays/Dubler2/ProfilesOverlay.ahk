@@ -48,13 +48,13 @@ Static DuplicateProfile(ProfileFile, *) {
     Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . ProfileFile, "UTF-8")
     ProfileObj := Jxon_Load(&Profile)
 
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
     Confirmation := MsgBox("Do you want to duplicate the profile " . ProfileObj["profileName"], "ReaHotkey", 4)
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     If Not Confirmation == "Yes"
         Return
@@ -104,14 +104,14 @@ Static DeleteProfile(ProfileFile, Index, *) {
 
     Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . ProfileFile, "UTF-8")
     ProfileObj := Jxon_Load(&Profile)
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
 
     Confirmation := MsgBox("Do you really want to delete the profile " . ProfileObj["profileName"] . "?", "ReaHotkey", 4)
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     If Not Confirmation == "Yes"
         Return
@@ -139,13 +139,13 @@ Static RenameProfile(ProfileFile, *) {
     Profile := FileRead(A_AppData . "\Vochlea\Dubler2\" . ProfileFile, "UTF-8")
     ProfileObj := Jxon_Load(&Profile)
 
-    SetTimer ReaHotkey.ManageState, 0
+    SetTimer ReaHotkey.StateManagementTimer, 0
     ReaHotkey.TurnStandaloneTimersOff()
     ReaHotkey.TurnStandaloneHotkeysOff()
     Name := InputBox("Profile name:", "ReaHotkey", , ProfileObj["profileName"])
     ReaHotkey.TurnStandaloneHotkeysOn()
     ReaHotkey.TurnStandaloneTimersOn()
-    SetTimer ReaHotkey.ManageState, 100
+    SetTimer ReaHotkey.StateManagementTimer, 100
 
     ReaHotkey.AutoFocusStandaloneOverlay := False
 
