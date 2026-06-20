@@ -152,97 +152,21 @@ Class CodeParser {
     ProcessExpression(Code) {
         If InStr(Code, ";")
         Code := SubStr(Code, 1, InStr(Code, ";") - 1)
-        Items := Array()
         Segments := Array()
         Code := This.Split(Code, " ")
         For Segment In Code {
-            If Segment Is String
-            Segment := Trim(Segment)
+            If Not Segment Is Object
             If Not Segment = ""
-            If Not Segment = "."
-            Items.Push(This.ParseSegment(Segment))
-        }
-        For Segment In Items {
+            Segment := This.ParseSegment(Segment)
             If Segment Is Func Or Segment Is BoundFunc
             Segment := Segment.Call()
-            Try
-            Segment := Segment + 0
-            Catch
-            Segment := Segment
-            If Segment Is String
-            Segment := Trim(Segment)
+            If Not Segment Is Object
             If Not Segment = ""
             Segments.Push(Segment)
         }
         Expression := ""
-        Skip := 0
-        For SegmentIndex, Segment In Segments {
-            If Skip > 0 {
-                Skip -= 1
-                Continue
-            }
-            If This.IsNumberOrOperator(Segment) {
-                If SegmentIndex = Segments.Length {
-                    Expression .= Segment
-                    Break
-                }
-                NextSegment := Segments[SegmentIndex + 1]
-                If This.IsOperator(NextSegment) And Segments.Length = SegmentIndex + 1 {
-                    Expression .= Segment . NextSegment
-                    Break
-                }
-                SegmentBuffer := Array()
-                TempBuffer := Array()
-                For Value In Segments
-                If A_Index >= SegmentIndex {
-                    If This.IsNumberOrOperator(Value)
-                    TempBuffer.Push(Value)
-                }
-                LoopCount := TempBuffer.Length
-                Loop TempBuffer.Length {
-                    If TempBuffer.Length > 0
-                    If This.IsOperator(TempBuffer[TempBuffer.Length])
-                    TempBuffer.Pop()
-                }
-                Skip := TempBuffer.Length - 1
-                Loop TempBuffer.Length
-                If TempBuffer[A_Index] Is Number And Not This.IsOperator(SubStr(TempBuffer[A_Index], 1, 1)) {
-                    SegmentBuffer.Push("+" . TempBuffer[A_Index])
-                }
-                Else If This.IsOperator(TempBuffer[A_Index]) {
-                    If TempBuffer[A_Index + 1] Is Number And Not This.IsOperator(SubStr(TempBuffer[A_Index + 1], 1, 1)) {
-                        SegmentBuffer.Push(TempBuffer[A_Index] . TempBuffer[A_Index + 1])
-                    }
-                    Else {
-                        SegmentBuffer.Push(TempBuffer[A_Index + 1])
-                    }
-                    A_Index := A_Index + 1
-                }
-                Else {
-                    SegmentBuffer.Push(TempBuffer[A_Index])
-                }
-                If SegmentBuffer.Length = 0
-                Result := Segment
-                Else
-                Result := 0
-                For Item In SegmentBuffer {
-                    Operator := SubStr(Item, 1, 1)
-                    NumberValue := SubStr(Item, 2)
-                    If Operator = "+"
-                    Result := Result + NumberValue
-                    Else If Operator = "-"
-                    Result := Result - NumberValue
-                    Else If Operator = "*"
-                    Result := Result * NumberValue
-                    Else If Operator = "/"
-                    Result := Result / NumberValue
-                }
-                Expression .= Result
-            }
-            Else If Segment Is String {
-                Expression .= Segment
-            }
-        }
+        For Segment In Segments
+        Expression .= Segment
         Return Expression
     }
     
