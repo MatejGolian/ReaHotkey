@@ -16,6 +16,16 @@ Static ReadAudioSettings() {
         }
     }
 
+    ReadFloat(K) {
+        Attr := Node.GetAttributeNode(K)
+
+        Try {
+            Return Float(Attr.Text)
+        } Catch {
+            Return 0.0
+        }
+    }
+
     Settings := Map()
 
     If FileExist(A_AppData . "\Vochlea\Dubler2\audiosettings.xml") {
@@ -29,7 +39,7 @@ Static ReadAudioSettings() {
 
         Settings.Set("audioDeviceInChans", Read("audioDeviceInChans"))
         Settings.Set("audioDeviceOutChans", Read("audioDeviceOutChans"))
-        Settings.Set("audioDeviceRate", Float(Read("audioDeviceRate")))
+        Settings.Set("audioDeviceRate", ReadFloat("audioDeviceRate"))
         Settings.Set("audioInputDeviceName", Read("audioInputDeviceName"))
         Settings.Set("audioOutputDeviceName", Read("audioOutputDeviceName"))
         Settings.Set("deviceType", Read("deviceType"))
@@ -62,6 +72,8 @@ Static SaveAudioSettings(*) {
     Obj.AppendChild(Inst)
 
     Node := Obj.CreateNode(1, "DEVICESETUP", "")
+
+    Dubler2.AudioSettings.Set("deviceType", "ASIO")
 
     For K, V In Dubler2.AudioSettings {
         Write(K, V)
@@ -224,6 +236,7 @@ Static CreateAudioCalibrationOverlay(Overlay) {
 
         Dubler2.AudioSettings["audioInputDeviceName"] := Device["Name"]
         Dubler2.AudioSettings["audioOutputDeviceName"] := Device["Name"]
+        Dubler2.AudioSettings["audioDeviceRate"] := Device["Rate"]
 
         If Not Init {
             Dubler2.AudioSettings["audioDeviceInChans"] := "1"
@@ -235,18 +248,21 @@ Static CreateAudioCalibrationOverlay(Overlay) {
 
     CreateAudioDeviceControl() {
 
+        SelectedDev := ""
         Ctrl := PopulatedListBox("Audio Device", ObjBindMethod(Dubler2, "FocusListBox"))
         
         For Dev In Dubler2.ASIODevices {
             Ctrl.AddItem(Dev["Name"], SelectDevice.Bind(Dev))
 
-            If Dubler2.AudioSettings["audioInputDeviceName"] == Dev["Name"] {
-                Ctrl.SetValue(Dev["Name"])
-                SelectDevice(Dev, True)
+            If Dubler2.AudioSettings["audioInputDeviceName"] == Dev["Name"] or SelectedDev == "" {
+                SelectedDev := Dev
             }
         }
 
-        Ctrl.SetValue(Dubler2.AudioSettings["audioInputDeviceName"])
+        If SelectedDev != "" {
+            Ctrl.SetValue(SelectedDev["Name"])
+            SelectDevice(SelectedDev, True)
+        }
 
         Return Ctrl
     }
