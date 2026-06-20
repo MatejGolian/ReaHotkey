@@ -120,6 +120,7 @@ Class Program {
         TimerFunc.DefineProp("Call", {call: CallTimerFunc})
         Return TimerFunc
         CallTimerFunc(This) {
+        Thread "NoTimers"
             Type := This.Type
             Name := This.Name
             Function := This.Function

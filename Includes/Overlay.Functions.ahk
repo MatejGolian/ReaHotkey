@@ -10,6 +10,8 @@ ActivateChooser(OverlayControl) {
 
 AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False, TypeToFocus := "C", ValueToFocus := 0) {
     Critical
+    If Not ReaHotkey.Found%Type% Is %Type%
+    Return
     SourceNumber := ReaHotkey.Found%Type%.Overlay.GetCurrentControlNumber()
     PluginControlPos := GetPluginControlPos()
     OverlayList := %Type%.GetOverlays(Name)
