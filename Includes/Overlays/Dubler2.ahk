@@ -327,7 +327,7 @@ Class Dubler2 {
     }
 
     Static Sync() {
-        WindowID := ReaHotkey.FoundStandalone.WindowID
+        WindowID := ReaHotkey.FoundStandalone.WinID
         Path := ProcessGetPath("dubler2.exe")
 
         ProcessClose("dubler2.exe")

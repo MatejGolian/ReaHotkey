@@ -8,6 +8,7 @@ Static Settings := Map(
         "showAudioSetupOnStartup", False,
         "showAboutChromaticScalePopup", False,
         "newFeatureAnnouncement", 2,
+        "language", "en",
     )
 
 Static DetectFixSettings(*) {
