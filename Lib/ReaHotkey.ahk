@@ -474,7 +474,7 @@ Class ReaHotkey {
     }
     
     Static ManageState() {
-    Thread "NoTimers"
+        Thread "NoTimers"
         Static CurrentPlugin := False
         Static CurrentStandalone := False
         Static PreviousPlugin := False
@@ -915,16 +915,10 @@ Class ReaHotkey {
     
     Static TurnTimersOn(Type, Name := "") {
         If Name = "" {
-            TimerList := %Type%.GetList()
-            For TimerEntry In TimerList
-            For Timer In TimerEntry["Timers"]
-            If Timer["Enabled"] = False {
-                Timer["Enabled"] := True
-                If Not Timer["Period"] = 0
-                SetTimer Timer["Function"], Timer["Period"], Timer["Priority"]
-            }
+            If ReaHotkey.Found%Type% Is %Type%
+            Name := ReaHotkey.Found%Type%.Name
         }
-        Else {
+        If Not Name = "" {
             For Timer In %Type%.GetTimers(Name)
             If Timer["Enabled"] = False {
                 Timer["Enabled"] := True
