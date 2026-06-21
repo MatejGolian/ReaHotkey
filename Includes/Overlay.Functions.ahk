@@ -9,7 +9,6 @@ ActivateChooser(OverlayControl) {
 }
 
 AutoChangeOverlay(Type, Name, CompensatePluginCoordinates := False, ReportChange := False, TypeToFocus := "C", ValueToFocus := 0) {
-    Critical
     If Not ReaHotkey.Found%Type% Is %Type%
     Return
     SourceNumber := ReaHotkey.Found%Type%.Overlay.GetCurrentControlNumber()
@@ -139,7 +138,8 @@ AutoChangeStandaloneOverlay(Name, ReportChange := False, TypeToFocus := "C", Val
 }
 
 ChangeOverlay(Type, ItemName, ItemNumber, OverlayMenu, TypeToFocus := "C", ValueToFocus := 0) {
-    Critical
+    If Not ReaHotkey.Found%Type% Is %Type%
+    Return
     SourceNumber := ReaHotkey.Found%Type%.Overlay.GetCurrentControlNumber()
     OverlayList := %Type%.GetOverlays(ReaHotkey.Found%Type%.Name)
     OverlayNumber := OverlayMenu.OverlayNumbers[ItemName]

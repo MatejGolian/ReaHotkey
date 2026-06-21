@@ -34,7 +34,7 @@ Class Zampler {
         ArpeggiatorTab.AddControl(FilterBox)
         ZamplerTabControl.AddTabs(ArpeggiatorTab)
         
-        Plugin.SetTimer("Zampler", ObjBindMethod(This, "ResetOverlay"), -1)
+        Plugin.SetTimer("Zampler", ObjBindMethod(This, "ResetOverlay"), -250)
     }
     
     Static ChangeFilter(OverlayObj) {

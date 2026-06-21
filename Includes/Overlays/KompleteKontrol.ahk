@@ -43,7 +43,7 @@ Class KompleteKontrol {
             Plugin.RegisterOverlay("Komplete Kontrol", KKPluginOverlay)
         }
         
-        Plugin.SetTimer("Komplete Kontrol", This.CheckPluginConfig, -1)
+        Plugin.SetTimer("Komplete Kontrol", This.CheckPluginConfig, -250)
         Plugin.SetTimer("Komplete Kontrol", This.CheckPluginMenu, 250)
         Plugin.SetTimer("Komplete Kontrol", This.TogglePluginSearchVisible, 500)
         Plugin.SetTimer("Komplete Kontrol", This.ManageLoadedPlugin, 250)
@@ -84,7 +84,7 @@ Class KompleteKontrol {
         Plugin.RegisterOverlay("Komplete Kontrol Save As Dialog", PluginSaveAsOverlay)
         
         Standalone.Register("Komplete Kontrol", "Komplete Kontrol ahk_class NINormalWindow* ahk_exe Komplete Kontrol.exe", False, False, False, False, 1)
-        Standalone.SetTimer("Komplete Kontrol", This.CheckStandaloneConfig, -1)
+        Standalone.SetTimer("Komplete Kontrol", This.CheckStandaloneConfig, -250)
         Standalone.RegisterOverlay("Komplete Kontrol", StandaloneHeader)
         
         Standalone.Register("Komplete Kontrol Preference Dialog", "Preferences ahk_class #32770 ahk_exe Komplete Kontrol.exe", False, ObjBindMethod(This, "FocusStandalonePreferenceTab"), False, False, 1)

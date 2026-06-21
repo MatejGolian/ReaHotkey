@@ -49,10 +49,10 @@ Class OverlayLoader {
         This.Overlay := DefaultOverlay
         Plugin.Register("OverlayLoader", ".*", ObjBindMethod(This, "Check"), False, ObjBindMethod(This, "Unload"), False, 1, True)
         Plugin.RegisterOverlay("OverlayLoader", DefaultOverlay)
-        Plugin.SetTimer("OverlayLoader", This.SetOverlay, -1)
+        Plugin.SetTimer("OverlayLoader", This.SetOverlay, -250)
         Standalone.Register("OverlayLoader", "ahk_exe .+.exe", ObjBindMethod(This, "Check"), False, ObjBindMethod(This, "Unload"), False, 1)
         Standalone.RegisterOverlay("OverlayLoader", DefaultOverlay)
-        Standalone.SetTimer("OverlayLoader", This.SetOverlay, -1)
+        Standalone.SetTimer("OverlayLoader", This.SetOverlay, -250)
     }
     
     Static AddFromJson(OverlayObj, JsonData, StartingID := False) {

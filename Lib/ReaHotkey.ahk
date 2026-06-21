@@ -474,6 +474,7 @@ Class ReaHotkey {
     }
     
     Static ManageState() {
+    Thread "NoTimers"
         Static CurrentPlugin := False
         Static CurrentStandalone := False
         Static PreviousPlugin := False

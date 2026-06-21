@@ -43,7 +43,7 @@ Class Kontakt7 {
             Plugin.RegisterOverlay("Kontakt 7", K7PluginOverlay)
         }
         
-        Plugin.SetTimer("Kontakt 7", This.CheckPluginConfig, -1)
+        Plugin.SetTimer("Kontakt 7", This.CheckPluginConfig, -250)
         Plugin.SetTimer("Kontakt 7", This.CheckPluginMenu, 250)
         
         Plugin.Register("Kontakt 7 Content Missing Dialog", "^NIChildWindow[0-9A-F]{17}$", ObjBindMethod(This, "CheckPluginContentMissing"), False, False, False, 1, True)
@@ -53,7 +53,7 @@ Class Kontakt7 {
         Plugin.RegisterOverlay("Kontakt 7 Content Missing Dialog", PluginContentMissingOverlay)
         
         Standalone.Register("Kontakt 7", "Kontakt 7 ahk_class NINormalWindow* ahk_exe Kontakt 7.exe", False, False, False, False, 1)
-        Standalone.SetTimer("Kontakt 7", This.CheckStandaloneConfig, -1)
+        Standalone.SetTimer("Kontakt 7", This.CheckStandaloneConfig, -250)
         Standalone.SetTimer("Kontakt 7", This.CheckStandaloneMenu, 250)
         Standalone.RegisterOverlay("Kontakt 7", StandaloneHeader)
         
