@@ -579,8 +579,10 @@ Class ReaHotkey {
                     This.TurnPluginHotkeysOff(PreviousPlugin.Name)
                     PreviousPlugin.Unload()
                 }
-                This.TurnPluginTimersOn(This.FoundPlugin.Name)
-                This.TurnPluginHotkeysOn(This.FoundPlugin.Name)
+                If Not Plugin.GetStateTrigger(This.FoundPlugin.Name) {
+                    This.TurnPluginTimersOn(This.FoundPlugin.Name)
+                    This.TurnPluginHotkeysOn(This.FoundPlugin.Name)
+                }
                 If This.AutoFocusPluginOverlay = True {
                     This.FocusPluginOverlay()
                     This.AutoFocusPluginOverlay := False
@@ -609,8 +611,10 @@ Class ReaHotkey {
                     This.TurnStandaloneHotkeysOff(PreviousStandalone.Name)
                     PreviousStandalone.Unload()
                 }
-                This.TurnStandaloneTimersOn(This.FoundStandalone.Name)
-                This.TurnStandaloneHotkeysOn(This.FoundStandalone.Name)
+                If Not Standalone.GetStateTrigger(This.FoundStandalone.Name) {
+                    This.TurnStandaloneTimersOn(This.FoundStandalone.Name)
+                    This.TurnStandaloneHotkeysOn(This.FoundStandalone.Name)
+                }
                 If This.AutoFocusStandaloneOverlay = True {
                     This.FocusStandaloneOverlay()
                     This.AutoFocusStandaloneOverlay := False

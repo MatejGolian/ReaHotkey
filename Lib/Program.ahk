@@ -60,6 +60,10 @@ Class Program {
         Throw ErrorMessage
     }
     
+    AddStateTrigger(CheckerFunction, HotkeyMode := "", TimerToggle := "") {
+        %This.__Class%.AddStateTrigger(This.Name, CheckerFunction, HotkeyMode, TimerToggle)
+    }
+    
     Check() {
         If This.CheckerFunction Is Object And This.CheckerFunction.HasMethod("Call")
         Return This.CheckerFunction.Call(This)
@@ -80,6 +84,10 @@ Class Program {
     
     GetOverlays() {
         Return %This.__Class%.GetOverlays(This.Name)
+    }
+    
+    GetStateTrigger() {
+        Return %This.__Class%.GetStateTrigger(This.Name)
     }
     
     Init() {
@@ -112,6 +120,19 @@ Class Program {
         This.UnloadFunction.Call(This)
     }
     
+    Static __Get(Name, Params) {
+        Try
+        Return This.Get%Name%(Params*)
+        Catch As ErrorMessage
+        Throw ErrorMessage
+    }
+    
+    Static AddStateTrigger(ProgramName, CheckerFunction, HotkeyMode := "", TimerToggle := "") {
+        ProgramNumber := This.FindName(ProgramName)
+        If ProgramNumber > 0
+        This.List[ProgramNumber]["StateTriggers"].Push(Map("CheckerFunction", CheckerFunction, "HotkeyMode", HotkeyMode, "TimerToggle", TimerToggle))
+    }
+    
     Static CreateTimerFunc(Type, Name, Function) {
         TimerFunc := Object()
         TimerFunc.DefineProp("Type", {Value: Type})
@@ -120,7 +141,7 @@ Class Program {
         TimerFunc.DefineProp("Call", {call: CallTimerFunc})
         Return TimerFunc
         CallTimerFunc(This) {
-        Thread "NoTimers"
+            Thread "NoTimers"
             Type := This.Type
             Name := This.Name
             Function := This.Function
@@ -211,6 +232,38 @@ Class Program {
         Return Array()
     }
     
+    Static GetStateTrigger(ProgramName := "") {
+        If ProgramName = "" {
+            If ReaHotkey.Found%This.Prototype.__Class% Is %This.Prototype.__Class%
+            ProgramName := ReaHotkey.Found%This.Prototype.__Class%.Name
+        }
+        If Not ProgramName = "" {
+            ProgramNumber := This.FindName(ProgramName)
+            If ProgramNumber > 0
+            For StateTrigger In This.List[ProgramNumber]["StateTriggers"]
+            If StateTrigger["CheckerFunction"].Call() {
+                If StateTrigger["HotkeyMode"] = "" {
+                    ReaHotkey.Turn%This.Prototype.__Class%HotkeysOn(ProgramName)
+                }
+                Else {
+                    This.SetHotkeyMode(ProgramName, StateTrigger["HotkeyMode"])
+                    ReaHotkey.Turn%This.Prototype.__Class%HotkeysOn(ProgramName)
+                }
+                If StateTrigger["TimerToggle"] = "" {
+                    ReaHotkey.Turn%This.Prototype.__Class%TimersOn(ProgramName)
+                }
+                Else {
+                    If StateTrigger["TimerToggle"]
+                    ReaHotkey.Turn%This.Prototype.__Class%TimersOn(ProgramName)
+                    Else
+                    ReaHotkey.Turn%This.Prototype.__Class%TimersOff(ProgramName)
+                }
+                Return True
+            }
+        }
+        Return False
+    }
+    
     Static GetTimers(ProgramName) {
         ProgramNumber := This.FindName(ProgramName)
         If ProgramNumber > 0
@@ -242,6 +295,7 @@ Class Program {
             ProgramEntry["Hotkeys"] := Array()
             ProgramEntry["Overlays"] := Array()
             ProgramEntry["Timers"] := Array()
+            ProgramEntry["StateTriggers"] := Array()
             %This.Prototype.__Class%.List.Push(ProgramEntry)
             Return True
         }
