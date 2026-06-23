@@ -60,8 +60,8 @@ Class Program {
         Throw ErrorMessage
     }
     
-    AddStateTrigger(CheckerFunction, HotkeyMode := "", TimerToggle := "") {
-        %This.__Class%.AddStateTrigger(This.Name, CheckerFunction, HotkeyMode, TimerToggle)
+    AddStateTrigger(CheckerFunction, HotkeyModeOnTrue := "", TimerToggleOnTrue := "", HotkeyModeOnFalse := "", TimerToggleOnFalse := "") {
+        %This.__Class%.AddStateTrigger(This.Name, CheckerFunction, HotkeyModeOnTrue, TimerToggleOnTrue, HotkeyModeOnFalse, TimerToggleOnFalse)
     }
     
     Check() {
@@ -127,10 +127,10 @@ Class Program {
         Throw ErrorMessage
     }
     
-    Static AddStateTrigger(ProgramName, CheckerFunction, HotkeyMode := "", TimerToggle := "") {
+    Static AddStateTrigger(ProgramName, CheckerFunction, HotkeyModeOnTrue := "", TimerToggleOnTrue := "", HotkeyModeOnFalse := "", TimerToggleOnFalse := "") {
         ProgramNumber := This.FindName(ProgramName)
         If ProgramNumber > 0
-        This.List[ProgramNumber]["StateTriggers"].Push(Map("CheckerFunction", CheckerFunction, "HotkeyMode", HotkeyMode, "TimerToggle", TimerToggle))
+        This.List[ProgramNumber]["StateTriggers"].Push(Map("CheckerFunction", CheckerFunction, "HotkeyModeOnTrue", HotkeyModeOnTrue, "TimerToggleOnTrue", TimerToggleOnTrue, "HotkeyModeOnFalse", HotkeyModeOnFalse, "TimerToggleOnFalse", TimerToggleOnFalse))
     }
     
     Static CreateTimerFunc(Type, Name, Function) {
@@ -240,24 +240,33 @@ Class Program {
         If Not ProgramName = "" {
             ProgramNumber := This.FindName(ProgramName)
             If ProgramNumber > 0
-            For StateTrigger In This.List[ProgramNumber]["StateTriggers"]
-            If StateTrigger["CheckerFunction"].Call() {
-                If StateTrigger["HotkeyMode"] = "" {
+            For StateTrigger In This.List[ProgramNumber]["StateTriggers"] {
+                Result := StateTrigger["CheckerFunction"].Call()
+                If Result {
+                    HotkeyMode := StateTrigger["HotkeyModeOnTrue"]
+                    TimerToggle := StateTrigger["TimerToggleOnTrue"]
+                }
+                Else {
+                    HotkeyMode := StateTrigger["HotkeyModeOnFalse"]
+                    TimerToggle := StateTrigger["TimerToggleOnFalse"]
+                }
+                If HotkeyMode = "" {
                     ReaHotkey.Turn%This.Prototype.__Class%HotkeysOn(ProgramName)
                 }
                 Else {
-                    This.SetHotkeyMode(ProgramName, StateTrigger["HotkeyMode"])
+                    This.SetHotkeyMode(ProgramName, HotkeyMode)
                     ReaHotkey.Turn%This.Prototype.__Class%HotkeysOn(ProgramName)
                 }
-                If StateTrigger["TimerToggle"] = "" {
+                If TimerToggle = "" {
                     ReaHotkey.Turn%This.Prototype.__Class%TimersOn(ProgramName)
                 }
                 Else {
-                    If StateTrigger["TimerToggle"]
+                    If TimerToggle
                     ReaHotkey.Turn%This.Prototype.__Class%TimersOn(ProgramName)
                     Else
                     ReaHotkey.Turn%This.Prototype.__Class%TimersOff(ProgramName)
                 }
+                If Result
                 Return True
             }
         }
