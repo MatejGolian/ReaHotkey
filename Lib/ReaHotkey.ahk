@@ -645,10 +645,14 @@ Class ReaHotkey {
     
     Static Quit(*) {
         If This.Update.IsRunning() {
+            This.Update.TogglePause()
             ConfirmationDialog := MsgBox("An update is currently in progress.`nAre you sure you want to quit the app?", "Quit ReaHotkey", 4)
             If ConfirmationDialog == "Yes" {
                 This.Update.Close()
                 ExitApp
+            }
+            Else {
+                This.Update.TogglePause()
             }
         }
         Else {
@@ -659,8 +663,14 @@ Class ReaHotkey {
     Static Reload(*) {
         Proceed := True
         If This.Update.IsRunning() {
+            This.Update.TogglePause()
             ConfirmationDialog := MsgBox("An update is currently in progress.`nAre you sure you want to reload the app?", "Reload ReaHotkey", 4)
-            If ConfirmationDialog == "No" {
+            If ConfirmationDialog == "Yes" {
+                This.Update.Close()
+                Proceed := True
+            }
+            Else {
+                This.Update.TogglePause()
                 Proceed := False
             }
         }

@@ -24,6 +24,8 @@ Class FileDownload {
     }
     
     Cancel(*) {
+        If A_IsPaused
+        Return
         This.OwnDialog()
         ConfirmationDialog := MsgBox("Are you sure you want to cancel?", This.DialogTitle, 4)
         If ConfirmationDialog == "Yes" {

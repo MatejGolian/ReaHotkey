@@ -241,4 +241,16 @@ Class Update {
         Return RunningUpdate
     }
     
+    Static TogglePause() {
+        If Not This.IsRunning()
+        Return
+        PrevDetectionSetting := A_DetectHiddenWindows
+        DetectHiddenWindows True
+        PrevTitleSetting := A_TitleMatchMode
+        SetTitleMatchMode 2
+        PostMessage 0x0111, 65306,,, This.GetHiddenWinTitle()
+        SetTitleMatchMode PrevTitleSetting
+        DetectHiddenWindows PrevDetectionSetting
+    }
+    
 }

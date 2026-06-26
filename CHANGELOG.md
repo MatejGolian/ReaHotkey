@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Pause the updater while displaying quit/reload confirmation messages
+
 ## [1.0.48] - 2026-06-22
 
 ### Changed

@@ -76,6 +76,8 @@ ShowStatusDialog(Status, RunOnCancel := False, DisableCancel := False) {
     DialogGUI.Show()
     Return DialogGUI
     Cancel(*) {
+        If A_IsPaused
+        Return
         DialogGUI.Opt("+OwnDialogs")
         ConfirmationDialog := MsgBox("Are you sure you want to cancel?", UpdaterTitle, 4)
         If ConfirmationDialog == "Yes" {
