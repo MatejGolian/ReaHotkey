@@ -136,6 +136,7 @@ Class Update {
             If DataError Or LatestAssetName = "" Or LatestAssetUrl = "" Or LatestVersion = "" Or LatestVersionUrl = "" {
                 LatestRelease := GetLatestRelease()
                 If LatestRelease.Length >=1 {
+                DataError := False
                     LatestAssetName := LatestRelease[1]["assets"][1]["name"]
                     LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
                     LatestVersion := LatestRelease[1]["tag_name"]
@@ -164,6 +165,7 @@ Class Update {
             If DataError Or LatestAssetName = "" Or LatestAssetUrl = "" Or LatestVersion = "" Or LatestVersionUrl = "" {
                 LatestRelease := GetLatestRelease()
                 If LatestRelease.Length >=1 {
+                DataError := False
                     LatestAssetName := LatestRelease[1]["assets"][1]["name"]
                     LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
                     LatestVersion := LatestRelease[1]["tag_name"]
