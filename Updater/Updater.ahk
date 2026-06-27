@@ -61,6 +61,28 @@ GetParentPID() {
     Return 0
 }
 
+PerformCleanup(CleanupOption := "All") {
+    Global ExtractedTempDir, MainTempDir
+    If DirExist(A_Temp . "\" . MainTempDir) {
+        If CleanupOption = "All" {
+            DirDelete A_Temp . "\" . MainTempDir, True
+        }
+        Else If CleanupOption = "Extracted" {
+            If DirExist(A_Temp . "\" . ExtractedTempDir)
+            DirDelete A_Temp . "\" . ExtractedTempDir, True
+        }
+    }
+}
+
+PrepareRunCMD(ExtraArgs := "") {
+    ExtraArgs := Trim(ExtraArgs)
+    If A_IsCompiled = 0
+    PreparedCMD := A_AhkPath . " /restart " . A_ScriptFullPath . " " . ExtraArgs
+    Else
+    PreparedCMD := A_ScriptFullPath . " /restart /script *UPDATE " . ExtraArgs
+    Return Trim(PreparedCMD)
+}
+
 ShowStatusDialog(Status, RunOnCancel := False, DisableCancel := False) {
     Global UpdaterTitle
     DialogGUI := GUI(, UpdaterTitle)
@@ -88,33 +110,25 @@ ShowStatusDialog(Status, RunOnCancel := False, DisableCancel := False) {
     }
 }
 
-PerformCleanup(CleanupOption := "All") {
-    Global ExtractedTempDir, MainTempDir
-    If DirExist(A_Temp . "\" . MainTempDir) {
-        If CleanupOption = "All" {
-            DirDelete A_Temp . "\" . MainTempDir, True
-        }
-        Else If CleanupOption = "Extracted" {
-            If DirExist(A_Temp . "\" . ExtractedTempDir)
-            DirDelete A_Temp . "\" . ExtractedTempDir, True
-        }
-    }
-}
-
-PrepareRunCMD(ExtraArgs := "") {
-    ExtraArgs := Trim(ExtraArgs)
-    If A_IsCompiled = 0
-    PreparedCMD := A_AhkPath . " /restart " . A_ScriptFullPath . " " . ExtraArgs
+ToggleDialogDisabled(wParam, lParam, msg, hwnd) {
+    Global StatusDialog
+    If Not StatusDialog Is GUI
+    Return
+    StatusDialog.Opt("+OwnDialogs")
+    If A_IsPaused
+    StatusDialog.Opt("-Disabled")
     Else
-    PreparedCMD := A_ScriptFullPath . " /restart /script *UPDATE " . ExtraArgs
-    Return Trim(PreparedCMD)
+    StatusDialog.Opt("+Disabled")
 }
 
 CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
 ParentAhkDir := GetParentAhkDir()
 ParentPID := GetParentPID()
 PreviousPID := GetParam("PreviousPID")
+StatusDialog := Object()
 TaskSwitch := ""
+
+OnMessage 0x0111, ToggleDialogDisabled
 
 If A_Args.Length > 0
 TaskSwitch := A_Args[1]
@@ -130,6 +144,7 @@ If TaskSwitch = "Download" {
     DestinationFile := A_Args[3]
     
     UpdateDownload := FileDownload(URL, DestinationFile, UpdaterTitle)
+    StatusDialog := UpdateDownload.CreateDialog()
     
     If UpdateDownload.Available {
         

@@ -48,6 +48,7 @@ Class FileDownload {
         This.DialogGUI.AddText("Section W100", "Time remaining")
         This.DialogGUI.AddText("W450 YS vTimeRemaining", "∞")
         This.DialogGUI.AddButton("Default Section XS", "Cancel").OnEvent("Click", ObjBindMethod(This, "Cancel"))
+        Return This.DialogGUI
     }
     
     DestroyDialog() {
@@ -55,6 +56,7 @@ Class FileDownload {
             This.DialogGUI.Destroy()
             This.DialogGUI := Object()
         }
+        Return This.DialogGUI
     }
     
     FormatSize(Size, DecimalPlaces := 2) {

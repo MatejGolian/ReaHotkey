@@ -1,4 +1,4 @@
-Version := "1.0.48"
+Version := "1.0.49"
 ;@Ahk2Exe-Let U_version = %A_PriorLine~U)^(.+"){1}(.+)".*$~$2%
 BuildNumber := "0"
 ;@Ahk2Exe-Let U_OrigFilename = %A_ScriptName~\.[^\.]+$~.exe%

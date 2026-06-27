@@ -111,15 +111,42 @@ Class Update {
             This.NotificationBox.Destroy()
             This.NotificationBox := False
         }
-        PerformUpdate(*) {
-            CloseNotificationBox()
-            If This.IsRunning() {
+        GetLatestRelease() {
+            Try {
+                ReleaseData := ""
+                WHR := ComObject("WinHttp.WinHttpRequest.5.1")
+                WHR.Open("GET", This.JsonUrl . "?page=1&per_page=1", True)
+                WHR.Send()
+                WHR.WaitForResponse()
+                ReleaseData := WHR.ResponseText
+                ReleaseData := Jxon_Load(&ReleaseData)
+                If Not ReleaseData Is Array
+                ReleaseData := Array()
+                }
+                Catch {
+                ReleaseData := Array()
+                }
+                Return ReleaseData
+                }
+                PerformUpdate(*) {
+                LatestRelease := GetLatestRelease()
+                If LatestRelease.Length >=1 {
+                LatestAssetName := LatestRelease[1]["assets"][1]["name"]
+                LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
+                LatestVersion := LatestRelease[1]["tag_name"]
+                LatestVersionUrl := LatestRelease[1]["html_url"]
+                }
+                Else {
+                DataError := True
+                }
+                CloseNotificationBox()
+                If This.IsRunning() {
                 This.ActivateWindow()
-            }
-            Else If DataError {
+                }
+                Else If DataError {
                 MsgBox "An error occurred.`nPlease try again later.", This.AppName
-            }
-            Else {
+                }
+                Else {
                 This.DeleteTempDir()
                 If A_IsCompiled = 0
                 Run A_AhkPath . " `"Updater/Updater.ahk`" Download " . LatestAssetUrl . " `"" . A_Temp . "\" . This.TempDirName . "\" . LatestAssetName . "`""
@@ -128,6 +155,16 @@ Class Update {
             }
         }
         ProceedToDownloadPage(*) {
+            LatestRelease := GetLatestRelease()
+            If LatestRelease.Length >=1 {
+                LatestAssetName := LatestRelease[1]["assets"][1]["name"]
+                LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
+                LatestVersion := LatestRelease[1]["tag_name"]
+                LatestVersionUrl := LatestRelease[1]["html_url"]
+            }
+            Else {
+                DataError := True
+            }
             CloseNotificationBox()
             If DataError {
                 MsgBox "An error occurred.`nPlease try again later.", This.AppName
