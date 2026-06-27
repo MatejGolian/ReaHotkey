@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.49] - 2026-06-27
+
 ### Changed
 
 -   Pause the updater while displaying quit/reload confirmation messages
@@ -1019,7 +1021,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.48...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.49...HEAD
+
+[1.0.49]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.48...1.0.49
 
 [1.0.48]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.47...1.0.48
 
