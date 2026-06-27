@@ -24,6 +24,8 @@ Class FileDownload {
     }
     
     Cancel(*) {
+        If A_IsPaused
+        Return
         This.OwnDialog()
         ConfirmationDialog := MsgBox("Are you sure you want to cancel?", This.DialogTitle, 4)
         If ConfirmationDialog == "Yes" {
@@ -46,6 +48,7 @@ Class FileDownload {
         This.DialogGUI.AddText("Section W100", "Time remaining")
         This.DialogGUI.AddText("W450 YS vTimeRemaining", "∞")
         This.DialogGUI.AddButton("Default Section XS", "Cancel").OnEvent("Click", ObjBindMethod(This, "Cancel"))
+        Return This.DialogGUI
     }
     
     DestroyDialog() {
@@ -53,6 +56,7 @@ Class FileDownload {
             This.DialogGUI.Destroy()
             This.DialogGUI := Object()
         }
+        Return This.DialogGUI
     }
     
     FormatSize(Size, DecimalPlaces := 2) {

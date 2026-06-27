@@ -130,9 +130,11 @@ PauseHK(ThisHotkey) {
 }
 
 QuitHK(ThisHotkey) {
-    AccessibilityOverlay.ClearSpeechQueue()
-    AccessibilityOverlay.Speak("Quitting ReaHotkey")
-    ReaHotkey.Quit()
+    If Not A_IsPaused {
+        AccessibilityOverlay.ClearSpeechQueue()
+        AccessibilityOverlay.Speak("Quitting ReaHotkey")
+        ReaHotkey.Quit()
+    }
 }
 
 ReaHotkeyMenuHK(ThisHotkey) {
@@ -140,7 +142,9 @@ ReaHotkeyMenuHK(ThisHotkey) {
 }
 
 ReloadHK(ThisHotkey) {
-    ReaHotkey.Reload()
+    If Not A_IsPaused {
+        ReaHotkey.Reload()
+    }
 }
 
 ShiftTabHK(ThisHotkey) {

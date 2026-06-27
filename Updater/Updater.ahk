@@ -18,6 +18,19 @@ X86Exe := "ReaHotkey_x86.exe"
 
 #Include <FileDownload>
 
+CloseParent() {
+    PrevDetectionSetting := A_DetectHiddenWindows
+    DetectHiddenWindows True
+    PrevTitleSetting := A_TitleMatchMode
+    SetTitleMatchMode 3
+    ParentPath := GetParentPath()
+    If WinExist(ParentPath) {
+        WinClose(ParentPath)
+    }
+    SetTitleMatchMode PrevTitleSetting
+    DetectHiddenWindows PrevDetectionSetting
+}
+
 CloseUpdater(TargetPID) {
     If Not TargetPID = WinGetPID("ahk_id " . A_ScriptHWND)
     If ProcessExist(TargetPID) {
@@ -47,6 +60,15 @@ GetParentAhkDir() {
     Return A_ScriptDir
 }
 
+GetParentPath() {
+    Global ParentAhkDir, ParentAhkName
+    If A_IsCompiled = 0
+    ParentPath := ParentAhkDir . "\" . ParentAhkName . " - AutoHotkey v" . A_AhkVersion
+    Else
+    ParentPath := A_ScriptFullPath
+    Return ParentPath
+}
+
 GetParentPID() {
     Global ParentAhkDir, ParentAhkName
     PrevTitleSetting := A_TitleMatchMode
@@ -61,29 +83,44 @@ GetParentPID() {
     Return 0
 }
 
-ShowStatusDialog(Status, RunOnCancel := False, DisableCancel := False) {
-    Global UpdaterTitle
-    DialogGUI := GUI(, UpdaterTitle)
-    DialogGUI.AddText("Section W550 vStatus", Status)
-    DialogGUI.AddButton("Default Section XS vCancelBtn", "Cancel").OnEvent("Click", Cancel)
-    If DisableCancel {
-        DialogGUI["CancelBtn"].Opt("+Disabled")
-    }
-    Else {
-        DialogGUI.OnEvent("Close", Cancel)
-        DialogGUI.OnEvent("Escape", Cancel)
-    }
-    DialogGUI.Show()
-    Return DialogGUI
-    Cancel(*) {
-        DialogGUI.Opt("+OwnDialogs")
-        ConfirmationDialog := MsgBox("Are you sure you want to cancel?", UpdaterTitle, 4)
+ManagePause(wParam, lParam, msg, hwnd) {
+    Global StatusDialog
+    If Not wParam = 65306
+    Return
+    If StatusDialog Is GUI
+    StatusDialog.Opt("+OwnDialogs")
+    If Not A_IsPaused {
+        ToggleParentPause()
+        ConfirmationDialog := MsgBox("An update is currently in progress.`nAre you sure you want to quit the app?", "Quit ReaHotkey", 4)
         If ConfirmationDialog == "Yes" {
-            If RunOnCancel
-            Run RunOnCancel
+            CloseParent()
             ExitApp
         }
+        Else {
+            ToggleParentPause()
+        }
     }
+    Return 1
+}
+
+ManageReload(wParam, lParam, msg, hwnd) {
+    Global StatusDialog
+    If Not wParam = 65303
+    Return
+    If StatusDialog Is GUI
+    StatusDialog.Opt("+OwnDialogs")
+    If Not A_IsPaused {
+        ToggleParentPause()
+        ConfirmationDialog := MsgBox("An update is currently in progress.`nAre you sure you want to reload the app?", "Reload ReaHotkey", 4)
+        If ConfirmationDialog == "Yes" {
+            ReloadParent()
+            ExitApp
+        }
+        Else {
+            ToggleParentPause()
+        }
+    }
+    Return 1
 }
 
 PerformCleanup(CleanupOption := "All") {
@@ -108,11 +145,66 @@ PrepareRunCMD(ExtraArgs := "") {
     Return Trim(PreparedCMD)
 }
 
+ReloadParent() {
+    PrevDetectionSetting := A_DetectHiddenWindows
+    DetectHiddenWindows True
+    PrevTitleSetting := A_TitleMatchMode
+    SetTitleMatchMode 3
+    ParentPath := GetParentPath()
+    If WinExist(ParentPath)
+    PostMessage 0x0111, 65303,,, ParentPath
+    SetTitleMatchMode PrevTitleSetting
+    DetectHiddenWindows PrevDetectionSetting
+}
+
+ShowStatusDialog(Status, RunOnCancel := False, DisableCancel := False) {
+    Global UpdaterTitle
+    DialogGUI := GUI(, UpdaterTitle)
+    DialogGUI.AddText("Section W550 vStatus", Status)
+    DialogGUI.AddButton("Default Section XS vCancelBtn", "Cancel").OnEvent("Click", Cancel)
+    If DisableCancel {
+        DialogGUI["CancelBtn"].Opt("+Disabled")
+    }
+    Else {
+        DialogGUI.OnEvent("Close", Cancel)
+        DialogGUI.OnEvent("Escape", Cancel)
+    }
+    DialogGUI.Show()
+    Return DialogGUI
+    Cancel(*) {
+        If A_IsPaused
+        Return
+        DialogGUI.Opt("+OwnDialogs")
+        ConfirmationDialog := MsgBox("Are you sure you want to cancel?", UpdaterTitle, 4)
+        If ConfirmationDialog == "Yes" {
+            If RunOnCancel
+            Run RunOnCancel
+            ExitApp
+        }
+    }
+}
+
+ToggleParentPause() {
+    PrevDetectionSetting := A_DetectHiddenWindows
+    DetectHiddenWindows True
+    PrevTitleSetting := A_TitleMatchMode
+    SetTitleMatchMode 3
+    ParentPath := GetParentPath()
+    If WinExist(ParentPath)
+    PostMessage 0x0111, 65306,,, ParentPath
+    SetTitleMatchMode PrevTitleSetting
+    DetectHiddenWindows PrevDetectionSetting
+}
+
 CurrentPID := WinGetPID("ahk_id " . A_ScriptHWND)
 ParentAhkDir := GetParentAhkDir()
 ParentPID := GetParentPID()
 PreviousPID := GetParam("PreviousPID")
+StatusDialog := Object()
 TaskSwitch := ""
+
+OnMessage 0x0111, ManagePause
+OnMessage 0x0111, ManageReload
 
 If A_Args.Length > 0
 TaskSwitch := A_Args[1]
@@ -128,6 +220,7 @@ If TaskSwitch = "Download" {
     DestinationFile := A_Args[3]
     
     UpdateDownload := FileDownload(URL, DestinationFile, UpdaterTitle)
+    StatusDialog := UpdateDownload.CreateDialog()
     
     If UpdateDownload.Available {
         

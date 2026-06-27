@@ -46,6 +46,10 @@ Class Update {
                 }
                 Catch {
                     DataError := True
+                    LatestAssetName := ""
+                    LatestAssetUrl := ""
+                    LatestVersion := ""
+                    LatestVersionUrl := ""
                     ResultData := Array()
                     ShowCheckingError()
                     Return False
@@ -111,7 +115,37 @@ Class Update {
             This.NotificationBox.Destroy()
             This.NotificationBox := False
         }
+        GetLatestRelease() {
+            Try {
+                ReleaseData := ""
+                WHR := ComObject("WinHttp.WinHttpRequest.5.1")
+                WHR.Open("GET", This.JsonUrl . "?page=1&per_page=1", True)
+                WHR.Send()
+                WHR.WaitForResponse()
+                ReleaseData := WHR.ResponseText
+                ReleaseData := Jxon_Load(&ReleaseData)
+                If Not ReleaseData Is Array
+                ReleaseData := Array()
+            }
+            Catch {
+                ReleaseData := Array()
+            }
+            Return ReleaseData
+        }
         PerformUpdate(*) {
+            If DataError Or LatestAssetName = "" Or LatestAssetUrl = "" Or LatestVersion = "" Or LatestVersionUrl = "" {
+                LatestRelease := GetLatestRelease()
+                If LatestRelease.Length >=1 {
+                DataError := False
+                    LatestAssetName := LatestRelease[1]["assets"][1]["name"]
+                    LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
+                    LatestVersion := LatestRelease[1]["tag_name"]
+                    LatestVersionUrl := LatestRelease[1]["html_url"]
+                }
+                Else {
+                    DataError := True
+                }
+            }
             CloseNotificationBox()
             If This.IsRunning() {
                 This.ActivateWindow()
@@ -128,6 +162,19 @@ Class Update {
             }
         }
         ProceedToDownloadPage(*) {
+            If DataError Or LatestAssetName = "" Or LatestAssetUrl = "" Or LatestVersion = "" Or LatestVersionUrl = "" {
+                LatestRelease := GetLatestRelease()
+                If LatestRelease.Length >=1 {
+                DataError := False
+                    LatestAssetName := LatestRelease[1]["assets"][1]["name"]
+                    LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
+                    LatestVersion := LatestRelease[1]["tag_name"]
+                    LatestVersionUrl := LatestRelease[1]["html_url"]
+                }
+                Else {
+                    DataError := True
+                }
+            }
             CloseNotificationBox()
             If DataError {
                 MsgBox "An error occurred.`nPlease try again later.", This.AppName
@@ -239,6 +286,30 @@ Class Update {
         SetTitleMatchMode PrevTitleSetting
         DetectHiddenWindows PrevDetectionSetting
         Return RunningUpdate
+    }
+    
+    Static TogglePause() {
+        If Not This.IsRunning()
+        Return
+        PrevDetectionSetting := A_DetectHiddenWindows
+        DetectHiddenWindows True
+        PrevTitleSetting := A_TitleMatchMode
+        SetTitleMatchMode 2
+        PostMessage 0x0111, 65306,,, This.GetHiddenWinTitle()
+        SetTitleMatchMode PrevTitleSetting
+        DetectHiddenWindows PrevDetectionSetting
+    }
+    
+    Static TriggerReload() {
+        If Not This.IsRunning()
+        Return
+        PrevDetectionSetting := A_DetectHiddenWindows
+        DetectHiddenWindows True
+        PrevTitleSetting := A_TitleMatchMode
+        SetTitleMatchMode 2
+        PostMessage 0x0111, 65303,,, This.GetHiddenWinTitle()
+        SetTitleMatchMode PrevTitleSetting
+        DetectHiddenWindows PrevDetectionSetting
     }
     
 }
