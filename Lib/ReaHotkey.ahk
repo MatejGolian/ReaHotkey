@@ -644,16 +644,10 @@ Class ReaHotkey {
     }
     
     Static Quit(*) {
+        If A_IsPaused
+        Return
         If This.Update.IsRunning() {
             This.Update.TogglePause()
-            ConfirmationDialog := MsgBox("An update is currently in progress.`nAre you sure you want to quit the app?", "Quit ReaHotkey", 4)
-            If ConfirmationDialog == "Yes" {
-                This.Update.Close()
-                ExitApp
-            }
-            Else {
-                This.Update.TogglePause()
-            }
         }
         Else {
             ExitApp
@@ -661,20 +655,12 @@ Class ReaHotkey {
     }
     
     Static Reload(*) {
-        Proceed := True
+        If A_IsPaused
+        Return
         If This.Update.IsRunning() {
-            This.Update.TogglePause()
-            ConfirmationDialog := MsgBox("An update is currently in progress.`nAre you sure you want to reload the app?", "Reload ReaHotkey", 4)
-            If ConfirmationDialog == "Yes" {
-                This.Update.Close()
-                Proceed := True
-            }
-            Else {
-                This.Update.TogglePause()
-                Proceed := False
-            }
+            This.Update.TriggerReload()
         }
-        If Proceed {
+        Else {
             If A_IsCompiled = 0
             Run A_AhkPath . " /restart `"" . A_ScriptFullPath . "`" /Reload"
             Else

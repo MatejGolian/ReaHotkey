@@ -122,31 +122,31 @@ Class Update {
                 ReleaseData := Jxon_Load(&ReleaseData)
                 If Not ReleaseData Is Array
                 ReleaseData := Array()
-                }
-                Catch {
+            }
+            Catch {
                 ReleaseData := Array()
-                }
-                Return ReleaseData
-                }
-                PerformUpdate(*) {
-                LatestRelease := GetLatestRelease()
-                If LatestRelease.Length >=1 {
+            }
+            Return ReleaseData
+        }
+        PerformUpdate(*) {
+            LatestRelease := GetLatestRelease()
+            If LatestRelease.Length >=1 {
                 LatestAssetName := LatestRelease[1]["assets"][1]["name"]
                 LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
                 LatestVersion := LatestRelease[1]["tag_name"]
                 LatestVersionUrl := LatestRelease[1]["html_url"]
-                }
-                Else {
+            }
+            Else {
                 DataError := True
-                }
-                CloseNotificationBox()
-                If This.IsRunning() {
+            }
+            CloseNotificationBox()
+            If This.IsRunning() {
                 This.ActivateWindow()
-                }
-                Else If DataError {
+            }
+            Else If DataError {
                 MsgBox "An error occurred.`nPlease try again later.", This.AppName
-                }
-                Else {
+            }
+            Else {
                 This.DeleteTempDir()
                 If A_IsCompiled = 0
                 Run A_AhkPath . " `"Updater/Updater.ahk`" Download " . LatestAssetUrl . " `"" . A_Temp . "\" . This.TempDirName . "\" . LatestAssetName . "`""
@@ -286,6 +286,18 @@ Class Update {
         PrevTitleSetting := A_TitleMatchMode
         SetTitleMatchMode 2
         PostMessage 0x0111, 65306,,, This.GetHiddenWinTitle()
+        SetTitleMatchMode PrevTitleSetting
+        DetectHiddenWindows PrevDetectionSetting
+    }
+    
+    Static TriggerReload() {
+        If Not This.IsRunning()
+        Return
+        PrevDetectionSetting := A_DetectHiddenWindows
+        DetectHiddenWindows True
+        PrevTitleSetting := A_TitleMatchMode
+        SetTitleMatchMode 2
+        PostMessage 0x0111, 65303,,, This.GetHiddenWinTitle()
         SetTitleMatchMode PrevTitleSetting
         DetectHiddenWindows PrevDetectionSetting
     }
