@@ -46,6 +46,10 @@ Class Update {
                 }
                 Catch {
                     DataError := True
+                    LatestAssetName := ""
+                    LatestAssetUrl := ""
+                    LatestVersion := ""
+                    LatestVersionUrl := ""
                     ResultData := Array()
                     ShowCheckingError()
                     Return False
@@ -129,15 +133,17 @@ Class Update {
             Return ReleaseData
         }
         PerformUpdate(*) {
-            LatestRelease := GetLatestRelease()
-            If LatestRelease.Length >=1 {
-                LatestAssetName := LatestRelease[1]["assets"][1]["name"]
-                LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
-                LatestVersion := LatestRelease[1]["tag_name"]
-                LatestVersionUrl := LatestRelease[1]["html_url"]
-            }
-            Else {
-                DataError := True
+            If DataError Or LatestAssetName = "" Or LatestAssetUrl = "" Or LatestVersion = "" Or LatestVersionUrl = "" {
+                LatestRelease := GetLatestRelease()
+                If LatestRelease.Length >=1 {
+                    LatestAssetName := LatestRelease[1]["assets"][1]["name"]
+                    LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
+                    LatestVersion := LatestRelease[1]["tag_name"]
+                    LatestVersionUrl := LatestRelease[1]["html_url"]
+                }
+                Else {
+                    DataError := True
+                }
             }
             CloseNotificationBox()
             If This.IsRunning() {
@@ -155,15 +161,17 @@ Class Update {
             }
         }
         ProceedToDownloadPage(*) {
-            LatestRelease := GetLatestRelease()
-            If LatestRelease.Length >=1 {
-                LatestAssetName := LatestRelease[1]["assets"][1]["name"]
-                LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
-                LatestVersion := LatestRelease[1]["tag_name"]
-                LatestVersionUrl := LatestRelease[1]["html_url"]
-            }
-            Else {
-                DataError := True
+            If DataError Or LatestAssetName = "" Or LatestAssetUrl = "" Or LatestVersion = "" Or LatestVersionUrl = "" {
+                LatestRelease := GetLatestRelease()
+                If LatestRelease.Length >=1 {
+                    LatestAssetName := LatestRelease[1]["assets"][1]["name"]
+                    LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
+                    LatestVersion := LatestRelease[1]["tag_name"]
+                    LatestVersionUrl := LatestRelease[1]["html_url"]
+                }
+                Else {
+                    DataError := True
+                }
             }
             CloseNotificationBox()
             If DataError {

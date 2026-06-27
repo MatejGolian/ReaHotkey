@@ -151,9 +151,8 @@ ReloadParent() {
     PrevTitleSetting := A_TitleMatchMode
     SetTitleMatchMode 3
     ParentPath := GetParentPath()
-    If WinExist(ParentPath) {
-        PostMessage 0x0111, 65303,,, ParentPath
-    }
+    If WinExist(ParentPath)
+    PostMessage 0x0111, 65303,,, ParentPath
     SetTitleMatchMode PrevTitleSetting
     DetectHiddenWindows PrevDetectionSetting
 }
@@ -191,9 +190,8 @@ ToggleParentPause() {
     PrevTitleSetting := A_TitleMatchMode
     SetTitleMatchMode 3
     ParentPath := GetParentPath()
-    If WinExist(ParentPath) {
-        PostMessage 0x0111, 65306,,, ParentPath
-    }
+    If WinExist(ParentPath)
+    PostMessage 0x0111, 65306,,, ParentPath
     SetTitleMatchMode PrevTitleSetting
     DetectHiddenWindows PrevDetectionSetting
 }
