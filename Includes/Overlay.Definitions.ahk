@@ -17,6 +17,7 @@ Standalone.ChooserOverlay.AddCustomButton("Choose overlay",,, ActivateChooser).S
 #Include Overlays/Diva.ahk
 #Include Overlays/Dubler2.ahk
 #Include Overlays/FabFilter.ahk
+#Include Overlays/Gateway.ahk
 #Include Overlays/GTune.ahk
 #Include Overlays/Hive2.ahk
 #Include Overlays/Repro.ahk

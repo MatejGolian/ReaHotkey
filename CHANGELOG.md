@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-  Add support for NAM and IR file loading/unloading in the Neural Amp Modeler Gateway plug-in
+
 ## [1.0.50] - 2026-06-27
 
 ### Fixed
