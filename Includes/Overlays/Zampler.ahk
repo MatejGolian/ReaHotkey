@@ -76,7 +76,7 @@ Class Zampler {
         If ReaHotkey.Config.Get("Config", "ZamplerImageSearch") = 1 And FindImage("Images/Zampler/Zampler.png", PluginControlPos.X, PluginControlPos.Y + 140, PluginControlPos.X + 230, PluginControlPos.Y + 170) Is Object
         Return True
         If ReaHotkey.AbletonPlugin {
-            If RegExMatch(WinGetTitle("A"), "^Zampler-RX/[1-9][0-9]*-Zampler-RX$")
+            If RegExMatch(WinGetTitle("A"), "^Zampler-RX/[1-9][0-9]*")
             Return True
         }
         If ReaHotkey.ReaperPluginNative {

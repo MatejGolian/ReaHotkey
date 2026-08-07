@@ -17,7 +17,7 @@ Class Gateway {
         If PluginInstance.Name = "Gateway"
         Return True
         If ReaHotkey.AbletonPlugin {
-            If RegExMatch(WinGetTitle("A"), "^Gateway/[1-9][0-9]*-Gateway$")
+            If RegExMatch(WinGetTitle("A"), "^Gateway/[1-9][0-9]*")
             Return True
         }
         If ReaHotkey.ReaperPluginNative {

@@ -83,7 +83,7 @@ Class Engine2 {
         If ReaHotkey.Config.Get("Config", "Engine2ImageSearch") = 1 And FindImage("Images/Engine2/Engine2.png", PluginControlPos.X + 492, PluginControlPos.Y, PluginControlPos.X + 892, PluginControlPos.Y + 100) Is Object
         Return True
         If ReaHotkey.AbletonPlugin {
-            If RegExMatch(WinGetTitle("A"), "^Engine 2/[1-9][0-9]*-Engine 2$")
+            If RegExMatch(WinGetTitle("A"), "^Engine 2/[1-9][0-9]*")
             Return True
         }
         If ReaHotkey.ReaperPluginNative {

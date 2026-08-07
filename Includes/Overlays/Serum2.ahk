@@ -23,7 +23,7 @@ Class Serum2 {
         If ReaHotkey.Config.Get("Config", "Serum2ImageSearch") = 1 And FindImage("Images/Serum2/Serum2.png", PluginControlPos.X, PluginControlPos.Y, PluginControlPos.X + 200, PluginControlPos.Y + 100) Is Object
         Return True
         If ReaHotkey.AbletonPlugin {
-            If RegExMatch(WinGetTitle("A"), "^Serum 2/[1-9][0-9]*-Serum 2$")
+            If RegExMatch(WinGetTitle("A"), "^Serum 2/[1-9][0-9]*")
             Return True
         }
         If ReaHotkey.ReaperPluginNative {

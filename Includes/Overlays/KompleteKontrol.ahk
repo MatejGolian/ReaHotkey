@@ -254,7 +254,7 @@ Class KompleteKontrol {
         UIAElement := This.GetBrowser(Type)
         If UIAElement Is UIA.IUIAutomationElement {
             Try
-            UIAElement.WalkTree(-1).Click("Left")
+            UIAElement.Click()
             LastMessage := AccessibilityOverlay.LastMessage
             AccessibilityOverlay.AddToSpeechQueue("Library Browser closed.")
             AccessibilityOverlay.AddToSpeechQueue(LastMessage)
@@ -306,21 +306,16 @@ Class KompleteKontrol {
     }
     
     Static GetBrowser(Type) {
-        Thread "NoTimers"
-        Static Criteria := [{ClassName: "FileTypeSelector", MatchMode: "Substring"}, {ClassName: "TagCloudAccordionWithBrands", MatchMode: "Substring"}]
         If Type = "Plugin"
         UIAElement := This.GetPluginUIAElement()
         Else
         UIAElement := AccessibilityOverlay.Helpers.GetUIAWindow()
-        If UIAElement Is UIA.IUIAutomationElement
-        Loop Criteria.Length {
-            Try
-            UIAElement := UIAElement.FindElement(Criteria[A_Index])
-            Catch
-            UIAElement := False
-            If UIAElement Is UIA.IUIAutomationElement And UIAElement.Type = (A_Index = 1 ? 50018 : 50033)
-            Return UIAElement
-        }
+        Try
+        UIAElement := UIAElement.FindElement({Name: "Close Browser"})
+        Catch
+        Return False
+        If UIAElement.Type = 50000
+        Return UIAElement
         Return False
     }
     
