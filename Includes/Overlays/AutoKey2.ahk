@@ -15,11 +15,13 @@ Class AutoKey2 {
         If PluginInstance.Name = "Auto-Key 2"
         Return True
         If ReaHotkey.AbletonPlugin {
+            If RegExMatch(WinGetTitle("A"), "^Auto-Key/[1-9][0-9]*")
+            Return True
             If RegExMatch(WinGetTitle("A"), "^Auto-Key 2/[1-9][0-9]*")
             Return True
         }
         If ReaHotkey.ReaperPluginNative {
-            ReaperPluginNames := ["VST3: Auto-Key 2 (Antares)"]
+            ReaperPluginNames := ["VST3: Auto-Key (Antares)", "VST3: Auto-Key 2 (Antares)"]
             Try
             ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
             Catch
@@ -30,11 +32,15 @@ Class AutoKey2 {
             Return True
         }
         If ReaHotkey.ReaperPluginBridged {
-            Try
-            If RegExMatch(WinGetTitle("A"), "^Auto-Key 2 \(x(64|86) bridged\)$")
-            Return True
-            Catch
-            Return False
+            Try {
+                If RegExMatch(WinGetTitle("A"), "^Auto-Key \(x(64|86) bridged\)$")
+                Return True
+                If RegExMatch(WinGetTitle("A"), "^Auto-Key 2 \(x(64|86) bridged\)$")
+                Return True
+            }
+            Catch {
+                Return False
+            }
         }
         Return False
     }
