@@ -45,7 +45,14 @@ Class Tesseract {
         Command := Quote . This.TesseractExe . Quote . " --tessdata-dir " . Quote . Type . Quote . " --psm 7 " . Quote . Input . Quote . " " . Quote . SubStr(Output, 1, -4) . Quote
         Command .= (This.Language) ? " -l " . Quote . This.Language . Quote : ""
         Command := A_ComSpec . " /C " . Quote . Command . Quote
-        RunWait Command,, "Hide"
+        PrevDetectionSetting := A_DetectHiddenWindows
+        DetectHiddenWindows True
+        ProcessPID := ""
+        Run Command,, "Hide", &ProcessPID
+        WinWait "ahk_pid " . ProcessPID,, 5
+        If WinExist("ahk_pid " . ProcessPID)
+        WinWaitClose "ahk_pid " . ProcessPID,, 5
+        DetectHiddenWindows PrevDetectionSetting
         If Not FileExist(Output)
         Return
         Return Output
@@ -65,7 +72,7 @@ Class Tesseract {
         Output := StrReplace(Output, Chr(0xc), "")
         Output := Trim(Output)
         Return Output
-        }
+    }
     
     Static OCR(X, Y, W, H, Language := "", ScaleFactor := "", Type := "") {
         This.Language := (Language) ? Language : "eng"
@@ -96,7 +103,14 @@ Class Tesseract {
         Command := Quote . This.LeptonicaExe . Quote . " " . Quote . Input . Quote . " " . Quote . Output . Quote
         Command .= " " . NegateArg . " 0.5 " . PerformScaleArg . " " . ScaleFactor . " " . OCRPreProcessing . " 5 2.5 " . OCRPreProcessing . " 2000 2000 0 0 0.0"
         Command := A_ComSpec . " /C " . Quote . Command . Quote
-        RunWait Command,, "Hide"
+        PrevDetectionSetting := A_DetectHiddenWindows
+        DetectHiddenWindows True
+        ProcessPID := ""
+        Run Command,, "Hide", &ProcessPID
+        WinWait "ahk_pid " . ProcessPID,, 5
+        If WinExist("ahk_pid " . ProcessPID)
+        WinWaitClose "ahk_pid " . ProcessPID,, 5
+        DetectHiddenWindows PrevDetectionSetting
         If Not FileExist(Output)
         Return
         Return Output
