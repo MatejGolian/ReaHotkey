@@ -810,8 +810,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
     }
     
     Static Speak(Message := "") {
-    CurrentWorkingDir := A_WorkingDir
-    A_WorkingDir := A_ScriptDir
+        CurrentWorkingDir := A_WorkingDir
+        A_WorkingDir := A_ScriptDir
         This.AddToSpeechQueue(Message)
         Message := ""
         For QueuedMessage In This.SpeechQueue
@@ -1482,7 +1482,7 @@ Class FocusableGraphic Extends FocusableControl {
         If Groups.Count = 0
         Groups := Map(1, 1)
         For GroupName, ReturnState In Groups {
-            If SubStr(GroupName, 1, 1) Is Number
+            If RegExMatch(SubStr(GroupName, 1, 1), "[0-9]")
             GroupName := ""
             Try
             For Image In This.%GroupName%Images
