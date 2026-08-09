@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Added timeout to Tesseract
+
 ### Fixed
 
 -   Fixed several plug-ins probably not getting detected in Ableton

@@ -49,7 +49,6 @@ Class Tesseract {
         DetectHiddenWindows True
         ProcessPID := ""
         Run Command,, "Hide", &ProcessPID
-        WinWait "ahk_pid " . ProcessPID,, 5
         If WinExist("ahk_pid " . ProcessPID)
         WinWaitClose "ahk_pid " . ProcessPID,, 5
         DetectHiddenWindows PrevDetectionSetting
@@ -107,7 +106,6 @@ Class Tesseract {
         DetectHiddenWindows True
         ProcessPID := ""
         Run Command,, "Hide", &ProcessPID
-        WinWait "ahk_pid " . ProcessPID,, 5
         If WinExist("ahk_pid " . ProcessPID)
         WinWaitClose "ahk_pid " . ProcessPID,, 5
         DetectHiddenWindows PrevDetectionSetting
