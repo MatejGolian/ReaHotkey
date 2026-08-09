@@ -357,6 +357,14 @@ Many of the available keyboard shortcuts are disabled when the overlay designing
 | `Shift + Windows + T` | Set top-left corner coordinates of Graphical/OCR objects to mouse position |
 | `Shift + Windows + B` | Set bottom-right corner coordinates of Graphical/OCR objects to mouse position |
 
+## Credits
+
+Thanks goes to
+
+* Hrvoje Katić for contributing the Diva and Serum overlays,
+* Scott Chesworth for making various tweaks and assisting with various Kontakt-related stuff,
+* Toni Barth for adding several essential features.
+
 ## Roadmap
 
 This is an incomplete list of features we're planning to look into in the future or are currently developing. Noone can guarantee that they will ever become reality, but they might at some point, and you can always open an issue to either offer help or request a new entry on this list. This list doesn't necessarily include bugfixes or additional features for entries above, except if they require special treatment and time to investigate them.
