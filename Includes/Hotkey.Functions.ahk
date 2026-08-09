@@ -116,6 +116,7 @@ LeftRightHK(ThisHotkey) {
     }
     AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
 }
+
 ReadmeHK(ThisHotkey) {
     ReaHotkey.ViewReadme()
 }
