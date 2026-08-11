@@ -10,12 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added timeout to Tesseract
+-   OverlayDesigner: Added context menu items for setting graphical object images
 
 ### Fixed
 
 -   Fixed several plug-ins probably not getting detected in Ableton
 -   Fixed Library Browser not closing in Komplete Kontrol 3.5.4
--   Fixed basic GraphicalButtons not working
+-   Fixed GraphicalButtons and GraphicalTabs not working
 
 ## [1.0.51] - 2026-07-28
 

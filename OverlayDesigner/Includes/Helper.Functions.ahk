@@ -97,7 +97,7 @@ ExtractImage(*) {
             If X1 Is Number And Y1 Is Number And X2 Is Number And Y2 Is Number {
                 W := X2 - X1
                 H := Y2 - Y1
-                ImageFile := FileSelect("S18", "Image", "Save Image", "PNG Files (*.png)")
+                ImageFile := FileSelect("S18", "Image", "Save Image…", "PNG Files (*.png)")
                 If ImageFile {
                     SplitPath ImageFile, &FileName, &Directory, &Extension
                     If Extension = "" {
@@ -404,7 +404,7 @@ SearchForImage(RepeatLast := False) {
     If Not RepeatLast
     ImageFile := ""
     If ImageFile = "" Or Not FileExist(ImageFile) Or InStr(FileExist(ImageFile), "D")
-    ImageFile := FileSelect(3,, "Choose Image", "Supported Images (*.ANI; *.BMP; *.CUR; *.EMF; *.Exif; *.GIF; *.ICO; *.JPG; *.PNG; *.TIF; *.WMF)")
+    ImageFile := FileSelect(3,, "Choose Image…", "Supported Images (*.ani; *.bmp; *.cur; *.emf; *.exif; *.gif; *.ico; *.jpg; *.png; *.tif; *.wmf)")
     If Not ImageFile = "" {
         LastImage := ImageFile
         XPosition := ""

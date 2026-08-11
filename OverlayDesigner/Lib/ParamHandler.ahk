@@ -298,6 +298,35 @@ Class ParamHandler {
         }
     }
     
+    Static SetImageProp(OverlayObj, AcceptedTypes, PropName) {
+        If Not AcceptedTypes Is Array
+        AcceptedTypes := Array(AcceptedTypes)
+        Proceed := False
+        For AcceptedType In AcceptedTypes
+        If OverlayObj Is %AcceptedType% {
+            Proceed := True
+            Break
+        }
+        If Not Proceed
+        Return
+        SelectedFiles := FileSelect("M3", "", "Choose Images…", "Supported Images (*.ani; *.bmp; *.cur; *.emf; *.exif; *.gif; *.ico; *.jpg; *.png; *.tif; *.wmf)")
+        If SelectedFiles.Length = 0
+        Return
+        EditorPropValue := ""
+        For SelectedFile In SelectedFiles
+        If SubStr(SelectedFile, 1, StrLen(A_WorkingDir)) = A_WorkingDir {
+            SelectedFile := SubStr(SelectedFile, StrLen(A_WorkingDir) + 2)
+            SelectedFile := StrReplace(SelectedFile, "\", "/")
+            SelectedFiles[A_Index] := SelectedFile
+        }
+        For SelectedFile In SelectedFiles
+        EditorPropValue .= "`"" . SelectedFile . "`", "
+        EditorPropValue := SubStr(EditorPropValue, 1, -2)
+        Editor.Items[OverlayObj.ControlID].ObjParams.%PropName% := EditorPropValue
+        OverlayObj.%PropName% := SelectedFiles
+        MsgBox "Images set successfully.", Editor.AppName
+    }
+    
     Static ValidateDefaultLabel(OverlayObj, Name, Value, Expression, Optional) {
         If Value = "" And Not Expression
         Return Value
