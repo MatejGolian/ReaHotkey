@@ -178,7 +178,7 @@ Here are basic instructions how to use OverlayDesigner to create overlays.
 
 3. To edit items:
    - Focus an item using `Tab` or `Shift + Tab`.
-   - Press `F2` to edit the selected item or choose 'Item properties…' from the Edit submenu.
+   - Press `F2` to edit the selected item or choose 'Item properties…' from the `Edit` submenu. Alternatively, some control types also have quick editing actions defined for them, so that you don't have to edit everything manually in the item properties dialog. Should a given item type have quick editing actions, the main editor menu will show a special `Current item` entry with all the applicable actions. This menu can also be opened by pressing `Ctrl + Applications` or `Ctrl + Shift + F10` directly after focusing an item.
    - For mouse coordinate adjustments, you can:
      - Move your mouse to the desired position.
      - Use shortcuts:
@@ -195,6 +195,25 @@ To edit container objects (e.g., AccessibilityOverlays, PluginOverlays, Tabs), n
 Opening `Item properties` while a TabControl has focus will edit the TabControl object itself and not the currently selected tab.
 After adding container objects, focus will move to the start of that newly added object so that you can begin adding controls to it right away.
 When `Treat as expression` is checked next to a field in `Item properties`, OverlayDesigner will try to interpret parts of your input as AutoHotkey code. This feature is aimed at advanced use and therefore whenever you have the choice and you're unsure of what to select, keep that option unchecked to avoid potentially unexpected results.
+
+### Available Tools
+
+The following table presents a brief description of the various tools that OverlayDesigner offers. They can be accessed via keyboard shortcuts or by opening the Tools menu. See the Keyboard Shortcuts section for more information.
+
+| Name | Description |
+| --- | --- |
+| `Nudge coordinates` (only active when the designing feature is enabled) | Nudges/recalculates coordinates of overlay elements |
+| `Focus control` | Focuses the window control of your choice |
+| `Extract image` | Captures a portion of the active window as an image file |
+| `Search for image` | Tries to find the image you select on the screen |
+| `Repeat search for last image` | Repeats the search for the last used image |
+| `Perform OCR` | Performs OCR on the active window and opens a message box showing the individual strings along with their respective mouse coordinates |
+| `Generate markers from OCR` | Performs OCR and generates a start/end marker pair per each recognized string |
+| `View window info` | Opens a message box showing info about the active window |
+| `View control info` | Opens a message box showing info about the focused control |
+| `View control list` | Opens a message box showing info about all the controls found in the active window |
+| `View mouse and caret info` | Opens a message box showing info about the mouse and caret |
+| `View clipboard contents` | Opens a message box showing the contents of the clipboard as text |
 
 ### Available Overlay Types
 

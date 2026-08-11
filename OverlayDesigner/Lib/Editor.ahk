@@ -438,6 +438,9 @@ Class Editor {
     Static CreateToolsMenu() {
         ToolsMenu := Menu()
         For ToolsMenuItem In This.ToolsMenuList
+        If Not This.Active And SubStr(ToolsMenuItem.Name, 1, 19) = "&Nudge coordinates…"
+        Continue
+        Else
         ToolsMenu.Add(ToolsMenuItem.Name, ToolsMenuItem.Handler)
         Return ToolsMenu
     }

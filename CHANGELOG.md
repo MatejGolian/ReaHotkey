@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   OverlayDesigner: Added context menu items for setting hotspot object colors
 -   OverlayDesigner: Added keyboard shortcuts for opening the item-specific context menu with Ctrl+Applications or Ctrl+Shift+F10
 -   OverlayDesigner: Added keyboard shortcuts for opening the Tools menu with Shift+Windows+Applications or Shift+Windows+F10
+-   Added more info to readMe
 
 ### Fixed
 
