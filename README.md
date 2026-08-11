@@ -198,7 +198,7 @@ When `Treat as expression` is checked next to a field in `Item properties`, Over
 
 ### Available Tools
 
-The following table presents a brief description of the various tools that OverlayDesigner offers. They can be accessed via keyboard shortcuts or by opening the Tools menu. See the Keyboard Shortcuts section for more information.
+The following table presents a brief overview of the various tools that OverlayDesigner offers. They can be accessed via keyboard shortcuts or by opening the Tools menu. See the Keyboard Shortcuts section for more information.
 
 | Name | Description |
 | --- | --- |
