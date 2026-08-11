@@ -217,7 +217,7 @@ The following table presents a brief description of the various tools that Overl
 
 ### Available Overlay Types
 
-ReaHotkey/OverlayDesigner supports 3 overlay types:
+ReaHotkey and OverlayDesigner support 3 overlay types:
 
 1. AccessibilityOverlay:
    - Basic overlay type not geared towards anything specific.
