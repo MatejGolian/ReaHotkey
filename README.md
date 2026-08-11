@@ -221,7 +221,7 @@ ReaHotkey and OverlayDesigner support 3 overlay types:
 
 1. AccessibilityOverlay:
    - Basic overlay type not geared towards anything specific.
-   - This is the overlay type created by default. To make the root item a different type, create a new overlay (File > New…).
+   - This is the overlay type OverlayDesigner creates by default. To make the root item a different type, create a new overlay (File > New…).
 
 2. PluginOverlay:
    - Similar to the basic AccessibilityOverlay type, but it makes things easier when creating overlays for plug-ins.
