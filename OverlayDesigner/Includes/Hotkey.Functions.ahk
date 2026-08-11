@@ -113,11 +113,11 @@ InportCodeHK(ThisHotkey) {
     Editor.InportCode()
 }
 
-ItemContextMenuHK(ThisHotkey) {
-    ContextMenu := Editor.CreateItemContextMenu()
-    If ContextMenu Is Menu {
+ItemMenuHK(ThisHotkey) {
+    ItemMenu := Editor.CreateItemMenu()
+    If ItemMenu Is Menu {
         Editor.ToggleHKs("Off")
-        ContextMenu.Show()
+        ItemMenu.Show()
     }
 }
 
@@ -139,11 +139,11 @@ LeftRightHK(ThisHotkey) {
     }
 }
 
-MainContextMenuHK(ThisHotkey) {
-    ContextMenu := Editor.CreateMainContextMenu()
-    If ContextMenu Is Menu {
+MainMenuHK(ThisHotkey) {
+    MainMenu := Editor.CreateMainMenu()
+    If MainMenu Is Menu {
         Editor.ToggleHKs("Off")
-        ContextMenu.Show()
+        MainMenu.Show()
     }
 }
 
@@ -377,6 +377,14 @@ TogglePauseHK(ThisHotkey) {
     AccessibilityOverlay.Speak("Paused " . Editor.AppName)
     Else
     AccessibilityOverlay.Speak(Editor.AppName . " ready")
+}
+
+ToolsMenuHK(ThisHotkey) {
+    ToolsMenu := Editor.CreateToolsMenu()
+    If ToolsMenu Is Menu {
+        Editor.ToggleHKs("Off")
+        ToolsMenu.Show()
+    }
 }
 
 TriggerOverlayHotkey(ThisHotkey) {

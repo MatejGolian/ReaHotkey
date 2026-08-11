@@ -6,11 +6,14 @@ Press Shift + Windows + D to adtivate or deactivate the overlay designing/editin
 Use standard commands to move through the overlay when the design editor is active.
 Press the Applications key or Shift + F10 to open the main editor context menu when a control has focus.
 Press Ctrl + Applications or Ctrl + Shift + F10 to open the context menu for the currently focused control.
+Press the Applications key or Shift + F10 to open the main editor context menu when a control has focus.
+Press Shift + Windows + Applications or Shift + Windows + F10 to open the Tools menu.
 Note that most project-related commands do not work when the editor feature is inactive. On the other hand, functions aimed at a more general purpose, such as those found in the script's Tools menu, remain accessible regardless of editor state. They only become inactive when the script is paused.
 
 Keyboard Shortcuts
 
 Always active, even when the script is paused:
+Shift + Windows + Applications or Shift + Windows + F10 - Open tools menu
 Shift + Windows + P - Toggle pause
 Shift + Windows + F1 - Open this window
 Shift + Windows + Q - Quit

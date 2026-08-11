@@ -304,6 +304,7 @@ Many of the available keyboard shortcuts are disabled when the overlay designing
 
 | Shortcut | Description |
 | --- | --- |
+| `Shift + Windows + Applications` or `Shift + Windows + F10` | Open Tools menu |
 | `Shift + Windows + P` | Toggle pause |
 | `Shift + Windows + F1` | Open the About window |
 | `Shift + Windows + Q` | Quit the script |

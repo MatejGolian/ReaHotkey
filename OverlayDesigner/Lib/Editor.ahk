@@ -341,7 +341,7 @@ Class Editor {
         Return ItemEntry
     }
     
-    Static CreateItemContextMenu() {
+    Static CreateItemMenu() {
         If Not This.Overlay.CurrentControl
         Return False
         CurrentControl := This.Overlay.CurrentControl
@@ -352,15 +352,15 @@ Class Editor {
         CurrentItem := CurrentControl
         If This.ItemDefinitions[Type(CurrentItem)].HasProp("MenuActions")
         If This.ItemDefinitions[Type(CurrentItem)].MenuActions Is Array And This.ItemDefinitions[Type(CurrentItem)].MenuActions.Length > 0 {
-            ItemContextMenu := Menu()
+            ItemMenu := Menu()
             For ActionMenuItem In This.ItemDefinitions[Type(CurrentItem)].MenuActions
-            ItemContextMenu.Add(ActionMenuItem, ItemActionMenuHandler)
-            Return ItemContextMenu
+            ItemMenu.Add(ActionMenuItem, ItemActionMenuHandler)
+            Return ItemMenu
         }
         Return False
     }
     
-    Static CreateMainContextMenu() {
+    Static CreateMainMenu() {
         If Not This.Overlay.CurrentControl
         Return False
         CurrentControl := This.Overlay.CurrentControl
@@ -416,25 +416,30 @@ Class Editor {
         ItemSubmenuLabel := "Current item <" . Type(ParentControl) . ">"
         Else
         ItemSubmenuLabel :=  "Current item <" . Type(CurrentControl) . ">"
-        ItemSubmenu := This.CreateItemContextMenu()
-        ToolsSubmenu := Menu()
-        For ToolsMenuItem In This.ToolsMenuList
-        ToolsSubmenu.Add(ToolsMenuItem.Name, ToolsMenuItem.Handler)
+        ItemSubmenu := This.CreateItemMenu()
+        ToolsSubmenu := This.CreateToolsMenu()
         HelpSubmenu := Menu()
         HelpSubmenu.Add("About…`tShift+Windows+F1", ObjBindMethod(This, "ShowAboutBox"))
-        ContextMenu := Menu()
-        ContextMenu.Add("File", FileSubmenu)
-        ContextMenu.Add("Edit", EditSubmenu)
-        ContextMenu.Add("Add", AddSubmenu)
+        MainMenu := Menu()
+        MainMenu.Add("File", FileSubmenu)
+        MainMenu.Add("Edit", EditSubmenu)
+        MainMenu.Add("Add", AddSubmenu)
         If ItemSubmenu Is Menu
-        ContextMenu.Add(ItemSubmenuLabel, ItemSubmenu)
-        ContextMenu.Add("Tools", ToolsSubmenu)
-        ContextMenu.Add("Help", HelpSubmenu)
-        Return ContextMenu
+        MainMenu.Add(ItemSubmenuLabel, ItemSubmenu)
+        MainMenu.Add("Tools", ToolsSubmenu)
+        MainMenu.Add("Help", HelpSubmenu)
+        Return MainMenu
     }
     
     Static CreateProject(*) {
         This.ShowNewProjectBox()
+    }
+    
+    Static CreateToolsMenu() {
+        ToolsMenu := Menu()
+        For ToolsMenuItem In This.ToolsMenuList
+        ToolsMenu.Add(ToolsMenuItem.Name, ToolsMenuItem.Handler)
+        Return ToolsMenu
     }
     
     Static CreateUndo() {
