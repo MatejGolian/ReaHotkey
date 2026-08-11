@@ -169,6 +169,7 @@ FocusControl(*) {
         If Control = ControlClass
         ControlMenu.Check(control)
     }
+    Editor.ToggleHKs("Off")
     ControlMenu.Show()
 }
 ControlMenuHandler(ControlName, ControlNumber, ControlMenu) {

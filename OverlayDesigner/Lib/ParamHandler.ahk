@@ -298,6 +298,31 @@ Class ParamHandler {
         }
     }
     
+    Static SetColorProp(OverlayObj, AcceptedTypes, PropName) {
+        If Not AcceptedTypes Is Array
+        AcceptedTypes := Array(AcceptedTypes)
+        Proceed := False
+        For AcceptedType In AcceptedTypes
+        If OverlayObj Is %AcceptedType% {
+            Proceed := True
+            Break
+        }
+        If Not Proceed
+        Return
+        Sleep 250
+        Try {
+            MouseGetPos &MouseXPosition, &MouseYPosition
+        }
+        Catch {
+            MsgBox "Could not determine mouse position", Editor.AppName
+            Return
+        }
+        EditorPropValue := PixelGetColor(MouseXPosition, MouseYPosition, "Slow")
+        Editor.Items[OverlayObj.ControlID].ObjParams.%PropName% := "`"" . EditorPropValue . "`""
+        OverlayObj.%PropName% := Array(EditorPropValue)
+        MsgBox "Color set successfully.", Editor.AppName
+    }
+    
     Static SetImageProp(OverlayObj, AcceptedTypes, PropName) {
         If Not AcceptedTypes Is Array
         AcceptedTypes := Array(AcceptedTypes)
