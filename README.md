@@ -339,7 +339,7 @@ Many of the available keyboard shortcuts are disabled when the overlay designing
 
 | Shortcut | Description |
 | --- | --- |
-| `Applications` or `Shift + F10` | Open main editor context menu |
+| `Applications` or `Shift + F10` | Open main editor menu |
 | `Ctrl + Applications` or `Ctrl + Shift + F10` | Open context menu for currently focused item, if applicable |
 | `Ctrl + N` | Create new project |
 | `Ctrl + O` | Open existing project |
