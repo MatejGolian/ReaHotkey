@@ -264,90 +264,6 @@ Class Editor {
         AccessibilityOverlay.Speak(Type(ItemToCopy) " copied to clipboard")
     }
     
-    Static CreateContextMenu() {
-        If Not This.Overlay.CurrentControl
-        Return False
-        CurrentControl := This.Overlay.CurrentControl
-        ParentControl := CurrentControl.SuperordinateControl
-        FileSubmenu := Menu()
-        FileSubmenu.Add("New…`tCtrl+N", ObjBindMethod(This, "CreateProject"))
-        FileSubmenu.Add("Open…`tCtrl+O", ObjBindMethod(This, "OpenProject"))
-        FileSubmenu.Add("Save`tCtrl+S", ObjBindMethod(This, "SaveProject"))
-        FileSubmenu.Add("Save as…`tCtrl+Alt+S", ObjBindMethod(This, "SaveProjectAs"))
-        FileSubmenu.Add("Inport overlay code…`tCtrl+I", ObjBindMethod(This, "InportCode"))
-        FileSubmenu.Add("Export overlay code…`tCtrl+E", ObjBindMethod(This, "GenerateCode"))
-        FileSubmenu.Add("Quit…`tShift+Windows+Q", ObjBindMethod(This, "Quit"))
-        EditSubmenu := Menu()
-        EditSubmenu.Add("Undo`tCtrl+Z", ObjBindMethod(This, "PerformUndo"))
-        EditSubmenu.Add("Cut`tCtrl+X", ObjBindMethod(This, "CutItem"))
-        EditSubmenu.Add("Copy`tCtrl+C", ObjBindMethod(This, "CopyItem"))
-        EditSubmenu.Add("Paste`tCtrl+V", ObjBindMethod(This, "PasteItem"))
-        EditSubmenu.Add("Delete item`tDel", DeleteItemHandler)
-        EditSubmenu.Add("Item properties…`tF2", EditItemHandler)
-        EditSubmenu.Add("Delete markers…`tShift+Windows+Del", ObjBindMethod(This, "DeleteMarkers"))
-        If Not This.Undo.Json {
-            EditSubmenu.Disable("Undo`tCtrl+Z")
-        }
-        If Not This.Overlay.CurrentControl {
-            EditSubmenu.Disable("Cut`tCtrl+X")
-            EditSubmenu.Disable("Copy`tCtrl+C")
-            EditSubmenu.Disable("Paste`tCtrl+V")
-            EditSubmenu.Disable("Delete item`tDel")
-            EditSubmenu.Disable("Item properties…`F2")
-        }
-        If This.Overlay.CurrentControl Is Separator
-        If This.Overlay.CurrentControl.SuperordinateControl = This.Overlay {
-            EditSubmenu.Disable("Cut`tCtrl+X")
-            EditSubmenu.Disable("Delete item`tDel")
-        }
-        If Not This.Clipboard.Json {
-            EditSubmenu.Disable("Paste`tCtrl+V")
-        }
-        AddSubmenu := Menu()
-        If CurrentControl Is TabControl {
-            For Value In This.TabControlAddList {
-                If This.ItemDefinitions.Has(Value)
-                AddSubmenu.Add(Value, AddItemHandler)
-            }
-        }
-        Else {
-            For Value In This.GenericAddList {
-                If This.ItemDefinitions.Has(Value)
-                AddSubmenu.Add(Value, AddItemHandler)
-            }
-        }
-        ItemSubmenuLabel := ""
-        If This.Overlay.CurrentControl Is Separator {
-            ItemSubmenuLabel := "Current item <" . Type(ParentControl) . ">"
-            CurrentItem := ParentControl
-        }
-        Else {
-            ItemSubmenuLabel :=  "Current item <" . Type(CurrentControl) . ">"
-            CurrentItem := CurrentControl
-        }
-        ItemSubmenu := False
-        If This.ItemDefinitions[Type(CurrentItem)].HasProp("MenuActions")
-        If This.ItemDefinitions[Type(CurrentItem)].MenuActions Is Array And This.ItemDefinitions[Type(CurrentItem)].MenuActions.Length > 0 {
-            ItemSubmenu := Menu()
-            For ActionMenuItem In This.ItemDefinitions[Type(CurrentItem)].MenuActions
-            ItemSubmenu.Add(ActionMenuItem, ItemActionMenuHandler)
-        }
-        ToolsSubmenu := Menu()
-        For ToolsMenuItem In This.ToolsMenuList
-        ToolsSubmenu.Add(ToolsMenuItem.Name, ToolsMenuItem.Handler)
-        HelpSubmenu := Menu()
-        HelpSubmenu.Add("About…`tShift+Windows+F1", ObjBindMethod(This, "ShowAboutBox"))
-        ContextMenu := Menu()
-        ContextMenu.Add("File", FileSubmenu)
-        ContextMenu.Add("Edit", EditSubmenu)
-        ContextMenu.Add("Add", AddSubmenu)
-        If ItemSubmenu Is Menu
-        ContextMenu.Add(ItemSubmenuLabel, ItemSubmenu)
-        ContextMenu.Add("Tools", ToolsSubmenu)
-        ContextMenu.Add("Help", HelpSubmenu)
-        Return ContextMenu
-    }
-    
     Static CreateItem(ItemType, OverlayObj := False, WithInitParamList := False) {
         If Not This.ItemCounts.Has(ItemType)
         This.ItemCounts.Set(ItemType, 0)
@@ -423,6 +339,98 @@ Class Editor {
         If WithInitParamList
         ItemEntry.InitialParamlist := InitialParamList
         Return ItemEntry
+    }
+    
+    Static CreateItemContextMenu() {
+        If Not This.Overlay.CurrentControl
+        Return False
+        CurrentControl := This.Overlay.CurrentControl
+        ParentControl := CurrentControl.SuperordinateControl
+        If This.Overlay.CurrentControl Is Separator
+        CurrentItem := ParentControl
+        Else
+        CurrentItem := CurrentControl
+        If This.ItemDefinitions[Type(CurrentItem)].HasProp("MenuActions")
+        If This.ItemDefinitions[Type(CurrentItem)].MenuActions Is Array And This.ItemDefinitions[Type(CurrentItem)].MenuActions.Length > 0 {
+            ItemContextMenu := Menu()
+            For ActionMenuItem In This.ItemDefinitions[Type(CurrentItem)].MenuActions
+            ItemContextMenu.Add(ActionMenuItem, ItemActionMenuHandler)
+            Return ItemContextMenu
+        }
+        Return False
+    }
+    
+    Static CreateMainContextMenu() {
+        If Not This.Overlay.CurrentControl
+        Return False
+        CurrentControl := This.Overlay.CurrentControl
+        ParentControl := CurrentControl.SuperordinateControl
+        FileSubmenu := Menu()
+        FileSubmenu.Add("New…`tCtrl+N", ObjBindMethod(This, "CreateProject"))
+        FileSubmenu.Add("Open…`tCtrl+O", ObjBindMethod(This, "OpenProject"))
+        FileSubmenu.Add("Save`tCtrl+S", ObjBindMethod(This, "SaveProject"))
+        FileSubmenu.Add("Save as…`tCtrl+Alt+S", ObjBindMethod(This, "SaveProjectAs"))
+        FileSubmenu.Add("Inport overlay code…`tCtrl+I", ObjBindMethod(This, "InportCode"))
+        FileSubmenu.Add("Export overlay code…`tCtrl+E", ObjBindMethod(This, "GenerateCode"))
+        FileSubmenu.Add("Quit…`tShift+Windows+Q", ObjBindMethod(This, "Quit"))
+        EditSubmenu := Menu()
+        EditSubmenu.Add("Undo`tCtrl+Z", ObjBindMethod(This, "PerformUndo"))
+        EditSubmenu.Add("Cut`tCtrl+X", ObjBindMethod(This, "CutItem"))
+        EditSubmenu.Add("Copy`tCtrl+C", ObjBindMethod(This, "CopyItem"))
+        EditSubmenu.Add("Paste`tCtrl+V", ObjBindMethod(This, "PasteItem"))
+        EditSubmenu.Add("Delete item`tDel", DeleteItemHandler)
+        EditSubmenu.Add("Item properties…`tF2", EditItemHandler)
+        EditSubmenu.Add("Delete markers…`tShift+Windows+Del", ObjBindMethod(This, "DeleteMarkers"))
+        If Not This.Undo.Json {
+            EditSubmenu.Disable("Undo`tCtrl+Z")
+        }
+        If Not This.Overlay.CurrentControl {
+            EditSubmenu.Disable("Cut`tCtrl+X")
+            EditSubmenu.Disable("Copy`tCtrl+C")
+            EditSubmenu.Disable("Paste`tCtrl+V")
+            EditSubmenu.Disable("Delete item`tDel")
+            EditSubmenu.Disable("Item properties…`F2")
+        }
+        If This.Overlay.CurrentControl Is Separator
+        If This.Overlay.CurrentControl.SuperordinateControl = This.Overlay {
+            EditSubmenu.Disable("Cut`tCtrl+X")
+            EditSubmenu.Disable("Delete item`tDel")
+        }
+        If Not This.Clipboard.Json {
+            EditSubmenu.Disable("Paste`tCtrl+V")
+        }
+        AddSubmenu := Menu()
+        If CurrentControl Is TabControl {
+            For Value In This.TabControlAddList {
+                If This.ItemDefinitions.Has(Value)
+                AddSubmenu.Add(Value, AddItemHandler)
+            }
+        }
+        Else {
+            For Value In This.GenericAddList {
+                If This.ItemDefinitions.Has(Value)
+                AddSubmenu.Add(Value, AddItemHandler)
+            }
+        }
+        If This.Overlay.CurrentControl Is Separator
+        ItemSubmenuLabel := "Current item <" . Type(ParentControl) . ">"
+        Else
+        ItemSubmenuLabel :=  "Current item <" . Type(CurrentControl) . ">"
+        ItemSubmenu := This.CreateItemContextMenu()
+        ToolsSubmenu := Menu()
+        For ToolsMenuItem In This.ToolsMenuList
+        ToolsSubmenu.Add(ToolsMenuItem.Name, ToolsMenuItem.Handler)
+        HelpSubmenu := Menu()
+        HelpSubmenu.Add("About…`tShift+Windows+F1", ObjBindMethod(This, "ShowAboutBox"))
+        ContextMenu := Menu()
+        ContextMenu.Add("File", FileSubmenu)
+        ContextMenu.Add("Edit", EditSubmenu)
+        ContextMenu.Add("Add", AddSubmenu)
+        If ItemSubmenu Is Menu
+        ContextMenu.Add(ItemSubmenuLabel, ItemSubmenu)
+        ContextMenu.Add("Tools", ToolsSubmenu)
+        ContextMenu.Add("Help", HelpSubmenu)
+        Return ContextMenu
     }
     
     Static CreateProject(*) {

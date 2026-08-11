@@ -324,7 +324,7 @@ Class ParamHandler {
         EditorPropValue := SubStr(EditorPropValue, 1, -2)
         Editor.Items[OverlayObj.ControlID].ObjParams.%PropName% := EditorPropValue
         OverlayObj.%PropName% := SelectedFiles
-        MsgBox "Images set successfully.", Editor.AppName
+        MsgBox "Image files set successfully.", Editor.AppName
     }
     
     Static ValidateDefaultLabel(OverlayObj, Name, Value, Expression, Optional) {

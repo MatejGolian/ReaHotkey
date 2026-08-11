@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Added timeout to Tesseract
 -   OverlayDesigner: Added context menu items for setting graphical object images
+-   OverlayDesigner: Added keyboard shortcuts to open the item-specific context menu
 
 ### Fixed
 

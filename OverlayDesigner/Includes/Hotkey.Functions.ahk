@@ -22,14 +22,6 @@ AddMarkerHK(ThisHotkey) {
     AddMarkerOrHotspotButton("Marker")
 }
 
-ContextMenuHK(ThisHotkey) {
-    ContextMenu := Editor.CreateContextMenu()
-    If ContextMenu Is Menu {
-        Editor.ToggleHKs("Off")
-        ContextMenu.Show()
-    }
-}
-
 ControlHK(ThisHotkey) {
     AccessibilityOverlay.StopSpeech()
 }
@@ -121,6 +113,14 @@ InportCodeHK(ThisHotkey) {
     Editor.InportCode()
 }
 
+ItemContextMenuHK(ThisHotkey) {
+    ContextMenu := Editor.CreateItemContextMenu()
+    If ContextMenu Is Menu {
+        Editor.ToggleHKs("Off")
+        ContextMenu.Show()
+    }
+}
+
 LeftRightHK(ThisHotkey) {
     AccessibilityOverlay.Helpers.PassThroughHotkey(ThisHotkey)
     Switch(Editor.Overlay.GetCurrentControlType()) {
@@ -136,6 +136,14 @@ LeftRightHK(ThisHotkey) {
         Editor.Overlay.FocusPreviousTab(False)
         Else
         Editor.Overlay.FocusNextTab(False)
+    }
+}
+
+MainContextMenuHK(ThisHotkey) {
+    ContextMenu := Editor.CreateMainContextMenu()
+    If ContextMenu Is Menu {
+        Editor.ToggleHKs("Off")
+        ContextMenu.Show()
     }
 }
 

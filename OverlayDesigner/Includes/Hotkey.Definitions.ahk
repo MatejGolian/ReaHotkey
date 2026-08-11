@@ -33,8 +33,6 @@ This.AlwaysActiveHKs := Map(
 
 This.OnlyWhenEditorActiveHKs := Map(
 "#+H", AddHotspotButtonHK,
-"AppsKey", ContextMenuHK,
-"+F10", ContextMenuHK,
 "+^Tab", ControlShiftTabHK,
 "^Tab", ControlTabHK,
 "^C", CopyItemHK,
@@ -46,8 +44,12 @@ This.OnlyWhenEditorActiveHKs := Map(
 "Space", EnterSpaceHK,
 "^E", GenerateCodeHK,
 "^I", InportCodeHK,
+"^AppsKey", ItemContextMenuHK,
+"^+F10", ItemContextMenuHK,
 "Left", LeftRightHK,
 "Right", LeftRightHK,
+"AppsKey", MainContextMenuHK,
+"+F10", MainContextMenuHK,
 "#+N", NudgeCoordinates,
 "^O", OpenProjectHK,
 "^V", PasteItemHK,
