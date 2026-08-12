@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added timeout to Tesseract
 -   OverlayDesigner: Added context menu items for setting graphical object images
 -   OverlayDesigner: Added context menu items for setting hotspot object colors
+-   OverlayDesigner: Added keyboard shortcuts for opening the Add item menu with Alt+Applications or Alt+Shift+F10
 -   OverlayDesigner: Added keyboard shortcuts for opening the item-specific context menu with Ctrl+Applications or Ctrl+Shift+F10
 -   OverlayDesigner: Added keyboard shortcuts for opening the Tools menu with Shift+Windows+Applications or Shift+Windows+F10
 -   Added more info to readMe

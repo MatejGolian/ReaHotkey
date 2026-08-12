@@ -22,6 +22,14 @@ AddMarkerHK(ThisHotkey) {
     AddMarkerOrHotspotButton("Marker")
 }
 
+AddMenuHK(ThisHotkey) {
+    AddMenu := Editor.CreateAddMenu()
+    If AddMenu Is Menu {
+        Editor.ToggleHKs("Off")
+        AddMenu.Show()
+    }
+}
+
 ControlHK(ThisHotkey) {
     AccessibilityOverlay.StopSpeech()
 }

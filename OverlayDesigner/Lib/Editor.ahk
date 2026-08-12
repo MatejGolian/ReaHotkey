@@ -264,6 +264,27 @@ Class Editor {
         AccessibilityOverlay.Speak(Type(ItemToCopy) " copied to clipboard")
     }
     
+    Static CreateAddMenu() {
+        If Not This.Overlay.CurrentControl
+        Return False
+        CurrentControl := This.Overlay.CurrentControl
+        ParentControl := CurrentControl.SuperordinateControl
+        AddMenu := Menu()
+        If CurrentControl Is TabControl {
+            For Value In This.TabControlAddList {
+                If This.ItemDefinitions.Has(Value)
+                AddMenu.Add(Value, AddItemHandler)
+            }
+        }
+        Else {
+            For Value In This.GenericAddList {
+                If This.ItemDefinitions.Has(Value)
+                AddMenu.Add(Value, AddItemHandler)
+            }
+        }
+        Return AddMenu
+    }
+    
     Static CreateItem(ItemType, OverlayObj := False, WithInitParamList := False) {
         If Not This.ItemCounts.Has(ItemType)
         This.ItemCounts.Set(ItemType, 0)
@@ -399,19 +420,7 @@ Class Editor {
         If Not This.Clipboard.Json {
             EditSubmenu.Disable("Paste`tCtrl+V")
         }
-        AddSubmenu := Menu()
-        If CurrentControl Is TabControl {
-            For Value In This.TabControlAddList {
-                If This.ItemDefinitions.Has(Value)
-                AddSubmenu.Add(Value, AddItemHandler)
-            }
-        }
-        Else {
-            For Value In This.GenericAddList {
-                If This.ItemDefinitions.Has(Value)
-                AddSubmenu.Add(Value, AddItemHandler)
-            }
-        }
+        AddSubmenu := This.CreateAddMenu()
         If This.Overlay.CurrentControl Is Separator
         ItemSubmenuLabel := "Current item <" . Type(ParentControl) . ">"
         Else
