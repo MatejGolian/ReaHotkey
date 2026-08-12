@@ -1098,6 +1098,7 @@ Class AccessibilityOverlay Extends AccessibilityControl {
         }
         
         Static _OCR(OCRType, X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage := "", OCRScale := "") {
+        Try
             If OCRType = "Tesseract" Or OCRType = "TesseractLegacy"
             Return This._TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 3)
             Else If OCRType = "TesseractBest"
@@ -1106,6 +1107,8 @@ Class AccessibilityOverlay Extends AccessibilityControl {
             Return This._TesseractOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale, 2)
             Else
             Return This._UWPOCR(X1Coordinate, Y1Coordinate, X2Coordinate, Y2Coordinate, OCRLanguage, OCRScale)
+            Catch
+            Return ""
         }
         
         Static _PassThroughHotkey(ThisHotkey) {

@@ -598,6 +598,19 @@ GetPluginYCoordinate() {
     Return GetPluginControlPos().Y
 }
 
+GetReaperFXInstanceName() {
+    If ReaHotkey.ReaperPluginNative {
+        Try
+        FXInstanceName := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
+        Catch
+        FXInstanceName := ""
+    }
+    Else {
+        FXInstanceName := ""
+    }
+    Return FXInstanceName
+}
+
 GetWinPos() {
     WinX := 0
     WinY := 0

@@ -12,6 +12,7 @@ Our changelog can be found [in our dedicated changelog file](https://github.com/
 
 The following list contains the gist of what ReaHotkey has to offer. There may be some features not specifically mentioned here - either because they are experimental or self-explanatory.
 
+* Supports using Antares Auto-Key 2.
 * Adds basic support for the u-HE Diva, Hive 2, Repro and Zebra Legacy synthesizers inside REAPER and Ableton Live 12.
   - Currently supported Features include preset browsing/saving and accessing the vendor menus.
 * Enables accessibility for Dubler 2.2 by Vochlea
@@ -384,8 +385,9 @@ Many of the available keyboard shortcuts are disabled when the overlay designing
 Thanks goes to
 
 * Hrvoje Katić for contributing the Diva and Serum overlays,
+* Nghia Nguyen for adding support for Auto-Key 2,
 * Scott Chesworth for making various tweaks and assisting with various Kontakt-related stuff,
-* Toni Barth for adding several essential features.
+* Toni Barth for implementing several essential features.
 
 ## Roadmap
 

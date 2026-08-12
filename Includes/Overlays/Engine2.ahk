@@ -87,14 +87,11 @@ Class Engine2 {
             Return True
         }
         If ReaHotkey.ReaperPluginNative {
+            ReaperFXInstanceName := GetReaperFXInstanceName()
             ReaperPluginNames := ["VSTi: ENGINE (Best Service) (24 out)"]
-            Try
-            ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
-            Catch
-            ReaperListItem := ""
-            If Not ReaperListItem = ""
+            If Not ReaperFXInstanceName = ""
             For ReaperPluginName In ReaperPluginNames
-            If ReaperListItem = ReaperPluginName
+            If ReaperFXInstanceName = ReaperPluginName
             Return True
         }
         If ReaHotkey.ReaperPluginBridged {

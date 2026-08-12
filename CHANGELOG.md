@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+-   Added support for Antares Auto-Key 2 (Thanks to Nghia Nguyen)
 -   Added timeout to Tesseract
 -   OverlayDesigner: Added context menu items for setting graphical object images
 -   OverlayDesigner: Added context menu items for setting hotspot object colors

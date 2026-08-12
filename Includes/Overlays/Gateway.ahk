@@ -21,14 +21,11 @@ Class Gateway {
             Return True
         }
         If ReaHotkey.ReaperPluginNative {
+            ReaperFXInstanceName := GetReaperFXInstanceName()
             ReaperPluginNames := ["VST3: Gateway (Atkinson Advanced Modeling, LLC)"]
-            Try
-            ReaperListItem := ListViewGetContent("Focused", "SysListView321", ReaHotkey.PluginWinCriteria)
-            Catch
-            ReaperListItem := ""
-            If Not ReaperListItem = ""
+            If Not ReaperFXInstanceName = ""
             For ReaperPluginName In ReaperPluginNames
-            If ReaperListItem = ReaperPluginName
+            If ReaperFXInstanceName = ReaperPluginName
             Return True
         }
         If ReaHotkey.ReaperPluginBridged {
