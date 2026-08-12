@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.52] - 2026-08-12
+
 ### Added
 
 -   Added support for Antares Auto-Key 2 (Thanks to Nghia Nguyen)
@@ -1050,7 +1052,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.51...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.52...HEAD
+
+[1.0.52]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.51...1.0.52
 
 [1.0.51]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.50...1.0.51
 
