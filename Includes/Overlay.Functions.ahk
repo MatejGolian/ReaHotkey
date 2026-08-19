@@ -710,6 +710,25 @@ MovePluginControl(X := "", Y := "", W := "", H := "") {
     }
 }
 
+MoveWindow(X := "", Y := "", W := "", H := "") {
+    Try
+    WindowID := WinGetID("A")
+    Catch
+    WindowID := 0
+    WindowPos := GetWinPos()
+    If WindowID  {
+        If X = ""
+        X := WindowPos.X
+        If Y = ""
+        Y := WindowPos.Y
+        If W = ""
+        W := WindowPos.W
+        If H = ""
+        H := WindowPos.H
+        WinMove X, Y, W, H, "ahk_id " . WindowID
+    }
+}
+
 MoveToPluginCoordinates(XCoordinate, YCoordinate) {
     MouseMove CompensatePluginXCoordinate(XCoordinate), CompensatePluginYCoordinate(YCoordinate)
 }
