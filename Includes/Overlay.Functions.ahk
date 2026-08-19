@@ -539,6 +539,16 @@ GetImgSize(Img) {
     Return ReturnObject
 }
 
+GetPluginControlHWND() {
+    PluginWinCriteria := ReaHotkey.PluginWinCriteria
+    If PluginWinCriteria {
+        PluginControl := ReaHotkey.GetPluginControl()
+        If PluginControl
+        Return ControlGetHWND(PluginControl, PluginWinCriteria)
+    }
+    Return 0
+}
+
 GetPluginControlPos() {
     PluginControlX := 0
     PluginControlY := 0
@@ -691,6 +701,22 @@ MergeArrays(Params*) {
     For Item In Param
     Merged.Push(Item)
     Return Merged
+}
+
+MovePluginControl(X := "", Y := "", W := "", H := "") {
+    PluginControlHWND := GetPluginControlHWND()
+    If PluginControlHWND {
+        WinGetPos &DefaultX, &DefaultY, &DefaultW, &DefaultH, PluginControlHWND
+        If X = ""
+        X := DefaultX
+        If Y = ""
+        Y := DefaultY
+        If W = ""
+        W := DefaultW
+        If H = ""
+        H := DefaultH
+        WinMove X, Y, W, H, PluginControlHWND
+    }
 }
 
 MoveToPluginCoordinates(XCoordinate, YCoordinate) {
