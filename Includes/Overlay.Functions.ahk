@@ -611,6 +611,39 @@ GetReaperFXInstanceName() {
     Return FXInstanceName
 }
 
+GetWinClientPos() {
+    WinX := 0
+    WinY := 0
+    WinW := 0
+    WinH := 0
+    Try {
+        WinGetClientPos &WinX, &WinY, &WinW, &WinH, "A"
+    }
+    Catch {
+        WinX := 0
+        WinY := 0
+        WinW := 0
+        WinH := 0
+    }
+    Return {X: WinX, Y: WinY, W: WinW, H: WinH}
+}
+
+GetWinClientHeight() {
+    Return GetWinClientPos().H
+}
+
+GetWinClientWidth() {
+    Return GetWinClientPos().W
+}
+
+GetWinClientXCoordinate() {
+    Return GetWinClientPos().X
+}
+
+GetWinClientYCoordinate() {
+    Return GetWinClientPos().Y
+}
+
 GetWinPos() {
     WinX := 0
     WinY := 0
@@ -695,9 +728,9 @@ MergeArrays(Params*) {
 
 MovePluginControl(X := "", Y := "", W := "", H := "") {
     PluginControl := ReaHotkey.GetPluginControl()
-    PluginControlPos := GetPluginControlPos()
-    PluginWinCriteria := ReaHotkey.PluginWinCriteria
     If PluginControl {
+        PluginControlPos := GetPluginControlPos()
+        PluginWinCriteria := ReaHotkey.PluginWinCriteria
         If X = ""
         X := PluginControlPos.X
         If Y = ""
@@ -710,13 +743,17 @@ MovePluginControl(X := "", Y := "", W := "", H := "") {
     }
 }
 
+MoveToPluginCoordinates(XCoordinate, YCoordinate) {
+    MouseMove CompensatePluginXCoordinate(XCoordinate), CompensatePluginYCoordinate(YCoordinate)
+}
+
 MoveWindow(X := "", Y := "", W := "", H := "") {
     Try
     WindowID := WinGetID("A")
     Catch
     WindowID := 0
-    WindowPos := GetWinPos()
-    If WindowID  {
+    If WindowID {
+        WindowPos := GetWinPos()
         If X = ""
         X := WindowPos.X
         If Y = ""
@@ -729,8 +766,38 @@ MoveWindow(X := "", Y := "", W := "", H := "") {
     }
 }
 
-MoveToPluginCoordinates(XCoordinate, YCoordinate) {
-    MouseMove CompensatePluginXCoordinate(XCoordinate), CompensatePluginYCoordinate(YCoordinate)
+MoveWindowClientArea(X := "", Y := "", W := "", H := "") {
+    Try
+    WindowID := WinGetID("A")
+    Catch
+    WindowID := 0
+    If WindowID {
+        ClientPos := GetWinClientPos()
+        WinPos := GetWinPos()
+        XOffset := 0
+        YOffset := 0
+        If WinPos.W > ClientPos.W
+        XOffset := WinPos.W - ClientPos.W
+        If WinPos.H > ClientPos.H
+        YOffset := WinPos.H - ClientPos.H
+        If X = ""
+        X := WinPos.X
+        Else
+        X := X + XOffset
+        If Y = ""
+        Y := WinPos.Y
+        Else
+        Y := Y + YOffset
+        If W = ""
+        W := WinPos.W
+        Else
+        W := W + XOffset
+        If H = ""
+        H := WinPos.H
+        Else
+        H := H + YOffset
+        WinMove X, Y, W, H, "ahk_id " . WindowID
+    }
 }
 
 PluginPctClick(XPct, YPct) {
