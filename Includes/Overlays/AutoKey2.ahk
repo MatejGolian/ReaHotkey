@@ -4,6 +4,7 @@ Class AutoKey2 {
     
     Static __New() {
         Plugin.Register("Auto-Key 2", "^JUCE_[0-9a-f]{1,}$", ObjBindMethod(This, "CheckPlugin"), False, False, False, 1, False)
+        Plugin.SetTimer("Auto-Key 2", This.Resize, -1)
         Plugin.SetTimer("Auto-Key 2", This.AutoReport, 2000)
         AutoKey2Overlay := PluginOverlay("Auto-Key 2", "Auto-Key 2")
         AutoKey2Overlay.AddHotspotButton("Send To AUTO-TUNE", 265, 318, , , , , "!s", "Alt + S")
@@ -82,6 +83,12 @@ Class AutoKey2 {
                 PreviousValue := CurrentValue
                 AccessibilityOverlay.Speak(CurrentValue)
             }
+        }
+    }
+    
+    Class Resize {
+        Static Call() {
+            MovePluginControl(, , 545, 425)
         }
     }
     

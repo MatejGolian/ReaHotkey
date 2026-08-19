@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   Resize Auto-Key 2 window to default size when focused
+
 ## [1.0.52] - 2026-08-12
 
 ### Added
