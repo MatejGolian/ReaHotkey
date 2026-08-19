@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.53] - 2026-08-19
+
 ### Changed
 
 -   Resize Auto-Key 2 window to default size when focused
@@ -1056,7 +1058,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.52...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.53...HEAD
+
+[1.0.53]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.52...1.0.53
 
 [1.0.52]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.51...1.0.52
 
