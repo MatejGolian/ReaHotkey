@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.55] - 2026-08-19
+
 ### Added
 
 -   Added helper functions targeting the window client area
@@ -1068,7 +1070,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.54...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.55...HEAD
+
+[1.0.55]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.54...1.0.55
 
 [1.0.54]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.53...1.0.54
 
