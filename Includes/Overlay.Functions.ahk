@@ -774,28 +774,34 @@ MoveWindowClientArea(X := "", Y := "", W := "", H := "") {
     If WindowID {
         ClientPos := GetWinClientPos()
         WinPos := GetWinPos()
-        XOffset := 0
-        YOffset := 0
-        If ClientPos.X > WinPos.X
-        XOffset := ClientPos.X - WinPos.X
-        If ClientPos.Y > WinPos.Y
-        YOffset := ClientPos.Y - WinPos.Y
+        LeftBorder := 0
+        RightBorder := 0
+        TopBorder := 0
+        BottomBorder := 0
+        If ClientPos.X > WinPos.X {
+            LeftBorder := ClientPos.X - WinPos.X
+            RightBorder := WinPos.W - ClientPos.W - LeftBorder
+        }
+        If ClientPos.Y > WinPos.Y {
+            TopBorder := ClientPos.Y - WinPos.Y
+            BottomBorder := WinPos.H - ClientPos.H - TopBorder
+        }
         If X = ""
         X := WinPos.X
         Else
-        X := X + XOffset
+        X := X + LeftBorder
         If Y = ""
         Y := WinPos.Y
         Else
-        Y := Y + YOffset
+        Y := Y + TopBorder
         If W = ""
         W := WinPos.W
         Else
-        W := W + XOffset
+        W := W + LeftBorder + RightBorder
         If H = ""
         H := WinPos.H
         Else
-        H := H + YOffset
+        H := H + TopBorder + BottomBorder
         WinMove X, Y, W, H, "ahk_id " . WindowID
     }
 }
