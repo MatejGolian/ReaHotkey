@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.57] - 2026-08-20
+
 ### Fixed
 
 -   Fixed wrong calculation in MoveWindowClientArea function
@@ -1080,7 +1082,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.56...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.57...HEAD
+
+[1.0.57]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.56...1.0.57
 
 [1.0.56]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.55...1.0.56
 
