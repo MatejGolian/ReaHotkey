@@ -789,11 +789,11 @@ MoveWindowClientArea(X := "", Y := "", W := "", H := "") {
         If X = ""
         X := WinPos.X
         Else
-        X := X + LeftBorder
+        X := X - LeftBorder
         If Y = ""
         Y := WinPos.Y
         Else
-        Y := Y + TopBorder
+        Y := Y - TopBorder
         If W = ""
         W := WinPos.W
         Else
