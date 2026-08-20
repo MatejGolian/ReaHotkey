@@ -776,10 +776,10 @@ MoveWindowClientArea(X := "", Y := "", W := "", H := "") {
         WinPos := GetWinPos()
         XOffset := 0
         YOffset := 0
-        If WinPos.X > ClientPos.X
-        XOffset := WinPos.X - ClientPos.X
-        If WinPos.Y > ClientPos.Y
-        YOffset := WinPos.Y - ClientPos.Y
+        If ClientPos.X > WinPos.X
+        XOffset := ClientPos.X - WinPos.X
+        If ClientPos.Y > WinPos.Y
+        YOffset := ClientPos.Y - WinPos.Y
         If X = ""
         X := WinPos.X
         Else

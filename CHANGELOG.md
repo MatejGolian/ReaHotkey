@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   Fixed wrong calculation in MoveWindowClientArea function
+
 ## [1.0.56] - 2026-08-20
 
 ### Changed
