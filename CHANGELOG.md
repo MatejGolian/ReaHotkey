@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.59] - 2026-08-20
+
 ### Fixed
 
 -   Fix wrong target positions in MoveWindowClientArea
@@ -1092,7 +1094,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.58...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.59...HEAD
+
+[1.0.59]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.58...1.0.59
 
 [1.0.58]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.57...1.0.58
 
