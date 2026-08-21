@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.62] - 2026-08-21
+
 ### Fixed
 
 -   More update check regression fixes
@@ -1110,7 +1112,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
-[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.61...HEAD
+[Unreleased]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.62...HEAD
+
+[1.0.62]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.61...1.0.62
 
 [1.0.61]: https://github.com/MatejGolian/ReaHotkey/compare/1.0.60...1.0.61
 
