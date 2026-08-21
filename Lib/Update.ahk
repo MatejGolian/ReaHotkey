@@ -49,7 +49,7 @@ Class Update {
                     ResultData := Jxon_Load(&ResultData)
                     If Not ResultData Is Array
                     ResultData := Array()
-                    For Value In ResultData {
+                    For Key, Value In ResultData {
                         JsonData.Push(Value)
                         If Value["tag_name"] = CurrentVersion {
                             CurrentVersionIndex := Key
