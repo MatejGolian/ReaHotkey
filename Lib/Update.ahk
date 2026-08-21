@@ -23,6 +23,14 @@ Class Update {
         If Not This.NotificationBox {
             If NotifyOnNoUpdate
             AccessibilityOverlay.Speak("Checking for updates...")
+            CurrentVersion := ""
+            If IsSet(GetVersion) And GetVersion Is Func
+            CurrentVersion := StrSplit(GetVersion(), "-")
+            If CurrentVersion Is Array
+            CurrentVersion := CurrentVersion[1]
+            If CurrentVersion = ""
+            CurrentVersion := "0.0.0"
+            CurrentVersionIndex := 0
             LatestAssetName := ""
             LatestAssetUrl := ""
             LatestVersion := ""
@@ -41,8 +49,13 @@ Class Update {
                     ResultData := Jxon_Load(&ResultData)
                     If Not ResultData Is Array
                     ResultData := Array()
-                    For Value In ResultData
-                    JsonData.Push(Value)
+                    For Value In ResultData {
+                        JsonData.Push(Value)
+                        If Value["tag_name"] = CurrentVersion {
+                            CurrentVersionIndex := Key
+                            Break 2
+                        }
+                    }
                 }
                 Catch {
                     DataError := True
@@ -56,19 +69,6 @@ Class Update {
                 }
             }
             Until ResultData.Length = 0
-            CurrentVersion := ""
-            If IsSet(GetVersion) And GetVersion Is Func
-            CurrentVersion := StrSplit(GetVersion(), "-")
-            If CurrentVersion Is Array
-            CurrentVersion := CurrentVersion[1]
-            If CurrentVersion = ""
-            CurrentVersion := "0.0.0"
-            CurrentVersionIndex := 0
-            For Key, Value In JsonData
-            If Value["tag_name"] = CurrentVersion {
-                CurrentVersionIndex := Key
-                Break
-            }
             LatestVersion := "0.0.0"
             LatestVersionIndex := 1
             If JsonData.Length >= LatestVersionIndex {
@@ -136,7 +136,7 @@ Class Update {
             If DataError Or LatestAssetName = "" Or LatestAssetUrl = "" Or LatestVersion = "" Or LatestVersionUrl = "" {
                 LatestRelease := GetLatestRelease()
                 If LatestRelease.Length >=1 {
-                DataError := False
+                    DataError := False
                     LatestAssetName := LatestRelease[1]["assets"][1]["name"]
                     LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
                     LatestVersion := LatestRelease[1]["tag_name"]
@@ -165,7 +165,7 @@ Class Update {
             If DataError Or LatestAssetName = "" Or LatestAssetUrl = "" Or LatestVersion = "" Or LatestVersionUrl = "" {
                 LatestRelease := GetLatestRelease()
                 If LatestRelease.Length >=1 {
-                DataError := False
+                    DataError := False
                     LatestAssetName := LatestRelease[1]["assets"][1]["name"]
                     LatestAssetUrl := LatestRelease[1]["assets"][1]["browser_download_url"]
                     LatestVersion := LatestRelease[1]["tag_name"]
