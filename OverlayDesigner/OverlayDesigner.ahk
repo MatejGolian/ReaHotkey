@@ -35,7 +35,6 @@ SetTitleMatchMode 2
 #Include Includes/Hotkey.Functions.ahk
 #Include Includes/Menu.Handlers.ahk
 #Include Includes/Overlay.Functions.ahk
-#Include Includes/ScreenArea2File.ahk
 
 #HotIf
 Editor.Init()

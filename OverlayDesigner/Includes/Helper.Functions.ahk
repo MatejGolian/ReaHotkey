@@ -1,21 +1,5 @@
 ﻿#Requires AutoHotkey v2.0
 
-ClientCoordToScreenCoord(X, Y) {
-    CoordMode "Mouse", "Client"
-    Try {
-        WinWaitActive("A")
-        MouseMove X, Y
-        CoordMode "Mouse", "Screen"
-        MouseGetPos &XPos, &YPos
-    }
-    Catch {
-        XPos := False
-        YPos := False
-    }
-    CoordMode "Mouse", "Client"
-    Return {X: XPos, Y: YPos}
-}
-
 ExtractImage(*) {
     Static X1Coord := "", Y1Coord := "", X2Coord := "", Y2Coord := ""
     Try {
@@ -81,20 +65,14 @@ ExtractImage(*) {
         Y1 := ControlValues.Y1Coord
         X2 := ControlValues.X2Coord
         Y2 := ControlValues.Y2Coord
-        If Not WinExist("ahk_id" . WindowID) {
+        If Not WinExist("ahk_id " . WindowID) {
             MsgBox "Target window not found.", Editor.AppName
             CloseCoordinateBox()
         }
         Else {
-            WinActivate("ahk_id" . WindowID)
-            WinWaitActive("ahk_id" . WindowID)
-            Coord := ClientCoordToScreenCoord(X1, Y1)
-            X1 := Coord.X
-            Y1 := Coord.Y
-            Coord := ClientCoordToScreenCoord(X2, Y2)
-            X2 := Coord.X
-            Y2 := Coord.Y
-            If X1 Is Number And Y1 Is Number And X2 Is Number And Y2 Is Number {
+            WinActivate("ahk_id " . WindowID)
+            WinWaitActive("ahk_id " . WindowID)
+            If Not X1 = "" And Not Y1 = "" And Not X2 = "" And Not Y2 = "" {
                 W := X2 - X1
                 H := Y2 - Y1
                 ImageFile := FileSelect("S18", "Image", "Save Image…", "PNG Files (*.png)")
@@ -105,7 +83,7 @@ ExtractImage(*) {
                         ImageFile .= ".png"
                     }
                     Sleep 2000
-                    ScreenArea2File(Directory, FileName, {X: X1, Y: Y1, W: W, H: H})
+                    ImagePutFile({Screenshot: "ahk_id " . WindowID, Crop: [X1, Y1, W, H]}, ImageFile)
                     If Not FileExist(ImageFile) Or InStr(FileExist(ImageFile), "D") {
                         MsgBox "An error occurred while saving file.`nPlease try again.", Editor.AppName
                         CoordinateBox.Show()
